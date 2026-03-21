@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Zero-cost Abstractions — Miễn Phí Hoàn Toàn! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>✨ Zero-cost Abstractions — Miễn Phí Hoàn Toàn!</h1>
+  <p class="subtitle">An toàn và tiện lợi mà không mất thêm chi phí!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bảo đảm tĩnh › Zero-cost</span>
+</header>
+<main>
+
+  <h2>🆓 "Zero-cost" nghĩa là gì?</h2>
+  <div class="fun-box">
+    <p>🎯 <span class="hi">Zero-cost abstraction</span> = thêm tính năng tiện lợi, an toàn hơn... nhưng robot <strong>không cần tốn thêm bộ nhớ, không chạy chậm hơn</strong>!</p>
+    <p>Đây là câu châm ngôn nổi tiếng của Rust: <em>"What you don't use, you don't pay for. What you do use, you couldn't hand code any better."</em></p>
+    <p>Tạm dịch: "Thứ gì bạn không dùng thì không tốn tiền. Thứ gì bạn dùng thì code tay cũng không nhanh hơn được!" 🏆</p>
+  </div>
+
+  <h2>🏷️ Zero Sized Types (ZST) — Nhãn Dán Vô Hình</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Nhãn dán lên hộp</div>
+    <p>Khi bạn dán nhãn "ĐỒ GIÒN" lên hộp — nhãn giúp bạn biết cần cẩn thận, nhưng <strong>nhãn không chiếm không gian trong hộp</strong>!</p>
+    <p>Zero Sized Types cũng vậy: chúng giúp compiler "biết thêm thông tin" nhưng <strong>không chiếm bất kỳ byte nào trong bộ nhớ robot!</strong> 🎁</p>
+  </div>
+
+  <div class="fun-box">
+    <p>Ví dụ: Các kiểu trạng thái cho GPIO:</p>
+    <ul>
+      <li><code>struct Input;</code> — 0 byte!</li>
+      <li><code>struct Output;</code> — 0 byte!</li>
+      <li><code>struct Enabled;</code> — 0 byte!</li>
+      <li><code>struct Disabled;</code> — 0 byte!</li>
+    </ul>
+    <p>Và struct dùng chúng:</p>
+    <p><code>struct Pin&lt;T&gt; { address: u32, _mode: T }</code></p>
+    <ul>
+      <li><code>size_of::&lt;Pin&lt;Input&gt;&gt;()</code> = 4 bytes (chỉ địa chỉ!)</li>
+      <li><code>size_of::&lt;Pin&lt;Output&gt;&gt;()</code> = 4 bytes (chỉ địa chỉ!)</li>
+    </ul>
+    <p>Trạng thái <strong>không tốn bộ nhớ nào cả!</strong> 🎉</p>
+  </div>
+
+  <h2>⚡ Machine Code Giống Hệt!</h2>
+  <div class="fun-box">
+    <p>🤯 <strong>Điều kỳ diệu nhất:</strong></p>
+    <p>Code dùng Typestate (tiện lợi, an toàn):</p>
+    <p><code>let pin = Pin::new(0x48000000).into_output();<br>pin.set_high();</code></p>
+    <p>Và code ghi thẳng vào register (kiểu cũ, C-style):</p>
+    <p><code>unsafe { write_volatile(0x48000018 as *mut u32, 0x100); }</code></p>
+    <p>→ <span class="hi">Tạo ra machine code GIỐNG HỆT nhau!</span> Compiler tối ưu hóa hoàn toàn! 🚀</p>
+  </div>
+
+  <h2>📊 So Sánh Thực Tế</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Tiêu chí</th>
+        <th>C (ghi thẳng)</th>
+        <th>Rust (Typestate)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🏃 Tốc độ</td>
+        <td>Rất nhanh</td>
+        <td>✅ Rất nhanh (giống hệt)</td>
+      </tr>
+      <tr>
+        <td>💾 Bộ nhớ</td>
+        <td>Tối thiểu</td>
+        <td>✅ Tối thiểu (giống hệt)</td>
+      </tr>
+      <tr>
+        <td>🛡️ An toàn</td>
+        <td>❌ Dễ lỗi</td>
+        <td>✅ Compiler kiểm tra</td>
+      </tr>
+      <tr>
+        <td>📖 Dễ đọc</td>
+        <td>❌ Khó hiểu số magic</td>
+        <td>✅ Code rõ ràng</td>
+      </tr>
+      <tr>
+        <td>🔧 Bảo trì</td>
+        <td>❌ Dễ nhầm</td>
+        <td>✅ Compiler giúp đỡ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fun-box">
+    <p>🏆 <strong>Đây là điểm đặc biệt nhất của Rust!</strong></p>
+    <p>Ngôn ngữ khác phải <em>chọn một trong hai</em>:</p>
+    <ul>
+      <li>🏃 Nhanh (như C) nhưng không an toàn</li>
+      <li>🛡️ An toàn (như Python) nhưng chậm</li>
+    </ul>
+    <p>Rust cho bạn <strong>cả hai</strong>: an toàn + tiện lợi + nhanh = không tốn thêm tài nguyên! 🎯✨</p>
+    <p>Đó là lý do Rust được dùng trong rocket, OS, trình duyệt web, và cả robot nhỏ! 🚀🤖</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Tóm tắt hành trình của bạn:</strong><br>
+    Typestate → ZST → Zero-cost → An toàn miễn phí!<br>
+    Bạn có thể viết code rõ ràng, dễ hiểu, được compiler kiểm tra... và robot chạy nhanh như code C thô! 🦀🔥
+  </div>
+
+<div class="nav-buttons">
+  <a href="typestate-programming.html" class="nav-btn">← Typestate</a>
+  <a href="../interoperability/index.html" class="nav-btn next">Hai ngôn ngữ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

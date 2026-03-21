@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛡️ Bảo Đảm Tĩnh — Rust Kiểm Tra Khi Đang Viết Code! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🛡️ Bảo Đảm Tĩnh — Rust Kiểm Tra Khi Đang Viết Code!</h1>
+  <p class="subtitle">Lỗi bị bắt trước khi robot chạy — tiết kiệm rất nhiều đau đầu!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Thiết kế & Bảo đảm › Bảo đảm tĩnh</span>
+</header>
+<main>
+
+  <h2>🔍 Static Guarantees là gì?</h2>
+  <div class="fun-box">
+    <p>🦀 <span class="hi">Static</span> nghĩa là "trước khi chạy" — Rust kiểm tra code của bạn ngay lúc bạn đang viết (lúc compile), <strong>trước khi code được chạy lần nào!</strong></p>
+    <p>Hầu hết ngôn ngữ khác chỉ phát hiện lỗi khi chạy (runtime errors). Rust bắt rất nhiều loại lỗi tại compile time! ⚡</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Giáo viên siêu giỏi</div>
+    <p>Hãy tưởng tượng hai trường học:</p>
+    <ul>
+      <li>🏫 Trường A: Học sinh nộp bài → chờ kết quả → biết sai → sửa → nộp lại (mất nhiều thời gian!)</li>
+      <li>🏆 Trường B: Giáo viên nhìn qua bài làm ngay khi đang viết, chỉ ra lỗi trước khi nộp! (hiệu quả hơn!)</li>
+    </ul>
+    <p>Rust là <strong>Trường B</strong> — compiler như giáo viên siêu giỏi đứng bên cạnh! 👨‍🏫</p>
+  </div>
+
+  <h2>🏗️ 3 Cơ Chế Bảo Đảm</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">👑</div>
+      <div class="card-title">Ownership (Quyền sở hữu)</div>
+      <div class="card-desc">Mỗi thứ chỉ có 1 chủ! Không có "hai người cùng sở hữu và sửa một thứ" → không có conflict! 🔒</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏷️</div>
+      <div class="card-title">Type System (Hệ thống kiểu)</div>
+      <div class="card-desc">Kiểu dữ liệu mang thông tin trạng thái! Pin&lt;Output&gt; khác Pin&lt;Input&gt; — compiler biết được! 🎯</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚪</div>
+      <div class="card-title">Access Control (Kiểm soát truy cập)</div>
+      <div class="card-desc">Ai được làm gì — pub, private, unsafe. Không ai truy cập trái phép! 🛡️</div>
+    </div>
+  </div>
+
+  <h2>💡 Ví Dụ Thực Tế</h2>
+  <div class="fun-box">
+    <h3>Bật đèn LED — 3 bước:</h3>
+    <ol>
+      <li>🔌 Lấy quyền điều khiển GPIO peripheral: <code>Peripherals::take()</code></li>
+      <li>🔧 Cấu hình pin thành Output: <code>pin.into_push_pull_output()</code></li>
+      <li>💡 Bật đèn: <code>output_pin.set_high()</code></li>
+    </ol>
+    <p>Nếu bạn bỏ qua bước 2 và gọi <code>set_high()</code> trên pin Input → <span class="hi">Compiler báo lỗi ngay!</span></p>
+    <p>Kiểu <code>Pin&lt;Input&gt;</code> không có method <code>set_high()</code> — không cần chạy code để biết sai! ✅</p>
+  </div>
+
+  <h2>📊 So Sánh: Rust vs Ngôn Ngữ Khác</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Loại lỗi</th>
+        <th>C/C++</th>
+        <th>Python</th>
+        <th>Rust</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Sai kiểu dữ liệu</td>
+        <td>⚠️ Compile / Runtime</td>
+        <td>❌ Runtime</td>
+        <td>✅ Compile time</td>
+      </tr>
+      <tr>
+        <td>Dùng sai trạng thái</td>
+        <td>❌ Runtime</td>
+        <td>❌ Runtime</td>
+        <td>✅ Compile time</td>
+      </tr>
+      <tr>
+        <td>Data race</td>
+        <td>❌ Runtime</td>
+        <td>❌ Runtime</td>
+        <td>✅ Compile time</td>
+      </tr>
+      <tr>
+        <td>NULL pointer</td>
+        <td>❌ Runtime crash</td>
+        <td>❌ Runtime</td>
+        <td>✅ Không tồn tại!</td>
+      </tr>
+      <tr>
+        <td>Memory leak</td>
+        <td>❌ Runtime</td>
+        <td>✅ GC lo</td>
+        <td>✅ Ownership lo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fun-box">
+    <p>🏆 <strong>Kết quả:</strong> Code Rust embedded thường ít bug hơn rất nhiều so với C, dù cả hai đều chạy ở cùng tốc độ! An toàn không phải đánh đổi hiệu năng! 🚀</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="../design-patterns/index.html" class="nav-btn">← Design Patterns</a>
+  <a href="typestate-programming.html" class="nav-btn next">Typestate →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

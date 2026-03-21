@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚖️ Nhanh Hay Nhỏ Gọn? 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>⚖️ Nhanh Hay Nhỏ Gọn?</h1>
+  <p class="subtitle">Tối ưu hóa robot: chọn tốc độ hay tiết kiệm chỗ?</p>
+  <span class="breadcrumb">🏠 Trang chủ › Chủ đề khác › Tốc độ vs Kích thước</span>
+</header>
+<main>
+
+  <h2>⚡ Bài Toán Robot Nhỏ</h2>
+  <div class="fun-box">
+    <p>🤖 Robot STM32F303 của bạn chỉ có <span class="hi">256KB Flash</span>! Nếu code quá lớn, nó không vừa — robot không chạy được!</p>
+    <p>Nhưng đôi khi bạn lại cần robot <strong>chạy nhanh nhất có thể</strong> — ví dụ như xử lý tín hiệu thời gian thực!</p>
+    <p>Vậy phải chọn: <strong>nhanh</strong> hay <strong>nhỏ gọn</strong>? 🤔</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Balo du lịch</div>
+    <p>Bạn đi du lịch, balo chỉ 15kg:</p>
+    <ul>
+      <li>🏎️ <strong>Tối ưu tốc độ</strong>: như xe đua — mạnh nhất nhưng tốn nhiên liệu, nặng!</li>
+      <li>🎒 <strong>Tối ưu kích thước</strong>: như balo gọn nhẹ — đi xa được hơn, nhẹ hơn!</li>
+      <li>📝 <strong>Không tối ưu</strong>: như bản nháp chưa gọn — to nhưng dễ đọc!</li>
+    </ul>
+  </div>
+
+  <h2>🎚️ Các Mức Tối Ưu Hóa</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Chế độ</th>
+        <th>Cờ opt-level</th>
+        <th>Tốc độ</th>
+        <th>Kích thước</th>
+        <th>Dùng khi nào?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🔍 Dev (debug)</td>
+        <td><code>opt-level = 0</code></td>
+        <td>🐢 Chậm</td>
+        <td>📦 To</td>
+        <td>Đang phát triển, debug</td>
+      </tr>
+      <tr>
+        <td>⚖️ Balanced 1</td>
+        <td><code>opt-level = 1</code></td>
+        <td>🚶 Vừa</td>
+        <td>📫 Vừa</td>
+        <td>Bắt đầu test performance</td>
+      </tr>
+      <tr>
+        <td>🏃 Speed</td>
+        <td><code>opt-level = 2</code> hoặc <code>3</code></td>
+        <td>🏎️ Rất nhanh</td>
+        <td>📦 Lớn hơn</td>
+        <td>Cần tốc độ tối đa</td>
+      </tr>
+      <tr>
+        <td>🎒 Small</td>
+        <td><code>opt-level = "s"</code></td>
+        <td>🚗 Nhanh</td>
+        <td>📨 Nhỏ</td>
+        <td>Flash ít, cần code nhỏ</td>
+      </tr>
+      <tr>
+        <td>🌱 Tiny</td>
+        <td><code>opt-level = "z"</code></td>
+        <td>🚗 Nhanh</td>
+        <td>💌 Nhỏ nhất</td>
+        <td>Flash rất ít, tiết kiệm tối đa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>⚙️ Cách Cài Đặt Trong Cargo.toml</h2>
+  <div class="fun-box">
+    <p>Thêm vào <code>Cargo.toml</code>:</p>
+    <ul>
+      <li>
+        <strong>Profile dev (debug):</strong><br>
+        <code>[profile.dev]</code><br>
+        <code>opt-level = 0 # Dễ debug</code>
+      </li>
+      <li>
+        <strong>Profile release (sản phẩm):</strong><br>
+        <code>[profile.release]</code><br>
+        <code>opt-level = "z" # Nhỏ nhất</code><br>
+        <code>lto = true # Link-time optimization</code><br>
+        <code>codegen-units = 1 # Tối ưu toàn bộ</code>
+      </li>
+    </ul>
+  </div>
+
+  <h2>🧙‍♂️ Mẹo Hay Nhất: Tối Ưu Chọn Lọc!</h2>
+  <div class="fun-box">
+    <p>🎯 <strong>Mẹo chuyên nghiệp:</strong> Tối ưu dependencies (thư viện ngoài) ở opt="z", nhưng <strong>giữ nguyên code của bạn</strong> ở opt=0 để debug dễ!</p>
+    <p>Trong <code>Cargo.toml</code>:</p>
+    <ul>
+      <li><code>[profile.dev.package."*"]</code></li>
+      <li><code>opt-level = "z" # Tối ưu tất cả dependencies</code></li>
+    </ul>
+    <p>Kết quả: code nhỏ hơn nhiều, debug vẫn dễ! 🏆</p>
+  </div>
+
+  <h2>📐 LTO — Tối Ưu Toàn Bộ Cùng Lúc</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Chỉnh sửa phim</div>
+    <p>Khi làm phim, bạn có thể chỉnh sửa từng cảnh riêng lẻ (nhanh hơn), hoặc xem toàn bộ phim và chỉnh sửa cùng lúc (kết quả tốt hơn nhưng lâu hơn)!</p>
+    <p><strong>LTO (Link-Time Optimization)</strong> = nhìn toàn bộ code cùng lúc để tìm cách tối ưu không thể tìm thấy nếu nhìn từng file riêng lẻ! 🎬</p>
+  </div>
+
+  <div class="fun-box">
+    <p>💡 <strong>Tiết kiệm 6KB Flash</strong> chỉ bằng 1 dòng trong Cargo.toml?</p>
+    <p>Thêm <code>lto = true</code> vào <code>[profile.release]</code> — xong! Compiler sẽ tối ưu xuyên suốt toàn bộ code, loại bỏ tất cả hàm không được dùng! 🗑️✨</p>
+    <p>Đây là loại "phép thuật" compiler hiếm gặp nhưng rất hiệu quả! 🧙‍♂️</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Quy trình khuyến nghị:</strong><br>
+    1. 🔍 Dev: không tối ưu, debug thoải mái<br>
+    2. 🧪 Test: opt=1, kiểm tra performance cơ bản<br>
+    3. 📦 Release: opt="z" + lto=true + codegen-units=1<br>
+    4. 📏 Đo kích thước: <code>cargo size --release</code> để xem đã vừa Flash chưa!
+  </div>
+
+  <div class="fun-box">
+    <p>🎊 <strong>Chúc mừng!</strong> Bạn đã đi qua toàn bộ Rust Embedded Book dành cho bé!</p>
+    <p>Bạn đã học được:</p>
+    <ul>
+      <li>🤖 Embedded system và phần cứng robot</li>
+      <li>🏕️ no_std — robot tự lập</li>
+      <li>🧰 Công cụ lập trình embedded</li>
+      <li>🚀 Viết và chạy chương trình đầu tiên</li>
+      <li>🌍 Tính di động với embedded-hal</li>
+      <li>🤹 Concurrency và data race</li>
+      <li>📦 Collections cho robot nhỏ</li>
+      <li>🎨 Design Patterns thông minh</li>
+      <li>🛡️ Static guarantees của Rust</li>
+      <li>🤝 Kết hợp Rust và C</li>
+      <li>⚖️ Tối ưu tốc độ và kích thước</li>
+    </ul>
+    <p>🦀 Bạn đã sẵn sàng để lập trình robot thật sự! Chúc mừng lập trình viên Rust Embedded! 🎉🎊🥳</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="../interoperability/rust-with-c.html" class="nav-btn">← Rust trong C</a>
+  <a href="../../index.html" class="nav-btn next">Trang chủ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

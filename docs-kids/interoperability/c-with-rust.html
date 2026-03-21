@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Dùng Thư Viện C Trong Rust 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>📚 Dùng Thư Viện C Trong Rust</h1>
+  <p class="subtitle">Mượn sách C để đọc trong thế giới Rust</p>
+  <span class="breadcrumb">🏠 Trang chủ › Tương tác ngôn ngữ › C trong Rust</span>
+</header>
+<main>
+
+  <h2>📖 Câu Chuyện Thực Tế</h2>
+  <div class="fun-box">
+    <p>🌡️ Bạn có <span class="hi">thư viện cảm biến nhiệt độ</span> được viết bằng C — đã hoạt động tốt nhiều năm nay. Bạn muốn dùng nó trong project Rust mới của mình.</p>
+    <p>Phải làm gì? Viết lại bằng Rust từ đầu? Không cần! Hãy <strong>mượn sách C để đọc trong thế giới Rust</strong>! 📖🦀</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Thuê phiên dịch viên</div>
+    <p>Bạn có "sách hướng dẫn cảm biến" viết bằng tiếng C. Bạn muốn đọc nó trong "thư viện tiếng Rust".</p>
+    <p>Giải pháp: Thuê <strong>phiên dịch viên bindgen</strong> để dịch "sách hướng dẫn tiếng C" thành "tiếng Rust" tự động! 📖→🔄→📘</p>
+  </div>
+
+  <h2>🛠️ Hai Bước Chính</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Bước 1: Khai báo giao diện</div>
+      <div class="card-desc">Nói với Rust: "Đây là các hàm và kiểu dữ liệu có trong thư viện C" 📝</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <div class="card-title">Bước 2: Link thư viện</div>
+      <div class="card-desc">Biên dịch code C và nối nó với project Rust — như ghép hai mảnh ghép hình! 🧩</div>
+    </div>
+  </div>
+
+  <h2>🏷️ #[repr(C)] — Nói Tiếng C</h2>
+  <div class="fun-box">
+    <p>Rust mặc định sắp xếp dữ liệu theo cách của mình. Nhưng khi dùng C, cần đảm bảo cùng cách sắp xếp:</p>
+    <p><code>#[repr(C)]</code> → nói với Rust: "Sắp xếp struct này <strong>theo kiểu C</strong>"</p>
+    <p>Ví dụ:</p>
+    <ul>
+      <li>C: <code>struct SensorData { int temp; float humidity; }</code></li>
+      <li>Rust: <code>#[repr(C)] struct SensorData { temp: i32, humidity: f32 }</code></li>
+    </ul>
+    <p>Hai struct này có cùng layout trong bộ nhớ → có thể truyền qua lại giữa C và Rust! ✅</p>
+  </div>
+
+  <h2>📢 extern "C" — Hàm Từ Thư Viện C</h2>
+  <div class="fun-box">
+    <p>Khai báo hàm C trong Rust:</p>
+    <ul>
+      <li><code>extern "C" { ... }</code> — block khai báo các hàm nước ngoài</li>
+      <li><code>fn read_temperature() -> f32;</code> — hàm trả về float</li>
+      <li><code>fn init_sensor(config: *const Config) -> i32;</code> — hàm nhận con trỏ</li>
+    </ul>
+    <p>Khi gọi các hàm này, phải dùng <code>unsafe { ... }</code> — Rust không thể kiểm tra an toàn của code C! ⚠️</p>
+  </div>
+
+  <h2>🤖 bindgen — Máy Dịch Tự Động!</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Máy dịch tự động</div>
+    <p>Thay vì tự tay dịch từng hàm, từng struct từ C sang Rust — hãy để <strong>bindgen</strong> làm! Nó đọc file header C (.h) và tự động tạo ra code Rust tương ứng! 🤖</p>
+    <p><code>bindgen sensor.h -o src/bindings.rs</code></p>
+    <p>Xong! File <code>bindings.rs</code> có đủ mọi khai báo cần thiết! 🎉</p>
+  </div>
+
+  <h2>🔨 build.rs — Chuẩn Bị Trước Khi Build</h2>
+  <div class="fun-box">
+    <p>File <code>build.rs</code> là "script chuẩn bị" — chạy trước khi Cargo build project:</p>
+    <ul>
+      <li>🔨 <strong>Biên dịch code C</strong> thành object file</li>
+      <li>🔗 <strong>Thêm vào link flags</strong> để Rust tìm thấy thư viện C</li>
+      <li>🤖 <strong>Chạy bindgen</strong> để tạo bindings tự động</li>
+    </ul>
+    <p>Cargo tự động chạy build.rs mỗi khi bạn build — tiện lắm! ⚡</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Công cụ hay:</strong> Crate <code>cc</code> giúp biên dịch C từ build.rs rất dễ dàng:<br>
+    <code>cc::Build::new().file("src/sensor.c").compile("sensor");</code><br>
+    Chỉ một dòng là xong! 🎯
+  </div>
+
+  <div class="warn-box">
+    ⚠️ <strong>unsafe là cần thiết:</strong> Mọi lần gọi hàm C đều cần <code>unsafe { }</code>. Đây là Rust nói: "Tôi không thể kiểm tra code C — bạn phải tự đảm bảo an toàn!" Hãy kiểm tra kỹ tài liệu thư viện C trước khi dùng! 📖
+  </div>
+
+<div class="nav-buttons">
+  <a href="index.html" class="nav-btn">← Tổng quan</a>
+  <a href="rust-with-c.html" class="nav-btn next">Dùng Rust trong C →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

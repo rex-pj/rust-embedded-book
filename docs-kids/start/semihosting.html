@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📡 Semihosting — Robot Gửi Tin Nhắn! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>📡 Semihosting — Robot Gửi Tin Nhắn!</h1>
+  <p class="subtitle">Cách robot nói chuyện với máy tính của bạn</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › Semihosting</span>
+</header>
+<main>
+
+  <h2>📨 Semihosting là gì?</h2>
+  <div class="fun-box">
+    <p>🤖 Robot của bạn đang làm việc... nhưng làm sao bạn biết nó đang làm gì? Không có màn hình, không có bàn phím! Đây là lúc <span class="hi">Semihosting</span> xuất hiện!</p>
+    <p>Semihosting cho phép robot <strong>gửi tin nhắn về máy tính qua dây debug</strong> — giống như điện báo ngày xưa! 📮</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Điện báo Morse</div>
+    <p>Ngày xưa, người ta dùng điện báo để gửi tin nhắn xa xôi: "tít tè tít tè" — robot bây giờ cũng gửi tín hiệu qua dây debug về máy tính, rồi máy tính hiển thị cho bạn đọc! 📡</p>
+  </div>
+
+  <h2>✅ Ưu điểm của Semihosting</h2>
+  <ul>
+    <li>🔌 <strong>Không cần thêm dây:</strong> Dùng luôn dây ST-LINK/debug đang có</li>
+    <li>🚀 <strong>Dễ dùng:</strong> Chỉ cần <code>hprintln!("Xin chào!")</code> — giống <code>println!</code>!</li>
+    <li>🛠️ <strong>Hoàn hảo cho debug:</strong> In ra giá trị biến, trạng thái robot...</li>
+    <li>🎮 <strong>Hoạt động trên QEMU:</strong> Không cần robot thật để dùng tính năng này</li>
+  </ul>
+
+  <h2>⚠️ Nhược điểm cần biết</h2>
+  <div class="warn-box">
+    ⚠️ <strong>Semihosting rất chậm!</strong> Mỗi lần gửi tin nhắn, robot phải "dừng lại, gửi, chờ xác nhận, rồi mới tiếp tục". Điều này tốn hàng chục đến hàng trăm microsecond cho mỗi ký tự! 🐢
+  </div>
+  <ul>
+    <li>🐌 <strong>Chậm:</strong> Mỗi tin nhắn mất vài millisecond</li>
+    <li>🔗 <strong>Cần debugger:</strong> Nếu không có debugger kết nối, robot bị đóng băng!</li>
+    <li>🚫 <strong>Không dùng trong sản phẩm thật:</strong> Chỉ dành cho debug thôi!</li>
+  </ul>
+
+  <h2>💻 Cách dùng Semihosting</h2>
+  <div class="fun-box">
+    <h3>Thêm vào Cargo.toml:</h3>
+    <p><code>[dependencies]</code><br>
+    <code>cortex-m-semihosting = "0.5.0"</code></p>
+
+    <h3>Trong code:</h3>
+    <ul>
+      <li>In một dòng: <code>hprintln!("Robot đang chạy!")</code></li>
+      <li>In nhiều giá trị: <code>hprintln!("Nhiệt độ: {}°C", temp)</code></li>
+      <li>Thoát (chỉ QEMU!): <code>debug::exit(debug::EXIT_SUCCESS)</code></li>
+    </ul>
+  </div>
+
+  <h2>🎮 QEMU hỗ trợ Semihosting!</h2>
+  <div class="fun-box">
+    <p>🌟 Khi chạy trên QEMU, tất cả tin nhắn semihosting sẽ hiện ra <strong>ngay trên terminal của bạn</strong>! Cứ như robot đang nói chuyện trực tiếp với bạn vậy! 😄</p>
+    <p>Đây là lý do QEMU rất hữu ích — bạn có thể debug dễ dàng ngay trên máy tính!</p>
+  </div>
+
+  <div class="warn-box">
+    🛑 <strong>ĐỪNG dùng <code>debug::exit()</code> trên robot thật!</strong> Lệnh này có thể làm robot bị kẹt hoàn toàn, không làm gì được nữa! Chỉ dùng với QEMU để kết thúc chương trình một cách sạch sẽ.
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Khi nào dùng Semihosting?</strong><br>
+    ✅ Trong lúc debug và phát triển<br>
+    ✅ Khi cần in thông tin kiểm tra<br>
+    ✅ Khi có debugger kết nối sẵn<br>
+    ❌ Không dùng trong code sản phẩm cuối cùng
+  </div>
+
+<div class="nav-buttons">
+  <a href="hardware.html" class="nav-btn">← Phần cứng thực</a>
+  <a href="panicking.html" class="nav-btn next">Robot hoảng loạn →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

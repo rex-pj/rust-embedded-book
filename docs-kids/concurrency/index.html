@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤹 Tung Hứng — Làm Nhiều Việc Cùng Lúc! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🤹 Tung Hứng — Làm Nhiều Việc Cùng Lúc!</h1>
+  <p class="subtitle">Robot vừa đọc cảm biến, vừa nhấp nháy đèn, vừa gửi dữ liệu...</p>
+  <span class="breadcrumb">🏠 Trang chủ › Chủ đề nâng cao › Đồng thời</span>
+</header>
+<main>
+
+  <h2>🤹 Concurrency là gì?</h2>
+  <div class="fun-box">
+    <p>🎪 Robot thực tế phải làm rất nhiều việc:</p>
+    <ul>
+      <li>🌡️ Đọc cảm biến mỗi giây</li>
+      <li>💡 Nhấp nháy đèn LED</li>
+      <li>📡 Gửi dữ liệu qua UART</li>
+      <li>🔘 Đọc trạng thái nút bấm</li>
+      <li>⏱️ Đếm thời gian chính xác</li>
+    </ul>
+    <p><span class="hi">Concurrency</span> là cách robot làm "gần như cùng lúc" — thực ra là chuyển qua chuyển lại rất nhanh! Giống như người biểu diễn <strong>tung hứng nhiều bóng</strong>! 🎪</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Người tung hứng</div>
+    <p>Người tung hứng giỏi có thể "juggle" 5-7 quả bóng cùng lúc! Thực ra mỗi tay chỉ cầm 1 quả, nhưng chuyển đổi nhanh đến mức trông như làm tất cả cùng lúc. Robot cũng vậy! 🎯</p>
+  </div>
+
+  <h2>⚠️ Vấn Đề Nguy Hiểm: Data Race!</h2>
+  <div class="warn-box">
+    ⚠️ <strong>Chuyện gì xảy ra nếu interrupt gõ vai robot giữa chừng?</strong>
+  </div>
+  <div class="fun-box">
+    <p>Hãy tưởng tượng robot đang cộng hai số lớn (ví dụ 16-bit), nhưng chip chỉ tính 8-bit mỗi lần:</p>
+    <ol>
+      <li>📝 Robot đang ghi số 256 (= 0x0100) vào bộ nhớ</li>
+      <li>✍️ Ghi byte cao: 0x01 vào ô đầu — xong!</li>
+      <li>⚡ <strong>INTERRUPT XẢY RA!</strong> Interrupt handler đọc biến này...</li>
+      <li>📖 Interrupt đọc được: 0x0100 nhưng byte thấp là 0x00 cũ! → Đọc nhầm giá trị!</li>
+      <li>✍️ Robot tiếp tục ghi byte thấp: 0x00...</li>
+    </ol>
+    <p>🚨 <strong>Data Race!</strong> Dữ liệu bị đọc sai vì interrupt cắt ngang giữa chừng! Rất nguy hiểm! 😱</p>
+  </div>
+
+  <h2>🛡️ Giải Pháp Rust</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <div class="card-title">Critical Section</div>
+      <div class="card-desc">Vùng "không làm phiền" — tắt tất cả interrupt trong khoảng thời gian ngắn. Dữ liệu an toàn! 🔒</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <div class="card-title">Mutex</div>
+      <div class="card-desc">Ổ khóa — chỉ một người được dùng biến tại một thời điểm. Người khác phải chờ! 🗝️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚛️</div>
+      <div class="card-title">AtomicUsize</div>
+      <div class="card-desc">Phép tính nguyên tử — thực hiện trong một bước duy nhất, không thể bị cắt ngang! 💎</div>
+    </div>
+  </div>
+
+  <h2>🚫 Critical Section — Treo Biển "Không Làm Phiền"</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Biển "Không làm phiền" trong khách sạn</div>
+    <p>Khi bạn đang ngủ, treo biển "Do Not Disturb" — không ai được gõ cửa! Sau khi xong việc, bạn bỏ biển xuống, mọi người có thể vào lại.</p>
+    <p>Critical section cũng vậy: <code>cortex_m::interrupt::free(|_| {</code> ... <code>})</code> — trong đó không có interrupt nào được "gõ cửa" robot! 🏨</p>
+  </div>
+
+  <div class="fun-box">
+    <p>🦀 <strong>Rust là ngôn ngữ DUY NHẤT đảm bảo "no data race" tại compile time!</strong></p>
+    <p>Các ngôn ngữ khác chỉ phát hiện data race khi chạy (runtime) — đôi khi lỗi chỉ xuất hiện ở sản phẩm của khách hàng! 😱</p>
+    <p>Rust phát hiện ngay khi bạn đang gõ code — compiler sẽ báo lỗi trước khi bạn kịp chạy! ✅</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Quy tắc vàng:</strong> Critical section càng ngắn càng tốt! Tắt interrupt lâu → robot có thể bỏ lỡ các tín hiệu quan trọng. Chỉ tắt đủ thời gian để làm việc cần làm, rồi bật lại ngay! ⚡
+  </div>
+
+<div class="nav-buttons">
+  <a href="../portability/index.html" class="nav-btn">← Tính di động</a>
+  <a href="../collections/index.html" class="nav-btn next">Hộp đựng đồ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

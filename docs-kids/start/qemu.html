@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖥️ Robot Ảo — QEMU 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🖥️ Robot Ảo — QEMU</h1>
+  <p class="subtitle">Luyện tập mà không cần robot thật!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › QEMU</span>
+</header>
+<main>
+
+  <h2>🎮 QEMU là gì?</h2>
+  <div class="fun-box">
+    <p>🕹️ Bạn có biết trình giả lập game (emulator) không? Nó cho bạn chơi game Super Mario trên máy tính dù không có máy Nintendo! <span class="hi">QEMU cũng như vậy</span> — nhưng giả lập cả một con chip ARM thật sự!</p>
+    <p>Bạn có thể <strong>viết và chạy code robot ngay trên máy tính</strong>, không cần mua board mạch nào cả! 🎉</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von</div>
+    <p>QEMU giống như <strong>phòng luyện tập ảo</strong>. Phi công tập lái máy bay trong buồng lái giả lập trước khi lái máy bay thật. Bạn cũng tập lập trình robot trên QEMU trước khi dùng robot thật! ✈️</p>
+  </div>
+
+  <h2>📁 Tạo Project Đầu Tiên</h2>
+  <div class="fun-box">
+    <h3>Bước 1: Tạo từ template</h3>
+    <p>Dùng <strong>cargo-generate</strong> — như dùng khuôn bánh 🍪:</p>
+    <p><code>cargo generate --git https://github.com/rust-embedded/cortex-m-quickstart</code></p>
+
+    <h3>Bước 2: Đặt tên project</h3>
+    <p>Nhập tên của bạn, ví dụ: <code>hello-robot</code></p>
+
+    <h3>Bước 3: Vào thư mục và chạy!</h3>
+    <p><code>cd hello-robot</code><br>
+    <code>cargo run --target thumbv7em-none-eabihf</code></p>
+  </div>
+
+  <h2>🗂️ Cấu trúc project</h2>
+  <div class="fun-box">
+    <p>Project robot có những file đặc biệt:</p>
+    <ul>
+      <li>📄 <strong>src/main.rs</strong> — Code chính của bạn viết ở đây</li>
+      <li>📄 <strong>memory.x</strong> — "Bản đồ bộ nhớ robot" (quan trọng!)</li>
+      <li>📄 <strong>Cargo.toml</strong> — Danh sách công cụ cần dùng</li>
+      <li>📄 <strong>.cargo/config.toml</strong> — Cài đặt cho Cargo và QEMU</li>
+      <li>📄 <strong>build.rs</strong> — Script chạy trước khi build</li>
+    </ul>
+  </div>
+
+  <h2>🗺️ memory.x — Bản Đồ Bộ Nhớ Robot</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Bản đồ ngôi nhà robot</div>
+    <p>Giống như bản đồ ngôi nhà cho biết "phòng ngủ ở đây, nhà bếp ở đó", <strong>memory.x</strong> nói với robot: "Flash (sổ tay) bắt đầu từ địa chỉ X, RAM (bảng trắng) bắt đầu từ địa chỉ Y"!</p>
+  </div>
+  <div class="fun-box">
+    <p>File memory.x cho QEMU LM3S6965EVB trông như thế này:</p>
+    <ul>
+      <li>📔 <strong>Flash:</strong> Bắt đầu từ 0x00000000, dung lượng 256KB</li>
+      <li>🖊️ <strong>RAM:</strong> Bắt đầu từ 0x20000000, dung lượng 64KB</li>
+    </ul>
+  </div>
+
+  <h2>👋 Hello World đầu tiên!</h2>
+  <div class="fun-box">
+    <p>Chương trình đơn giản nhất — robot in "Hello, world!" ra màn hình:</p>
+    <ul>
+      <li>🔧 Dùng <code>cortex_m_semihosting::hprintln!</code> để in chữ</li>
+      <li>⏹️ Dùng <code>debug::exit()</code> để thoát khi chạy trên QEMU</li>
+      <li>🔄 Dùng <code>loop {}</code> để robot chạy mãi mãi trên phần cứng thật</li>
+    </ul>
+    <p>Khi chạy <code>cargo run</code>, bạn sẽ thấy dòng chữ "Hello, world!" hiện ra! 🎊</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Thú vị chưa?</strong> QEMU giả lập cả CPU ARM thật! Code chạy trên QEMU <strong>giống hệt</strong> như chạy trên robot thật — chỉ không có đèn LED nhấp nháy thôi! 😄
+  </div>
+
+  <div class="warn-box">
+    ⚠️ <strong>Nhớ nhé:</strong> <code>debug::exit()</code> CHỈ dùng với QEMU! Nếu bạn dùng trên robot thật, robot sẽ bị "đóng băng" không hoạt động được nữa. Sẽ học cách khác ở trang tiếp theo! 🛑
+  </div>
+
+<div class="nav-buttons">
+  <a href="index.html" class="nav-btn">← Bắt đầu</a>
+  <a href="hardware.html" class="nav-btn next">Robot thật →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rust Embedded Book — Tiếng Việt</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 32px 20px;
+  }
+
+  .logo {
+    font-size: 3.5em;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 1em;
+    color: #a0aec0;
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .cards {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 760px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 32px;
+    text-decoration: none;
+    color: #333;
+    width: 320px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    transition: transform 0.18s, box-shadow 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 56px rgba(0,0,0,0.45);
+  }
+
+  .card-icon { font-size: 3.5em; margin-bottom: 16px; }
+
+  .card-title {
+    font-size: 1.35em;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .card-badge {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78em;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .card-desc {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+
+  .card-btn {
+    display: inline-block;
+    border-radius: 50px;
+    padding: 11px 28px;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: white;
+    width: 100%;
+  }
+
+  /* Adult version */
+  .card-adult .card-title  { color: #1a365d; }
+  .card-adult .card-badge  { background: #ebf8ff; color: #2b6cb0; }
+  .card-adult .card-btn    { background: linear-gradient(135deg, #2b6cb0, #4299e1); }
+  .card-adult::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #2b6cb0, #4299e1);
+  }
+
+  /* Kids version */
+  .card-kids .card-title   { color: #c05621; }
+  .card-kids .card-badge   { background: #fffbeb; color: #c05621; }
+  .card-kids .card-btn     { background: linear-gradient(135deg, #ff6b35, #f7c948); }
+  .card-kids::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #ff6b35, #f7c948);
+  }
+
+  footer {
+    margin-top: 48px;
+    font-size: 0.8em;
+    color: #4a5568;
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    h1 { font-size: 1.5em; }
+    .card { width: 100%; max-width: 340px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="logo">🦀</div>
+  <h1>Rust Embedded Book</h1>
+  <p class="subtitle">Phiên bản Tiếng Việt — Chọn phiên bản phù hợp với bạn</p>
+
+  <div class="cards">
+
+    <a href="docs/index.html" class="card card-adult">
+      <div class="card-icon">📘</div>
+      <div class="card-title">Phiên bản đầy đủ</div>
+      <span class="card-badge">👩‍💻 Dành cho lập trình viên</span>
+      <p class="card-desc">
+        Nội dung kỹ thuật đầy đủ về lập trình hệ thống nhúng với Rust.
+        Bao gồm code, ví dụ thực tế, và giải thích chuyên sâu.
+      </p>
+      <span class="card-btn">Đọc ngay →</span>
+    </a>
+
+    <a href="docs-kids/index.html" class="card card-kids">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Phiên bản dành cho trẻ em</div>
+      <span class="card-badge">🧒 Dành cho bạn nhỏ 6–10 tuổi</span>
+      <p class="card-desc">
+        Học lập trình robot một cách vui vẻ! Giải thích bằng hình ảnh,
+        ví von dễ hiểu, và ngôn ngữ thân thiện với trẻ em.
+      </p>
+      <span class="card-btn">Khám phá ngay 🚀</span>
+    </a>
+
+  </div>
+
+  <footer>
+    Dựa trên <em>The Embedded Rust Book</em> — Bản dịch Tiếng Việt
+  </footer>
+
+</body>
+</html>

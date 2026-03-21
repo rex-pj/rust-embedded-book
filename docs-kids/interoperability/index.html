@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤝 Hai Ngôn Ngữ Hợp Tác — Interoperability 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🤝 Hai Ngôn Ngữ Hợp Tác — Interoperability</h1>
+  <p class="subtitle">Rust và C làm việc cùng nhau</p>
+  <span class="breadcrumb">🏠 Trang chủ › Tương tác ngôn ngữ</span>
+</header>
+<main>
+
+  <h2>🌏 Tại Sao Cần Kết Hợp?</h2>
+  <div class="fun-box">
+    <p>🕰️ Trong thế giới embedded, rất nhiều thư viện quan trọng được viết bằng C <strong>từ nhiều năm trước</strong> — driver cảm biến, giao thức truyền thông, RTOS...</p>
+    <p>Viết lại tất cả bằng Rust? Tốn nhiều năm và tiền! 😱</p>
+    <p>Giải pháp thông minh: <span class="hi">để Rust và C cùng làm việc!</span> Dùng thư viện C sẵn có, viết code mới bằng Rust! 🤝</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Phiên dịch viên</div>
+    <p>Bạn nói tiếng Việt, bạn của bạn nói tiếng Nhật. Hai bạn vẫn có thể làm việc cùng nhau nếu có <strong>phiên dịch viên</strong>!</p>
+    <p><strong>FFI (Foreign Function Interface)</strong> là phiên dịch viên giữa Rust và C — hai ngôn ngữ nói chuyện với nhau qua cầu nối này! 🌉</p>
+  </div>
+
+  <h2>🌉 FFI — Cầu Nối Giữa Hai Thế Giới</h2>
+  <div class="fun-box">
+    <p>FFI = Foreign Function Interface = "Giao diện hàm nước ngoài"</p>
+    <p>Cho phép:</p>
+    <ul>
+      <li>🦀→🔵 <strong>Rust gọi hàm C</strong> — dùng thư viện C trong project Rust</li>
+      <li>🔵→🦀 <strong>C gọi hàm Rust</strong> — nhúng code Rust vào project C</li>
+    </ul>
+    <p>Cả hai chiều đều hoạt động! 🔄</p>
+  </div>
+
+  <h2>📋 Bảng Kiểu Dữ Liệu Tương Đương</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Rust</th>
+        <th>C</th>
+        <th>Kích thước</th>
+        <th>Ghi chú</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>u8</code></td>
+        <td><code>uint8_t</code></td>
+        <td>1 byte</td>
+        <td>Số nguyên 0-255</td>
+      </tr>
+      <tr>
+        <td><code>i32</code></td>
+        <td><code>int32_t</code></td>
+        <td>4 bytes</td>
+        <td>Số nguyên có dấu</td>
+      </tr>
+      <tr>
+        <td><code>u32</code></td>
+        <td><code>uint32_t</code></td>
+        <td>4 bytes</td>
+        <td>Số nguyên không dấu</td>
+      </tr>
+      <tr>
+        <td><code>f32</code></td>
+        <td><code>float</code></td>
+        <td>4 bytes</td>
+        <td>Số thực 32-bit</td>
+      </tr>
+      <tr>
+        <td><code>*const u8</code></td>
+        <td><code>const char*</code></td>
+        <td>4/8 bytes</td>
+        <td>Con trỏ đến chuỗi</td>
+      </tr>
+      <tr>
+        <td><code>bool</code></td>
+        <td><code>bool / _Bool</code></td>
+        <td>1 byte</td>
+        <td>Đúng/Sai</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>🖥️ RTOS — Hệ Điều Hành Nhúng Nhỏ</h2>
+  <div class="fun-box">
+    <p>🏃 Khi robot cần làm nhiều việc thực sự song song, người ta dùng <strong>RTOS (Real-Time Operating System)</strong> — hệ điều hành siêu nhỏ dành cho robot!</p>
+    <p>FreeRTOS là RTOS phổ biến nhất — viết bằng C. Với FFI, bạn có thể dùng FreeRTOS từ code Rust! 🤖</p>
+    <ul>
+      <li>⏱️ Quản lý nhiều "task" chạy song song</li>
+      <li>📦 Hàng đợi tin nhắn giữa các task</li>
+      <li>🔐 Semaphore, Mutex cho đồng bộ</li>
+    </ul>
+  </div>
+
+  <div class="fun-box">
+    <p>🔑 <strong>ABI (Application Binary Interface)</strong> — "Ngôn ngữ nhị phân chung"!</p>
+    <p>Cả Rust và C đều hiểu ABI chung này. Khi Rust dùng <code>extern "C"</code>, nó nói: "Tôi sẽ nói chuyện theo kiểu C"!</p>
+    <ul>
+      <li>📐 Cách sắp xếp tham số trên stack</li>
+      <li>🔢 Cách trả về giá trị</li>
+      <li>📛 Cách đặt tên hàm trong binary</li>
+    </ul>
+    <p>Miễn là cả hai nói cùng "ABI", chúng hiểu nhau! 🌍</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Trang tiếp theo:</strong> Xem cách thực tế để dùng thư viện C trong Rust, và cách đưa code Rust vào project C! 🚀
+  </div>
+
+<div class="nav-buttons">
+  <a href="../static-guarantees/zero-cost-abstractions.html" class="nav-btn">← Zero-cost</a>
+  <a href="c-with-rust.html" class="nav-btn next">Dùng C trong Rust →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

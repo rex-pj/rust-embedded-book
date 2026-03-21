@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔑 Typestate — Ổ Khóa Thông Minh! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🔑 Typestate — Ổ Khóa Thông Minh!</h1>
+  <p class="subtitle">Mỗi trạng thái có chìa khóa riêng — không thể dùng sai!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bảo đảm tĩnh › Typestate</span>
+</header>
+<main>
+
+  <h2>🔐 Typestate là gì?</h2>
+  <div class="fun-box">
+    <p>🤔 Thông thường, trạng thái được lưu trong <strong>dữ liệu</strong>: <code>is_on: bool</code>. Nhưng Typestate làm điều đặc biệt: lưu trạng thái vào <span class="hi">kiểu dữ liệu</span> — trong tên của struct!</p>
+    <p>Thay vì: <code>led.is_on = true</code> (runtime)<br>
+    Dùng: <code>led: LED&lt;On&gt;</code> (compile time!) 🎯</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Bộ chìa khóa</div>
+    <p>Bạn có bộ chìa khóa — mỗi ổ khóa chỉ mở được đúng một loại chìa. Không thể dùng chìa phòng ngủ để mở cửa garage!</p>
+    <p>Typestate cũng vậy: kiểu <code>LED&lt;Off&gt;</code> chỉ có method <code>turn_on()</code>. Kiểu <code>LED&lt;On&gt;</code> chỉ có method <code>turn_off()</code>. Không thể gọi sai method! 🗝️</p>
+  </div>
+
+  <h2>💡 Ví Dụ Đơn Giản: Đèn</h2>
+  <div class="fun-box">
+    <p>Đèn có 2 trạng thái: TẮT và BẬT. Mỗi trạng thái là một kiểu khác nhau:</p>
+    <ul>
+      <li>🔴 <code>struct TatDen;</code> — Kiểu "trạng thái đèn tắt"</li>
+      <li>🟡 <code>struct BatDen;</code> — Kiểu "trạng thái đèn bật"</li>
+      <li>💡 <code>struct Den&lt;T&gt; { pin: GpioPin, _state: T }</code> — Đèn với trạng thái</li>
+    </ul>
+    <p>Methods:</p>
+    <ul>
+      <li>Chỉ <code>Den&lt;TatDen&gt;</code> có method <code>bat_den(self) -> Den&lt;BatDen&gt;</code></li>
+      <li>Chỉ <code>Den&lt;BatDen&gt;</code> có method <code>tat_den(self) -> Den&lt;TatDen&gt;</code></li>
+    </ul>
+    <p>Thử gọi <code>bat_den()</code> trên đèn đang bật → <span class="hi">Compiler báo lỗi ngay!</span> 🎊</p>
+  </div>
+
+  <h2>🤖 Ví Dụ Robot: Pin GPIO</h2>
+  <div class="fun-box">
+    <p>Pin GPIO thực tế trong STM32:</p>
+    <table class="kids-table">
+      <thead>
+        <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+          <th>Kiểu</th>
+          <th>Có thể làm gì</th>
+          <th>Không thể làm gì</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Pin&lt;Input&gt;</code></td>
+          <td>✅ Đọc trạng thái (is_high)</td>
+          <td>❌ Ghi giá trị (set_high)</td>
+        </tr>
+        <tr>
+          <td><code>Pin&lt;Output&gt;</code></td>
+          <td>✅ Ghi giá trị (set_high, set_low)</td>
+          <td>❌ Đọc nội bộ như Input</td>
+        </tr>
+        <tr>
+          <td><code>Pin&lt;Analog&gt;</code></td>
+          <td>✅ Kết nối với ADC</td>
+          <td>❌ Digital read/write</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Muốn chuyển từ Input sang Output? Phải gọi <code>into_output()</code> — hàm này "tiêu thụ" <code>Pin&lt;Input&gt;</code> cũ và trả về <code>Pin&lt;Output&gt;</code> mới! 🔄</p>
+  </div>
+
+  <h2>✨ Chuyển Đổi Trạng Thái</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 "Tiêu thụ" đối tượng cũ</div>
+    <p>Khi chuyển trạng thái, đối tượng cũ <strong>biến mất</strong> và đối tượng mới xuất hiện! Bạn không thể dùng đối tượng cũ nữa:</p>
+    <p><code>let input_pin: Pin&lt;Input&gt; = ...;</code><br>
+    <code>let output_pin: Pin&lt;Output&gt; = input_pin.into_output(); // input_pin biến mất!</code><br>
+    <code>// input_pin.is_high() → ❌ Lỗi compile! input_pin đã không còn!</code></p>
+    <p>Điều này <strong>đảm bảo</strong> không ai có thể giữ hai tham chiếu đến cùng pin ở hai trạng thái khác nhau! 🛡️</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Builder Pattern là Typestate đơn giản nhất!</strong><br>
+    <code>Builder::new()</code> → <code>Builder&lt;WithName&gt;</code> → <code>Builder&lt;WithName, WithSize&gt;</code> → <code>FinalObject</code><br>
+    Mỗi bước "thêm" trạng thái vào kiểu — compiler đảm bảo không bước nào bị bỏ qua! 🎯
+  </div>
+
+  <div class="fun-box">
+    <p>🤩 <strong>Điều kỳ diệu nhất:</strong> Tất cả các kiểu trạng thái này (<code>Input</code>, <code>Output</code>, <code>On</code>, <code>Off</code>...) có <strong>kích thước = 0 byte</strong> trong bộ nhớ!</p>
+    <p>Compiler thấy chúng và kiểm tra, nhưng robot không cần lưu chúng. An toàn + miễn phí! Tìm hiểu thêm ở trang tiếp theo! ✨</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="index.html" class="nav-btn">← Bảo đảm tĩnh</a>
+  <a href="zero-cost-abstractions.html" class="nav-btn next">Miễn phí! →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

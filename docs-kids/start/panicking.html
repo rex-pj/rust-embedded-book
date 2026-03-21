@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💥 Panicking — Khi Robot Hoảng Loạn! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>💥 Panicking — Khi Robot Hoảng Loạn!</h1>
+  <p class="subtitle">Chuyện gì xảy ra khi robot gặp sự cố không biết xử lý?</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › Panicking</span>
+</header>
+<main>
+
+  <h2>😱 Panic là gì?</h2>
+  <div class="fun-box">
+    <p>Đôi khi robot gặp tình huống <span class="hi">không biết phải làm gì</span>! Ví dụ:</p>
+    <ul>
+      <li>📋 Đọc phần tử số 10 trong danh sách chỉ có 5 phần tử</li>
+      <li>➗ Chia một số cho 0</li>
+      <li>❌ Unwrap một giá trị <code>None</code></li>
+      <li>⚡ Tràn số khi cộng (overflow)</li>
+    </ul>
+    <p>Trong những trường hợp đó, Rust sẽ gọi <strong>panic!</strong> — robot dừng lại và kêu cứu! 🚨</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von dễ hiểu</div>
+    <p>Giống như bạn đang làm bài toán, nhưng đề bài yêu cầu "lấy phần tử thứ 10 trong dãy số có 5 phần tử"... Bạn đọc lại đề, không hiểu gì, rồi giơ tay nói: <strong>"Em không hiểu, thầy ơi!"</strong></p>
+    <p>Robot cũng vậy — khi gặp điều vô lý, nó dừng lại và báo lỗi thay vì làm bừa! Đây thực ra là <strong>hành vi tốt</strong> — tránh làm sai còn hơn làm bừa! ✅</p>
+  </div>
+
+  <h2>🛡️ Tại sao Rust tự động kiểm tra?</h2>
+  <div class="fun-box">
+    <p>🦀 <strong>Rust tự động kiểm tra khi bạn truy cập mảng!</strong> Mỗi lần bạn đọc <code>arr[i]</code>, Rust ngầm kiểm tra xem <code>i</code> có hợp lệ không.</p>
+    <p>Ở ngôn ngữ C, đọc ngoài mảng gây ra "undefined behavior" — robot có thể làm bất cứ điều gì kỳ lạ! 😱 Rust ngăn điều đó xảy ra bằng cách panic có kiểm soát! ✅</p>
+  </div>
+
+  <h2>🎛️ Ba Cách Xử Lý Panic</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🛑</div>
+      <div class="card-title">panic-halt</div>
+      <div class="card-desc">Robot đứng im tại chỗ, không làm gì nữa. An toàn nhất! Dùng khi không cần biết lý do lỗi. 🧱</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💣</div>
+      <div class="card-title">panic-abort</div>
+      <div class="card-desc">Robot dừng hẳn, giải phóng tài nguyên. Code nhỏ nhất! Dùng cho sản phẩm cuối cùng. 💥</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📡</div>
+      <div class="card-title">panic-semihosting</div>
+      <div class="card-desc">Robot gửi thông báo lỗi về máy tính trước khi dừng. Tốt nhất để debug! 🔍</div>
+    </div>
+  </div>
+
+  <h2>🔧 Chọn Panic Handler Phù Hợp</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Tình huống</th>
+        <th>Nên dùng</th>
+        <th>Lý do</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🔍 Đang debug</td>
+        <td>panic-semihosting</td>
+        <td>Thấy được lý do lỗi!</td>
+      </tr>
+      <tr>
+        <td>📦 Sản phẩm cuối</td>
+        <td>panic-abort</td>
+        <td>Nhỏ gọn, không thừa code</td>
+      </tr>
+      <tr>
+        <td>🔒 Hệ thống an toàn</td>
+        <td>panic-halt</td>
+        <td>Dừng im, không gây thêm hại</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>💡 Cách dùng trong Cargo.toml</h2>
+  <div class="fun-box">
+    <p>Thêm vào Cargo.toml:</p>
+    <ul>
+      <li>Debug: <code>panic-semihosting = "0.6.0"</code></li>
+      <li>Release: <code>panic-abort</code> hoặc <code>panic-halt</code></li>
+    </ul>
+    <p>Và trong code thêm dòng <code>use panic_semihosting as _;</code> (hoặc tương tự)</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Mẹo chuyên nghiệp:</strong> Bạn có thể dùng <code>cfg</code> để tự động chọn panic handler dựa trên debug/release mode! Khi debug → semihosting, khi release → halt. Rất tiện! 🎯
+  </div>
+
+<div class="nav-buttons">
+  <a href="semihosting.html" class="nav-btn">← Semihosting</a>
+  <a href="exceptions.html" class="nav-btn next">Tín hiệu khẩn →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

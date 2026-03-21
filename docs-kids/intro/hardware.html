@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚙️ Thân thể của Robot — Phần cứng 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>⚙️ Thân thể của Robot — Phần cứng</h1>
+  <p class="subtitle">STM32F3DISCOVERY: con chip nhỏ làm được gì?</p>
+  <span class="breadcrumb">🏠 Trang chủ › Giới thiệu › Phần cứng</span>
+</header>
+<main>
+
+  <h2>🎁 Hộp đồ chơi robot STM32F3DISCOVERY</h2>
+  <div class="fun-box">
+    <p>🤖 Board <span class="hi">STM32F3DISCOVERY</span> giống như một "hộp đồ chơi robot" đầy đủ! Nó không lớn hơn chiếc thẻ ngân hàng, nhưng bên trong có cực kỳ nhiều bộ phận thú vị!</p>
+    <p>Đây là "robot thật" đầu tiên bạn sẽ lập trình — nhỏ bé nhưng rất mạnh mẽ! 💪</p>
+  </div>
+
+  <h2>🧠 Não Robot — Bộ Xử Lý ARM Cortex-M4F</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von</div>
+    <p>Bộ xử lý giống như <strong>não của robot</strong> — nó đọc "lệnh" và làm theo từng bước một. Tốc độ <span class="hi">72 MHz</span> có nghĩa là nó có thể thực hiện <strong>72 triệu lệnh mỗi giây</strong>! 🚀</p>
+  </div>
+  <ul>
+    <li>⚡ <strong>Tốc độ:</strong> 72 MHz = 72,000,000 lệnh/giây</li>
+    <li>🔢 <strong>FPU:</strong> Tính toán số thập phân siêu nhanh (ví dụ: 3.14 × 2.5)</li>
+    <li>💻 <strong>Kiến trúc:</strong> ARM Cortex-M4 — dùng trong rất nhiều thiết bị thực tế</li>
+  </ul>
+
+  <h2>💾 Bộ Nhớ của Robot</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Loại bộ nhớ</th>
+        <th>Dung lượng</th>
+        <th>Đặc điểm</th>
+        <th>Ví von</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>⚡ <strong>Flash</strong></td>
+        <td>256 KiB</td>
+        <td>Nhớ kể cả tắt điện</td>
+        <td>📔 Sổ tay vĩnh cửu</td>
+      </tr>
+      <tr>
+        <td>🟡 <strong>RAM</strong></td>
+        <td>48 KiB</td>
+        <td>Xóa khi tắt điện</td>
+        <td>🖊️ Bảng trắng làm việc</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="tip-box">
+    💡 <strong>Code của bạn được lưu trong Flash</strong> — giống như ghi vào sổ tay. Khi bật điện, robot đọc sổ tay đó và làm theo! RAM là nơi robot tính toán tạm thời trong lúc làm việc.
+  </div>
+
+  <h2>🎯 Các Cảm Biến Tuyệt Vời</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <div class="card-title">Gia tốc kế</div>
+      <div class="card-desc">Biết robot đang nghiêng hay không! Như cảm giác trong thang máy 🛗</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌀</div>
+      <div class="card-title">Con quay hồi chuyển</div>
+      <div class="card-desc">Biết robot đang quay theo hướng nào! Như con quay hồi chuyển trong điện thoại 📱</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧭</div>
+      <div class="card-title">Từ kế (La bàn)</div>
+      <div class="card-desc">Biết hướng Bắc Nam Đông Tây! Như la bàn cho người đi rừng 🏕️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <div class="card-title">8 đèn LED</div>
+      <div class="card-desc">Xếp thành hình tròn la bàn! Robot có thể nhấp nháy theo nhiều kiểu ✨</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <div class="card-title">Cổng USB</div>
+      <div class="card-desc">Kết nối với máy tính để nạp code và giao tiếp 💻</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📡</div>
+      <div class="card-title">ST-LINK/V2</div>
+      <div class="card-desc">Bộ debug tích hợp — nhìn xuyên thấu bên trong robot! 🔍</div>
+    </div>
+  </div>
+
+  <h2>⚠️ Điều Quan Trọng Cần Nhớ</h2>
+  <div class="warn-box">
+    ⚠️ <strong>Robot này chỉ dùng điện 3.3V!</strong> Nếu bạn vô tình cắm 5V vào các chân GPIO, chip sẽ bị hỏng ngay lập tức. Hãy kiểm tra kỹ trước khi kết nối bất kỳ thứ gì! 🛑
+  </div>
+
+  <div class="fun-box">
+    <p>🤩 <strong>Thú vị chưa?</strong> Con chip này nhỏ hơn đầu ngón tay nhưng có thể:</p>
+    <ul>
+      <li>🏃 Thực hiện 72 triệu lệnh mỗi giây</li>
+      <li>🌡️ Đọc nhiều cảm biến cùng lúc</li>
+      <li>💡 Điều khiển nhiều đèn LED</li>
+      <li>📡 Giao tiếp qua nhiều giao thức khác nhau</li>
+      <li>⏱️ Đo thời gian chính xác đến từng microsecond!</li>
+    </ul>
+    <p>Và tất cả điều này chỉ cần <strong>ít điện hơn một bóng đèn nhỏ</strong>! 🌱</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="index.html" class="nav-btn">← Giới thiệu</a>
+  <a href="no-std.html" class="nav-btn next">Sống tự lập →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../nav.js"></script>
+</body>
+</html>

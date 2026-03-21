@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧰 Hộp Công Cụ của Lập Trình Viên 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🧰 Hộp Công Cụ của Lập Trình Viên</h1>
+  <p class="subtitle">Những công cụ giúp bạn tạo ra robot!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Giới thiệu › Công cụ</span>
+</header>
+<main>
+
+  <h2>🛠️ Tại sao cần công cụ?</h2>
+  <div class="fun-box">
+    <p>Để xây nhà, thợ cần búa, cưa, máy khoan... Để lập trình robot, bạn cũng cần <span class="hi">hộp công cụ đặc biệt</span>! Mỗi công cụ có vai trò riêng, cùng nhau tạo nên robot hoàn chỉnh! 🏗️</p>
+  </div>
+
+  <h2>🔨 Các công cụ thiết yếu</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🏭</div>
+      <div class="card-title">Rust Compiler (rustc)</div>
+      <div class="card-desc">Nhà máy dịch "ngôn ngữ Rust" thành "ngôn ngữ robot hiểu được" (mã máy) ⚙️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Cargo</div>
+      <div class="card-desc">Người quản lý dự án — lo tất cả mọi việc: tải thư viện, build, chạy test 📋</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎮</div>
+      <div class="card-title">QEMU</div>
+      <div class="card-desc">Robot ảo! Luyện tập mà không cần robot thật. Như trình giả lập game 🕹️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">GDB / probe-rs</div>
+      <div class="card-desc">Kính lúp siêu mạnh — nhìn xem robot đang làm gì bên trong, từng bước một 🔬</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <div class="card-title">OpenOCD / ST-Link</div>
+      <div class="card-desc">Dây cáp đặc biệt nối máy tính với robot thật để nạp code và debug 🖥️↔️🤖</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍪</div>
+      <div class="card-title">cargo-generate</div>
+      <div class="card-desc">Mẫu dự án sẵn có — như khuôn bánh! Dùng khuôn để tạo project mới nhanh hơn 🎂</div>
+    </div>
+  </div>
+
+  <h2>🔄 Quy trình làm việc</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Từng bước tạo robot</div>
+    <ol>
+      <li>✍️ <strong>Viết code</strong> — Dùng text editor yêu thích (VS Code, nvim...)</li>
+      <li>🔨 <strong>Build (cargo build)</strong> — Cargo + rustc dịch code thành file binary</li>
+      <li>⚡ <strong>Chạy</strong> — Dùng QEMU (giả lập) hoặc flash lên robot thật</li>
+      <li>👀 <strong>Xem kết quả</strong> — Robot làm đúng chưa?</li>
+      <li>🐛 <strong>Debug</strong> — Dùng GDB/probe-rs nếu có vấn đề</li>
+      <li>🔁 <strong>Lặp lại</strong> — Cải thiện và thử lại!</li>
+    </ol>
+  </div>
+
+  <h2>💻 Cài đặt như thế nào?</h2>
+  <div class="fun-box">
+    <h3>Bước 1: Cài Rust</h3>
+    <p>Vào <strong>rustup.rs</strong> và làm theo hướng dẫn — tự động cài tất cả! ✨</p>
+
+    <h3>Bước 2: Thêm target cho ARM</h3>
+    <p>Robot dùng chip ARM, cần thêm "target" phù hợp:</p>
+    <p><code>rustup target add thumbv7em-none-eabihf</code></p>
+
+    <h3>Bước 3: Cài QEMU (robot ảo)</h3>
+    <p>Tải từ website QEMU hoặc qua package manager của hệ điều hành</p>
+
+    <h3>Bước 4: Cài cargo-generate</h3>
+    <p><code>cargo install cargo-generate</code></p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Mẹo cho người mới:</strong> Bắt đầu với <span class="hi">QEMU</span> trước! Bạn không cần mua robot thật ngay. QEMU giả lập robot hoàn toàn miễn phí trên máy tính của bạn! 🎉
+  </div>
+
+  <div class="warn-box">
+    ⚠️ <strong>Cross-compilation:</strong> Máy tính bạn dùng x86/x64, nhưng robot dùng ARM. Cargo + rustc sẽ tự động "dịch sang ngôn ngữ ARM" — gọi là cross-compilation! Phức tạp nhưng Cargo lo tất cả cho bạn. 🎯
+  </div>
+
+<div class="nav-buttons">
+  <a href="no-std.html" class="nav-btn">← no_std</a>
+  <a href="../start/index.html" class="nav-btn next">Bắt đầu viết code →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../nav.js"></script>
+</body>
+</html>

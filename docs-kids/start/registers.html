@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📦 Kho Báu Bộ Nhớ — Registers và Peripherals 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>📦 Kho Báu Bộ Nhớ — Registers và Peripherals</h1>
+  <p class="subtitle">Cách điều khiển đèn LED, nút bấm và các bộ phận của robot</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › Thanh ghi bộ nhớ</span>
+</header>
+<main>
+
+  <h2>🏘️ Memory-Mapped Registers là gì?</h2>
+  <div class="fun-box">
+    <p>🤖 Mỗi bộ phận của robot (đèn LED, nút bấm, cổng UART, bộ đếm thời gian...) đều có một <span class="hi">địa chỉ bộ nhớ riêng</span>!</p>
+    <p>Để bật đèn LED, bạn <strong>ghi số vào địa chỉ đó</strong>. Để đọc trạng thái nút bấm, bạn <strong>đọc số từ địa chỉ đó</strong>. Đơn giản vậy thôi! 🎛️</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Ngôi nhà có nhiều phòng</div>
+    <p>Hãy tưởng tượng robot là một ngôi nhà lớn. Mỗi phòng có <strong>số nhà riêng</strong>:</p>
+    <ul>
+      <li>🚪 Phòng 0x48000014 = nút bấm 1</li>
+      <li>💡 Phòng 0x48000018 = đèn LED</li>
+      <li>🌡️ Phòng 0x40021000 = cảm biến nhiệt độ</li>
+    </ul>
+    <p>Gõ cửa đúng phòng (địa chỉ đúng), bạn có thể điều khiển hoặc đọc thông tin từ bộ phận đó! 🏠</p>
+  </div>
+
+  <h2>🏗️ 4 Tầng Abstraction</h2>
+  <p>Giống như bạn có thể điều khiển TV bằng <em>remote</em> hoặc bằng <em>nút bấm trực tiếp</em>, có <strong>4 cách</strong> để điều khiển robot — từ dễ đến khó:</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🎁</div>
+      <div class="card-title">Board Crate (Tầng 1)</div>
+      <div class="card-desc">Gõ 1 lệnh là bật được đèn LED! Siêu dễ! Như remote có nút "bật tất cả đèn" 🟡</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-title">HAL Crate (Tầng 2)</div>
+      <div class="card-desc">Điều khiển từ xa thân thiện — dùng được cho nhiều loại robot! Như remote vạn năng 🎮</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📘</div>
+      <div class="card-title">PAC Crate (Tầng 3)</div>
+      <div class="card-desc">Sách hướng dẫn chi tiết từng nút bấm — bản đồ tất cả registers! Chính xác nhưng phức tạp hơn 📗</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Micro-arch (Tầng 4)</div>
+      <div class="card-desc">Cấp thấp nhất, gần phần cứng nhất. Dùng khi cần kiểm soát tuyệt đối! 🔧</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Khuyến nghị:</strong> Bắt đầu từ <span class="hi">Board Crate hoặc HAL</span>! Đừng bắt đầu từ tầng thấp nhất — giống như học lái xe, bắt đầu bằng xe số tự động trước, rồi mới học xe số sàn! 🚗
+  </div>
+
+  <h2>🔑 Ba Thao Tác Cơ Bản</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Thao tác</th>
+        <th>Làm gì?</th>
+        <th>Khi nào dùng?</th>
+        <th>Ví von</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>📖 <strong>read()</strong></td>
+        <td>Đọc trạng thái hiện tại</td>
+        <td>Muốn biết đèn đang bật hay tắt</td>
+        <td>Nhìn vào phòng xem có đèn không 👀</td>
+      </tr>
+      <tr>
+        <td>✍️ <strong>write()</strong></td>
+        <td>Ghi mới hoàn toàn</td>
+        <td>Muốn đặt giá trị mới từ đầu</td>
+        <td>Viết lại hết tờ giấy ✏️</td>
+      </tr>
+      <tr>
+        <td>🔧 <strong>modify()</strong></td>
+        <td>Chỉ thay đổi một phần</td>
+        <td>Muốn bật đèn nhưng giữ các cài đặt khác</td>
+        <td>Chỉ sửa một dòng trong tờ giấy 🖊️</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>⚡ PAC — Bản Đồ Chi Tiết của Robot</h2>
+  <div class="fun-box">
+    <p>🗺️ <strong>PAC (Peripheral Access Crate)</strong> được tạo tự động từ file SVD — một file XML mô tả TẤT CẢ các register của chip!</p>
+    <p>Giống như bản đồ chi tiết ngôi nhà robot — bạn biết chính xác mỗi "phòng" (register) có những "công tắc" (bits) gì và mỗi công tắc làm gì! 🗺️</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von hoàn chỉnh</div>
+    <p>Tưởng tượng bạn muốn bật đèn trong phòng:</p>
+    <ul>
+      <li>🎁 <strong>Board crate:</strong> <code>leds.ld4.on().unwrap()</code> — Bật đèn! Xong!</li>
+      <li>📱 <strong>HAL:</strong> <code>pin.set_high()</code> — Đặt chân GPIO lên HIGH</li>
+      <li>📘 <strong>PAC:</strong> <code>gpioe.bsrr.write(|w| w.bs8().set_bit())</code> — Ghi bit cụ thể</li>
+      <li>⚙️ <strong>Micro-arch:</strong> Ghi trực tiếp vào địa chỉ 0x48001018 </li>
+    </ul>
+    <p>Tất cả cùng kết quả: <strong>đèn bật sáng!</strong> ✨</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="exceptions.html" class="nav-btn">← Exceptions</a>
+  <a href="../../portability/index.html" class="nav-btn next">Code dùng nhiều robot →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

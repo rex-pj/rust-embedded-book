@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📦 Hộp Đựng Đồ — Collections 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>📦 Hộp Đựng Đồ — Collections</h1>
+  <p class="subtitle">Cách robot lưu trữ nhiều thứ cùng lúc</p>
+  <span class="breadcrumb">🏠 Trang chủ › Chủ đề nâng cao › Collections</span>
+</header>
+<main>
+
+  <h2>🎒 Collections là gì?</h2>
+  <div class="fun-box">
+    <p>📦 Collections là các cấu trúc dữ liệu giúp bạn <span class="hi">lưu nhiều thứ cùng lúc</span>:</p>
+    <ul>
+      <li>📋 <strong>Vec</strong> — Danh sách có thể mở rộng (thêm bao nhiêu cũng được)</li>
+      <li>🔤 <strong>String</strong> — Chuỗi ký tự có thể thay đổi</li>
+      <li>📚 <strong>HashMap</strong> — Từ điển: tra cứu bằng "từ khóa"</li>
+      <li>🗂️ <strong>VecDeque</strong> — Hàng đợi (như xếp hàng mua vé)</li>
+    </ul>
+  </div>
+
+  <h2>⚠️ Vấn Đề Với Robot Nhỏ</h2>
+  <div class="warn-box">
+    ⚠️ <strong>Robot nhỏ có bộ nhớ CỰC KỲ hạn chế!</strong><br>
+    STM32F303 chỉ có 40KB RAM — bằng khoảng 2-3 ảnh selfie trên điện thoại! 📱<br>
+    Không thể tự do thêm đồ vào hộp như trên máy tính thường! 🚫
+  </div>
+
+  <h2>🛍️ Hai Cách Giải Quyết</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🎒</div>
+      <div class="card-title">alloc (heap)</div>
+      <div class="card-desc">Hộp tự động mở rộng! Nhưng cần "người quản lý kho" (global allocator). Linh hoạt nhưng phức tạp hơn. 📦↔️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📫</div>
+      <div class="card-title">heapless</div>
+      <div class="card-desc">Hộp kích thước cố định! Phải biết trước tối đa bao nhiêu thứ. Đơn giản và an toàn hơn! 📏</div>
+    </div>
+  </div>
+
+  <h2>🎒 alloc — Túi Vải Co Giãn</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Túi vải co giãn</div>
+    <p>Túi vải co giãn có thể đựng ít hay nhiều tùy ý — nhưng cần có người quản lý kho để biết còn chỗ ở đâu! Nếu kho đầy → túi không mở rộng được → lỗi! 🎒</p>
+  </div>
+  <div class="fun-box">
+    <p>Để dùng <code>Vec</code>, <code>String</code>... trong no_std, bạn cần:</p>
+    <ol>
+      <li>📦 Thêm <code>extern crate alloc;</code> vào code</li>
+      <li>🏗️ Cài đặt <strong>global allocator</strong> — "người quản lý kho bộ nhớ"</li>
+      <li>⚠️ Xử lý trường hợp hết bộ nhớ (OOM = Out of Memory)</li>
+    </ol>
+    <p>Sau đó dùng bình thường: <code>let v: Vec&lt;u8&gt; = Vec::new();</code> 🎉</p>
+  </div>
+
+  <h2>📫 heapless — Hộp Cứng Có Nắp</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Hộp cứng có nắp</div>
+    <p>Hộp cứng có kích thước cố định — bạn biết trước chỉ đựng được tối đa 16 cái bánh. Không cần người quản lý kho, và không bao giờ "bất ngờ hết chỗ" giữa chừng! 📫</p>
+  </div>
+  <div class="fun-box">
+    <p>Dùng crate <strong>heapless</strong>:</p>
+    <ul>
+      <li><code>heapless::Vec&lt;u8, 16&gt;</code> — Vec tối đa 16 phần tử</li>
+      <li><code>heapless::String&lt;64&gt;</code> — String tối đa 64 ký tự</li>
+      <li><code>heapless::FnvIndexMap&lt;K, V, 8&gt;</code> — HashMap tối đa 8 entries</li>
+      <li><code>heapless::spsc::Queue&lt;u8, 32&gt;</code> — Hàng đợi tối đa 32 phần tử</li>
+    </ul>
+  </div>
+
+  <h2>📊 So Sánh</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Tiêu chí</th>
+        <th>alloc (heap)</th>
+        <th>heapless</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Kích thước</td>
+        <td>Tự động mở rộng</td>
+        <td>Cố định, biết trước</td>
+      </tr>
+      <tr>
+        <td>Độ phức tạp</td>
+        <td>Cần setup allocator</td>
+        <td>Dùng ngay, đơn giản</td>
+      </tr>
+      <tr>
+        <td>Hiệu năng</td>
+        <td>Có overhead</td>
+        <td>Tối ưu, ít overhead</td>
+      </tr>
+      <tr>
+        <td>An toàn OOM</td>
+        <td>Có thể panic</td>
+        <td>Biết trước giới hạn</td>
+      </tr>
+      <tr>
+        <td>Phù hợp với</td>
+        <td>Chip lớn hơn</td>
+        <td>Chip nhỏ, ít RAM</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    💡 <strong>Khuyến nghị cho người mới:</strong> Bắt đầu với <span class="hi">heapless</span>! Kích thước cố định giúp bạn biết chính xác robot dùng bao nhiêu bộ nhớ — không có bất ngờ! Sau này khi cần linh hoạt hơn, mới dùng alloc. 🎯
+  </div>
+
+<div class="nav-buttons">
+  <a href="../concurrency/index.html" class="nav-btn">← Tung hứng</a>
+  <a href="../design-patterns/index.html" class="nav-btn next">Mẫu thiết kế →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

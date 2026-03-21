@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Exceptions — Tín Hiệu Khẩn Cấp! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>⚡ Exceptions — Tín Hiệu Khẩn Cấp!</h1>
+  <p class="subtitle">Khi robot phải dừng lại và xử lý việc quan trọng</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › Exceptions</span>
+</header>
+<main>
+
+  <h2>🚨 Exception là gì?</h2>
+  <div class="fun-box">
+    <p>🤖 Hãy tưởng tượng robot đang làm việc bình thường... Đột nhiên có người <span class="hi">gõ vai</span> nó! Robot phải dừng công việc ngay lập tức, xử lý việc quan trọng hơn, rồi mới quay lại việc cũ.</p>
+    <p>Đó là <strong>Exception</strong> — hay còn gọi là <strong>Interrupt</strong> (ngắt)! 📢</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Đèn đỏ trên xa lộ</div>
+    <p>Exception giống như đèn đỏ trên xa lộ — dù xe đang chạy nhanh đến đâu, gặp đèn đỏ là phải dừng ngay! Xử lý xong (đèn xanh), xe chạy tiếp. Robot cũng vậy: đang làm gì thì làm, gặp exception là phải xử lý ngay! 🚗🔴</p>
+  </div>
+
+  <h2>⏰ SysTick — Đồng Hồ Hẹn Giờ</h2>
+  <div class="fun-box">
+    <p>🕐 <strong>SysTick</strong> là exception phổ biến nhất! Nó như đồng hồ hẹn giờ tích hợp trong chip — cứ sau mỗi khoảng thời gian định sẵn, nó "gõ vai" robot một cái!</p>
+    <p>Ví dụ thực tế: Lập trình SysTick để cứ mỗi giây gõ vai robot một lần → robot đếm thời gian! ⏱️</p>
+    <ul>
+      <li>⏰ Đếm thời gian chính xác</li>
+      <li>💡 Nhấp nháy đèn LED đều đặn</li>
+      <li>📊 Lấy mẫu dữ liệu cảm biến định kỳ</li>
+      <li>🎵 Tạo âm thanh đều đặn</li>
+    </ul>
+  </div>
+
+  <h2>🔥 HardFault — Sự Cố Nghiêm Trọng</h2>
+  <div class="warn-box">
+    ⚠️ <strong>HardFault</strong> xảy ra khi robot làm điều gì đó <strong>sai nghiêm trọng</strong>:
+    <ul>
+      <li>📍 Đọc/ghi địa chỉ bộ nhớ không tồn tại</li>
+      <li>💻 Thực thi lệnh không hợp lệ</li>
+      <li>🚫 Truy cập vùng nhớ bị cấm</li>
+    </ul>
+    Đây là "exception khẩn cấp nhất" — thường không thể tiếp tục! Robot cần dừng lại hoặc reset.
+  </div>
+
+  <h2>💻 Ví Dụ: Robot Đếm 1-2-3...</h2>
+  <div class="fun-box">
+    <p>Chương trình đơn giản dùng SysTick để đếm giây:</p>
+    <ol>
+      <li>🔧 <strong>Khởi tạo SysTick:</strong> Nói với chip "cứ 1 giây thì gõ vai tôi một lần"</li>
+      <li>💤 <strong>Loop chính:</strong> Robot ngủ yên (wfi = Wait For Interrupt)</li>
+      <li>⚡ <strong>Khi SysTick gõ vai:</strong> Tăng bộ đếm, in ra màn hình</li>
+      <li>🔁 <strong>Lặp lại:</strong> Robot đếm 1... 2... 3... mỗi giây!</li>
+    </ol>
+    <p>Kết quả: terminal hiển thị "SysTick! 1", "SysTick! 2", "SysTick! 3"... 🎊</p>
+  </div>
+
+  <h2>📝 Cách viết Exception Handler</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Dùng #[exception] macro</div>
+    <p>Rust dùng từ khóa đặc biệt <code>#[exception]</code> để nói "hàm này xử lý tín hiệu khẩn":</p>
+    <ul>
+      <li><code>#[exception]</code> — đánh dấu hàm là exception handler</li>
+      <li><code>fn SysTick()</code> — tên hàm = tên exception</li>
+      <li><code>fn HardFault(ef: &ExceptionFrame) -> !</code> — nhận thêm thông tin lỗi</li>
+    </ul>
+    <p>Compiler tự động "nối dây" hàm của bạn vào đúng vị trí trong chip! ⚡</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Static mut an toàn trong exception handler:</strong> Rust thường không cho phép dùng <code>static mut</code> vì không an toàn. Nhưng trong exception handler, cortex-m-rt cung cấp cách dùng an toàn qua từ khóa <code>static</code> đặc biệt! 🛡️
+  </div>
+
+<div class="nav-buttons">
+  <a href="panicking.html" class="nav-btn">← Panicking</a>
+  <a href="registers.html" class="nav-btn next">Thanh ghi bộ nhớ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

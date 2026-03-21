@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Bắt Đầu Hành Trình Lập Trình Robot! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🚀 Bắt Đầu Hành Trình Lập Trình Robot!</h1>
+  <p class="subtitle">Từng bước tạo chương trình đầu tiên</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu</span>
+</header>
+<main>
+
+  <h2>🔄 Vòng lặp phát triển</h2>
+  <div class="fun-box">
+    <p>Lập trình robot là một <span class="hi">vòng lặp liên tục</span> — bạn cứ lặp đi lặp lại cho đến khi robot làm đúng ý muốn! 🎯</p>
+    <div style="text-align:center; font-size:1.3em; padding:16px; background:#fff8e1; border-radius:12px; margin:12px 0;">
+      ✍️ Viết → 🔨 Build → ⚡ Flash/Chạy → 👀 Xem → 🐛 Sửa lỗi → ✍️ Viết...
+    </div>
+    <p>Đừng nản lòng nếu chưa được ngay! Ngay cả các lập trình viên kỳ cựu cũng cần nhiều vòng lặp như vậy! 💪</p>
+  </div>
+
+  <h2>⚙️ 6 Bước Cài Đặt Môi Trường</h2>
+  <div class="analogy-box">
+    <div class="title">🛠️ Chuẩn bị "xưởng chế tạo robot"</div>
+    <ol>
+      <li>🦀 <strong>Cài Rust</strong> — Vào rustup.rs, làm theo hướng dẫn</li>
+      <li>🎯 <strong>Thêm ARM target</strong> — <code>rustup target add thumbv7em-none-eabihf</code></li>
+      <li>🎮 <strong>Cài QEMU</strong> — Robot ảo để luyện tập</li>
+      <li>🍪 <strong>Cài cargo-generate</strong> — Tạo project từ template</li>
+      <li>🔍 <strong>Cài GDB hoặc probe-rs</strong> — Công cụ debug</li>
+      <li>📡 <strong>Cài ST-Link (nếu có robot thật)</strong> — Driver kết nối</li>
+    </ol>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Mẹo:</strong> Bắt đầu với QEMU — không cần mua robot! Sau khi code chạy tốt trên QEMU, mới cần robot thật! 🎉
+  </div>
+
+  <h2>🗺️ Lộ trình học tập</h2>
+  <div class="card-grid">
+    <a href="qemu.html" class="card">
+      <div class="card-icon">🖥️</div>
+      <div class="card-title">QEMU — Robot Ảo</div>
+      <div class="card-desc">Bắt đầu ở đây! Luyện tập miễn phí không cần mua phần cứng 🎮</div>
+    </a>
+    <a href="hardware.html" class="card">
+      <div class="card-icon">🔌</div>
+      <div class="card-title">Phần Cứng Thực</div>
+      <div class="card-desc">Sau khi thành thạo QEMU, lên robot thật! STM32F3DISCOVERY 🤖</div>
+    </a>
+    <a href="semihosting.html" class="card">
+      <div class="card-icon">📡</div>
+      <div class="card-title">Semihosting</div>
+      <div class="card-desc">Cách robot gửi tin nhắn về máy tính — như điện báo! 📨</div>
+    </a>
+    <a href="panicking.html" class="card">
+      <div class="card-icon">💥</div>
+      <div class="card-title">Panicking</div>
+      <div class="card-desc">Khi robot gặp sự cố không biết xử lý! Cách xử lý thông minh 😱</div>
+    </a>
+    <a href="exceptions.html" class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Exceptions</div>
+      <div class="card-desc">Tín hiệu khẩn cấp — robot phải dừng lại và xử lý ngay! 🚨</div>
+    </a>
+    <a href="registers.html" class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Thanh Ghi Bộ Nhớ</div>
+      <div class="card-desc">Cách điều khiển đèn LED, cảm biến và các bộ phận 🎛️</div>
+    </a>
+  </div>
+
+  <h2>🎯 Bạn sẽ học được gì?</h2>
+  <div class="fun-box">
+    <p>Sau chương này, bạn sẽ có thể:</p>
+    <ul>
+      <li>✅ Tạo project Rust Embedded từ template</li>
+      <li>✅ Chạy code trên robot ảo QEMU</li>
+      <li>✅ Flash code lên robot thật</li>
+      <li>✅ Hiển thị thông tin debug từ robot</li>
+      <li>✅ Xử lý khi robot gặp lỗi</li>
+      <li>✅ Điều khiển LED, đọc cảm biến!</li>
+    </ul>
+    <p>🎊 Sau đó, bạn sẽ thực sự là <strong>một lập trình viên robot</strong>!</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="../../intro/tooling.html" class="nav-btn">← Công cụ</a>
+  <a href="qemu.html" class="nav-btn next">Robot ảo QEMU →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

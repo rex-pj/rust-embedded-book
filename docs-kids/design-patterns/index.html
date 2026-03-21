@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎨 Mẫu Thiết Kế — Design Patterns 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🎨 Mẫu Thiết Kế — Design Patterns</h1>
+  <p class="subtitle">Những cách thông minh để viết code robot tốt hơn</p>
+  <span class="breadcrumb">🏠 Trang chủ › Thiết kế & Bảo đảm › Design Patterns</span>
+</header>
+<main>
+
+  <h2>👨‍🍳 Design Patterns là gì?</h2>
+  <div class="fun-box">
+    <p>🍳 Design Patterns giống như <span class="hi">công thức nấu ăn đã được chứng minh ngon</span>! Hàng nghìn lập trình viên đã thử và thấy những cách viết code này rất tốt — họ đặt tên cho chúng để dễ nói chuyện với nhau!</p>
+    <p>Không cần tự mình mò từ đầu — cứ dùng công thức đã có! 📖✨</p>
+  </div>
+
+  <h2>🏆 5 Patterns Quan Trọng Nhất</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🧱</div>
+      <div class="card-title">Builder Pattern</div>
+      <div class="card-desc">Xây dựng từng bước như lắp LEGO! Thêm từng bộ phận, rồi mới "hoàn thành". Không bao giờ tạo object "nửa vời". 🏗️</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔑</div>
+      <div class="card-title">Typestate Pattern</div>
+      <div class="card-desc">Ổ khóa chỉ mở đúng chìa! Pin phải là Output mới bật được đèn. Compiler kiểm tra cho bạn! 🔒</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">👑</div>
+      <div class="card-title">Singleton Pattern</div>
+      <div class="card-desc">Mỗi bộ phận robot chỉ có một "chủ" — tránh hai phần code cùng điều khiển một thứ! 🎯</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <div class="card-title">Extension Traits</div>
+      <div class="card-desc">Thêm tính năng mới vào đồ vật cũ mà không cần sửa đồ vật đó! Như cắm thêm phụ kiện. 🆕</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎁</div>
+      <div class="card-title">BSP (Board Support)</div>
+      <div class="card-desc">Hộp quà đã đóng gói sẵn — dùng ngay không cần lắp ráp! Driver sẵn cho board cụ thể. 📦</div>
+    </div>
+  </div>
+
+  <h2>🧱 Builder Pattern — Lắp LEGO từng bước</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Xây ngôi nhà LEGO</div>
+    <p>Khi xây nhà LEGO, bạn lắp từng phần: nền → tường → cửa → mái nhà. Mỗi bước chỉ làm đúng việc đó. Sau bước cuối cùng, ngôi nhà mới "hoàn thành"!</p>
+    <p>Builder Pattern cũng vậy: <code>Robot::new().with_speed(100).with_sensor(LightSensor).build()</code> 🏠</p>
+  </div>
+
+  <h2>🔑 Typestate Pattern — Ổ Khóa Thông Minh</h2>
+  <div class="fun-box">
+    <p>Pin GPIO có thể là:</p>
+    <ul>
+      <li>📥 <strong>Input</strong> — đọc tín hiệu từ bên ngoài</li>
+      <li>📤 <strong>Output</strong> — gửi tín hiệu ra ngoài</li>
+    </ul>
+    <p>Nếu bạn cố <strong>bật đèn trên pin Input</strong> → <span class="hi">compiler báo lỗi ngay!</span> Không cần chạy code mới biết sai! 🎯</p>
+    <p>Typestate mã hóa trạng thái vào kiểu dữ liệu: <code>Pin&lt;Output&gt;</code> khác <code>Pin&lt;Input&gt;</code>!</p>
+  </div>
+
+  <h2>👑 Singleton Pattern — Chủ Duy Nhất</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Một bếp, một đầu bếp</div>
+    <p>Nhà bếp chỉ có một bếp lò! Nếu hai người cùng nấu trên cùng bếp → hỗn loạn! Singleton đảm bảo chỉ có MỘT người được dùng bếp tại một thời điểm. 🍳</p>
+    <p>Trong robot: chỉ có MỘT nơi trong code được phép điều khiển UART, chỉ MỘT nơi điều khiển GPIO!</p>
+  </div>
+
+  <div class="fun-box">
+    <p>🦀 <strong>Rust tự nhiên hỗ trợ Singleton qua Ownership!</strong></p>
+    <p>Khi bạn dùng <code>cortex_m::Peripherals::take()</code>, nó trả về <code>Option&lt;Peripherals&gt;</code> — lần đầu là <code>Some(...)</code>, từ lần thứ hai trở đi là <code>None</code>! Không thể lấy hai lần! 🔒</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Những patterns này giúp compiler phát hiện lỗi trước khi robot chạy!</strong> Thay vì bug xuất hiện lúc robot đang vận hành (khó tìm!), Rust bắt lỗi ngay lúc bạn gõ code (dễ sửa hơn nhiều!). ✅
+  </div>
+
+<div class="nav-buttons">
+  <a href="../collections/index.html" class="nav-btn">← Collections</a>
+  <a href="../static-guarantees/index.html" class="nav-btn next">Bảo đảm tĩnh →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

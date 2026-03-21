@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦀 Đưa Rust Vào Dự Án C 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🦀 Đưa Rust Vào Dự Án C</h1>
+  <p class="subtitle">Viết một phần bằng Rust, phần còn lại vẫn là C</p>
+  <span class="breadcrumb">🏠 Trang chủ › Tương tác ngôn ngữ › Rust trong C</span>
+</header>
+<main>
+
+  <h2>🌱 Câu Chuyện Thực Tế</h2>
+  <div class="fun-box">
+    <p>🏢 Công ty bạn có một dự án firmware lớn viết bằng C — hàng chục nghìn dòng code, đã hoạt động nhiều năm. Không thể viết lại hết từ đầu!</p>
+    <p>Nhưng bạn muốn dùng Rust cho phần mới — <span class="hi">an toàn hơn</span>, ít bug hơn. Giải pháp: <strong>viết phần mới bằng Rust, phần cũ vẫn là C</strong>! 🤝</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Người nước ngoài học tiếng Việt</div>
+    <p>Một chuyên gia người Anh làm việc với đội ngũ Việt Nam. Thay vì yêu cầu tất cả học tiếng Anh, chuyên gia đó học thêm tiếng Việt để giao tiếp!</p>
+    <p>Code Rust "học cách nói tiếng C" để làm việc cùng codebase C hiện tại! 🌍</p>
+  </div>
+
+  <h2>📦 Tạo Thư Viện Rust cho C</h2>
+  <div class="fun-box">
+    <p>Trong <code>Cargo.toml</code>, khai báo kiểu thư viện:</p>
+    <ul>
+      <li><code>[lib]</code></li>
+      <li><code>crate-type = ["staticlib"]</code> — thư viện tĩnh (.a file), link vào C</li>
+      <li>Hoặc: <code>crate-type = ["cdylib"]</code> — thư viện động (.so/.dll), load lúc chạy</li>
+    </ul>
+    <p>Kết quả: một file <code>libmyrust.a</code> mà code C có thể link vào! 🔗</p>
+  </div>
+
+  <h2>📛 #[no_mangle] — Giữ Nguyên Tên Hàm</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Mã hóa tên</div>
+    <p>Rust bình thường "mã hóa" tên hàm thành chuỗi ký tự lạ: <code>compute_temperature</code> → <code>_ZN7mylib19compute_temperatureE</code>! 😱</p>
+    <p>C không hiểu tên lạ đó! <code>#[no_mangle]</code> nói với Rust: "Giữ nguyên tên gốc, đừng mã hóa!" 📛</p>
+  </div>
+
+  <div class="fun-box">
+    <p>Ví dụ hàm Rust xuất sang C:</p>
+    <ul>
+      <li><code>#[no_mangle]</code> — giữ tên nguyên</li>
+      <li><code>pub extern "C"</code> — xuất theo chuẩn C</li>
+      <li><code>fn compute_temperature(raw: u16) -> f32</code> — hàm bình thường</li>
+    </ul>
+    <p>Bây giờ code C có thể gọi: <code>float t = compute_temperature(raw_val);</code> 🎉</p>
+  </div>
+
+  <h2>📄 cbindgen — Tạo Header C Tự Động</h2>
+  <div class="fun-box">
+    <p>🤖 <strong>cbindgen</strong> là "máy dịch ngược" — đọc code Rust và tạo file header C (.h) tự động!</p>
+    <p>Thay vì tự viết:</p>
+    <p><code>/* sensor.h */<br>float compute_temperature(uint16_t raw);<br>void init_sensor(const Config* config);</code></p>
+    <p>Chạy: <code>cbindgen --output sensor.h</code> → cbindgen tự làm! 🎊</p>
+  </div>
+
+  <h2>🔄 Chiến Lược Chuyển Đổi Dần Dần</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">1️⃣</div>
+      <div class="card-title">Bắt đầu nhỏ</div>
+      <div class="card-desc">Viết một module nhỏ bằng Rust đầu tiên — ví dụ: thuật toán tính toán không có side effect 🌱</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">2️⃣</div>
+      <div class="card-title">Test kỹ</div>
+      <div class="card-desc">Đảm bảo phần Rust hoạt động đúng, unit test đầy đủ! Rust giúp viết test dễ hơn 🧪</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">3️⃣</div>
+      <div class="card-title">Dần dần mở rộng</div>
+      <div class="card-desc">Viết thêm module mới bằng Rust, tái cấu trúc module C cũ khi cần sửa chữa 📈</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">4️⃣</div>
+      <div class="card-title">Không cần làm hết</div>
+      <div class="card-desc">Không nhất thiết phải chuyển toàn bộ sang Rust! Kết hợp là hoàn toàn chấp nhận được 🎯</div>
+    </div>
+  </div>
+
+  <div class="fun-box">
+    <p>🚀 <strong>Nhiều công ty thành công làm điều này!</strong></p>
+    <ul>
+      <li>Mozilla Firefox: dần dần thêm Rust vào codebase C/C++</li>
+      <li>Linux kernel: mới bắt đầu cho phép Rust module</li>
+      <li>Android OS: dùng Rust cho các component mới</li>
+    </ul>
+    <p>Bạn không cần làm một mình — cả thế giới đang đi con đường này! 🌍</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Lời khuyên:</strong> Bắt đầu bằng các phần code <em>tự chứa</em> (pure functions, không phụ thuộc vào global state) — dễ nhất để chuyển sang Rust và cũng dễ test nhất! 🎯
+  </div>
+
+<div class="nav-buttons">
+  <a href="c-with-rust.html" class="nav-btn">← C trong Rust</a>
+  <a href="../unsorted/speed-vs-size.html" class="nav-btn next">Nhanh hay nhỏ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

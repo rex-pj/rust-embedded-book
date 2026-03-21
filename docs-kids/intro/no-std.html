@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏕️ Robot Tự Lập — no_std 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🏕️ Robot Tự Lập — no_std</h1>
+  <p class="subtitle">Làm việc không cần ba lô nặng!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Giới thiệu › no_std</span>
+</header>
+<main>
+
+  <h2>🤔 Hai loại lập trình nhúng</h2>
+  <div class="fun-box">
+    <p>Khi bạn lập trình cho máy tính nhỏ (embedded), có <span class="hi">hai con đường</span> để đi:</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <div class="card-title">Có hệ điều hành (Linux)</div>
+      <div class="card-desc">Như Raspberry Pi — giống máy tính bình thường nhưng nhỏ hơn. Có đủ mọi thứ! Dùng Rust tiêu chuẩn bình thường.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏕️</div>
+      <div class="card-title">Bare Metal (no_std)</div>
+      <div class="card-desc">Không có hệ điều hành! Như robot đồ chơi đơn giản. Phải tự lo mọi thứ. Cần no_std!</div>
+    </div>
+  </div>
+
+  <h2>🎒 no_std là gì?</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Đi học vs Đi cắm trại</div>
+    <p>Bình thường khi học Rust, bạn dùng <strong>std (thư viện chuẩn)</strong> — giống như đi học mang theo <strong>ba lô đầy đủ sách vở</strong>: từ điển, máy tính, bút màu, kéo... Có đủ mọi thứ!</p>
+    <p>Nhưng robot nhỏ không có chỗ cho ba lô nặng đó! Bạn phải <strong>đi cắm trại chỉ mang những thứ thực sự cần thiết</strong>. Đó là <span class="hi">no_std</span>! 🏕️</p>
+  </div>
+
+  <h2>📦 Có gì và không có gì?</h2>
+  <table class="kids-table">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+        <th>Tính năng</th>
+        <th>std ✅</th>
+        <th>no_std ❓</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🔢 Số học cơ bản</td>
+        <td>✅ Có</td>
+        <td>✅ Có (qua <code>core</code>)</td>
+      </tr>
+      <tr>
+        <td>📝 String cơ bản</td>
+        <td>✅ Có</td>
+        <td>✅ Có (qua <code>core</code>)</td>
+      </tr>
+      <tr>
+        <td>📋 Vec (danh sách)</td>
+        <td>✅ Có</td>
+        <td>⚠️ Cần thêm <code>alloc</code></td>
+      </tr>
+      <tr>
+        <td>🖨️ println! in ra màn hình</td>
+        <td>✅ Có</td>
+        <td>❌ Không có</td>
+      </tr>
+      <tr>
+        <td>📁 Đọc/ghi file</td>
+        <td>✅ Có</td>
+        <td>❌ Không có</td>
+      </tr>
+      <tr>
+        <td>🌐 Kết nối mạng</td>
+        <td>✅ Có</td>
+        <td>❌ Không có (tự làm!)</td>
+      </tr>
+      <tr>
+        <td>🕐 Đồng hồ hệ thống</td>
+        <td>✅ Có</td>
+        <td>❌ Không có (tự lo!)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>⭐ core — "Ba lô nhỏ thiết yếu"</h2>
+  <div class="fun-box">
+    <p>Dù không có <strong>std</strong>, bạn vẫn có <span class="hi">core</span> — những thứ <strong>cơ bản nhất của Rust</strong>, không cần hệ điều hành!</p>
+    <ul>
+      <li>✅ Kiểu dữ liệu cơ bản (u8, i32, f64, bool...)</li>
+      <li>✅ Iterator — duyệt qua danh sách</li>
+      <li>✅ Option và Result — xử lý lỗi</li>
+      <li>✅ Traits cơ bản (Clone, Copy, Debug...)</li>
+      <li>✅ Toán học cơ bản</li>
+    </ul>
+    <p>Tóm lại: <strong>những thứ cần thiết để Rust hoạt động</strong>, không cần gì từ hệ điều hành! 🎯</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Để dùng no_std</strong>, chỉ cần thêm dòng này vào đầu file Rust của bạn:<br>
+    <code>#![no_std]</code><br>
+    Thế là xong! Compiler sẽ không dùng thư viện chuẩn nữa.
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🏕️ Cắm trại thông minh</div>
+    <p>Khi đi cắm trại, bạn không mang theo cả tủ lạnh — nhưng vẫn mang theo dao, diêm, và lương khô! Đó là <code>core</code>: những công cụ thiết yếu luôn luôn có mặt. 🔪🔥🍫</p>
+  </div>
+
+<div class="nav-buttons">
+  <a href="hardware.html" class="nav-btn">← Phần cứng</a>
+  <a href="tooling.html" class="nav-btn next">Hộp công cụ →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../nav.js"></script>
+</body>
+</html>

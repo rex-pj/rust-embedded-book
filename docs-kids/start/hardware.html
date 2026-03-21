@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔌 Robot Thật — Phần Cứng Thực 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🔌 Robot Thật — Phần Cứng Thực</h1>
+  <p class="subtitle">Chạy code trên board mạch STM32!</p>
+  <span class="breadcrumb">🏠 Trang chủ › Bắt đầu › Phần cứng thực</span>
+</header>
+<main>
+
+  <h2>🎯 Từ QEMU lên Robot Thật!</h2>
+  <div class="fun-box">
+    <p>🤖 Bạn đã luyện tập trên robot ảo QEMU rồi! Giờ là lúc <span class="hi">chạy code trên robot thật</span>! Hồi hộp chưa? 🎉</p>
+    <p>Sự khác biệt lớn nhất: với robot thật, bạn phải <strong>biết chính xác thông số phần cứng</strong> của mình. Mỗi robot có cấu hình khác nhau!</p>
+  </div>
+
+  <h2>📋 4 Thông Tin Cần Biết Về Robot Của Bạn</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Loại CPU</div>
+      <div class="card-desc">Cortex-M0? M3? M4? M7? Mỗi loại có tập lệnh khác nhau → target khác nhau!</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔢</div>
+      <div class="card-title">Có FPU không?</div>
+      <div class="card-desc">FPU = tính số thập phân nhanh. Cortex-M4F có FPU (chữ F ở cuối!) 🏃</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📔</div>
+      <div class="card-title">Flash bao nhiêu?</div>
+      <div class="card-desc">STM32F303: 256KB Flash, bắt đầu từ địa chỉ 0x08000000</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🖊️</div>
+      <div class="card-title">RAM bao nhiêu?</div>
+      <div class="card-desc">STM32F303: 40KB RAM, bắt đầu từ địa chỉ 0x20000000</div>
+    </div>
+  </div>
+
+  <h2>⚙️ Cấu hình cho STM32F3DISCOVERY</h2>
+  <div class="fun-box">
+    <table class="kids-table">
+      <thead>
+        <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+          <th>Thông số</th>
+          <th>Giá trị</th>
+          <th>Ý nghĩa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU</td>
+          <td>Cortex-M4F</td>
+          <td>M4 + FPU, rất mạnh!</td>
+        </tr>
+        <tr>
+          <td>Rust target</td>
+          <td>thumbv7em-none-eabihf</td>
+          <td>Dành cho M4F với FPU</td>
+        </tr>
+        <tr>
+          <td>Flash</td>
+          <td>256KB @ 0x08000000</td>
+          <td>Sổ tay robot, 256 nghìn byte!</td>
+        </tr>
+        <tr>
+          <td>RAM</td>
+          <td>40KB @ 0x20000000</td>
+          <td>Bảng trắng làm việc</td>
+        </tr>
+        <tr>
+          <td>Debugger</td>
+          <td>ST-LINK/V2</td>
+          <td>Tích hợp sẵn, không cần mua thêm!</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>🔌 Kết Nối Robot Với Máy Tính</h2>
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Dây cáp đặc biệt</div>
+    <p>ST-LINK là "dây cáp đặc biệt" tích hợp trên board. Khi bạn cắm USB vào máy tính, máy tính có thể:</p>
+    <ul>
+      <li>⚡ <strong>Flash code</strong> — Ghi chương trình vào sổ tay robot</li>
+      <li>🔍 <strong>Debug</strong> — Nhìn xem robot đang làm gì bên trong</li>
+      <li>🛑 <strong>Dừng/tiếp tục</strong> — Điều khiển robot từ xa</li>
+    </ul>
+  </div>
+
+  <h2>🚀 Quy Trình Flash Code Lên Robot</h2>
+  <div class="fun-box">
+    <ol>
+      <li>🔨 <strong>Build:</strong> <code>cargo build --release</code> — Tạo file binary tối ưu</li>
+      <li>⚡ <strong>Flash:</strong> <code>cargo flash --chip STM32F303VCTx</code> — Ghi vào sổ tay robot</li>
+      <li>🔄 <strong>Robot tự khởi động lại</strong> — Và tự động chạy code mới!</li>
+    </ol>
+    <p>Hoặc dùng <strong>probe-rs</strong> để vừa flash vừa debug cùng lúc! 🛠️</p>
+  </div>
+
+  <div class="warn-box">
+    ⚠️ <strong>Quan trọng về điện áp!</strong> STM32F3DISCOVERY chỉ chịu được <strong>3.3V</strong> trên các chân GPIO. Nếu bạn kết nối thiết bị 5V trực tiếp, chip sẽ bị hỏng ngay! Luôn kiểm tra datasheet trước khi kết nối bất kỳ thiết bị ngoài nào. 🛑
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Lần đầu tiên chạy code trên robot thật</strong> — khi bạn thấy đèn LED nhấp nháy theo ý muốn, cảm giác đó thật tuyệt vời! Đó là khoảnh khắc bạn thực sự điều khiển phần cứng bằng code của mình! ✨
+  </div>
+
+<div class="nav-buttons">
+  <a href="qemu.html" class="nav-btn">← QEMU</a>
+  <a href="semihosting.html" class="nav-btn next">Nói chuyện với robot →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>

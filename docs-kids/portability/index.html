@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Tính Di Động — Code Dùng Được Nhiều Robot! 🤖 Rust Embedded cho bé</title>
+<link rel="stylesheet" href="../../kids-style.css">
+</head>
+<body>
+<header class="kids-header">
+  <h1>🌍 Tính Di Động — Code Dùng Được Nhiều Robot!</h1>
+  <p class="subtitle">Viết code một lần, chạy trên nhiều loại robot khác nhau</p>
+  <span class="breadcrumb">🏠 Trang chủ › Chủ đề nâng cao › Tính di động</span>
+</header>
+<main>
+
+  <h2>😓 Vấn Đề Ban Đầu</h2>
+  <div class="fun-box">
+    <p>🤔 Bạn viết driver cho cảm biến nhiệt độ để dùng với robot STM32. Một người bạn muốn dùng cùng driver đó trên robot ESP32 của họ... nhưng <span class="hi">không được</span>!</p>
+    <p>Tại sao? Vì code bạn viết dùng hàm riêng của STM32, không hoạt động trên ESP32 hay bất kỳ chip nào khác! 😭</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Ổ cắm điện</div>
+    <p>Trước đây, mỗi nước có ổ cắm kiểu khác nhau — thiết bị Mỹ không cắm được ở Việt Nam! Nhưng sau khi có <strong>chuẩn quốc tế</strong>, bạn chỉ cần một bộ chuyển đổi là xài được khắp nơi! 🔌🌍</p>
+    <p><strong>embedded-hal</strong> chính là "chuẩn quốc tế" cho robot! ⚡</p>
+  </div>
+
+  <h2>🤝 embedded-hal — Ngôn Ngữ Chung Cho Robot</h2>
+  <div class="fun-box">
+    <p>🌐 <strong>embedded-hal</strong> định nghĩa các "hợp đồng" (traits) mà bất kỳ robot nào cũng phải tuân theo:</p>
+    <ul>
+      <li>📡 <strong>I2C:</strong> Giao tiếp với cảm biến qua 2 dây</li>
+      <li>⚡ <strong>SPI:</strong> Giao tiếp tốc độ cao với màn hình, thẻ nhớ</li>
+      <li>🔌 <strong>GPIO:</strong> Bật tắt chân điện</li>
+      <li>📊 <strong>ADC:</strong> Đọc giá trị tương tự (analog)</li>
+      <li>⏱️ <strong>Timer:</strong> Hẹn giờ, đo thời gian</li>
+    </ul>
+    <p>Miễn là robot <strong>implement</strong> những hợp đồng này, driver của bạn hoạt động được! 🎉</p>
+  </div>
+
+  <h2>🎭 Ba Nhân Vật Chính</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">HAL Implementation</div>
+      <div class="card-desc">Driver của chip cụ thể (stm32f3xx-hal, esp-hal...) — implement các traits của embedded-hal</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌡️</div>
+      <div class="card-title">Driver</div>
+      <div class="card-desc">Code cho cảm biến/thiết bị ngoài — chỉ dùng traits chung, không quan tâm chip gì</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">👨‍💻</div>
+      <div class="card-title">Application</div>
+      <div class="card-desc">Code của bạn — kết nối HAL và Driver lại với nhau cho robot cụ thể</div>
+    </div>
+  </div>
+
+  <h2>📊 Lợi Ích Toán Học!</h2>
+  <div class="fun-box">
+    <p>Hãy tưởng tượng có <strong>M loại robot</strong> và <strong>N loại driver cảm biến</strong>:</p>
+    <table class="kids-table">
+      <thead>
+        <tr style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:white;">
+          <th>Cách làm</th>
+          <th>Số lượng code cần viết</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>❌ Không dùng embedded-hal</td>
+          <td><strong>M × N</strong> phiên bản! (mỗi robot × mỗi cảm biến)</td>
+        </tr>
+        <tr>
+          <td>✅ Dùng embedded-hal</td>
+          <td>Chỉ cần <strong>M + N</strong> phiên bản! 🎉</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Ví dụ: 10 loại robot × 20 loại cảm biến = 200 phiên bản → Dùng embedded-hal: chỉ cần 30 phiên bản! 🚀</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Esperanto cho robot</div>
+    <p>Trên thế giới có hàng nghìn ngôn ngữ khác nhau. Nếu muốn người người hiểu nhau, một cách là học <strong>Esperanto</strong> — ngôn ngữ chung được tạo ra để mọi người dễ học và giao tiếp!</p>
+    <p><strong>embedded-hal</strong> là Esperanto của thế giới robot — mọi robot đều "nói" cùng một ngôn ngữ! 🌍✨</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>Khi viết driver cảm biến</strong>, hãy dùng traits từ embedded-hal thay vì hàm cụ thể của từng chip. Vậy là driver của bạn sẽ hoạt động trên TẤT CẢ các loại robot có implement embedded-hal! 🎯
+  </div>
+
+<div class="nav-buttons">
+  <a href="../start/registers.html" class="nav-btn">← Thanh ghi bộ nhớ</a>
+  <a href="../concurrency/index.html" class="nav-btn next">Tung hứng →</a>
+</div>
+</main>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ cho các bạn nhỏ</footer>
+<script src="../../nav.js"></script>
+</body>
+</html>
