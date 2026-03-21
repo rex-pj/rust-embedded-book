@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm quen phần cứng - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="hardware.html" class="active">Làm quen phần cứng</a>
+      <a href="no-std.html">Môi trường no_std</a>
+      <a href="tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Giới thiệu</a>
+    <span class="sep">›</span>
+    <span class="current">Làm quen phần cứng</span>
+  </div>
+  <main id="main">
+
+    <h1>Làm quen với phần cứng</h1>
+
+    <p>Hãy làm quen với phần cứng chúng ta sẽ dùng.</p>
+
+    <h2>STM32F3DISCOVERY (còn gọi là "F3")</h2>
+
+    <h3>Board này chứa gì?</h3>
+
+    <ul>
+      <li>
+        Vi điều khiển <a href="https://www.st.com/en/microcontrollers/stm32f303vc.html">STM32F303VCT6</a>.
+        Vi điều khiển này có:
+        <ul>
+          <li>Bộ xử lý ARM Cortex-M4F single-core với hỗ trợ phần cứng cho các phép tính
+              dấu phẩy động độ chính xác đơn và tần số clock tối đa 72 MHz.</li>
+          <li>256 KiB bộ nhớ "Flash". (1 KiB = 10<sup>24</sup> bytes)</li>
+          <li>48 KiB RAM.</li>
+          <li>Nhiều peripheral tích hợp như timer, I2C, SPI và USART.</li>
+          <li>General Purpose Input Output (GPIO) và các loại pin khác có thể truy cập
+              qua hai hàng header dọc theo hai bên của board.</li>
+          <li>Giao diện USB có thể truy cập qua cổng USB ghi nhãn "USB USER".</li>
+        </ul>
+      </li>
+      <li>
+        Một <a href="https://en.wikipedia.org/wiki/Accelerometer">accelerometer</a> là một
+        phần của chip <a href="https://www.st.com/en/mems-and-sensors/lsm303dlhc.html">LSM303DLHC</a>.
+      </li>
+      <li>
+        Một <a href="https://en.wikipedia.org/wiki/Magnetometer">magnetometer</a> là một
+        phần của chip <a href="https://www.st.com/en/mems-and-sensors/lsm303dlhc.html">LSM303DLHC</a>.
+      </li>
+      <li>
+        Một <a href="https://en.wikipedia.org/wiki/Gyroscope">gyroscope</a> là một phần của
+        chip <a href="https://www.pololu.com/file/0J563/L3GD20.pdf">L3GD20</a>.
+      </li>
+      <li>8 user LED được sắp xếp theo hình la bàn.</li>
+      <li>
+        Vi điều khiển thứ hai:
+        <a href="https://www.st.com/en/microcontrollers/stm32f103cb.html">STM32F103</a>.
+        Vi điều khiển này thực chất là một phần của on-board programmer / debugger và được
+        kết nối với cổng USB có tên "USB ST-LINK".
+      </li>
+    </ul>
+
+    <p>
+      Để có danh sách đầy đủ hơn về tính năng và thông số kỹ thuật của board, hãy xem trang web
+      <a href="https://www.st.com/en/evaluation-tools/stm32f3discovery.html">STMicroelectronics</a>.
+    </p>
+
+    <h3>Một lưu ý quan trọng</h3>
+
+    <p>
+      Hãy cẩn thận nếu bạn muốn áp dụng tín hiệu bên ngoài vào board. Các pin của vi điều khiển
+      STM32F303VCT6 sử dụng điện áp danh định 3.3 volt. Để biết thêm thông tin, hãy tham khảo
+      <a href="https://www.st.com/resource/en/datasheet/stm32f303vc.pdf">mục 6.2 Absolute maximum
+      ratings trong manual</a>.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="index.html" class="nav-btn">← Tổng quan</a>
+      <a href="no-std.html" class="nav-btn next">Môi trường no_std →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

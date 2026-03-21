@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semihosting - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html" class="active">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">Semihosting</span>
+  </div>
+  <main id="main">
+
+    <h1>Semihosting</h1>
+
+    <p>
+      Semihosting là một cơ chế cho phép thiết bị nhúng thực hiện I/O trên host và chủ yếu được dùng
+      để ghi log message ra host console. Semihosting yêu cầu một debug session và hầu như không cần
+      gì khác (không cần thêm dây!) nên rất tiện để dùng. Nhược điểm là nó rất chậm: mỗi thao tác
+      ghi có thể mất vài mili giây tùy thuộc vào hardware debugger (ví dụ ST-Link) bạn dùng.
+    </p>
+
+    <p>
+      Crate <a href="https://crates.io/crates/cortex-m-semihosting"><code>cortex-m-semihosting</code></a>
+      cung cấp API để thực hiện các thao tác semihosting trên thiết bị Cortex-M. Chương trình dưới đây
+      là phiên bản semihosting của "Hello, world!":
+    </p>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_halt <span class="kw">as</span> _;
+
+<span class="kw">use</span> cortex_m_rt::entry;
+<span class="kw">use</span> cortex_m_semihosting::hprintln;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    hprintln!(<span class="str">"Hello, world!"</span>).unwrap();
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Nếu bạn chạy chương trình này trên phần cứng, bạn sẽ thấy thông điệp "Hello, world!" trong
+      log của OpenOCD.
+    </p>
+
+<pre><code>$ openocd
+(..)
+Hello, world!
+(..)</code></pre>
+
+    <p>Bạn cần enable semihosting trong OpenOCD từ GDB trước:</p>
+
+<pre><code>(gdb) monitor arm semihosting enable
+semihosting is enabled</code></pre>
+
+    <p>
+      QEMU hiểu các thao tác semihosting nên chương trình trên cũng hoạt động với
+      <code>qemu-system-arm</code> mà không cần bắt đầu một debug session. Lưu ý rằng bạn cần
+      truyền flag <code>-semihosting-config</code> cho QEMU để enable semihosting; các flag này
+      đã được bao gồm trong file <code>.cargo/config.toml</code> của template.
+    </p>
+
+<pre><code>$ # chương trình này sẽ block terminal
+$ cargo run
+     Running `qemu-system-arm (..)
+Hello, world!</code></pre>
+
+    <p>
+      Cũng có một thao tác semihosting <code>exit</code> có thể dùng để kết thúc tiến trình QEMU.
+      Quan trọng: <strong>đừng</strong> dùng <code>debug::exit</code> trên phần cứng thực; hàm này
+      có thể làm hỏng session OpenOCD của bạn và bạn sẽ không thể debug thêm chương trình nào cho
+      đến khi khởi động lại OpenOCD.
+    </p>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_halt <span class="kw">as</span> _;
+
+<span class="kw">use</span> cortex_m_rt::entry;
+<span class="kw">use</span> cortex_m_semihosting::debug;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    <span class="kw">let</span> roses = <span class="str">"blue"</span>;
+
+    <span class="kw">if</span> roses == <span class="str">"red"</span> {
+        debug::exit(debug::EXIT_SUCCESS);
+    } <span class="kw">else</span> {
+        debug::exit(debug::EXIT_FAILURE);
+    }
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+<pre><code>$ cargo run
+     Running `qemu-system-arm (..)
+
+$ echo $?
+1</code></pre>
+
+    <p>
+      Một mẹo cuối: bạn có thể đặt hành vi panicking thành <code>exit(EXIT_FAILURE)</code>.
+      Điều này cho phép bạn viết các run-pass test <code>no_std</code> có thể chạy trên QEMU.
+    </p>
+
+    <p>
+      Để tiện lợi, crate <code>panic-semihosting</code> có tính năng "exit" mà khi được enable sẽ
+      gọi <code>exit(EXIT_FAILURE)</code> sau khi ghi thông điệp panic ra host stderr.
+    </p>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_semihosting <span class="kw">as</span> _; <span class="comment">// features = ["exit"]</span>
+
+<span class="kw">use</span> cortex_m_rt::entry;
+<span class="kw">use</span> cortex_m_semihosting::debug;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    <span class="kw">let</span> roses = <span class="str">"blue"</span>;
+
+    assert_eq!(roses, <span class="str">"red"</span>);
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+<pre><code>$ cargo run
+     Running `qemu-system-arm (..)
+panicked at 'assertion failed: `(left == right)`
+  left: `"blue"`,
+ right: `"red"`', examples/hello.rs:15:5
+
+$ echo $?
+1</code></pre>
+
+    <p>
+      <strong>LƯU Ý</strong>: Để enable tính năng này trên <code>panic-semihosting</code>, sửa
+      phần dependencies trong <code>Cargo.toml</code> nơi khai báo <code>panic-semihosting</code>:
+    </p>
+
+<pre><code>panic-semihosting = { version = "VERSION", features = ["exit"] }</code></pre>
+
+    <p>
+      trong đó <code>VERSION</code> là phiên bản mong muốn. Để biết thêm thông tin về dependency
+      features, xem phần
+      <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html"><code>specifying dependencies</code></a>
+      trong Cargo book.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="hardware.html" class="nav-btn">← Phần cứng thực</a>
+      <a href="panicking.html" class="nav-btn next">Panicking →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

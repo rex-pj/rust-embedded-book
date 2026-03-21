@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lập trình đồng thời - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Lập trình đồng thời</span>
+  </div>
+  <main id="main">
+
+    <h1>Lập trình đồng thời (Concurrency)</h1>
+    <p class="subtitle">Xử lý đồng thời an toàn trong embedded Rust</p>
+
+    <p>
+      Concurrency xảy ra bất cứ khi nào các phần khác nhau của chương trình bạn
+      có thể thực thi vào các thời điểm khác nhau hoặc theo thứ tự khác nhau.
+      Trong ngữ cảnh embedded, điều này bao gồm:
+    </p>
+    <ul>
+      <li><strong>Interrupt handlers</strong> — chạy bất cứ khi nào interrupt tương ứng xảy ra,</li>
+      <li><strong>Đa luồng</strong> — vi xử lý thường xuyên hoán đổi giữa các phần của chương trình,</li>
+      <li><strong>Đa lõi</strong> — một số hệ thống có nhiều lõi, mỗi lõi có thể chạy một phần khác nhau của chương trình cùng lúc.</li>
+    </ul>
+
+    <p>
+      Vì nhiều chương trình embedded cần xử lý interrupt, concurrency thường xuất hiện
+      sớm hay muộn, và đây cũng là nơi nhiều bug tinh vi và khó phát hiện có thể xảy ra.
+      May mắn thay, Rust cung cấp một số abstraction và bảo đảm an toàn để giúp chúng ta
+      viết code đúng đắn.
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Các nguồn gốc của Concurrency trong Embedded</div>
+      <svg viewBox="0 0 680 200" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="200" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="ca" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#6b7280"/>
+          </marker>
+        </defs>
+
+        <!-- CPU -->
+        <circle cx="340" cy="100" r="55" fill="#1e293b"/>
+        <text x="340" y="96" text-anchor="middle" font-size="13" font-weight="700" fill="white" font-family="sans-serif">CPU</text>
+        <text x="340" y="114" text-anchor="middle" font-size="11" fill="#94a3b8" font-family="sans-serif">Cortex-M</text>
+
+        <!-- main thread -->
+        <rect x="20" y="30" width="140" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="90" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af" font-family="sans-serif">Thread chính</text>
+        <text x="90" y="70" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">main() loop</text>
+        <line x1="162" y1="55" x2="285" y2="90" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ca)"/>
+
+        <!-- interrupts -->
+        <rect x="20" y="120" width="140" height="50" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
+        <text x="90" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#9d174d" font-family="sans-serif">Interrupts</text>
+        <text x="90" y="160" text-anchor="middle" font-size="10" fill="#ec4899" font-family="sans-serif">Timer, GPIO, UART...</text>
+        <line x1="162" y1="145" x2="285" y2="110" stroke="#ec4899" stroke-width="1.5" marker-end="url(#ca)"/>
+
+        <!-- DMA -->
+        <rect x="520" y="30" width="140" height="50" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="590" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="sans-serif">DMA</text>
+        <text x="590" y="70" text-anchor="middle" font-size="10" fill="#22c55e" font-family="sans-serif">Direct Memory Access</text>
+        <line x1="520" y1="55" x2="397" y2="90" stroke="#22c55e" stroke-width="1.5" marker-end="url(#ca)"/>
+
+        <!-- Multi-core -->
+        <rect x="520" y="120" width="140" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="590" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="sans-serif">Đa lõi (SMP)</text>
+        <text x="590" y="160" text-anchor="middle" font-size="10" fill="#f59e0b" font-family="sans-serif">Cortex-M33, RP2040...</text>
+        <line x1="520" y1="145" x2="397" y2="110" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#ca)"/>
+      </svg>
+    </div>
+
+    <h2>Không có Concurrency</h2>
+
+    <p>
+      Dạng concurrency đơn giản nhất cho chương trình embedded là <em>không có concurrency</em>:
+      phần mềm của bạn gồm một vòng lặp main duy nhất cứ chạy mãi mãi, và không có
+      interrupt nào cả. Đôi khi đây là giải pháp hoàn toàn phù hợp! Thông thường vòng lặp
+      của bạn sẽ đọc một số input, thực hiện xử lý nào đó, và ghi một số output.
+    </p>
+
+    <pre><code><span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> peripherals = <span class="fn">setup_peripherals</span>();
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> inputs = <span class="fn">read_inputs</span>(&peripherals);
+        <span class="kw">let</span> outputs = <span class="fn">process</span>(inputs);
+        <span class="fn">write_outputs</span>(&peripherals, outputs);
+    }
+}</code></pre>
+
+    <p>
+      Vì không có concurrency, không cần lo lắng về việc chia sẻ dữ liệu giữa các phần
+      của chương trình hay đồng bộ hóa truy cập vào peripherals. Nếu bạn có thể dùng
+      cách tiếp cận đơn giản như vậy, đây có thể là một giải pháp tuyệt vời.
+    </p>
+
+    <h2>Dữ liệu Mutable Toàn cục (Global Mutable Data)</h2>
+
+    <p>
+      Khác với Rust thông thường, trong embedded thường chúng ta không có điều kiện thoải mái
+      là cấp phát heap và truyền reference đến dữ liệu đó vào một thread mới được tạo.
+      Thay vào đó, interrupt handler của chúng ta có thể được gọi bất cứ lúc nào và phải
+      biết cách truy cập bộ nhớ dùng chung mà chúng ta đang sử dụng. Ở mức thấp nhất,
+      điều này có nghĩa là chúng ta phải có <em>bộ nhớ mutable được cấp phát tĩnh</em>,
+      mà cả interrupt handler lẫn code chính đều có thể tham chiếu đến.
+    </p>
+
+    <p>
+      Trong Rust, các biến <a href="https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable"><code>static mut</code></a>
+      như vậy luôn không an toàn khi đọc hoặc ghi, bởi vì nếu không cẩn thận, bạn có thể
+      gây ra một race condition — truy cập vào biến bị interrupt giữa chừng bởi một
+      interrupt handler cũng truy cập vào biến đó.
+    </p>
+
+    <p>
+      Ví dụ về cách hành vi này có thể gây ra lỗi tinh vi — hãy xét một chương trình embedded
+      đếm rising edges của tín hiệu input trong mỗi chu kỳ một giây (bộ đếm tần số):
+    </p>
+
+    <pre><code><span class="kw">static mut</span> <span class="type">COUNTER</span>: <span class="type">u32</span> = 0;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> state = <span class="fn">read_signal_level</span>();
+        <span class="kw">if</span> state && !last_state {
+            <span class="comment">// NGUY HIỂM - Thực ra không an toàn! Có thể gây data race.</span>
+            <span class="kw">unsafe</span> { <span class="type">COUNTER</span> += 1 };
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="kw">unsafe</span> { <span class="type">COUNTER</span> = 0; }
+}</code></pre>
+
+    <p>
+      Mỗi giây, timer interrupt đặt lại counter về 0. Trong khi đó, vòng lặp main liên tục
+      đo tín hiệu và tăng counter khi thấy thay đổi từ low sang high. Chúng ta phải dùng
+      <code>unsafe</code> để truy cập <code>COUNTER</code> vì nó là <code>static mut</code>,
+      và điều đó có nghĩa là chúng ta đang hứa với compiler rằng chúng ta sẽ không gây
+      ra undefined behaviour. Bạn có thấy race condition không?
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Race Condition: Tại sao COUNTER += 1 không an toàn</div>
+      <svg viewBox="0 0 680 200" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="200" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="rca" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#ef4444"/>
+          </marker>
+        </defs>
+
+        <!-- 3 instructions of COUNTER += 1 -->
+        <text x="340" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#374151" font-family="sans-serif">COUNTER += 1 thực ra gồm 3 lệnh assembly!</text>
+
+        <rect x="20" y="35" width="190" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6"/>
+        <text x="115" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af" font-family="sans-serif">① LOAD</text>
+        <text x="115" y="68" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="monospace">r0 = *COUNTER  (= 5)</text>
+
+        <rect x="245" y="35" width="190" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+        <text x="340" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e" font-family="sans-serif">② ADD</text>
+        <text x="340" y="68" text-anchor="middle" font-size="10" fill="#92400e" font-family="monospace">r0 = r0 + 1   (= 6)</text>
+
+        <rect x="470" y="35" width="190" height="40" rx="6" fill="#dcfce7" stroke="#22c55e"/>
+        <text x="565" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#166534" font-family="sans-serif">③ STORE</text>
+        <text x="565" y="68" text-anchor="middle" font-size="10" fill="#166534" font-family="monospace">*COUNTER = r0  (= 6)</text>
+
+        <!-- Interrupt fires between 1 and 3 -->
+        <text x="340" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#ef4444" font-family="sans-serif">⚡ Interrupt timer() xảy ra sau ① và trước ③!</text>
+
+        <rect x="100" y="115" width="480" height="40" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+        <text x="340" y="133" text-anchor="middle" font-size="11" font-weight="600" fill="#991b1b" font-family="sans-serif">timer(): COUNTER = 0  → reset về 0</text>
+        <text x="340" y="150" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">Sau đó ③ ghi r0=6 vào COUNTER → ISR reset bị MẤT!</text>
+
+        <text x="340" y="185" text-anchor="middle" font-size="11" fill="#374151" font-family="sans-serif">→ Chương trình đếm gấp đôi số transition trong chu kỳ đó</text>
+      </svg>
+    </div>
+
+    <p>
+      Phép tăng trên <code>COUNTER</code> <em>không</em> được đảm bảo là atomic —
+      thực tế, trên hầu hết các nền tảng embedded, nó sẽ được chia thành một lệnh load,
+      sau đó tăng, rồi store. Nếu interrupt kích hoạt sau khi load nhưng trước khi store,
+      việc reset về 0 sẽ bị bỏ qua sau khi interrupt return — và chúng ta sẽ đếm gấp đôi
+      số lần transition trong chu kỳ đó.
+    </p>
+
+    <h2>Critical Sections (Vùng Nguy Cơ)</h2>
+
+    <p>
+      Vậy chúng ta có thể làm gì về data races? Một cách tiếp cận đơn giản là dùng
+      <em>critical sections</em> — một ngữ cảnh nơi interrupts bị vô hiệu hóa. Bằng cách
+      bọc việc truy cập <code>COUNTER</code> trong <code>main</code> trong một critical section,
+      chúng ta có thể chắc chắn rằng timer interrupt sẽ không kích hoạt cho đến khi
+      chúng ta tăng xong <code>COUNTER</code>:
+    </p>
+
+    <pre><code><span class="kw">static mut</span> <span class="type">COUNTER</span>: <span class="type">u32</span> = 0;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> state = <span class="fn">read_signal_level</span>();
+        <span class="kw">if</span> state && !last_state {
+            <span class="comment">// Critical section mới đảm bảo truy cập đồng bộ vào COUNTER</span>
+            <span class="type">cortex_m</span>::interrupt::free(|_| {
+                <span class="kw">unsafe</span> { <span class="type">COUNTER</span> += 1 };
+            });
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="kw">unsafe</span> { <span class="type">COUNTER</span> = 0; }
+}</code></pre>
+
+    <p>
+      Trong ví dụ này, chúng ta dùng <code>cortex_m::interrupt::free</code>, nhưng các
+      nền tảng khác sẽ có cơ chế tương tự để thực thi code trong critical section.
+      Về bản chất đây giống như disable interrupts, chạy code nào đó, rồi re-enable interrupts.
+    </p>
+
+    <p>Lưu ý rằng chúng ta không cần đặt critical section bên trong timer interrupt, vì hai lý do:</p>
+    <ul>
+      <li>Ghi 0 vào <code>COUNTER</code> không bị ảnh hưởng bởi race vì chúng ta không đọc nó</li>
+      <li>Timer interrupt sẽ không bao giờ bị ngắt bởi thread <code>main</code></li>
+    </ul>
+
+    <p>
+      Nếu <code>COUNTER</code> được chia sẻ bởi nhiều interrupt handler có thể
+      <em>preempt</em> nhau, thì mỗi handler cũng sẽ cần một critical section.
+    </p>
+
+    <div class="note">
+      Critical section giải quyết vấn đề trước mắt, nhưng chúng ta vẫn phải viết
+      nhiều code <code>unsafe</code> cần suy nghĩ cẩn thận. Mỗi critical section
+      tạm thời tạm dừng xử lý interrupt, có chi phí code size lớn hơn và interrupt
+      latency cao hơn. Ngoài ra, critical section <strong>không</strong> đảm bảo
+      truy cập độc quyền trên hệ thống đa lõi!
+    </div>
+
+    <h2>Atomic Access</h2>
+
+    <p>
+      Trên một số nền tảng, các lệnh atomic đặc biệt có sẵn, cung cấp bảo đảm về
+      các thao tác read-modify-write. Cụ thể với Cortex-M:
+      <code>thumbv6</code> (Cortex-M0, M0+) chỉ cung cấp load và store atomic,
+      trong khi <code>thumbv7</code> (Cortex-M3 trở lên) cung cấp đầy đủ lệnh
+      Compare and Swap (CAS). Những thao tác atomic này an toàn ngay cả trên nhiều lõi.
+    </p>
+
+    <pre><code><span class="kw">use</span> <span class="type">core</span>::sync::atomic::{<span class="type">AtomicUsize</span>, <span class="type">Ordering</span>};
+
+<span class="kw">static</span> <span class="type">COUNTER</span>: <span class="type">AtomicUsize</span> = <span class="type">AtomicUsize</span>::new(0);
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> state = <span class="fn">read_signal_level</span>();
+        <span class="kw">if</span> state && !last_state {
+            <span class="comment">// Dùng `fetch_add` để cộng 1 vào COUNTER một cách atomic</span>
+            <span class="type">COUNTER</span>.fetch_add(1, <span class="type">Ordering</span>::Relaxed);
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="comment">// Dùng `store` để ghi 0 trực tiếp vào COUNTER</span>
+    <span class="type">COUNTER</span>.store(0, <span class="type">Ordering</span>::Relaxed)
+}</code></pre>
+
+    <p>
+      Lần này <code>COUNTER</code> là một biến <code>static</code> <em>an toàn</em>.
+      Nhờ kiểu <code>AtomicUsize</code>, <code>COUNTER</code> có thể được sửa đổi an toàn
+      từ cả interrupt handler lẫn thread chính mà không cần disable interrupts.
+    </p>
+
+    <p>
+      Một lưu ý về <a href="https://doc.rust-lang.org/core/sync/atomic/enum.Ordering.html"><code>Ordering</code></a>:
+      tham số này ảnh hưởng đến cách compiler và hardware có thể sắp xếp lại lệnh, và cũng
+      có tác động đến khả năng hiển thị của cache. Giả sử target là nền tảng single-core,
+      <code>Relaxed</code> là đủ và là lựa chọn hiệu quả nhất trong trường hợp cụ thể này.
+      Ordering nghiêm ngặt hơn sẽ khiến compiler emit memory barriers xung quanh các
+      thao tác atomic.
+    </p>
+
+    <h2>Abstraction, Send và Sync</h2>
+
+    <p>
+      Không có giải pháp nào ở trên thực sự thỏa mãn. Chúng đều yêu cầu các block
+      <code>unsafe</code> phải được kiểm tra rất cẩn thận và không ergonomic.
+      Chắc chắn chúng ta có thể làm tốt hơn trong Rust!
+    </p>
+
+    <p>
+      Chúng ta có thể abstract counter của mình thành một interface an toàn có thể
+      dùng an toàn ở bất kỳ đâu trong code. Trong ví dụ này, chúng ta sẽ dùng
+      critical-section counter, nhưng bạn có thể làm điều gì đó rất tương tự với atomics.
+    </p>
+
+    <pre><code><span class="kw">use</span> <span class="type">core</span>::cell::<span class="type">UnsafeCell</span>;
+<span class="kw">use</span> <span class="type">cortex_m</span>::interrupt;
+
+<span class="comment">// Counter của chúng ta chỉ là một wrapper xung quanh UnsafeCell&lt;u32&gt;,</span>
+<span class="comment">// đây là trung tâm của interior mutability trong Rust. Bằng cách dùng</span>
+<span class="comment">// interior mutability, chúng ta có thể để COUNTER là `static` thay vì</span>
+<span class="comment">// `static mut`, nhưng vẫn có thể thay đổi giá trị counter của nó.</span>
+<span class="kw">struct</span> <span class="type">CSCounter</span>(<span class="type">UnsafeCell</span>&lt;<span class="type">u32</span>&gt;);
+
+<span class="kw">const</span> CS_COUNTER_INIT: <span class="type">CSCounter</span> = <span class="type">CSCounter</span>(<span class="type">UnsafeCell</span>::new(0));
+
+<span class="kw">impl</span> <span class="type">CSCounter</span> {
+    <span class="kw">pub fn</span> <span class="fn">reset</span>(&self, _cs: &interrupt::<span class="type">CriticalSection</span>) {
+        <span class="comment">// Bằng cách yêu cầu CriticalSection được truyền vào, chúng ta biết</span>
+        <span class="comment">// mình đang ở bên trong một CriticalSection và có thể dùng unsafe block này.</span>
+        <span class="kw">unsafe</span> { *self.0.get() = 0 };
+    }
+
+    <span class="kw">pub fn</span> <span class="fn">increment</span>(&self, _cs: &interrupt::<span class="type">CriticalSection</span>) {
+        <span class="kw">unsafe</span> { *self.0.get() += 1 };
+    }
+}
+
+<span class="comment">// Cần thiết để cho phép static CSCounter. Xem giải thích bên dưới.</span>
+<span class="kw">unsafe impl</span> <span class="type">Sync</span> <span class="kw">for</span> <span class="type">CSCounter</span> {}
+
+<span class="comment">// COUNTER không còn là `mut` vì nó dùng interior mutability;</span>
+<span class="comment">// do đó cũng không cần unsafe blocks để truy cập nữa.</span>
+<span class="kw">static</span> <span class="type">COUNTER</span>: <span class="type">CSCounter</span> = CS_COUNTER_INIT;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> state = <span class="fn">read_signal_level</span>();
+        <span class="kw">if</span> state && !last_state {
+            <span class="comment">// Không có unsafe ở đây!</span>
+            interrupt::free(|cs| <span class="type">COUNTER</span>.increment(cs));
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="comment">// Chúng ta cần enter một critical section ở đây chỉ để lấy một token cs hợp lệ,</span>
+    <span class="comment">// dù chúng ta biết không có interrupt nào khác có thể preempt cái này.</span>
+    interrupt::free(|cs| <span class="type">COUNTER</span>.reset(cs));
+}</code></pre>
+
+    <p>
+      Chúng ta đã chuyển code <code>unsafe</code> của mình vào bên trong abstraction
+      được lên kế hoạch cẩn thận, và giờ code ứng dụng của chúng ta không chứa
+      bất kỳ block <code>unsafe</code> nào.
+    </p>
+
+    <p>
+      Thiết kế này yêu cầu application truyền một token <code>CriticalSection</code> vào:
+      những token này chỉ được tạo ra an toàn bởi <code>interrupt::free</code>, vì vậy
+      bằng cách yêu cầu một cái được truyền vào, chúng ta đảm bảo rằng chúng ta đang
+      hoạt động bên trong một critical section, mà không phải thực sự tự làm lock.
+      Bảo đảm này được cung cấp tĩnh bởi compiler — sẽ không có runtime overhead nào
+      liên quan đến <code>cs</code>.
+    </p>
+
+    <p>
+      Điều này cũng đề cập đến một chủ đề quan trọng cho concurrency trong Rust:
+      các trait <a href="https://doc.rust-lang.org/nomicon/send-and-sync.html"><code>Send</code> và <code>Sync</code></a>.
+      Tóm tắt: một kiểu là <strong>Send</strong> khi nó có thể được an toàn chuyển sang thread khác,
+      trong khi nó là <strong>Sync</strong> khi nó có thể được chia sẻ an toàn giữa nhiều thread.
+      Trong ngữ cảnh embedded, chúng ta coi interrupts là đang thực thi trong một thread riêng
+      biệt so với code ứng dụng, vì vậy các biến được truy cập bởi cả interrupt lẫn code chính
+      phải là <code>Sync</code>.
+    </p>
+
+    <p>
+      Vì <code>CSCounter</code> chứa một <a href="https://doc.rust-lang.org/core/cell/struct.UnsafeCell.html"><code>UnsafeCell</code></a>,
+      nó không phải Sync, và do đó chúng ta không thể tạo một <code>static CSCounter</code>:
+      biến <code>static</code> <em>phải</em> là Sync. Để nói với compiler rằng chúng ta đã
+      đảm bảo <code>CSCounter</code> thực sự an toàn khi chia sẻ giữa các thread,
+      chúng ta implement trait Sync một cách tường minh.
+    </p>
+
+    <h2>Mutex</h2>
+
+    <p>
+      Chúng ta đã tạo một abstraction hữu ích dành riêng cho vấn đề counter của mình,
+      nhưng có nhiều abstraction phổ biến được dùng cho concurrency.
+    </p>
+
+    <p>
+      Một <em>synchronisation primitive</em> như vậy là mutex (mutual exclusion).
+      Những cấu trúc này đảm bảo truy cập độc quyền vào một biến. Một thread có thể
+      thử <em>lock</em> (acquire) mutex, và hoặc thành công ngay lập tức, hoặc block
+      chờ lock được acquire, hoặc trả về lỗi. Khi thread đó giữ lock, nó được
+      cấp quyền truy cập vào dữ liệu được bảo vệ. Khi thread xong, nó <em>unlock</em>
+      (release) mutex.
+    </p>
+
+    <p>
+      Sử dụng mutex với interrupt handler có thể phức tạp: thông thường không chấp nhận
+      được việc interrupt handler block, và sẽ thực sự thảm họa nếu nó block chờ thread
+      chính release lock, vì khi đó chúng ta sẽ <em>deadlock</em>. Deadlock không được
+      coi là unsafe — nó có thể xảy ra ngay cả trong safe Rust.
+    </p>
+
+    <p>
+      Để tránh hoàn toàn hành vi này, chúng ta có thể implement một mutex yêu cầu
+      critical section để lock. Điều này đã được làm sẵn trong crate <code>cortex_m</code>:
+    </p>
+
+    <pre><code><span class="kw">use</span> <span class="type">core</span>::cell::<span class="type">Cell</span>;
+<span class="kw">use</span> <span class="type">cortex_m</span>::interrupt::<span class="type">Mutex</span>;
+
+<span class="kw">static</span> <span class="type">COUNTER</span>: <span class="type">Mutex</span>&lt;<span class="type">Cell</span>&lt;<span class="type">u32</span>&gt;&gt; = <span class="type">Mutex</span>::new(<span class="type">Cell</span>::new(0));
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> state = <span class="fn">read_signal_level</span>();
+        <span class="kw">if</span> state && !last_state {
+            interrupt::free(|cs|
+                <span class="type">COUNTER</span>.borrow(cs).set(<span class="type">COUNTER</span>.borrow(cs).get() + 1));
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="comment">// Chúng ta vẫn cần enter critical section để thỏa mãn Mutex.</span>
+    interrupt::free(|cs| <span class="type">COUNTER</span>.borrow(cs).set(0));
+}</code></pre>
+
+    <p>
+      Chúng ta dùng <a href="https://doc.rust-lang.org/core/cell/struct.Cell.html"><code>Cell</code></a>
+      để cung cấp interior mutability an toàn. <code>Cell</code> cho phép lấy một bản copy
+      của giá trị hiện tại hoặc thay thế nó, nhưng không lấy reference — và vì nó không
+      phải Sync nên không thể chia sẻ giữa các thread.
+    </p>
+
+    <p>
+      <code>Mutex&lt;T&gt;</code> implement Sync cho bất kỳ <code>T</code> nào là Send —
+      chẳng hạn như <code>Cell</code>. Nó có thể làm điều này một cách an toàn vì nó chỉ
+      cho phép truy cập nội dung của mình trong một critical section. Kết quả là chúng ta
+      có được một counter an toàn <strong>hoàn toàn không có unsafe code</strong>!
+    </p>
+
+    <h2>Chia sẻ Peripherals</h2>
+
+    <p>
+      Device crates được tạo bằng <code>svd2rust</code> và các abstraction tương tự cung cấp
+      truy cập an toàn vào peripherals bằng cách đảm bảo chỉ tồn tại một instance của
+      peripheral struct tại một thời điểm. Điều này đảm bảo an toàn, nhưng gây khó khăn
+      khi truy cập peripheral từ cả thread chính lẫn interrupt handler.
+    </p>
+
+    <p>
+      Để chia sẻ peripheral một cách an toàn, chúng ta có thể dùng <code>Mutex</code> như đã thấy.
+      Chúng ta cũng cần dùng
+      <a href="https://doc.rust-lang.org/core/cell/struct.RefCell.html"><code>RefCell</code></a>
+      để đảm bảo chỉ có một reference đến peripheral được cấp ra tại một thời điểm.
+      Cuối cùng, chúng ta dùng kiểu <code>Option</code> để khởi tạo với <code>None</code>
+      và sau đó set thành peripheral.
+    </p>
+
+    <pre><code><span class="kw">use</span> <span class="type">core</span>::cell::<span class="type">RefCell</span>;
+<span class="kw">use</span> <span class="type">cortex_m</span>::interrupt::{self, <span class="type">Mutex</span>};
+<span class="kw">use</span> <span class="type">stm32f4</span>::stm32f405;
+
+<span class="kw">static</span> MY_GPIO: <span class="type">Mutex</span>&lt;<span class="type">RefCell</span>&lt;<span class="type">Option</span>&lt;stm32f405::<span class="type">GPIOA</span>&gt;&gt;&gt; =
+    <span class="type">Mutex</span>::new(<span class="type">RefCell</span>::new(<span class="type">None</span>));
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="comment">// Lấy peripheral singletons và cấu hình nó.</span>
+    <span class="kw">let</span> dp = stm32f405::<span class="type">Peripherals</span>::take().unwrap();
+    <span class="kw">let</span> gpioa = &dp.GPIOA;
+
+    <span class="comment">// Một hàm cấu hình nào đó.</span>
+    <span class="comment">// Giả sử nó đặt PA0 là input và PA1 là output.</span>
+    <span class="fn">configure_gpio</span>(gpioa);
+
+    <span class="comment">// Lưu GPIOA vào mutex (di chuyển vào).</span>
+    interrupt::free(|cs| MY_GPIO.borrow(cs).replace(<span class="type">Some</span>(dp.GPIOA)));
+    <span class="comment">// Chúng ta không thể dùng `gpioa` hay `dp.GPIOA` nữa, thay vào đó</span>
+    <span class="comment">// phải truy cập qua mutex.</span>
+
+    <span class="comment">// Hãy cẩn thận bật interrupt chỉ SAU KHI đặt MY_GPIO:</span>
+    <span class="comment">// nếu không, interrupt có thể kích hoạt khi nó vẫn chứa None,</span>
+    <span class="comment">// và với unwrap(), nó sẽ panic.</span>
+    <span class="fn">set_timer_1hz</span>();
+    <span class="kw">let mut</span> last_state = <span class="kw">false</span>;
+    <span class="kw">loop</span> {
+        <span class="comment">// Bây giờ chúng ta đọc state như một digital input, qua mutex</span>
+        <span class="kw">let</span> state = interrupt::free(|cs| {
+            <span class="kw">let</span> gpioa = MY_GPIO.borrow(cs).borrow();
+            gpioa.as_ref().unwrap().idr.read().idr0().bit_is_set()
+        });
+
+        <span class="kw">if</span> state && !last_state {
+            <span class="comment">// Đặt PA1 high nếu chúng ta thấy rising edge trên PA0.</span>
+            interrupt::free(|cs| {
+                <span class="kw">let</span> gpioa = MY_GPIO.borrow(cs).borrow();
+                gpioa.as_ref().unwrap().odr.modify(|_, w| w.odr1().set_bit());
+            });
+        }
+        last_state = state;
+    }
+}
+
+<span class="attr">#[interrupt]</span>
+<span class="kw">fn</span> <span class="fn">timer</span>() {
+    <span class="comment">// Lần này trong interrupt chúng ta chỉ clear PA0.</span>
+    interrupt::free(|cs| {
+        <span class="kw">let</span> gpioa = MY_GPIO.borrow(cs).borrow();
+        gpioa.as_ref().unwrap().odr.modify(|_, w| w.odr1().clear_bit());
+    });
+}</code></pre>
+
+    <p>Đó là khá nhiều thứ cần tiếp thu, hãy phân tích các dòng quan trọng:</p>
+
+    <pre><code><span class="kw">static</span> MY_GPIO: <span class="type">Mutex</span>&lt;<span class="type">RefCell</span>&lt;<span class="type">Option</span>&lt;stm32f405::<span class="type">GPIOA</span>&gt;&gt;&gt; =
+    <span class="type">Mutex</span>::new(<span class="type">RefCell</span>::new(<span class="type">None</span>));</code></pre>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Tại sao cần cả ba lớp: Mutex&lt;RefCell&lt;Option&lt;T&gt;&gt;&gt;?</div>
+      <svg viewBox="0 0 680 200" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="200" fill="#f8f9fc" rx="12"/>
+
+        <!-- Mutex -->
+        <rect x="20" y="20" width="640" height="160" rx="10" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="50" y="45" font-size="11" font-weight="700" fill="#9d174d" font-family="sans-serif">Mutex&lt;...&gt;</text>
+        <text x="50" y="62" font-size="10" fill="#be185d" font-family="sans-serif">→ Implement Sync: cho phép đặt làm `static`</text>
+        <text x="50" y="78" font-size="10" fill="#be185d" font-family="sans-serif">→ Chỉ cho phép truy cập bên trong critical section (token `cs`)</text>
+
+        <!-- RefCell -->
+        <rect x="40" y="88" width="600" height="70" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="70" y="108" font-size="11" font-weight="700" fill="#1e40af" font-family="sans-serif">RefCell&lt;...&gt;</text>
+        <text x="70" y="125" font-size="10" fill="#3b82f6" font-family="sans-serif">→ Interior mutability với reference (không phải copy như Cell)</text>
+        <text x="70" y="141" font-size="10" fill="#3b82f6" font-family="sans-serif">→ Runtime borrow check: đảm bảo chỉ 1 reference tại mỗi thời điểm</text>
+
+        <!-- Option -->
+        <rect x="60" y="152" width="560" height="22" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="90" y="167" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">Option&lt;GPIOA&gt;</text>
+        <text x="250" y="167" font-size="10" fill="#15803d" font-family="sans-serif">→ Khởi tạo với None, sau đó move peripheral vào lúc runtime</text>
+      </svg>
+    </div>
+
+    <p>
+      Shared variable của chúng ta giờ là một <code>Mutex</code> bao quanh một <code>RefCell</code>
+      chứa một <code>Option</code>. <code>Mutex</code> đảm bảo chúng ta chỉ có quyền truy cập
+      trong critical section, và do đó khiến biến Sync. <code>RefCell</code> cung cấp interior
+      mutability với references. <code>Option</code> cho phép khởi tạo biến này với giá trị rỗng,
+      và chỉ sau đó thực sự move biến vào.
+    </p>
+
+    <h2>RTIC</h2>
+
+    <p>
+      Một lựa chọn thay thế là <a href="https://github.com/rtic-rs/cortex-m-rtic">RTIC framework</a>
+      (Real Time Interrupt-driven Concurrency). Nó thực thi các priority tĩnh và theo dõi
+      truy cập vào các biến <code>static mut</code> ("resources") để đảm bảo tĩnh rằng
+      các resource dùng chung luôn được truy cập an toàn, mà không cần overhead của việc
+      luôn phải vào critical section và dùng reference counting (như <code>RefCell</code>).
+    </p>
+
+    <p>Điều này có nhiều ưu điểm như đảm bảo không deadlock và overhead thời gian và bộ nhớ cực thấp.</p>
+
+    <p>
+      Framework cũng bao gồm các tính năng khác như message passing, giúp giảm nhu cầu
+      shared state tường minh, và khả năng lên lịch task chạy vào thời điểm cụ thể,
+      dùng để implement periodic tasks. Xem <a href="https://rtic.rs">tài liệu RTIC</a>
+      để biết thêm!
+    </p>
+
+    <h2>Real-Time Operating Systems (RTOS)</h2>
+
+    <p>
+      Một mô hình phổ biến khác cho embedded concurrency là real-time operating system (RTOS).
+      Dù hiện tại ít được khám phá hơn trong Rust, chúng được dùng rộng rãi trong phát triển
+      embedded truyền thống. Các ví dụ open source bao gồm
+      <a href="https://freertos.org/">FreeRTOS</a> và
+      <a href="http://chibios.org/">ChibiOS</a>. Những RTOS này cung cấp hỗ trợ chạy nhiều
+      application thread mà CPU hoán đổi giữa chúng, hoặc khi thread yield quyền kiểm soát
+      (cooperative multitasking) hoặc dựa trên timer hoặc interrupt đều đặn (preemptive multitasking).
+    </p>
+
+    <h2>Đa lõi (Multiple Cores)</h2>
+
+    <p>
+      Ngày càng phổ biến có hai hoặc nhiều lõi trong vi xử lý embedded, điều này thêm một
+      lớp phức tạp cho concurrency. Tất cả các ví dụ dùng critical section (bao gồm cả
+      <code>cortex_m::interrupt::Mutex</code>) giả định rằng execution thread duy nhất khác
+      là interrupt thread, nhưng trên hệ thống đa lõi điều đó không còn đúng nữa.
+      Thay vào đó, chúng ta sẽ cần các synchronisation primitive được thiết kế cho nhiều lõi
+      (còn gọi là SMP — symmetric multi-processing).
+    </p>
+
+    <p>
+      Những primitive này thường dùng các lệnh atomic mà chúng ta đã thấy trước đó, vì
+      hệ thống xử lý sẽ đảm bảo tính atomic được duy trì trên tất cả các lõi.
+    </p>
+
+    <div class="note">
+      Đề cập chi tiết các chủ đề này hiện vượt quá phạm vi của cuốn sách này,
+      nhưng các pattern chung đều giống như cho trường hợp single-core.
+    </div>
+
+    <div class="nav-buttons">
+      <a href="../portability/index.html" class="nav-btn">← Tính di động</a>
+      <a href="../collections/index.html" class="nav-btn next">Collections →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

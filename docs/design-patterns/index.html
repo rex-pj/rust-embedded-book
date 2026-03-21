@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Patterns - Mẫu thiết kế - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="index.html" class="active">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Design Patterns</span>
+  </div>
+  <main id="main">
+
+    <h1>Design Patterns — Mẫu thiết kế HAL</h1>
+    <p class="subtitle">Các mẫu thiết kế phổ biến khi viết HAL và BSP trong Rust embedded</p>
+
+    <p>
+      Khi viết HAL (Hardware Abstraction Layer) hoặc BSP (Board Support Package) cho Rust embedded,
+      có một số design patterns được cộng đồng áp dụng rộng rãi để đạt được
+      <strong>API an toàn, rõ ràng và dễ dùng</strong>.
+    </p>
+
+    <h2>Kiến trúc lớp BSP → HAL → PAC → Hardware</h2>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Các lớp abstraction trong embedded Rust ecosystem</div>
+      <svg viewBox="0 0 680 320" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <defs>
+          <marker id="arr-dp" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L9,3 L0,6 Z" fill="#6366f1"/>
+          </marker>
+        </defs>
+        <rect width="680" height="320" fill="#f8f9fc" rx="12"/>
+
+        <!-- BSP Layer -->
+        <rect x="40" y="20" width="600" height="56" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="2.5"/>
+        <text x="340" y="44" text-anchor="middle" font-size="14" font-weight="700" fill="#7e22ce" font-family="sans-serif">BSP — Board Support Package</text>
+        <text x="340" y="62" text-anchor="middle" font-size="11" fill="#9333ea" font-family="sans-serif">stm32f3discovery / nucleo-f303re / rpi-pico — Cụ thể cho từng board mạch</text>
+
+        <!-- Arrow BSP → HAL -->
+        <line x1="340" y1="78" x2="340" y2="100" stroke="#6366f1" stroke-width="2" marker-end="url(#arr-dp)"/>
+        <text x="360" y="94" font-size="9" fill="#6366f1" font-family="sans-serif">dùng</text>
+
+        <!-- HAL Layer -->
+        <rect x="40" y="102" width="600" height="56" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+        <text x="340" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="sans-serif">HAL — Hardware Abstraction Layer</text>
+        <text x="340" y="144" text-anchor="middle" font-size="11" fill="#2563eb" font-family="sans-serif">stm32f3xx-hal / nrf52840-hal / rp2040-hal — Cụ thể cho từng chip</text>
+
+        <!-- Arrow HAL → PAC -->
+        <line x1="340" y1="160" x2="340" y2="182" stroke="#6366f1" stroke-width="2" marker-end="url(#arr-dp)"/>
+        <text x="360" y="176" font-size="9" fill="#6366f1" font-family="sans-serif">wraps</text>
+
+        <!-- PAC Layer -->
+        <rect x="40" y="184" width="600" height="56" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+        <text x="340" y="208" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e" font-family="sans-serif">PAC — Peripheral Access Crate</text>
+        <text x="340" y="226" text-anchor="middle" font-size="11" fill="#b45309" font-family="sans-serif">stm32f3 / nrf52840 / rp2040-pac — Tự động sinh từ SVD file</text>
+
+        <!-- Arrow PAC → Hardware -->
+        <line x1="340" y1="242" x2="340" y2="264" stroke="#6366f1" stroke-width="2" marker-end="url(#arr-dp)"/>
+        <text x="360" y="258" font-size="9" fill="#6366f1" font-family="sans-serif">điều khiển</text>
+
+        <!-- Hardware Layer -->
+        <rect x="40" y="266" width="600" height="40" rx="10" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+        <text x="340" y="292" text-anchor="middle" font-size="14" font-weight="700" fill="white" font-family="sans-serif">⚙️ Phần cứng thực — MCU Registers, GPIO pins, peripherals</text>
+
+        <!-- Vertical labels on right -->
+        <text x="650" y="50" font-size="9" fill="#7e22ce" font-family="sans-serif" transform="rotate(-90,650,50)">Application layer</text>
+        <text x="650" y="132" font-size="9" fill="#1e40af" font-family="sans-serif" transform="rotate(-90,650,132)">Chip-specific</text>
+        <text x="650" y="214" font-size="9" fill="#92400e" font-family="sans-serif" transform="rotate(-90,650,214)">Auto-generated</text>
+      </svg>
+    </div>
+
+    <h2>1. Builder Pattern — Cấu hình ngoại vi</h2>
+
+    <p>
+      Builder pattern rất phổ biến trong HAL để cấu hình ngoại vi với nhiều tùy chọn
+      mà vẫn có giá trị mặc định hợp lý:
+    </p>
+
+    <pre><code><span class="comment">// HAL cung cấp builder cho UART configuration</span>
+<span class="kw">use</span> stm32f3xx_hal::{serial::<span class="type">Serial</span>, time::Bps};
+
+<span class="kw">let</span> serial = <span class="type">Serial</span>::new(
+    dp.USART1,
+    (tx_pin, rx_pin),
+    <span class="type">9600</span>.bps(),      <span class="comment">// Baud rate</span>
+    clocks,
+    &<span class="kw">mut</span> rcc.apb2,
+);
+
+<span class="comment">// Hoặc với builder pattern đầy đủ:</span>
+<span class="kw">let</span> serial = <span class="type">Serial</span>::builder(dp.USART1)
+    .baud_rate(<span class="num">115200</span>.bps())
+    .word_length(<span class="type">WordLength</span>::Bits8)
+    .parity(<span class="type">Parity</span>::None)
+    .stop_bits(<span class="type">StopBits</span>::One)
+    .build((tx_pin, rx_pin), clocks, &<span class="kw">mut</span> rcc.apb2);</code></pre>
+
+    <h2>2. Typestate Pattern — GPIO và ngoại vi</h2>
+
+    <p>
+      Typestate pattern mã hóa trạng thái của ngoại vi vào type system,
+      ngăn việc dùng sai cách tại compile time:
+    </p>
+
+    <pre><code><span class="comment">// GPIO với typestate — không thể gọi set_high() trên pin input!</span>
+<span class="kw">let</span> <span class="kw">mut</span> gpioa = dp.GPIOA.split(&<span class="kw">mut</span> rcc.ahb);
+
+<span class="comment">// PA5 ban đầu là Floating Input</span>
+<span class="kw">let</span> pa5 = gpioa.pa5; <span class="comment">// PA5&lt;Input&lt;Floating&gt;&gt;</span>
+
+<span class="comment">// Chuyển sang Output</span>
+<span class="kw">let mut</span> led = pa5.into_push_pull_output(
+    &<span class="kw">mut</span> gpioa.moder,
+    &<span class="kw">mut</span> gpioa.otyper,
+); <span class="comment">// PA5&lt;Output&lt;PushPull&gt;&gt;</span>
+
+led.set_high().unwrap();  <span class="comment">// OK: pin là output</span>
+
+<span class="comment">// led.is_high() ← Compile error! is_high() chỉ có trên Input pin</span>
+<span class="comment">// → Xem thêm: static-guarantees/typestate-programming.html</span></code></pre>
+
+    <h2>3. Extension Traits — Mở rộng PAC API</h2>
+
+    <p>
+      Extension traits cho phép thêm method tiện lợi vào các type từ PAC
+      mà không cần fork PAC:
+    </p>
+
+    <pre><code><span class="comment">// Định nghĩa extension trait</span>
+<span class="kw">pub trait</span> <span class="type">GpioExt</span> {
+    <span class="kw">type</span> Parts;
+    <span class="kw">fn</span> <span class="fn">split</span>(self, ahb: &<span class="kw">mut</span> <span class="type">AHB</span>) -> Self::Parts;
+}
+
+<span class="comment">// Implement cho PAC type</span>
+<span class="kw">impl</span> <span class="type">GpioExt</span> <span class="kw">for</span> pac::<span class="type">GPIOA</span> {
+    <span class="kw">type</span> Parts = <span class="type">GpioAParts</span>;
+    <span class="kw">fn</span> <span class="fn">split</span>(self, ahb: &<span class="kw">mut</span> <span class="type">AHB</span>) -> <span class="type">GpioAParts</span> {
+        ahb.enr().modify(|_, w| w.iopaen().enabled());
+        <span class="type">GpioAParts</span> { pa0: <span class="type">PA0</span> { _mode: <span class="type">PhantomData</span> }, ... }
+    }
+}
+
+<span class="comment">// User: dp.GPIOA.split(&mut rcc.ahb) — method mới trên PAC type</span>
+<span class="kw">use</span> stm32f3xx_hal::prelude::*; <span class="comment">// import extension traits</span></code></pre>
+
+    <h2>4. Singleton Pattern — Ngăn trùng lặp peripheral</h2>
+
+    <pre><code><span class="comment">// PAC đảm bảo chỉ có thể lấy Peripherals một lần</span>
+<span class="kw">let</span> dp = pac::<span class="type">Peripherals</span>::take().unwrap();
+<span class="comment">// Lần 2 sẽ panic:</span>
+<span class="comment">// let dp2 = pac::Peripherals::take().unwrap(); // → None → panic</span>
+
+<span class="comment">// Tại sao? Rust type system + runtime singleton đảm bảo</span>
+<span class="comment">// không ai có thể có hai owner của cùng một peripheral.</span></code></pre>
+
+    <h2>5. Board Support Package (BSP)</h2>
+
+    <p>
+      BSP đóng gói toàn bộ setup cụ thể cho một board mạch,
+      cho phép user khởi tạo board chỉ trong một vài dòng:
+    </p>
+
+    <pre><code><span class="comment">// BSP cho STM32F3Discovery</span>
+<span class="kw">use</span> stm32f3_discovery::{leds::<span class="type">Leds</span>, <span class="type">Switch</span>};
+
+<span class="kw">let</span> dp = pac::<span class="type">Peripherals</span>::take().unwrap();
+<span class="kw">let mut</span> rcc = dp.RCC.constrain();
+<span class="kw">let</span> clocks = rcc.cfgr.freeze(&<span class="kw">mut</span> dp.FLASH.constrain().acr);
+<span class="kw">let</span> gpioe = dp.GPIOE.split(&<span class="kw">mut</span> rcc.ahb);
+
+<span class="comment">// BSP cung cấp abstraction cho 8 LED có sẵn trên board</span>
+<span class="kw">let</span> <span class="kw">mut</span> leds = <span class="type">Leds</span>::new(gpioe);
+
+leds[<span class="num">0</span>].on();   <span class="comment">// Bật LED đầu tiên</span>
+leds[<span class="num">4</span>].off();  <span class="comment">// Tắt LED thứ 5</span></code></pre>
+
+    <h2>HAL Design Checklist</h2>
+
+    <p>Khi thiết kế HAL, nên tuân theo các nguyên tắc sau:</p>
+
+    <table>
+      <tr>
+        <th>Tiêu chí</th>
+        <th>Hướng dẫn</th>
+      </tr>
+      <tr>
+        <td><strong>Đặt tên nhất quán</strong></td>
+        <td>Dùng tên giống embedded-hal: <code>set_high()</code>, <code>write()</code>, <code>read()</code></td>
+      </tr>
+      <tr>
+        <td><strong>Singleton cho peripheral</strong></td>
+        <td>Dùng move semantics hoặc <code>Option::take()</code> để ngăn trùng lặp</td>
+      </tr>
+      <tr>
+        <td><strong>Implement embedded-hal traits</strong></td>
+        <td>Cho GPIO, I2C, SPI, UART để driver portable dùng được</td>
+      </tr>
+      <tr>
+        <td><strong>Typestate cho trạng thái</strong></td>
+        <td>Mã hóa mode (Input/Output, Enabled/Disabled) vào generic parameter</td>
+      </tr>
+      <tr>
+        <td><strong>Zero unsafe trong public API</strong></td>
+        <td>Bọc <code>unsafe</code> bên trong, không để user phải dùng unsafe</td>
+      </tr>
+      <tr>
+        <td><strong>Builder với defaults hợp lý</strong></td>
+        <td>Cung cấp giá trị mặc định phổ biến, không bắt buộc mọi tham số</td>
+      </tr>
+      <tr>
+        <td><strong>Xử lý lỗi với Result</strong></td>
+        <td>Dùng <code>Result&lt;T, E&gt;</code>, không panic trong library code</td>
+      </tr>
+    </table>
+
+    <div class="tip">
+      Tham khảo <a href="https://github.com/rust-embedded/embedded-hal/blob/master/docs/hal-design-guidelines.md">HAL Design Guidelines</a>
+      chính thức của Rust Embedded Working Group để biết thêm chi tiết.
+    </div>
+
+    <div class="nav-buttons">
+      <a href="../collections/index.html" class="nav-btn">← Collections</a>
+      <a href="../static-guarantees/index.html" class="nav-btn next">Bảo đảm tĩnh →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

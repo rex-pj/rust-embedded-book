@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QEMU - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">QEMU</span>
+  </div>
+  <main id="main">
+
+    <h1>QEMU</h1>
+    <p class="subtitle">Chạy và debug chương trình embedded mà không cần phần cứng thực</p>
+
+    <p>
+      Chúng ta sẽ bắt đầu bằng cách viết một chương trình cho
+      <a href="http://www.ti.com/product/LM3S6965">LM3S6965</a>, một vi điều khiển Cortex-M3.
+      Chúng ta chọn mục tiêu này vì nó có thể được giả lập bằng QEMU — bạn không cần
+      phải loay hoay với phần cứng trong phần này và có thể tập trung vào công cụ và quy trình phát triển.
+    </p>
+
+    <div class="warning">
+      <strong>QUAN TRỌNG:</strong> Chúng ta sẽ dùng tên <code>app</code> cho tên dự án trong
+      hướng dẫn này. Mỗi khi bạn thấy từ <code>app</code>, hãy thay bằng tên bạn đã chọn cho
+      dự án của mình. Hoặc, bạn cũng có thể đặt tên dự án là <code>app</code> để tránh phải thay.
+    </div>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Quy trình phát triển với QEMU</div>
+      <svg viewBox="0 0 720 160" style="width:100%;max-width:720px;display:block;margin:0 auto">
+        <rect width="720" height="160" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="qa" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#CE422B"/>
+          </marker>
+        </defs>
+        <!-- Steps -->
+        <rect x="20" y="50" width="120" height="60" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="80" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af" font-family="sans-serif">📝 Viết code</text>
+        <text x="80" y="95" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">src/main.rs</text>
+
+        <line x1="142" y1="80" x2="168" y2="80" stroke="#CE422B" stroke-width="2" marker-end="url(#qa)"/>
+
+        <rect x="170" y="50" width="120" height="60" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="230" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#7e22ce" font-family="sans-serif">🔧 Build</text>
+        <text x="230" y="95" text-anchor="middle" font-size="10" fill="#7e22ce" font-family="sans-serif">cargo build</text>
+
+        <line x1="292" y1="80" x2="318" y2="80" stroke="#CE422B" stroke-width="2" marker-end="url(#qa)"/>
+
+        <rect x="320" y="50" width="120" height="60" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="380" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="sans-serif">🖥️ Inspect</text>
+        <text x="380" y="88" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">cargo-size</text>
+        <text x="380" y="103" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">cargo-objdump</text>
+
+        <line x1="442" y1="80" x2="468" y2="80" stroke="#CE422B" stroke-width="2" marker-end="url(#qa)"/>
+
+        <rect x="470" y="50" width="120" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="530" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="sans-serif">▶️ Chạy</text>
+        <text x="530" y="88" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">cargo run</text>
+        <text x="530" y="103" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">(QEMU)</text>
+
+        <line x1="592" y1="80" x2="618" y2="80" stroke="#CE422B" stroke-width="2" marker-end="url(#qa)"/>
+
+        <rect x="620" y="50" width="80" height="60" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="660" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b" font-family="sans-serif">🐛 GDB</text>
+        <text x="660" y="88" text-anchor="middle" font-size="10" fill="#991b1b" font-family="sans-serif">Debug</text>
+        <text x="660" y="103" text-anchor="middle" font-size="10" fill="#991b1b" font-family="sans-serif">từ xa</text>
+      </svg>
+    </div>
+
+    <h2>Tạo chương trình Rust không chuẩn</h2>
+
+    <p>
+      Chúng ta sẽ dùng template <a href="https://github.com/rust-embedded/cortex-m-quickstart"><code>cortex-m-quickstart</code></a>
+      để tạo một dự án mới. Dự án được tạo ra sẽ chứa một ứng dụng bare-bone:
+      điểm khởi đầu tốt cho một ứng dụng embedded Rust mới. Ngoài ra, dự án còn chứa
+      thư mục <code>examples</code> với nhiều ứng dụng riêng biệt, làm nổi bật
+      một số tính năng key của embedded Rust.
+    </p>
+
+    <h3>Dùng <code>cargo-generate</code></h3>
+
+    <p>Trước tiên cài cargo-generate:</p>
+
+    <pre><code>cargo install cargo-generate</code></pre>
+
+    <p>Sau đó tạo dự án mới:</p>
+
+    <pre><code>cargo generate --git https://github.com/rust-embedded/cortex-m-quickstart
+
+ Project Name: app
+ Creating project called `app`...
+ Done! New project created /tmp/app</code></pre>
+
+    <pre><code>cd app</code></pre>
+
+    <h3>Dùng <code>git</code></h3>
+
+    <p>Clone repository:</p>
+
+    <pre><code>git clone https://github.com/rust-embedded/cortex-m-quickstart app
+cd app</code></pre>
+
+    <p>Sau đó điền vào các placeholder trong file <code>Cargo.toml</code>:</p>
+
+    <pre><code>[package]
+authors = ["{{authors}}"] <span class="comment"># "{{authors}}" -> "John Smith"</span>
+edition = "2018"
+name = "{{project-name}}" <span class="comment"># "{{project-name}}" -> "app"</span>
+version = "0.1.0"
+
+# ..
+
+[[bin]]
+name = "{{project-name}}" <span class="comment"># "{{project-name}}" -> "app"</span>
+test = false
+bench = false</code></pre>
+
+    <h3>Không dùng công cụ nào</h3>
+
+    <p>Tải snapshot mới nhất của template <code>cortex-m-quickstart</code> và giải nén:</p>
+
+    <pre><code>curl -LO https://github.com/rust-embedded/cortex-m-quickstart/archive/master.zip
+unzip master.zip
+mv cortex-m-quickstart-master app
+cd app</code></pre>
+
+    <p>Sau đó điền vào các placeholder trong <code>Cargo.toml</code> như hướng dẫn ở phần "Dùng git" ở trên.</p>
+
+    <h2>Tổng quan chương trình</h2>
+
+    <p>Đây là các phần quan trọng nhất của source code trong <code>src/main.rs</code>:</p>
+
+    <pre><code><span class="attr">#![no_std]</span>
+<span class="attr">#![no_main]</span>
+
+<span class="kw">use</span> <span class="type">panic_halt</span> <span class="kw">as</span> _;
+
+<span class="kw">use</span> <span class="type">cortex_m_rt</span>::<span class="fn">entry</span>;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="kw">loop</span> {
+        <span class="comment">// code của bạn ở đây</span>
+    }
+}</code></pre>
+
+    <p>Chương trình này khác một chút so với chương trình Rust thông thường, hãy xem kỹ hơn:</p>
+
+    <p>
+      <code>#![no_std]</code> cho biết chương trình này sẽ <em>không</em> link vào crate chuẩn <code>std</code>.
+      Thay vào đó nó sẽ link vào tập hợp con của nó: crate <code>core</code>.
+    </p>
+
+    <p>
+      <code>#![no_main]</code> cho biết chương trình này sẽ không dùng interface <code>main</code>
+      chuẩn mà hầu hết các chương trình Rust sử dụng. Lý do chính để dùng <code>no_main</code>
+      là việc sử dụng interface <code>main</code> trong ngữ cảnh <code>no_std</code> yêu cầu nightly.
+    </p>
+
+    <p>
+      <code>use panic_halt as _;</code> — Crate này cung cấp một <code>panic_handler</code>
+      định nghĩa hành vi khi xảy ra panic. Chúng ta sẽ đề cập chi tiết hơn trong chương
+      <a href="panicking.html">Panicking</a>.
+    </p>
+
+    <p>
+      <a href="https://docs.rs/cortex-m-rt-macros/latest/cortex_m_rt_macros/attr.entry.html"><code>#[entry]</code></a>
+      là một attribute được cung cấp bởi crate
+      <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a>
+      dùng để đánh dấu điểm vào (entry point) của chương trình. Vì chúng ta không dùng
+      interface <code>main</code> chuẩn nên cần một cách khác để chỉ ra entry point, đó là <code>#[entry]</code>.
+    </p>
+
+    <p>
+      <code>fn main() -&gt; !</code> — Chương trình của chúng ta sẽ là <em>process duy nhất</em>
+      chạy trên phần cứng mục tiêu, vì vậy chúng ta không muốn nó kết thúc! Chúng ta dùng một
+      <a href="https://doc.rust-lang.org/rust-by-example/fn/diverging.html">divergent function</a>
+      (phần <code>-&gt; !</code> trong chữ ký hàm) để đảm bảo điều này tại compile time.
+    </p>
+
+    <h2>Cross compile</h2>
+
+    <p>
+      Bước tiếp theo là <em>cross</em> compile chương trình cho kiến trúc Cortex-M3.
+      Điều này đơn giản như chạy <code>cargo build --target $TRIPLE</code> nếu bạn biết
+      compilation target (<code>$TRIPLE</code>) là gì. May mắn thay, file
+      <code>.cargo/config.toml</code> trong template đã có câu trả lời:
+    </p>
+
+    <pre><code>tail -n6 .cargo/config.toml</code></pre>
+
+    <pre><code>[build]
+<span class="comment"># Chọn MỘT trong các compilation target sau</span>
+<span class="comment"># target = "thumbv6m-none-eabi"    # Cortex-M0 và Cortex-M0+</span>
+target = "thumbv7m-none-eabi"    <span class="comment"># Cortex-M3</span>
+<span class="comment"># target = "thumbv7em-none-eabi"   # Cortex-M4 và Cortex-M7 (không FPU)</span>
+<span class="comment"># target = "thumbv7em-none-eabihf" # Cortex-M4F và Cortex-M7F (có FPU)</span></code></pre>
+
+    <p>
+      Để cross compile cho kiến trúc Cortex-M3, chúng ta phải dùng <code>thumbv7m-none-eabi</code>.
+      Target đó không được cài tự động khi cài Rust toolchain, đây là lúc thích hợp để thêm
+      target vào toolchain nếu bạn chưa làm:
+    </p>
+
+    <pre><code>rustup target add thumbv7m-none-eabi</code></pre>
+
+    <p>
+      Vì compilation target <code>thumbv7m-none-eabi</code> đã được đặt làm default trong
+      <code>.cargo/config.toml</code>, hai lệnh dưới đây làm việc giống nhau:
+    </p>
+
+    <pre><code>cargo build --target thumbv7m-none-eabi
+cargo build</code></pre>
+
+    <h2>Kiểm tra binary</h2>
+
+    <p>
+      Bây giờ chúng ta có một ELF binary không phải native tại
+      <code>target/thumbv7m-none-eabi/debug/app</code>. Chúng ta có thể kiểm tra nó
+      bằng <code>cargo-binutils</code>.
+    </p>
+
+    <p>Với <code>cargo-readobj</code>, chúng ta có thể in ELF headers để xác nhận đây là binary ARM:</p>
+
+    <pre><code>cargo readobj --bin app -- --file-headers</code></pre>
+
+    <div class="note">
+      <code>--bin app</code> là cú pháp ngắn gọn để kiểm tra binary tại
+      <code>target/$TRIPLE/debug/app</code>. Flag này cũng sẽ (re)compile binary nếu cần.
+    </div>
+
+    <pre><code>ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0x0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x405
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          153204 (bytes into file)
+  Flags:                             0x5000200
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         2
+  Size of section headers:           40 (bytes)
+  Number of section headers:         19
+  Section header string table index: 18</code></pre>
+
+    <p><code>cargo-size</code> có thể in kích thước của các linker section của binary:</p>
+
+    <pre><code>cargo size --bin app --release -- -A</code></pre>
+
+    <p>Chúng ta dùng <code>--release</code> để kiểm tra phiên bản đã được tối ưu:</p>
+
+    <pre><code>app  :
+section             size        addr
+.vector_table       1024         0x0
+.text                 92       0x400
+.rodata                0       0x45c
+.data                  0  0x20000000
+.bss                   0  0x20000000
+.debug_str          2958         0x0
+.debug_loc            19         0x0
+.debug_abbrev        567         0x0
+.debug_info         4929         0x0
+.debug_ranges         40         0x0
+.debug_macinfo         1         0x0
+.debug_pubnames     2035         0x0
+.debug_pubtypes     1892         0x0
+.ARM.attributes       46         0x0
+.debug_frame         100         0x0
+.debug_line          867         0x0
+Total              14570</code></pre>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Các ELF linker sections và ý nghĩa</div>
+      <svg viewBox="0 0 680 220" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="220" fill="#f8f9fc" rx="12"/>
+
+        <!-- Flash sections -->
+        <text x="170" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#9d174d" font-family="sans-serif">Nạp vào Flash (chiếm ROM)</text>
+        <rect x="20" y="30" width="300" height="30" rx="4" fill="#fce7f3" stroke="#ec4899"/>
+        <text x="60" y="46" font-size="11" fill="#9d174d" font-family="monospace">.vector_table</text>
+        <text x="220" y="46" font-size="10" fill="#be185d" font-family="sans-serif">Bảng vector ngắt (1024 bytes)</text>
+        <rect x="20" y="65" width="300" height="30" rx="4" fill="#fce7f3" stroke="#ec4899"/>
+        <text x="60" y="81" font-size="11" fill="#9d174d" font-family="monospace">.text</text>
+        <text x="220" y="81" font-size="10" fill="#be185d" font-family="sans-serif">Mã lệnh thực thi (machine code)</text>
+        <rect x="20" y="100" width="300" height="30" rx="4" fill="#fce7f3" stroke="#ec4899"/>
+        <text x="60" y="116" font-size="11" fill="#9d174d" font-family="monospace">.rodata</text>
+        <text x="220" y="116" font-size="10" fill="#be185d" font-family="sans-serif">Hằng số, chuỗi string literals</text>
+        <rect x="20" y="135" width="300" height="30" rx="4" fill="#fce7f3" stroke="#ec4899"/>
+        <text x="60" y="151" font-size="11" fill="#9d174d" font-family="monospace">.data (ảnh)</text>
+        <text x="220" y="151" font-size="10" fill="#be185d" font-family="sans-serif">Giá trị khởi tạo cho biến RAM</text>
+
+        <!-- RAM sections -->
+        <text x="530" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="sans-serif">Chiếm RAM (khi chạy)</text>
+        <rect x="360" y="30" width="300" height="30" rx="4" fill="#dcfce7" stroke="#22c55e"/>
+        <text x="400" y="46" font-size="11" fill="#166534" font-family="monospace">.data</text>
+        <text x="540" y="46" font-size="10" fill="#15803d" font-family="sans-serif">Biến tĩnh đã khởi tạo ≠ 0</text>
+        <rect x="360" y="65" width="300" height="30" rx="4" fill="#dcfce7" stroke="#22c55e"/>
+        <text x="400" y="81" font-size="11" fill="#166534" font-family="monospace">.bss</text>
+        <text x="540" y="81" font-size="10" fill="#15803d" font-family="sans-serif">Biến tĩnh khởi tạo = 0</text>
+
+        <!-- Debug (not flashed) -->
+        <text x="170" y="185" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280" font-family="sans-serif">Chỉ có trong ELF, không nạp vào Flash</text>
+        <rect x="20" y="193" width="620" height="22" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+        <text x="330" y="208" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">.debug_str  .debug_info  .debug_loc  .debug_abbrev  .ARM.attributes  .debug_line  ... (metadata cho GDB)</text>
+      </svg>
+    </div>
+
+    <div class="warning">
+      <strong>QUAN TRỌNG:</strong> File ELF chứa metadata như thông tin debug nên
+      <em>kích thước trên đĩa</em> của nó <em>không</em> phản ánh chính xác dung lượng
+      chương trình sẽ chiếm khi nạp vào thiết bị. <em>Luôn</em> dùng <code>cargo-size</code>
+      để kiểm tra binary thực sự lớn bao nhiêu.
+    </div>
+
+    <p><code>cargo-objdump</code> có thể dùng để disassemble binary:</p>
+
+    <pre><code>cargo objdump --bin app --release -- --disassemble --no-show-raw-insn --print-imm-hex</code></pre>
+
+    <pre><code>app:  file format ELF32-arm-little
+
+Disassembly of section .text:
+main:
+     400: bl  #0x256
+     404: b #-0x4 &lt;main+0x4&gt;
+
+Reset:
+     406: bl  #0x24e
+     40a: movw  r0, #0x0
+     &lt;.. truncated ..&gt;
+
+DefaultHandler_:
+     656: b #-0x4 &lt;DefaultHandler_&gt;
+
+HardFaultTrampoline:
+     65c: mrs r0, msp
+     660: b #-0x2 &lt;HardFault_&gt;
+
+HardFault_:
+     662: b #-0x4 &lt;HardFault_&gt;</code></pre>
+
+    <h2>Chạy trên QEMU</h2>
+
+    <p>
+      Tiếp theo, hãy xem cách chạy chương trình embedded trên QEMU. Lần này chúng ta sẽ dùng
+      ví dụ <code>hello</code> — thứ thực sự làm gì đó hữu ích.
+    </p>
+
+    <p>Đây là source code của <code>examples/hello.rs</code>:</p>
+
+    <pre><code><span class="comment">//! In "Hello, world!" ra console của host dùng semihosting</span>
+
+<span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> <span class="type">panic_halt</span> <span class="kw">as</span> _;
+
+<span class="kw">use</span> <span class="type">cortex_m_rt</span>::<span class="fn">entry</span>;
+<span class="kw">use</span> <span class="type">cortex_m_semihosting</span>::{<span class="fn">debug</span>, <span class="macro">hprintln</span>};
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="macro">hprintln!</span>(<span class="str">"Hello, world!"</span>);
+
+    <span class="comment">// Thoát QEMU</span>
+    <span class="comment">// CHÚ Ý: đừng chạy lệnh này trên phần cứng thực; nó có thể làm hỏng trạng thái OpenOCD</span>
+    <span class="fn">debug</span>::exit(<span class="fn">debug</span>::EXIT_SUCCESS);
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Chương trình này dùng thứ gọi là semihosting để in text ra <em>console của host</em>.
+      Khi dùng phần cứng thực, điều này đòi hỏi một debug session, nhưng khi dùng QEMU
+      thì nó hoạt động ngay lập tức.
+    </p>
+
+    <p>Hãy bắt đầu bằng cách compile ví dụ:</p>
+
+    <pre><code>cargo build --example hello</code></pre>
+
+    <p>Binary output sẽ ở tại <code>target/thumbv7m-none-eabi/debug/examples/hello</code>.</p>
+
+    <p>Để chạy binary này trên QEMU, chạy lệnh sau:</p>
+
+    <pre><code>qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -kernel target/thumbv7m-none-eabi/debug/examples/hello</code></pre>
+
+    <pre><code>Hello, world!</code></pre>
+
+    <p>Lệnh sẽ thoát thành công (exit code = 0) sau khi in text. Trên *nix bạn có thể kiểm tra bằng:</p>
+
+    <pre><code>echo $?
+0</code></pre>
+
+    <p>Hãy phân tích lệnh QEMU đó:</p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Giải thích các flag của lệnh QEMU</div>
+      <svg viewBox="0 0 680 270" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="270" fill="#f8f9fc" rx="12"/>
+
+        <rect x="20" y="15" width="640" height="28" rx="6" fill="#282c34"/>
+        <text x="340" y="33" text-anchor="middle" font-size="11" fill="#abb2bf" font-family="monospace">qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config ... -kernel $file</text>
+
+        <!-- Flag 1 -->
+        <rect x="20" y="55" width="150" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6"/>
+        <text x="95" y="73" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af" font-family="monospace">qemu-system-arm</text>
+        <text x="95" y="87" text-anchor="middle" font-size="9" fill="#3b82f6" font-family="sans-serif">Giả lập hệ thống ARM đầy đủ</text>
+
+        <!-- Flag 2 -->
+        <rect x="180" y="55" width="130" height="40" rx="6" fill="#f3e8ff" stroke="#a855f7"/>
+        <text x="245" y="73" text-anchor="middle" font-size="10" font-weight="700" fill="#7e22ce" font-family="monospace">-cpu cortex-m3</text>
+        <text x="245" y="87" text-anchor="middle" font-size="9" fill="#7e22ce" font-family="sans-serif">Kiểu CPU cụ thể</text>
+
+        <!-- Flag 3 -->
+        <rect x="320" y="55" width="160" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+        <text x="400" y="70" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e" font-family="monospace">-machine lm3s6965evb</text>
+        <text x="400" y="84" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">Board mạch được giả lập</text>
+        <text x="400" y="95" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">(LM3S6965 của TI)</text>
+
+        <!-- Flag 4 -->
+        <rect x="490" y="55" width="100" height="40" rx="6" fill="#dcfce7" stroke="#22c55e"/>
+        <text x="540" y="73" text-anchor="middle" font-size="10" font-weight="700" fill="#166534" font-family="monospace">-nographic</text>
+        <text x="540" y="87" text-anchor="middle" font-size="9" fill="#166534" font-family="sans-serif">Không mở GUI</text>
+
+        <!-- Flag 5 -->
+        <rect x="20" y="115" width="350" height="50" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+        <text x="195" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b" font-family="monospace">-semihosting-config enable=on,target=native</text>
+        <text x="195" y="148" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="sans-serif">Bật semihosting — MCU giả lập có thể dùng</text>
+        <text x="195" y="160" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="sans-serif">stdout/stderr của host để in text</text>
+
+        <!-- Flag 6 -->
+        <rect x="380" y="115" width="210" height="50" rx="6" fill="#e0e7ff" stroke="#6366f1"/>
+        <text x="485" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#3730a3" font-family="monospace">-kernel $file</text>
+        <text x="485" y="148" text-anchor="middle" font-size="9" fill="#4338ca" font-family="sans-serif">File ELF binary để load và chạy</text>
+        <text x="485" y="160" text-anchor="middle" font-size="9" fill="#4338ca" font-family="sans-serif">trên máy được giả lập</text>
+
+        <!-- Tip -->
+        <rect x="20" y="180" width="640" height="74" rx="8" fill="#f0fdf4" stroke="#22c55e"/>
+        <text x="340" y="198" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="sans-serif">💡 Cách đơn giản hơn: dùng cargo runner</text>
+        <text x="50" y="216" font-size="10" fill="#15803d" font-family="monospace"># .cargo/config.toml</text>
+        <text x="50" y="230" font-size="10" fill="#15803d" font-family="monospace">[target.thumbv7m-none-eabi]</text>
+        <text x="50" y="244" font-size="10" fill="#166534" font-family="monospace">runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"</text>
+      </svg>
+    </div>
+
+    <p>
+      Gõ lệnh QEMU dài như vậy rất mất công! Chúng ta có thể đặt một <em>custom runner</em>
+      để đơn giản hóa quá trình. File <code>.cargo/config.toml</code> có một runner đã được
+      comment out để gọi QEMU — hãy bỏ comment nó:
+    </p>
+
+    <pre><code>[target.thumbv7m-none-eabi]
+<span class="comment"># bỏ comment dòng này để `cargo run` thực thi chương trình trên QEMU</span>
+runner = <span class="str">"qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"</span></code></pre>
+
+    <p>
+      Runner này chỉ áp dụng cho target <code>thumbv7m-none-eabi</code>, là compilation target
+      default của chúng ta. Giờ <code>cargo run</code> sẽ compile chương trình và chạy nó trên QEMU:
+    </p>
+
+    <pre><code>cargo run --example hello --release</code></pre>
+
+    <pre><code>   Compiling app v0.1.0 (file:///tmp/app)
+    Finished release [optimized + debuginfo] target(s) in 0.26s
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7m-none-eabi/release/examples/hello`
+Hello, world!</code></pre>
+
+    <h2>Debug</h2>
+
+    <p>
+      Debug là phần không thể thiếu trong phát triển embedded. Hãy xem cách thực hiện.
+    </p>
+
+    <p>
+      Debug một thiết bị embedded bao gồm <em>remote debugging</em> vì chương trình chúng ta
+      muốn debug sẽ không chạy trên máy đang chạy debugger (GDB hoặc LLDB).
+    </p>
+
+    <p>
+      Remote debugging bao gồm một client và một server. Trong setup QEMU, client là một
+      tiến trình GDB (hoặc LLDB) và server là tiến trình QEMU đang chạy chương trình embedded.
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Kiến trúc Remote Debugging với QEMU</div>
+      <svg viewBox="0 0 660 160" style="width:100%;max-width:660px;display:block;margin:0 auto">
+        <rect width="660" height="160" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="db" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#6b7280"/>
+          </marker>
+        </defs>
+
+        <!-- GDB Client -->
+        <rect x="20" y="40" width="200" height="80" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="120" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af" font-family="sans-serif">🐛 GDB Client</text>
+        <text x="120" y="86" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="monospace">gdb-multiarch</text>
+        <text x="120" y="102" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">Terminal 2</text>
+
+        <!-- TCP connection -->
+        <line x1="222" y1="80" x2="318" y2="80" stroke="#6b7280" stroke-width="2" marker-end="url(#db)"/>
+        <line x1="318" y1="80" x2="222" y2="80" stroke="#6b7280" stroke-width="2" marker-end="url(#db)"/>
+        <text x="270" y="72" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">TCP :3333</text>
+        <text x="270" y="96" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">GDB protocol</text>
+
+        <!-- QEMU Server -->
+        <rect x="320" y="40" width="200" height="80" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="420" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#7e22ce" font-family="sans-serif">🖥️ QEMU Server</text>
+        <text x="420" y="86" text-anchor="middle" font-size="10" fill="#7e22ce" font-family="monospace">qemu-system-arm -S -gdb</text>
+        <text x="420" y="102" text-anchor="middle" font-size="10" fill="#7e22ce" font-family="sans-serif">Terminal 1</text>
+
+        <!-- Source / Binary -->
+        <rect x="540" y="40" width="100" height="80" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="590" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">ELF Binary</text>
+        <text x="590" y="86" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">debug symbols</text>
+        <text x="590" y="102" text-anchor="middle" font-size="10" fill="#166534" font-family="monospace">hello</text>
+
+        <line x1="520" y1="80" x2="542" y2="80" stroke="#22c55e" stroke-width="1.5" marker-end="url(#db)"/>
+      </svg>
+    </div>
+
+    <p>Bước debug đầu tiên là khởi động QEMU ở chế độ debug:</p>
+
+    <pre><code>qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -gdb tcp::3333 \
+  -S \
+  -kernel target/thumbv7m-none-eabi/debug/examples/hello</code></pre>
+
+    <p>
+      Lệnh này sẽ không in gì ra console và sẽ block terminal. Chúng ta đã truyền thêm hai flag:
+    </p>
+    <ul>
+      <li><code>-gdb tcp::3333</code> — Nói với QEMU chờ kết nối GDB trên TCP port 3333.</li>
+      <li><code>-S</code> — Nói với QEMU đóng băng máy khi khởi động. Không có flag này, chương trình sẽ chạy đến cuối <code>main</code> trước khi chúng ta kịp khởi động debugger!</li>
+    </ul>
+
+    <p>Tiếp theo, khởi động GDB ở một terminal khác và nói cho nó load debug symbols của ví dụ:</p>
+
+    <pre><code>gdb-multiarch -q target/thumbv7m-none-eabi/debug/examples/hello</code></pre>
+
+    <div class="note">
+      Bạn có thể cần dùng phiên bản GDB khác thay vì <code>gdb-multiarch</code> tùy vào
+      cái bạn đã cài. Có thể là <code>arm-none-eabi-gdb</code> hoặc đơn giản là <code>gdb</code>.
+    </div>
+
+    <p>Trong shell GDB, kết nối tới QEMU đang chờ kết nối trên TCP port 3333:</p>
+
+    <pre><code>target remote :3333</code></pre>
+
+    <pre><code>Remote debugging using :3333
+Reset () at $REGISTRY/cortex-m-rt-0.6.1/src/lib.rs:473
+473     pub unsafe extern "C" fn Reset() -> ! {</code></pre>
+
+    <p>
+      Bạn sẽ thấy rằng tiến trình đang bị dừng và program counter đang trỏ đến một hàm
+      có tên <code>Reset</code>. Đó là reset handler: thứ mà các lõi Cortex-M thực thi khi boot.
+    </p>
+
+    <p>
+      Reset handler này cuối cùng sẽ gọi hàm <code>main</code> của chúng ta. Hãy nhảy thẳng
+      đến đó bằng breakpoint và lệnh <code>continue</code>. Để đặt breakpoint, đầu tiên
+      hãy xem code ở đâu chúng ta muốn dừng, dùng lệnh <code>list</code>:
+    </p>
+
+    <pre><code>list main</code></pre>
+
+    <pre><code>6       use panic_halt as _;
+7
+8       use cortex_m_rt::entry;
+9       use cortex_m_semihosting::{debug, hprintln};
+10
+11      #[entry]
+12      fn main() -> ! {
+13          hprintln!("Hello, world!").unwrap();
+14
+15          // exit QEMU</code></pre>
+
+    <p>Chúng ta muốn đặt breakpoint ngay trước "Hello, world!" ở dòng 13:</p>
+
+    <pre><code>break 13</code></pre>
+
+    <p>Hướng dẫn GDB chạy đến hàm <code>main</code>:</p>
+
+    <pre><code>continue</code></pre>
+
+    <pre><code>Continuing.
+
+Breakpoint 1, hello::__cortex_m_rt_main () at examples\hello.rs:13
+13          hprintln!("Hello, world!").unwrap();</code></pre>
+
+    <p>Chúng ta đang ở gần code in "Hello, world!". Tiếp tục dùng lệnh <code>next</code>:</p>
+
+    <pre><code>next</code></pre>
+
+    <pre><code>16          debug::exit(debug::EXIT_SUCCESS);</code></pre>
+
+    <p>Ở điểm này bạn sẽ thấy "Hello, world!" được in ra trên terminal đang chạy <code>qemu-system-arm</code>:</p>
+
+    <pre><code>$ qemu-system-arm (..)
+Hello, world!</code></pre>
+
+    <p>Gọi <code>next</code> thêm một lần sẽ kết thúc tiến trình QEMU:</p>
+
+    <pre><code>next</code></pre>
+
+    <pre><code>[Inferior 1 (Remote target) exited normally]</code></pre>
+
+    <p>Bây giờ bạn có thể thoát GDB session:</p>
+
+    <pre><code>quit</code></pre>
+
+    <div class="tip">
+      Sau khi thành thạo các bước trên, bạn có thể tạo file <code>.gdbinit</code> để
+      tự động hóa các bước kết nối và thiết lập breakpoint, giúp workflow debug nhanh hơn.
+    </div>
+
+    <div class="nav-buttons">
+      <a href="index.html" class="nav-btn">← Tổng quan</a>
+      <a href="hardware.html" class="nav-btn next">Phần cứng thực →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

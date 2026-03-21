@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh ghi bộ nhớ - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">Thanh ghi bộ nhớ</span>
+  </div>
+  <main id="main">
+
+    <h1>Thanh ghi ánh xạ bộ nhớ (Memory-mapped Registers)</h1>
+    <p class="subtitle">Điều khiển phần cứng thông qua địa chỉ bộ nhớ đặc biệt</p>
+
+    <p>
+      Các hệ thống nhúng chỉ có thể làm được nhiều việc bằng cách thực thi code Rust
+      thông thường và di chuyển dữ liệu trong RAM. Nếu chúng ta muốn đưa thông tin vào
+      hoặc ra khỏi hệ thống (dù là nhấp nháy LED, phát hiện nhấn nút hay giao tiếp với
+      peripheral bên ngoài chip qua bus nào đó) chúng ta cần phải đi vào thế giới của
+      Peripherals và 'memory-mapped registers'.
+    </p>
+
+    <p>Bạn có thể thấy rằng code cần để truy cập peripherals trong vi điều khiển của bạn
+    đã được viết sẵn, ở một trong các mức sau:</p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Bốn tầng trừu tượng trong hệ sinh thái Rust Embedded</div>
+      <svg viewBox="0 0 700 320" style="width:100%;max-width:700px;display:block;margin:0 auto">
+        <rect width="700" height="320" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="ra" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#6b7280"/>
+          </marker>
+        </defs>
+
+        <!-- Layer 4: Board Crate (top) -->
+        <rect x="20" y="20" width="660" height="52" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="180" y="43" font-size="13" font-weight="700" fill="#1e40af" font-family="sans-serif">④ Board Crate</text>
+        <text x="180" y="60" font-size="10" fill="#3b82f6" font-family="sans-serif">stm32f3-discovery, nrf52840-dk — cấu hình sẵn cho board cụ thể</text>
+        <text x="560" y="43" font-size="11" fill="#3b82f6" font-family="monospace">blink_led(), compass()</text>
+        <text x="560" y="58" font-size="10" fill="#3b82f6" font-family="sans-serif">Dễ dùng nhất</text>
+
+        <!-- Layer 3: HAL Crate -->
+        <rect x="20" y="85" width="660" height="52" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="180" y="108" font-size="13" font-weight="700" fill="#166534" font-family="sans-serif">③ HAL Crate</text>
+        <text x="180" y="125" font-size="10" fill="#166534" font-family="sans-serif">stm32f3xx-hal, nrf52840-hal — API thân thiện, dùng embedded-hal traits</text>
+        <text x="560" y="108" font-size="11" fill="#166534" font-family="monospace">Serial::new(), pin.set_high()</text>
+        <text x="560" y="123" font-size="10" fill="#166534" font-family="sans-serif">Khuyến nghị</text>
+
+        <!-- Layer 2: PAC -->
+        <rect x="20" y="150" width="660" height="52" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="180" y="173" font-size="13" font-weight="700" fill="#92400e" font-family="sans-serif">② PAC (Peripheral Access Crate)</text>
+        <text x="180" y="190" font-size="10" fill="#92400e" font-family="sans-serif">tm4c123x, stm32f3 — wrapper mỏng trực tiếp trên thanh ghi, sinh từ SVD</text>
+        <text x="560" y="173" font-size="11" fill="#92400e" font-family="monospace">gpioa.moder.modify(|r,w|...)</text>
+        <text x="560" y="188" font-size="10" fill="#92400e" font-family="sans-serif">Mức trung</text>
+
+        <!-- Layer 1: Micro-architecture -->
+        <rect x="20" y="215" width="660" height="52" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="180" y="238" font-size="13" font-weight="700" fill="#7e22ce" font-family="sans-serif">① Micro-architecture Crate</text>
+        <text x="180" y="255" font-size="10" fill="#7e22ce" font-family="sans-serif">cortex-m, riscv — các routine chung cho lõi CPU (SysTick, NVIC, enable/disable IRQ)</text>
+        <text x="560" y="238" font-size="11" fill="#7e22ce" font-family="monospace">NVIC::unmask(), delay()</text>
+        <text x="560" y="253" font-size="10" fill="#7e22ce" font-family="sans-serif">Mức thấp nhất</text>
+
+        <!-- Hardware at bottom -->
+        <rect x="20" y="280" width="660" height="30" rx="6" fill="#1e293b"/>
+        <text x="350" y="300" text-anchor="middle" font-size="12" font-weight="700" fill="white" font-family="sans-serif">⚙️ PHẦN CỨNG — Registers, Flash, GPIO, UART, SPI, Timer, ADC...</text>
+
+        <!-- Arrow down -->
+        <line x1="350" y1="72" x2="350" y2="83" stroke="#6b7280" stroke-width="1.5" marker-end="url(#ra)"/>
+        <line x1="350" y1="137" x2="350" y2="148" stroke="#6b7280" stroke-width="1.5" marker-end="url(#ra)"/>
+        <line x1="350" y1="202" x2="350" y2="213" stroke="#6b7280" stroke-width="1.5" marker-end="url(#ra)"/>
+        <line x1="350" y1="267" x2="350" y2="278" stroke="#6b7280" stroke-width="1.5" marker-end="url(#ra)"/>
+      </svg>
+    </div>
+
+    <h2>Board Crate</h2>
+
+    <p>
+      Một board crate là điểm khởi đầu hoàn hảo nếu bạn mới làm quen với embedded Rust.
+      Chúng trừu tượng hóa các chi tiết HW có thể gây ngợp khi bắt đầu học, và làm cho
+      các tác vụ chuẩn trở nên dễ dàng, như bật hoặc tắt LED.
+    </p>
+
+    <p>
+      Nếu bạn muốn thử nghiệm với board STM32F3DISCOVERY, rất khuyến nghị bạn xem
+      crate <a href="https://crates.io/crates/stm32f3-discovery">stm32f3-discovery</a>,
+      cung cấp tính năng nhấp nháy LED, truy cập compass, bluetooth và nhiều hơn nữa.
+      Cuốn sách <a href="https://rust-embedded.github.io/discovery/">Discovery</a>
+      cũng cung cấp phần giới thiệu tuyệt vời về việc dùng board crate.
+    </p>
+
+    <p>
+      Nhưng nếu bạn đang làm việc trên hệ thống chưa có board crate riêng, hoặc bạn cần
+      tính năng không có trong các crate hiện có, hãy đọc tiếp khi chúng ta bắt đầu từ
+      tầng dưới cùng — micro-architecture crates.
+    </p>
+
+    <h2>Micro-architecture Crate</h2>
+
+    <p>
+      Hãy xét peripheral SysTick có trong tất cả các vi điều khiển dựa trên Cortex-M.
+      Chúng ta có thể tìm thấy một API khá low-level trong crate
+      <a href="https://crates.io/crates/cortex-m">cortex-m</a>, và dùng nó như thế này:
+    </p>
+
+    <pre><code><span class="attr">#![no_std]</span>
+<span class="attr">#![no_main]</span>
+<span class="kw">use</span> <span class="type">cortex_m</span>::peripheral::{<span class="type">syst</span>, <span class="type">Peripherals</span>};
+<span class="kw">use</span> <span class="type">cortex_m_rt</span>::<span class="fn">entry</span>;
+<span class="kw">use</span> <span class="type">panic_halt</span> <span class="kw">as</span> _;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="kw">let</span> peripherals = <span class="type">Peripherals</span>::take().unwrap();
+    <span class="kw">let mut</span> systick = peripherals.SYST;
+    systick.set_clock_source(<span class="type">syst</span>::<span class="type">SystClkSource</span>::Core);
+    systick.set_reload(1_000);
+    systick.clear_current();
+    systick.enable_counter();
+    <span class="kw">while</span> !systick.has_wrapped() {
+        <span class="comment">// Loop</span>
+    }
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Các hàm trên struct <code>SYST</code> ánh xạ khá sát với tính năng được định nghĩa
+      bởi ARM Technical Reference Manual cho peripheral này. Không có gì trong API này về
+      'delay X milliseconds' — chúng ta phải tự implement thủ công bằng vòng lặp
+      <code>while</code>.
+    </p>
+
+    <div class="note">
+      Lưu ý rằng chúng ta không thể truy cập struct <code>SYST</code> cho đến khi gọi
+      <code>Peripherals::take()</code> — đây là một routine đặc biệt đảm bảo rằng chỉ có
+      một struct <code>SYST</code> trong toàn bộ chương trình. Đây là <strong>Singleton Pattern</strong>
+      được thực thi tại runtime — nếu bạn gọi <code>take()</code> lần thứ hai, nó trả về
+      <code>None</code>, ngăn ngừa aliasing không an toàn.
+    </div>
+
+    <h2>Dùng PAC (Peripheral Access Crate)</h2>
+
+    <p>
+      Chúng ta sẽ không đi được xa với phát triển phần mềm embedded nếu chỉ giới hạn bản
+      thân với các peripheral cơ bản có trong mọi Cortex-M. Tại một thời điểm nào đó,
+      chúng ta sẽ cần viết code dành riêng cho vi điều khiển cụ thể đang dùng.
+    </p>
+
+    <p>
+      Trong ví dụ này, giả sử chúng ta có Texas Instruments TM4C123 — một Cortex-M4 80MHz
+      trung cấp với 256 KiB Flash. Chúng ta sẽ kéo vào crate
+      <a href="https://crates.io/crates/tm4c123x">tm4c123x</a>:
+    </p>
+
+    <pre><code><span class="attr">#![no_std]</span>
+<span class="attr">#![no_main]</span>
+
+<span class="kw">use</span> <span class="type">panic_halt</span> <span class="kw">as</span> _;
+<span class="kw">use</span> <span class="type">cortex_m_rt</span>::<span class="fn">entry</span>;
+<span class="kw">use</span> <span class="type">tm4c123x</span>;
+
+<span class="attr">#[entry]</span>
+<span class="kw">pub fn</span> <span class="fn">init</span>() {
+    <span class="kw">let</span> cp = <span class="type">cortex_m</span>::<span class="type">Peripherals</span>::take().unwrap();
+    <span class="kw">let</span> p = <span class="type">tm4c123x</span>::<span class="type">Peripherals</span>::take().unwrap();
+
+    <span class="kw">let</span> pwm = p.PWM0;
+    pwm.ctl.write(|w| w.globalsync0().clear_bit());
+    <span class="comment">// Mode = 1 => Count up/down mode</span>
+    pwm._2_ctl.write(|w| w.enable().set_bit().mode().set_bit());
+    pwm._2_gena.write(|w| w.actcmpau().zero().actcmpad().one());
+    <span class="comment">// 528 cycles (264 up và down) = 4 loops mỗi video line (2112 cycles)</span>
+    pwm._2_load.write(|w| <span class="kw">unsafe</span> { w.load().bits(263) });
+    pwm._2_cmpa.write(|w| <span class="kw">unsafe</span> { w.compa().bits(64) });
+    pwm.enable.write(|w| w.pwm4en().set_bit());
+}</code></pre>
+
+    <p>
+      Chúng ta truy cập peripheral <code>PWM0</code> theo cách giống hệt như chúng ta truy cập
+      peripheral <code>SYST</code> trước đó. Vì crate này được auto-generated bằng
+      <a href="https://crates.io/crates/svd2rust">svd2rust</a>, các hàm truy cập cho
+      các trường register của chúng ta nhận một closure thay vì một đối số số.
+    </p>
+
+    <p>
+      Mặc dù trông như rất nhiều code, Rust compiler có thể dùng nó để thực hiện một
+      loạt kiểm tra, nhưng sau đó sinh ra machine-code khá gần với assembler viết tay!
+      Khi code auto-generated không thể xác định rằng tất cả các đối số có thể cho một
+      accessor function cụ thể đều hợp lệ, thì hàm đó được đánh dấu là <code>unsafe</code>.
+    </p>
+
+    <h3>Đọc (Reading)</h3>
+
+    <p>
+      Hàm <code>read()</code> trả về một object cho phép đọc chỉ đọc các sub-field khác nhau
+      trong register này, như được định nghĩa bởi SVD file của nhà sản xuất:
+    </p>
+
+    <pre><code><span class="kw">if</span> pwm.ctl.read().globalsync0().is_set() {
+    <span class="comment">// Làm gì đó</span>
+}</code></pre>
+
+    <h3>Ghi (Writing)</h3>
+
+    <p>
+      Hàm <code>write()</code> nhận một closure với một đối số duy nhất. Thông thường chúng
+      ta gọi nó là <code>w</code>. Đối số này sau đó cung cấp quyền truy cập đọc-ghi vào
+      các sub-field khác nhau trong register này. Lưu ý rằng tất cả các sub-field mà chúng
+      ta <em>không</em> set sẽ được đặt thành giá trị mặc định — bất kỳ nội dung hiện có
+      nào trong register sẽ bị mất:
+    </p>
+
+    <pre><code>pwm.ctl.write(|w| w.globalsync0().clear_bit());</code></pre>
+
+    <h3>Sửa đổi (Modifying)</h3>
+
+    <p>
+      Nếu chúng ta muốn thay đổi chỉ một sub-field cụ thể trong register và để nguyên các
+      sub-field khác, chúng ta có thể dùng hàm <code>modify</code>. Hàm này nhận một closure
+      với hai đối số — một để đọc và một để ghi. Thông thường chúng ta gọi chúng là
+      <code>r</code> và <code>w</code>. Đối số <code>r</code> dùng để kiểm tra nội dung
+      hiện tại của register, và đối số <code>w</code> dùng để sửa đổi nội dung register:
+    </p>
+
+    <pre><code>pwm.ctl.modify(|r, w| w.globalsync0().clear_bit());</code></pre>
+
+    <p>
+      Hàm <code>modify</code> thực sự cho thấy sức mạnh của closures ở đây. Trong C, chúng
+      ta phải đọc vào một giá trị tạm, sửa đổi các bit đúng rồi ghi giá trị trở lại.
+      Điều này có khả năng gây lỗi đáng kể:
+    </p>
+
+    <pre><code><span class="comment">// Trong C — dễ mắc lỗi!</span>
+uint32_t temp = pwm0.ctl.read();
+temp |= PWM0_CTL_GLOBALSYNC0;
+pwm0.ctl.write(temp);
+uint32_t temp2 = pwm0.enable.read();
+temp2 |= PWM0_ENABLE_PWM4EN;
+pwm0.enable.write(temp);  <span class="comment">// Ôi! Sai biến! temp thay vì temp2</span></code></pre>
+
+    <div class="diagram-container">
+      <div class="diagram-title">So sánh read(), write(), modify()</div>
+      <svg viewBox="0 0 680 180" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="180" fill="#f8f9fc" rx="12"/>
+        <defs>
+          <marker id="rwma" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#6b7280"/>
+          </marker>
+        </defs>
+
+        <!-- read() -->
+        <rect x="20" y="30" width="200" height="120" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="120" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af" font-family="monospace">read()</text>
+        <line x1="40" y1="75" x2="100" y2="75" stroke="#6b7280" stroke-width="1.5" marker-end="url(#rwma)"/>
+        <rect x="100" y="62" width="100" height="24" rx="4" fill="#93c5fd"/>
+        <text x="150" y="78" text-anchor="middle" font-size="10" fill="#1e3a8a" font-family="sans-serif">Register</text>
+        <text x="120" y="105" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">Đọc register</text>
+        <text x="120" y="120" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">Trả về struct R</text>
+        <text x="120" y="135" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">Chỉ đọc</text>
+
+        <!-- write() -->
+        <rect x="240" y="30" width="200" height="120" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="340" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" font-family="monospace">write(|w| ...)</text>
+        <line x1="380" y1="75" x2="320" y2="75" stroke="#6b7280" stroke-width="1.5" marker-end="url(#rwma)"/>
+        <rect x="260" y="62" width="100" height="24" rx="4" fill="#86efac"/>
+        <text x="310" y="78" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">Register</text>
+        <text x="340" y="105" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">Ghi register</text>
+        <text x="340" y="120" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">Reset field chưa set</text>
+        <text x="340" y="135" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">về giá trị mặc định</text>
+
+        <!-- modify() -->
+        <rect x="460" y="30" width="200" height="120" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="560" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="monospace">modify(|r, w| ...)</text>
+        <line x1="480" y1="70" x2="540" y2="70" stroke="#6b7280" stroke-width="1.5" marker-end="url(#rwma)"/>
+        <line x1="540" y1="84" x2="480" y2="84" stroke="#6b7280" stroke-width="1.5" marker-end="url(#rwma)"/>
+        <rect x="480" y="60" width="100" height="34" rx="4" fill="#fde68a"/>
+        <text x="530" y="74" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">Register</text>
+        <text x="530" y="87" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">(read → write)</text>
+        <text x="560" y="108" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">Đọc rồi ghi lại</text>
+        <text x="560" y="123" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">Chỉ thay field cần</text>
+        <text x="560" y="138" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">Giữ nguyên các field khác</text>
+      </svg>
+    </div>
+
+    <h2>Dùng HAL Crate</h2>
+
+    <p>
+      HAL crate cho một chip thường hoạt động bằng cách implement một Custom Trait cho
+      các cấu trúc thô được PAC cung cấp. Thường trait này sẽ định nghĩa một hàm
+      <code>constrain()</code> cho các peripheral đơn lẻ hoặc <code>split()</code> cho
+      các thứ như GPIO port với nhiều pin. Hàm này sẽ tiêu thụ cấu trúc peripheral thô
+      bên dưới và trả về một object mới với API cấp cao hơn.
+    </p>
+
+    <p>
+      API này cũng có thể làm những thứ như yêu cầu hàm <code>new</code> của Serial port
+      phải borrow một struct <code>Clock</code> nào đó, thứ chỉ có thể được tạo ra bằng
+      cách gọi hàm cấu hình PLL và thiết lập tần số clock. Theo cách này, việc tạo một
+      Serial port object mà không cấu hình tốc độ clock trước là <em>không thể tĩnh</em>
+      (statically impossible). Tất cả điều này mà không tốn chi phí runtime!
+    </p>
+
+    <p>Hãy xem một ví dụ:</p>
+
+    <pre><code><span class="attr">#![no_std]</span>
+<span class="attr">#![no_main]</span>
+
+<span class="kw">use</span> <span class="type">panic_halt</span> <span class="kw">as</span> _;
+<span class="kw">use</span> <span class="type">cortex_m_rt</span>::<span class="fn">entry</span>;
+<span class="kw">use</span> <span class="type">tm4c123x_hal</span> <span class="kw">as</span> hal;
+<span class="kw">use</span> <span class="type">tm4c123x_hal</span>::prelude::*;
+<span class="kw">use</span> <span class="type">tm4c123x_hal</span>::serial::{<span class="type">NewlineMode</span>, <span class="type">Serial</span>};
+<span class="kw">use</span> <span class="type">tm4c123x_hal</span>::sysctl;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="kw">let</span> p = hal::<span class="type">Peripherals</span>::take().unwrap();
+    <span class="kw">let</span> cp = hal::<span class="type">CorePeripherals</span>::take().unwrap();
+
+    <span class="comment">// Bọc SYSCTL struct thành object với API cấp cao hơn</span>
+    <span class="kw">let mut</span> sc = p.SYSCTL.constrain();
+    <span class="comment">// Chọn cài đặt oscillator</span>
+    sc.clock_setup.oscillator = sysctl::<span class="type">Oscillator</span>::Main(
+        sysctl::<span class="type">CrystalFrequency</span>::_16mhz,
+        sysctl::<span class="type">SystemClock</span>::UsePll(sysctl::<span class="type">PllOutputFrequency</span>::_80_00mhz),
+    );
+    <span class="comment">// Cấu hình PLL với các cài đặt đó</span>
+    <span class="kw">let</span> clocks = sc.clock_setup.freeze();
+
+    <span class="comment">// Bọc GPIO_PORTA struct thành object với API cấp cao hơn.</span>
+    <span class="comment">// Lưu ý cần borrow `sc.power_control` để tự động cấp nguồn cho peripheral GPIO</span>
+    <span class="kw">let mut</span> porta = p.GPIO_PORTA.split(&sc.power_control);
+
+    <span class="comment">// Kích hoạt UART</span>
+    <span class="kw">let</span> uart = <span class="type">Serial</span>::uart0(
+        p.UART0,
+        <span class="comment">// Pin truyền (TX)</span>
+        porta.pa1.into_af_push_pull::&lt;hal::gpio::<span class="type">AF1</span>&gt;(&<span class="kw">mut</span> porta.control),
+        <span class="comment">// Pin nhận (RX)</span>
+        porta.pa0.into_af_push_pull::&lt;hal::gpio::<span class="type">AF1</span>&gt;(&<span class="kw">mut</span> porta.control),
+        (),          <span class="comment">// Không cần RTS</span>
+        (),          <span class="comment">// Không cần CTS</span>
+        <span class="num">115200_u32</span>.bps(),    <span class="comment">// Baud rate</span>
+        <span class="type">NewlineMode</span>::SwapLFtoCRLF,
+        &clocks,     <span class="comment">// Cần tốc độ clock để tính baud rate divisor</span>
+        &sc.power_control,  <span class="comment">// Cần để cấp nguồn cho UART</span>
+    );
+
+    <span class="kw">loop</span> {
+        writeln!(uart, <span class="str">"Hello, World!\r\n"</span>).unwrap();
+    }
+}</code></pre>
+
+    <p>
+      Lưu ý cách Serial port <code>new</code> function yêu cầu:
+    </p>
+    <ul>
+      <li><strong>Pin đúng loại</strong> — <code>into_af_push_pull::&lt;AF1&gt;()</code> đặt pin vào Alternate Function 1 (UART) — nếu bạn truyền sai pin, <em>compiler</em> sẽ báo lỗi!</li>
+      <li><strong>Tham chiếu đến <code>clocks</code></strong> — đảm bảo bạn đã cấu hình clock trước. Không thể tạo Serial port mà không có điều này.</li>
+      <li><strong>Tham chiếu đến <code>power_control</code></strong> — HAL tự động cấp nguồn cho peripheral.</li>
+    </ul>
+
+    <p>
+      Tất cả các bảo đảm này được thực thi tại <strong>compile time</strong>, không tốn
+      bất kỳ chi phí runtime nào.
+    </p>
+
+    <div class="tip">
+      Nên bắt đầu với HAL crate cho chip của bạn nếu có. Chỉ xuống PAC khi bạn cần
+      truy cập các thanh ghi mà HAL chưa wrap, hoặc xuống micro-architecture crate
+      cho các tính năng chung của lõi CPU.
+    </div>
+
+    <div class="nav-buttons">
+      <a href="exceptions.html" class="nav-btn">← Ngoại lệ</a>
+      <a href="../portability/index.html" class="nav-btn next">Tính di động →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

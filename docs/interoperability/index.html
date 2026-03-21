@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khả năng tương tác - Interoperability - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="index.html" class="active">Tổng quan</a>
+      <a href="c-with-rust.html">C trong Rust</a>
+      <a href="rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Tương tác ngôn ngữ</span>
+  </div>
+  <main id="main">
+
+    <h1>Khả năng tương tác — Interoperability</h1>
+
+    <p>
+      Khả năng tương tác giữa Rust và code C luôn phụ thuộc vào việc chuyển đổi dữ liệu
+      giữa hai ngôn ngữ. Vì mục đích này, có một module chuyên dụng trong <code>stdlib</code>
+      gọi là <a href="https://doc.rust-lang.org/std/ffi/index.html"><code>std::ffi</code></a>.
+    </p>
+
+    <p>
+      <code>std::ffi</code> cung cấp các định nghĩa kiểu cho các kiểu nguyên thủy của C như
+      <code>char</code>, <code>int</code>, và <code>long</code>. Nó cũng cung cấp một số tiện
+      ích để chuyển đổi các kiểu phức tạp hơn như string, ánh xạ cả <code>&amp;str</code> và
+      <code>String</code> sang các kiểu C dễ và an toàn hơn để xử lý.
+    </p>
+
+    <p>
+      Kể từ Rust 1.30, các tính năng của <code>std::ffi</code> có thể dùng trong <code>core::ffi</code>
+      hoặc <code>alloc::ffi</code> tùy thuộc vào việc có liên quan đến memory allocation hay không.
+      Crate <a href="https://crates.io/crates/cty"><code>cty</code></a> và crate
+      <a href="https://crates.io/crates/cstr_core"><code>cstr_core</code></a> cũng cung cấp
+      các tính năng tương tự.
+    </p>
+
+    <table>
+      <tr>
+        <th>Kiểu Rust</th>
+        <th>Trung gian</th>
+        <th>Kiểu C</th>
+      </tr>
+      <tr>
+        <td><code>String</code></td>
+        <td><code>CString</code></td>
+        <td><code>char *</code></td>
+      </tr>
+      <tr>
+        <td><code>&amp;str</code></td>
+        <td><code>CStr</code></td>
+        <td><code>const char *</code></td>
+      </tr>
+      <tr>
+        <td><code>()</code></td>
+        <td><code>c_void</code></td>
+        <td><code>void</code></td>
+      </tr>
+      <tr>
+        <td><code>u32</code> hoặc <code>u64</code></td>
+        <td><code>c_uint</code></td>
+        <td><code>unsigned int</code></td>
+      </tr>
+      <tr>
+        <td>v.v.</td>
+        <td>…</td>
+        <td>…</td>
+      </tr>
+    </table>
+
+    <p>
+      Một giá trị của kiểu nguyên thủy C có thể được dùng như một trong các kiểu Rust tương ứng
+      và ngược lại, vì kiểu trước chỉ đơn giản là một type alias của kiểu sau. Ví dụ, đoạn code
+      sau biên dịch được trên các platform mà <code>unsigned int</code> có độ dài 32-bit.
+    </p>
+
+<pre><code><span class="kw">fn</span> <span class="fn">foo</span>(num: u32) {
+    <span class="kw">let</span> c_num: c_uint = num;
+    <span class="kw">let</span> r_num: u32 = c_num;
+}</code></pre>
+
+    <h2>Tương tác với các build system khác</h2>
+
+    <p>
+      Một yêu cầu phổ biến khi tích hợp Rust vào dự án embedded của bạn là kết hợp Cargo với
+      build system hiện có của bạn, chẳng hạn như make hoặc cmake.
+    </p>
+
+    <p>
+      Chúng tôi đang thu thập các ví dụ và use case cho vấn đề này tại issue tracker trong
+      <a href="https://github.com/rust-embedded/book/issues/61">issue #61</a>.
+    </p>
+
+    <h2>Tương tác với RTOS</h2>
+
+    <p>
+      Việc tích hợp Rust với RTOS như FreeRTOS hoặc ChibiOS vẫn đang trong quá trình phát triển;
+      đặc biệt việc gọi các hàm RTOS từ Rust có thể phức tạp.
+    </p>
+
+    <p>
+      Chúng tôi đang thu thập các ví dụ và use case cho vấn đề này tại issue tracker trong
+      <a href="https://github.com/rust-embedded/book/issues/62">issue #62</a>.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="../static-guarantees/zero-cost-abstractions.html" class="nav-btn">← Zero-cost Abstractions</a>
+      <a href="c-with-rust.html" class="nav-btn next">C trong Rust →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

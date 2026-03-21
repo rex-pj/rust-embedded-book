@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rust Embedded Book - Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button id="hamburger">☰</button>
+
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32">
+        <rect width="32" height="32" rx="6" fill="#CE422B"/>
+        <text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text>
+      </svg>
+      <div>
+        <h1>Rust Embedded Book</h1>
+        <p>Phiên bản Tiếng Việt</p>
+      </div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section">
+      <a href="index.html" class="section-link">🏠 Trang chủ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="intro/index.html">Tổng quan</a>
+      <a href="intro/hardware.html">Làm quen phần cứng</a>
+      <a href="intro/no-std.html">Môi trường no_std</a>
+      <a href="intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="start/index.html">Tổng quan</a>
+      <a href="start/qemu.html">QEMU</a>
+      <a href="start/hardware.html">Phần cứng thực</a>
+      <a href="start/semihosting.html">Semihosting</a>
+      <a href="start/panicking.html">Panicking</a>
+      <a href="start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="portability/index.html">Tính di động</a>
+      <a href="concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế & Bảo đảm</div>
+      <a href="design-patterns/index.html">Design Patterns</a>
+      <a href="static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="interoperability/index.html">Tổng quan</a>
+      <a href="interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <span class="current">Trang chủ</span>
+  </div>
+  <main id="main">
+
+    <h1>Rust Embedded Book</h1>
+    <p class="subtitle">Hướng dẫn lập trình hệ thống nhúng với Rust — Phiên bản tiếng Việt</p>
+
+    <p>
+      Chào mừng bạn đến với <strong>The Embedded Rust Book</strong> — tài liệu hướng dẫn sử dụng ngôn ngữ Rust
+      cho lập trình hệ thống nhúng (embedded systems). Đây là tài liệu được dịch và chú thích sang tiếng Việt
+      từ <a href="https://doc.rust-lang.org/stable/embedded-book/">bản gốc tiếng Anh</a>.
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Tổng quan hệ sinh thái Rust Embedded</div>
+      <svg viewBox="0 0 760 320" style="width:100%;max-width:760px;display:block;margin:0 auto">
+        <!-- Background -->
+        <rect width="760" height="320" fill="#f8f9fc" rx="12"/>
+
+        <!-- Title -->
+        <text x="380" y="30" text-anchor="middle" class="svg-title" fill="#CE422B">Hệ sinh thái lập trình Rust Embedded</text>
+
+        <!-- Layer: Application -->
+        <rect x="40" y="55" width="680" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="380" y="76" text-anchor="middle" class="svg-label-bold" fill="#1e40af">Ứng dụng (Application Layer)</text>
+        <text x="380" y="96" text-anchor="middle" class="svg-small" fill="#3b82f6">Logic nghiệp vụ · Giao thức · Điều khiển thiết bị</text>
+
+        <!-- Layer: HAL -->
+        <rect x="40" y="123" width="320" height="54" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="200" y="144" text-anchor="middle" class="svg-label-bold" fill="#15803d">HAL (Hardware Abstraction)</text>
+        <text x="200" y="163" text-anchor="middle" class="svg-small" fill="#166534">embedded-hal · stm32-hal · nrf-hal</text>
+
+        <!-- Layer: PAC -->
+        <rect x="400" y="123" width="320" height="54" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="1.5"/>
+        <text x="560" y="144" text-anchor="middle" class="svg-label-bold" fill="#854d0e">PAC (Peripheral Access)</text>
+        <text x="560" y="163" text-anchor="middle" class="svg-small" fill="#92400e">svd2rust · stm32-pac · nrf-pac</text>
+
+        <!-- Layer: Runtime -->
+        <rect x="40" y="191" width="680" height="54" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
+        <text x="380" y="212" text-anchor="middle" class="svg-label-bold" fill="#9d174d">Runtime &amp; BSP</text>
+        <text x="380" y="231" text-anchor="middle" class="svg-small" fill="#be185d">cortex-m-rt · riscv-rt · Bảng mạch cụ thể (BSP)</text>
+
+        <!-- Layer: Hardware -->
+        <rect x="40" y="259" width="680" height="46" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="380" y="280" text-anchor="middle" class="svg-label-bold" fill="#3730a3">Phần cứng (Hardware)</text>
+        <text x="380" y="297" text-anchor="middle" class="svg-small" fill="#4338ca">MCU · Flash · RAM · Peripherals · GPIO · UART · SPI · I2C</text>
+
+        <!-- Arrows between layers -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#999"/>
+          </marker>
+        </defs>
+        <line x1="380" y1="109" x2="380" y2="121" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="380" y1="177" x2="380" y2="189" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="380" y1="245" x2="380" y2="257" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+      </svg>
+    </div>
+
+    <h2>Nội dung sách</h2>
+
+    <div class="chapter-grid">
+      <a href="intro/index.html" class="chapter-card">
+        <div class="card-icon">🔰</div>
+        <div class="card-title">Giới thiệu</div>
+        <div class="card-desc">Tổng quan về hệ thống nhúng, phần cứng, và tại sao chọn Rust.</div>
+      </a>
+      <a href="intro/no-std.html" class="chapter-card">
+        <div class="card-icon">🚫</div>
+        <div class="card-title">Môi trường no_std</div>
+        <div class="card-desc">Lập trình không có thư viện chuẩn — cách Rust hoạt động trên bare metal.</div>
+      </a>
+      <a href="start/qemu.html" class="chapter-card">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">Bắt đầu với QEMU</div>
+        <div class="card-desc">Chạy và debug chương trình embedded trên máy ảo QEMU.</div>
+      </a>
+      <a href="start/exceptions.html" class="chapter-card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Exceptions & Interrupts</div>
+        <div class="card-desc">Xử lý ngắt và ngoại lệ phần cứng trong Rust.</div>
+      </a>
+      <a href="concurrency/index.html" class="chapter-card">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Lập trình đồng thời</div>
+        <div class="card-desc">Xử lý concurrency an toàn trong môi trường embedded với interrupts.</div>
+      </a>
+      <a href="static-guarantees/typestate-programming.html" class="chapter-card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Typestate Programming</div>
+        <div class="card-desc">Sử dụng hệ thống kiểu của Rust để bảo đảm tính đúng đắn tại compile time.</div>
+      </a>
+      <a href="interoperability/c-with-rust.html" class="chapter-card">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">Tương tác C/Rust</div>
+        <div class="card-desc">Kết hợp code C/C++ với Rust trong dự án embedded.</div>
+      </a>
+      <a href="unsorted/speed-vs-size.html" class="chapter-card">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">Tốc độ vs Kích thước</div>
+        <div class="card-desc">Tối ưu hóa binary: cân bằng giữa tốc độ thực thi và dung lượng flash.</div>
+      </a>
+    </div>
+
+    <h2>Tại sao Rust cho Embedded?</h2>
+
+    <div class="diagram-container">
+      <div class="diagram-title">So sánh Rust với C/C++ trong Embedded</div>
+      <svg viewBox="0 0 720 260" style="width:100%;max-width:720px;display:block;margin:0 auto">
+        <rect width="720" height="260" fill="#f8f9fc" rx="12"/>
+
+        <!-- Headers -->
+        <rect x="20" y="20" width="220" height="36" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1"/>
+        <text x="130" y="43" text-anchor="middle" class="svg-label-bold" fill="#b91c1c">C / C++</text>
+
+        <rect x="250" y="20" width="220" height="36" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1"/>
+        <text x="360" y="43" text-anchor="middle" class="svg-label-bold" fill="#15803d">Rust</text>
+
+        <rect x="480" y="20" width="220" height="36" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <text x="590" y="43" text-anchor="middle" class="svg-label-bold" fill="#1e40af">Lợi ích Rust</text>
+
+        <!-- Row 1 -->
+        <text x="130" y="82" text-anchor="middle" class="svg-small" fill="#7f1d1d">Buffer overflow dễ xảy ra</text>
+        <text x="360" y="82" text-anchor="middle" class="svg-small" fill="#166534">Bounds checking tự động</text>
+        <text x="590" y="82" text-anchor="middle" class="svg-small" fill="#1e3a8a">An toàn bộ nhớ</text>
+
+        <!-- Row 2 -->
+        <text x="130" y="110" text-anchor="middle" class="svg-small" fill="#7f1d1d">Use-after-free, dangling ptr</text>
+        <text x="360" y="110" text-anchor="middle" class="svg-small" fill="#166534">Ownership system ngăn chặn</text>
+        <text x="590" y="110" text-anchor="middle" class="svg-small" fill="#1e3a8a">Không runtime overhead</text>
+
+        <!-- Row 3 -->
+        <text x="130" y="138" text-anchor="middle" class="svg-small" fill="#7f1d1d">Data race khó phát hiện</text>
+        <text x="360" y="138" text-anchor="middle" class="svg-small" fill="#166534">Borrow checker ngăn chia sẻ</text>
+        <text x="590" y="138" text-anchor="middle" class="svg-small" fill="#1e3a8a">Đúng tại compile time</text>
+
+        <!-- Row 4 -->
+        <text x="130" y="166" text-anchor="middle" class="svg-small" fill="#7f1d1d">Cần test nhiều để tìm bug</text>
+        <text x="360" y="166" text-anchor="middle" class="svg-small" fill="#166534">Type system bắt lỗi sớm</text>
+        <text x="590" y="138" text-anchor="middle" class="svg-small" fill="#1e3a8a">Đúng tại compile time</text>
+
+        <!-- Row 5 -->
+        <text x="130" y="194" text-anchor="middle" class="svg-small" fill="#7f1d1d">Khó tái sử dụng code</text>
+        <text x="360" y="194" text-anchor="middle" class="svg-small" fill="#166534">Cargo + crates.io ecosystem</text>
+        <text x="590" y="194" text-anchor="middle" class="svg-small" fill="#1e3a8a">Package manager mạnh</text>
+
+        <!-- Row 6 -->
+        <text x="130" y="222" text-anchor="middle" class="svg-small" fill="#7f1d1d">UB (Undefined Behavior)</text>
+        <text x="360" y="222" text-anchor="middle" class="svg-small" fill="#166534">UB chỉ trong unsafe block</text>
+        <text x="590" y="222" text-anchor="middle" class="svg-small" fill="#1e3a8a">Rõ ràng, có thể audit</text>
+
+        <!-- Dividers -->
+        <line x1="20" y1="93" x2="700" y2="93" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="20" y1="121" x2="700" y2="121" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="20" y1="149" x2="700" y2="149" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="20" y1="177" x2="700" y2="177" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="20" y1="205" x2="700" y2="205" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="240" y1="56" x2="240" y2="245" stroke="#d1d5db" stroke-width="1"/>
+        <line x1="470" y1="56" x2="470" y2="245" stroke="#d1d5db" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="intro/index.html" class="nav-btn next">Bắt đầu đọc →</a>
+    </div>
+
+  </main>
+</div>
+
+<script src="nav.js"></script>
+</body>
+</html>

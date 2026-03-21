@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giới thiệu - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="index.html" class="active">Tổng quan</a>
+      <a href="hardware.html">Làm quen phần cứng</a>
+      <a href="no-std.html">Môi trường no_std</a>
+      <a href="tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Giới thiệu</span>
+  </div>
+  <main id="main">
+
+    <h1>The Embedded Rust Book</h1>
+
+    <p>
+      Chào mừng đến với The Embedded Rust Book: Một cuốn sách giới thiệu về việc sử dụng ngôn ngữ
+      lập trình Rust trên các hệ thống embedded "Bare Metal", chẳng hạn như Microcontroller.
+    </p>
+
+    <h2>Embedded Rust dành cho ai</h2>
+
+    <p>
+      Embedded Rust dành cho tất cả những ai muốn lập trình embedded trong khi tận dụng các khái niệm
+      cấp cao hơn và bảo đảm an toàn mà ngôn ngữ Rust cung cấp. (Xem thêm
+      <a href="https://doc.rust-lang.org/book/ch00-00-introduction.html">Who Rust Is For</a>)
+    </p>
+
+    <h2>Phạm vi</h2>
+
+    <p>Mục tiêu của cuốn sách này là:</p>
+
+    <ul>
+      <li>
+        Giúp các developer bắt kịp với embedded Rust. Tức là cách thiết lập môi trường phát triển.
+      </li>
+      <li>
+        Chia sẻ các <em>best practices hiện tại</em> về việc dùng Rust cho embedded. Tức là cách
+        tận dụng tốt nhất các tính năng của ngôn ngữ Rust để viết phần mềm embedded đúng đắn hơn.
+      </li>
+      <li>
+        Đóng vai trò như một cookbook trong một số trường hợp. Ví dụ: Làm thế nào để kết hợp
+        C và Rust trong một project duy nhất?
+      </li>
+    </ul>
+
+    <p>
+      Cuốn sách này cố gắng tổng quát nhất có thể nhưng để mọi thứ dễ dàng hơn cho cả người đọc
+      và người viết, nó sử dụng kiến trúc ARM Cortex-M trong tất cả các ví dụ. Tuy nhiên, sách
+      không giả định rằng người đọc đã quen thuộc với kiến trúc cụ thể này và giải thích các chi
+      tiết đặc thù của kiến trúc này khi cần thiết.
+    </p>
+
+    <h2>Cuốn sách này dành cho ai</h2>
+
+    <p>
+      Cuốn sách này phục vụ những người có một số kiến thức nền về embedded hoặc về Rust, tuy nhiên
+      chúng tôi tin rằng tất cả những ai tò mò về embedded Rust đều có thể thu được điều gì đó từ
+      cuốn sách này. Đối với những người không có kiến thức nền, chúng tôi gợi ý bạn đọc phần
+      "Giả định và Điều kiện tiên quyết" và bổ sung kiến thức còn thiếu để thu được nhiều hơn từ
+      sách và cải thiện trải nghiệm đọc của bạn. Bạn có thể xem phần "Tài nguyên khác" để tìm
+      tài nguyên về các chủ đề bạn muốn bổ sung.
+    </p>
+
+    <h3>Giả định và Điều kiện tiên quyết</h3>
+
+    <ul>
+      <li>
+        Bạn thoải mái sử dụng ngôn ngữ lập trình Rust, và đã viết, chạy, và debug các ứng dụng
+        Rust trên môi trường desktop. Bạn cũng nên quen thuộc với idiom của
+        <a href="https://doc.rust-lang.org/edition-guide/">edition 2018</a>
+        vì cuốn sách này nhắm đến Rust 2018.
+      </li>
+      <li>
+        Bạn thoải mái phát triển và debug các hệ thống embedded bằng ngôn ngữ khác như C, C++,
+        hoặc Ada, và quen thuộc với các khái niệm như:
+        <ul>
+          <li>Cross Compilation</li>
+          <li>Memory Mapped Peripherals</li>
+          <li>Interrupts</li>
+          <li>Các giao diện phổ biến như I2C, SPI, Serial, v.v.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Tài nguyên khác</h3>
+
+    <p>
+      Nếu bạn chưa quen với bất cứ điều gì được đề cập ở trên hoặc muốn biết thêm thông tin về
+      một chủ đề cụ thể được đề cập trong cuốn sách này, bạn có thể thấy một số tài nguyên này
+      hữu ích.
+    </p>
+
+    <table>
+      <tr>
+        <th>Chủ đề</th>
+        <th>Tài nguyên</th>
+        <th>Mô tả</th>
+      </tr>
+      <tr>
+        <td>Rust</td>
+        <td><a href="https://doc.rust-lang.org/book/">Rust Book</a></td>
+        <td>Nếu bạn chưa thoải mái với Rust, chúng tôi đề nghị bạn đọc cuốn sách này.</td>
+      </tr>
+      <tr>
+        <td>Rust, Embedded</td>
+        <td><a href="https://docs.rust-embedded.org/discovery/">Discovery Book</a></td>
+        <td>Nếu bạn chưa từng lập trình embedded, cuốn sách này có thể là điểm khởi đầu tốt hơn.</td>
+      </tr>
+      <tr>
+        <td>Rust, Embedded</td>
+        <td><a href="https://docs.rust-embedded.org">Embedded Rust Bookshelf</a></td>
+        <td>Tại đây bạn có thể tìm thấy một số tài nguyên khác do Rust's Embedded Working Group cung cấp.</td>
+      </tr>
+      <tr>
+        <td>Rust, Embedded</td>
+        <td><a href="https://docs.rust-embedded.org/embedonomicon/">Embedonomicon</a></td>
+        <td>Các chi tiết kỹ thuật chi tiết khi lập trình embedded bằng Rust.</td>
+      </tr>
+      <tr>
+        <td>Rust, Embedded</td>
+        <td><a href="https://docs.rust-embedded.org/faq.html">embedded FAQ</a></td>
+        <td>Các câu hỏi thường gặp về Rust trong ngữ cảnh embedded.</td>
+      </tr>
+      <tr>
+        <td>Rust, Embedded</td>
+        <td><a href="https://google.github.io/comprehensive-rust/bare-metal.html">Comprehensive Rust: Bare Metal</a></td>
+        <td>Tài liệu giảng dạy cho khóa học 1 ngày về bare-metal Rust.</td>
+      </tr>
+      <tr>
+        <td>Interrupts</td>
+        <td><a href="https://en.wikipedia.org/wiki/Interrupt">Interrupt</a></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>Memory-mapped IO/Peripherals</td>
+        <td><a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">Memory-mapped I/O</a></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>SPI, UART, RS232, USB, I2C, TTL</td>
+        <td><a href="https://electronics.stackexchange.com/questions/37814/usart-uart-rs232-usb-spi-i2c-ttl-etc-what-are-all-of-these-and-how-do-th">Stack Exchange về SPI, UART và các giao diện khác</a></td>
+        <td>-</td>
+      </tr>
+    </table>
+
+    <h3>Bản dịch</h3>
+
+    <p>Cuốn sách này đã được dịch bởi các tình nguyện viên. Nếu bạn muốn bản dịch của mình được liệt kê ở đây, vui lòng mở PR để thêm vào.</p>
+
+    <ul>
+      <li><a href="https://tomoyuki-nakabayashi.github.io/book/">Tiếng Nhật</a> (<a href="https://github.com/tomoyuki-nakabayashi/book">repository</a>)</li>
+      <li><a href="https://xxchang.github.io/book/">Tiếng Trung</a> (<a href="https://github.com/XxChang/book">repository</a>)</li>
+    </ul>
+
+    <h2>Cách đọc cuốn sách này</h2>
+
+    <p>
+      Cuốn sách này thường giả định rằng bạn đọc theo thứ tự từ đầu đến cuối. Các chương sau
+      được xây dựng trên các khái niệm ở các chương trước, và các chương trước có thể không đào
+      sâu chi tiết về một chủ đề, để lại cho chương sau.
+    </p>
+
+    <p>
+      Cuốn sách này sẽ sử dụng board phát triển
+      <a href="http://www.st.com/en/evaluation-tools/stm32f3discovery.html">STM32F3DISCOVERY</a>
+      từ STMicroelectronics cho phần lớn các ví dụ. Board này dựa trên kiến trúc ARM Cortex-M,
+      và trong khi chức năng cơ bản là giống nhau trên hầu hết CPU dựa trên kiến trúc này,
+      các peripheral và các chi tiết implement khác của Microcontroller lại khác nhau giữa các
+      nhà sản xuất khác nhau, và thậm chí thường khác nhau giữa các dòng Microcontroller từ
+      cùng một nhà sản xuất.
+    </p>
+
+    <p>
+      Vì lý do này, chúng tôi đề nghị mua board phát triển
+      <a href="http://www.st.com/en/evaluation-tools/stm32f3discovery.html">STM32F3DISCOVERY</a>
+      để theo dõi các ví dụ trong cuốn sách này.
+    </p>
+
+    <h2>Đóng góp cho cuốn sách này</h2>
+
+    <p>
+      Công việc trên cuốn sách này được điều phối tại
+      <a href="https://github.com/rust-embedded/book">repository này</a>
+      và chủ yếu được phát triển bởi
+      <a href="https://github.com/rust-embedded/wg#the-resources-team">resources team</a>.
+    </p>
+
+    <p>
+      Nếu bạn gặp khó khăn khi theo dõi hướng dẫn trong cuốn sách này hoặc thấy rằng một phần
+      nào đó không đủ rõ ràng hoặc khó theo dõi thì đó là một bug và nên được báo cáo tại
+      <a href="https://github.com/rust-embedded/book/issues/">issue tracker</a> của cuốn sách này.
+    </p>
+
+    <p>Pull request sửa lỗi chính tả và thêm nội dung mới đều rất được chào đón!</p>
+
+    <h2>Tái sử dụng tài liệu này</h2>
+
+    <p>Cuốn sách này được phân phối theo các giấy phép sau:</p>
+
+    <ul>
+      <li>
+        Các ví dụ code và các Cargo project độc lập trong cuốn sách này được cấp phép theo cả
+        <a href="https://opensource.org/licenses/MIT">MIT License</a> và
+        <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.
+      </li>
+      <li>
+        Văn bản, hình ảnh và sơ đồ trong cuốn sách này được cấp phép theo
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">CC-BY-SA v4.0</a>.
+      </li>
+    </ul>
+
+    <p>TL;DR: Nếu bạn muốn dùng văn bản hoặc hình ảnh của chúng tôi trong tác phẩm của mình, bạn cần:</p>
+
+    <ul>
+      <li>Ghi nguồn phù hợp (tức là đề cập đến cuốn sách này trong slide của bạn và cung cấp link đến trang liên quan)</li>
+      <li>Cung cấp link đến giấy phép <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">CC-BY-SA v4.0</a></li>
+      <li>Cho biết nếu bạn đã thay đổi tài liệu theo bất kỳ cách nào, và làm cho mọi thay đổi đối với tài liệu của chúng tôi có thể sử dụng theo cùng giấy phép</li>
+    </ul>
+
+    <p>Ngoài ra, vui lòng cho chúng tôi biết nếu bạn thấy cuốn sách này hữu ích!</p>
+
+    <div class="nav-buttons">
+      <a href="../index.html" class="nav-btn">← Trang chủ</a>
+      <a href="hardware.html" class="nav-btn next">Làm quen phần cứng →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

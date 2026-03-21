@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panicking - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html" class="active">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">Panicking</span>
+  </div>
+  <main id="main">
+
+    <h1>Panicking</h1>
+
+    <p>
+      Panicking là một phần cốt lõi của ngôn ngữ Rust. Các thao tác tích hợp sẵn như indexing
+      được kiểm tra tại runtime để đảm bảo an toàn bộ nhớ. Khi cố gắng truy cập ngoài giới hạn mảng,
+      kết quả là một panic.
+    </p>
+
+    <p>
+      Trong thư viện chuẩn, panicking có hành vi xác định: nó unwind stack của thread đang panic,
+      trừ khi người dùng đã chọn abort chương trình khi có panic.
+    </p>
+
+    <p>
+      Trong các chương trình không có thư viện chuẩn, tuy nhiên, hành vi panicking bị để ngỏ (undefined).
+      Có thể chọn một hành vi bằng cách khai báo một hàm <code>#[panic_handler]</code>. Hàm này phải
+      xuất hiện đúng <em>một lần</em> trong dependency graph của chương trình, và phải có chữ ký sau:
+      <code>fn(&amp;PanicInfo) -&gt; !</code>, trong đó
+      <a href="https://doc.rust-lang.org/core/panic/struct.PanicInfo.html"><code>PanicInfo</code></a>
+      là một struct chứa thông tin về vị trí của panic.
+    </p>
+
+    <p>
+      Do các hệ thống nhúng dao động từ hướng người dùng đến safety-critical (không được crash),
+      không có một hành vi panicking nào phù hợp với tất cả, nhưng có nhiều hành vi thường dùng.
+      Các hành vi phổ biến này đã được đóng gói thành các crate định nghĩa hàm <code>#[panic_handler]</code>.
+      Một số ví dụ bao gồm:
+    </p>
+
+    <ul>
+      <li>
+        <a href="https://crates.io/crates/panic-abort"><code>panic-abort</code></a>.
+        Một panic khiến lệnh abort được thực thi.
+      </li>
+      <li>
+        <a href="https://crates.io/crates/panic-halt"><code>panic-halt</code></a>.
+        Một panic khiến chương trình, hoặc thread hiện tại, dừng lại bằng cách vào vòng lặp vô hạn.
+      </li>
+      <li>
+        <a href="https://crates.io/crates/panic-itm"><code>panic-itm</code></a>.
+        Thông điệp panic được ghi lại bằng ITM, một peripheral đặc thù của ARM Cortex-M.
+      </li>
+      <li>
+        <a href="https://crates.io/crates/panic-semihosting"><code>panic-semihosting</code></a>.
+        Thông điệp panic được ghi ra host console dùng kỹ thuật semihosting.
+      </li>
+    </ul>
+
+    <p>
+      Bạn có thể tìm thêm nhiều crate bằng cách tìm kiếm từ khóa
+      <a href="https://crates.io/keywords/panic-handler"><code>panic-handler</code></a>
+      trên crates.io.
+    </p>
+
+    <p>
+      Một chương trình có thể chọn một trong các hành vi này đơn giản bằng cách link đến crate tương ứng.
+      Việc hành vi panicking được thể hiện trong source code của ứng dụng như một dòng code duy nhất
+      không chỉ hữu ích như tài liệu mà còn có thể dùng để thay đổi hành vi panicking theo compilation
+      profile. Ví dụ:
+    </p>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="comment">// dev profile: dễ debug hơn khi có panic; có thể đặt breakpoint tại `rust_begin_unwind`</span>
+<span class="attr">#[cfg(debug_assertions)]</span>
+<span class="kw">use</span> panic_halt <span class="kw">as</span> _;
+
+<span class="comment">// release profile: giảm thiểu kích thước binary của ứng dụng</span>
+<span class="attr">#[cfg(not(debug_assertions))]</span>
+<span class="kw">use</span> panic_abort <span class="kw">as</span> _;
+
+<span class="comment">// ..</span></code></pre>
+
+    <p>
+      Trong ví dụ này, crate link đến <code>panic-halt</code> khi build với dev profile
+      (<code>cargo build</code>), nhưng link đến <code>panic-abort</code> khi build với release
+      profile (<code>cargo build --release</code>).
+    </p>
+
+    <blockquote>
+      <p>
+        Dạng <code>use panic_abort as _;</code> của câu lệnh <code>use</code> được dùng để đảm bảo
+        panic handler <code>panic_abort</code> được đưa vào executable cuối cùng trong khi vẫn
+        thông báo rõ ràng cho compiler rằng chúng ta sẽ không dùng bất cứ thứ gì từ crate một cách
+        tường minh. Nếu không có <code>as _</code>, compiler sẽ cảnh báo rằng chúng ta có một
+        import không được sử dụng. Đôi khi bạn có thể thấy <code>extern crate panic_abort</code>
+        thay thế, đây là kiểu cũ dùng trước Rust edition 2018, và hiện chỉ nên dùng cho các crate
+        "sysroot" (những crate được phân phối cùng Rust) như <code>proc_macro</code>,
+        <code>alloc</code>, <code>std</code>, và <code>test</code>.
+      </p>
+    </blockquote>
+
+    <h2>Một ví dụ</h2>
+
+    <p>
+      Đây là một ví dụ thử truy cập mảng vượt quá độ dài của nó. Thao tác này dẫn đến panic.
+    </p>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_semihosting <span class="kw">as</span> _;
+
+<span class="kw">use</span> cortex_m_rt::entry;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    <span class="kw">let</span> xs = [<span class="num">0</span>, <span class="num">1</span>, <span class="num">2</span>];
+    <span class="kw">let</span> i = xs.len();
+    <span class="kw">let</span> _y = xs[i]; <span class="comment">// truy cập ngoài giới hạn</span>
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Ví dụ này chọn hành vi <code>panic-semihosting</code>, in thông điệp panic ra host console
+      bằng semihosting.
+    </p>
+
+<pre><code>$ cargo run
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb (..)
+panicked at 'index out of bounds: the len is 3 but the index is 4', src/main.rs:12:13</code></pre>
+
+    <p>
+      Bạn có thể thử thay đổi hành vi thành <code>panic-halt</code> và xác nhận rằng không có
+      thông điệp nào được in trong trường hợp đó.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="semihosting.html" class="nav-btn">← Semihosting</a>
+      <a href="exceptions.html" class="nav-btn next">Ngoại lệ (Exceptions) →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

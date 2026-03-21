@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tối ưu hóa: Đánh đổi giữa Tốc độ và Kích thước - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="speed-vs-size.html" class="active">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Tốc độ vs Kích thước</span>
+  </div>
+  <main id="main">
+
+    <h1>Tối ưu hóa: Đánh đổi giữa tốc độ và kích thước</h1>
+
+    <p>
+      Ai cũng muốn chương trình của mình cực kỳ nhanh và cực kỳ nhỏ, nhưng thường
+      không thể có cả hai đặc tính đó cùng một lúc. Phần này thảo luận về các mức
+      tối ưu hóa khác nhau mà <code>rustc</code> cung cấp và cách chúng ảnh hưởng
+      đến thời gian thực thi và kích thước binary của chương trình.
+    </p>
+
+    <h2>Không tối ưu hóa</h2>
+
+    <p>
+      Đây là mặc định. Khi bạn gọi <code>cargo build</code>, bạn dùng profile
+      development (còn gọi là <code>dev</code>). Profile này được tối ưu cho debug
+      nên nó bật thông tin debug và <em>không</em> bật bất kỳ tối ưu hóa nào,
+      tức là nó dùng <code>-C opt-level = 0</code>.
+    </p>
+
+    <p>
+      Ít nhất đối với phát triển bare metal, debuginfo là không tốn chi phí theo
+      nghĩa nó sẽ không chiếm không gian trong Flash / ROM, vì vậy chúng tôi thực
+      sự khuyến nghị bạn bật debuginfo trong release profile — nó bị tắt theo mặc định.
+      Điều đó sẽ cho phép bạn dùng breakpoints khi debug release builds.
+    </p>
+
+<pre><code>[profile.release]
+# symbols rất hữu ích và chúng không tăng kích thước trên Flash
+debug = true</code></pre>
+
+    <p>
+      Không tối ưu hóa rất tốt cho debug vì việc bước qua code có cảm giác như bạn
+      đang thực thi chương trình từng lệnh một, và bạn có thể <code>print</code> các
+      biến stack và đối số hàm trong GDB. Khi code được tối ưu hóa, việc cố gắng
+      in biến sẽ cho kết quả là <code>$0 = &lt;value optimized out&gt;</code>.
+    </p>
+
+    <p>
+      Nhược điểm lớn nhất của profile <code>dev</code> là binary kết quả sẽ rất to
+      và chậm. Kích thước thường là vấn đề hơn vì binary chưa được tối ưu có thể
+      chiếm hàng chục KiB Flash, mà thiết bị mục tiêu của bạn có thể không có —
+      kết quả là: binary chưa được tối ưu của bạn không vừa trong thiết bị!
+    </p>
+
+    <p>Chúng ta có thể có binary nhỏ hơn, thân thiện với debugger không? Có, có một mẹo.</p>
+
+    <h3>Tối ưu hóa các dependency</h3>
+
+    <p>
+      Có một tính năng Cargo tên là <code>profile-overrides</code> cho phép bạn
+      ghi đè mức tối ưu hóa của các dependency. Bạn có thể dùng tính năng đó để
+      tối ưu tất cả dependency cho kích thước trong khi giữ crate cấp cao nhất
+      không được tối ưu và thân thiện với debugger.
+    </p>
+
+    <p>
+      Lưu ý rằng code generic đôi khi được tối ưu hóa cùng với crate nơi nó được
+      khởi tạo, thay vì crate nơi nó được định nghĩa. Nếu bạn tạo một instance
+      của generic struct trong ứng dụng và thấy rằng nó kéo vào code có kích thước
+      lớn, thì có thể việc tăng mức tối ưu hóa của các dependency liên quan không
+      có tác dụng.
+    </p>
+
+    <p>Đây là một ví dụ:</p>
+
+<pre><code># Cargo.toml
+[package]
+name = "app"
+# ..
+
+[profile.dev.package."*"] # +
+opt-level = "z" # +</code></pre>
+
+    <p>Không có override:</p>
+
+<pre><code>$ cargo size --bin app -- -A
+app  :
+section               size        addr
+.vector_table         1024   0x8000000
+.text                 9060   0x8000400
+.rodata               1708   0x8002780
+.data                    0  0x20000000
+.bss                     4  0x20000000</code></pre>
+
+    <p>Với override:</p>
+
+<pre><code>$ cargo size --bin app -- -A
+app  :
+section               size        addr
+.vector_table         1024   0x8000000
+.text                 3490   0x8000400
+.rodata               1100   0x80011c0
+.data                    0  0x20000000
+.bss                     4  0x20000000</code></pre>
+
+    <p>
+      Đó là mức giảm 6 KiB trong việc sử dụng Flash mà không mất bất kỳ khả năng
+      debug nào của crate cấp cao nhất. Nếu bạn bước vào một dependency, bạn sẽ
+      bắt đầu thấy các thông báo <code>&lt;value optimized out&gt;</code> đó lại,
+      nhưng thường thì bạn muốn debug crate cấp cao nhất chứ không phải các
+      dependency. Và nếu bạn <em>thực sự</em> cần debug một dependency, bạn có thể
+      dùng tính năng <code>profile-overrides</code> để loại trừ một dependency
+      cụ thể khỏi việc được tối ưu hóa. Xem ví dụ dưới đây:
+    </p>
+
+<pre><code># ..
+
+# không tối ưu hóa crate `cortex-m-rt`
+[profile.dev.package.cortex-m-rt] # +
+opt-level = 0 # +
+
+# nhưng tối ưu hóa tất cả các dependency khác
+[profile.dev.package."*"]
+codegen-units = 1 # tối ưu hóa tốt hơn
+opt-level = "z"</code></pre>
+
+    <p>Bây giờ crate cấp cao nhất và <code>cortex-m-rt</code> thân thiện với debugger!</p>
+
+    <h2>Tối ưu hóa cho tốc độ</h2>
+
+    <p>
+      Tính đến ngày 2018-09-18, <code>rustc</code> hỗ trợ ba mức "tối ưu hóa cho tốc độ":
+      <code>opt-level = 1</code>, <code>2</code> và <code>3</code>. Khi bạn chạy
+      <code>cargo build --release</code>, bạn đang dùng release profile mặc định là
+      <code>opt-level = 3</code>.
+    </p>
+
+    <p>
+      Cả <code>opt-level = 2</code> và <code>3</code> đều tối ưu cho tốc độ với
+      chi phí là kích thước binary, nhưng level <code>3</code> thực hiện nhiều
+      vectorization và inlining hơn level <code>2</code>. Cụ thể, bạn sẽ thấy rằng
+      ở <code>opt-level</code> bằng hoặc lớn hơn <code>2</code>, LLVM sẽ unroll
+      các vòng lặp. Loop unrolling có chi phí khá cao về Flash / ROM (ví dụ từ 26
+      byte lên 194 cho vòng lặp zero this array) nhưng cũng có thể giảm một nửa
+      thời gian thực thi trong các điều kiện phù hợp (ví dụ số lần lặp đủ lớn).
+    </p>
+
+    <p>
+      Hiện tại không có cách nào để tắt loop unrolling trong <code>opt-level = 2</code>
+      và <code>3</code>, vì vậy nếu bạn không thể chịu được chi phí của nó, bạn
+      nên tối ưu chương trình cho kích thước.
+    </p>
+
+    <h2>Tối ưu hóa cho kích thước</h2>
+
+    <p>
+      Tính đến ngày 2018-09-18, <code>rustc</code> hỗ trợ hai mức "tối ưu hóa cho
+      kích thước": <code>opt-level = "s"</code> và <code>"z"</code>. Những tên này
+      được kế thừa từ clang / LLVM và không quá mô tả nhưng <code>"z"</code> có
+      ý nghĩa là nó tạo ra binary nhỏ hơn <code>"s"</code>.
+    </p>
+
+    <p>
+      Nếu bạn muốn release binary được tối ưu cho kích thước, hãy thay đổi cài đặt
+      <code>profile.release.opt-level</code> trong <code>Cargo.toml</code> như dưới đây.
+    </p>
+
+<pre><code>[profile.release]
+# hoặc "z"
+opt-level = "s"</code></pre>
+
+    <p>
+      Hai mức tối ưu hóa này làm giảm đáng kể inline threshold của LLVM, một metric
+      được dùng để quyết định có inline một hàm hay không. Một trong những nguyên
+      tắc của Rust là các zero cost abstraction; các abstraction này có xu hướng dùng
+      nhiều newtype và hàm nhỏ để giữ các invariant (ví dụ: các hàm mượn một giá trị
+      bên trong như <code>deref</code>, <code>as_ref</code>), vì vậy inline threshold
+      thấp có thể khiến LLVM bỏ lỡ các cơ hội tối ưu hóa (ví dụ: loại bỏ dead branch,
+      inline các lời gọi closure).
+    </p>
+
+    <p>
+      Khi tối ưu hóa cho kích thước, bạn có thể muốn thử tăng inline threshold để
+      xem liệu điều đó có ảnh hưởng đến kích thước binary không. Cách khuyến nghị
+      để thay đổi inline threshold là thêm flag <code>-C inline-threshold</code>
+      vào các rustflag khác trong <code>.cargo/config.toml</code>.
+    </p>
+
+<pre><code># .cargo/config.toml
+# điều này giả định bạn đang dùng template cortex-m-quickstart
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+rustflags = [
+  # ..
+  "-C", "inline-threshold=123", # +
+]</code></pre>
+
+    <p>Giá trị nào nên dùng? Tính đến phiên bản 1.29.0, đây là các inline threshold mà các mức tối ưu hóa khác nhau sử dụng:</p>
+
+    <ul>
+      <li><code>opt-level = 3</code> dùng 275</li>
+      <li><code>opt-level = 2</code> dùng 225</li>
+      <li><code>opt-level = "s"</code> dùng 75</li>
+      <li><code>opt-level = "z"</code> dùng 25</li>
+    </ul>
+
+    <p>Bạn nên thử <code>225</code> và <code>275</code> khi tối ưu hóa cho kích thước.</p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Tóm tắt các mức tối ưu hóa</div>
+      <svg viewBox="0 0 680 220" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="220" fill="#f8f9fc" rx="12"/>
+
+        <!-- Axes labels -->
+        <text x="20" y="110" text-anchor="middle" font-size="10" fill="#374151" font-family="sans-serif" transform="rotate(-90,20,110)">Tốc độ cao hơn →</text>
+        <text x="360" y="215" text-anchor="middle" font-size="10" fill="#374151" font-family="sans-serif">← Kích thước nhỏ hơn &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Kích thước lớn hơn →</text>
+
+        <!-- Axes -->
+        <line x1="50" y1="190" x2="650" y2="190" stroke="#374151" stroke-width="2"/>
+        <line x1="50" y1="30" x2="50" y2="190" stroke="#374151" stroke-width="2"/>
+
+        <!-- Data points: (size, speed) mapped to (x, y) -->
+        <!-- opt=0: big, slow → x=590, y=175 -->
+        <circle cx="590" cy="172" r="18" fill="#ef4444" opacity="0.9"/>
+        <text x="590" y="176" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">0</text>
+        <text x="590" y="155" text-anchor="middle" font-size="10" fill="#ef4444" font-family="sans-serif">dev</text>
+
+        <!-- opt=1: medium, medium → x=450, y=130 -->
+        <circle cx="450" cy="132" r="18" fill="#f97316" opacity="0.9"/>
+        <text x="450" y="136" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">1</text>
+
+        <!-- opt=2: medium, fast → x=310, y=70 -->
+        <circle cx="330" cy="72" r="18" fill="#eab308" opacity="0.9"/>
+        <text x="330" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">2</text>
+
+        <!-- opt=3: slightly bigger than 2, fastest → x=370, y=50 -->
+        <circle cx="390" cy="50" r="18" fill="#84cc16" opacity="0.9"/>
+        <text x="390" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">3</text>
+        <text x="420" y="42" text-anchor="middle" font-size="9" fill="#4d7c0f" font-family="sans-serif">fastest</text>
+
+        <!-- opt="s": small, good → x=185, y=90 -->
+        <circle cx="195" cy="90" r="18" fill="#22c55e" opacity="0.9"/>
+        <text x="195" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">s</text>
+
+        <!-- opt="z": smallest, medium → x=110, y=115 -->
+        <circle cx="110" cy="115" r="18" fill="#14b8a6" opacity="0.9"/>
+        <text x="110" y="119" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="sans-serif">z</text>
+        <text x="70" y="128" text-anchor="middle" font-size="9" fill="#0f766e" font-family="sans-serif">smallest</text>
+
+        <!-- Ideal zone -->
+        <rect x="52" y="32" width="200" height="100" rx="6" fill="#dcfce7" opacity="0.25"/>
+        <text x="152" y="68" text-anchor="middle" font-size="9" fill="#166534" font-family="sans-serif" opacity="0.6">✨ Vùng lý tưởng</text>
+      </svg>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="../interoperability/rust-with-c.html" class="nav-btn">← Rust trong C</a>
+      <a href="../index.html" class="nav-btn next">Trang chủ →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

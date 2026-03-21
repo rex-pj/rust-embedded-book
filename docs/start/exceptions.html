@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ngoại lệ (Exceptions) - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html" class="active">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">Ngoại lệ (Exceptions)</span>
+  </div>
+  <main id="main">
+
+    <h1>Ngoại lệ (Exceptions)</h1>
+
+    <p>
+      Exception và interrupt là cơ chế phần cứng mà bộ xử lý dùng để xử lý các sự kiện bất đồng
+      bộ và lỗi nghiêm trọng (ví dụ: thực thi lệnh không hợp lệ). Exception có nghĩa là preemption
+      và liên quan đến các exception handler, tức là các subroutine được thực thi để phản hồi với
+      tín hiệu kích hoạt sự kiện.
+    </p>
+
+    <p>
+      Crate <code>cortex-m-rt</code> cung cấp thuộc tính
+      <a href="https://docs.rs/cortex-m-rt-macros/latest/cortex_m_rt_macros/attr.exception.html"><code>exception</code></a>
+      để khai báo exception handler.
+    </p>
+
+<pre><code><span class="comment">// Exception handler cho SysTick (System Timer) exception</span>
+<span class="attr">#[exception]</span>
+<span class="kw">fn</span> <span class="fn">SysTick</span>() {
+    <span class="comment">// ..</span>
+}</code></pre>
+
+    <p>
+      Ngoài thuộc tính <code>exception</code>, các exception handler trông giống như các hàm bình
+      thường nhưng có thêm một điểm khác biệt: các exception handler <strong>không thể</strong>
+      được gọi bởi phần mềm. Theo ví dụ trước, câu lệnh <code>SysTick();</code> sẽ dẫn đến lỗi
+      biên dịch.
+    </p>
+
+    <p>
+      Hành vi này là hoàn toàn có chủ ý và cần thiết để cung cấp một tính năng: các biến
+      <code>static mut</code> được khai báo <em>bên trong</em> exception handler là <em>an toàn</em>
+      để dùng.
+    </p>
+
+<pre><code><span class="attr">#[exception]</span>
+<span class="kw">fn</span> <span class="fn">SysTick</span>() {
+    <span class="kw">static mut</span> COUNT: <span class="type">u32</span> = <span class="num">0</span>;
+
+    <span class="comment">// `COUNT` đã được chuyển thành kiểu `&amp;mut u32` và an toàn để dùng</span>
+    *COUNT += <span class="num">1</span>;
+}</code></pre>
+
+    <p>
+      Như bạn có thể biết, việc dùng biến <code>static mut</code> trong một hàm làm cho hàm đó
+      <a href="https://en.wikipedia.org/wiki/Reentrancy_(computing)"><em>non-reentrant</em></a>.
+      Hành vi không xác định xảy ra khi gọi một hàm non-reentrant, trực tiếp hoặc gián tiếp,
+      từ nhiều hơn một exception / interrupt handler hoặc từ <code>main</code> và một hoặc nhiều
+      exception / interrupt handler.
+    </p>
+
+    <p>
+      Safe Rust không bao giờ được dẫn đến hành vi không xác định, vì vậy các hàm non-reentrant
+      phải được đánh dấu là <code>unsafe</code>. Thế nhưng tôi vừa nói rằng exception handler có
+      thể dùng biến <code>static mut</code> một cách an toàn. Làm sao điều này có thể xảy ra?
+      Điều này có thể xảy ra vì exception handler <strong>không thể</strong> được gọi bởi phần
+      mềm, do đó reentrancy là không thể. Các handler này được gọi bởi chính phần cứng, được giả
+      định là không có concurrent về mặt vật lý.
+    </p>
+
+    <p>
+      Kết quả là, trong ngữ cảnh của exception handler trong các hệ thống embedded, sự vắng mặt
+      của các lần gọi đồng thời cùng một handler đảm bảo không có vấn đề reentrancy, ngay cả khi
+      handler dùng static mutable variable.
+    </p>
+
+    <p>
+      Trong hệ thống multicore, nơi nhiều processor core đang thực thi code đồng thời, khả năng
+      xảy ra reentrancy lại trở nên liên quan, ngay cả trong exception handler. Để giải quyết vấn
+      đề này trong môi trường multicore, cần dùng các cơ chế đồng bộ hóa phù hợp trong exception
+      handler như lock, semaphore, hoặc atomic operation.
+    </p>
+
+    <blockquote>
+      <p>
+        Lưu ý rằng thuộc tính <code>exception</code> chuyển đổi các định nghĩa biến static bên
+        trong hàm bằng cách bọc chúng vào các block <code>unsafe</code> và cung cấp cho chúng ta
+        các biến mới thích hợp có kiểu <code>&amp;mut</code> cùng tên. Vì vậy chúng ta có thể
+        dereference reference qua <code>*</code> để truy cập giá trị của biến mà không cần bọc
+        trong block <code>unsafe</code>.
+      </p>
+    </blockquote>
+
+    <h2>Một ví dụ hoàn chỉnh</h2>
+
+    <p>
+      Đây là ví dụ dùng system timer để raise exception <code>SysTick</code> khoảng mỗi giây.
+      Exception handler <code>SysTick</code> theo dõi số lần nó đã được gọi trong biến
+      <code>COUNT</code> rồi in giá trị của <code>COUNT</code> ra host console bằng semihosting.
+    </p>
+
+    <blockquote>
+      <p><strong>LƯU Ý</strong>: Bạn có thể chạy ví dụ này trên bất kỳ thiết bị Cortex-M nào; bạn cũng có thể chạy nó trên QEMU.</p>
+    </blockquote>
+
+<pre><code><span class="attr">#![deny(unsafe_code)]</span>
+<span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_halt <span class="kw">as</span> _;
+
+<span class="kw">use</span> core::fmt::Write;
+
+<span class="kw">use</span> cortex_m::peripheral::syst::SystClkSource;
+<span class="kw">use</span> cortex_m_rt::{entry, exception};
+<span class="kw">use</span> cortex_m_semihosting::{
+    debug,
+    hio::{self, HostStream},
+};
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="kw">let</span> p = cortex_m::<span class="type">Peripherals</span>::take().unwrap();
+    <span class="kw">let mut</span> syst = p.SYST;
+
+    <span class="comment">// cấu hình system timer để trigger SysTick exception mỗi giây</span>
+    syst.set_clock_source(<span class="type">SystClkSource</span>::<span class="type">Core</span>);
+    <span class="comment">// cấu hình cho LM3S6965 có CPU clock mặc định 12 MHz</span>
+    syst.set_reload(<span class="num">12_000_000</span>);
+    syst.clear_current();
+    syst.enable_counter();
+    syst.enable_interrupt();
+
+    <span class="kw">loop</span> {}
+}
+
+<span class="attr">#[exception]</span>
+<span class="kw">fn</span> <span class="fn">SysTick</span>() {
+    <span class="kw">static mut</span> COUNT: <span class="type">u32</span> = <span class="num">0</span>;
+    <span class="kw">static mut</span> STDOUT: <span class="type">Option</span>&lt;<span class="type">HostStream</span>&gt; = <span class="type">None</span>;
+
+    *COUNT += <span class="num">1</span>;
+
+    <span class="comment">// Lazy initialization</span>
+    <span class="kw">if</span> STDOUT.is_none() {
+        *STDOUT = hio::hstdout().ok();
+    }
+
+    <span class="kw">if let</span> <span class="type">Some</span>(hstdout) = STDOUT.as_mut() {
+        write!(hstdout, <span class="str">"{}"</span>, *COUNT).ok();
+    }
+
+    <span class="comment">// QUAN TRỌNG: bỏ qua block `if` này nếu chạy trên phần cứng thực hoặc
+    // debugger sẽ rơi vào trạng thái không nhất quán</span>
+    <span class="kw">if</span> *COUNT == <span class="num">9</span> {
+        <span class="comment">// Kết thúc tiến trình QEMU</span>
+        debug::exit(debug::EXIT_SUCCESS);
+    }
+}</code></pre>
+
+<pre><code>[dependencies]
+cortex-m = "0.5.7"
+cortex-m-rt = "0.6.3"
+panic-halt = "0.2.0"
+cortex-m-semihosting = "0.3.1"</code></pre>
+
+<pre><code>$ cargo run --release
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb (..)
+123456789</code></pre>
+
+    <p>
+      Nếu bạn chạy trên Discovery board, bạn sẽ thấy output trên console OpenOCD. Ngoài ra,
+      chương trình <em>sẽ không</em> dừng khi count đạt 9.
+    </p>
+
+    <h2>Default exception handler</h2>
+
+    <p>
+      Điều mà thuộc tính <code>exception</code> thực sự làm là <em>ghi đè</em> default exception
+      handler cho một exception cụ thể. Nếu bạn không ghi đè handler cho một exception cụ thể,
+      nó sẽ được xử lý bởi hàm <code>DefaultHandler</code>, mặc định là:
+    </p>
+
+<pre><code><span class="kw">fn</span> <span class="fn">DefaultHandler</span>() {
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Hàm này được crate <code>cortex-m-rt</code> cung cấp và được đánh dấu là
+      <code>#[no_mangle]</code> để bạn có thể đặt breakpoint tại "DefaultHandler" và bắt các
+      exception <em>chưa được xử lý</em>.
+    </p>
+
+    <p>Có thể ghi đè <code>DefaultHandler</code> này bằng thuộc tính <code>exception</code>:</p>
+
+<pre><code><span class="attr">#[exception]</span>
+<span class="kw">fn</span> <span class="fn">DefaultHandler</span>(irqn: <span class="type">i16</span>) {
+    <span class="comment">// custom default handler</span>
+}</code></pre>
+
+    <p>
+      Tham số <code>irqn</code> cho biết exception nào đang được phục vụ. Giá trị âm cho biết
+      một Cortex-M exception đang được phục vụ; và zero hoặc giá trị dương cho biết một exception
+      dành riêng cho thiết bị, còn gọi là interrupt, đang được phục vụ.
+    </p>
+
+    <h2>Hard fault handler</h2>
+
+    <p>
+      Exception <code>HardFault</code> hơi đặc biệt một chút. Exception này được kích hoạt khi
+      chương trình vào trạng thái không hợp lệ nên handler của nó <strong>không thể</strong>
+      return vì điều đó có thể dẫn đến hành vi không xác định. Ngoài ra, crate runtime thực hiện
+      một số công việc trước khi user định nghĩa handler <code>HardFault</code> được gọi để cải
+      thiện khả năng debug.
+    </p>
+
+    <p>
+      Kết quả là, handler <code>HardFault</code> phải có chữ ký sau:
+      <code>fn(&amp;ExceptionFrame) -&gt; !</code>. Tham số của handler là một con trỏ đến các
+      register đã được push vào stack bởi exception. Các register này là snapshot của trạng thái
+      bộ xử lý tại thời điểm exception được kích hoạt và hữu ích để chẩn đoán hard fault.
+    </p>
+
+    <p>
+      Đây là ví dụ thực hiện thao tác không hợp lệ: đọc từ một địa chỉ bộ nhớ không tồn tại.
+    </p>
+
+    <blockquote>
+      <p>
+        <strong>LƯU Ý</strong>: Chương trình này sẽ không hoạt động, tức là sẽ không crash, trên
+        QEMU vì <code>qemu-system-arm -machine lm3s6965evb</code> không kiểm tra memory load và
+        sẽ vui vẻ trả về <code>0</code> khi đọc từ bộ nhớ không hợp lệ.
+      </p>
+    </blockquote>
+
+<pre><code><span class="attr">#![no_main]</span>
+<span class="attr">#![no_std]</span>
+
+<span class="kw">use</span> panic_halt <span class="kw">as</span> _;
+
+<span class="kw">use</span> core::fmt::Write;
+<span class="kw">use</span> core::ptr;
+
+<span class="kw">use</span> cortex_m_rt::{entry, exception, ExceptionFrame};
+<span class="kw">use</span> cortex_m_semihosting::hio;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -> ! {
+    <span class="comment">// đọc từ địa chỉ bộ nhớ không tồn tại</span>
+    <span class="kw">unsafe</span> {
+        ptr::read_volatile(<span class="num">0x3FFF_0000</span> <span class="kw">as</span> *<span class="kw">const</span> <span class="type">u32</span>);
+    }
+
+    <span class="kw">loop</span> {}
+}
+
+<span class="attr">#[exception]</span>
+<span class="kw">fn</span> <span class="fn">HardFault</span>(ef: &<span class="type">ExceptionFrame</span>) -> ! {
+    <span class="kw">if let</span> <span class="type">Ok</span>(<span class="kw">mut</span> hstdout) = hio::hstdout() {
+        writeln!(hstdout, <span class="str">"{:#?}"</span>, ef).ok();
+    }
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Handler <code>HardFault</code> in giá trị <code>ExceptionFrame</code>. Nếu bạn chạy đoạn
+      này, bạn sẽ thấy nội dung tương tự trên console OpenOCD.
+    </p>
+
+<pre><code>$ openocd
+(..)
+ExceptionFrame {
+    r0: 0x3fff0000,
+    r1: 0x00000003,
+    r2: 0x080032e8,
+    r3: 0x00000000,
+    r12: 0x00000000,
+    lr: 0x080016df,
+    pc: 0x080016e2,
+    xpsr: 0x61000000,
+}</code></pre>
+
+    <p>
+      Giá trị <code>pc</code> là giá trị của Program Counter tại thời điểm exception và nó trỏ
+      đến lệnh đã gây ra exception.
+    </p>
+
+    <p>Nếu bạn xem disassembly của chương trình:</p>
+
+<pre><code>$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+(..)
+ResetTrampoline:
+ 8000942:       movw    r0, #0xfffe
+ 8000946:       movt    r0, #0x3fff
+ 800094a:       ldr     r0, [r0]
+ 800094c:       b       #-0x4 &lt;ResetTrampoline+0xa&gt;</code></pre>
+
+    <p>
+      Bạn có thể tra cứu giá trị program counter <code>0x0800094a</code> trong disassembly. Bạn
+      sẽ thấy rằng thao tác load (<code>ldr r0, [r0]</code>) đã gây ra exception. Trường
+      <code>r0</code> của <code>ExceptionFrame</code> sẽ cho bạn biết giá trị của register
+      <code>r0</code> là <code>0x3fff_fffe</code> tại thời điểm đó.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="panicking.html" class="nav-btn">← Panicking</a>
+      <a href="registers.html" class="nav-btn next">Thanh ghi bộ nhớ →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

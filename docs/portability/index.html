@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tính di động - Portability - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="index.html" class="active">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Tính di động</span>
+  </div>
+  <main id="main">
+
+    <h1>Tính di động — Portability</h1>
+
+    <p>
+      Trong môi trường embedded, tính di động là một chủ đề rất quan trọng: mỗi nhà sản xuất
+      và thậm chí từng dòng sản phẩm của cùng một nhà sản xuất đều có ngoại vi và khả năng
+      khác nhau, và tương tự, cách tương tác với các ngoại vi đó cũng sẽ khác nhau.
+    </p>
+
+    <p>
+      Một cách phổ biến để san bằng sự khác biệt đó là thông qua một lớp gọi là
+      Hardware Abstraction Layer (Lớp Trừu tượng Phần cứng) hay <strong>HAL</strong>.
+    </p>
+
+    <blockquote>
+      <p>
+        Hardware abstractions (Các trừu tượng phần cứng) là tập hợp các routine trong phần mềm
+        giả lập một số chi tiết đặc thù của nền tảng, cho phép chương trình truy cập trực tiếp
+        vào các tài nguyên phần cứng.
+      </p>
+      <p>
+        Chúng thường cho phép lập trình viên viết các ứng dụng độc lập với thiết bị và hiệu
+        suất cao bằng cách cung cấp các lời gọi hệ điều hành (OS) chuẩn tới phần cứng.
+      </p>
+      <p><em>Wikipedia: Hardware Abstraction Layer</em></p>
+    </blockquote>
+
+    <p>
+      Hệ thống embedded có chút đặc biệt trong khía cạnh này vì chúng ta thường không có
+      hệ điều hành và phần mềm có thể cài đặt từ người dùng, mà là các firmware image được
+      biên dịch toàn bộ cùng nhau cùng với một số ràng buộc khác. Vì vậy, dù cách tiếp cận
+      truyền thống theo định nghĩa của Wikipedia có thể áp dụng được, nó có lẽ không phải
+      cách tiếp cận hiệu quả nhất để đảm bảo tính di động.
+    </p>
+
+    <p>Chúng ta làm điều này trong Rust như thế nào? Hãy cùng khám phá <strong>embedded-hal</strong>…</p>
+
+    <h2>embedded-hal là gì?</h2>
+
+    <p>
+      Nói ngắn gọn, đây là một tập hợp các trait định nghĩa hợp đồng triển khai giữa
+      <strong>các HAL implementation</strong>, <strong>driver</strong> và
+      <strong>ứng dụng (hoặc firmware)</strong>. Những hợp đồng này bao gồm cả khả năng
+      (tức là, nếu một trait được implement cho một kiểu nhất định, thì <strong>HAL implementation</strong>
+      cung cấp một khả năng nhất định) và các phương thức (tức là, nếu bạn có thể tạo một kiểu
+      implement một trait, bạn được đảm bảo có các phương thức được chỉ định trong trait đó).
+    </p>
+
+    <p>Một kiến trúc phân lớp điển hình có thể trông như thế này:</p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Các lớp trong hệ sinh thái embedded-hal</div>
+      <svg viewBox="0 0 720 300" style="width:100%;max-width:720px;display:block;margin:0 auto">
+        <defs>
+          <marker id="arr-port" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L9,3 L0,6 Z" fill="#CE422B"/>
+          </marker>
+          <marker id="arr-port2" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L9,3 L0,6 Z" fill="#22c55e"/>
+          </marker>
+        </defs>
+        <rect width="720" height="300" fill="#f8f9fc" rx="12"/>
+
+        <!-- Application (top) -->
+        <rect x="210" y="16" width="300" height="52" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2.5"/>
+        <text x="360" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6" font-family="sans-serif">Application / Firmware</text>
+        <text x="360" y="56" text-anchor="middle" font-size="10" fill="#6d28d9" font-family="sans-serif">Kết nối mọi thứ lại với nhau</text>
+
+        <!-- Driver (middle) -->
+        <rect x="210" y="90" width="300" height="52" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2.5"/>
+        <text x="360" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af" font-family="sans-serif">Driver</text>
+        <text x="360" y="130" text-anchor="middle" font-size="10" fill="#2563eb" font-family="sans-serif">Cảm biến, màn hình, actuators — platform-agnostic</text>
+
+        <!-- embedded-hal traits (middle-lower) -->
+        <rect x="160" y="164" width="400" height="52" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+        <text x="360" y="187" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="sans-serif">embedded-hal traits</text>
+        <text x="360" y="205" text-anchor="middle" font-size="10" fill="#78350f" font-family="sans-serif">I2c, Spi, OutputPin, InputPin, Serial, DelayMs, AdcChannel...</text>
+
+        <!-- HAL implementations (bottom) -->
+        <rect x="20" y="238" width="155" height="52" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="97" y="260" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">HAL Implementation</text>
+        <text x="97" y="276" text-anchor="middle" font-size="9" fill="#15803d" font-family="sans-serif">stm32f3xx-hal, nrf52840-hal...</text>
+
+        <rect x="185" y="238" width="155" height="52" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="262" y="260" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">HAL qua OS</text>
+        <text x="262" y="276" text-anchor="middle" font-size="9" fill="#15803d" font-family="sans-serif">Linux sysfs, RTOS APIs</text>
+
+        <rect x="350" y="238" width="155" height="52" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="427" y="260" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">Adapter / Mock</text>
+        <text x="427" y="276" text-anchor="middle" font-size="9" fill="#15803d" font-family="sans-serif">Unit testing mocks</text>
+
+        <rect x="515" y="238" width="185" height="52" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="607" y="260" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">Driver adapter</text>
+        <text x="607" y="276" text-anchor="middle" font-size="9" fill="#15803d" font-family="sans-serif">I2C mux, GPIO expander</text>
+
+        <!-- Arrows -->
+        <line x1="360" y1="68" x2="360" y2="88" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-port)"/>
+        <line x1="360" y1="142" x2="360" y2="162" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-port)"/>
+        <line x1="97" y1="236" x2="220" y2="218" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-port2)"/>
+        <line x1="262" y1="236" x2="300" y2="218" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-port2)"/>
+        <line x1="427" y1="236" x2="400" y2="218" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-port2)"/>
+        <line x1="607" y1="236" x2="510" y2="218" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arr-port2)"/>
+      </svg>
+    </div>
+
+    <p>Một số trait được định nghĩa trong <strong>embedded-hal</strong> bao gồm:</p>
+
+    <ul>
+      <li>GPIO (pin input và output)</li>
+      <li>Giao tiếp nối tiếp (Serial)</li>
+      <li>I2C</li>
+      <li>SPI</li>
+      <li>Timers/Countdowns</li>
+      <li>Analog Digital Conversion (ADC)</li>
+    </ul>
+
+    <p>
+      Lý do chính để có các trait và crate của <strong>embedded-hal</strong> và các crate
+      implement cũng như sử dụng chúng là để kiểm soát độ phức tạp. Nếu bạn xem xét rằng
+      một ứng dụng có thể phải implement việc sử dụng ngoại vi trong phần cứng cũng như
+      ứng dụng và có thể cả driver cho các linh kiện phần cứng bổ sung, thì sẽ dễ dàng
+      thấy rằng khả năng tái sử dụng bị hạn chế rất nhiều. Nói theo toán học, nếu
+      <strong>M</strong> là số lượng HAL implementation ngoại vi và <strong>N</strong> là
+      số lượng driver thì nếu chúng ta phải tự phát minh lại từ đầu cho mỗi ứng dụng,
+      ta sẽ có <strong>M×N</strong> implementation, trong khi bằng cách sử dụng
+      <em>API</em> được cung cấp bởi các trait <strong>embedded-hal</strong> sẽ làm cho
+      độ phức tạp implementation tiến tới <strong>M+N</strong>. Tất nhiên còn có các lợi
+      ích bổ sung khác, chẳng hạn như ít thử nghiệm và sai sót hơn nhờ các API được
+      định nghĩa rõ ràng và sẵn sàng sử dụng.
+    </p>
+
+    <h2>Người dùng của embedded-hal</h2>
+
+    <p>Như đã nói ở trên, có ba người dùng chính của HAL:</p>
+
+    <h3>HAL implementation</h3>
+
+    <p>
+      Một HAL implementation cung cấp giao diện giữa phần cứng và người dùng của các
+      HAL trait. Các implementation điển hình bao gồm ba phần:
+    </p>
+
+    <ul>
+      <li>Một hoặc nhiều kiểu đặc thù cho phần cứng cụ thể</li>
+      <li>Các hàm để tạo và khởi tạo kiểu đó, thường cung cấp nhiều tùy chọn cấu hình
+        (tốc độ, chế độ hoạt động, pin sử dụng, v.v.)</li>
+      <li>Một hoặc nhiều <code>impl</code> <code>trait</code> của <strong>embedded-hal</strong>
+        cho kiểu đó</li>
+    </ul>
+
+    <p>Một <strong>HAL implementation</strong> như vậy có thể có nhiều dạng:</p>
+
+    <ul>
+      <li>Thông qua truy cập phần cứng cấp thấp, ví dụ qua các register</li>
+      <li>Thông qua hệ điều hành, ví dụ bằng cách sử dụng <code>sysfs</code> trong Linux</li>
+      <li>Thông qua adapter, ví dụ mock của các kiểu để unit testing</li>
+      <li>Thông qua driver cho các hardware adapter, ví dụ I2C multiplexer hoặc GPIO expander</li>
+    </ul>
+
+    <h3>Driver</h3>
+
+    <p>
+      Một driver implement một tập hợp chức năng tùy chỉnh cho một linh kiện nội bộ hay
+      ngoại vi, được kết nối với một ngoại vi implement các embedded-hal trait. Các ví dụ
+      điển hình cho các driver đó bao gồm nhiều loại cảm biến (nhiệt độ, từ kế, gia tốc kế,
+      ánh sáng), thiết bị hiển thị (mảng LED, màn hình LCD) và các actuator (động cơ, máy phát).
+    </p>
+
+    <p>
+      Một driver phải được khởi tạo với một instance của kiểu implement một <code>trait</code>
+      nhất định của embedded-hal (được đảm bảo qua trait bound) và cung cấp instance kiểu
+      của chính nó với tập hợp phương thức tùy chỉnh cho phép tương tác với thiết bị được điều khiển.
+    </p>
+
+    <h3>Application</h3>
+
+    <p>
+      Application kết nối các phần khác nhau lại với nhau và đảm bảo đạt được chức năng
+      mong muốn. Khi chuyển đổi giữa các hệ thống khác nhau, đây là phần đòi hỏi nỗ lực
+      thích nghi nhiều nhất, vì application cần khởi tạo đúng phần cứng thực tế thông qua
+      HAL implementation và quá trình khởi tạo của các phần cứng khác nhau, đôi khi rất
+      khác nhau đáng kể. Ngoài ra, lựa chọn của người dùng thường đóng vai trò quan trọng,
+      vì các linh kiện có thể được kết nối vật lý với các cổng khác nhau, bus phần cứng
+      đôi khi cần phần cứng ngoài để khớp với cấu hình hoặc có những đánh đổi khác nhau
+      khi sử dụng các ngoại vi nội bộ (ví dụ: nhiều timer với khả năng khác nhau có thể
+      được sử dụng hoặc các ngoại vi xung đột với nhau).
+    </p>
+
+    <div class="nav-buttons">
+      <a href="../start/registers.html" class="nav-btn">← Thanh ghi bộ nhớ</a>
+      <a href="../concurrency/index.html" class="nav-btn next">Concurrency →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

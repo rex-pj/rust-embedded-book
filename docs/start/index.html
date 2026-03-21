@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bắt đầu - Getting Started - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html" class="active">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Bắt đầu</span>
+  </div>
+  <main id="main">
+
+    <h1>Bắt đầu — Getting Started</h1>
+    <p class="subtitle">Viết, build và chạy chương trình embedded Rust đầu tiên của bạn</p>
+
+    <p>
+      Phần này hướng dẫn bạn từng bước từ việc thiết lập dự án đến chạy code trên
+      phần cứng thực hoặc máy ảo QEMU. Mỗi chương tập trung vào một khía cạnh cụ thể
+      của quy trình phát triển embedded.
+    </p>
+
+    <h2>Quy trình phát triển embedded</h2>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Vòng lặp phát triển Embedded Rust</div>
+      <svg viewBox="0 0 760 200" style="width:100%;max-width:760px;display:block;margin:0 auto">
+        <defs>
+          <marker id="arr-flow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <path d="M0,0 L10,3.5 L0,7 Z" fill="#CE422B"/>
+          </marker>
+          <marker id="arr-back" markerWidth="10" markerHeight="7" refX="1" refY="3.5" orient="auto">
+            <path d="M10,0 L0,3.5 L10,7 Z" fill="#6366f1"/>
+          </marker>
+        </defs>
+        <rect width="760" height="200" fill="#f8f9fc" rx="12"/>
+
+        <!-- Step boxes -->
+        <rect x="20" y="70" width="120" height="60" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="80" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af" font-family="sans-serif">✍️ Viết code</text>
+        <text x="80" y="113" text-anchor="middle" font-size="10" fill="#3730a3" font-family="sans-serif">src/main.rs</text>
+
+        <rect x="175" y="70" width="120" height="60" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="235" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="sans-serif">🔨 Build</text>
+        <text x="235" y="113" text-anchor="middle" font-size="10" fill="#78350f" font-family="sans-serif">cargo build</text>
+
+        <rect x="330" y="70" width="120" height="60" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="390" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#7e22ce" font-family="sans-serif">⚡ Flash/QEMU</text>
+        <text x="390" y="113" text-anchor="middle" font-size="10" fill="#6b21a8" font-family="sans-serif">cargo run</text>
+
+        <rect x="485" y="70" width="120" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="545" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="sans-serif">🐛 Debug</text>
+        <text x="545" y="113" text-anchor="middle" font-size="10" fill="#15803d" font-family="sans-serif">GDB / RTT</text>
+
+        <rect x="640" y="70" width="100" height="60" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+        <text x="690" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b" font-family="sans-serif">🔁 Lặp lại</text>
+        <text x="690" y="113" text-anchor="middle" font-size="10" fill="#7f1d1d" font-family="sans-serif">iterate</text>
+
+        <!-- Forward arrows -->
+        <line x1="142" y1="100" x2="173" y2="100" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-flow)"/>
+        <line x1="297" y1="100" x2="328" y2="100" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-flow)"/>
+        <line x1="452" y1="100" x2="483" y2="100" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-flow)"/>
+        <line x1="607" y1="100" x2="638" y2="100" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-flow)"/>
+
+        <!-- Back arrow (iterate → write) -->
+        <path d="M690,132 Q690,168 400,168 Q110,168 80,132" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-back)"/>
+        <text x="390" y="185" text-anchor="middle" font-size="10" fill="#6366f1" font-family="sans-serif">Phát hiện lỗi → sửa → build lại</text>
+
+        <!-- Tool labels below boxes -->
+        <text x="80" y="148" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">VSCode + rust-analyzer</text>
+        <text x="235" y="148" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">cargo + linker</text>
+        <text x="390" y="148" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">probe-rs / QEMU</text>
+        <text x="545" y="148" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">arm-gdb / probe-rs</text>
+      </svg>
+    </div>
+
+    <h2>Nội dung chương này</h2>
+
+    <p>Phần "Bắt đầu" gồm các chương sau, được thiết kế để học theo thứ tự:</p>
+
+    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:24px 0">
+
+      <a href="qemu.html" style="text-decoration:none">
+        <div style="border:1.5px solid #a855f7;border-radius:10px;padding:18px;background:#faf5ff;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(168,85,247,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">🖥️</div>
+          <div style="font-weight:700;color:#7e22ce;margin-bottom:6px">QEMU — Chạy trên máy ảo</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">Chạy chương trình embedded mà không cần phần cứng thực. Sử dụng QEMU để giả lập Cortex-M. Thiết lập cortex-m-quickstart, memory.x, và cargo run.</div>
+        </div>
+      </a>
+
+      <a href="hardware.html" style="text-decoration:none">
+        <div style="border:1.5px solid #ef4444;border-radius:10px;padding:18px;background:#fff5f5;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(239,68,68,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">🔌</div>
+          <div style="font-weight:700;color:#b91c1c;margin-bottom:6px">Phần cứng thực — Real Hardware</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">Flash code lên STM32 thực. ST-Link probe, probe-rs, cấu hình .cargo/config.toml, xem output qua ITM/RTT.</div>
+        </div>
+      </a>
+
+      <a href="semihosting.html" style="text-decoration:none">
+        <div style="border:1.5px solid #f59e0b;border-radius:10px;padding:18px;background:#fffbeb;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(245,158,11,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">📡</div>
+          <div style="font-weight:700;color:#92400e;margin-bottom:6px">Semihosting</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">In debug output từ MCU qua debug probe đến terminal PC. Dùng hprintln! từ cortex-m-semihosting. Chậm nhưng tiện cho debug.</div>
+        </div>
+      </a>
+
+      <a href="panicking.html" style="text-decoration:none">
+        <div style="border:1.5px solid #ef4444;border-radius:10px;padding:18px;background:#fef2f2;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(239,68,68,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">💥</div>
+          <div style="font-weight:700;color:#b91c1c;margin-bottom:6px">Panicking — Xử lý panic</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">panic! trong no_std không có backtrace mặc định. Các crate: panic-halt, panic-reset, panic-semihosting. Viết #[panic_handler] tùy chỉnh.</div>
+        </div>
+      </a>
+
+      <a href="exceptions.html" style="text-decoration:none">
+        <div style="border:1.5px solid #3b82f6;border-radius:10px;padding:18px;background:#eff6ff;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(59,130,246,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">⚠️</div>
+          <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px">Ngoại lệ — Exceptions</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">Xử lý ngoại lệ phần cứng: HardFault, SysTick, ngắt ngoại vi. Dùng #[exception] và #[interrupt] attribute.</div>
+        </div>
+      </a>
+
+      <a href="registers.html" style="text-decoration:none">
+        <div style="border:1.5px solid #22c55e;border-radius:10px;padding:18px;background:#f0fdf4;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(34,197,94,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:24px;margin-bottom:8px">🗄️</div>
+          <div style="font-weight:700;color:#15803d;margin-bottom:6px">Thanh ghi bộ nhớ</div>
+          <div style="font-size:13px;color:#4b5563;line-height:1.5">Memory-mapped I/O — điều khiển GPIO, UART qua thanh ghi. PAC được sinh từ SVD file. HAL bọc PAC với API an toàn.</div>
+        </div>
+      </a>
+
+    </div>
+
+    <h2>Điều kiện tiên quyết</h2>
+
+    <p>Trước khi bắt đầu, hãy đảm bảo bạn đã:</p>
+
+    <ol>
+      <li>Cài <strong>Rust toolchain</strong> qua <a href="https://rustup.rs">rustup.rs</a></li>
+      <li>Thêm target ARM: <code>rustup target add thumbv7em-none-eabihf</code></li>
+      <li>Cài <strong>cargo-generate</strong>: <code>cargo install cargo-generate</code></li>
+      <li>Cài <strong>QEMU</strong> (để chạy máy ảo): <code>apt install qemu-system-arm</code> hoặc <code>brew install qemu</code></li>
+      <li>Cài <strong>probe-rs</strong> (để flash phần cứng): <code>cargo install probe-rs-tools</code></li>
+      <li>Cài <strong>arm-none-eabi-gdb</strong> hoặc <strong>gdb-multiarch</strong></li>
+    </ol>
+
+    <div class="tip">
+      Nếu bạn chỉ muốn thử nghiệm mà chưa có phần cứng, hãy bắt đầu với chương <a href="qemu.html">QEMU</a>.
+      Bạn có thể chạy toàn bộ quy trình phát triển chỉ với máy tính.
+    </div>
+
+    <h2>Template dự án khởi đầu</h2>
+
+    <p>
+      Cách nhanh nhất để bắt đầu là dùng template <strong>cortex-m-quickstart</strong>:
+    </p>
+
+    <pre><code><span class="comment"># Tạo dự án mới từ template</span>
+cargo generate --git https://github.com/rust-embedded/cortex-m-quickstart \
+    --name my-first-embedded-app
+<span class="kw">cd</span> my-first-embedded-app
+
+<span class="comment"># Cấu trúc dự án được tạo:</span>
+<span class="comment"># my-first-embedded-app/</span>
+<span class="comment"># ├── .cargo/config.toml   ← target, runner</span>
+<span class="comment"># ├── Cargo.toml           ← dependencies</span>
+<span class="comment"># ├── memory.x             ← linker script</span>
+<span class="comment"># ├── build.rs             ← copy memory.x</span>
+<span class="comment"># └── src/</span>
+<span class="comment">#     └── main.rs          ← entry point</span></code></pre>
+
+    <div class="nav-buttons">
+      <a href="../intro/tooling.html" class="nav-btn">← Công cụ</a>
+      <a href="qemu.html" class="nav-btn next">QEMU →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

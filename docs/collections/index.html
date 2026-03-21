@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections - Bộ sưu tập dữ liệu - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="index.html" class="active">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Collections</span>
+  </div>
+  <main id="main">
+
+    <h1>Collections — Bộ sưu tập dữ liệu</h1>
+
+    <p>
+      Cuối cùng bạn sẽ muốn sử dụng các cấu trúc dữ liệu động (hay còn gọi là collections)
+      trong chương trình của mình. <code>std</code> cung cấp một tập hợp các collection thông dụng:
+      <code>Vec</code>, <code>String</code>, <code>HashMap</code>, v.v. Tất cả các collection
+      được implement trong <code>std</code> đều sử dụng một global dynamic memory allocator
+      (hay còn gọi là heap).
+    </p>
+
+    <p>
+      Vì <code>core</code> theo định nghĩa không có cấp phát bộ nhớ, các implementation này
+      không có sẵn ở đó, nhưng chúng có thể được tìm thấy trong crate <code>alloc</code>
+      đi kèm với compiler.
+    </p>
+
+    <p>
+      Nếu bạn cần collections, implementation được cấp phát trên heap không phải lựa chọn
+      duy nhất của bạn. Bạn cũng có thể sử dụng các collection có
+      <em>dung lượng cố định</em>; một implementation như vậy có thể được tìm thấy trong
+      crate <code>heapless</code>.
+    </p>
+
+    <p>Trong phần này, chúng ta sẽ khám phá và so sánh hai implementation này.</p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">alloc (heap) vs heapless (dung lượng cố định) — Hai cách tiếp cận</div>
+      <svg viewBox="0 0 680 200" style="width:100%;max-width:680px;display:block;margin:0 auto">
+        <rect width="680" height="200" fill="#f8f9fc" rx="12"/>
+
+        <!-- Left: alloc -->
+        <rect x="20" y="20" width="300" height="160" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="170" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c" font-family="sans-serif">alloc crate</text>
+        <text x="170" y="66" text-anchor="middle" font-size="11" fill="#dc2626" font-family="sans-serif">Vec, String, HashMap — heap động</text>
+        <text x="170" y="86" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">✓ API quen thuộc, giống std</text>
+        <text x="170" y="102" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">✓ Tự động tăng kích thước</text>
+        <text x="170" y="118" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">✗ Cần global allocator</text>
+        <text x="170" y="134" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">✗ Có thể OOM lúc runtime</text>
+        <text x="170" y="150" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">✗ WCET không thể xác định</text>
+        <text x="170" y="168" text-anchor="middle" font-size="9" fill="#9ca3af" font-family="monospace">extern crate alloc;</text>
+
+        <!-- Right: heapless -->
+        <rect x="360" y="20" width="300" height="160" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+        <text x="510" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" font-family="sans-serif">heapless crate</text>
+        <text x="510" y="66" text-anchor="middle" font-size="11" fill="#15803d" font-family="sans-serif">Vec, String — dung lượng cố định</text>
+        <text x="510" y="86" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">✓ Không cần allocator</text>
+        <text x="510" y="102" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">✓ Kích thước xác định tại compile time</text>
+        <text x="510" y="118" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">✓ WCET có thể xác định</text>
+        <text x="510" y="134" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">✗ Phải khai báo dung lượng trước</text>
+        <text x="510" y="150" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">✗ push() trả về Result</text>
+        <text x="510" y="168" text-anchor="middle" font-size="9" fill="#9ca3af" font-family="monospace">use heapless::Vec;</text>
+      </svg>
+    </div>
+
+    <h2>Dùng <code>alloc</code></h2>
+
+    <p>
+      Crate <code>alloc</code> đi kèm với bản phân phối Rust chuẩn. Để import crate,
+      bạn có thể <code>use</code> trực tiếp mà <em>không cần</em> khai báo nó như một
+      dependency trong file <code>Cargo.toml</code>.
+    </p>
+
+<pre><code><span class="attr">#![feature(alloc)]</span>
+
+<span class="kw">extern crate</span> alloc;
+
+<span class="kw">use</span> alloc::vec::<span class="type">Vec</span>;</code></pre>
+
+    <p>
+      Để có thể sử dụng bất kỳ collection nào, trước tiên bạn sẽ cần dùng attribute
+      <code>global_allocator</code> để khai báo global allocator mà chương trình sẽ
+      sử dụng. Yêu cầu là allocator bạn chọn phải implement trait <code>GlobalAlloc</code>.
+    </p>
+
+    <p>
+      Để đầy đủ và giữ phần này khép kín nhất có thể, chúng ta sẽ implement một
+      bump pointer allocator đơn giản và sử dụng nó làm global allocator. Tuy nhiên,
+      chúng tôi <em>khuyến khích mạnh mẽ</em> bạn hãy sử dụng một allocator đã được
+      kiểm chứng kỹ lưỡng từ crates.io trong chương trình của bạn thay vì allocator này.
+    </p>
+
+<pre><code><span class="comment">// Triển khai bump pointer allocator</span>
+
+<span class="kw">use</span> core::alloc::{<span class="type">GlobalAlloc</span>, <span class="type">Layout</span>};
+<span class="kw">use</span> core::cell::<span class="type">UnsafeCell</span>;
+<span class="kw">use</span> core::ptr;
+
+<span class="kw">use</span> cortex_m::interrupt;
+
+<span class="comment">// Bump pointer allocator cho hệ thống *đơn nhân*</span>
+<span class="kw">struct</span> <span class="type">BumpPointerAlloc</span> {
+    head: <span class="type">UnsafeCell</span>&lt;usize&gt;,
+    end: usize,
+}
+
+<span class="kw">unsafe impl</span> <span class="type">Sync</span> <span class="kw">for</span> <span class="type">BumpPointerAlloc</span> {}
+
+<span class="kw">unsafe impl</span> <span class="type">GlobalAlloc</span> <span class="kw">for</span> <span class="type">BumpPointerAlloc</span> {
+    <span class="kw">unsafe fn</span> <span class="fn">alloc</span>(&amp;self, layout: <span class="type">Layout</span>) -&gt; *<span class="kw">mut</span> u8 {
+        <span class="comment">// `interrupt::free` là critical section giúp allocator</span>
+        <span class="comment">// của chúng ta an toàn khi dùng từ bên trong interrupts</span>
+        interrupt::<span class="fn">free</span>(|_| {
+            <span class="kw">let</span> head = self.head.<span class="fn">get</span>();
+            <span class="kw">let</span> size = layout.<span class="fn">size</span>();
+            <span class="kw">let</span> align = layout.<span class="fn">align</span>();
+            <span class="kw">let</span> align_mask = !(align - <span class="num">1</span>);
+
+            <span class="comment">// dịch start lên đến ranh giới căn chỉnh tiếp theo</span>
+            <span class="kw">let</span> start = (*head + align - <span class="num">1</span>) &amp; align_mask;
+
+            <span class="kw">if</span> start + size &gt; self.end {
+                <span class="comment">// null pointer báo hiệu điều kiện Out Of Memory</span>
+                ptr::<span class="fn">null_mut</span>()
+            } <span class="kw">else</span> {
+                *head = start + size;
+                start <span class="kw">as</span> *<span class="kw">mut</span> u8
+            }
+        })
+    }
+
+    <span class="kw">unsafe fn</span> <span class="fn">dealloc</span>(&amp;self, _: *<span class="kw">mut</span> u8, _: <span class="type">Layout</span>) {
+        <span class="comment">// allocator này không bao giờ giải phóng bộ nhớ</span>
+    }
+}
+
+<span class="comment">// Khai báo global memory allocator</span>
+<span class="comment">// LƯU Ý người dùng phải đảm bảo vùng nhớ `[0x2000_0100, 0x2000_0200]`</span>
+<span class="comment">// không được sử dụng bởi các phần khác của chương trình</span>
+<span class="attr">#[global_allocator]</span>
+<span class="kw">static</span> HEAP: <span class="type">BumpPointerAlloc</span> = <span class="type">BumpPointerAlloc</span> {
+    head: <span class="type">UnsafeCell</span>::<span class="fn">new</span>(<span class="num">0x2000_0100</span>),
+    end: <span class="num">0x2000_0200</span>,
+};</code></pre>
+
+    <p>
+      Ngoài việc chọn global allocator, người dùng cũng phải định nghĩa cách xử lý
+      lỗi Out Of Memory (OOM) bằng attribute <em>unstable</em> <code>alloc_error_handler</code>.
+    </p>
+
+<pre><code><span class="attr">#![feature(alloc_error_handler)]</span>
+
+<span class="kw">use</span> cortex_m::asm;
+
+<span class="attr">#[alloc_error_handler]</span>
+<span class="kw">fn</span> <span class="fn">on_oom</span>(_layout: <span class="type">Layout</span>) -&gt; ! {
+    asm::<span class="fn">bkpt</span>();
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>Khi tất cả đã sẵn sàng, người dùng cuối cùng có thể sử dụng các collection trong <code>alloc</code>.</p>
+
+<pre><code><span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    <span class="kw">let mut</span> xs = <span class="type">Vec</span>::<span class="fn">new</span>();
+
+    xs.<span class="fn">push</span>(<span class="num">42</span>);
+    <span class="macro">assert!</span>(xs.<span class="fn">pop</span>(), <span class="type">Some</span>(<span class="num">42</span>));
+
+    <span class="kw">loop</span> {
+        <span class="comment">// ..</span>
+    }
+}</code></pre>
+
+    <p>
+      Nếu bạn đã dùng các collection trong crate <code>std</code> thì chúng sẽ quen thuộc
+      vì đây là cùng một implementation.
+    </p>
+
+    <h2>Dùng <code>heapless</code></h2>
+
+    <p>
+      <code>heapless</code> không cần thiết lập vì các collection của nó không phụ thuộc
+      vào global memory allocator. Chỉ cần <code>use</code> các collection của nó và
+      tiến hành khởi tạo:
+    </p>
+
+<pre><code><span class="comment">// heapless phiên bản: v0.4.x</span>
+<span class="kw">use</span> heapless::<span class="type">Vec</span>;
+<span class="kw">use</span> heapless::consts::*;
+
+<span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    <span class="kw">let mut</span> xs: <span class="type">Vec</span>&lt;_, U8&gt; = <span class="type">Vec</span>::<span class="fn">new</span>();
+
+    xs.<span class="fn">push</span>(<span class="num">42</span>).<span class="fn">unwrap</span>();
+    <span class="macro">assert_eq!</span>(xs.<span class="fn">pop</span>(), <span class="type">Some</span>(<span class="num">42</span>));
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>Bạn sẽ nhận thấy hai sự khác biệt giữa các collection này và các collection trong <code>alloc</code>.</p>
+
+    <p>
+      Thứ nhất, bạn phải khai báo trước dung lượng của collection. Các collection
+      <code>heapless</code> không bao giờ cấp phát lại và có dung lượng cố định; dung lượng
+      này là một phần của type signature của collection. Trong trường hợp này, chúng ta đã
+      khai báo rằng <code>xs</code> có dung lượng 8 phần tử, tức là vector có thể chứa
+      tối đa 8 phần tử. Điều này được biểu thị bằng <code>U8</code> (xem <code>typenum</code>)
+      trong type signature.
+    </p>
+
+    <p>
+      Thứ hai, phương thức <code>push</code> và nhiều phương thức khác trả về một
+      <code>Result</code>. Vì các collection <code>heapless</code> có dung lượng cố định,
+      tất cả các thao tác chèn phần tử vào collection đều có thể thất bại. API phản ánh
+      vấn đề này bằng cách trả về <code>Result</code> cho biết thao tác có thành công
+      hay không. Ngược lại, các collection <code>alloc</code> sẽ tự cấp phát lại trên
+      heap để tăng dung lượng.
+    </p>
+
+    <p>
+      Từ phiên bản v0.4.x, tất cả các collection <code>heapless</code> lưu trữ tất cả
+      các phần tử của chúng inline. Điều này có nghĩa là một thao tác như
+      <code>let x = heapless::Vec::new();</code> sẽ cấp phát collection trên stack,
+      nhưng cũng có thể cấp phát collection trên biến <code>static</code>, hoặc thậm chí
+      trên heap (<code>Box&lt;Vec&lt;_, _&gt;&gt;</code>).
+    </p>
+
+    <h2>Đánh đổi — Trade-offs</h2>
+
+    <p>Hãy ghi nhớ những điều này khi chọn giữa các collection được cấp phát trên heap, có thể di chuyển, và các collection dung lượng cố định.</p>
+
+    <h3>Out Of Memory và xử lý lỗi</h3>
+
+    <p>
+      Với cấp phát heap, Out Of Memory luôn là một khả năng và có thể xảy ra ở bất kỳ
+      nơi nào mà một collection có thể cần tăng kích thước: ví dụ, tất cả các lời gọi
+      <code>alloc::Vec.push</code> đều có thể tạo ra điều kiện OOM. Do đó một số thao
+      tác có thể <em>thất bại ngầm</em>. Một số collection <code>alloc</code> cung cấp
+      các phương thức <code>try_reserve</code> cho phép bạn kiểm tra các điều kiện OOM
+      tiềm năng khi tăng kích thước collection, nhưng bạn cần chủ động sử dụng chúng.
+    </p>
+
+    <p>
+      Nếu bạn chỉ dùng các collection <code>heapless</code> và không dùng memory
+      allocator cho bất cứ điều gì khác thì điều kiện OOM là không thể xảy ra.
+      Thay vào đó, bạn sẽ phải xử lý trường hợp collections bị hết dung lượng theo
+      từng trường hợp cụ thể. Tức là bạn phải xử lý <em>tất cả</em> các <code>Result</code>
+      được trả về bởi các phương thức như <code>Vec.push</code>.
+    </p>
+
+    <p>
+      Lỗi OOM có thể khó debug hơn so với việc <code>unwrap</code> tất cả các
+      <code>Result</code> được trả về bởi <code>heapless::Vec.push</code>, vì vị trí
+      quan sát được của lỗi có thể <em>không</em> trùng với vị trí gây ra vấn đề.
+      Ví dụ, ngay cả <code>vec.reserve(1)</code> cũng có thể kích hoạt OOM nếu
+      allocator gần cạn kiệt vì một collection khác đang bị rò rỉ bộ nhớ
+      (rò rỉ bộ nhớ là có thể xảy ra trong safe Rust).
+    </p>
+
+    <h3>Sử dụng bộ nhớ</h3>
+
+    <p>
+      Phân tích sử dụng bộ nhớ của các collection được cấp phát heap khó khăn vì
+      dung lượng của các collection tồn tại lâu dài có thể thay đổi lúc runtime.
+      Một số thao tác có thể ngầm cấp phát lại collection làm tăng mức sử dụng bộ nhớ,
+      và một số collection cung cấp các phương thức như <code>shrink_to_fit</code>
+      có thể giảm bộ nhớ được sử dụng bởi collection — cuối cùng, tùy thuộc vào
+      allocator để quyết định có thực sự thu nhỏ phần cấp phát bộ nhớ hay không.
+      Ngoài ra, allocator có thể phải xử lý phân mảnh bộ nhớ (memory fragmentation)
+      có thể làm tăng <em>biểu kiến</em> mức sử dụng bộ nhớ.
+    </p>
+
+    <p>
+      Mặt khác, nếu bạn chỉ dùng các collection dung lượng cố định, lưu trữ hầu hết
+      chúng trong các biến <code>static</code> và đặt kích thước tối đa cho call stack
+      thì linker sẽ phát hiện nếu bạn cố dùng nhiều bộ nhớ hơn mức thực tế có sẵn.
+    </p>
+
+    <p>
+      Hơn nữa, các collection dung lượng cố định được cấp phát trên stack sẽ được
+      báo cáo bởi flag <code>-Z emit-stack-sizes</code>, có nghĩa là các công cụ
+      phân tích stack usage (như <code>stack-sizes</code>) sẽ bao gồm chúng trong
+      phân tích của mình.
+    </p>
+
+    <p>
+      Tuy nhiên, các collection dung lượng cố định <em>không</em> thể co lại, điều này
+      có thể dẫn đến load factor thấp hơn (tỷ lệ giữa kích thước collection và dung
+      lượng của nó) so với những gì các collection có thể di chuyển đạt được.
+    </p>
+
+    <h3>Worst Case Execution Time (WCET)</h3>
+
+    <p>
+      Nếu bạn đang xây dựng các ứng dụng nhạy cảm về thời gian hoặc ứng dụng real-time
+      cứng, bạn sẽ quan tâm, có thể rất nhiều, đến worst case execution time của các
+      phần khác nhau trong chương trình.
+    </p>
+
+    <p>
+      Các collection <code>alloc</code> có thể cấp phát lại, vì vậy WCET của các thao
+      tác có thể tăng kích thước collection cũng sẽ bao gồm thời gian để cấp phát lại
+      collection, điều này phụ thuộc vào dung lượng <em>lúc runtime</em> của collection.
+      Điều này khiến việc xác định WCET của ví dụ thao tác <code>alloc::Vec.push</code>
+      trở nên khó khăn vì nó phụ thuộc vào cả allocator đang được sử dụng và dung lượng
+      lúc runtime của nó.
+    </p>
+
+    <p>
+      Mặt khác, các collection dung lượng cố định không bao giờ cấp phát lại, vì vậy
+      tất cả các thao tác đều có thời gian thực thi có thể dự đoán được. Ví dụ,
+      <code>heapless::Vec.push</code> thực thi trong thời gian hằng số.
+    </p>
+
+    <h3>Dễ sử dụng</h3>
+
+    <p>
+      <code>alloc</code> yêu cầu thiết lập global allocator còn <code>heapless</code> thì không.
+      Tuy nhiên, <code>heapless</code> yêu cầu bạn chọn dung lượng của mỗi collection
+      mà bạn khởi tạo.
+    </p>
+
+    <p>
+      API của <code>alloc</code> sẽ quen thuộc với hầu như mọi Rust developer. API của
+      <code>heapless</code> cố gắng bắt chước API của <code>alloc</code> nhưng sẽ không
+      bao giờ hoàn toàn giống nhau do phải xử lý lỗi tường minh — một số developer
+      có thể cảm thấy việc xử lý lỗi tường minh là quá nhiều hoặc quá cồng kềnh.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="../concurrency/index.html" class="nav-btn">← Concurrency</a>
+      <a href="../design-patterns/index.html" class="nav-btn next">Design Patterns →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

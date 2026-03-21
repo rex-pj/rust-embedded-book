@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dùng Rust trong C - Rust with C - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="c-with-rust.html">C trong Rust</a>
+      <a href="rust-with-c.html" class="active">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Tương tác ngôn ngữ</a>
+    <span class="sep">›</span>
+    <span class="current">Rust trong C</span>
+  </div>
+  <main id="main">
+
+    <h1>Một chút Rust trong C — A little Rust with your C</h1>
+
+    <p>
+      Việc dùng code Rust bên trong project C hoặc C++ chủ yếu bao gồm hai phần:
+    </p>
+
+    <ul>
+      <li>Tạo C-friendly API trong Rust</li>
+      <li>Nhúng Rust project vào build system bên ngoài</li>
+    </ul>
+
+    <p>
+      Ngoài <code>cargo</code> và <code>meson</code>, hầu hết các build system không
+      có hỗ trợ Rust native. Vì vậy có lẽ tốt nhất là chỉ dùng <code>cargo</code>
+      để biên dịch crate và các dependency của bạn.
+    </p>
+
+    <h2>Thiết lập project</h2>
+
+    <p>Tạo một <code>cargo</code> project mới như thường lệ.</p>
+
+    <p>
+      Có các flag để báo cho <code>cargo</code> emit ra một systems library, thay vì
+      rust target thông thường. Điều này cũng cho phép bạn đặt tên output khác nhau
+      cho thư viện, nếu bạn muốn nó khác với phần còn lại của crate.
+    </p>
+
+<pre><code>[lib]
+name = "your_crate"
+crate-type = ["cdylib"]      # Tạo dynamic lib
+# crate-type = ["staticlib"] # Tạo static lib</code></pre>
+
+    <h2>Build C API</h2>
+
+    <p>
+      Vì C++ không có ABI ổn định để Rust compiler nhắm đến, chúng ta dùng
+      <code>C</code> cho bất kỳ tương tác nào giữa các ngôn ngữ khác nhau.
+      Điều này không ngoại lệ khi dùng Rust bên trong code C và C++.
+    </p>
+
+    <h3><code>#[no_mangle]</code></h3>
+
+    <p>
+      Rust compiler mangling tên symbol theo cách khác so với những gì native code
+      linker mong đợi. Vì vậy, bất kỳ hàm nào Rust export để dùng bên ngoài Rust
+      cần được báo là không bị mangle bởi compiler.
+    </p>
+
+    <h3><code>extern "C"</code></h3>
+
+    <p>
+      Theo mặc định, bất kỳ hàm nào bạn viết trong Rust sẽ dùng Rust ABI (cũng
+      chưa được ổn định hóa). Thay vào đó, khi build các FFI API hướng ra ngoài,
+      chúng ta cần báo cho compiler dùng system ABI.
+    </p>
+
+    <p>
+      Tùy thuộc vào nền tảng của bạn, bạn có thể muốn nhắm đến một phiên bản ABI
+      cụ thể, được ghi lại trong Rust Reference.
+    </p>
+
+    <hr/>
+
+    <p>Kết hợp các phần này lại với nhau, bạn sẽ có một hàm trông giống như thế này:</p>
+
+<pre><code><span class="attr">#[no_mangle]</span>
+<span class="kw">pub extern</span> <span class="str">"C"</span> <span class="kw">fn</span> <span class="fn">rust_function</span>() {
+
+}</code></pre>
+
+    <p>
+      Cũng giống như khi dùng code <code>C</code> trong Rust project, bây giờ bạn cần
+      chuyển đổi dữ liệu từ và sang dạng mà phần còn lại của ứng dụng sẽ hiểu.
+    </p>
+
+    <h2>Link và bối cảnh project lớn hơn</h2>
+
+    <p>Vậy thì, đó là một nửa vấn đề đã được giải quyết. Làm thế nào để dùng điều này?</p>
+
+    <p><strong>Điều này phụ thuộc rất nhiều vào project và/hoặc build system của bạn</strong></p>
+
+    <p>
+      <code>cargo</code> sẽ tạo ra file <code>my_lib.so</code>/<code>my_lib.dll</code>
+      hoặc <code>my_lib.a</code>, tùy thuộc vào nền tảng và cài đặt của bạn.
+      Thư viện này có thể đơn giản là được link bởi build system của bạn.
+    </p>
+
+    <p>
+      Tuy nhiên, việc gọi một hàm Rust từ C yêu cầu một file header để khai báo
+      chữ ký hàm.
+    </p>
+
+    <p>Mỗi hàm trong Rust-ffi API cần có một hàm header tương ứng.</p>
+
+<pre><code><span class="attr">#[no_mangle]</span>
+<span class="kw">pub extern</span> <span class="str">"C"</span> <span class="kw">fn</span> <span class="fn">rust_function</span>() {}</code></pre>
+
+    <p>sẽ trở thành</p>
+
+<pre><code><span class="kw">void</span> <span class="fn">rust_function</span>();</code></pre>
+
+    <p>v.v.</p>
+
+    <p>
+      Có một công cụ để tự động hóa quá trình này, gọi là
+      <strong>cbindgen</strong>, phân tích code Rust của bạn rồi sinh ra các
+      header cho các project C và C++ từ nó.
+    </p>
+
+    <p>
+      Ở thời điểm này, việc dùng các hàm Rust từ C đơn giản như include header
+      và gọi chúng!
+    </p>
+
+<pre><code><span class="attr">#include</span> <span class="str">"my-rust-project.h"</span>
+<span class="fn">rust_function</span>();</code></pre>
+
+    <div class="nav-buttons">
+      <a href="c-with-rust.html" class="nav-btn">← C trong Rust</a>
+      <a href="../unsorted/speed-vs-size.html" class="nav-btn next">Tốc độ vs Kích thước →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

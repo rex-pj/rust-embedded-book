@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bảo đảm tĩnh - Static Guarantees - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="index.html" class="active">Bảo đảm tĩnh</a>
+      <a href="typestate-programming.html">Typestate Programming</a>
+      <a href="zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Bảo đảm tĩnh</span>
+  </div>
+  <main id="main">
+
+    <h1>Bảo đảm tĩnh — Static Guarantees</h1>
+
+    <p>
+      Type system của Rust ngăn chặn data race tại compile time (xem các trait
+      <a href="https://doc.rust-lang.org/core/marker/trait.Send.html"><code>Send</code></a> và
+      <a href="https://doc.rust-lang.org/core/marker/trait.Sync.html"><code>Sync</code></a>).
+      Type system cũng có thể được dùng để kiểm tra các thuộc tính khác tại compile time;
+      giảm bớt nhu cầu kiểm tra tại runtime trong một số trường hợp.
+    </p>
+
+    <p>
+      Khi áp dụng vào các chương trình embedded, các <em>kiểm tra tĩnh</em> này có thể được dùng,
+      ví dụ, để đảm bảo rằng cấu hình của các giao diện I/O được thực hiện đúng cách. Ví dụ, có
+      thể thiết kế một API mà chỉ có thể khởi tạo một serial interface khi đã cấu hình xong các
+      pin sẽ được interface đó sử dụng.
+    </p>
+
+    <p>
+      Người ta cũng có thể kiểm tra tĩnh rằng các thao tác, như đặt pin xuống mức thấp, chỉ có
+      thể được thực hiện trên các peripheral đã được cấu hình đúng. Ví dụ, cố gắng thay đổi
+      trạng thái output của một pin được cấu hình ở chế độ floating input sẽ gây ra lỗi biên
+      dịch.
+    </p>
+
+    <p>
+      Và, như đã thấy trong chương trước, khái niệm ownership có thể được áp dụng cho peripheral
+      để đảm bảo rằng chỉ có một số phần nhất định của chương trình mới có thể sửa đổi một
+      peripheral. <em>Kiểm soát truy cập</em> này làm cho phần mềm dễ lý luận hơn so với cách
+      thay thế là xem peripheral như là global mutable state.
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Ba cơ chế bảo đảm tĩnh trong Rust Embedded</div>
+      <svg viewBox="0 0 700 240" style="width:100%;max-width:700px;display:block;margin:0 auto">
+        <rect width="700" height="240" fill="#f8f9fc" rx="12"/>
+
+        <!-- Pillar 1: Ownership -->
+        <rect x="30" y="30" width="195" height="180" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="127" y="58" text-anchor="middle" font-size="24" font-family="sans-serif">🔒</text>
+        <text x="127" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af" font-family="sans-serif">Ownership</text>
+        <text x="127" y="100" text-anchor="middle" font-size="11" fill="#2563eb" font-family="sans-serif">Mỗi peripheral chỉ</text>
+        <text x="127" y="116" text-anchor="middle" font-size="11" fill="#2563eb" font-family="sans-serif">có một owner.</text>
+        <text x="127" y="136" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">Không thể dùng SPI1</text>
+        <text x="127" y="151" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif">từ 2 chỗ cùng lúc.</text>
+        <text x="127" y="172" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="sans-serif">→ Singleton pattern</text>
+        <text x="127" y="188" text-anchor="middle" font-size="10" fill="#1d4ed8" font-family="sans-serif">→ Borrow checker</text>
+        <text x="127" y="204" text-anchor="middle" font-size="10" fill="#1d4ed8" font-family="sans-serif">ngăn data race</text>
+
+        <!-- Pillar 2: Type System -->
+        <rect x="252" y="30" width="195" height="180" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="349" y="58" text-anchor="middle" font-size="24" font-family="sans-serif">🏷️</text>
+        <text x="349" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="sans-serif">Type System</text>
+        <text x="349" y="100" text-anchor="middle" font-size="11" fill="#b45309" font-family="sans-serif">Không thể gọi</text>
+        <text x="349" y="116" text-anchor="middle" font-size="11" fill="#b45309" font-family="sans-serif">set_high() nếu</text>
+        <text x="349" y="132" text-anchor="middle" font-size="11" fill="#b45309" font-family="sans-serif">pin không phải Output.</text>
+        <text x="349" y="152" text-anchor="middle" font-size="10" fill="#d97706" font-family="sans-serif">Kiểu dữ liệu mang</text>
+        <text x="349" y="167" text-anchor="middle" font-size="10" fill="#d97706" font-family="sans-serif">thông tin trạng thái.</text>
+        <text x="349" y="188" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e" font-family="sans-serif">→ Typestate pattern</text>
+        <text x="349" y="204" text-anchor="middle" font-size="10" fill="#92400e" font-family="sans-serif">→ PhantomData</text>
+
+        <!-- Pillar 3: Access Control -->
+        <rect x="474" y="30" width="195" height="180" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+        <text x="571" y="58" text-anchor="middle" font-size="24" font-family="sans-serif">🛡️</text>
+        <text x="571" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" font-family="sans-serif">Access Control</text>
+        <text x="571" y="100" text-anchor="middle" font-size="11" fill="#15803d" font-family="sans-serif">Chỉ một số phần</text>
+        <text x="571" y="116" text-anchor="middle" font-size="11" fill="#15803d" font-family="sans-serif">của chương trình</text>
+        <text x="571" y="132" text-anchor="middle" font-size="11" fill="#15803d" font-family="sans-serif">mới modify được</text>
+        <text x="571" y="148" text-anchor="middle" font-size="11" fill="#15803d" font-family="sans-serif">peripheral.</text>
+        <text x="571" y="172" text-anchor="middle" font-size="10" font-weight="600" fill="#166534" font-family="sans-serif">→ Không còn global</text>
+        <text x="571" y="188" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">mutable state</text>
+        <text x="571" y="204" text-anchor="middle" font-size="10" fill="#166534" font-family="sans-serif">dễ gây lỗi</text>
+      </svg>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="../design-patterns/index.html" class="nav-btn">← Design Patterns</a>
+      <a href="typestate-programming.html" class="nav-btn next">Typestate Programming →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typestate Programming - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="typestate-programming.html" class="active">Typestate Programming</a>
+      <a href="zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bảo đảm tĩnh</a>
+    <span class="sep">›</span>
+    <span class="current">Typestate Programming</span>
+  </div>
+  <main id="main">
+
+    <h1>Typestate Programming</h1>
+
+    <p>
+      Khái niệm <a href="https://en.wikipedia.org/wiki/Typestate_analysis">typestate</a> mô tả
+      việc mã hóa thông tin về trạng thái hiện tại của một đối tượng vào kiểu của đối tượng đó.
+      Mặc dù nghe có vẻ hơi khó hiểu, nhưng nếu bạn đã từng dùng
+      <a href="https://doc.rust-lang.org/1.0.0/style/ownership/builders.html">Builder Pattern</a>
+      trong Rust, bạn đã bắt đầu sử dụng Typestate Programming rồi!
+    </p>
+
+<pre><code><span class="kw">pub mod</span> foo_module {
+    <span class="attr">#[derive(Debug)]</span>
+    <span class="kw">pub struct</span> <span class="type">Foo</span> {
+        inner: <span class="type">u32</span>,
+    }
+
+    <span class="kw">pub struct</span> <span class="type">FooBuilder</span> {
+        a: <span class="type">u32</span>,
+        b: <span class="type">u32</span>,
+    }
+
+    <span class="kw">impl</span> <span class="type">FooBuilder</span> {
+        <span class="kw">pub fn</span> <span class="fn">new</span>(starter: <span class="type">u32</span>) -> <span class="type">Self</span> {
+            <span class="type">Self</span> {
+                a: starter,
+                b: starter,
+            }
+        }
+
+        <span class="kw">pub fn</span> <span class="fn">double_a</span>(self) -> <span class="type">Self</span> {
+            <span class="type">Self</span> {
+                a: self.a * <span class="num">2</span>,
+                b: self.b,
+            }
+        }
+
+        <span class="kw">pub fn</span> <span class="fn">into_foo</span>(self) -> <span class="type">Foo</span> {
+            <span class="type">Foo</span> {
+                inner: self.a + self.b,
+            }
+        }
+    }
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> x = foo_module::<span class="type">FooBuilder</span>::new(<span class="num">10</span>)
+        .double_a()
+        .into_foo();
+
+    println!(<span class="str">"{:#?}"</span>, x);
+}</code></pre>
+
+    <p>
+      Trong ví dụ này, không có cách trực tiếp nào để tạo một đối tượng <code>Foo</code>.
+      Chúng ta phải tạo một <code>FooBuilder</code> và khởi tạo nó đúng cách trước khi có thể
+      lấy được đối tượng <code>Foo</code> mà chúng ta muốn.
+    </p>
+
+    <p>Ví dụ tối giản này mã hóa hai trạng thái:</p>
+
+    <ul>
+      <li>
+        <code>FooBuilder</code>, đại diện cho trạng thái "chưa được cấu hình" hoặc
+        "đang trong quá trình cấu hình"
+      </li>
+      <li>
+        <code>Foo</code>, đại diện cho trạng thái "đã được cấu hình" hoặc "sẵn sàng để dùng"
+      </li>
+    </ul>
+
+    <h2>Strong Types</h2>
+
+    <p>
+      Vì Rust có một
+      <a href="https://en.wikipedia.org/wiki/Strong_and_weak_typing">Strong Type System</a>,
+      không có cách nào dễ dàng để tạo một instance của <code>Foo</code> một cách "ma thuật",
+      hoặc để biến một <code>FooBuilder</code> thành <code>Foo</code> mà không gọi phương thức
+      <code>into_foo()</code>. Ngoài ra, việc gọi phương thức <code>into_foo()</code> tiêu thụ
+      cấu trúc <code>FooBuilder</code> gốc, nghĩa là nó không thể được tái sử dụng mà không
+      tạo một instance mới.
+    </p>
+
+    <p>
+      Điều này cho phép chúng ta biểu diễn các trạng thái của hệ thống dưới dạng các kiểu, và
+      bao gồm các hành động cần thiết cho việc chuyển đổi trạng thái vào các phương thức trao
+      đổi một kiểu với kiểu khác. Bằng cách tạo một <code>FooBuilder</code> và trao đổi nó lấy
+      đối tượng <code>Foo</code>, chúng ta đã đi qua các bước của một state machine cơ bản.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="index.html" class="nav-btn">← Bảo đảm tĩnh</a>
+      <a href="zero-cost-abstractions.html" class="nav-btn next">Zero-cost Abstractions →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

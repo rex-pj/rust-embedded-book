@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dùng C trong Rust - C with Rust - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="c-with-rust.html" class="active">C trong Rust</a>
+      <a href="rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Tương tác ngôn ngữ</a>
+    <span class="sep">›</span>
+    <span class="current">C trong Rust</span>
+  </div>
+  <main id="main">
+
+    <h1>Một chút C trong Rust — A little C with your Rust</h1>
+
+    <p>
+      Việc dùng C hoặc C++ bên trong một project Rust bao gồm hai phần chính:
+    </p>
+
+    <ul>
+      <li>Bọc C API được expose để dùng với Rust</li>
+      <li>Build code C hoặc C++ của bạn để tích hợp với code Rust</li>
+    </ul>
+
+    <p>
+      Vì C++ không có ABI ổn định để compiler Rust nhắm đến, nên khuyến khích dùng
+      ABI <code>C</code> khi kết hợp Rust với C hoặc C++.
+    </p>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Quy trình build: Rust + C → binary ELF</div>
+      <svg viewBox="0 0 720 200" style="width:100%;max-width:720px;display:block;margin:0 auto">
+        <defs>
+          <marker id="arr-cr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <path d="M0,0 L10,3.5 L0,7 Z" fill="#CE422B"/>
+          </marker>
+        </defs>
+        <rect width="720" height="200" fill="#f8f9fc" rx="12"/>
+
+        <rect x="16" y="30" width="120" height="50" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="76" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#7e22ce" font-family="sans-serif">build.rs</text>
+        <text x="76" y="66" text-anchor="middle" font-size="10" fill="#6b21a8" font-family="sans-serif">cc crate / bindgen</text>
+
+        <rect x="16" y="100" width="120" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="76" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="sans-serif">cool.h / cool.c</text>
+        <text x="76" y="136" text-anchor="middle" font-size="10" fill="#2563eb" font-family="sans-serif">C source files</text>
+
+        <line x1="138" y1="130" x2="176" y2="130" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr-cr)"/>
+        <rect x="178" y="100" width="110" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="233" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e" font-family="sans-serif">libcool.a</text>
+        <text x="233" y="136" text-anchor="middle" font-size="10" fill="#b45309" font-family="sans-serif">static library</text>
+
+        <line x1="138" y1="55" x2="233" y2="98" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arr-cr)"/>
+
+        <rect x="310" y="30" width="130" height="50" rx="8" fill="#fee2e2" stroke="#CE422B" stroke-width="2"/>
+        <text x="375" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#CE422B" font-family="sans-serif">src/main.rs</text>
+        <text x="375" y="66" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="sans-serif">extern "C" { ... }</text>
+
+        <rect x="310" y="100" width="130" height="50" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="375" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="sans-serif">cool_bindings.rs</text>
+        <text x="375" y="136" text-anchor="middle" font-size="10" fill="#15803d" font-family="sans-serif">bindgen output</text>
+
+        <line x1="290" y1="130" x2="308" y2="130" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-cr)"/>
+
+        <rect x="470" y="65" width="100" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="520" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e" font-family="sans-serif">rustc + linker</text>
+
+        <line x1="442" y1="110" x2="468" y2="100" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-cr)"/>
+        <line x1="442" y1="55" x2="468" y2="80" stroke="#CE422B" stroke-width="2" marker-end="url(#arr-cr)"/>
+
+        <rect x="590" y="65" width="114" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+        <text x="647" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="white" font-family="sans-serif">app.elf</text>
+        <line x1="572" y1="90" x2="588" y2="90" stroke="#CE422B" stroke-width="2.5" marker-end="url(#arr-cr)"/>
+      </svg>
+    </div>
+
+    <h2>Định nghĩa giao diện</h2>
+
+    <p>
+      Trước khi dùng code C hoặc C++ từ Rust, cần phải định nghĩa (trong Rust) những
+      kiểu dữ liệu và chữ ký hàm nào tồn tại trong code được link. Trong C hoặc C++,
+      bạn sẽ include một file header (<code>.h</code> hoặc <code>.hpp</code>) định nghĩa
+      điều này. Trong Rust, cần phải dịch thủ công các định nghĩa này sang Rust, hoặc
+      dùng công cụ để tự động sinh ra chúng.
+    </p>
+
+    <p>Đầu tiên, chúng ta sẽ đề cập đến việc dịch thủ công các định nghĩa này từ C/C++ sang Rust.</p>
+
+    <h3>Bọc các hàm và kiểu dữ liệu C</h3>
+
+    <p>
+      Thông thường, các thư viện được viết bằng C hoặc C++ sẽ cung cấp một file header
+      định nghĩa tất cả các kiểu và hàm được dùng trong các giao diện công khai.
+      Một ví dụ file có thể trông như thế này:
+    </p>
+
+<pre><code><span class="comment">/* File: cool.h */</span>
+<span class="kw">typedef struct</span> <span class="type">CoolStruct</span> {
+    <span class="kw">int</span> x;
+    <span class="kw">int</span> y;
+} <span class="type">CoolStruct</span>;
+
+<span class="kw">void</span> <span class="fn">cool_function</span>(<span class="kw">int</span> i, <span class="kw">char</span> c, <span class="type">CoolStruct</span>* cs);</code></pre>
+
+    <p>Khi được dịch sang Rust, giao diện này sẽ trông như thế này:</p>
+
+<pre><code><span class="comment">/* File: cool_bindings.rs */</span>
+<span class="attr">#[repr(C)]</span>
+<span class="kw">pub struct</span> <span class="type">CoolStruct</span> {
+    <span class="kw">pub</span> x: cty::c_int,
+    <span class="kw">pub</span> y: cty::c_int,
+}
+
+<span class="kw">extern</span> <span class="str">"C"</span> {
+    <span class="kw">pub fn</span> <span class="fn">cool_function</span>(
+        i: cty::c_int,
+        c: cty::c_char,
+        cs: *<span class="kw">mut</span> <span class="type">CoolStruct</span>
+    );
+}</code></pre>
+
+    <p>Hãy cùng xem xét định nghĩa này từng phần một để giải thích từng phần.</p>
+
+<pre><code><span class="attr">#[repr(C)]</span>
+<span class="kw">pub struct</span> <span class="type">CoolStruct</span> { ... }</code></pre>
+
+    <p>
+      Theo mặc định, Rust không đảm bảo thứ tự, padding hay kích thước của dữ liệu
+      được chứa trong một <code>struct</code>. Để đảm bảo tương thích với code C,
+      chúng ta bao gồm attribute <code>#[repr(C)]</code>, hướng dẫn Rust compiler
+      luôn dùng các quy tắc giống C để tổ chức dữ liệu trong struct.
+    </p>
+
+<pre><code><span class="kw">pub</span> x: cty::c_int,
+<span class="kw">pub</span> y: cty::c_int,</code></pre>
+
+    <p>
+      Do sự linh hoạt trong cách C hoặc C++ định nghĩa <code>int</code> hoặc
+      <code>char</code>, nên khuyến khích dùng các kiểu dữ liệu nguyên thủy được
+      định nghĩa trong <code>cty</code>, sẽ ánh xạ các kiểu từ C sang các kiểu trong Rust.
+    </p>
+
+<pre><code><span class="kw">extern</span> <span class="str">"C"</span> { <span class="kw">pub fn</span> <span class="fn">cool_function</span>( ... ); }</code></pre>
+
+    <p>
+      Câu lệnh này định nghĩa chữ ký của một hàm sử dụng C ABI, gọi là
+      <code>cool_function</code>. Bằng cách định nghĩa chữ ký mà không định nghĩa
+      phần thân hàm, định nghĩa của hàm này sẽ phải được cung cấp ở nơi khác,
+      hoặc được link vào thư viện hay binary cuối từ một static library.
+    </p>
+
+<pre><code>i: cty::c_int,
+c: cty::c_char,
+cs: *<span class="kw">mut</span> <span class="type">CoolStruct</span></code></pre>
+
+    <p>
+      Tương tự với kiểu dữ liệu ở trên, chúng ta định nghĩa các kiểu dữ liệu của
+      các đối số hàm bằng cách dùng các định nghĩa tương thích với C. Chúng ta
+      cũng giữ nguyên các tên đối số, để rõ ràng.
+    </p>
+
+    <p>
+      Chúng ta có một kiểu mới ở đây, <code>*mut CoolStruct</code>. Vì C không có
+      khái niệm về reference của Rust (trông sẽ như: <code>&amp;mut CoolStruct</code>),
+      thay vào đó chúng ta có một raw pointer. Vì việc dereference pointer này là
+      <code>unsafe</code>, và pointer có thể thực sự là một <code>null</code> pointer,
+      cần phải cẩn thận để đảm bảo các đảm bảo thông thường của Rust khi tương tác
+      với code C hoặc C++.
+    </p>
+
+    <h3>Tự động sinh giao diện</h3>
+
+    <p>
+      Thay vì tự sinh các giao diện này (có thể tẻ nhạt và dễ lỗi), có một công cụ
+      gọi là <strong>bindgen</strong> sẽ thực hiện các chuyển đổi này tự động. Để biết
+      hướng dẫn sử dụng bindgen, hãy tham khảo bindgen user's manual, tuy nhiên quy
+      trình điển hình bao gồm:
+    </p>
+
+    <ol>
+      <li>Thu thập tất cả các header C hoặc C++ định nghĩa các giao diện hoặc kiểu
+        dữ liệu mà bạn muốn dùng với Rust.</li>
+      <li>Viết file <code>bindings.h</code> có <code>#include "..."</code> mỗi file
+        bạn thu thập ở bước một.</li>
+      <li>Đưa file <code>bindings.h</code> này cùng với bất kỳ compilation flag nào
+        được dùng để biên dịch code của bạn vào <code>bindgen</code>. Mẹo: dùng
+        <code>Builder.ctypes_prefix("cty")</code> / <code>--ctypes-prefix=cty</code>
+        và <code>Builder.use_core()</code> / <code>--use-core</code> để làm cho code
+        sinh ra tương thích với <code>#![no_std]</code>.</li>
+      <li><code>bindgen</code> sẽ tạo ra code Rust được sinh tới output của cửa sổ
+        terminal. Output này có thể được pipe vào một file trong project của bạn,
+        chẳng hạn như <code>bindings.rs</code>. Bạn có thể dùng file này trong
+        Rust project để tương tác với code C/C++ được biên dịch và link như
+        thư viện ngoài. Mẹo: đừng quên dùng crate <code>cty</code> nếu các
+        kiểu trong bindings được sinh ra có tiền tố là <code>cty</code>.</li>
+    </ol>
+
+    <h2>Build code C/C++ của bạn</h2>
+
+    <p>
+      Vì Rust compiler không biết cách biên dịch code C hoặc C++ trực tiếp (hoặc code
+      từ bất kỳ ngôn ngữ nào khác có giao diện C), cần phải biên dịch code không phải
+      Rust của bạn trước.
+    </p>
+
+    <p>
+      Đối với các project embedded, điều này thường có nghĩa là biên dịch code C/C++
+      thành static archive (như <code>cool-library.a</code>), sau đó có thể được kết
+      hợp với code Rust của bạn ở bước link cuối cùng.
+    </p>
+
+    <p>
+      Nếu thư viện bạn muốn dùng đã được phân phối dưới dạng static archive, thì không
+      cần phải rebuild code của bạn. Chỉ cần chuyển đổi file header giao diện được cung
+      cấp như mô tả ở trên, và include static archive vào lúc compile/link.
+    </p>
+
+    <p>
+      Nếu code của bạn tồn tại như một source project, sẽ cần phải biên dịch code
+      C/C++ của bạn thành static library, bằng cách kích hoạt build system hiện có
+      của bạn (như <code>make</code>, <code>CMake</code>, v.v.), hoặc bằng cách chuyển
+      các bước biên dịch cần thiết để dùng một công cụ gọi là crate <code>cc</code>.
+      Đối với cả hai bước này, cần phải dùng script <code>build.rs</code>.
+    </p>
+
+    <h3>Rust <code>build.rs</code> build scripts</h3>
+
+    <p>
+      Script <code>build.rs</code> là một file được viết bằng cú pháp Rust, được thực
+      thi trên máy biên dịch của bạn, SAU KHI các dependency của project đã được build,
+      nhưng TRƯỚC KHI project của bạn được build.
+    </p>
+
+    <p>
+      Tài liệu đầy đủ có thể được tìm thấy tại
+      <a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html">https://doc.rust-lang.org/cargo/reference/build-scripts.html</a>.
+      Script <code>build.rs</code> hữu ích cho việc sinh code (chẳng hạn qua bindgen),
+      gọi đến các build system bên ngoài như <code>Make</code>, hoặc biên dịch trực tiếp
+      C/C++ thông qua crate <code>cc</code>.
+    </p>
+
+    <h3>Kích hoạt build system bên ngoài</h3>
+
+    <p>
+      Đối với các project với project hoặc build system bên ngoài phức tạp, có thể dễ
+      nhất là dùng <code>std::process::Command</code> để "shell out" tới các build system
+      khác bằng cách duyệt qua các đường dẫn tương đối, gọi một lệnh cố định (như
+      <code>make library</code>), và sau đó copy static library kết quả vào vị trí thích
+      hợp trong thư mục build <code>target</code>.
+    </p>
+
+    <p>
+      Trong khi crate của bạn có thể nhắm đến nền tảng embedded <code>no_std</code>,
+      <code>build.rs</code> của bạn chỉ thực thi trên máy biên dịch crate. Điều này có
+      nghĩa là bạn có thể dùng bất kỳ crate Rust nào sẽ chạy trên compilation host của bạn.
+    </p>
+
+    <h3>Build code C/C++ với crate <code>cc</code></h3>
+
+    <p>
+      Đối với các project có dependency hoặc độ phức tạp hạn chế, hoặc các project khó
+      thay đổi build system để tạo ra static library (thay vì binary hoặc executable
+      cuối cùng), có thể dễ hơn khi sử dụng crate <code>cc</code>, cung cấp giao diện
+      Rust idiomatic cho compiler được cung cấp bởi host.
+    </p>
+
+    <p>
+      Trong trường hợp đơn giản nhất là biên dịch một file C đơn như dependency cho
+      static library, một script <code>build.rs</code> ví dụ dùng crate <code>cc</code>
+      sẽ trông như thế này:
+    </p>
+
+<pre><code><span class="kw">fn</span> <span class="fn">main</span>() {
+    cc::<span class="type">Build</span>::<span class="fn">new</span>()
+        .<span class="fn">file</span>(<span class="str">"src/foo.c"</span>)
+        .<span class="fn">compile</span>(<span class="str">"foo"</span>);
+}</code></pre>
+
+    <p>
+      File <code>build.rs</code> được đặt ở root của package. Sau đó
+      <code>cargo build</code> sẽ biên dịch và thực thi nó trước khi build package.
+      Một static archive có tên <code>libfoo.a</code> được sinh ra và đặt vào thư mục
+      <code>target</code>.
+    </p>
+
+    <div class="nav-buttons">
+      <a href="index.html" class="nav-btn">← Tổng quan</a>
+      <a href="rust-with-c.html" class="nav-btn next">Rust trong C →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phần cứng thực - Real Hardware - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="../intro/index.html">Tổng quan</a>
+      <a href="../intro/hardware.html">Làm quen phần cứng</a>
+      <a href="../intro/no-std.html">Môi trường no_std</a>
+      <a href="../intro/tooling.html">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="qemu.html">QEMU</a>
+      <a href="hardware.html" class="active">Phần cứng thực</a>
+      <a href="semihosting.html">Semihosting</a>
+      <a href="panicking.html">Panicking</a>
+      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Bắt đầu</a>
+    <span class="sep">›</span>
+    <span class="current">Phần cứng thực</span>
+  </div>
+  <main id="main">
+
+    <h1>Phần cứng thực — Hardware</h1>
+
+    <p>
+      Đến đây bạn đã quen phần nào với tooling và quy trình phát triển. Trong phần này chúng ta
+      sẽ chuyển sang phần cứng thực; quy trình về cơ bản vẫn như cũ. Hãy bắt đầu.
+    </p>
+
+    <h2>Tìm hiểu phần cứng của bạn</h2>
+
+    <p>
+      Trước khi bắt đầu, bạn cần xác định một số đặc điểm của thiết bị target vì chúng sẽ được
+      dùng để cấu hình project:
+    </p>
+
+    <ul>
+      <li>
+        <strong>ARM core.</strong> Ví dụ: Cortex-M3.
+      </li>
+      <li>
+        <strong>ARM core có FPU không?</strong> Cortex-M4<strong>F</strong> và
+        Cortex-M7<strong>F</strong> thì có.
+      </li>
+      <li>
+        <strong>Target device có bao nhiêu Flash memory và RAM?</strong> Ví dụ: 256 KiB Flash và
+        32 KiB RAM.
+      </li>
+      <li>
+        <strong>Flash memory và RAM được ánh xạ vào address space ở đâu?</strong> Ví dụ: RAM
+        thường nằm ở địa chỉ <code>0x2000_0000</code>.
+      </li>
+    </ul>
+
+    <p>
+      Bạn có thể tìm thấy thông tin này trong data sheet hoặc reference manual của thiết bị.
+    </p>
+
+    <p>
+      Trong phần này chúng ta sẽ dùng phần cứng tham chiếu của mình là STM32F3DISCOVERY.
+      Board này chứa vi điều khiển STM32F303VCT6. Vi điều khiển này có:
+    </p>
+
+    <ul>
+      <li>Một Cortex-M4F core với FPU độ chính xác đơn</li>
+      <li>256 KiB Flash ở địa chỉ 0x0800_0000</li>
+      <li>40 KiB RAM ở địa chỉ 0x2000_0000. (Còn một vùng RAM khác nhưng để đơn giản chúng ta bỏ qua)</li>
+    </ul>
+
+    <div class="diagram-container">
+      <div class="diagram-title">STM32F3DISCOVERY: Bộ nhớ và kết nối debug</div>
+      <svg viewBox="0 0 720 160" style="width:100%;max-width:720px;display:block;margin:0 auto">
+        <defs>
+          <marker id="arr-hw" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <path d="M0,0 L10,3.5 L0,7 Z" fill="#CE422B"/>
+          </marker>
+        </defs>
+        <rect width="720" height="160" fill="#f8f9fc" rx="12"/>
+        <!-- Host PC -->
+        <rect x="20" y="30" width="160" height="100" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="100" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af" font-family="sans-serif">Host PC</text>
+        <text x="100" y="75" text-anchor="middle" font-size="10" fill="#1e3a8a" font-family="sans-serif">OpenOCD</text>
+        <text x="100" y="92" text-anchor="middle" font-size="10" fill="#1e3a8a" font-family="sans-serif">GDB Client</text>
+        <text x="100" y="112" text-anchor="middle" font-size="9" fill="#3b82f6" font-family="sans-serif">port :3333</text>
+        <!-- Arrow USB -->
+        <line x1="182" y1="80" x2="228" y2="80" stroke="#CE422B" stroke-width="2.5" marker-end="url(#arr-hw)"/>
+        <text x="205" y="72" text-anchor="middle" font-size="9" font-weight="600" fill="#CE422B" font-family="sans-serif">USB</text>
+        <!-- ST-Link -->
+        <rect x="230" y="30" width="140" height="100" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="300" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#7e22ce" font-family="sans-serif">ST-LINK</text>
+        <text x="300" y="73" text-anchor="middle" font-size="10" fill="#6b21a8" font-family="sans-serif">Debug probe</text>
+        <text x="300" y="90" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="sans-serif">USB ↔ SWD</text>
+        <text x="300" y="112" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="sans-serif">(on-board)</text>
+        <!-- Arrow SWD -->
+        <line x1="372" y1="80" x2="418" y2="80" stroke="#CE422B" stroke-width="2.5" marker-end="url(#arr-hw)"/>
+        <text x="395" y="72" text-anchor="middle" font-size="9" font-weight="600" fill="#CE422B" font-family="sans-serif">SWD</text>
+        <!-- STM32 -->
+        <rect x="420" y="20" width="280" height="120" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="560" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="sans-serif">STM32F303VCT6</text>
+        <text x="560" y="63" text-anchor="middle" font-size="10" fill="#78350f" font-family="sans-serif">Cortex-M4F (có FPU)</text>
+        <rect x="434" y="72" width="114" height="30" rx="4" fill="#fde68a"/>
+        <text x="491" y="86" text-anchor="middle" font-size="10" font-weight="600" fill="#78350f" font-family="sans-serif">Flash: 256 KiB</text>
+        <text x="491" y="99" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">0x0800_0000</text>
+        <rect x="556" y="72" width="130" height="30" rx="4" fill="#fde68a"/>
+        <text x="621" y="86" text-anchor="middle" font-size="10" font-weight="600" fill="#78350f" font-family="sans-serif">RAM: 40 KiB</text>
+        <text x="621" y="99" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">0x2000_0000</text>
+        <text x="560" y="128" text-anchor="middle" font-size="9" fill="#92400e" font-family="sans-serif">thumbv7em-none-eabihf</text>
+      </svg>
+    </div>
+
+    <h2>Cấu hình</h2>
+
+    <p>
+      Chúng ta sẽ bắt đầu từ đầu với một template instance mới. Tham khảo
+      <a href="qemu.html">phần trước về QEMU</a> để ôn lại cách làm này mà không dùng
+      <code>cargo-generate</code>.
+    </p>
+
+<pre><code>$ cargo generate --git https://github.com/rust-embedded/cortex-m-quickstart
+ Project Name: app
+ Creating project called `app`...
+ Done! New project created /tmp/app
+
+$ cd app</code></pre>
+
+    <p>
+      Bước đầu tiên là đặt default compilation target trong <code>.cargo/config.toml</code>.
+    </p>
+
+<pre><code>tail -n5 .cargo/config.toml</code></pre>
+
+<pre><code># Pick ONE of these compilation targets
+# target = "thumbv6m-none-eabi"    # Cortex-M0 and Cortex-M0+
+# target = "thumbv7m-none-eabi"    # Cortex-M3
+# target = "thumbv7em-none-eabi"   # Cortex-M4 and Cortex-M7 (no FPU)
+target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)</code></pre>
+
+    <p>
+      Chúng ta sẽ dùng <code>thumbv7em-none-eabihf</code> vì nó áp dụng cho Cortex-M4F core.
+    </p>
+
+    <blockquote>
+      <p>
+        <strong>LƯU Ý</strong>: Như bạn có thể nhớ từ chương trước, chúng ta cần install tất cả
+        target và đây là target mới. Vì vậy đừng quên chạy lệnh install:
+        <code>rustup target add thumbv7em-none-eabihf</code>.
+      </p>
+    </blockquote>
+
+    <p>Bước thứ hai là nhập thông tin memory region vào file <code>memory.x</code>.</p>
+
+<pre><code>$ cat memory.x
+/* Linker script for the STM32F303VCT6 */
+MEMORY
+{
+  /* NOTE 1 K = 1 KiBi = 1024 bytes */
+  FLASH : ORIGIN = 0x08000000, LENGTH = 256K
+  RAM : ORIGIN = 0x20000000, LENGTH = 40K
+}</code></pre>
+
+    <blockquote>
+      <p>
+        <strong>LƯU Ý</strong>: Nếu vì lý do nào đó bạn thay đổi file <code>memory.x</code> sau
+        khi đã build lần đầu cho một build target cụ thể, hãy chạy <code>cargo clean</code> trước
+        <code>cargo build</code>, vì <code>cargo build</code> có thể không theo dõi các cập nhật
+        của <code>memory.x</code>.
+      </p>
+    </blockquote>
+
+    <p>
+      Chúng ta sẽ bắt đầu lại với ví dụ hello, nhưng trước tiên cần thực hiện một thay đổi nhỏ.
+    </p>
+
+    <p>
+      Trong <code>examples/hello.rs</code>, hãy đảm bảo lệnh gọi <code>debug::exit()</code> được
+      comment out hoặc xóa đi. Nó chỉ được dùng khi chạy trên QEMU.
+    </p>
+
+<pre><code><span class="attr">#[entry]</span>
+<span class="kw">fn</span> <span class="fn">main</span>() -&gt; ! {
+    hprintln!(<span class="str">"Hello, world!"</span>).unwrap();
+
+    <span class="comment">// exit QEMU
+    // NOTE do not run this on hardware; it can corrupt OpenOCD state
+    // debug::exit(debug::EXIT_SUCCESS);</span>
+
+    <span class="kw">loop</span> {}
+}</code></pre>
+
+    <p>
+      Bây giờ bạn có thể cross compile chương trình bằng <code>cargo build</code> và kiểm tra
+      binary bằng <code>cargo-binutils</code> như trước. Crate <code>cortex-m-rt</code> xử lý tất
+      cả các "ma thuật" cần thiết để khởi động chip, vì hầu hết Cortex-M CPU đều boot theo cùng
+      một cách.
+    </p>
+
+<pre><code>cargo build --example hello</code></pre>
+
+    <h2>Debug</h2>
+
+    <p>
+      Debug sẽ trông hơi khác một chút. Thực ra, các bước đầu có thể khác nhau tùy thuộc vào
+      thiết bị target. Trong phần này chúng ta sẽ trình bày các bước cần thiết để debug một
+      chương trình chạy trên STM32F3DISCOVERY. Đây là tài liệu tham khảo; để biết thông tin
+      debug cụ thể theo thiết bị, xem
+      <a href="https://github.com/rust-embedded/debugonomicon">Debugonomicon</a>.
+    </p>
+
+    <p>
+      Như trước, chúng ta sẽ dùng remote debugging và client sẽ là một tiến trình GDB. Tuy nhiên
+      lần này, server sẽ là OpenOCD.
+    </p>
+
+    <p>
+      Như đã làm trong phần <a href="../intro/install/verify.html">verify</a>, kết nối discovery
+      board vào laptop / PC và kiểm tra header ST-LINK đã được lắp.
+    </p>
+
+    <p>
+      Trên một terminal, chạy <code>openocd</code> để kết nối với ST-LINK trên discovery board.
+      Chạy lệnh này từ thư mục root của template; <code>openocd</code> sẽ dùng file
+      <code>openocd.cfg</code> để biết interface file và target file nào cần dùng.
+    </p>
+
+<pre><code>cat openocd.cfg</code></pre>
+
+<pre><code># Sample OpenOCD configuration for the STM32F3DISCOVERY development board
+
+# Depending on the hardware revision you got you'll have to pick ONE of these
+# interfaces. At any time only one interface should be commented out.
+
+# Revision C (newer revision)
+source [find interface/stlink.cfg]
+
+# Revision A and B (older revisions)
+# source [find interface/stlink-v2.cfg]
+
+source [find target/stm32f3x.cfg]</code></pre>
+
+    <blockquote>
+      <p>
+        <strong>LƯU Ý</strong>: Nếu bạn phát hiện ra mình có phiên bản cũ hơn của discovery board
+        trong phần <a href="../intro/install/verify.html">verify</a> thì bạn nên sửa file
+        <code>openocd.cfg</code> tại thời điểm này để dùng <code>interface/stlink-v2.cfg</code>.
+      </p>
+    </blockquote>
+
+<pre><code>$ openocd
+Open On-Chip Debugger 0.10.0
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+Info : auto-selecting first available session transport "hla_swd". To override use 'transport select &lt;transport&gt;'.
+adapter speed: 1000 kHz
+adapter_nsrst_delay: 100
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : clock speed 950 kHz
+Info : STLINK v2 JTAG v27 API v2 SWIM v15 VID 0x0483 PID 0x374B
+Info : using stlink api v2
+Info : Target voltage: 2.913879
+Info : stm32f3x.cpu: hardware has 6 breakpoints, 4 watchpoints</code></pre>
+
+    <p>
+      Trên một terminal khác, chạy GDB, cũng từ thư mục root của template.
+    </p>
+
+<pre><code>gdb-multiarch -q target/thumbv7em-none-eabihf/debug/examples/hello</code></pre>
+
+    <p>
+      <strong>LƯU Ý</strong>: như trước, bạn có thể cần phiên bản GDB khác thay vì
+      <code>gdb-multiarch</code> tùy thuộc vào phiên bản đã cài trong chương installation. Có thể
+      là <code>arm-none-eabi-gdb</code> hoặc đơn giản là <code>gdb</code>.
+    </p>
+
+    <p>
+      Tiếp theo, kết nối GDB với OpenOCD đang chờ kết nối TCP trên port 3333.
+    </p>
+
+<pre><code>(gdb) target remote :3333
+Remote debugging using :3333
+0x00000000 in ?? ()</code></pre>
+
+    <p>
+      Bây giờ tiến hành <em>flash</em> (load) chương trình lên vi điều khiển bằng lệnh
+      <code>load</code>.
+    </p>
+
+<pre><code>(gdb) load
+Loading section .vector_table, size 0x400 lma 0x8000000
+Loading section .text, size 0x1518 lma 0x8000400
+Loading section .rodata, size 0x414 lma 0x8001918
+Start address 0x08000400, load size 7468
+Transfer rate: 13 KB/sec, 2489 bytes/write.</code></pre>
+
+    <p>
+      Chương trình đã được load. Chương trình này dùng semihosting nên trước khi thực hiện bất kỳ
+      semihosting call nào, chúng ta phải báo cho OpenOCD enable semihosting. Bạn có thể gửi lệnh
+      đến OpenOCD bằng lệnh <code>monitor</code>.
+    </p>
+
+<pre><code>(gdb) monitor arm semihosting enable
+semihosting is enabled</code></pre>
+
+    <blockquote>
+      <p>Bạn có thể xem tất cả lệnh OpenOCD bằng cách gọi lệnh <code>monitor help</code>.</p>
+    </blockquote>
+
+    <p>
+      Như trước, chúng ta có thể nhảy thẳng đến <code>main</code> bằng một breakpoint và lệnh
+      <code>continue</code>.
+    </p>
+
+<pre><code>(gdb) break main
+Breakpoint 1 at 0x8000490: file examples/hello.rs, line 11.
+Note: automatically using hardware breakpoints for read-only addresses.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, hello::__cortex_m_rt_main_trampoline () at examples/hello.rs:11
+11      #[entry]</code></pre>
+
+    <blockquote>
+      <p>
+        <strong>LƯU Ý</strong>: Nếu GDB block terminal thay vì dừng tại breakpoint sau khi bạn
+        gõ lệnh <code>continue</code>, bạn nên kiểm tra lại thông tin memory region trong file
+        <code>memory.x</code> đã được cài đặt đúng cho thiết bị của bạn (cả địa chỉ đầu
+        <em>và</em> độ dài).
+      </p>
+    </blockquote>
+
+    <p>Bước vào hàm main bằng <code>step</code>.</p>
+
+<pre><code>(gdb) step
+halted: PC: 0x08000496
+hello::__cortex_m_rt_main () at examples/hello.rs:13
+13          hprintln!("Hello, world!").unwrap();</code></pre>
+
+    <p>
+      Sau khi tiến chương trình bằng <code>next</code>, bạn sẽ thấy "Hello, world!" được in ra
+      console OpenOCD, cùng với một số nội dung khác.
+    </p>
+
+<pre><code>$ openocd
+(..)
+Info : halted: PC: 0x08000502
+Hello, world!
+Info : halted: PC: 0x080004ac
+Info : halted: PC: 0x080004ae
+Info : halted: PC: 0x080004b0
+Info : halted: PC: 0x080004b4
+Info : halted: PC: 0x080004b8
+Info : halted: PC: 0x080004bc</code></pre>
+
+    <p>
+      Thông điệp chỉ hiển thị một lần vì chương trình sắp vào vòng lặp vô hạn được định nghĩa
+      tại dòng 19: <code>loop {}</code>
+    </p>
+
+    <p>Bây giờ bạn có thể thoát GDB bằng lệnh <code>quit</code>.</p>
+
+<pre><code>(gdb) quit
+A debugging session is active.
+
+        Inferior 1 [Remote target] will be detached.
+
+Quit anyway? (y or n)</code></pre>
+
+    <p>
+      Debug giờ đây cần thêm vài bước nên chúng ta đã đóng gói tất cả các bước đó vào một GDB
+      script tên là <code>openocd.gdb</code>. File này được tạo trong bước <code>cargo generate</code>
+      và sẽ hoạt động mà không cần sửa đổi gì. Hãy xem qua:
+    </p>
+
+<pre><code>cat openocd.gdb</code></pre>
+
+<pre><code>target extended-remote :3333
+
+# print demangled symbols
+set print asm-demangle on
+
+# detect unhandled exceptions, hard faults and panics
+break DefaultHandler
+break HardFault
+break rust_begin_unwind
+
+monitor arm semihosting enable
+
+load
+
+# start the process but immediately halt the processor
+stepi</code></pre>
+
+    <p>
+      Bây giờ chạy <code>&lt;gdb&gt; -x openocd.gdb target/thumbv7em-none-eabihf/debug/examples/hello</code>
+      sẽ ngay lập tức kết nối GDB với OpenOCD, enable semihosting, load chương trình và bắt đầu
+      tiến trình.
+    </p>
+
+    <p>
+      Ngoài ra, bạn có thể biến <code>&lt;gdb&gt; -x openocd.gdb</code> thành một custom runner để
+      <code>cargo run</code> build chương trình <em>và</em> bắt đầu GDB session. Runner này được
+      bao gồm trong <code>.cargo/config.toml</code> nhưng bị comment out.
+    </p>
+
+<pre><code>head -n10 .cargo/config.toml</code></pre>
+
+<pre><code>[target.thumbv7m-none-eabi]
+# uncomment this to make `cargo run` execute programs on QEMU
+# runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+# uncomment ONE of these three option to make `cargo run` start a GDB session
+# which option to pick depends on your system
+runner = "arm-none-eabi-gdb -x openocd.gdb"
+# runner = "gdb-multiarch -x openocd.gdb"
+# runner = "gdb -x openocd.gdb"</code></pre>
+
+<pre><code>$ cargo run --example hello
+(..)
+Loading section .vector_table, size 0x400 lma 0x8000000
+Loading section .text, size 0x1e70 lma 0x8000400
+Loading section .rodata, size 0x61c lma 0x8002270
+Start address 0x800144e, load size 10380
+Transfer rate: 17 KB/sec, 3460 bytes/write.
+(gdb)</code></pre>
+
+    <div class="nav-buttons">
+      <a href="qemu.html" class="nav-btn">← QEMU</a>
+      <a href="semihosting.html" class="nav-btn next">Semihosting →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

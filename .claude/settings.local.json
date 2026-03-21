@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l d:/Workspace/rust-embedded-doc/docs/**/*.html d:/Workspace/rust-embedded-doc/docs/index.html)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(data[0][''''text'''']\\)\")",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)"
+    ]
+  }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công cụ - Rust Embedded Book</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="../index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>Rust Embedded</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-section"><a href="../index.html" class="section-link">🏠 Trang chủ</a></div>
+    <div class="nav-section">
+      <div class="nav-section-title">Giới thiệu</div>
+      <a href="index.html">Tổng quan</a>
+      <a href="hardware.html">Làm quen phần cứng</a>
+      <a href="no-std.html">Môi trường no_std</a>
+      <a href="tooling.html" class="active">Công cụ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Bắt đầu</div>
+      <a href="../start/index.html">Tổng quan</a>
+      <a href="../start/qemu.html">QEMU</a>
+      <a href="../start/hardware.html">Phần cứng thực</a>
+      <a href="../start/semihosting.html">Semihosting</a>
+      <a href="../start/panicking.html">Panicking</a>
+      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
+      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề nâng cao</div>
+      <a href="../portability/index.html">Tính di động</a>
+      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../collections/index.html">Collections</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <a href="../design-patterns/index.html">Design Patterns</a>
+      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
+      <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <a href="../interoperability/index.html">Tổng quan</a>
+      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Chủ đề khác</div>
+      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="../index.html">Trang chủ</a>
+    <span class="sep">›</span>
+    <a href="index.html">Giới thiệu</a>
+    <span class="sep">›</span>
+    <span class="current">Công cụ</span>
+  </div>
+  <main id="main">
+
+    <h1>Công cụ (Tooling)</h1>
+
+    <p>
+      Làm việc với microcontroller liên quan đến việc sử dụng nhiều công cụ khác nhau vì chúng
+      ta sẽ làm việc với kiến trúc khác với laptop của bạn và phải chạy và debug chương trình
+      trên một thiết bị <em>từ xa</em>.
+    </p>
+
+    <p>
+      Chúng ta sẽ dùng tất cả các công cụ được liệt kê dưới đây. Bất kỳ phiên bản gần đây nào
+      cũng sẽ hoạt động khi không có phiên bản tối thiểu được chỉ định, nhưng chúng tôi đã liệt
+      kê các phiên bản đã được kiểm tra.
+    </p>
+
+    <ul>
+      <li>Rust 1.31, 1.31-beta, hoặc toolchain mới hơn CỘNG VỚI hỗ trợ biên dịch ARM Cortex-M.</li>
+      <li><a href="https://github.com/rust-embedded/cargo-binutils"><code>cargo-binutils</code></a> ~0.1.4</li>
+      <li><a href="https://www.qemu.org/"><code>qemu-system-arm</code></a>. Các phiên bản đã kiểm tra: 3.0.0</li>
+      <li>OpenOCD &gt;=0.8. Các phiên bản đã kiểm tra: v0.9.0 và v0.10.0</li>
+      <li>GDB với hỗ trợ ARM. Phiên bản 7.12 trở lên được khuyến nghị. Các phiên bản đã kiểm tra: 7.10, 7.11, 7.12 và 8.1</li>
+      <li><a href="https://github.com/ashleygwilliams/cargo-generate"><code>cargo-generate</code></a>
+          hoặc <code>git</code>. Các công cụ này là tùy chọn nhưng sẽ giúp bạn dễ dàng theo dõi cuốn sách hơn.</li>
+    </ul>
+
+    <p>
+      Văn bản dưới đây giải thích lý do tại sao chúng ta dùng các công cụ này. Hướng dẫn cài
+      đặt có thể được tìm thấy ở trang tiếp theo.
+    </p>
+
+    <h2><code>cargo-generate</code> HOẶC <code>git</code></h2>
+
+    <p>
+      Các chương trình bare metal là các chương trình Rust không chuẩn (<code>no_std</code>) yêu
+      cầu một số điều chỉnh trong quá trình linking để có được memory layout đúng của chương trình.
+      Điều này yêu cầu một số file bổ sung (như linker script) và cài đặt (như linker flag). Chúng
+      tôi đã đóng gói những thứ này vào một template để bạn chỉ cần điền vào thông tin còn thiếu
+      (như tên project và đặc điểm của phần cứng target của bạn).
+    </p>
+
+    <p>
+      Template của chúng tôi tương thích với <code>cargo-generate</code>: một Cargo subcommand để
+      tạo project Cargo mới từ template. Bạn cũng có thể tải template bằng <code>git</code>,
+      <code>curl</code>, <code>wget</code>, hoặc trình duyệt web.
+    </p>
+
+    <h2><code>cargo-binutils</code></h2>
+
+    <p>
+      <code>cargo-binutils</code> là một tập hợp các Cargo subcommand giúp dễ dàng dùng các
+      công cụ LLVM được đi kèm với Rust toolchain. Các công cụ này bao gồm các phiên bản LLVM
+      của <code>objdump</code>, <code>nm</code> và <code>size</code> và được dùng để kiểm tra
+      binary.
+    </p>
+
+    <p>
+      Ưu điểm của việc dùng các công cụ này so với GNU binutils là (a) cài đặt các công cụ LLVM
+      là cùng một lệnh cài đặt (<code>rustup component add llvm-tools</code>) bất kể hệ điều hành
+      của bạn và (b) các công cụ như <code>objdump</code> hỗ trợ tất cả các kiến trúc mà
+      <code>rustc</code> hỗ trợ – từ ARM đến x86_64 – vì cả hai đều chia sẻ cùng LLVM backend.
+    </p>
+
+    <h2><code>qemu-system-arm</code></h2>
+
+    <p>
+      QEMU là một trình giả lập. Trong trường hợp này chúng ta dùng biến thể có thể giả lập đầy
+      đủ hệ thống ARM. Chúng ta dùng QEMU để chạy các chương trình embedded trên host. Nhờ vậy
+      bạn có thể theo dõi một số phần của cuốn sách này ngay cả khi bạn không có phần cứng!
+    </p>
+
+    <h2>Tooling cho Embedded Rust Debugging</h2>
+
+    <h3>Tổng quan</h3>
+
+    <p>
+      Debug các hệ thống embedded trong Rust đòi hỏi các công cụ chuyên dụng bao gồm phần mềm
+      để quản lý quá trình debug, debugger để kiểm tra và điều khiển thực thi chương trình, và
+      hardware probe để tạo điều kiện tương tác giữa host và thiết bị embedded. Tài liệu này
+      phác thảo các công cụ phần mềm thiết yếu như Probe-rs và OpenOCD, cùng với các debugger
+      nổi bật như GDB và tiện ích mở rộng Probe-rs Visual Studio Code. Ngoài ra, tài liệu đề
+      cập đến các hardware probe chính như Rusty-probe, ST-Link, J-Link và MCU-Link.
+    </p>
+
+    <h3>Phần mềm điều khiển công cụ debug</h3>
+
+    <h4>Probe-rs</h4>
+
+    <p>
+      Probe-rs là phần mềm hiện đại, tập trung vào Rust, được thiết kế để làm việc với debugger
+      trong các hệ thống embedded. Không giống như OpenOCD, Probe-rs được xây dựng với sự đơn
+      giản trong tâm trí và nhằm mục đích giảm gánh nặng cấu hình thường thấy trong các giải
+      pháp debug khác. Nó hỗ trợ nhiều probe và target, cung cấp giao diện cấp cao để tương tác
+      với phần cứng embedded. Probe-rs tích hợp trực tiếp với Rust tooling và tích hợp với
+      Visual Studio Code thông qua tiện ích mở rộng.
+    </p>
+
+    <h4>OpenOCD (Open On-Chip Debugger)</h4>
+
+    <p>
+      OpenOCD là công cụ phần mềm mã nguồn mở dùng để debug, kiểm tra và lập trình các hệ thống
+      embedded. Nó cung cấp giao diện giữa hệ thống host và phần cứng embedded, hỗ trợ nhiều
+      transport layer như JTAG và SWD (Serial Wire Debug). OpenOCD tích hợp với GDB. OpenOCD
+      được hỗ trợ rộng rãi với tài liệu phong phú và cộng đồng lớn, nhưng có thể yêu cầu cấu
+      hình phức tạp, đặc biệt cho các thiết lập embedded tùy chỉnh.
+    </p>
+
+    <h3>Debugger</h3>
+
+    <p>
+      Debugger cho phép developer kiểm tra và điều khiển việc thực thi chương trình để xác định
+      và sửa lỗi. Debugger biết cách:
+    </p>
+
+    <ul>
+      <li>Tương tác với các memory mapped register.</li>
+      <li>Đặt Breakpoint/Watchpoint.</li>
+      <li>Đọc và ghi vào các memory mapped register.</li>
+      <li>Phát hiện khi MCU bị dừng do sự kiện debug.</li>
+      <li>Tiếp tục thực thi MCU sau khi gặp sự kiện debug.</li>
+      <li>Xóa và ghi vào Flash của microcontroller.</li>
+    </ul>
+
+    <h4>Tiện ích mở rộng Probe-rs Visual Studio Code</h4>
+
+    <p>
+      Probe-rs có tiện ích mở rộng Visual Studio Code, cung cấp trải nghiệm debug liền mạch mà
+      không cần cài đặt phức tạp.
+    </p>
+
+    <h4>GDB (GNU Debugger)</h4>
+
+    <p>
+      GDB là công cụ debug linh hoạt cho phép developer kiểm tra trạng thái của chương trình
+      trong khi chạy hoặc sau khi crash. Đối với embedded Rust, GDB kết nối với hệ thống target
+      qua OpenOCD hoặc các server debug khác. GDB có thể cấu hình cao và hỗ trợ các tính năng
+      như remote debugging, kiểm tra biến, và breakpoint có điều kiện.
+    </p>
+
+    <h3>Probe (Hardware probe)</h3>
+
+    <p>
+      Hardware probe là thiết bị dùng trong phát triển và debug các hệ thống embedded để tạo
+      điều kiện giao tiếp giữa máy tính host và thiết bị embedded target. Nó thường hỗ trợ các
+      giao thức như JTAG hoặc SWD, cho phép lập trình, debug và phân tích microcontroller.
+    </p>
+
+    <ul>
+      <li><strong>Rusty-probe</strong>: Hardware probe USB mã nguồn mở được thiết kế để hoạt động với probe-rs.</li>
+      <li><strong>ST-Link</strong>: Probe debug và lập trình phổ biến do STMicroelectronics phát triển cho dòng STM32 và STM8. Hỗ trợ JTAG và SWD.</li>
+      <li><strong>J-Link</strong>: Debugger mạnh mẽ và linh hoạt của SEGGER, hỗ trợ nhiều CPU core bao gồm RISC-V. Nổi tiếng với hiệu suất cao và tính năng như unlimited breakpoints trong flash.</li>
+      <li><strong>MCU-Link</strong>: Probe debug do NXP Semiconductors cung cấp, hỗ trợ nhiều ARM Cortex microcontroller. Đặc biệt phù hợp về tính linh hoạt và giá cả.</li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a href="no-std.html" class="nav-btn">← Môi trường no_std</a>
+      <a href="../start/index.html" class="nav-btn next">Bắt đầu →</a>
+    </div>
+
+  </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>
