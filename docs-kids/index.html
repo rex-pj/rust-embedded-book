@@ -3,311 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rust Embedded - Dành cho các bạn nhỏ!</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Segoe UI', 'Arial Rounded MT Bold', Arial, sans-serif;
-    background: linear-gradient(135deg, #fff9f0 0%, #f0f9ff 100%);
-    color: #333;
-    font-size: 18px;
-    line-height: 1.7;
-  }
-
-  /* ===== HEADER ===== */
-  header {
-    background: linear-gradient(135deg, #ff6b35 0%, #f7c948 50%, #4ecdc4 100%);
-    padding: 32px 24px 28px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: "⭐🚀🤖💡🔧⭐";
-    position: absolute;
-    top: 8px; left: 0; right: 0;
-    font-size: 22px;
-    letter-spacing: 12px;
-    opacity: 0.35;
-  }
-  header h1 {
-    font-size: 2.4em;
-    color: white;
-    text-shadow: 2px 3px 0 rgba(0,0,0,0.18);
-    margin-bottom: 6px;
-  }
-  header .tagline {
-    font-size: 1.1em;
-    color: #fff8e1;
-    font-weight: 600;
-  }
-  .age-badge {
-    display: inline-block;
-    background: white;
-    color: #ff6b35;
-    border-radius: 20px;
-    padding: 4px 18px;
-    font-size: 0.85em;
-    font-weight: 700;
-    margin-top: 10px;
-  }
-
-  /* ===== MAIN CONTENT ===== */
-  main {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 32px 20px 60px;
-  }
-
-  /* ===== SECTION TITLES ===== */
-  h2 {
-    font-size: 1.6em;
-    color: #e05a00;
-    margin: 40px 0 16px;
-    padding-left: 12px;
-    border-left: 6px solid #f7c948;
-  }
-
-  /* ===== INTRO BOX ===== */
-  .intro-box {
-    background: white;
-    border-radius: 20px;
-    padding: 28px 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 3px solid #ffe082;
-    margin-bottom: 32px;
-  }
-  .intro-box p { margin-bottom: 12px; }
-  .intro-box p:last-child { margin-bottom: 0; }
-  .highlight { color: #d84315; font-weight: 700; }
-  .fun-fact {
-    background: #fff3e0;
-    border-left: 5px solid #ff9800;
-    border-radius: 0 12px 12px 0;
-    padding: 12px 16px;
-    margin-top: 14px;
-    font-size: 0.95em;
-  }
-
-  /* ===== ROBOT DIAGRAM ===== */
-  .diagram-box {
-    background: white;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 32px;
-    border: 3px solid #b2ebf2;
-    text-align: center;
-  }
-  .diagram-box .diagram-title {
-    font-size: 1.1em;
-    font-weight: 700;
-    color: #0277bd;
-    margin-bottom: 16px;
-  }
-
-  /* ===== LAYER CARDS ===== */
-  .layers {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 0 auto;
-    max-width: 600px;
-  }
-  .layer {
-    border-radius: 14px;
-    padding: 14px 20px;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .layer .layer-icon { font-size: 2em; flex-shrink: 0; }
-  .layer .layer-text .layer-name {
-    font-weight: 700;
-    font-size: 1.05em;
-    margin-bottom: 2px;
-  }
-  .layer .layer-text .layer-desc {
-    font-size: 0.85em;
-    opacity: 0.85;
-  }
-  .layer-app  { background: #dbeafe; border: 2px solid #3b82f6; color: #1e3a8a; }
-  .layer-hal  { background: #dcfce7; border: 2px solid #22c55e; color: #14532d; }
-  .layer-pac  { background: #fef9c3; border: 2px solid #eab308; color: #713f12; }
-  .layer-rt   { background: #fce7f3; border: 2px solid #ec4899; color: #831843; }
-  .layer-hw   { background: #e0e7ff; border: 2px solid #6366f1; color: #312e81; }
-  .layer-arrow { text-align: center; font-size: 1.5em; margin: -4px 0; }
-
-  /* ===== CHAPTER GRID ===== */
-  .chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 18px;
-    margin-bottom: 32px;
-  }
-  .chapter-card {
-    background: white;
-    border-radius: 18px;
-    padding: 22px 18px;
-    text-decoration: none;
-    color: #333;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-    border: 2px solid #e0e0e0;
-    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-    display: block;
-  }
-  .chapter-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.13);
-    border-color: #f7c948;
-  }
-  .card-icon { font-size: 2.4em; margin-bottom: 10px; }
-  .card-title { font-weight: 700; font-size: 1.05em; margin-bottom: 6px; color: #d84315; }
-  .card-simple { font-size: 0.9em; color: #555; margin-bottom: 6px; font-weight: 600; }
-  .card-desc   { font-size: 0.82em; color: #777; }
-
-  /* ===== COMPARISON TABLE ===== */
-  .compare-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    margin-bottom: 32px;
-    font-size: 0.92em;
-  }
-  .compare-table thead tr th {
-    padding: 14px 16px;
-    font-size: 1em;
-  }
-  .compare-table th.col-c   { background: #fee2e2; color: #b91c1c; }
-  .compare-table th.col-r   { background: #dcfce7; color: #15803d; }
-  .compare-table th.col-why { background: #dbeafe; color: #1e40af; }
-  .compare-table tbody tr:nth-child(odd) td  { background: #fafafa; }
-  .compare-table tbody tr:nth-child(even) td { background: #fff; }
-  .compare-table td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-  .compare-table td.col-c   { color: #7f1d1d; }
-  .compare-table td.col-r   { color: #166534; font-weight: 600; }
-  .compare-table td.col-why { color: #1e3a8a; }
-
-  /* ===== ANALOGY BOX ===== */
-  .analogy-box {
-    background: linear-gradient(135deg, #fff8e1, #e8f5e9);
-    border-radius: 18px;
-    padding: 22px 24px;
-    border: 2px dashed #aed581;
-    margin-bottom: 28px;
-  }
-  .analogy-box .analogy-title {
-    font-weight: 700;
-    font-size: 1.1em;
-    color: #558b2f;
-    margin-bottom: 10px;
-  }
-  .analogy-box ul { padding-left: 24px; }
-  .analogy-box li { margin-bottom: 8px; }
-
-  /* ===== QUIZ BOX ===== */
-  .quiz-box {
-    background: linear-gradient(135deg, #f3e5f5, #e1f5fe);
-    border-radius: 18px;
-    padding: 22px 24px;
-    border: 2px solid #ce93d8;
-    margin-bottom: 32px;
-  }
-  .quiz-box .quiz-title {
-    font-weight: 700;
-    font-size: 1.1em;
-    color: #6a1b9a;
-    margin-bottom: 12px;
-  }
-  .quiz-q {
-    background: white;
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    font-size: 0.92em;
-    border-left: 4px solid #ab47bc;
-    cursor: pointer;
-    position: relative;
-  }
-  .quiz-q .question { font-weight: 600; margin-bottom: 6px; }
-  .quiz-q .answer {
-    display: none;
-    color: #2e7d32;
-    font-size: 0.9em;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px dashed #c8e6c9;
-  }
-  .quiz-q:hover .answer { display: block; }
-  .quiz-hint { font-size: 0.8em; color: #8e24aa; margin-top: 8px; }
-
-  /* ===== CTA BUTTON ===== */
-  .cta-section {
-    text-align: center;
-    margin-top: 40px;
-  }
-  .cta-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, #ff6b35, #f7c948);
-    color: white;
-    text-decoration: none;
-    padding: 16px 40px;
-    border-radius: 50px;
-    font-size: 1.15em;
-    font-weight: 700;
-    box-shadow: 0 4px 18px rgba(255,107,53,0.35);
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  .cta-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 28px rgba(255,107,53,0.45);
-  }
-
-  /* ===== FOOTER ===== */
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.82em;
-    color: #999;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 520px) {
-    header h1 { font-size: 1.7em; }
-    .chapter-grid { grid-template-columns: 1fr 1fr; }
-    .compare-table { font-size: 0.8em; }
-  }
-</style>
+<title>🤖 Rust Embedded - Dành cho các bạn nhỏ!</title>
+<link rel="stylesheet" href="kids-style.css">
 </head>
 <body>
 
-<header>
+<header class="kids-header">
   <h1>🤖 Khám phá Thế giới Robot với Rust!</h1>
-  <p class="tagline">Học lập trình cho máy móc thông minh — thật dễ và vui!</p>
-  <span class="age-badge">📚 Dành cho các bạn 6–10 tuổi</span>
+  <p class="subtitle">Học lập trình cho máy móc thông minh — thật dễ và vui!</p>
+  <span class="breadcrumb">📚 Dành cho các bạn 6–10 tuổi</span>
 </header>
 
 <main>
 
   <!-- ===== INTRO ===== -->
-  <div class="intro-box">
+  <div class="fun-box">
     <p>
-      Bạn đã từng tự hỏi <span class="highlight">đèn giao thông biết chuyển màu như thế nào</span>?
-      Hay <span class="highlight">điều khiển TV hoạt động ra sao</span>?
+      Bạn đã từng tự hỏi <span class="hi">đèn giao thông biết chuyển màu như thế nào</span>?
+      Hay <span class="hi">điều khiển TV hoạt động ra sao</span>?
       Bên trong những thứ đó có một <strong>máy tính nhỏ xíu</strong> — nhỏ như ngón tay của bạn!
     </p>
     <p>
-      Máy tính nhỏ đó được gọi là <span class="highlight">hệ thống nhúng</span>
+      Máy tính nhỏ đó được gọi là <span class="hi">hệ thống nhúng</span>
       (embedded system — đọc là: em-béc-đét xi-xtờm 🗣️).
       Và chúng ta sẽ học cách <strong>ra lệnh</strong> cho chúng bằng ngôn ngữ lập trình có tên là
-      <span class="highlight">Rust</span>! 🦀
+      <span class="hi">Rust</span>! 🦀
     </p>
-    <div class="fun-fact">
+    <div class="tip-box">
       💡 <strong>Hay đó!</strong> Rust có linh vật là con <strong>cua</strong> 🦀 — vì cua cứng cáp,
       khỏe mạnh, không dễ bị bắt nạt. Rust cũng vậy: mạnh mẽ và ít mắc lỗi!
     </div>
@@ -316,17 +38,15 @@
   <!-- ===== ANALOGY ===== -->
   <h2>🏠 Hệ thống nhúng là gì?</h2>
   <div class="analogy-box">
-    <div class="analogy-title">🎮 Hãy tưởng tượng thế này…</div>
+    <div class="title">🎮 Hãy tưởng tượng thế này…</div>
     <ul>
       <li>🤖 Một <strong>robot đồ chơi</strong> di chuyển, phát nhạc — bên trong có máy tính nhỏ điều khiển!</li>
       <li>🚦 <strong>Đèn giao thông</strong> đếm thời gian và đổi màu đỏ–vàng–xanh — cũng do máy tính nhỏ làm!</li>
       <li>🌡️ <strong>Nhiệt kế điện tử</strong> đọc nhiệt độ và hiển thị số — đó cũng là hệ thống nhúng!</li>
       <li>🎵 <strong>Đồ chơi phát nhạc</strong> khi bạn bấm nút — đúng rồi, lại là hệ thống nhúng!</li>
     </ul>
-    <p style="margin-top:10px; font-size:0.9em; color:#555;">
-      Những máy tính nhỏ này <strong>không cần màn hình to hay bàn phím</strong>.
-      Chúng chỉ làm <em>một việc duy nhất</em> — nhưng làm rất giỏi!
-    </p>
+    <p>Những máy tính nhỏ này <strong>không cần màn hình to hay bàn phím</strong>.
+      Chúng chỉ làm <em>một việc duy nhất</em> — nhưng làm rất giỏi!</p>
   </div>
 
   <!-- ===== LAYER DIAGRAM ===== -->
@@ -390,58 +110,58 @@
   <!-- ===== CHAPTERS ===== -->
   <h2>📖 Các chủ đề trong sách</h2>
 
-  <div class="chapter-grid">
+  <div class="card-grid">
 
-    <a href="intro/index.html" class="chapter-card">
+    <a href="intro/index.html" class="card">
       <div class="card-icon">🔰</div>
       <div class="card-title">Khởi đầu hành trình</div>
       <div class="card-simple">Robot là gì? Rust là gì?</div>
       <div class="card-desc">Tìm hiểu hệ thống nhúng là gì và tại sao Rust là ngôn ngữ tuyệt vời cho chúng.</div>
     </a>
 
-    <a href="intro/no-std.html" class="chapter-card">
+    <a href="intro/no-std.html" class="card">
       <div class="card-icon">🏕️</div>
       <div class="card-title">Sống tự lập — no_std</div>
       <div class="card-simple">Robot không cần "ba lô" nặng!</div>
       <div class="card-desc">Máy tính nhỏ không có hệ điều hành — Rust vẫn chạy được mà không cần các thư viện lớn.</div>
     </a>
 
-    <a href="start/qemu.html" class="chapter-card">
+    <a href="start/qemu.html" class="card">
       <div class="card-icon">🖥️</div>
       <div class="card-title">Robot ảo — QEMU</div>
       <div class="card-simple">Luyện tập trước khi dùng robot thật!</div>
       <div class="card-desc">Chạy chương trình trên máy tính như thể đang dùng robot thật — không sợ làm hỏng gì!</div>
     </a>
 
-    <a href="start/exceptions.html" class="chapter-card">
+    <a href="start/exceptions.html" class="card">
       <div class="card-icon">⚡</div>
       <div class="card-title">Tín hiệu khẩn — Interrupts</div>
       <div class="card-simple">Giống như ai đó gõ vai bạn!</div>
       <div class="card-desc">Khi có chuyện quan trọng xảy ra (bấm nút, nhiệt độ quá cao), robot dừng lại và xử lý ngay.</div>
     </a>
 
-    <a href="concurrency/index.html" class="chapter-card">
+    <a href="concurrency/index.html" class="card">
       <div class="card-icon">🤹</div>
       <div class="card-title">Làm nhiều việc cùng lúc</div>
       <div class="card-simple">Như tung hứng bóng!</div>
       <div class="card-desc">Robot vừa đọc cảm biến, vừa bật đèn, vừa gửi tín hiệu — Rust giúp làm điều này an toàn.</div>
     </a>
 
-    <a href="static-guarantees/typestate-programming.html" class="chapter-card">
+    <a href="static-guarantees/typestate-programming.html" class="card">
       <div class="card-icon">🔒</div>
       <div class="card-title">Khóa an toàn — Typestate</div>
       <div class="card-simple">Rust kiểm tra trước khi cho chạy!</div>
       <div class="card-desc">Giống như ổ khóa chỉ mở đúng chìa. Rust đảm bảo bạn không bật đèn khi chưa cắm điện!</div>
     </a>
 
-    <a href="interoperability/c-with-rust.html" class="chapter-card">
+    <a href="interoperability/c-with-rust.html" class="card">
       <div class="card-icon">🤝</div>
       <div class="card-title">Rust và C làm bạn</div>
       <div class="card-simple">Hai ngôn ngữ hợp tác!</div>
       <div class="card-desc">Đôi khi robot đã có code cũ viết bằng C — Rust biết cách làm việc chung với chúng.</div>
     </a>
 
-    <a href="unsorted/speed-vs-size.html" class="chapter-card">
+    <a href="unsorted/speed-vs-size.html" class="card">
       <div class="card-icon">⚖️</div>
       <div class="card-title">Nhanh hay nhỏ gọn?</div>
       <div class="card-simple">Chọn theo nhu cầu robot!</div>
@@ -453,12 +173,12 @@
   <!-- ===== COMPARISON ===== -->
   <h2>⚔️ Rust so với C/C++ — Ai khỏe hơn?</h2>
 
-  <p style="margin-bottom:16px; font-size:0.95em; color:#555;">
-    Trước khi có Rust, mọi người hay dùng C hoặc C++ để lập trình robot. Nhưng C rất dễ mắc lỗi nguy hiểm...
-    Rust ra đời để <strong>bắt lỗi từ sớm</strong>, trước khi robot thậm chí chạy!
-  </p>
+  <div class="fun-box">
+    <p>Trước khi có Rust, mọi người hay dùng C hoặc C++ để lập trình robot. Nhưng C rất dễ mắc lỗi nguy hiểm...
+    Rust ra đời để <strong>bắt lỗi từ sớm</strong>, trước khi robot thậm chí chạy!</p>
+  </div>
 
-  <table class="compare-table">
+  <table class="kids-table">
     <thead>
       <tr>
         <th class="col-c">😬 C / C++ — Ngôn ngữ cũ</th>
@@ -526,22 +246,17 @@
 
   <!-- ===== CTA ===== -->
   <div class="cta-section">
-    <p style="margin-bottom:18px; font-size:1.05em; color:#555;">
-      Sẵn sàng khám phá sâu hơn chưa? 🚀
-    </p>
+    <p>Sẵn sàng khám phá sâu hơn chưa? 🚀</p>
     <a href="intro/index.html" class="cta-btn">
       🏁 Bắt đầu khám phá ngay →
     </a>
-    <p style="margin-top:14px; font-size:0.85em; color:#aaa;">
-      (Phiên bản vui vẻ dành cho các bạn nhỏ)
-    </p>
+    <p style="margin-top:14px; font-size:0.85em; color:#aaa;">(Phiên bản vui vẻ dành cho các bạn nhỏ)</p>
   </div>
 
 </main>
 
-<footer>
-  <p>🦀 Rust Embedded Book — Phiên bản vui vẻ dành cho các bạn nhỏ · Dựa trên <em>The Embedded Rust Book</em></p>
-</footer>
+<footer>🦀 Rust Embedded Book — Phiên bản vui vẻ dành cho các bạn nhỏ · Dựa trên <em>The Embedded Rust Book</em></footer>
 
+<script src="nav.js"></script>
 </body>
 </html>

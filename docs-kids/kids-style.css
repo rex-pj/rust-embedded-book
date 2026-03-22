@@ -13,6 +13,8 @@ body {
 .kids-header h1 { font-size: 1.9em; color: white; text-shadow: 2px 2px 0 rgba(0,0,0,0.15); margin-bottom: 6px; }
 .kids-header .subtitle { font-size: 1em; color: #fff8e1; }
 .breadcrumb { background: rgba(255,255,255,0.25); border-radius: 20px; display:inline-block; padding: 4px 14px; font-size:0.85em; color:white; margin-top:8px; }
+.breadcrumb a { color: white; text-decoration: none; opacity: 0.9; }
+.breadcrumb a:hover { text-decoration: underline; opacity: 1; }
 /* Main */
 main { max-width: 820px; margin: 0 auto; padding: 28px 18px 60px; }
 h2 { font-size:1.4em; color:#e05a00; margin:32px 0 14px; padding-left:10px; border-left:5px solid #f7c948; }
@@ -51,3 +53,38 @@ footer { text-align:center; padding:18px; font-size:0.8em; color:#aaa; }
 .hi { color:#d84315; font-weight:700; }
 ul, ol { padding-left:22px; margin-bottom:12px; }
 li { margin-bottom:6px; }
+/* Card subtitle (for index hub page) */
+.card-simple { font-size:0.88em; color:#555; margin-bottom:4px; font-weight:600; }
+/* Diagram / Layer stack (for index hub page) */
+.diagram-box { background:white; border-radius:20px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:32px; border:3px solid #b2ebf2; text-align:center; }
+.diagram-box .diagram-title { font-size:1.1em; font-weight:700; color:#0277bd; margin-bottom:16px; }
+.layers { display:flex; flex-direction:column; gap:8px; margin:0 auto; max-width:600px; }
+.layer { border-radius:14px; padding:14px 20px; text-align:left; display:flex; align-items:center; gap:14px; }
+.layer .layer-icon { font-size:2em; flex-shrink:0; }
+.layer .layer-text .layer-name { font-weight:700; font-size:1.05em; margin-bottom:2px; }
+.layer .layer-text .layer-desc { font-size:0.85em; opacity:0.85; }
+.layer-app { background:#dbeafe; border:2px solid #3b82f6; color:#1e3a8a; }
+.layer-hal { background:#dcfce7; border:2px solid #22c55e; color:#14532d; }
+.layer-pac { background:#fef9c3; border:2px solid #eab308; color:#713f12; }
+.layer-rt  { background:#fce7f3; border:2px solid #ec4899; color:#831843; }
+.layer-hw  { background:#e0e7ff; border:2px solid #6366f1; color:#312e81; }
+.layer-arrow { text-align:center; font-size:1.5em; margin:-4px 0; }
+/* Quiz box */
+.quiz-box { background:linear-gradient(135deg,#f3e5f5,#e1f5fe); border-radius:18px; padding:22px 24px; border:2px solid #ce93d8; margin-bottom:32px; }
+.quiz-box .quiz-title { font-weight:700; font-size:1.1em; color:#6a1b9a; margin-bottom:12px; }
+.quiz-q { background:white; border-radius:12px; padding:12px 16px; margin-bottom:10px; font-size:0.92em; border-left:4px solid #ab47bc; cursor:pointer; }
+.quiz-q .question { font-weight:600; margin-bottom:6px; }
+.quiz-q .answer { display:none; color:#2e7d32; font-size:0.9em; margin-top:6px; padding-top:6px; border-top:1px dashed #c8e6c9; }
+.quiz-q:hover .answer { display:block; }
+.quiz-hint { font-size:0.8em; color:#8e24aa; margin-top:8px; }
+/* CTA button */
+.cta-section { text-align:center; margin-top:40px; }
+.cta-btn { display:inline-block; background:linear-gradient(135deg,#ff6b35,#f7c948); color:white; text-decoration:none; padding:16px 40px; border-radius:50px; font-size:1.15em; font-weight:700; box-shadow:0 4px 18px rgba(255,107,53,0.35); transition:transform .15s,box-shadow .15s; }
+.cta-btn:hover { transform:scale(1.05); box-shadow:0 8px 28px rgba(255,107,53,0.45); }
+/* Compare table column colours */
+.kids-table th.col-c  { background:#fee2e2; color:#b91c1c; }
+.kids-table th.col-r  { background:#dcfce7; color:#15803d; }
+.kids-table th.col-why { background:#dbeafe; color:#1e40af; }
+.kids-table td.col-c  { color:#7f1d1d; }
+.kids-table td.col-r  { color:#166534; font-weight:600; }
+.kids-table td.col-why { color:#1e3a8a; }
