@@ -72,11 +72,29 @@ li { margin-bottom:6px; }
 /* Quiz box */
 .quiz-box { background:linear-gradient(135deg,#f3e5f5,#e1f5fe); border-radius:18px; padding:22px 24px; border:2px solid #ce93d8; margin-bottom:32px; }
 .quiz-box .quiz-title { font-weight:700; font-size:1.1em; color:#6a1b9a; margin-bottom:12px; }
-.quiz-q { background:white; border-radius:12px; padding:12px 16px; margin-bottom:10px; font-size:0.92em; border-left:4px solid #ab47bc; cursor:pointer; }
+.quiz-q { background:white; border-radius:12px; padding:12px 16px; margin-bottom:10px; font-size:0.92em; border-left:4px solid #ab47bc; cursor:pointer; user-select:none; transition:background .12s; }
+.quiz-q:hover { background:#faf5ff; }
 .quiz-q .question { font-weight:600; margin-bottom:6px; }
+.quiz-q .question::after { content:' 👆'; font-size:0.8em; opacity:0.5; }
 .quiz-q .answer { display:none; color:#2e7d32; font-size:0.9em; margin-top:6px; padding-top:6px; border-top:1px dashed #c8e6c9; }
-.quiz-q:hover .answer { display:block; }
+/* hover works on desktop; .open class added by JS for both desktop and touch */
+.quiz-q:hover .answer, .quiz-q.open .answer { display:block; }
 .quiz-hint { font-size:0.8em; color:#8e24aa; margin-top:8px; }
+
+/* Try It box */
+.try-it-box {
+  background:linear-gradient(135deg,#e8f5e9,#e3f2fd); border-radius:16px;
+  padding:18px 22px; border:2px solid #66bb6a; margin:20px 0;
+}
+.try-it-box .try-it-title {
+  font-weight:700; color:#2e7d32; font-size:1.05em; margin-bottom:10px;
+}
+.try-it-box a.try-btn {
+  display:inline-block; background:#2e7d32; color:white; text-decoration:none;
+  padding:8px 20px; border-radius:20px; font-weight:700; font-size:0.9em;
+  margin:4px 6px 4px 0; transition:background .15s;
+}
+.try-it-box a.try-btn:hover { background:#1b5e20; }
 /* CTA button */
 .cta-section { text-align:center; margin-top:40px; }
 .cta-btn { display:inline-block; background:linear-gradient(135deg,#ff6b35,#f7c948); color:white; text-decoration:none; padding:16px 40px; border-radius:50px; font-size:1.15em; font-weight:700; box-shadow:0 4px 18px rgba(255,107,53,0.35); transition:transform .15s,box-shadow .15s; }
@@ -88,3 +106,171 @@ li { margin-bottom:6px; }
 .kids-table td.col-c  { color:#7f1d1d; }
 .kids-table td.col-r  { color:#166534; font-weight:600; }
 .kids-table td.col-why { color:#1e3a8a; }
+
+/* ===== DIFFICULTY BADGE ===== */
+.difficulty-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 16px; border-radius:20px; font-weight:700;
+  font-size:0.88em; margin-top:10px; letter-spacing:0.01em;
+}
+.level-easy   { background:#dcfce7; color:#15803d; border:2px solid #22c55e; }
+.level-medium { background:#fef9c3; color:#854d0e; border:2px solid #eab308; }
+.level-hard   { background:#fee2e2; color:#b91c1c; border:2px solid #ef4444; }
+
+/* ===== COMIC PSEUDOCODE ===== */
+.comic-code {
+  background:#1a1a2e; border-radius:12px;
+  padding:18px 20px 14px; margin:14px 0;
+  font-family:'Courier New', Consolas, monospace;
+  font-size:0.9em; color:#e0e0ff; line-height:1.75;
+  border:3px solid #7c3aed; position:relative; overflow:hidden;
+}
+.comic-code-label {
+  display:inline-block; background:#7c3aed; color:white;
+  padding:2px 12px; border-radius:8px; font-size:0.75em;
+  font-family:'Segoe UI',Arial,sans-serif; font-weight:700;
+  margin-bottom:10px;
+}
+.comic-code .kw  { color:#c084fc; font-weight:700; }
+.comic-code .fn  { color:#67e8f9; }
+.comic-code .cm  { color:#86efac; font-style:italic; }
+.comic-code .str { color:#fbbf24; }
+.comic-code .num { color:#fb923c; }
+.comic-code .ok  { color:#4ade80; font-weight:700; }
+.comic-code .err { color:#f87171; font-weight:700; }
+
+/* ===== SVG SCENE ===== */
+.svg-scene {
+  background:white; border-radius:16px; padding:20px;
+  text-align:center; margin:16px 0;
+  box-shadow:0 3px 16px rgba(0,0,0,0.07);
+  border:2px solid #e0e0e0;
+}
+.svg-scene svg { max-width:100%; height:auto; display:block; margin:0 auto; }
+.svg-caption {
+  font-size:0.82em; color:#666; margin-top:10px;
+  font-style:italic;
+}
+
+/* ===== REAL CODE BLOCK ===== */
+.code-real {
+  background:#0d1117; color:#e6edf3;
+  border-radius:10px; padding:16px 18px 12px;
+  font-family:'Courier New', Consolas, monospace;
+  font-size:0.82em; line-height:1.65; overflow-x:auto;
+  margin:12px 0; border:2px solid #30363d;
+}
+.code-real-label {
+  display:inline-block; background:#238636; color:white;
+  font-family:'Segoe UI',Arial,sans-serif; font-size:0.75em;
+  font-weight:700; padding:2px 10px; border-radius:6px; margin-bottom:10px;
+}
+
+/* ===== SIDEBAR NAVIGATION ===== */
+
+/* Hamburger button — nổi trên header */
+#hamburger {
+  position:fixed; top:12px; left:12px; z-index:400;
+  background:rgba(0,0,0,0.22); border:none; border-radius:8px;
+  padding:7px 12px; cursor:pointer; font-size:1.15em; color:white;
+  line-height:1; transition:background .15s; box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+#hamburger:hover { background:rgba(0,0,0,0.42); }
+
+/* Overlay mờ phía sau sidebar */
+#sidebar-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.38); z-index:300;
+}
+#sidebar-overlay.open { display:block; }
+
+/* Sidebar panel */
+#sidebar {
+  position:fixed; top:0; left:-272px; width:252px; height:100vh;
+  background:white; z-index:350; overflow-y:auto;
+  box-shadow:4px 0 24px rgba(0,0,0,0.18);
+  transition:left .25s cubic-bezier(.4,0,.2,1);
+  border-right:3px solid #f7c948;
+  display:flex; flex-direction:column;
+}
+#sidebar.open { left:0; }
+
+/* Brand header bên trong sidebar */
+.sidebar-brand {
+  background:linear-gradient(135deg,#ff6b35,#f7c948);
+  padding:16px 18px 14px; flex-shrink:0; position:relative;
+}
+.sidebar-brand a {
+  color:white; text-decoration:none; font-weight:700;
+  font-size:1em; line-height:1.45; display:block;
+}
+.sidebar-brand small { font-size:0.75em; opacity:0.88; }
+
+/* Nút đóng (✕) góc trên phải sidebar */
+#sidebar-close {
+  position:absolute; top:10px; right:12px;
+  background:none; border:none; font-size:1.1em;
+  color:white; cursor:pointer; padding:4px 6px; line-height:1;
+  border-radius:6px; transition:background .12s;
+}
+#sidebar-close:hover { background:rgba(0,0,0,0.2); }
+
+/* Links trong sidebar */
+#sidebar a {
+  display:block; padding:9px 16px;
+  color:#333; text-decoration:none; font-size:0.87em;
+  border-left:3px solid transparent;
+  transition:background .12s, border-color .12s, color .12s;
+}
+#sidebar a:hover { background:#fff8f0; border-left-color:#ff6b35; color:#e05a00; }
+#sidebar a.active {
+  background:#fff3e0; border-left-color:#ff6b35;
+  color:#e05a00; font-weight:700;
+}
+
+/* Section headers */
+.nav-section { border-top:1px solid #f0f0f0; margin-top:2px; }
+.nav-section-title {
+  display:block; font-size:0.76em; font-weight:700;
+  color:#e05a00; padding:10px 16px 3px;
+  text-transform:uppercase; letter-spacing:0.04em;
+}
+
+/* Child links (thụt vào) */
+#sidebar a.nav-child {
+  padding-left:28px; color:#555; font-size:0.84em;
+}
+#sidebar a.nav-child:hover { color:#e05a00; }
+#sidebar a.nav-child.active { color:#e05a00; }
+
+/* Mobile: sidebar hẹp hơn */
+@media (max-width:480px) {
+  #sidebar { width:220px; left:-224px; }
+}
+
+/* ===== VERSION SWITCHER (Kids → Adult) ===== */
+#version-switch {
+  position: fixed;
+  top: 10px; right: 16px;
+  z-index: 600;
+  background: #264653;
+  color: white;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.22);
+  transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+#version-switch:hover {
+  background: #1a3040;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+}
+@media (max-width:520px) {
+  /* Mobile: tránh đè hamburger ở top-left */
+  #version-switch { top: auto; bottom: 18px; right: 14px; }
+}

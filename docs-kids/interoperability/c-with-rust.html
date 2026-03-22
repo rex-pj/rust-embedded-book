@@ -11,6 +11,7 @@
   <h1>📚 Dùng Thư Viện C Trong Rust</h1>
   <p class="subtitle">Mượn sách C để đọc trong thế giới Rust</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › <a href="index.html">Tương tác ngôn ngữ</a> › C trong Rust</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -18,6 +19,12 @@
   <div class="fun-box">
     <p>🌡️ Bạn có <span class="hi">thư viện cảm biến nhiệt độ</span> được viết bằng C — đã hoạt động tốt nhiều năm nay. Bạn muốn dùng nó trong project Rust mới của mình.</p>
     <p>Phải làm gì? Viết lại bằng Rust từ đầu? Không cần! Hãy <strong>mượn sách C để đọc trong thế giới Rust</strong>! 📖🦀</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Dùng sách cũ trong thư viện mới</div>
+    <p>Hãy tưởng tượng thư viện của bạn (Rust) muốn dùng một cuốn sách cũ tiếng Pháp (code C). Bạn cần một <strong>người phiên dịch</strong> đứng giữa để "dịch" yêu cầu từ tiếng Việt sang tiếng Pháp và ngược lại!</p>
+    <p><code>extern "C"</code> chính là người phiên dịch đó — nói với Rust rằng "hàm này viết bằng C, tôi sẽ dịch cho"!</p>
   </div>
 
   <div class="analogy-box">
@@ -91,6 +98,19 @@
   <div class="warn-box">
     ⚠️ <strong>unsafe là cần thiết:</strong> Mọi lần gọi hàm C đều cần <code>unsafe { }</code>. Đây là Rust nói: "Tôi không thể kiểm tra code C — bạn phải tự đảm bảo an toàn!" Hãy kiểm tra kỹ tài liệu thư viện C trước khi dùng! 📖
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Gọi hàm C từ Rust</div>
+  <span class="cm">// Khai báo: "Có hàm này trong thư viện C"</span><br>
+  <span class="kw">extern</span> <span class="str">"C"</span> {<br>
+  &nbsp;&nbsp;<span class="kw">fn</span> <span class="fn">ham_viet_bang_c</span>(x: i32) -> i32;<br>
+  }<br><br>
+  <span class="cm">// Gọi hàm C từ Rust:</span><br>
+  <span class="kw">let</span> ket_qua = <span class="kw">unsafe</span> {<br>
+  &nbsp;&nbsp;<span class="fn">ham_viet_bang_c</span>(<span class="kw">42</span>)  <span class="cm">// 📞 Gọi sang C!</span><br>
+  };<br>
+  <span class="cm">// unsafe vì Rust không thể kiểm tra code C</span>
+</div>
 
 <div class="nav-buttons">
   <a href="index.html" class="nav-btn">← Tổng quan</a>

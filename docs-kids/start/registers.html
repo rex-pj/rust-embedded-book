@@ -11,6 +11,7 @@
   <h1>📦 Kho Báu Bộ Nhớ — Registers và Peripherals</h1>
   <p class="subtitle">Cách điều khiển đèn LED, nút bấm và các bộ phận của robot</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › <a href="index.html">Bắt đầu</a> › Thanh ghi bộ nhớ</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -30,6 +31,44 @@
     </ul>
     <p>Gõ cửa đúng phòng (địa chỉ đúng), bạn có thể điều khiển hoặc đọc thông tin từ bộ phận đó! 🏠</p>
   </div>
+
+  <div class="tip-box">
+    💡 <strong>Địa chỉ 0x48000014 là gì?</strong> Đây là cách máy tính đặt số phòng — dùng hệ số 16 thay vì hệ số 10 bình thường. <em>Bạn không cần thuộc lòng!</em> Thư viện PAC đã ghi nhớ hết rồi — bạn chỉ cần viết <code>gpioa.odr</code> là đủ! 😊
+  </div>
+
+<div class="svg-scene">
+<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" width="380" height="200">
+  <!-- Mái nhà -->
+  <polygon points="60,70 190,10 320,70" fill="#e05a00" stroke="#c0392b" stroke-width="2"/>
+  <!-- Thân nhà -->
+  <rect x="70" y="70" width="240" height="100" rx="4" fill="#fff8e1" stroke="#e05a00" stroke-width="2"/>
+  <!-- Phòng đèn LED -->
+  <rect x="90" y="85" width="80" height="35" rx="5" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="130" y="100" text-anchor="middle" font-size="8" fill="white" font-weight="bold" font-family="Arial">💡 Đèn LED</text>
+  <text x="130" y="112" text-anchor="middle" font-size="7" fill="white" font-family="Courier New">0x4800_0018</text>
+  <!-- Phòng nút bấm -->
+  <rect x="210" y="85" width="80" height="35" rx="5" fill="#f7c948" stroke="#e05a00" stroke-width="2"/>
+  <text x="250" y="100" text-anchor="middle" font-size="8" fill="#7f2d00" font-weight="bold" font-family="Arial">🔘 Nút bấm</text>
+  <text x="250" y="112" text-anchor="middle" font-size="7" fill="#7f2d00" font-family="Courier New">0x4800_0014</text>
+  <!-- Phòng cảm biến nhiệt -->
+  <rect x="90" y="130" width="80" height="30" rx="5" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <text x="130" y="145" text-anchor="middle" font-size="8" fill="white" font-weight="bold" font-family="Arial">🌡️ Nhiệt độ</text>
+  <text x="130" y="156" text-anchor="middle" font-size="7" fill="white" font-family="Courier New">0x4002_1000</text>
+  <!-- Phòng UART -->
+  <rect x="210" y="130" width="80" height="30" rx="5" fill="#6c757d" stroke="#495057" stroke-width="2"/>
+  <text x="250" y="145" text-anchor="middle" font-size="8" fill="white" font-weight="bold" font-family="Arial">📡 UART</text>
+  <text x="250" y="156" text-anchor="middle" font-size="7" fill="white" font-family="Courier New">0x4000_4400</text>
+  <!-- Nhãn Robot: đặt trong mái nhà (y=57), tại y=57 mái rộng ~190px → không đè phòng nào -->
+  <text x="190" y="57" text-anchor="middle" font-size="11" fill="white" font-weight="bold" font-family="Arial">🏠 Robot của bạn</text>
+  <!-- Mũi tên chỉ vào -->
+  <text x="40" y="100" text-anchor="middle" font-size="9" fill="#264653" font-family="Arial">Gõ cửa</text>
+  <text x="40" y="112" text-anchor="middle" font-size="9" fill="#264653" font-family="Arial">đúng phòng</text>
+  <path d="M66 100 L88 100" stroke="#264653" stroke-width="2" marker-end="url(#a2)"/>
+  <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#264653"/></marker></defs>
+  <text x="190" y="185" text-anchor="middle" font-size="10" fill="#264653" font-family="Arial">Mỗi bộ phận robot có "địa chỉ phòng" riêng!</text>
+</svg>
+<p class="svg-caption">Địa chỉ hex như số phòng trong ngôi nhà — gõ cửa đúng phòng để điều khiển đúng bộ phận!</p>
+</div>
 
   <h2>🏗️ 4 Tầng Abstraction</h2>
   <p>Giống như bạn có thể điều khiển TV bằng <em>remote</em> hoặc bằng <em>nút bấm trực tiếp</em>, có <strong>4 cách</strong> để điều khiển robot — từ dễ đến khó:</p>
@@ -110,6 +149,17 @@
     </ul>
     <p>Tất cả cùng kết quả: <strong>đèn bật sáng!</strong> ✨</p>
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Bật đèn LED</div>
+  <span class="cm">// Cách 1 — Board crate (siêu dễ!):</span><br>
+  <span class="fn">den_led</span>.<span class="fn">bat</span>()  <span class="ok">✅ Xong!</span><br><br>
+  <span class="cm">// Cách 2 — HAL (rõ ràng hơn):</span><br>
+  <span class="fn">chan_gpio</span>.<span class="fn">set_high</span>()  <span class="ok">✅ Đặt chân lên HIGH</span><br><br>
+  <span class="cm">// Cách 3 — PAC (chi tiết):</span><br>
+  gpioe.bsrr.<span class="fn">write</span>(|w| w.bs8().<span class="fn">set_bit</span>())<br><br>
+  <span class="cm">// Tất cả 3 cách đều cho kết quả giống nhau: Đèn sáng! 💡</span>
+</div>
 
 <div class="nav-buttons">
   <a href="exceptions.html" class="nav-btn">← Exceptions</a>

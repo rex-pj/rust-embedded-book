@@ -11,6 +11,7 @@
   <h1>🤹 Tung Hứng — Làm Nhiều Việc Cùng Lúc!</h1>
   <p class="subtitle">Robot vừa đọc cảm biến, vừa nhấp nháy đèn, vừa gửi dữ liệu...</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › Đồng thời</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -32,7 +33,44 @@
     <p>Người tung hứng giỏi có thể "juggle" 5-7 quả bóng cùng lúc! Thực ra mỗi tay chỉ cầm 1 quả, nhưng chuyển đổi nhanh đến mức trông như làm tất cả cùng lúc. Robot cũng vậy! 🎯</p>
   </div>
 
+<div class="svg-scene">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" width="380" height="210">
+  <!-- Người tung hứng (stickfigure) -->
+  <circle cx="190" cy="130" r="18" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2.5"/>
+  <text x="190" y="135" text-anchor="middle" font-size="12" fill="white" font-family="Arial">😊</text>
+  <!-- Thân -->
+  <line x1="190" y1="148" x2="190" y2="182" stroke="#2a9d8f" stroke-width="3"/>
+  <!-- Tay trái -->
+  <line x1="190" y1="158" x2="150" y2="168" stroke="#2a9d8f" stroke-width="3"/>
+  <!-- Tay phải -->
+  <line x1="190" y1="158" x2="230" y2="168" stroke="#2a9d8f" stroke-width="3"/>
+  <!-- Chân -->
+  <line x1="190" y1="182" x2="168" y2="204" stroke="#2a9d8f" stroke-width="3"/>
+  <line x1="190" y1="182" x2="212" y2="204" stroke="#2a9d8f" stroke-width="3"/>
+  <!-- Bóng 1: Cảm biến -->
+  <circle cx="120" cy="80" r="26" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <text x="120" y="75" text-anchor="middle" font-size="16" font-family="Arial">🌡️</text>
+  <text x="120" y="92" text-anchor="middle" font-size="8" fill="white" font-weight="bold" font-family="Arial">Đọc cảm biến</text>
+  <!-- Bóng 2: LED -->
+  <circle cx="190" cy="50" r="26" fill="#f7c948" stroke="#e05a00" stroke-width="2"/>
+  <text x="190" y="45" text-anchor="middle" font-size="16" font-family="Arial">💡</text>
+  <text x="190" y="62" text-anchor="middle" font-size="8" fill="#7f2d00" font-weight="bold" font-family="Arial">Nhấp nháy LED</text>
+  <!-- Bóng 3: UART -->
+  <circle cx="260" cy="80" r="26" fill="#57cc99" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="260" y="75" text-anchor="middle" font-size="16" font-family="Arial">📡</text>
+  <text x="260" y="92" text-anchor="middle" font-size="8" fill="white" font-weight="bold" font-family="Arial">Gửi dữ liệu</text>
+  <!-- Đường cung -->
+  <path d="M140 88 Q155 40 175 55" stroke="#4ecdc4" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+  <path d="M205 55 Q225 40 242 72" stroke="#4ecdc4" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+  <path d="M246 100 Q220 140 165 168" stroke="#4ecdc4" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+</svg>
+<p class="svg-caption">Robot "tung hứng" nhiều việc cùng lúc — chuyển đổi nhanh đến mức trông như làm cùng lúc!</p>
+</div>
+
   <h2>⚠️ Vấn Đề Nguy Hiểm: Data Race!</h2>
+  <div class="tip-box">
+    💡 <strong>Giải thích đơn giản trước:</strong> Data Race giống như hai bạn cùng viết lên một tờ giấy, mỗi người viết một nửa câu. Nếu ai đó đọc tờ giấy đúng lúc đang viết dở — họ sẽ đọc được câu bị hỏng! Robot cũng vậy khi dữ liệu bị interrupt "chen ngang" giữa chừng.
+  </div>
   <div class="warn-box">
     ⚠️ <strong>Chuyện gì xảy ra nếu interrupt gõ vai robot giữa chừng?</strong>
   </div>
@@ -47,6 +85,33 @@
     </ol>
     <p>🚨 <strong>Data Race!</strong> Dữ liệu bị đọc sai vì interrupt cắt ngang giữa chừng! Rất nguy hiểm! 😱</p>
   </div>
+
+  <div class="svg-scene">
+<svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" width="380" height="160">
+  <!-- Lọ bánh quy -->
+  <rect x="155" y="50" width="70" height="80" rx="12" fill="#fff3cd" stroke="#f7c948" stroke-width="3"/>
+  <rect x="148" y="42" width="84" height="20" rx="6" fill="#f7c948" stroke="#e05a00" stroke-width="2"/>
+  <text x="190" y="91" text-anchor="middle" font-size="24" font-family="Arial">🍪</text>
+  <text x="190" y="118" text-anchor="middle" font-size="9" fill="#7f2d00" font-weight="bold" font-family="Arial">Biến chia sẻ</text>
+  <text x="190" y="140" text-anchor="middle" font-size="9" fill="#7f2d00" font-family="Arial">(dữ liệu dùng chung)</text>
+  <!-- Tay 1 từ trái - code chính -->
+  <path d="M50 80 L148 80" stroke="#4ecdc4" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="50" cy="80" r="15" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="50" y="84" text-anchor="middle" font-size="9" fill="white" font-weight="bold" font-family="Arial">Main</text>
+  <text x="50" y="108" text-anchor="middle" font-size="8" fill="#2a9d8f" font-family="Arial">Code chính</text>
+  <text x="50" y="120" text-anchor="middle" font-size="8" fill="#2a9d8f" font-family="Arial">đang viết...</text>
+  <!-- Tay 2 từ phải - interrupt -->
+  <path d="M330 80 L232 80" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="330" cy="80" r="15" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <text x="330" y="84" text-anchor="middle" font-size="9" fill="white" font-weight="bold" font-family="Arial">IRQ</text>
+  <text x="330" y="108" text-anchor="middle" font-size="8" fill="#c1121f" font-family="Arial">Interrupt đến</text>
+  <text x="330" y="120" text-anchor="middle" font-size="8" fill="#c1121f" font-family="Arial">đọc giữa chừng!</text>
+  <!-- Dấu chấm than -->
+  <text x="190" y="28" text-anchor="middle" font-size="22" font-family="Arial">⚠️</text>
+  <text x="190" y="15" text-anchor="middle" font-size="9" fill="#e63946" font-weight="bold" font-family="Arial">Data Race!</text>
+</svg>
+<p class="svg-caption">Data Race: code chính đang viết dữ liệu thì interrupt chen vào đọc giữa chừng — đọc được dữ liệu sai!</p>
+</div>
 
   <h2>🛡️ Giải Pháp Rust</h2>
   <div class="card-grid">
@@ -83,6 +148,17 @@
   <div class="tip-box">
     💡 <strong>Quy tắc vàng:</strong> Critical section càng ngắn càng tốt! Tắt interrupt lâu → robot có thể bỏ lỡ các tín hiệu quan trọng. Chỉ tắt đủ thời gian để làm việc cần làm, rồi bật lại ngay! ⚡
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Critical Section</div>
+  <span class="cm">// 🚫 Treo biển "Không làm phiền":</span><br>
+  <span class="fn">treo_bien_khong_lam_phien</span>() {  <span class="cm">// tắt interrupt</span><br>
+  &nbsp;&nbsp;<span class="cm">// Trong đây, KHÔNG AI được "gõ vai" robot</span><br>
+  &nbsp;&nbsp;bien_dung_chung = gia_tri_moi;  <span class="cm">// ghi an toàn!</span><br>
+  }<br>
+  <span class="fn">bo_bien_xuong</span>()  <span class="cm">// bật interrupt lại</span><br><br>
+  <span class="cm">// Rust dùng cortex_m::interrupt::free() cho việc này!</span>
+</div>
 
 <div class="nav-buttons">
   <a href="../portability/index.html" class="nav-btn">← Tính di động</a>

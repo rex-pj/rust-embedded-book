@@ -11,6 +11,7 @@
   <h1>🤝 Hai Ngôn Ngữ Hợp Tác — Interoperability</h1>
   <p class="subtitle">Rust và C làm việc cùng nhau</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › Tương tác ngôn ngữ</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -26,6 +27,41 @@
     <p>Bạn nói tiếng Việt, bạn của bạn nói tiếng Nhật. Hai bạn vẫn có thể làm việc cùng nhau nếu có <strong>phiên dịch viên</strong>!</p>
     <p><strong>FFI (Foreign Function Interface)</strong> là phiên dịch viên giữa Rust và C — hai ngôn ngữ nói chuyện với nhau qua cầu nối này! 🌉</p>
   </div>
+
+  <div class="svg-scene">
+<svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" width="380" height="160">
+  <!-- Robot Rust -->
+  <rect x="30" y="55" width="50" height="60" rx="8" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <rect x="38" y="33" width="34" height="26" rx="6" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <circle cx="49" cy="44" r="5" fill="white"/><circle cx="49" cy="44" r="2.5" fill="#264653"/>
+  <circle cx="63" cy="44" r="5" fill="white"/><circle cx="63" cy="44" r="2.5" fill="#264653"/>
+  <path d="M47 56 Q55 62 63 56" stroke="#264653" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <text x="55" y="20" text-anchor="middle" font-size="22" font-family="Arial">🦀</text>
+  <text x="55" y="132" text-anchor="middle" font-size="12" fill="#2a9d8f" font-weight="bold" font-family="Arial">Rust</text>
+  <!-- Tay phải robot Rust — kéo dài đến hộp FFI (x=80→160) -->
+  <rect x="80" y="72" width="80" height="10" rx="5" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Hộp FFI ở giữa -->
+  <rect x="160" y="66" width="60" height="22" rx="8" fill="#f7c948" stroke="#e05a00" stroke-width="2"/>
+  <text x="190" y="81" text-anchor="middle" font-size="12" font-family="Arial">🤝 FFI</text>
+  <!-- Tay trái robot C — kéo dài từ hộp FFI đến thân robot (x=220→300) -->
+  <rect x="220" y="72" width="80" height="10" rx="5" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <!-- Robot C -->
+  <rect x="300" y="55" width="50" height="60" rx="8" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <rect x="308" y="33" width="34" height="26" rx="6" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <circle cx="319" cy="44" r="5" fill="white"/><circle cx="319" cy="44" r="2.5" fill="#264653"/>
+  <circle cx="333" cy="44" r="5" fill="white"/><circle cx="333" cy="44" r="2.5" fill="#264653"/>
+  <path d="M317 56 Q325 62 333 56" stroke="#264653" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <text x="325" y="20" text-anchor="middle" font-size="22" font-family="Arial">⚙️</text>
+  <text x="325" y="132" text-anchor="middle" font-size="12" fill="#c1121f" font-weight="bold" font-family="Arial">C</text>
+  <!-- Chân -->
+  <rect x="42" y="115" width="12" height="14" rx="3" fill="#2a9d8f"/>
+  <rect x="56" y="115" width="12" height="14" rx="3" fill="#2a9d8f"/>
+  <rect x="312" y="115" width="12" height="14" rx="3" fill="#c1121f"/>
+  <rect x="326" y="115" width="12" height="14" rx="3" fill="#c1121f"/>
+  <text x="190" y="155" text-anchor="middle" font-size="11" fill="#264653" font-family="Arial">FFI = "Cầu nối" giữa Rust và C!</text>
+</svg>
+<p class="svg-caption">FFI (Foreign Function Interface) là "cầu nối" giúp Rust và C giao tiếp với nhau!</p>
+</div>
 
   <h2>🌉 FFI — Cầu Nối Giữa Hai Thế Giới</h2>
   <div class="fun-box">

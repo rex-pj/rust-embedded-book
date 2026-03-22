@@ -12,9 +12,51 @@
   <h1>🤖 Khám phá Thế giới Robot với Rust!</h1>
   <p class="subtitle">Học lập trình cho máy móc thông minh — thật dễ và vui!</p>
   <span class="breadcrumb">📚 Dành cho các bạn 6–10 tuổi</span>
+  <br><span class="difficulty-badge level-easy">🟢 Dễ — Bắt đầu tại đây!</span>
 </header>
 
 <main>
+
+<div class="svg-scene">
+<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" width="400" height="180">
+  <!-- Robot thân -->
+  <rect x="60" y="60" width="50" height="60" rx="8" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Robot đầu -->
+  <rect x="68" y="36" width="34" height="28" rx="6" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Robot mắt -->
+  <circle cx="79" cy="48" r="5" fill="white"/><circle cx="79" cy="48" r="2.5" fill="#264653"/>
+  <circle cx="91" cy="48" r="5" fill="white"/><circle cx="91" cy="48" r="2.5" fill="#264653"/>
+  <!-- Robot miệng cười -->
+  <path d="M77 58 Q85 64 93 58" stroke="#264653" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Robot tay trái -->
+  <rect x="38" y="68" width="22" height="10" rx="5" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Robot tay phải -->
+  <rect x="110" y="68" width="22" height="10" rx="5" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Robot chân -->
+  <rect x="70" y="120" width="14" height="18" rx="4" fill="#2a9d8f"/>
+  <rect x="86" y="120" width="14" height="18" rx="4" fill="#2a9d8f"/>
+  <!-- Đèn giao thông -->
+  <rect x="180" y="30" width="36" height="90" rx="8" fill="#333"/>
+  <circle cx="198" cy="52" r="11" fill="#e63946"/>
+  <circle cx="198" cy="75" r="11" fill="#f7c948"/>
+  <circle cx="198" cy="98" r="11" fill="#57cc99"/>
+  <rect x="193" y="120" width="10" height="30" fill="#555"/>
+  <!-- Label đèn -->
+  <text x="198" y="165" text-anchor="middle" font-size="11" fill="#555" font-family="Arial">Đèn giao thông</text>
+  <!-- Remote TV -->
+  <rect x="290" y="50" width="50" height="80" rx="10" fill="#6c757d" stroke="#495057" stroke-width="2"/>
+  <rect x="300" y="62" width="30" height="18" rx="4" fill="#90e0ef"/>
+  <circle cx="305" cy="96" r="6" fill="#e63946"/><circle cx="320" cy="96" r="6" fill="#57cc99"/>
+  <circle cx="305" cy="112" r="6" fill="#f7c948"/><circle cx="320" cy="112" r="6" fill="#aaa"/>
+  <text x="315" y="148" text-anchor="middle" font-size="11" fill="#555" font-family="Arial">Điều khiển TV</text>
+  <!-- mũi tên từ robot -->
+  <path d="M135 85 L175 85" stroke="#f7c948" stroke-width="3" marker-end="url(#arr)" fill="none"/>
+  <path d="M245 85 L285 85" stroke="#f7c948" stroke-width="3" fill="none"/>
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f7c948"/></marker></defs>
+  <text x="85" y="155" text-anchor="middle" font-size="12" fill="#e05a00" font-weight="bold" font-family="Arial">Robot điều khiển tất cả!</text>
+</svg>
+<p class="svg-caption">Hệ thống nhúng là "não" bên trong mọi đồ vật thông minh xung quanh bạn!</p>
+</div>
 
   <!-- ===== INTRO ===== -->
   <div class="fun-box">
@@ -216,7 +258,7 @@
   </table>
 
   <!-- ===== QUIZ ===== -->
-  <h2>🧠 Kiểm tra nhanh — Di chuột vào để xem đáp án!</h2>
+  <h2>🧠 Kiểm tra nhanh — Bấm vào để xem đáp án!</h2>
 
   <div class="quiz-box">
     <div class="quiz-title">🎯 Bạn có nhớ không? (Di chuột hoặc chạm vào câu hỏi)</div>
@@ -241,7 +283,23 @@
       <div class="answer">✅ HAL giống như "bộ điều khiển từ xa" — nó giúp bạn điều khiển phần cứng mà không cần biết hết mọi chi tiết kỹ thuật bên trong chip!</div>
     </div>
 
-    <p class="quiz-hint">💡 Mẹo: Di chuột vào từng câu hỏi để thấy đáp án!</p>
+    <p class="quiz-hint">💡 Mẹo: Bấm/chạm vào từng câu hỏi để thấy đáp án!</p>
+  </div>
+
+  <!-- ===== TRY IT ===== -->
+  <h2>🧪 Thử ngay — Không cần cài đặt gì!</h2>
+  <div class="try-it-box">
+    <div class="try-it-title">🚀 Muốn thử viết Rust ngay bây giờ?</div>
+    <p>Bạn có thể viết và chạy code Rust <strong>ngay trên trình duyệt</strong> — không cần cài đặt gì cả!</p>
+    <a href="https://play.rust-lang.org/" class="try-btn" target="_blank" rel="noopener">
+      🦀 Rust Playground — thử code Rust
+    </a>
+    <a href="https://wokwi.com/" class="try-btn" target="_blank" rel="noopener">
+      🤖 Wokwi — mô phỏng mạch điện robot
+    </a>
+    <p style="margin-top:10px; font-size:0.88em; color:#555;">
+      💡 <strong>Gợi ý cho bố mẹ:</strong> Wokwi là trình mô phỏng robot/Arduino miễn phí trên web — trẻ có thể thấy đèn LED nhấp nháy thật sự mà không cần mua linh kiện!
+    </p>
   </div>
 
   <!-- ===== CTA ===== -->

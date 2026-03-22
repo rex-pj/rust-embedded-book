@@ -11,6 +11,7 @@
   <h1>🦀 Đưa Rust Vào Dự Án C</h1>
   <p class="subtitle">Viết một phần bằng Rust, phần còn lại vẫn là C</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › <a href="index.html">Tương tác ngôn ngữ</a> › Rust trong C</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -18,6 +19,12 @@
   <div class="fun-box">
     <p>🏢 Công ty bạn có một dự án firmware lớn viết bằng C — hàng chục nghìn dòng code, đã hoạt động nhiều năm. Không thể viết lại hết từ đầu!</p>
     <p>Nhưng bạn muốn dùng Rust cho phần mới — <span class="hi">an toàn hơn</span>, ít bug hơn. Giải pháp: <strong>viết phần mới bằng Rust, phần cũ vẫn là C</strong>! 🤝</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="title">🌟 Ví von: Xuất khẩu sách sang thư viện khác</div>
+    <p>Lần này, thư viện Rust muốn <strong>cho người khác mượn sách của mình</strong>! Để người nói tiếng Pháp (code C) đọc được, sách phải được "dịch ra" theo cách người Pháp hiểu.</p>
+    <p><code>#[no_mangle]</code> và <code>extern "C"</code> giúp hàm Rust "xuất khẩu" được để C gọi tới!</p>
   </div>
 
   <div class="analogy-box">
@@ -99,6 +106,17 @@
   <div class="tip-box">
     💡 <strong>Lời khuyên:</strong> Bắt đầu bằng các phần code <em>tự chứa</em> (pure functions, không phụ thuộc vào global state) — dễ nhất để chuyển sang Rust và cũng dễ test nhất! 🎯
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Hàm Rust cho C gọi</div>
+  <span class="cm">// Xuất hàm để C có thể gọi:</span><br>
+  <span class="kw">#[no_mangle]</span>  <span class="cm">// Giữ nguyên tên hàm!</span><br>
+  <span class="kw">pub extern</span> <span class="str">"C"</span> <span class="kw">fn</span> <span class="fn">ham_rust_cho_c</span>(x: i32) -> i32 {<br>
+  &nbsp;&nbsp;x * <span class="kw">2</span>  <span class="cm">// Tính toán bằng Rust, an toàn!</span><br>
+  }<br><br>
+  <span class="cm">// C gọi sang Rust:</span><br>
+  <span class="cm">// int ket_qua = ham_rust_cho_c(21); // = 42</span>
+</div>
 
 <div class="nav-buttons">
   <a href="c-with-rust.html" class="nav-btn">← C trong Rust</a>

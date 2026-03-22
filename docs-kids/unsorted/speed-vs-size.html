@@ -11,6 +11,7 @@
   <h1>⚖️ Nhanh Hay Nhỏ Gọn?</h1>
   <p class="subtitle">Tối ưu hóa robot: chọn tốc độ hay tiết kiệm chỗ?</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › Tốc độ vs Kích thước</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -19,6 +20,10 @@
     <p>🤖 Robot STM32F303 của bạn chỉ có <span class="hi">256KB Flash</span>! Nếu code quá lớn, nó không vừa — robot không chạy được!</p>
     <p>Nhưng đôi khi bạn lại cần robot <strong>chạy nhanh nhất có thể</strong> — ví dụ như xử lý tín hiệu thời gian thực!</p>
     <p>Vậy phải chọn: <strong>nhanh</strong> hay <strong>nhỏ gọn</strong>? 🤔</p>
+  </div>
+
+  <div class="tip-box">
+    💡 <strong>256KB Flash là bao nhiêu?</strong> Khoảng bằng 2-3 ảnh chụp điện thoại! Robot nhỏ có rất ít bộ nhớ — code của bạn phải vừa trong đó. Nếu code quá to → robot không chạy được! 📱
   </div>
 
   <div class="analogy-box">
@@ -30,6 +35,73 @@
       <li>📝 <strong>Không tối ưu</strong>: như bản nháp chưa gọn — to nhưng dễ đọc!</li>
     </ul>
   </div>
+
+  <div class="svg-scene">
+<!--
+  Layout plan (viewBox 0 0 500 310):
+  LEFT column center x=85:
+    label box  y=18..93  (h=75)
+    car emoji  baseline y=155  (font 42 → top ≈ y=113, gap from box=20px)
+    red plate  cy=205 ry=20   (top y=185, gap from car=30px)
+    "⬇ Nặng"  y=237         (gap from plate bottom=12px)
+  RIGHT column center x=415:
+    label box  y=8..83   (h=75)
+    feather    baseline y=130  (font 38 → top ≈ y=92, gap from box=9px)
+    green plate cy=168 ry=20  (top y=148, gap from feather=18px)
+    "⬆ Nhẹ"  y=200         (gap from plate bottom=12px)
+  BEAM: (85,205)→(415,168)
+    at x=250: y = 205+(250-85)*(168-205)/(415-85) = 205+165*(-37)/330 = 205-18.5 = 186.5 ≈ 187
+  FULCRUM: circle (250,187)
+  STAND: polygon 234,258 266,258 250,187
+  BASE: rect x=217 y=258 w=66 h=14
+  QUESTION: y=295  (15px from bottom 310)
+-->
+<svg viewBox="0 0 500 310" xmlns="http://www.w3.org/2000/svg" width="500" height="310">
+
+  <!-- ===== TRÁI: TỐC ĐỘ CAO (nặng → cân xuống thấp) ===== -->
+  <rect x="20" y="18" width="130" height="75" rx="12" fill="#fee2e2" stroke="#e63946" stroke-width="2.5"/>
+  <text x="85" y="40" text-anchor="middle" font-size="13" fill="#c1121f" font-weight="bold" font-family="Arial">⚡ TỐC ĐỘ CAO</text>
+  <text x="85" y="58" text-anchor="middle" font-size="10" fill="#c1121f" font-family="Arial">opt-level = 3</text>
+  <text x="85" y="74" text-anchor="middle" font-size="10" fill="#666" font-family="Arial">Code to hơn 📦</text>
+
+  <!-- Xe đua (trọng vật nặng) -->
+  <text x="85" y="155" text-anchor="middle" font-size="42" font-family="Arial">🏎️</text>
+
+  <!-- Đĩa cân bên trái (thấp hơn = nặng hơn) -->
+  <ellipse cx="85" cy="205" rx="68" ry="20" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+  <!-- Nhãn bên dưới đĩa -->
+  <text x="85" y="237" text-anchor="middle" font-size="11" fill="#c1121f" font-weight="bold" font-family="Arial">⬇ Nặng hơn</text>
+
+  <!-- ===== PHẢI: NHỎ GỌN (nhẹ → cân lên cao) ===== -->
+  <rect x="350" y="8" width="130" height="75" rx="12" fill="#dcfce7" stroke="#57cc99" stroke-width="2.5"/>
+  <text x="415" y="30" text-anchor="middle" font-size="13" fill="#15803d" font-weight="bold" font-family="Arial">🎒 NHỎ GỌN</text>
+  <text x="415" y="48" text-anchor="middle" font-size="10" fill="#15803d" font-family="Arial">opt-level = "z"</text>
+  <text x="415" y="64" text-anchor="middle" font-size="10" fill="#666" font-family="Arial">Code nhỏ hơn 📨</text>
+
+  <!-- Lông vũ (trọng vật nhẹ) -->
+  <text x="415" y="130" text-anchor="middle" font-size="38" font-family="Arial">🪶</text>
+
+  <!-- Đĩa cân bên phải (cao hơn = nhẹ hơn) -->
+  <ellipse cx="415" cy="168" rx="62" ry="20" fill="#57cc99" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Nhãn bên dưới đĩa -->
+  <text x="415" y="200" text-anchor="middle" font-size="11" fill="#15803d" font-weight="bold" font-family="Arial">⬆ Nhẹ hơn</text>
+
+  <!-- ===== ĐÒN CÂN (beam) ===== -->
+  <!-- Beam: (85,205)→(415,168); tại x=250: y≈187 → khớp với fulcrum -->
+  <line x1="85" y1="205" x2="415" y2="168" stroke="#4ecdc4" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Điểm tựa -->
+  <circle cx="250" cy="187" r="9" fill="#f7c948" stroke="#e05a00" stroke-width="2.5"/>
+
+  <!-- ===== GIÁ ĐỠ ===== -->
+  <polygon points="234,258 266,258 250,187" fill="#264653"/>
+  <rect x="217" y="258" width="66" height="14" rx="5" fill="#264653"/>
+
+  <!-- ===== CÂU HỎI ===== -->
+  <text x="250" y="292" text-anchor="middle" font-size="13" fill="#264653" font-weight="bold" font-family="Arial">Chọn: ⚡ Nhanh hơn hay 🎒 Nhỏ gọn hơn?</text>
+</svg>
+<p class="svg-caption">Giống như cân bập bênh — muốn nhanh hơn thì code lớn hơn, muốn nhỏ hơn thì hy sinh một chút tốc độ!</p>
+</div>
 
   <h2>🎚️ Các Mức Tối Ưu Hóa</h2>
   <table class="kids-table">
@@ -123,6 +195,17 @@
     <p>Thêm <code>lto = true</code> vào <code>[profile.release]</code> — xong! Compiler sẽ tối ưu xuyên suốt toàn bộ code, loại bỏ tất cả hàm không được dùng! 🗑️✨</p>
     <p>Đây là loại "phép thuật" compiler hiếm gặp nhưng rất hiệu quả! 🧙‍♂️</p>
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Cài đặt tối ưu trong Cargo.toml</div>
+  <span class="cm"># Khi phát triển — không tối ưu, dễ debug:</span><br>
+  [profile.dev]<br>
+  opt-level = <span class="kw">0</span>  <span class="cm"># 🐢 Chậm nhưng dễ tìm lỗi</span><br><br>
+  <span class="cm"># Khi ra sản phẩm — tối ưu tối đa:</span><br>
+  [profile.release]<br>
+  opt-level = <span class="str">"z"</span>  <span class="cm"># 🚀 Nhỏ nhất có thể!</span><br>
+  lto = <span class="kw">true</span>        <span class="cm"># ✨ Tối ưu toàn bộ</span>
+</div>
 
   <div class="tip-box">
     💡 <strong>Quy trình khuyến nghị:</strong><br>

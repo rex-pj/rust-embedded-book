@@ -11,6 +11,7 @@
   <h1>⚡ Exceptions — Tín Hiệu Khẩn Cấp!</h1>
   <p class="subtitle">Khi robot phải dừng lại và xử lý việc quan trọng</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › <a href="index.html">Bắt đầu</a> › Exceptions</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -25,6 +26,36 @@
     <p>Exception giống như đèn đỏ trên xa lộ — dù xe đang chạy nhanh đến đâu, gặp đèn đỏ là phải dừng ngay! Xử lý xong (đèn xanh), xe chạy tiếp. Robot cũng vậy: đang làm gì thì làm, gặp exception là phải xử lý ngay! 🚗🔴</p>
   </div>
 
+<div class="svg-scene">
+<svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg" width="380" height="170">
+  <!-- Robot đang làm việc -->
+  <rect x="60" y="70" width="50" height="60" rx="8" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <rect x="68" y="46" width="34" height="28" rx="6" fill="#4ecdc4" stroke="#2a9d8f" stroke-width="2"/>
+  <!-- Mắt nhìn xuống (đang làm việc) -->
+  <ellipse cx="79" cy="57" rx="5" ry="4" fill="white"/><circle cx="79" cy="59" r="2.5" fill="#264653"/>
+  <ellipse cx="91" cy="57" rx="5" ry="4" fill="white"/><circle cx="91" cy="59" r="2.5" fill="#264653"/>
+  <!-- Robot đang gõ bàn phím -->
+  <rect x="50" y="135" width="80" height="15" rx="4" fill="#f7c948" stroke="#e05a00" stroke-width="1.5"/>
+  <text x="90" y="146" text-anchor="middle" font-size="8" fill="#7f2d00" font-family="Arial">⌨️ đang làm việc...</text>
+  <rect x="70" y="130" width="14" height="10" rx="3" fill="#2a9d8f"/>
+  <rect x="86" y="130" width="14" height="10" rx="3" fill="#2a9d8f"/>
+  <!-- Bàn tay gõ vai từ phải -->
+  <path d="M230 90 Q200 80 135 88" stroke="#e63946" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- Ngón tay -->
+  <circle cx="135" cy="88" r="8" fill="#ffdbac" stroke="#d4956a" stroke-width="2"/>
+  <!-- Nguồn tín hiệu bên phải -->
+  <rect x="235" y="65" width="100" height="55" rx="10" fill="#fee2e2" stroke="#e63946" stroke-width="2"/>
+  <text x="285" y="88" text-anchor="middle" font-size="22" font-family="Arial">🔔</text>
+  <text x="285" y="105" text-anchor="middle" font-size="10" fill="#c1121f" font-weight="bold" font-family="Arial">Interrupt!</text>
+  <!-- Speech bubbles -->
+  <rect x="145" y="35" width="90" height="28" rx="8" fill="#f7c948" stroke="#e05a00" stroke-width="2"/>
+  <polygon points="165,63 175,68 185,63" fill="#f7c948"/>
+  <text x="190" y="50" text-anchor="middle" font-size="9" fill="#7f2d00" font-weight="bold" font-family="Arial">⚡ Việc khẩn cấp!</text>
+  <text x="190" y="62" text-anchor="middle" font-size="9" fill="#7f2d00" font-family="Arial">Dừng lại xử lý!</text>
+</svg>
+<p class="svg-caption">Interrupt giống ai đó gõ vai robot — robot phải dừng lại, xử lý việc khẩn, rồi mới làm tiếp!</p>
+</div>
+
   <h2>⏰ SysTick — Đồng Hồ Hẹn Giờ</h2>
   <div class="fun-box">
     <p>🕐 <strong>SysTick</strong> là exception phổ biến nhất! Nó như đồng hồ hẹn giờ tích hợp trong chip — cứ sau mỗi khoảng thời gian định sẵn, nó "gõ vai" robot một cái!</p>
@@ -38,6 +69,9 @@
   </div>
 
   <h2>🔥 HardFault — Sự Cố Nghiêm Trọng</h2>
+  <div class="tip-box">
+    💡 <strong>HardFault dễ hiểu:</strong> Giống như robot đang đi và bước vào vùng đất cấm — nó phải dừng ngay! Thường xảy ra khi code có lỗi nghiêm trọng. Rust giúp ngăn hầu hết các lỗi này ngay khi viết code! 🛡️
+  </div>
   <div class="warn-box">
     ⚠️ <strong>HardFault</strong> xảy ra khi robot làm điều gì đó <strong>sai nghiêm trọng</strong>:
     <ul>
@@ -59,6 +93,18 @@
     </ol>
     <p>Kết quả: terminal hiển thị "SysTick! 1", "SysTick! 2", "SysTick! 3"... 🎊</p>
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — SysTick Handler</div>
+  <span class="cm">// Cứ mỗi giây, chip TỰ ĐỘNG gọi hàm này:</span><br>
+  <span class="kw">fn</span> <span class="fn">khi_dong_ho_gõ_vai</span>() {<br>
+  &nbsp;&nbsp;dem_giay += <span class="kw">1</span>;  <span class="cm">// tăng đếm lên 1</span><br>
+  &nbsp;&nbsp;<span class="fn">in_ra</span>(<span class="str">"Đã qua {} giây!"</span>, dem_giay);<br>
+  }<br><br>
+  <span class="cm">// Kết quả trên màn hình:</span><br>
+  <span class="cm">// Đã qua 1 giây!</span><br>
+  <span class="cm">// Đã qua 2 giây! ...</span>
+</div>
 
   <h2>📝 Cách viết Exception Handler</h2>
   <div class="analogy-box">

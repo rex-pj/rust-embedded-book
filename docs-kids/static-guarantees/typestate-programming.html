@@ -11,6 +11,7 @@
   <h1>🔑 Typestate — Ổ Khóa Thông Minh!</h1>
   <p class="subtitle">Mỗi trạng thái có chìa khóa riêng — không thể dùng sai!</p>
   <span class="breadcrumb"><a href="../index.html">🏠 Trang chủ</a> › <a href="index.html">Bảo đảm tĩnh</a> › Typestate</span>
+  <br><span class="difficulty-badge level-hard">🔴 Khó — Bố mẹ giúp đỡ nhé!</span>
 </header>
 <main>
 
@@ -25,6 +26,44 @@
     <div class="title">🌟 Ví von: Bộ chìa khóa</div>
     <p>Bạn có bộ chìa khóa — mỗi ổ khóa chỉ mở được đúng một loại chìa. Không thể dùng chìa phòng ngủ để mở cửa garage!</p>
     <p>Typestate cũng vậy: kiểu <code>LED&lt;Off&gt;</code> chỉ có method <code>turn_on()</code>. Kiểu <code>LED&lt;On&gt;</code> chỉ có method <code>turn_off()</code>. Không thể gọi sai method! 🗝️</p>
+  </div>
+
+  <div class="svg-scene">
+<svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg" width="380" height="170">
+  <!-- Đèn TẮT bên trái -->
+  <circle cx="80" cy="65" r="35" fill="#555" stroke="#333" stroke-width="3"/>
+  <circle cx="80" cy="65" r="20" fill="#333"/>
+  <text x="80" y="72" text-anchor="middle" font-size="18" font-family="Arial">💡</text>
+  <text x="80" y="108" text-anchor="middle" font-size="10" fill="#555" font-weight="bold" font-family="Arial">Đèn TẮT</text>
+  <text x="80" y="120" text-anchor="middle" font-size="9" fill="#555" font-family="Courier New">LED&lt;TatDen&gt;</text>
+  <!-- Chìa khóa turn_on -->
+  <rect x="42" y="135" width="75" height="22" rx="8" fill="#57cc99" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="79" y="150" text-anchor="middle" font-size="9" fill="white" font-weight="bold" font-family="Courier New">bat_den() ✅</text>
+  <!-- Mũi tên sang phải -->
+  <path d="M120 65 L180 65" stroke="#f7c948" stroke-width="3" marker-end="url(#a3)"/>
+  <text x="150" y="58" text-anchor="middle" font-size="9" fill="#e05a00" font-family="Arial">bat_den()</text>
+  <!-- Đèn BẬT bên phải -->
+  <circle cx="230" cy="65" r="35" fill="#f7c948" stroke="#e05a00" stroke-width="3"/>
+  <circle cx="230" cy="65" r="20" fill="#fff3cd"/>
+  <text x="230" y="72" text-anchor="middle" font-size="18" font-family="Arial">💡</text>
+  <text x="230" y="108" text-anchor="middle" font-size="10" fill="#e05a00" font-weight="bold" font-family="Arial">Đèn BẬT</text>
+  <text x="230" y="120" text-anchor="middle" font-size="9" fill="#e05a00" font-family="Courier New">LED&lt;BatDen&gt;</text>
+  <!-- Chìa khóa turn_off -->
+  <rect x="192" y="135" width="75" height="22" rx="8" fill="#57cc99" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="229" y="150" text-anchor="middle" font-size="9" fill="white" font-weight="bold" font-family="Courier New">tat_den() ✅</text>
+  <!-- bat_den bị chặn — box h=66 để chứa hết 4 dòng text (y=58/73/85/96, box bottom y=108) -->
+  <rect x="302" y="42" width="66" height="66" rx="8" fill="#fee2e2" stroke="#e63946" stroke-width="2"/>
+  <text x="335" y="58" text-anchor="middle" font-size="9" fill="#c1121f" font-family="Courier New">bat_den()</text>
+  <text x="335" y="73" text-anchor="middle" font-size="14" font-family="Arial">❌</text>
+  <text x="335" y="87" text-anchor="middle" font-size="8" fill="#c1121f" font-family="Arial">Compiler</text>
+  <text x="335" y="100" text-anchor="middle" font-size="8" fill="#c1121f" font-family="Arial">báo lỗi!</text>
+  <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f7c948"/></marker></defs>
+</svg>
+<p class="svg-caption">Mỗi trạng thái chỉ có "chìa khóa" phù hợp — không thể gọi sai hàm, compiler ngăn lại ngay!</p>
+</div>
+
+  <div class="tip-box">
+    💡 <strong>Đọc code dưới đây:</strong> <code>Den&lt;TatDen&gt;</code> nghĩa là "cái đèn đang ở trạng thái TẮT". <code>Den&lt;BatDen&gt;</code> nghĩa là "cái đèn đang ở trạng thái BẬT". Dấu <code>&lt; &gt;</code> như cái nhãn dán vào đèn để biết nó đang ở trạng thái nào!
   </div>
 
   <h2>💡 Ví Dụ Đơn Giản: Đèn</h2>
@@ -84,6 +123,16 @@
     <code>// input_pin.is_high() → ❌ Lỗi compile! input_pin đã không còn!</code></p>
     <p>Điều này <strong>đảm bảo</strong> không ai có thể giữ hai tham chiếu đến cùng pin ở hai trạng thái khác nhau! 🛡️</p>
   </div>
+
+  <div class="comic-code">
+  <div class="comic-code-label">🤖 Pseudo-code vui vẻ — Typestate</div>
+  <span class="cm">// Đèn TẮT chỉ có thể BẬT, không thể TẮT lần nữa:</span><br>
+  den_tat.<span class="fn">bat_den</span>()   <span class="ok">✅ Hợp lệ!</span><br>
+  den_tat.<span class="fn">tat_den</span>()   <span class="err">❌ Lỗi biên dịch! Đèn đã tắt rồi!</span><br><br>
+  <span class="cm">// Sau khi bật, đèn trở thành LED&lt;BatDen&gt;:</span><br>
+  den_bat.<span class="fn">tat_den</span>()   <span class="ok">✅ Hợp lệ!</span><br>
+  den_bat.<span class="fn">bat_den</span>()   <span class="err">❌ Lỗi biên dịch! Đèn đã bật rồi!</span>
+</div>
 
   <div class="tip-box">
     💡 <strong>Builder Pattern là Typestate đơn giản nhất!</strong><br>
