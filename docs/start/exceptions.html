@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ngoại lệ (Exceptions) - Rust Embedded Book</title>
+<title>Exceptions - Rust Embedded Book</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -31,31 +31,31 @@
       <a href="hardware.html">Phần cứng thực</a>
       <a href="semihosting.html">Semihosting</a>
       <a href="panicking.html">Panicking</a>
-      <a href="exceptions.html" class="active">Ngoại lệ (Exceptions)</a>
-      <a href="registers.html">Thanh ghi bộ nhớ</a>
+      <a href="exceptions.html" class="active">Exceptions</a>
+      <a href="registers.html">Memory-mapped Registers</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề nâng cao</div>
-      <a href="../portability/index.html">Tính di động</a>
-      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../portability/index.html">Portability</a>
+      <a href="../concurrency/index.html">Concurrency</a>
       <a href="../collections/index.html">Collections</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <div class="nav-section-title">Design &amp; Guarantees</div>
       <a href="../design-patterns/index.html">Design Patterns</a>
-      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/index.html">Static Guarantees</a>
       <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
       <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <div class="nav-section-title">Interoperability</div>
       <a href="../interoperability/index.html">Tổng quan</a>
-      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
-      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+      <a href="../interoperability/c-with-rust.html">C with Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust with C</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề khác</div>
-      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+      <a href="../unsorted/speed-vs-size.html">Speed vs Size</a>
     </div>
   </nav>
 </nav>
@@ -66,17 +66,17 @@
     <span class="sep">›</span>
     <a href="index.html">Bắt đầu</a>
     <span class="sep">›</span>
-    <span class="current">Ngoại lệ (Exceptions)</span>
+    <span class="current">Exceptions</span>
   </div>
   <main id="main">
 
-    <h1>Ngoại lệ (Exceptions)</h1>
+    <h1>Exceptions</h1>
 
     <p>
       Exception và interrupt là cơ chế phần cứng mà bộ xử lý dùng để xử lý các sự kiện bất đồng
-      bộ và lỗi nghiêm trọng (ví dụ: thực thi lệnh không hợp lệ). Exception có nghĩa là preemption
-      và liên quan đến các exception handler, tức là các subroutine được thực thi để phản hồi với
-      tín hiệu kích hoạt sự kiện.
+      bộ và lỗi nghiêm trọng (ví dụ: thực thi lệnh không hợp lệ). Exception liên quan đến cơ chế
+      preemption và được xử lý bởi các exception handler — các subroutine được thực thi để phản hồi
+      với tín hiệu kích hoạt sự kiện.
     </p>
 
     <p>
@@ -125,13 +125,13 @@
       phải được đánh dấu là <code>unsafe</code>. Thế nhưng tôi vừa nói rằng exception handler có
       thể dùng biến <code>static mut</code> một cách an toàn. Làm sao điều này có thể xảy ra?
       Điều này có thể xảy ra vì exception handler <strong>không thể</strong> được gọi bởi phần
-      mềm, do đó reentrancy là không thể. Các handler này được gọi bởi chính phần cứng, được giả
-      định là không có concurrent về mặt vật lý.
+      mềm, do đó reentrancy là không thể. Các handler này được gọi bởi chính phần cứng, và phần
+      cứng được giả định là không kích hoạt cùng một handler đồng thời.
     </p>
 
     <p>
-      Kết quả là, trong ngữ cảnh của exception handler trong các hệ thống embedded, sự vắng mặt
-      của các lần gọi đồng thời cùng một handler đảm bảo không có vấn đề reentrancy, ngay cả khi
+      Kết quả là, trong ngữ cảnh của exception handler trên hệ thống embedded, việc không có
+      các lần gọi đồng thời đến cùng một handler đảm bảo không có vấn đề reentrancy, ngay cả khi
       handler dùng static mutable variable.
     </p>
 
@@ -366,7 +366,7 @@ ResetTrampoline:
 
     <div class="nav-buttons">
       <a href="panicking.html" class="nav-btn">← Panicking</a>
-      <a href="registers.html" class="nav-btn next">Thanh ghi bộ nhớ →</a>
+      <a href="registers.html" class="nav-btn next">Memory-mapped Registers →</a>
     </div>
 
   </main>

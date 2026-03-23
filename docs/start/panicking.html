@@ -31,31 +31,31 @@
       <a href="hardware.html">Phần cứng thực</a>
       <a href="semihosting.html">Semihosting</a>
       <a href="panicking.html" class="active">Panicking</a>
-      <a href="exceptions.html">Ngoại lệ (Exceptions)</a>
-      <a href="registers.html">Thanh ghi bộ nhớ</a>
+      <a href="exceptions.html">Exceptions</a>
+      <a href="registers.html">Memory-mapped Registers</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề nâng cao</div>
-      <a href="../portability/index.html">Tính di động</a>
-      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="../portability/index.html">Portability</a>
+      <a href="../concurrency/index.html">Concurrency</a>
       <a href="../collections/index.html">Collections</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <div class="nav-section-title">Design &amp; Guarantees</div>
       <a href="../design-patterns/index.html">Design Patterns</a>
-      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/index.html">Static Guarantees</a>
       <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
       <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <div class="nav-section-title">Interoperability</div>
       <a href="../interoperability/index.html">Tổng quan</a>
-      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
-      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+      <a href="../interoperability/c-with-rust.html">C with Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust with C</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề khác</div>
-      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+      <a href="../unsorted/speed-vs-size.html">Speed vs Size</a>
     </div>
   </nav>
 </nav>
@@ -84,7 +84,7 @@
     </p>
 
     <p>
-      Trong các chương trình không có thư viện chuẩn, tuy nhiên, hành vi panicking bị để ngỏ (undefined).
+      Trong các chương trình không có thư viện chuẩn, hành vi panicking là undefined.
       Có thể chọn một hành vi bằng cách khai báo một hàm <code>#[panic_handler]</code>. Hàm này phải
       xuất hiện đúng <em>một lần</em> trong dependency graph của chương trình, và phải có chữ ký sau:
       <code>fn(&amp;PanicInfo) -&gt; !</code>, trong đó
@@ -93,7 +93,7 @@
     </p>
 
     <p>
-      Do các hệ thống nhúng dao động từ hướng người dùng đến safety-critical (không được crash),
+      Do các hệ thống nhúng trải dài từ hướng người dùng đến safety-critical (không được crash),
       không có một hành vi panicking nào phù hợp với tất cả, nhưng có nhiều hành vi thường dùng.
       Các hành vi phổ biến này đã được đóng gói thành các crate định nghĩa hàm <code>#[panic_handler]</code>.
       Một số ví dụ bao gồm:
@@ -201,7 +201,7 @@ panicked at 'index out of bounds: the len is 3 but the index is 4', src/main.rs:
 
     <div class="nav-buttons">
       <a href="semihosting.html" class="nav-btn">← Semihosting</a>
-      <a href="exceptions.html" class="nav-btn next">Ngoại lệ (Exceptions) →</a>
+      <a href="exceptions.html" class="nav-btn next">Exceptions →</a>
     </div>
 
   </main>

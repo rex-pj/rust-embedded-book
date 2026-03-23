@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tính di động - Portability - Rust Embedded Book</title>
+<title>Portability - Rust Embedded Book</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -31,31 +31,31 @@
       <a href="../start/hardware.html">Phần cứng thực</a>
       <a href="../start/semihosting.html">Semihosting</a>
       <a href="../start/panicking.html">Panicking</a>
-      <a href="../start/exceptions.html">Ngoại lệ (Exceptions)</a>
-      <a href="../start/registers.html">Thanh ghi bộ nhớ</a>
+      <a href="../start/exceptions.html">Exceptions</a>
+      <a href="../start/registers.html">Memory-mapped Registers</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề nâng cao</div>
-      <a href="index.html" class="active">Tính di động</a>
-      <a href="../concurrency/index.html">Đồng thời (Concurrency)</a>
+      <a href="index.html" class="active">Portability</a>
+      <a href="../concurrency/index.html">Concurrency</a>
       <a href="../collections/index.html">Collections</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Thiết kế &amp; Bảo đảm</div>
+      <div class="nav-section-title">Design &amp; Guarantees</div>
       <a href="../design-patterns/index.html">Design Patterns</a>
-      <a href="../static-guarantees/index.html">Bảo đảm tĩnh</a>
+      <a href="../static-guarantees/index.html">Static Guarantees</a>
       <a href="../static-guarantees/typestate-programming.html">Typestate Programming</a>
       <a href="../static-guarantees/zero-cost-abstractions.html">Zero-cost Abstractions</a>
     </div>
     <div class="nav-section">
-      <div class="nav-section-title">Tương tác ngôn ngữ</div>
+      <div class="nav-section-title">Interoperability</div>
       <a href="../interoperability/index.html">Tổng quan</a>
-      <a href="../interoperability/c-with-rust.html">C trong Rust</a>
-      <a href="../interoperability/rust-with-c.html">Rust trong C</a>
+      <a href="../interoperability/c-with-rust.html">C with Rust</a>
+      <a href="../interoperability/rust-with-c.html">Rust with C</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Chủ đề khác</div>
-      <a href="../unsorted/speed-vs-size.html">Tốc độ vs Kích thước</a>
+      <a href="../unsorted/speed-vs-size.html">Speed vs Size</a>
     </div>
   </nav>
 </nav>
@@ -64,32 +64,32 @@
   <div id="topbar">
     <a href="../index.html">Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Tính di động</span>
+    <span class="current">Portability</span>
   </div>
   <main id="main">
 
-    <h1>Tính di động — Portability</h1>
+    <h1>Portability</h1>
 
     <p>
-      Trong môi trường embedded, tính di động là một chủ đề rất quan trọng: mỗi nhà sản xuất
-      và thậm chí từng dòng sản phẩm của cùng một nhà sản xuất đều có ngoại vi và khả năng
-      khác nhau, và tương tự, cách tương tác với các ngoại vi đó cũng sẽ khác nhau.
+      Trong môi trường embedded, portability là một chủ đề rất quan trọng: mỗi nhà sản xuất
+      và thậm chí từng dòng sản phẩm của cùng một nhà sản xuất đều có peripheral và khả năng
+      khác nhau, và tương tự, cách tương tác với các peripheral đó cũng sẽ khác nhau.
     </p>
 
     <p>
-      Một cách phổ biến để san bằng sự khác biệt đó là thông qua một lớp gọi là
-      Hardware Abstraction Layer (Lớp Trừu tượng Phần cứng) hay <strong>HAL</strong>.
+      Một cách phổ biến để giải quyết sự khác biệt đó là thông qua một lớp gọi là
+      Hardware Abstraction Layer hay <strong>HAL</strong>.
     </p>
 
     <blockquote>
       <p>
-        Hardware abstractions (Các trừu tượng phần cứng) là tập hợp các routine trong phần mềm
-        giả lập một số chi tiết đặc thù của nền tảng, cho phép chương trình truy cập trực tiếp
-        vào các tài nguyên phần cứng.
+        Hardware abstraction là tập hợp các routine trong phần mềm che giấu các chi tiết
+        đặc thù của từng nền tảng, cho phép chương trình truy cập tài nguyên phần cứng
+        theo cách thống nhất.
       </p>
       <p>
         Chúng thường cho phép lập trình viên viết các ứng dụng độc lập với thiết bị và hiệu
-        suất cao bằng cách cung cấp các lời gọi hệ điều hành (OS) chuẩn tới phần cứng.
+        suất cao bằng cách cung cấp các OS call chuẩn tới phần cứng.
       </p>
       <p><em>Wikipedia: Hardware Abstraction Layer</em></p>
     </blockquote>
@@ -99,7 +99,7 @@
       hệ điều hành và phần mềm có thể cài đặt từ người dùng, mà là các firmware image được
       biên dịch toàn bộ cùng nhau cùng với một số ràng buộc khác. Vì vậy, dù cách tiếp cận
       truyền thống theo định nghĩa của Wikipedia có thể áp dụng được, nó có lẽ không phải
-      cách tiếp cận hiệu quả nhất để đảm bảo tính di động.
+      cách tiếp cận hiệu quả nhất để đảm bảo portability.
     </p>
 
     <p>Chúng ta làm điều này trong Rust như thế nào? Hãy cùng khám phá <strong>embedded-hal</strong>…</p>
@@ -256,7 +256,7 @@
     </p>
 
     <div class="nav-buttons">
-      <a href="../start/registers.html" class="nav-btn">← Thanh ghi bộ nhớ</a>
+      <a href="../start/registers.html" class="nav-btn">← Memory-mapped Registers</a>
       <a href="../concurrency/index.html" class="nav-btn next">Concurrency →</a>
     </div>
 
