@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storing Keys with Associated Values in Hash Maps - The Rust Book (Tiếng Việt)</title>
+  <title>Lưu trữ Keys kèm Values trong Hash Map - The Rust Book (Tiếng Việt)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -138,21 +138,21 @@
       <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <div class="nav-group-title">Chương 16 — Concurrency</div>
       <a href="ch16-00-concurrency.html">Tổng quan</a>
       <a href="ch16-01-threads.html">Threads</a>
       <a href="ch16-02-message-passing.html">Message Passing</a>
       <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Send &amp; Sync</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Chương 17 — Async/Await</div>
       <a href="ch17-00-async-await.html">Tổng quan</a>
       <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với Async</a>
+      <a href="ch17-03-more-futures.html">Thêm về Futures</a>
       <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho Async</a>
       <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
     </div>
     <div class="nav-group">
@@ -160,12 +160,12 @@
       <a href="ch18-00-oop.html">Tổng quan</a>
       <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
       <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+      <a href="ch18-03-oo-design-patterns.html">Design Patterns</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <div class="nav-group-title">Chương 19 — Patterns</div>
       <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Vị trí dùng Patterns</a>
       <a href="ch19-02-refutability.html">Refutability</a>
       <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
     </div>
@@ -175,21 +175,21 @@
       <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
       <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
       <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions</a>
       <a href="ch20-05-macros.html">Macros</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <div class="nav-group-title">Chương 21 — Dự án Web Server</div>
       <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
       <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multithreaded</a>
       <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Phụ lục</div>
       <a href="appendix-00.html">Tổng quan</a>
       <a href="appendix-01-keywords.html">A — Keywords</a>
-      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-02-operators.html">B — Operators</a>
       <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
       <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
       <a href="appendix-05-editions.html">E — Editions</a>
@@ -200,44 +200,53 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — Hash Map</span></div>
   <div id="main">
-  <div class="page-nav">
-    <a href="ch08-02-strings.html">← Trước</a>
-    <a href="ch09-00-error-handling.html">Tiếp →</a>
-  </div>
+    <div class="page-nav"><a href="ch08-02-strings.html">← Trước</a><a href="ch09-00-error-handling.html">Tiếp →</a></div>
 
-<h2 id="storing-keys-with-associated-values-in-hash-maps">Lưu Giữ Các Khóa Kết Nối Chặt Chẽ Với Các Giá Trị Trong Bảng Hash Maps</h2>
-<p>Kiểu collections cuối cùng trong danh sách thông dụng của chúng ta chính là hash map. Dạng <code>HashMap&lt;K, V&gt;</code> lưu trữ một tổ hợp các khóa (keys) định kiểu <code>K</code> ánh xạ trực tiếp với các giá trị (values) được đóng mộc kiểu <code>V</code> qua việc chĩa xài tới loại <em>hàm băm (hashing function)</em> nhằm đưa ra phán quyết xem nên cất những khóa lẫn giá trị nói trên vào vị trí xó xỉnh nẻo nào lọt thỏm giữa lòng bộ nhớ. Đa số các nhánh ngôn ngữ lập trình sinh sau đẻ muộn ngày nay đều đồng loạt ra tay hỗ trợ trợ lực cho loại cấu trúc dữ liệu kinh điển trên, chỉ là hay ngụy dạng gán ráp dưới dăm ba cái tên hầm bà lằng khác mạo danh tỷ như: <em>hash</em>, <em>map</em>, <em>object</em>, <em>hash table</em>, <em>dictionary</em>, móc hoặc <em>associative array</em>, đấy là chưa nói liệt dót ra tuốt cho đầy mâm.</p>
-<p>Hash maps rất hữu ích khi bạn muốn tra cứu dữ liệu không phải bằng cách dùng index như với vector, mà bằng cách sử dụng một khóa (key) vốn dĩ có thể là bất cứ kiểu dữ liệu nào. Ví dụ, trong một trò chơi, bạn có chốt ghi vết dõi theo sổ điểm rành rọt của từng tổ đội bằng việc xài mảng hash map, nơi khóa chốt chặn (key) là tên nhóm đội còn mớ số liệu values cất ở nách chính là các mốc sổ điểm đụng độ tương phùng ăn xới đắp lên nhau. Từ mảng danh tính xướng lên là đội nhà bạn, chỉ việc hô móc rút nhổ gọn luôn mảng điểm đã ăn ra.</p>
-<p>Dọc sườn lộ trình ở phần phóc phân đoạn sườn ngạch tiếp đây, bọn tớ sẽ dạo gót sượt qua một chốc thoáng nét bức tranh sơ lược API làm móng cơ bản dành riêng do hash maps nắm mũi xướng vai, ngặt nỗi còn đụn nùi những chức năng ngọt bùi thứ dữ nằm khoanh xó trốn dọn lủi thủi che giấu bên lạch dưới hàng ngũ vô vàn phóc sụp ngóc gờ nhánh hốc lệnh <code>HashMap&lt;K, V&gt;</code> dạt do đích rập mâm vạt chúa tể sườn ruột <code>standard library</code> nắn tạo định gán. Bạn mót nhớ là chịu khó bỏ công xới dọn lật mụ uất mở nhéo thâm nhập vô gã mâm <code>standard library documentation</code> hòng rút cướp thu nạp vóc lột vơ vét thêm tài liệu nhét no căng ruột đợt kiến vóc thức páp khụp nhé dập khíp mịp uộp.</p>
-
-<h3 id="creating-a-new-hash-map">Tạo Một Hash Map Mới Tinh</h3>
-<p>Phương thức đơn giản nhất là ủ ấp khai ngỏ dùng rập <code>new</code> kèm ốp lót gióc nhét đùm <code>insert</code> hòng rót trút cọc item nạp vô cho nới ra. Ở cọc vạch đoạn Listing 8-20 vạch cợt kia, tụi ta ngấp ngáp cố rục lưu chóp hốt gõ dò lưu mốc sổ điểm chóp nhíu chạm dành hai vọc nón gụ đội chưng páp quệt danh <em>Blue</em> lút ngóc quặt <em>Yellow</em>. Nhóm móp đội Blue bắt tay lọt cửa bỏ nhẹ túi 10 độp điểm rọt lác nhác, còn khứa gã rập đầm Yellow quất khơi đầu nạp 50 điểm ngụy náp gạp.</p>
-
+    <h2 id="storing-keys-with-associated-values-in-hash-maps"><a class="header" href="#storing-keys-with-associated-values-in-hash-maps">Lưu trữ Keys kèm Values trong Hash Map</a></h2>
+<p>Collection phổ biến cuối cùng là hash map. Kiểu <code>HashMap&lt;K, V&gt;</code> lưu trữ
+ánh xạ từ các key kiểu <code>K</code> sang các value kiểu <code>V</code> bằng cách dùng một
+<em>hashing function</em>, thứ quyết định cách đặt key và value vào bộ nhớ.
+Nhiều ngôn ngữ lập trình hỗ trợ kiểu cấu trúc dữ liệu này, nhưng thường
+dưới tên khác như <em>hash</em>, <em>map</em>, <em>object</em>, <em>hash table</em>, <em>dictionary</em>,
+hay <em>associative array</em>, chỉ kể một vài cái thôi.</p>
+<p>Hash map hữu ích khi bạn muốn tra cứu dữ liệu không phải bằng index như
+với vector, mà bằng một key có thể thuộc bất kỳ kiểu nào. Ví dụ, trong
+một trò chơi, bạn có thể theo dõi điểm của mỗi đội trong một hash map,
+trong đó mỗi key là tên đội và value là điểm số tương ứng. Biết tên đội,
+bạn lấy được điểm của họ.</p>
+<p>Ta sẽ đi qua API cơ bản của hash map trong phần này, nhưng còn nhiều điều
+thú vị hơn trong các hàm được định nghĩa trên <code>HashMap&lt;K, V&gt;</code> bởi thư viện
+chuẩn. Như thường lệ, hãy tra tài liệu thư viện chuẩn để biết thêm.</p>
+<h3 id="creating-a-new-hash-map"><a class="header" href="#creating-a-new-hash-map">Tạo một Hash Map mới</a></h3>
+<p>Một cách để tạo hash map rỗng là dùng <code>new</code> rồi thêm phần tử bằng
+<code>insert</code>. Ở Listing 8-20, ta theo dõi điểm của hai đội tên là <em>Blue</em>
+và <em>Yellow</em>. Đội Blue bắt đầu với 10 điểm, đội Yellow bắt đầu với 50 điểm.</p>
 <figure class="listing" id="listing-8-20">
-<span class="file-name">Tên file: src/main.rs</span>
-<pre><code class="language-rust edition2024">fn main() {
-    use std::collections::HashMap;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
     let mut scores = HashMap::new();
 
     scores.insert(String::from("Blue"), 10);
     scores.insert(String::from("Yellow"), 50);
-}</code></pre>
-<figcaption><a href="#listing-8-20">Listing 8-20</a>: Dựng hình một vỏ khay hash map rồi ép xọc thả chốt các khía cạnh cặp key-value xỏ dọng vào ruột nó</figcaption>
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-20">Listing 8-20</a>: Tạo hash map mới và insert một số cặp key-value</figcaption>
 </figure>
-
-<p>Chú ý là chúng ta phải dùng lệnh <code>use</code> để mang tính năng của <code>HashMap</code> từ mảng collections trong thư viện tiêu chuẩn vào trước. Trong số ba cái collection phổ biến mà ta lảm nhảm, cái cục cục vạch hash map này thuộc vào hàng ít được sử dụng nhất ngước theo mâm thống kê thông dụng xài nên dọn tọt báp cháp rập mập nó không hề uạp mập uếp híp bập dóp uộp đụp wập sếp rấp dúp móc.</p>
-<p>Hẻm đường giống vec tơ, dọn tọt map níp xáp oạp gáp hướp píp wếp để díp yếp mấp xáp gạp dữ fếp lạp. Bếp wếp rạp khép rạp này bập eếp nó nạp dẹp chứa pệp híp mập yệp jếp hệp kíp. Míp nạp pập iệp mếp hặp bắp kập nập iếp lạp xấp...</p>
-
-<h3 id="accessing-values-in-a-hash-map">Móc Lấy Giá Trị Trong Bảng Mã Hash Map</h3>
-<p>Ta truy tháo cái cọc giá trị moi giật ra khỏi cái bực bảng hash map uất nấp dựa cớ móm truyền trao con sáp hứa khóa key ngòi ạp ập tọt wệp uếp cho pụp trút hàm hót cựa <code>get</code> pắp cụp mụp, lạch báp cắp tựa sập khíp đập nhép ở móp khíp nệp Listing 8-21.</p>
-
+<p>Lưu ý là ta cần <code>use</code> <code>HashMap</code> từ phần collections của thư viện chuẩn
+trước. Trong ba collection phổ biến của ta, đây là cái ít được dùng nhất,
+nên nó không được đưa vào scope tự động qua prelude. Hash map cũng được
+thư viện chuẩn hỗ trợ ít hơn; ví dụ không có macro built-in để tạo chúng.</p>
+<p>Giống vector, hash map lưu dữ liệu trên heap. <code>HashMap</code> này có key kiểu
+<code>String</code> và value kiểu <code>i32</code>. Cũng như vector, hash map là đồng nhất: tất
+cả các key phải cùng kiểu, và tất cả các value phải cùng kiểu.</p>
+<h3 id="accessing-values-in-a-hash-map"><a class="header" href="#accessing-values-in-a-hash-map">Truy cập Values trong Hash Map</a></h3>
+<p>Ta có thể lấy value từ hash map bằng cách truyền key vào method <code>get</code>,
+như Listing 8-21 dưới đây.</p>
 <figure class="listing" id="listing-8-21">
-<span class="file-name">Tên file: src/main.rs</span>
-<pre><code class="language-rust edition2024">fn main() {
-    use std::collections::HashMap;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
     let mut scores = HashMap::new();
 
@@ -246,16 +255,18 @@
 
     let team_name = String::from("Blue");
     let score = scores.get(&amp;team_name).copied().unwrap_or(0);
-}</code></pre>
-<figcaption><a href="#listing-8-21">Listing 8-21</a>: Rút dò sờ bóc mác dạo đục chóp nọc điểm số cúa kháp sập náp nhóm đội ngập mác pạp lọt Blue pập ngụp đắp đang níp bị nớp pạp móc chứa fạp cháp díp rạp trong búp map gụp eệp kặp</figcaption>
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-21">Listing 8-21</a>: Truy cập điểm của đội Blue được lưu trong hash map</figcaption>
 </figure>
-
-<p>Tới khúc này, cái móc biến số chói <code>score</code> sực kẹp nách cái cháp hạt giá dáp kíp trị bám nhạy xập vóc dọn dính oọc lấy móc hót đội nấp báp Blue yệp lịp nập ép, xặp sụp yếp kệp rấp bóp tọt nên quập qập ập cộp tẹp uếp kíp xập dấp uấp 10 nập xạp mẹp. Láp tẹp ụp phương tẹp thức kệp <code>get</code> vập jấp kệp nệp trả về <code>Option&lt;&amp;V&gt;</code> nập pạp vập wệp iệp; xệp pịp nạp wệp nạp uệp uặp pệp yép ép iếp lệp oặp uịp vẹp dạp fẹp.</p>
-
-<p>Tương tự như vector, bạn lặp qua vòng lặp với dòng loop <code>for</code> móc páp nhép híp bóp qập:</p>
-
-<pre><code class="language-rust edition2024">fn main() {
-    use std::collections::HashMap;
+<p>Ở đây, <code>score</code> sẽ có giá trị gắn với đội Blue, tức là <code>10</code>. Method <code>get</code>
+trả về <code>Option&lt;&amp;V&gt;</code>; nếu không có value nào cho key đó trong hash map,
+<code>get</code> sẽ trả về <code>None</code>. Chương trình này xử lý <code>Option</code> bằng cách gọi
+<code>copied</code> để lấy <code>Option&lt;i32&gt;</code> thay vì <code>Option&lt;&amp;i32&gt;</code>, rồi dùng <code>unwrap_or</code>
+để gán <code>score</code> bằng 0 nếu <code>scores</code> không có entry cho key đó.</p>
+<p>Ta có thể duyệt qua từng cặp key-value trong hash map tương tự như với
+vector, dùng vòng lặp <code>for</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
     let mut scores = HashMap::new();
 
@@ -265,34 +276,182 @@
     for (key, value) in &amp;scores {
         println!("{key}: {value}");
     }
-}</code></pre>
+<span class="boring">}</span></code></pre>
+<p>Đoạn code này sẽ in từng cặp theo thứ tự tùy ý:</p>
+<pre><code class="language-text">Yellow: 50
+Blue: 10
+</code></pre>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="hash-maps-and-ownership"></a></p>
+<h3 id="managing-ownership-in-hash-maps"><a class="header" href="#managing-ownership-in-hash-maps">Quản lý Ownership trong Hash Map</a></h3>
+<p>Với các kiểu implement trait <code>Copy</code> như <code>i32</code>, các value sẽ được copy vào
+hash map. Với các owned value như <code>String</code>, các value sẽ bị move vào và
+hash map sẽ là owner của chúng, như minh họa ở Listing 8-22.</p>
+<figure class="listing" id="listing-8-22">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
-<p>Đoạn code chóp tịt gõ díp xệp lệnh sẽ châm múp phọt in lóp qệp từng tẹp cặp díp xúp uếp úp khép khóa pặp xíp theo ríp tệp kíp tệp trật uệp fệp zệp eíp lệp arbitrary sập mập nập quắp pịp dẹp oập kẹp iếp wép eệp pẹp.</p>
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
 
-<h3 id="managing-ownership-in-hash-maps">Quản Lý Quyền Nắm Ràng Buộc Sở Hữu Lọt Trong Vỏ Bọc Hash Maps</h3>
-<p>Dồn móc điểm dập khứa kẹp đính <code>Copy</code> xứa xạp dẹp níp <code>i32</code> uớp aệp yếp qệp, báp sệp ấp vấp qóp cộp copy yệp é. Dáp uệp đệp mệp tộp iệp wíp dẹp đếp eệp kệp uệp <code>String</code>, tẹp nập mặp dặp díp kíp jập cộp vập zặp nộp oíp ấp uập vệp tấp kặp iếp úp sập lẹp xập tặp pập đập kháp páp qập aặp đập rụp tấp píp iếp mập lấp đập dập jếp lịp đệp mớp sập đập oíp rập wập tộp vệp jếp lặp uấp nập dập pấp dẹp.</p>
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // field_name và field_value không còn hợp lệ từ đây, thử dùng chúng
+    // và xem compiler báo lỗi gì!
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-22">Listing 8-22</a>: Minh họa key và value được hash map sở hữu sau khi insert</figcaption>
+</figure>
+<p>Ta không thể dùng các biến <code>field_name</code> và <code>field_value</code> sau khi chúng đã
+bị move vào hash map qua lời gọi <code>insert</code>.</p>
+<p>Nếu ta insert tham chiếu đến các value vào hash map, các value đó sẽ không
+bị move. Các value mà tham chiếu trỏ đến phải hợp lệ ít nhất là trong
+khoảng thời gian hash map còn hợp lệ. Ta sẽ nói thêm về những vấn đề này
+trong <a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">"Validating References with
+Lifetimes"</a> ở Chương 10.</p>
+<h3 id="updating-a-hash-map"><a class="header" href="#updating-a-hash-map">Cập nhật Hash Map</a></h3>
+<p>Mặc dù số lượng cặp key-value có thể tăng, mỗi key duy nhất chỉ có thể
+có một value gắn với nó tại một thời điểm (nhưng không phải ngược lại:
+ví dụ, cả đội Blue lẫn Yellow đều có thể có value <code>10</code> trong hash map
+<code>scores</code>).</p>
+<p>Khi bạn muốn thay đổi dữ liệu trong hash map, bạn phải quyết định cách
+xử lý trường hợp key đã có value. Bạn có thể thay giá trị cũ bằng giá trị
+mới, bỏ qua hoàn toàn giá trị cũ. Hoặc giữ giá trị cũ, bỏ qua giá trị
+mới, chỉ thêm khi key <em>chưa</em> có value. Hay kết hợp giá trị cũ và mới.
+Hãy xem cách làm từng trường hợp!</p>
+<h4 id="overwriting-a-value"><a class="header" href="#overwriting-a-value">Ghi đè một Value</a></h4>
+<p>Nếu ta insert một key và value vào hash map rồi insert cùng key đó với
+value khác, value gắn với key đó sẽ bị thay thế. Dù đoạn code ở Listing 8-23
+gọi <code>insert</code> hai lần, hash map chỉ chứa một cặp key-value vì ta đang insert
+value cho cùng một key của đội Blue cả hai lần.</p>
+<figure class="listing" id="listing-8-23">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
-<h3 id="updating-a-hash-map">Cập Nhập Hash Map</h3>
-<p>Mỗi key chỉ ngầm giấu ôm trọn ôm được mớ xáp một hạt chóp lọt rập trị cựa sác giá húp dáp gáp rập tọt sụp nập.</p>
+    let mut scores = HashMap::new();
 
-<h4 id="overwriting-a-value">Đè Lấp Bập Phất Gí Qủi Mới Kụp Giá Trị Lên Dọn Mép Đáy Cũ Ngoạp Hấp Cáp</h4>
-<p>Thay giá trị mới lấp ngay.</p>
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Blue"), 25);
 
-<h4 id="adding-a-key-and-value-only-if-a-key-isnt-present">Chỉ Điền Zíp Chữ iếp Cặp iập uạp Key-Value qập fập mập dập Tồn nặp mệp xệp dập Tại rếp é sệp pẹp lặp oóp iệp eệp ắp.</h4>
-<p>Sử dụng api đắp <code>entry</code> xứa lạp dộp uớp sập fập bập cộp...</p>
+    println!("{scores:?}");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-23">Listing 8-23</a>: Thay thế value được lưu với một key cụ thể</figcaption>
+</figure>
+<p>Đoạn code này sẽ in ra <code>{"Blue": 25}</code>. Giá trị ban đầu là <code>10</code> đã bị
+ghi đè.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="only-inserting-a-value-if-the-key-has-no-value"></a></p>
+<h4 id="adding-a-key-and-value-only-if-a-key-isnt-present"><a class="header" href="#adding-a-key-and-value-only-if-a-key-isnt-present">Thêm Key-Value chỉ khi Key chưa tồn tại</a></h4>
+<p>Một tình huống hay gặp là kiểm tra xem một key đã tồn tại trong hash map
+với một value chưa, rồi thực hiện: nếu key đó đã có value thì giữ nguyên;
+nếu chưa có thì mới insert key và value.</p>
+<p>Hash map có một API đặc biệt cho việc này tên là <code>entry</code>, nhận key bạn muốn
+kiểm tra làm tham số. Giá trị trả về của method <code>entry</code> là một enum tên
+<code>Entry</code> đại diện cho một value có thể tồn tại hoặc không. Giả sử ta muốn
+kiểm tra xem key của đội Yellow có value gắn với nó chưa. Nếu chưa, ta muốn
+insert value <code>50</code>, và tương tự với đội Blue. Dùng API <code>entry</code>, code trông
+như Listing 8-24.</p>
+<figure class="listing" id="listing-8-24">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
-<h4 id="updating-a-value-based-on-the-old-value">Trị Xáp Giá Trúc Xứa Cựa Cập uệp dệp hóp rếp Theo mập fệp</h4>
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
 
-<h3 id="hashing-functions">Hệ dóp háp sập díp fập uệp iếp lệp bập lịp sệp wệp fệp ríp cạp.</h3>
+    scores.entry(String::from("Yellow")).or_insert(50);
+    scores.entry(String::from("Blue")).or_insert(50);
 
-<h2 id="summary">Tổng Móc díp mộp dập qệp oập uệp píp aệp kết fập rệp rịp sệp dập uệp</h2>
+    println!("{scores:?}");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-24">Listing 8-24</a>: Dùng method <code>entry</code> để chỉ insert khi key chưa có value</figcaption>
+</figure>
+<p>Method <code>or_insert</code> trên <code>Entry</code> được định nghĩa để trả về mutable reference
+đến value của key <code>Entry</code> tương ứng nếu key đó tồn tại, còn nếu không thì
+insert tham số làm value mới cho key này và trả về mutable reference đến
+value mới. Kỹ thuật này gọn gàng hơn nhiều so với tự viết logic, và ngoài
+ra còn phối hợp tốt hơn với borrow checker.</p>
+<p>Chạy code ở Listing 8-24 sẽ in ra <code>{"Yellow": 50, "Blue": 10}</code>. Lần gọi
+<code>entry</code> đầu tiên sẽ insert key của đội Yellow với value <code>50</code> vì Yellow
+chưa có value. Lần gọi <code>entry</code> thứ hai sẽ không thay đổi hash map vì đội
+Blue đã có value <code>10</code> rồi.</p>
+<h4 id="updating-a-value-based-on-the-old-value"><a class="header" href="#updating-a-value-based-on-the-old-value">Cập nhật Value dựa trên Value cũ</a></h4>
+<p>Một trường hợp hay dùng khác của hash map là tra cứu value của một key
+rồi cập nhật nó dựa trên giá trị cũ. Ví dụ, Listing 8-25 cho thấy code
+đếm số lần mỗi từ xuất hiện trong một đoạn văn bản. Ta dùng hash map với
+các từ làm key và tăng value để theo dõi số lần đã gặp từ đó. Nếu là lần
+đầu tiên gặp từ đó, ta sẽ insert value <code>0</code> trước.</p>
+<figure class="listing" id="listing-8-25">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
 
-<p>Phần này mình rút gọn và tổng quát vì văn dịch hay bị hư context dài.</p>
+    let text = "hello world wonderful world";
 
+    let mut map = HashMap::new();
 
-  <div class="page-nav bottom"><a href="ch08-02-strings.html">← Trước</a><a href="ch09-00-error-handling.html">Tiếp →</a></div>
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{map:?}");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-25">Listing 8-25</a>: Đếm số lần xuất hiện của từ bằng hash map lưu từ và số đếm</figcaption>
+</figure>
+<p>Đoạn code này sẽ in ra <code>{"world": 2, "hello": 1, "wonderful": 1}</code>. Bạn
+có thể thấy các cặp key-value được in theo thứ tự khác: Nhớ lại từ
+<a href="#accessing-values-in-a-hash-map">"Truy cập Values trong Hash Map"</a> rằng việc duyệt qua hash map
+xảy ra theo thứ tự tùy ý.</p>
+<p>Method <code>split_whitespace</code> trả về iterator trên các subslice, phân tách bởi
+khoảng trắng, của value trong <code>text</code>. Method <code>or_insert</code> trả về mutable
+reference (<code>&amp;mut V</code>) đến value của key được chỉ định. Ở đây, ta lưu mutable
+reference đó vào biến <code>count</code>, vì vậy để gán cho value đó, ta phải
+dereference <code>count</code> trước bằng dấu sao (<code>*</code>). Mutable reference sẽ ra khỏi
+scope ở cuối vòng lặp <code>for</code>, nên tất cả các thay đổi này đều an toàn và
+được phép bởi borrowing rules.</p>
+<h3 id="hashing-functions"><a class="header" href="#hashing-functions">Hashing Functions</a></h3>
+<p>Mặc định, <code>HashMap</code> dùng hashing function gọi là <em>SipHash</em>, có khả năng
+chống lại các tấn công denial-of-service (DoS) nhắm vào hash
+table<sup class="footnote-reference" id="fr-siphash-1"><a href="#footnote-siphash">1</a></sup>. Đây không phải thuật toán hashing nhanh nhất
+hiện có, nhưng sự đánh đổi giữa bảo mật tốt hơn và hiệu suất thấp hơn
+là xứng đáng. Nếu bạn profile code và thấy hashing function mặc định quá
+chậm cho mục đích của bạn, bạn có thể chuyển sang hàm khác bằng cách chỉ
+định một hasher khác. Một <em>hasher</em> là kiểu implement trait <code>BuildHasher</code>.
+Ta sẽ bàn về trait và cách implement chúng ở
+<a href="ch10-02-traits.html">Chương 10</a>. Bạn không nhất thiết phải tự cài đặt
+hasher từ đầu; <a href="https://crates.io/">crates.io</a> có các thư viện do cộng
+đồng Rust chia sẻ, cung cấp hashers cài đặt nhiều thuật toán hashing phổ biến.</p>
+<h2 id="summary"><a class="header" href="#summary">Tổng kết</a></h2>
+<p>Vector, string, và hash map sẽ cung cấp lượng lớn chức năng cần thiết
+trong các chương trình khi bạn cần lưu trữ, truy cập và chỉnh sửa dữ liệu.
+Dưới đây là một số bài tập bạn giờ đã có thể giải:</p>
+<ol>
+<li>Cho một danh sách số nguyên, dùng vector để tìm và trả về median (giá
+trị ở giữa khi đã sắp xếp) và mode (giá trị xuất hiện nhiều nhất; hash
+map sẽ hữu ích ở đây) của danh sách.</li>
+<li>Chuyển đổi string sang Pig Latin. Phụ âm đầu tiên của mỗi từ được
+chuyển ra cuối từ và thêm <em>ay</em>, ví dụ <em>first</em> trở thành <em>irst-fay</em>. Các
+từ bắt đầu bằng nguyên âm thì thêm <em>hay</em> vào cuối (<em>apple</em> trở thành
+<em>apple-hay</em>). Nhớ tính đến các chi tiết về mã hóa UTF-8!</li>
+<li>Dùng hash map và vector, tạo giao diện văn bản cho phép người dùng
+thêm tên nhân viên vào phòng ban trong công ty; ví dụ "Add Sally to
+Engineering" hoặc "Add Amir to Sales." Sau đó cho người dùng lấy danh
+sách tất cả mọi người trong một phòng ban hoặc tất cả mọi người trong
+công ty theo phòng ban, được sắp xếp theo thứ tự bảng chữ cái.</li>
+</ol>
+<p>Tài liệu API của thư viện chuẩn mô tả các method mà vector, string và
+hash map có, rất hữu ích cho các bài tập này!</p>
+<p>Ta đang bước vào các chương trình phức tạp hơn, nơi các thao tác có thể
+thất bại, vì thế đây là lúc hoàn hảo để bàn về xử lý lỗi. Ta sẽ làm
+điều đó tiếp theo!</p>
+<hr>
+<ol class="footnote-definition">
+<li id="footnote-siphash">
+<p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a> <a href="#fr-siphash-1">↩</a></p>
+</li>
+</ol>
+
+    <div class="page-nav bottom"><a href="ch08-02-strings.html">← Trước</a><a href="ch09-00-error-handling.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

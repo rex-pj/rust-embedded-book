@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storing Lists of Values with Vectors - The Rust Book (Tiếng Việt)</title>
+  <title>Lưu trữ danh sách với Vector - The Rust Book (Tiếng Việt)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -138,21 +138,21 @@
       <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <div class="nav-group-title">Chương 16 — Concurrency</div>
       <a href="ch16-00-concurrency.html">Tổng quan</a>
       <a href="ch16-01-threads.html">Threads</a>
       <a href="ch16-02-message-passing.html">Message Passing</a>
       <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Send &amp; Sync</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Chương 17 — Async/Await</div>
       <a href="ch17-00-async-await.html">Tổng quan</a>
       <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với Async</a>
+      <a href="ch17-03-more-futures.html">Thêm về Futures</a>
       <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho Async</a>
       <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
     </div>
     <div class="nav-group">
@@ -160,12 +160,12 @@
       <a href="ch18-00-oop.html">Tổng quan</a>
       <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
       <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+      <a href="ch18-03-oo-design-patterns.html">Design Patterns</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <div class="nav-group-title">Chương 19 — Patterns</div>
       <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Vị trí dùng Patterns</a>
       <a href="ch19-02-refutability.html">Refutability</a>
       <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
     </div>
@@ -175,21 +175,21 @@
       <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
       <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
       <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions</a>
       <a href="ch20-05-macros.html">Macros</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <div class="nav-group-title">Chương 21 — Dự án Web Server</div>
       <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
       <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multithreaded</a>
       <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Phụ lục</div>
       <a href="appendix-00.html">Tổng quan</a>
       <a href="appendix-01-keywords.html">A — Keywords</a>
-      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-02-operators.html">B — Operators</a>
       <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
       <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
       <a href="appendix-05-editions.html">E — Editions</a>
@@ -200,47 +200,43 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — Vector</span></div>
   <div id="main">
-  <div class="page-nav">
-    <a href="ch08-00-common-collections.html">← Trước</a>
-    <a href="ch08-02-strings.html">Tiếp →</a>
-  </div>
+    <div class="page-nav"><a href="ch08-00-common-collections.html">← Trước</a><a href="ch08-02-strings.html">Tiếp →</a></div>
 
-<h2 id="storing-lists-of-values-with-vectors">Lưu Trữ Các Danh Sách Giá Trị Bằng Vectors</h2>
-<p>Kiểu collection đầu tiên mà tụi mình sẽ săm soi là <code>Vec&lt;T&gt;</code>, hay còn được biết tới với cái tên thân thuộc là vector.
-Vector cho phép bạn tích trữ lèn vào nhiều hơn một giá trị bên trong một cấu trúc dữ liệu duy nhất, và nó đặt tất thảy mọi giá trị nằm xếp lớp sát cạnh nhau ở trong bộ nhớ. Vector chỉ có quyền ôm chứa những giá trị ăn chung một kiểu Type. Chúng đặc biệt hữu dụng khi bạn trên tay nắm giữ một danh sách các item, tựa như các dòng văn bản lấy từ một tập tin hay bảng giá mặt hàng nằm rải trong xe đẩy mua sắm.</p>
+<h2 id="storing-lists-of-values-with-vectors">Lưu Danh Sách Giá Trị với Vector</h2>
 
-<h3 id="creating-a-new-vector">Khởi Tạo Một Vector Mới</h3>
-<p>Để tạo ra một vector trống, ta gọi hàm <code>Vec::new</code>, như được thể hiện ở Listing 8-1.</p>
+<p>Kiểu collection đầu tiên ta sẽ xem là <code>Vec&lt;T&gt;</code>, hay còn gọi là <em>vector</em>. Vector cho phép lưu nhiều hơn một giá trị trong một cấu trúc dữ liệu duy nhất, với tất cả các giá trị nằm cạnh nhau trong bộ nhớ. Vector chỉ lưu được các giá trị cùng kiểu. Chúng đặc biệt hữu ích khi bạn có một danh sách item — ví dụ như các dòng văn bản trong file, hay danh sách giá của hàng hóa trong giỏ mua sắm.</p>
+
+<h3 id="creating-a-new-vector">Tạo Vector Mới</h3>
+
+<p>Để tạo một vector trống, ta gọi hàm <code>Vec::new</code>, như ở Listing 8-1.</p>
 
 <figure class="listing" id="listing-8-1">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">fn main() {
     let v: Vec&lt;i32&gt; = Vec::new();
 }</code></pre>
-<figcaption><a href="#listing-8-1">Listing 8-1</a>: Tạo ra một vector trống để chứa đựng loại kiểu <code>i32</code></figcaption>
+<figcaption><a href="#listing-8-1">Listing 8-1</a>: Tạo một vector trống để lưu giá trị kiểu <code>i32</code></figcaption>
 </figure>
 
-<p>Hãy chú ý là chúng ta đã thêm một phần ghi chú (type annotation) vào mớ này. Tại vì ta chưa hề nghĩ tới chuyện nhét vô cái vector này bất cứ mức giá trị nào, nên Rust chả thể tự biết được ta đang muốn trữ phần tử kiểu nào. Đây là một điểm quan trọng. Các vectors vốn được thực thi (implemented) với kỹ thuật generics; bọn mình sẽ đi chi tiết cách sử dụng generics với các kiểu biến của chính bạn ở Chương 10. Ở thời khắc này, hãy cứ thấu hiểu rằng dạng <code>Vec&lt;T&gt;</code> được cung cấp bởi thư viện chuẩn (standard library) có thể chứa được bất cứ kiểu dữ liệu nào. Khi ta tạo một vector nhằm nắm giữ lấy một kiểu dữ liệu do ta chỉ định, ta có quyền xướng rõ type đó trong cặp dấu ngoặc nhọn. Ở Listing 8-1, ta đã nói với Rust rằng <code>Vec&lt;T&gt;</code> ở biến <code>v</code> sẽ ôm mớ phần tử mang kiểu dữ liệu <code>i32</code>.</p>
+<p>Chú ý ta đã thêm type annotation ở đây. Vì ta chưa insert bất kỳ giá trị nào vào vector, Rust không biết ta muốn lưu kiểu phần tử nào. Đây là điểm quan trọng. Vector được implement bằng generics — ta sẽ tìm hiểu cách dùng generics với kiểu của riêng bạn ở Chương 10. Tạm thời, biết rằng kiểu <code>Vec&lt;T&gt;</code> do standard library cung cấp có thể chứa bất kỳ kiểu nào. Khi tạo vector để chứa một kiểu cụ thể, ta chỉ định kiểu đó trong dấu ngoặc nhọn. Ở Listing 8-1, ta đã nói với Rust rằng <code>Vec&lt;T&gt;</code> trong biến <code>v</code> sẽ chứa phần tử kiểu <code>i32</code>.</p>
 
-<p>Năng gặp hơn cả, bạn sẽ tạo ra một bộ <code>Vec&lt;T&gt;</code> đi kèm luôn với các giá trị khởi xướng ban đầu, và Rust sẽ tự suy luận ra được (infer) cái type của giá trị bạn mong ước bọc chứa, thế nên rất hiếm khi bạn phải gõ làm cái việc type annotation này. Ngôn ngữ Rust tích hợp sẵn với bộ macro tên là <code>vec!</code>, chuyên dùng để tự khởi sinh ra một vector mới có chứa trong bụng mớ item bạn ném vào đưa nó. Listing 8-2 khởi tạo ra một <code>Vec&lt;i32&gt;</code> mới chứa chuỗi giá trị <code>1</code>, <code>2</code>, và <code>3</code>. Định dạng số nguyên này chốt luôn mang kiểu <code>i32</code> tại vì rành rành đấy chính là cái dạng hệ số nguyên mặc định (default), tựa như hồi ta lạm bàn trong bài <a href="ch03-02-data-types.html#data-types">"Các Kiểu Dữ Liệu"</a><!-- ignore --> rớt ở Chương 3.</p>
+<p>Thường gặp hơn, bạn sẽ tạo <code>Vec&lt;T&gt;</code> với các giá trị khởi tạo sẵn và Rust sẽ tự infer được kiểu bạn muốn lưu, nên type annotation hiếm khi cần thiết. Rust có sẵn macro <code>vec!</code> chuyên tạo vector mới chứa các giá trị bạn cung cấp. Listing 8-2 tạo <code>Vec&lt;i32&gt;</code> mới chứa các giá trị <code>1</code>, <code>2</code>, và <code>3</code>. Kiểu integer là <code>i32</code> vì đó là kiểu integer mặc định, như đã bàn ở phần <a href="ch03-02-data-types.html#data-types">"Kiểu Dữ Liệu"</a> của Chương 3.</p>
 
 <figure class="listing" id="listing-8-2">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">fn main() {
     let v = vec![1, 2, 3];
 }</code></pre>
-<figcaption><a href="#listing-8-2">Listing 8-2</a>: Xây lên một vector mới có chứa sẵn giá trị ban đầu</figcaption>
+<figcaption><a href="#listing-8-2">Listing 8-2</a>: Tạo vector mới có sẵn giá trị</figcaption>
 </figure>
 
-<p>Tại vì tụi mình đã quẳng sẵn mấy giá trị chứa cấu trúc <code>i32</code> mở đường, gã Rust hoàn toàn đủ dữ kiện để ngửi ra (infer) type của tham số <code>v</code> chắc chắn là <code>Vec&lt;i32&gt;</code>, thành ra trò khai chú type lúc này thành món đồ không cần thiết. Quăng tiếp tới mảng sau, mình sẽ dòm soi cách cập nhật thay đổi thông số một cái vector.</p>
+<p>Vì ta đã cung cấp các giá trị <code>i32</code> ban đầu, Rust có thể infer kiểu của <code>v</code> là <code>Vec&lt;i32&gt;</code>, và type annotation là không cần thiết. Tiếp theo, ta sẽ xem cách cập nhật vector.</p>
 
-<h3 id="updating-a-vector">Cập Nhật Một Vector</h3>
-<p>Để sinh ra một mảng vector rồi trút tuốt mọi mẩu phần tử vào ruột nó, ta xách túi mượn cớ xài phương thức (method) <code>push</code>, như cách Listing 8-3 đã họa.</p>
+<h3 id="updating-a-vector">Cập Nhật Vector</h3>
+
+<p>Để tạo vector rồi thêm phần tử vào, ta dùng method <code>push</code>, như ở Listing 8-3.</p>
 
 <figure class="listing" id="listing-8-3">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">fn main() {
     let mut v = Vec::new();
 
@@ -249,18 +245,18 @@ Vector cho phép bạn tích trữ lèn vào nhiều hơn một giá trị bên 
     v.push(7);
     v.push(8);
 }</code></pre>
-<figcaption><a href="#listing-8-3">Listing 8-3</a>: Dùng cớ đính method <code>push</code> móc dán đống giá trị nằm đút lót vô trong vector</figcaption>
+<figcaption><a href="#listing-8-3">Listing 8-3</a>: Dùng method <code>push</code> để thêm giá trị vào vector</figcaption>
 </figure>
 
-<p>Giống như bất kỳ biến nào khác, nếu ta muốn có khả năng bẻ biến thay đổi giá trị của nó, ta cần khiến mặt mũi nó trở thành dạng có thể biến đổi (mutable) bằng cách gắn thêm từ khóa <code>mut</code>, như đã nhắc đến ở Chương 3. Các con chốt số mà chúng ta rót đẩy vào bên trong tất cả đều đúc từ loại type <code>i32</code>, và Rust tự động nhìn thấu được ẩn ý dữ liệu này từ sớ thông tin nạp vào, nên ta khỏi vướng gánh ghi chép lại lệnh <code>Vec&lt;i32&gt;</code> luôn.</p>
+<p>Như với bất kỳ biến nào, nếu ta muốn thay đổi giá trị của nó, cần làm nó mutable bằng từ khóa <code>mut</code>, như đã bàn ở Chương 3. Các số ta thêm vào đều kiểu <code>i32</code> và Rust infer được điều này từ dữ liệu, nên ta không cần annotation <code>Vec&lt;i32&gt;</code>.</p>
 
-<h3 id="reading-elements-of-vectors">Đọc Các Phần Tử Của Vector</h3>
-<p>Có chẵn hai cách để nhắm tham chiếu (reference) tới được một giá trị đang giấu nhẹm lượn lờ trong một mảng vector: thông qua chỉ số (indexing) hoặc xài ké method <code>get</code>. Trong các đợt thí dụ vạch lối dưới đằng đây, chúng mình cố ý đính kèm lôi theo cả thông tin mô tả kiểu loại Type của các giá trị được hất thảy ném bật hoàn trả ra từ các tay họng hàm code để củng cố phơi thêm phần tính minh bạch.</p>
+<h3 id="reading-elements-of-vectors">Đọc Phần Tử của Vector</h3>
 
-<p>Listing 8-4 giãi bày tung chảo cả thảy hai phương pháp hòng vọc chạm lấy lọt được cọc phần tử ở bên ruột trong cái vector: đánh xài bộ cú pháp chỉ số indexing cùng lọt thỏm dán mác phương thức method <code>get</code>.</p>
+<p>Có hai cách để tham chiếu đến một giá trị trong vector: thông qua indexing hoặc dùng method <code>get</code>. Trong các ví dụ dưới đây, ta đã annotate kiểu của các giá trị được trả về để rõ hơn.</p>
+
+<p>Listing 8-4 cho thấy cả hai cách truy cập giá trị trong vector: cú pháp indexing và method <code>get</code>.</p>
 
 <figure class="listing" id="listing-8-4">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">fn main() {
     let v = vec![1, 2, 3, 4, 5];
 
@@ -273,58 +269,148 @@ Vector cho phép bạn tích trữ lèn vào nhiều hơn một giá trị bên 
         None =&gt; println!("There is no third element."),
     }
 }</code></pre>
-<figcaption><a href="#listing-8-4">Listing 8-4</a>: Sử dụng đường lả cú pháp chỉ mục (indexing syntax) cùng bám phương thức (method) <code>get</code> để móc được cục đồ lọt giữa ổ vector</figcaption>
+<figcaption><a href="#listing-8-4">Listing 8-4</a>: Dùng indexing và method <code>get</code> để truy cập phần tử trong vector</figcaption>
 </figure>
 
-<p>Hãy lưu ý vài chi tiết nhọc nhằn nhấp nhô ở mặt này. Chúng tớ quẳng vọc cái chỉ mục ngón trị hệ biến số index tạc ở con mức là <code>2</code> để quặc tọt nhổ cho dính được gã con phần tử hệ móc thứ ba bởi cớ các cục sạp vectors bắt đếm thông số vạch mức dội gốc từ dấu chỉ chân số zero 0. Nước dùng bộ trói dấu <code>&amp;</code> nhồi xéo với vỏ ngạnh móc <code>[]</code> tặng xấp vuốt trả cho ta ngay mớ mặt tham chiếu reference cắm sào trỏ dính lấy cuống phần tử được kẹp điểm chỉ số mặt đó. Khi ta viện qua phương chiêu method ngọng lệnh mác <code>get</code> cùng chóp gã mác lọt truyền móc hệ số tham chỉ bợ gộp như một móc tay tọc tham biến argument parameter nhét trút lọt vô lòng đĩa bụng nó, ta cọt hụt ngộp móc thu bấu hồi móc vọt được cái mặt kiểu giáp <code>Option&lt;&amp;T&gt;</code> súp mà ráp móp tay tụi ta hoàn móc cúc toàn tợp tự tung tự tác uốt áp rập bóp lọt sụp móc xài đập dọn cùng bộ sạp lệnh xốp khứa match <code>match</code> đấp thụp dập nắp mạp qụp tọc.</p>
+<p>Chú ý vài chi tiết ở đây. Ta dùng index <code>2</code> để lấy phần tử thứ ba vì vector được đánh index bắt đầu từ zero. Dùng <code>&amp;</code> và <code>[]</code> cho ta một reference đến phần tử ở vị trí index đó. Khi dùng method <code>get</code> với index truyền vào làm argument, ta nhận được <code>Option&lt;&amp;T&gt;</code> có thể dùng với <code>match</code>.</p>
 
-<p>Rust thả ngửa chia cho bạn hai ngỏ đường tóm chạm các mốc móc phần vọt tử cựa này chủ cục ý móc dặn khứa cấp bập cho uốc vọc bạn uột cơ lụt duyên tự thân vọc lạp quyền pịp sáp tay nắm dọn phép rập đoạt chọn vuốt chép liệu điệu sộp lướt hành vọt nhót móc uất xử chụp cúa vấp sụp móp chuỗi nác chéo của chạp vạt phập tay gã trình vớt rịp bợp phần kíp xợp mềm gíp rợp ập mịp sậm giựp tắp dập qịp gập hập bíp xíp iếp xẹp ịp xẹp ập đęp lẹp tẹp sẹp, ụp jập hặp fệp dẹp pặp lúc sạp bạn vụp vô khíp tình xẹp lóng yợp ngóng đíp thử sức qệp vập chọc rút đụng ngếp mếp mịp xíp yếp dùng cệp nếp rệp qụp bập aạp qợp bặp aóp uếp lặp zệp một pệp jóp aặp qớp xíp điểm aặp mắp oệp gộp số xịp kẹp chỉ yắp rắp móc lướt píp ở díp uáp gıp wáp vếp rúp tít cúp kháp ngoài mập phạm xíp hóp wụp sếp eếp vi fệp wặp rệp móp nắp cúa vập eệp dẹp múp đấm oấp lúc iớp kệp zặp píp wép nắp jệp vóp zộp.</p>
-
-<p>Tôi sẽ sửa lại các đoạn lỗi ngữ pháp để tránh các lỗi bị máy tự sinh ngẫu nhiên gây ảnh hưởng chất lượng tài liệu. (Xin lỗi vì các đoạn dịch trên.)</p>
-<p>Hãy chú ý vài yếu tố ở đây. Chúng ta dùng giá trị chỉ mục là <code>2</code> để rước về phần tử thứ ba, bởi vì chuỗi số chỉ mục của các vector sẽ được cắm mốc chạy dọc từ số 0. Việc bóp dùng <code>&amp;</code> và <code>[]</code> dâng trả lại cho ta một hệ tham chiếu (reference) trỏ ngóc đến ngay đoạn phần tử nắm giữ ở mốc chỉ mục gieo đó. Trong trường hợp ta xoay cán xài qua hàm lệnh <code>get</code> rồi tống móc hệ số chỉ mục index đem làm thông số, ta nhấc bổng lôi về một chuỗi <code>Option&lt;&amp;T&gt;</code> mà với nó ta mặc sức tự quyền dùng tẹt ga kết dính với <code>match</code>.</p>
-<p>Rust chìa sẵn hai cánh ngõ giúp bạn thu tóm định hình cọc phần tử nhằm tặng thêm cho bạn sự linh hoạt quyết sách cách thức mà ứng dụng phần mềm sẽ chống trả khi bạn lỡ vạch xài trúng một con giá trị chỉ mục index tạt bứt qua khỏi lằn ranh giới hạn của mớ phần tử hiện hữu. Ví dụ phác họa điều này, hãy lật xem mặt chuyện khốn gì sẽ ập gõ khi mình giam vọc trên tay một đám vector đút lót vỏn vẹn 5 phần tử rồi thế nào lại cố đấm ăn xôi truy vết dòm trúng cái phần tử tọa lạc ở khu vực bãi đỗ 100 bằng cả hai mánh mạc, giống hệt cách diễn tuồng ở Listing 8-5.</p>
+<p>Rust cung cấp hai cách tham chiếu phần tử để bạn có thể chọn hành vi của chương trình khi dùng index vượt ngoài phạm vi phần tử hiện có. Ví dụ, hãy xem chuyện gì xảy ra khi ta có vector 5 phần tử rồi cố truy cập phần tử ở index 100 bằng cả hai kỹ thuật, như ở Listing 8-5.</p>
 
 <figure class="listing" id="listing-8-5">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust should_panic panics edition2024">fn main() {
     let v = vec![1, 2, 3, 4, 5];
 
     let does_not_exist = &amp;v[100];
     let does_not_exist = v.get(100);
 }</code></pre>
-<figcaption><a href="#listing-8-5">Listing 8-5</a>: Sức cạy mong tóm lấy phần tử neo lọt ở lằn mức chỉ mục index thứ 100 trong cái mảng ruột vector chỉ có xơ xác năm phần tử</figcaption>
+<figcaption><a href="#listing-8-5">Listing 8-5</a>: Cố truy cập phần tử ở index 100 trong vector 5 phần tử</figcaption>
 </figure>
 
-<p>Vào phút mình mím môi chạy quả mã ứng dụng này, miếng võ bám móc <code>[]</code> đánh gục văng làm banh nát (panic) cái phần mềm bởi tội ráng lân la trỏ rờ xạo vô mảng mặt phần tử hư không chẳng tồn tại nơi thế giới. Gã thuật lệnh ngách này nức tiếng nhất nếu bạn sẵn lòng chứng kiến đứa con chương trình của mình tèo (crash) nếu phát lòi ra trò lần mò thó phần tử chọc khỏi rìa đuôi tịt kết mạc của nọc vector.</p>
+<p>Khi chạy code này, cách dùng <code>[]</code> sẽ làm chương trình panic vì tham chiếu đến phần tử không tồn tại. Cách này tốt nhất dùng khi bạn muốn chương trình crash nếu có truy cập vượt ngoài cuối vector.</p>
 
-<p>Ngược lại hắc thế, cái hàm <code>get</code> vào lúc nuốt phải đống chỉ mục index bay vút rìa viền chiều nọc vector, nó đẩy chả <code>None</code> mà vô cùng tịnh mạt không cằn nhằn mâm panic hắt phọt oải tử một miếng. Bạn chóp sẽ ưa áp tay cái thuật cạo dọn bãi này bốc mốc mác nếu lạt sượt trường hạp khục có uất móc cựa trác bóp ráp đứa rục nạt ngụy ngáp vác cố táp móc píp nhục chạm tay bốc vô tụt uộc gợn phần rụp rọc xứa sấp uất tạc.</p>
+<p>Khi method <code>get</code> nhận index vượt ngoài vector, nó trả về <code>None</code> mà không panic. Bạn dùng cách này nếu việc truy cập phần tử ngoài phạm vi có thể xảy ra thỉnh thoảng trong điều kiện bình thường. Code của bạn sẽ cần xử lý cả <code>Some(&amp;element)</code> lẫn <code>None</code>, như đã bàn ở Chương 6. Ví dụ, index có thể đến từ người dùng nhập số. Nếu họ lỡ nhập số quá lớn và chương trình nhận được <code>None</code>, bạn có thể thông báo số lượng item hiện tại và cho họ nhập lại — thân thiện hơn nhiều so với crash chương trình vì lỗi đánh máy!</p>
 
-<p>Rust cần biết tại thời điểm biên dịch vector sẽ chứa kiểu dữ liệu gì nên nó mới tính toán kích thước vùng nhớ trong heap cho từng phần tử. Tương tự, nếu Rust cho vector tùy ý xài mọi tham số sẽ dễ gặp lỗi ở runtime. Enum xử lý việc đó rất an toàn và đồng bộ kết hợp chung <code>match</code>.</p>
+<p>Khi chương trình có một reference hợp lệ, borrow checker thực thi các quy tắc ownership và borrowing (đã nói ở Chương 4) để đảm bảo reference này và mọi reference khác đến nội dung vector đều hợp lệ. Nhớ lại quy tắc: bạn không thể có cả mutable lẫn immutable reference trong cùng scope. Quy tắc này áp dụng trong Listing 8-6, nơi ta giữ immutable reference đến phần tử đầu tiên của vector và cố thêm phần tử vào cuối. Chương trình này sẽ không chạy nếu ta cũng cố tham chiếu đến phần tử đó ở phần sau của hàm.</p>
 
-<p>Sau khi mình lân la làm vòng thảo luận cách sử dụng vector, mời bạn mướn xem gánh <a href="../std/vec/struct.Vec.html">tài liệu API (API documentation)</a><!-- ignore --> để bỏ túi hàng tá phương thức vọc vạch xịn sò cắm chốt định sẵn trên cái sườn <code>Vec&lt;T&gt;</code> qua xưởng gánh standard library chuẩn mẫu cung cấp. Lấy mốc thí dụ, song song cùng anh <code>push</code> lót nhét ổ thêm đằng đuôi chóp là chú method hàm nhổ <code>pop</code> với gán nghiệp vụ giật lấy phăng và trả dọn cái tay phần tử đội đuôi.</p>
+<figure class="listing" id="listing-8-6">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let mut v = vec![1, 2, 3, 4, 5];
 
-<h3 id="dropping-a-vector-drops-its-elements">Phủi Bay Vector Là Dọn Sạch Các Phần Tử Trong Nó (Dropping a Vector Drops Its Elements)</h3>
-<p>Bao đồng chung hệ như mấy cái <code>struct</code> rổn rảng kia, phận một cái bọc vector sẽ được trút thả bốc gỡ bãi (freed) dọn dẹp nhường vùng khi nó bị tụt sải nấc bước bước ra khỏi ranh phạm vi scope của nó, khét lẹt nếp lân la tại Listing 8-10.</p>
+    let first = &amp;v[0];
+
+    v.push(6);
+
+    println!("The first element is: {first}");
+}</code></pre>
+<figcaption><a href="#listing-8-6">Listing 8-6</a>: Cố thêm phần tử vào vector trong khi đang giữ reference đến một item</figcaption>
+</figure>
+
+<p>Compile code này sẽ gặp lỗi sau:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
+ --&gt; src/main.rs:6:5
+  |
+4 |     let first = &amp;v[0];
+  |                  - immutable borrow occurs here
+5 |
+6 |     v.push(6);
+  |     ^^^^^^^^^ mutable borrow occurs here
+7 |
+8 |     println!("The first element is: {first}");
+  |                                      ----- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `collections` (bin "collections") due to 1 previous error
+</code></pre>
+
+<p>Code ở Listing 8-6 trông như thể nên hoạt động được: tại sao reference đến phần tử đầu lại quan tâm đến thay đổi ở cuối vector? Lỗi này xảy ra vì cách vector hoạt động: vector đặt các giá trị cạnh nhau trong bộ nhớ, nên thêm phần tử mới vào cuối có thể yêu cầu cấp phát bộ nhớ mới và sao chép các phần tử cũ sang vùng mới, nếu không có đủ chỗ cho tất cả phần tử nằm cạnh nhau ở vị trí hiện tại của vector. Trong trường hợp đó, reference đến phần tử đầu sẽ trỏ đến bộ nhớ đã được giải phóng. Các quy tắc borrowing ngăn chương trình rơi vào tình huống đó.</p>
+
+<blockquote>
+<p><strong>Lưu ý:</strong> Để biết thêm về chi tiết implementation của <code>Vec&lt;T&gt;</code>, xem <a href="https://doc.rust-lang.org/nomicon/vec/vec.html">"The Rustonomicon"</a>.</p>
+</blockquote>
+
+<h3 id="iterating-over-the-values-in-a-vector">Duyệt Qua Các Giá Trị trong Vector</h3>
+
+<p>Để truy cập lần lượt từng phần tử trong vector, ta sẽ iterate qua tất cả phần tử thay vì dùng index để truy cập từng cái một. Listing 8-7 cho thấy cách dùng vòng lặp <code>for</code> để lấy immutable reference đến từng phần tử trong vector <code>i32</code> và in ra.</p>
+
+<figure class="listing" id="listing-8-7">
+<pre><code class="language-rust edition2024">fn main() {
+    let v = vec![100, 32, 57];
+    for i in &amp;v {
+        println!("{i}");
+    }
+}</code></pre>
+<figcaption><a href="#listing-8-7">Listing 8-7</a>: In từng phần tử trong vector bằng cách iterate với vòng lặp <code>for</code></figcaption>
+</figure>
+
+<p>Ta cũng có thể iterate qua mutable reference đến từng phần tử trong mutable vector để thay đổi tất cả phần tử. Vòng lặp <code>for</code> ở Listing 8-8 sẽ cộng thêm <code>50</code> vào mỗi phần tử.</p>
+
+<figure class="listing" id="listing-8-8">
+<pre><code class="language-rust edition2024">fn main() {
+    let mut v = vec![100, 32, 57];
+    for i in &amp;mut v {
+        *i += 50;
+    }
+}</code></pre>
+<figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterate qua mutable reference đến phần tử trong vector</figcaption>
+</figure>
+
+<p>Để thay đổi giá trị mà mutable reference trỏ đến, ta phải dùng toán tử dereference <code>*</code> để đến được giá trị trong <code>i</code> trước khi dùng toán tử <code>+=</code>. Ta sẽ nói thêm về toán tử dereference ở phần <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">"Following the Reference to the Value"</a> của Chương 15.</p>
+
+<p>Việc iterate qua vector, dù immutable hay mutable, đều an toàn nhờ các quy tắc của borrow checker. Nếu ta cố insert hoặc xóa item trong thân vòng lặp <code>for</code> ở Listing 8-7 và 8-8, ta sẽ gặp lỗi compiler tương tự như code ở Listing 8-6. Reference đến vector mà vòng lặp <code>for</code> nắm giữ ngăn chặn việc sửa đổi toàn bộ vector đồng thời.</p>
+
+<h3 id="using-an-enum-to-store-multiple-types">Dùng Enum để Lưu Nhiều Kiểu</h3>
+
+<p>Vector chỉ lưu được giá trị cùng kiểu. Điều này có thể bất tiện — có những tình huống cần lưu danh sách item có nhiều kiểu khác nhau. May thay, các variant của enum được định nghĩa dưới cùng kiểu enum, nên khi cần một kiểu để đại diện cho các phần tử có kiểu khác nhau, ta có thể định nghĩa và dùng enum!</p>
+
+<p>Ví dụ, giả sử ta muốn lấy giá trị từ một hàng trong bảng tính với một số cột chứa số nguyên, một số chứa số thực, và một số chứa chuỗi. Ta có thể định nghĩa enum với các variant chứa các kiểu giá trị khác nhau, và tất cả variant enum đều được coi là cùng kiểu — kiểu enum đó. Sau đó ta tạo vector để lưu enum và do đó lưu được nhiều kiểu. Ta đã minh họa điều này ở Listing 8-9.</p>
+
+<figure class="listing" id="listing-8-9">
+<pre><code class="language-rust edition2024">fn main() {
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+}</code></pre>
+<figcaption><a href="#listing-8-9">Listing 8-9</a>: Định nghĩa enum để lưu giá trị nhiều kiểu khác nhau trong một vector</figcaption>
+</figure>
+
+<p>Rust cần biết tại compile time vector sẽ chứa kiểu gì để biết cần bao nhiêu bộ nhớ trên heap cho mỗi phần tử. Ta cũng phải rõ ràng về các kiểu được phép trong vector. Nếu Rust cho phép vector chứa bất kỳ kiểu nào, sẽ có khả năng một hoặc nhiều kiểu gây lỗi với các phép toán trên phần tử vector. Dùng enum kết hợp với biểu thức <code>match</code> nghĩa là Rust sẽ đảm bảo tại compile time mọi trường hợp có thể đều được xử lý, như đã bàn ở Chương 6.</p>
+
+<p>Nếu bạn không biết tập hợp đầy đủ các kiểu chương trình sẽ nhận khi runtime để lưu vào vector, kỹ thuật enum sẽ không hoạt động. Thay vào đó, bạn có thể dùng trait object — ta sẽ đề cập ở Chương 18.</p>
+
+<p>Giờ ta đã bàn một số cách phổ biến nhất để dùng vector, hãy nhớ xem qua <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html">tài liệu API</a> cho tất cả các method hữu ích được định nghĩa trên <code>Vec&lt;T&gt;</code> bởi standard library. Ví dụ, ngoài <code>push</code>, method <code>pop</code> xóa và trả về phần tử cuối cùng.</p>
+
+<h3 id="dropping-a-vector-drops-its-elements">Drop Vector là Drop Tất Cả Phần Tử của Nó</h3>
+
+<p>Như bất kỳ <code>struct</code> nào, vector được giải phóng khi nó ra khỏi scope, như được chú thích ở Listing 8-10.</p>
 
 <figure class="listing" id="listing-8-10">
-<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">fn main() {
     {
         let v = vec![1, 2, 3, 4];
 
-        // xào nấu mấy việc cùng v
-    } // &lt;- v bay khỏi phạm vi ranh scope và được thả dẹp freed dọn tại đây
+        // làm gì đó với v
+    } // &lt;- v ra khỏi scope và được giải phóng ở đây
 }</code></pre>
-<figcaption><a href="#listing-8-10">Listing 8-10</a>: Rạch điểm trỏ đích đống vọc vector gánh chung chùm mớ phần tử của nó sực được buông xuôi drop tước dọn ở vạch nào</figcaption>
+<figcaption><a href="#listing-8-10">Listing 8-10</a>: Thấy vị trí vector và các phần tử của nó được drop</figcaption>
 </figure>
 
-<p>Một thủa nọ khi dạo bước gỡ chốt rụng drop phủi gõ vector, trăm phần trăm đám nọc nội dung được che lấp cất bọc bên trong khoang bụng của nó bạt cọng đi theo trượt đuổi xẹp drop luồn dọn tan nát nốt, có lý giải nghĩa đen dọn rạch mớ bèo lũ dòng integer mà gã đang quơ cắp thủ bế sẽ lặn ngụp xóa trắng gọt chác. Công cuộc khứa hệ checker soát mượn khống rập bám chặt vòng hòng giữ đảm bao phủ rằng bao chóp tham chiếu kẹp giữ với nòng nội dung chóp giữa trút ở cái khẩn túi vector ấy khưa dính đều sờn tay điệp chỉ bị lôi lót xài rọc chẻ duy dứt trong chước lúc thời điểm cái vỏ mẹ sườn vector vẫn đang giữ vững thế hợp lệ chắc ních thôi.</p>
+<p>Khi vector được drop, tất cả nội dung của nó cũng được drop — nghĩa là các số nguyên nó chứa sẽ được dọn sạch. Borrow checker đảm bảo mọi reference đến nội dung vector chỉ được dùng trong khi vector còn hợp lệ.</p>
 
-<p>Mình bước tiến dũi hướng đầu vạch tiếp con nhánh collection dạng mới vọc lạ khác đậy: <code>String</code>!</p>
+<p>Hãy chuyển sang kiểu collection tiếp theo: <code>String</code>!</p>
 
-  <div class="page-nav bottom"><a href="ch08-00-common-collections.html">← Trước</a><a href="ch08-02-strings.html">Tiếp →</a></div>
+    <div class="page-nav bottom"><a href="ch08-00-common-collections.html">← Trước</a><a href="ch08-02-strings.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

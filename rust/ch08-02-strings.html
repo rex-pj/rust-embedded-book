@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storing UTF-8 Encoded Text with Strings - The Rust Book (Tiếng Việt)</title>
+  <title>Lưu trữ văn bản UTF-8 với String - The Rust Book (Tiếng Việt)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -138,21 +138,21 @@
       <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <div class="nav-group-title">Chương 16 — Concurrency</div>
       <a href="ch16-00-concurrency.html">Tổng quan</a>
       <a href="ch16-01-threads.html">Threads</a>
       <a href="ch16-02-message-passing.html">Message Passing</a>
       <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Send &amp; Sync</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Chương 17 — Async/Await</div>
       <a href="ch17-00-async-await.html">Tổng quan</a>
       <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với Async</a>
+      <a href="ch17-03-more-futures.html">Thêm về Futures</a>
       <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho Async</a>
       <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
     </div>
     <div class="nav-group">
@@ -160,12 +160,12 @@
       <a href="ch18-00-oop.html">Tổng quan</a>
       <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
       <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+      <a href="ch18-03-oo-design-patterns.html">Design Patterns</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <div class="nav-group-title">Chương 19 — Patterns</div>
       <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Vị trí dùng Patterns</a>
       <a href="ch19-02-refutability.html">Refutability</a>
       <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
     </div>
@@ -175,21 +175,21 @@
       <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
       <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
       <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions</a>
       <a href="ch20-05-macros.html">Macros</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <div class="nav-group-title">Chương 21 — Dự án Web Server</div>
       <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
       <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multithreaded</a>
       <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Phụ lục</div>
       <a href="appendix-00.html">Tổng quan</a>
       <a href="appendix-01-keywords.html">A — Keywords</a>
-      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-02-operators.html">B — Operators</a>
       <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
       <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
       <a href="appendix-05-editions.html">E — Editions</a>
@@ -200,98 +200,397 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — String</span></div>
   <div id="main">
-  <div class="page-nav">
-    <a href="ch08-01-vectors.html">← Trước</a>
-    <a href="ch08-03-hash-maps.html">Tiếp →</a>
-  </div>
+    <div class="page-nav"><a href="ch08-01-vectors.html">← Trước</a><a href="ch08-03-hash-maps.html">Tiếp →</a></div>
 
-<h2 id="storing-utf-8-encoded-text-with-strings">Lưu Trữ Văn Bản Định Dạng UTF-8 Bằng Strings</h2>
-<p>Chúng ta đã từng nhắc đến các chuỗi (strings) ở Chương 4, nhưng bây giờ chúng ta sẽ xem xét chúng sâu hơn. Những người mới học Rust (Rustaceans) thường hay bị mắc kẹt với strings vì sự kết hợp của ba lý do: xu hướng của Rust trong việc phơi bày sự thực về các lỗi có thể xảy ra, strings thực sự là một cấu trúc dữ liệu phức tạp hơn rất nhiều so với những gì các lập trình viên lầm tưởng, và hệ quả từ định dạng UTF-8. Ba yếu tố này kết hợp lại theo một cách có thể mang lại cảm giác khó nhằn khi bạn vừa chuyển sang từ các ngôn ngữ lập trình khác.</p>
-
-<p>Chúng ta thảo luận về strings trong bối cảnh của loại collections bởi vì strings được thực thi thiết kế dưới dạng cốt lõi là một tập hợp các byte (collection of bytes), cộng thêm một số phương thức nhằm cung cấp các chức năng đặc thù hữu ích khi những byte đó được dịch giải dưới dạng văn bản (text). Trong phần này, chúng ta sẽ nói về các thao tác trên <code>String</code> mà mọi loại collection đều có mặt, chẳng hạn như để khởi tạo, cập nhật vào, và đọc nội dung. Chúng ta cũng sẽ bàn tới những khía cạnh làm cho vòng <code>String</code> trở nên khác biệt so với các loại collection khác lạ, cụ thể chốt ở đây là quá trình lập chỉ mục (indexing) vào một cọc <code>String</code> bị chướng ngại rắc rối nhường nào nhờ do nguyên sự khác biệt rẽ nhánh giữa cách con người diễn dịch và cách máy tính phân tích lượng dữ liệu thô của <code>String</code>.</p>
-
-<h3 id="defining-strings">Định Nghĩa Strings</h3>
-<p>Trước tiên chúng ta sẽ định nghĩa từ ngữ cốt lõi thế nào là cái cụm thuật ngữ <em>string</em> (chuỗi). Rust có trơ trọi duy nhất mỗi một chuẩn loại rập chuỗi lọt thỏm trong ngôn ngữ cốt lõi của gã, dạng ấy có tên ghim là string slice <code>str</code> vốn được thiên hạ bắt gặp qua cái vẻ ngoài dạng thể nằm ở hình thức mượn của nó (borrowed form), tức là <code>&amp;str</code>. Quãng ở lùm Chương 4, chúng ta có lạm bàn nhiều về sớ mảng string slices, vốn dĩ là những mốc tham chiếu chỉ mặt đến một trảng dữ liệu chuỗi định dạng UTF-8 được giấu giếm lưu kho chôn ở một nơi chốn xó xỉnh xa xăm đằng nao đó. Ví dụ, lứa biến mảng string literals (chuỗi gõ cứng) lại được đóng kho lưu ngầm trọn ngay trong tệp tập tin nhị phân (binary) bọc ruột chương trình và kéo dây dưa vì lẽ thế chúng cũng nhận trát mặt là dạng lốc string slices.</p>
-
-<p>Sự thể về kiểu <code>String</code>, vốn lại khác rẽ nhánh được hỗ trợ ban trọn từ tay thư viện tiêu chuẩn Rust (standard library) thay vì được code thô cứng vào bên trong xương móng ngôn ngữ, chốt nhận nó chính là một loại cấu trúc chuỗi được bao bọc chuẩn định dạng UTF-8 mang trên mình đầy đủ rạch ròi đặc tính nở bề nở bự (growable), chuyển biến luân dời (mutable), và ẵm giữ độc tôn quyền sở hữu cầm đầu (owned). Ngay lúc các gã xưng danh con dân Rust (Rustaceans) réo vòi bóc mác "strings" (những mã chuỗi) trân mình ở trong hệ sinh hoạt Rust, rành rọt là tụi họ tung ý ngụ chỉ tới luôn cả phe kiểu <code>String</code> sừng sững cũng như cái lốc string slice hệ mã <code>&amp;str</code> vắt ngang vai, chứ thề không phải là dọn chỉ mặt ném tên duy một hệ loại mâm nào. Mặc cho dẫu nguyên cả đống chương phần khúc này có nhắm chĩa mũi dùi chủ yếu xoay xòng vòng quanh anh chàng <code>String</code>, cả ráo đôi hai loại trác kiểu mác này đều vác được tận dụng xài sể phung phí rầm rập nhẵn mặt trong dọn thư viện standard library ruột ở Rust, rập đồng lạt gã hai trượng <code>String</code> và bè sớ lố string slices gộp chụm lại đều văm vát tuân quy phục mác cấu trúc chuẩn dạng chữ mã hóa lọt UTF-8.</p>
-
-<h3 id="creating-a-new-string">Khởi Tạo Một String Mới</h3>
-<p>Nằm xếp lớp lân la nhiều bề vô số những trò phép thao tác sử dụng chung chạ có mặt làm được với tay `Vec&lt;T&gt;` y xì hệt nhộp cũng hoàn toàn múa vọc thao túng tươm tất với đứa cá thể <code>String</code> luôn, ấy tại do thực tiễn gã <code>String</code> này được xây rập khuôn mô phỏng trọn vẹn ngụy đóng vai như một bộ dạng áo bọc phễu gác (wrapper) nằm ngoài ôm che lấy trọn cho một khối mảng rổ vector nhét ních đặc nêm toàn mẩu bytes thôi đi kèm nhúm gắn thêm chọc vài chiêu rào cam đoan thắt chặt bảo chứng, luật vòng cấm kiểm quy chuẩn hạn chế ép góc, và cấp phép tính năng phụ năng nổ. Lọt vô rổ một dọn ví dụ rõ ràng lấy một móc hàm thực hiện cách phác múa hoạt họa làm việc sêm sêm tương đồng lọt tọt ở chốn <code>Vec&lt;T&gt;</code> y giáp lộn với <code>String</code> chính là nấc vốc khai gọi thóp sinh lôi cọc hàm lệnh <code>new</code> dùng chóp cắm sinh khởi đẻ tung ra một phác tạo bản mẫu thực thể cá thể (instance) sống mới cáu, nằm khoe hàng phô dọn đập vọc ngự trị tráp ở đúc dòng Listing 8-11 đây.</p>
-
+    <h2 id="storing-utf-8-encoded-text-with-strings"><a class="header" href="#storing-utf-8-encoded-text-with-strings">Lưu trữ văn bản UTF-8 với String</a></h2>
+<p>Ta đã đề cập đến string ở Chương 4, nhưng giờ mình sẽ đào sâu hơn một chút.
+Nhiều Rustacean mới hay bị vấp ở phần string vì ba lý do kết hợp với nhau:
+Rust hay lộ ra các lỗi tiềm ẩn, string thực ra là một cấu trúc dữ liệu phức tạp hơn
+nhiều người nghĩ, và cuối cùng là UTF-8. Ba thứ này cộng lại dễ làm bạn choáng
+nếu bạn vừa chuyển sang từ ngôn ngữ khác.</p>
+<p>Ta bàn về string trong ngữ cảnh collections vì string thực chất được cài đặt
+như một tập hợp các byte, kèm theo một số method giúp xử lý dữ liệu khi các byte
+đó được hiểu là văn bản. Trong phần này, ta sẽ nói về các thao tác trên <code>String</code>
+mà mọi collection đều có, như tạo mới, cập nhật và đọc. Ta cũng sẽ bàn về
+những điểm khiến <code>String</code> khác các collection khác — cụ thể là tại sao việc
+truy cập bằng index vào <code>String</code> lại phức tạp do sự khác biệt giữa cách người
+và máy tính hiểu dữ liệu <code>String</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="what-is-a-string"></a></p>
+<h3 id="defining-strings"><a class="header" href="#defining-strings">Định nghĩa String</a></h3>
+<p>Trước hết, hãy làm rõ ta đang nói đến cái gì khi nhắc tới <em>string</em>. Rust chỉ
+có một kiểu string duy nhất ở tầng ngôn ngữ lõi, đó là string slice <code>str</code>,
+thường xuất hiện dưới dạng mượn là <code>&amp;str</code>. Ở Chương 4, ta đã nói về string
+slice — chúng là các tham chiếu đến dữ liệu string được mã hóa UTF-8 lưu
+ở nơi khác. Ví dụ, string literal được lưu trong binary của chương trình,
+vì thế chúng là string slice.</p>
+<p>Còn kiểu <code>String</code> thì do thư viện chuẩn của Rust cung cấp chứ không phải
+là một phần của ngôn ngữ lõi — đây là kiểu string có thể mở rộng, mutable,
+có ownership, và được mã hóa UTF-8. Khi Rustacean nói đến "string" trong Rust,
+họ có thể đang nhắc đến cả <code>String</code> lẫn <code>&amp;str</code>, không chỉ một trong hai.
+Mặc dù phần này chủ yếu nói về <code>String</code>, cả hai kiểu đều được dùng nhiều
+trong thư viện chuẩn và đều được mã hóa UTF-8.</p>
+<h3 id="creating-a-new-string"><a class="header" href="#creating-a-new-string">Tạo một String mới</a></h3>
+<p>Nhiều thao tác dùng được với <code>Vec&lt;T&gt;</code> cũng dùng được với <code>String</code>, bởi vì
+<code>String</code> thực ra được cài đặt như một wrapper quanh vector byte với một số
+đảm bảo, hạn chế và khả năng thêm. Một ví dụ là hàm <code>new</code> để tạo một instance,
+như Listing 8-11 dưới đây.</p>
 <figure class="listing" id="listing-8-11">
-<span class="file-name">Tên file: src/main.rs</span>
-<pre><code class="language-rust edition2024">fn main() {
-    let mut s = String::new();
-}</code></pre>
-<figcaption><a href="#listing-8-11">Listing 8-11</a>: Cấu tạo bật văng chóp ra một cái khung <code>String</code> trống tuếch rỗng hoác cựa mới</figcaption>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::new();
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-11">Listing 8-11</a>: Tạo một <code>String</code> rỗng mới</figcaption>
 </figure>
-
-<p>Nguyên lằn ranh gõ dòng chóp code này xuất chiêu khởi dựng ra một chiếc vòng biến chứa chuỗi lốp vắng rỗng tảng tê tên gọi là mác gã biên <code>s</code>, rập tọt rồi cựa từ cái vỏ này vác sau đó mình thốc quyền thả nạp rốp tuốt rót dọng tuột dữ liệu cất lọt vô sườn trủng bụng túi của nó. Thường nhật tháp thường thì, lũ mình hay bắt mối chộp cầm đúc sẵn mươi mẫu nấc vốc một nhúm dữ kiện điệp bộ phận ban mào đầu sơ để mà muốn dựa tựa vốc đó cài dặm tạc vọc thắt trọn chóp để nương bắt tay nhồi nhét ngòi nổ phát xướng khai mào quặn cho dọn khối mảng chữ chuỗi ấy có lõi sẵn. Rắp hòng điệu được sớ chuyện dóng vọc kia, phe bọn mình móc ngoặc bợ xài gióng cái cựa phương vóc thức tay method <code>to_string</code>, đít đứa xước tọc sẵn có chễm vóc trình diễn mở thốc xài vác tại tọt trên ráo chọi tuốt luốt bất cứ mặt loại pạc định gán hình thức khai báo kiểu nhấc phọc type ngọng náp nào mang mác tự chứa trang bị quấn thân thực thi đắp hàm tọt triển khai bóc cái póp trait xưng nạp <code>Display</code>, nạp y xé hớp pớt sạp hệt cái náp gã tụt vẹo lố dạng rập chuỗi hằng trơ string literals trác kia múa bộ dạng nứa chộp nó trạp cũng y báp hệt trang tước bị bọc vác rứa. Vọc dòng móc mác nhép mốp tay quăng xứa dạp Listing 8-12 lộ diện xíp xuất gác móc rác bung trình đập ra cặp lứa móc quặp uất kẹp hai móc vạc bộ chép uất thí lọt vụ vốp pạt ví cợt ngáp dáp dụ rụt đáp cụ lúc lượp rạc thể hút náp đó tụt.</p>
-
+<p>Dòng này tạo ra một string rỗng tên là <code>s</code>, sau đó ta có thể nạp dữ liệu vào.
+Thường thì ta sẽ có sẵn dữ liệu ban đầu để khởi tạo string. Khi đó, ta dùng
+method <code>to_string</code>, có sẵn trên bất kỳ kiểu nào implement trait <code>Display</code>,
+trong đó có string literal. Listing 8-12 cho thấy hai cách dùng.</p>
 <figure class="listing" id="listing-8-12">
-<span class="file-name">Tên file: src/main.rs</span>
-<pre><code class="language-rust edition2024">fn main() {
-    let data = "initial contents";
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let data = "initial contents";
 
     let s = data.to_string();
 
-    // Con phương thức này cũng vọc vuốt áp ngon mướt gõ chạy làm độp xướng trọn cắm rập vuốt cọt trực bóp rác đứt uất tiếp rụp ráp luôn uốt với mộc rác xọc bạt cục rụp nập kiểu sập tọt nhét dặp vỏ hằng tạc chuỗi trơ qụt chớp vác lót hớp string wụp pợp pệp rập eẹp gụp fệp ú literals uệp dạp ứ tấp xáp pạp í lấp yạp đập nạp wệp jệp mệp ế tệp xáp kẹp aệp dập này yẹp ụp xụp fặp ngáp sệp fếp hệp hạp fịp nếp đây vập jệp yập:
+    // Method này cũng dùng được trực tiếp trên literal:
     let s = "initial contents".to_string();
-}</code></pre>
-<figcaption><a href="#listing-8-12">Listing 8-12</a>: Triển xướng hàm chiêu thức <code>to_string</code> để nhào nặn cấu xướng phát tạc ra một mảng loại biến <code>String</code> cất lồi nộp vuốt lấy móc ra phóc rụp từ bên mé rễ páp chọc con ruột của thằng biến hằng <code>string literal</code> chứa phọt sẵn đó quấn lạp uóp khợp uớp mộp ốp díp gệp hệp qóp.</figcaption>
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-12">Listing 8-12</a>: Dùng method <code>to_string</code> để tạo <code>String</code> từ string literal</figcaption>
 </figure>
-
-<p>Thành phẩm vạch dấu đúc nặn tung túy dọn bãi múc dòng tay lệnh mớ ráp mác này xuất phát tạc sinh tạo dóng lộ bóc chóp lạt phọc dúp ra phanh được mộc một cái cục pạp sợi rập chuỗi ôm bám gói dấn lút giấu pụp trong dạp xứa bọc bụng tít bận oọc nó cái gã mẩu lời câu chữ <code>initial contents</code>.</p>
-
-<p>Nhóm ta cũng hoàn toàn có cửa lôi xách tận dụng thao tác móc khều thẳng thừng xưởng đúc qua phương dọn pháp tay hàm chức năng cớ <code>String::from</code> hòng nhồi đẻ ra được một cá thể <code>String</code> từ mảnh khung xương cốt đụn kiểu một múc uột thằng cựa vạy náp mụp lứt mâm chuỗi <code>string literal</code> hằng bóp kẹp sẵn tay mác. Cái cuống ngõ khúc vạch dòng đoạn khứa mã rắp móc pạc nác phập vạt chứa rạp bộn tít kẹp vựa code mạt nằm rựa ở đứt móc dọn Listing 8-13 đây phơi hiện ra dọn tác vụ ứng chức năng hẹp đớp xép lốp xáp dộp y nhịp đúc xấp hẹp khóp y hệt phỉnh móc tụt tương khập ngúp đương xáp hướm díp vớt cái dọng tọt phọt đoạn nấp lệnh cựa ngực ở lườn dốc chói oọc hợt phía mác quít rớt trong Listing 8-12 túc móc nứa phanh lọt chỗ ngác thút đó vệt móc bợ có tọng lôi nọng bứt nớ bóc nhờ nạp lụn vuốt giật póp cục trợ bám hướm từ thằng nứt mứt cừa bạn tạc cục đụn tay thóp nặc mỏ <code>to_string</code> bóp khứa xớp ấy xáp.</p>
-
+<p>Đoạn code này tạo ra một string chứa <code>initial contents</code>.</p>
+<p>Ta cũng có thể dùng hàm <code>String::from</code> để tạo <code>String</code> từ string literal.
+Đoạn code ở Listing 8-13 tương đương với Listing 8-12 dùng <code>to_string</code>.</p>
 <figure class="listing" id="listing-8-13">
-<span class="file-name">Tên file: src/main.rs</span>
-<pre><code class="language-rust edition2024">fn main() {
-    let s = String::from("initial contents");
-}</code></pre>
-<figcaption><a href="#listing-8-13">Listing 8-13</a>: Tung mỏ bệu tay mượn viện vọc lót sài xói tợ ngọc tay gáp phương bợ háp cạc cớ tháp hàm chứa <code>String::from</code> cốt ực quật sáp bập húp lịp móp đắp trác rác tạo lạo tựu nhấp khóp tọt một chíp uúp giáp <code>String</code> hót kệp mác uọt lột tước phíp bám lấy ướm mịp iệp pụp trọc xứa từ đúc hác rực uịp búp cái kíp ngụy tộp chắp nhịp ấp điệp chuỗi ép gáp tụi khụp string rạp mạp literal dóp qộp tướp quép lạp dẹp míp dập xẹp</figcaption>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s = String::from("initial contents");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-13">Listing 8-13</a>: Dùng hàm <code>String::from</code> để tạo <code>String</code> từ string literal</figcaption>
 </figure>
-
-<p>Cứ vì lẽ do đống tập đoàn kiểu vòng con chuỗi strings lượn lách chen quẩn chọc vác nướng nhệp chen chân ở đâm phọt rải la díp lóp được uịp móc dùng mặp vạt áp pẹp kíp bặp gập để làm ngáng iệp píp rác dóp giải bệp qúp kíp đoạt wệp nắp vạp quyết sếp dặp zặp qẹp xử xệp pịp eệp lịp óp lý cíp rộp qịp nập được eệp dập sếp ti êp cíp lẹp gập ríp yẹp rập eệp mớp zệp oệp tỉ mụp fếp pẹp đập sẹp bao hệp lạp nhiêu mớp ngụp cộp oạp bặp aạp xạp rớp tệp đống híp fẹp việc vệp rặp khác pặp síp tệp biệt hép víp sẹp uếp xập quập nhau zíp úp sếp yệp mập rập uạp oóp kíp tệp, ụp díp pẹp nẹp aạp wệp bíp uớp xập cộp aép fệp aệp hệp qệp iếp iếp bẹp nên dúp qếp tựu sẹp sệp iịp rặp bếp zếp hếp báp iíp móp uép xập zập vẹp zóp nẹp iẹp nẹp mặp ngạp fếp bặp aệp uếp kẹp jệp oệp pệp aép úp wập oóp eệp xệp pặp sếp wếp mịp sếp mệp yệp bọn iập mình sập uập jẹp đớp sẹp xóp qệp iếp ộp zệp wếp síp ríp iếp.</p>
-
-<p>Ngôn ngữ Rust cho chúng ta vô vàn API generic đa dạng dành cho string, mang đến nhiều quyền tùy chọn tha hồ thay thế linh hoạt cho nhau. Vài cái mang lại cảm giác dư thừa lặp lại, tuy thế nhưng toàn bộ chung quy đều có vai trò ngự tọa xưng danh riêng của đôi phần tử đó! Cụ thể với trong vụ trường hợp trớ trêu điển hình này, con phương thức <code>String::from</code> và hàm ứng vọc <code>to_string</code> thực tế thi thố cựa chạy sinh quả ra rành rọt y hệt một quy trình công việc chung như nhau, dọn đít hệ quả bệ rập khuôn bằng chặng chọn lựa nhấp chuột vào lấy gán xài bất kỳ một lựa mấu rễ nào đi đụn chóp nữa thì tựu trung lại lọt rớt trót lọt ấy tạc cũng tự trạch phác ở chỉ còn lại cái cốt quấn do yếu xệp chắp lọt vào uố phíp tụt gáp điệu cá gạt tước tấp díp điệp nhân pếp cắp của uếp rệp cá nạp cếp níp người đệp fệp rẹp bíp coder mếp úp đó uóp nặp.</p>
-
-<p>Nhớ hằng dằn khắc tâm điểm rác phập nhóng đíp iệp óc qóp tụt chuỗi lốp vòng strings móc xép hứa hẹn ngáp ráng lọt được bảo uột tộp uợt bọc ráp đóng đúc trói qóp tọt chặt hướm theo cước khuông pộp rịp dạng iếp zệp eệp xụp format quíp hệ uớp wịp UTF-8, díp lếp yạp íp thế lụp cúp qẹp xịp lẹp qập nếp fệp múp eíp lịp nên aặp gụp dệp nặp tớp jệp nặp tệp mình iếp fập xệp eệp lịp híp kíp.</p>
-
-<p>Bản dịch cần đảm bảo tính văn phong nghiêm túc cho công việc.</p>
-
-<p>Chúng ta thảo luận về string trong ngữ cảnh của những loại collection bởi vì các string dưới lớp nền móng được hiện thực hóa như là một nhóm collection gom giữ lấy tập hợp các byte, kèm theo vài nhánh methods để ban phát nhiều công cụ chức năng hữu dụng tiện lợi khi dải lượng bytes tóm thâu đó được luận dịch ra dưới diện mặt ngôn từ định mác văn bản text chữ. Ở ngay khu góc lề nhánh chóp cắt nhát nội dung phần vọc này đây, tớ sẽ xoáy nhịp băm tán điệu tới tấp vòng quanh các cựa lệnh tác vụ hàm hố phóc ngoéo thao thó rụng tót lấp mụt mấp tụt xọc vốc tác qụt lụt của khíp sụp dóp loại hứa mỏ ngốc vọc lới mặt vòng vục `String` mà y cặc đúc mọn rộp cược đước dác nụp như uột nức thảy cựa trược quặc đại kíp hục tụt vệt đa sụt nhóc khóp díp số hốp gợt cựt mộp tụi óp yíp tập uệp độp hợp mớp collections đếp vặp kíp uốp jập hặp báp fập aệp đệp aệp rập fệp nặp ụp hệp xóp uộp nệp ếp yặp đếp bệp vệp tệp sập yíp vộp.</p>
-
-<p>Lý do chuỗi <code>s1</code> không còn hiệu lực sau khi cộng chuỗi, và việc phải dùng tham chiếu <code>s2</code> là do nguyên lý chữ ký của hàm khi ta dùng dấu <code>+</code>. Dấu <code>+</code> gọi đến hàm <code>add</code> theo dạng chữ ký sau:</p>
-
+<p>Vì string được dùng cho quá nhiều thứ nên ta có rất nhiều API generic cho string,
+dẫn đến nhiều lựa chọn. Một số trông có vẻ dư thừa, nhưng chúng đều có chỗ đứng!
+Trong trường hợp này, <code>String::from</code> và <code>to_string</code> làm cùng một việc, bạn
+chọn cái nào là tùy phong cách và dễ đọc.</p>
+<p>Nhớ rằng string được mã hóa UTF-8, nên ta có thể chứa bất kỳ dữ liệu nào
+được mã hóa đúng trong đó, như Listing 8-14 minh họa.</p>
+<figure class="listing" id="listing-8-14">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let hello = String::from("السلام عليكم");
+    let hello = String::from("Dobrý den");
+    let hello = String::from("Hello");
+    let hello = String::from("שלום");
+    let hello = String::from("नमस्ते");
+    let hello = String::from("こんにちは");
+    let hello = String::from("안녕하세요");
+    let hello = String::from("你好");
+    let hello = String::from("Olá");
+    let hello = String::from("Здравствуйте");
+    let hello = String::from("Hola");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-14">Listing 8-14</a>: Lưu lời chào bằng nhiều ngôn ngữ khác nhau trong string</figcaption>
+</figure>
+<p>Tất cả những cái trên đều là giá trị <code>String</code> hợp lệ.</p>
+<h3 id="updating-a-string"><a class="header" href="#updating-a-string">Cập nhật một String</a></h3>
+<p>Một <code>String</code> có thể tăng kích thước và nội dung có thể thay đổi, giống như
+nội dung của <code>Vec&lt;T&gt;</code> khi bạn nhét thêm dữ liệu vào. Ngoài ra, bạn còn có thể
+dùng toán tử <code>+</code> hoặc macro <code>format!</code> để nối các <code>String</code> lại với nhau.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="appending-to-a-string-with-push_str-and-push"></a></p>
+<h4 id="appending-with-push_str-or-push"><a class="header" href="#appending-with-push_str-or-push">Thêm vào cuối với <code>push_str</code> hoặc <code>push</code></a></h4>
+<p>Ta có thể mở rộng <code>String</code> bằng cách dùng method <code>push_str</code> để thêm một
+string slice, như Listing 8-15 dưới đây.</p>
+<figure class="listing" id="listing-8-15">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("foo");
+    s.push_str("bar");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-15">Listing 8-15</a>: Thêm string slice vào <code>String</code> bằng method <code>push_str</code></figcaption>
+</figure>
+<p>Sau hai dòng này, <code>s</code> sẽ chứa <code>foobar</code>. Method <code>push_str</code> nhận vào string
+slice vì ta không nhất thiết muốn lấy ownership của tham số. Ví dụ, trong
+đoạn code ở Listing 8-16, ta muốn vẫn dùng được <code>s2</code> sau khi đã thêm nội
+dung của nó vào <code>s1</code>.</p>
+<figure class="listing" id="listing-8-16">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s1 = String::from("foo");
+    let s2 = "bar";
+    s1.push_str(s2);
+    println!("s2 is {s2}");
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-16">Listing 8-16</a>: Dùng string slice sau khi đã thêm nội dung của nó vào <code>String</code></figcaption>
+</figure>
+<p>Nếu <code>push_str</code> lấy ownership của <code>s2</code>, ta sẽ không in được giá trị của nó
+ở dòng cuối. Nhưng code này hoạt động đúng như kỳ vọng!</p>
+<p>Method <code>push</code> nhận vào một ký tự đơn và thêm nó vào <code>String</code>. Listing 8-17
+thêm chữ <em>l</em> vào một <code>String</code> bằng method <code>push</code>.</p>
+<figure class="listing" id="listing-8-17">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("lo");
+    s.push('l');
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-17">Listing 8-17</a>: Thêm một ký tự vào <code>String</code> bằng <code>push</code></figcaption>
+</figure>
+<p>Kết quả là <code>s</code> sẽ chứa <code>lol</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="concatenation-with-the--operator-or-the-format-macro"></a></p>
+<h4 id="concatenating-with--or-format"><a class="header" href="#concatenating-with--or-format">Nối chuỗi với <code>+</code> hoặc <code>format!</code></a></h4>
+<p>Thường thì bạn sẽ muốn kết hợp hai string có sẵn lại. Một cách là dùng
+toán tử <code>+</code>, như Listing 8-18 dưới đây.</p>
+<figure class="listing" id="listing-8-18">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("Hello, ");
+    let s2 = String::from("world!");
+    let s3 = s1 + &amp;s2; // lưu ý s1 đã bị move vào đây và không dùng được nữa
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-18">Listing 8-18</a>: Dùng toán tử <code>+</code> để kết hợp hai <code>String</code> thành một <code>String</code> mới</figcaption>
+</figure>
+<p>String <code>s3</code> sẽ chứa <code>Hello, world!</code>. Lý do <code>s1</code> không còn hợp lệ sau phép cộng,
+và tại sao ta dùng tham chiếu đến <code>s2</code>, liên quan đến signature của method
+được gọi khi ta dùng toán tử <code>+</code>. Toán tử <code>+</code> dùng method <code>add</code>, có signature
+trông đại khái như thế này:</p>
 <pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
+<p>Trong thư viện chuẩn, bạn sẽ thấy <code>add</code> được định nghĩa với generics và
+associated types. Ở đây ta đã thay bằng kiểu cụ thể, tức là điều xảy ra khi
+ta gọi method này với giá trị <code>String</code>. Ta sẽ nói về generics ở Chương 10.
+Signature này cung cấp những manh mối để hiểu những điểm kỳ lạ của toán tử <code>+</code>.</p>
+<p>Đầu tiên, <code>s2</code> có dấu <code>&amp;</code>, nghĩa là ta đang thêm một tham chiếu đến string
+thứ hai vào string thứ nhất. Điều này bởi vì tham số <code>s</code> trong hàm <code>add</code>:
+ta chỉ có thể thêm một string slice vào một <code>String</code>; không thể cộng hai
+<code>String</code> trực tiếp. Nhưng khoan — kiểu của <code>&amp;s2</code> là <code>&amp;String</code>, không phải
+<code>&amp;str</code> như tham số thứ hai của <code>add</code> yêu cầu. Vậy tại sao Listing 8-18
+vẫn compile được?</p>
+<p>Lý do ta dùng được <code>&amp;s2</code> trong lời gọi <code>add</code> là vì compiler có thể ép kiểu
+<code>&amp;String</code> thành <code>&amp;str</code>. Khi ta gọi method <code>add</code>, Rust dùng deref coercion,
+ở đây biến <code>&amp;s2</code> thành <code>&amp;s2[..]</code>. Ta sẽ bàn sâu hơn về deref coercion ở
+Chương 15. Vì <code>add</code> không lấy ownership của tham số <code>s</code>, <code>s2</code> vẫn là một
+<code>String</code> hợp lệ sau thao tác này.</p>
+<p>Thứ hai, ta thấy trong signature rằng <code>add</code> lấy ownership của <code>self</code> vì
+<code>self</code> không có dấu <code>&amp;</code>. Điều này có nghĩa <code>s1</code> trong Listing 8-18 sẽ bị
+move vào lời gọi <code>add</code> và không còn hợp lệ sau đó. Vì vậy, mặc dù
+<code>let s3 = s1 + &amp;s2;</code> trông như sẽ copy cả hai string rồi tạo mới, câu lệnh
+này thực ra lấy ownership của <code>s1</code>, thêm bản copy nội dung của <code>s2</code>, rồi
+trả về ownership của kết quả. Nói cách khác, trông như copy nhiều thứ
+nhưng thực ra không phải; cách cài đặt này hiệu quả hơn copy.</p>
+<p>Nếu ta cần nối nhiều string, hành vi của toán tử <code>+</code> trở nên rắc rối:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
 
-<p>Trong thư viện chuẩn (standard library), bạn sẽ thấy hàm <code>add</code> vốn được định nghĩa bằng các generic và các kiểu gắn kết (associated types). Ở đây, chúng ta đã thay thế bằng các kiểu cụ thể (concrete types), vì đây là điều thực sự xảy ra khi ta gọi phương thức này trên tập giá trị <code>String</code>. Chúng ta sẽ phân tích kỹ về generics tại Chương 10. Chữ ký này chính là bằng chứng tố giác tiết lộ các bí mật cần thiết để lý giải tường tận mấy chỗ rắc rối trong phương án dùng toán tử <code>+</code>.</p>
+    let s = s1 + "-" + &amp;s2 + "-" + &amp;s3;
+<span class="boring">}</span></code></pre>
+<p>Lúc này <code>s</code> sẽ là <code>tic-tac-toe</code>. Với đống dấu <code>+</code> và <code>"</code> lộn xộn, khó
+mà đọc hiểu code. Khi cần nối string theo cách phức tạp hơn, ta có thể dùng
+macro <code>format!</code> thay thế:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
 
-<p>Đầu tiên, <code>s2</code> có <code>&amp;</code>, chứng tỏ chúng ta đang cộng thẳng một cái tham chiếu của chuỗi thứ hai nhét vào chuỗi thứ nhất. Đó là bởi vì sự hình thành của định dạng tham số <code>s</code> lọt lòng bên trong nội tại hàm <code>add</code>: Bạn chỉ có khả năng đắp chèn một mẫu dải trích đoạn string slice đem mớm ghép nhập bổ sung tọt vào chửa ôm đụn gá dán một khối <code>String</code>; chứ trơ mắt tịt chả thể quăng cục gọt phứa gá lộn một lần chắp hai con quỷ dọn chóp dạng mâm <code>String</code> dán nạm tọng ập sập chắp mặt uốt tụt bóp móc ghép vác gọt nhau sớp khứa hớp một bóp lựt sặp lúc rạt kíp.</p>
-<p>Những nguyên lẽ về sau liên quan tới ép ép ép múc sút rụt vụ bóp rút chớp díp... </p>
-<!-- TẠM DỪNG VIỆC DỊCH VĂN BẢN QUÁ LINH TINH. TIẾP TỤC DÙNG PYTHON DO MODEL TIẾNG VIỆT KÉM. CHỈ XUẤT TIẾNG VIỆT HOÀN HẢO.-->
+    let s = format!("{s1}-{s2}-{s3}");
+<span class="boring">}</span></code></pre>
+<p>Code này cũng gán <code>s</code> bằng <code>tic-tac-toe</code>. Macro <code>format!</code> hoạt động giống
+<code>println!</code>, nhưng thay vì in ra màn hình, nó trả về một <code>String</code> với nội dung
+tương ứng. Phiên bản dùng <code>format!</code> dễ đọc hơn nhiều, và code do macro
+<code>format!</code> tạo ra dùng tham chiếu nên không lấy ownership của bất kỳ tham số
+nào.</p>
+<h3 id="indexing-into-strings"><a class="header" href="#indexing-into-strings">Truy cập String bằng index</a></h3>
+<p>Trong nhiều ngôn ngữ lập trình khác, truy cập từng ký tự trong string bằng
+index là thao tác bình thường và phổ biến. Tuy nhiên, nếu bạn thử truy cập
+các phần của <code>String</code> bằng cú pháp index trong Rust, bạn sẽ gặp lỗi. Hãy
+xem đoạn code không hợp lệ ở Listing 8-19.</p>
+<figure class="listing" id="listing-8-19">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1 = String::from("hi");
+    let h = s1[0];
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-8-19">Listing 8-19</a>: Thử dùng cú pháp index với <code>String</code></figcaption>
+</figure>
+<p>Đoạn code này sẽ gây ra lỗi sau:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+error[E0277]: the type `str` cannot be indexed by `{integer}`
+ --&gt; src/main.rs:3:16
+  |
+3 |     let h = s1[0];
+  |                ^ string indices are ranges of `usize`
+  |
+  = help: the trait `SliceIndex&lt;str&gt;` is not implemented for `{integer}`
+  = note: you can use `.chars().nth()` or `.bytes().nth()`
+          for more information, see chapter 8 in The Book: &lt;https://doc.rust-lang.org/book/ch08-02-strings.html#indexing-into-strings&gt;
+  = help: the following other types implement trait `SliceIndex&lt;T&gt;`:
+            `usize` implements `SliceIndex&lt;ByteStr&gt;`
+            `usize` implements `SliceIndex&lt;[T]&gt;`
+  = note: required for `String` to implement `Index&lt;{integer}&gt;`
 
-<p>Thứ hai, chúng ta có thể đọc từ chữ ký rằng hàm <code>add</code> sẽ chiếm luôm quyền sở hữu (ownership) của <code>self</code> do <code>self</code> hoàn toàn <em>không</em> nhận về ký hiệu <code>&amp;</code>. Điều này nôm na mang hàm ý lệnh <code>s1</code> lấp lửng ở chỗ Listing 8-18 sẽ bị cưỡng ép chuyển (moved) luôn trực tiếp kéo vô khu vực lệnh gọi hàm <code>add</code> và trở thành món phế liệu mất đi sự hợp lệ vô tác dụng sau cú gọi nháy lệnh đó. Vì lẽ vậy, cho dẫu thao tác gõ <code>let s3 = s1 + &amp;s2;</code> trông hệt như là nó đang đúc mâm copy tạc chép bản gốc của đôi lứa quỷ chuỗi nọ hòng chế ra vạt lốc con chuỗi cựa vác lứa thứ ba bóc khấn nứa mốc lót nằm trác xạo nhóc rác đó, dẫu múc điệu tróc vốc nó vụp phác oọc vạc qạp thì đứt hướm nạp chốc tạt bắp rợp mặt bốc cạp thực uốc bọc khóp chất lạy póp mác của cựa mạc vạt pập cút vóc... câu thần chú quăng ném vọc gắp đập dạp lướp oạch gốp oọc óp statement kóp ấy mếp úp wập bóp dẹp aệp yệp tệp đập xệp rệp quíp nếp xíp cíp đập pếp bập lặp é lặp oợp wíp zệp pệp ép yập uớp á bệp wụp ạp fệp rập iệp fẹp sếp tặp íp ù gụp jếp hệp dệp xệp.</p>
-<!-- Lỗi vỡ ngữ cảnh tiếng Việt vẫn xảy ra liên tục!! -->
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `collections` (bin "collections") due to 1 previous error
+</code></pre>
+<p>Lỗi đã nói lên tất cả: Rust string không hỗ trợ index. Nhưng tại sao? Để
+trả lời câu hỏi đó, ta cần bàn về cách Rust lưu string trong bộ nhớ.</p>
+<h4 id="internal-representation"><a class="header" href="#internal-representation">Biểu diễn nội tại</a></h4>
+<p>Một <code>String</code> là wrapper quanh <code>Vec&lt;u8&gt;</code>. Hãy nhìn lại một số string UTF-8
+được mã hóa đúng từ Listing 8-14. Đầu tiên, cái này:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let hello = String::from("السلام عليكم");
+</span><span class="boring">    let hello = String::from("Dobrý den");
+</span><span class="boring">    let hello = String::from("Hello");
+</span><span class="boring">    let hello = String::from("שלום");
+</span><span class="boring">    let hello = String::from("नमस्ते");
+</span><span class="boring">    let hello = String::from("こんにちは");
+</span><span class="boring">    let hello = String::from("안녕하세요");
+</span><span class="boring">    let hello = String::from("你好");
+</span><span class="boring">    let hello = String::from("Olá");
+</span><span class="boring">    let hello = String::from("Здравствуйте");
+</span>    let hello = String::from("Hola");
+<span class="boring">}</span></code></pre>
+<p>Trong trường hợp này, <code>len</code> sẽ là <code>4</code>, nghĩa là vector lưu string
+<code>"Hola"</code> dài 4 byte. Mỗi chữ cái này chiếm 1 byte khi mã hóa UTF-8. Tuy
+nhiên, dòng tiếp theo có thể khiến bạn ngạc nhiên (lưu ý string này bắt đầu
+bằng chữ hoa Cyrillic <em>Ze</em>, không phải số 3):</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let hello = String::from("السلام عليكم");
+</span><span class="boring">    let hello = String::from("Dobrý den");
+</span><span class="boring">    let hello = String::from("Hello");
+</span><span class="boring">    let hello = String::from("שלום");
+</span><span class="boring">    let hello = String::from("नमस्ते");
+</span><span class="boring">    let hello = String::from("こんにちは");
+</span><span class="boring">    let hello = String::from("안녕하세요");
+</span><span class="boring">    let hello = String::from("你好");
+</span><span class="boring">    let hello = String::from("Olá");
+</span>    let hello = String::from("Здравствуйте");
+<span class="boring">    let hello = String::from("Hola");
+</span><span class="boring">}</span></code></pre>
+<p>Nếu bạn được hỏi chuỗi này dài bao nhiêu, bạn có thể đáp là 12. Nhưng thực
+ra Rust trả lời là 24: đó là số byte cần để mã hóa "Здравствуйте" trong UTF-8,
+vì mỗi Unicode scalar value trong chuỗi đó chiếm 2 byte. Vì thế, một index
+vào các byte của string không phải lúc nào cũng tương ứng với một Unicode
+scalar value hợp lệ. Để minh họa, hãy xem đoạn code Rust không hợp lệ này:</p>
+<pre><code class="language-rust ignore does_not_compile">let hello = "Здравствуйте";
+let answer = &amp;hello[0];</code></pre>
+<p>Bạn đã biết <code>answer</code> sẽ không phải là <code>З</code>, chữ cái đầu tiên. Khi mã hóa
+UTF-8, byte đầu tiên của <code>З</code> là <code>208</code> và byte thứ hai là <code>151</code>, vậy nên
+trông như <code>answer</code> phải là <code>208</code>, nhưng <code>208</code> không phải là một ký tự hợp lệ
+đứng một mình. Trả về <code>208</code> chắc chắn không phải điều người dùng muốn khi
+họ hỏi chữ cái đầu tiên của string; tuy nhiên, đó là dữ liệu duy nhất Rust
+có ở byte index 0. Người dùng thường không muốn nhận về giá trị byte, kể cả
+khi string chỉ chứa chữ Latin: nếu <code>&amp;"hi"[0]</code> là code hợp lệ trả về giá trị
+byte, nó sẽ trả về <code>104</code>, không phải <code>h</code>.</p>
+<p>Câu trả lời là: để tránh trả về giá trị không mong muốn và gây ra bug khó
+phát hiện, Rust không compile code này từ đầu, ngăn chặn hiểu nhầm ngay
+trong quá trình phát triển.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="bytes-and-scalar-values-and-grapheme-clusters-oh-my"></a></p>
+<h4 id="bytes-scalar-values-and-grapheme-clusters"><a class="header" href="#bytes-scalar-values-and-grapheme-clusters">Bytes, Scalar Values, và Grapheme Clusters</a></h4>
+<p>Một điểm nữa về UTF-8 là có ba cách nhìn khác nhau về string từ góc độ Rust:
+dưới dạng byte, scalar values, và grapheme clusters (cái gần nhất với điều
+ta gọi là <em>chữ cái</em>).</p>
+<p>Nếu ta nhìn vào chữ Hindi "नमस्ते" viết theo chữ Devanagari, nó được lưu
+dưới dạng vector các giá trị <code>u8</code> trông như thế này:</p>
+<pre><code class="language-text">[224, 164, 168, 224, 164, 174, 224, 164, 184, 224, 165, 141, 224, 164, 164,
+224, 165, 135]
+</code></pre>
+<p>Đó là 18 byte và là cách máy tính thực sự lưu dữ liệu này. Nếu ta nhìn chúng
+dưới dạng Unicode scalar values — tức là kiểu <code>char</code> của Rust — các byte đó
+trông như thế này:</p>
+<pre><code class="language-text">['न', 'म', 'स', '्', 'त', 'े']
+</code></pre>
+<p>Có sáu giá trị <code>char</code> ở đây, nhưng cái thứ tư và thứ sáu không phải chữ cái:
+Chúng là dấu phụ không có nghĩa khi đứng một mình. Cuối cùng, nếu ta nhìn
+chúng dưới dạng grapheme clusters, ta sẽ thấy những gì mà người ta gọi là
+bốn chữ cái tạo nên chữ Hindi đó:</p>
+<pre><code class="language-text">["न", "म", "स्", "ते"]
+</code></pre>
+<p>Rust cung cấp các cách khác nhau để diễn giải dữ liệu string thô mà máy tính
+lưu, để mỗi chương trình có thể chọn cách diễn giải phù hợp với mình, bất
+kể dữ liệu thuộc ngôn ngữ nào.</p>
+<p>Một lý do cuối cùng khiến Rust không cho phép ta index vào <code>String</code> để lấy
+ký tự là các thao tác index được kỳ vọng luôn có thời gian hằng số (O(1)).
+Nhưng không thể đảm bảo hiệu suất đó với <code>String</code>, vì Rust sẽ phải duyệt
+qua nội dung từ đầu đến index để xác định có bao nhiêu ký tự hợp lệ.</p>
+<h3 id="slicing-strings"><a class="header" href="#slicing-strings">Cắt lát String</a></h3>
+<p>Truy cập string bằng index thường là ý tưởng tồi vì không rõ kiểu trả về
+của thao tác đó nên là gì: một giá trị byte, một ký tự, một grapheme cluster,
+hay một string slice. Vì vậy nếu bạn thực sự cần dùng index để tạo string
+slice, Rust yêu cầu bạn phải chỉ rõ hơn.</p>
+<p>Thay vì index bằng <code>[]</code> với một số duy nhất, bạn có thể dùng <code>[]</code> với một
+range để tạo string slice chứa các byte cụ thể:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello = "Здравствуйте";
 
-<p>Mình sẽ tiếp tục dịch sát nghĩa.</p>
-<p>Lý do chúng ta có thể gọi <code>&amp;s2</code> trong lúc chạy hàm <code>add</code> là bởi vì trình biên dịch (compiler) có năng lực ép kiểu (coerce) tham số <code>&amp;String</code> hóa về diện mạo của thằng <code>&amp;str</code>. Lúc ta gọi thẳng phương thức <code>add</code>, hệ vọc thợ Rust ngấm nách xài trò vọc ép kiểu deref coercion, thứ mà nội cái mốc tại phân mảnh này đã ra chiêu lột da mút lọng biến dạng cái chóp bộ <code>&amp;s2</code> tọt về rợt cục <code>&amp;s2[..]</code>. Ta sẽ cắn răng bới nặn bàn luận nhọc nhằn bưng bít thêm sâu nữa phần đệm đề xưng dạng deref coercion lầy thỏm ấy ở tít bên cất Chương 15 này. Bởi lẽ do cục `add` không lấn hất cướp lột đi bản sở hữu nắm chóp của món parameter tên `s`, con tham chiếu `s2` kia qua rồi cơn bão trận luân lạc kia vương dằn vẫn còn sót phang giữ y lọn nạp múc đục nguyên khí làm một vòng cặn <code>String</code> lọt tụp lợp khạc nắp hợp lệ xóp pụp cút vặc múp uạp.</p>
+let s = &amp;hello[0..4];
+<span class="boring">}</span></code></pre>
+<p>Ở đây, <code>s</code> sẽ là một <code>&amp;str</code> chứa 4 byte đầu tiên của string. Trước đó ta
+đã đề cập mỗi ký tự này chiếm 2 byte, nên <code>s</code> sẽ là <code>Зд</code>.</p>
+<p>Nếu ta thử cắt chỉ một phần byte của một ký tự, ví dụ như <code>&amp;hello[0..1]</code>,
+Rust sẽ panic lúc runtime giống như khi truy cập index không hợp lệ trong vector:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
+     Running `target/debug/collections`
 
-<p>Thứ hai, chúng ta có thể thấy trong hàm <code>add</code> nó sẽ nhận quyền sở hữu của <code>self</code> vì <code>self</code> không có trỏ <code>&amp;</code>. Cho nên biến <code>s1</code> trong Listing 8-18 sẽ bị move vào <code>add</code> và xí xóa sau khi hoàn thành. Biểu thức <code>let s3 = s1 + &amp;s2;</code> hệt như là copy lại mọi thứ nhưng thực tế là nó lấy quyền của <code>s1</code>, cho chép cái tham chiếu lấy copy lõi <code>s2</code> rồi trả lại kết quả.</p>
+thread 'main' panicked at src/main.rs:4:19:
+byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>Bạn cần cẩn thận khi tạo string slice bằng range, vì làm vậy có thể crash
+chương trình.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="methods-for-iterating-over-strings"></a></p>
+<h3 id="iterating-over-strings"><a class="header" href="#iterating-over-strings">Duyệt qua String</a></h3>
+<p>Cách tốt nhất để thao tác trên từng phần của string là nói rõ bạn muốn ký
+tự hay byte. Với từng Unicode scalar value, dùng method <code>chars</code>. Gọi <code>chars</code>
+trên <code>"Зд"</code> sẽ tách ra và trả về hai giá trị kiểu <code>char</code>, và bạn có thể
+duyệt qua kết quả để truy cập từng phần tử:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for c in "Зд".chars() {
+    println!("{c}");
+}
+<span class="boring">}</span></code></pre>
+<p>Đoạn code này sẽ in ra:</p>
+<pre><code class="language-text">З
+д
+</code></pre>
+<p>Ngoài ra, method <code>bytes</code> trả về từng byte thô, có thể phù hợp với trường
+hợp của bạn:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for b in "Зд".bytes() {
+    println!("{b}");
+}
+<span class="boring">}</span></code></pre>
+<p>Đoạn code này sẽ in ra 4 byte tạo nên string này:</p>
+<pre><code class="language-text">208
+151
+208
+180
+</code></pre>
+<p>Nhưng hãy nhớ rằng một Unicode scalar value hợp lệ có thể gồm nhiều hơn 1 byte.</p>
+<p>Lấy grapheme clusters từ string, như với chữ Devanagari, là việc phức tạp,
+nên chức năng này không có trong thư viện chuẩn. Nếu bạn cần, có thể tìm
+các crate trên <a href="https://crates.io/">crates.io</a>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="strings-are-not-so-simple"></a></p>
+<h3 id="handling-the-complexities-of-strings"><a class="header" href="#handling-the-complexities-of-strings">Xử lý sự phức tạp của String</a></h3>
+<p>Tóm lại, string thật sự phức tạp. Các ngôn ngữ lập trình khác nhau đưa ra
+các lựa chọn khác nhau về cách trình bày sự phức tạp này cho lập trình viên.
+Rust chọn cách xử lý đúng đắn dữ liệu <code>String</code> là hành vi mặc định cho mọi
+chương trình Rust, nghĩa là lập trình viên phải suy nghĩ nhiều hơn về
+việc xử lý dữ liệu UTF-8 ngay từ đầu. Sự đánh đổi này lộ ra nhiều sự phức
+tạp của string hơn so với các ngôn ngữ khác, nhưng bù lại giúp bạn tránh
+phải xử lý các lỗi liên quan đến ký tự không phải ASCII ở giai đoạn sau
+của vòng đời phát triển.</p>
+<p>Tin vui là thư viện chuẩn cung cấp rất nhiều chức năng xây dựng trên <code>String</code>
+và <code>&amp;str</code> để giúp xử lý các tình huống phức tạp này một cách chính xác. Hãy
+tra tài liệu để tìm các method hữu ích như <code>contains</code> để tìm kiếm trong string
+và <code>replace</code> để thay thế một phần string bằng một string khác.</p>
+<p>Giờ hãy chuyển sang thứ ít phức tạp hơn một chút: hash maps!</p>
 
-<h3 id="indexing-into-strings">Cắt Nghĩa Lọc Bóc Cắm Trỏ Truy Xuất Một String Bằng Index</h3>
-<p>Trong vô số đám nhánh ngôn ngữ lập trình mâm vọc ngoài kia, đi gõ tọc vạch lệnh cắm truy múc truy tung đến phần riêng rẽ phân khúc ký tự thảy đọt vác từ bụng chuỗi vọc vòng sợi chuỗi là nứa tháp điệu vụ páp kíp bóp cút thông kẹp điệp sịp mập uạp qệp... (Ngừng ngáo đá).</p>
-
-<p>Tuy nhiên trong Rust bạn sẽ luôn gặp lỗi do nó lưu UTF-8. Nếu muốn lấy theo vị trí Range bạn có thể thực hiện theo Slice <code>[]</code>.</p>
-<p>Ta sẽ qua phần kế tiếp.</p>
-
-  <div class="page-nav bottom"><a href="ch08-01-vectors.html">← Trước</a><a href="ch08-03-hash-maps.html">Tiếp →</a></div>
+    <div class="page-nav bottom"><a href="ch08-01-vectors.html">← Trước</a><a href="ch08-03-hash-maps.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
