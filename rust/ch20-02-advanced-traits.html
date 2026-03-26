@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Traits - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html" class="active">Advanced Traits</a><a href="ch20-03-advanced-types.html">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 20 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch20-01-unsafe-rust.html">← Trước</a><a href="ch20-03-advanced-types.html">Tiếp →</a></div>
+
+<h2 id="advanced-traits"><a class="header" href="#advanced-traits">Advanced Traits</a></h2>
+<p>Chúng ta đã làm quen với trait từ phần <a href="ch10-02-traits.html">"Định nghĩa hành vi chung với Trait"</a> ở Chương 10, nhưng lúc đó chưa đào sâu vào những chi tiết nâng cao hơn. Giờ bạn đã hiểu Rust tốt hơn rồi, hãy cùng đi vào những góc khuất thú vị nhé!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="specifying-placeholder-types-in-trait-definitions-with-associated-types"></a>
+<a id="associated-types"></a></p>
+<h3 id="defining-traits-with-associated-types"><a class="header" href="#defining-traits-with-associated-types">Định nghĩa Trait với Associated Types</a></h3>
+<p><em>Associated types</em> (kiểu liên kết) kết nối một kiểu placeholder với một trait, để các method của trait có thể dùng placeholder đó trong signature của mình. Người implement trait sẽ chỉ định kiểu cụ thể thay cho placeholder khi viết implementation của mình. Nhờ vậy, ta có thể định nghĩa trait dùng một số kiểu mà không cần biết chính xác các kiểu đó là gì cho đến lúc trait được implement.</p>
+<p>Hầu hết các tính năng nâng cao trong chương này được giới thiệu là "hiếm khi cần dùng". Associated types thì nằm ở giữa: được dùng ít hơn những tính năng ở các chương khác, nhưng lại phổ biến hơn nhiều tính năng nâng cao khác trong chương này.</p>
+<p>Một ví dụ điển hình về trait có associated type là trait <code>Iterator</code> trong thư viện chuẩn. Associated type của nó tên là <code>Item</code> và đại diện cho kiểu của các giá trị mà kiểu implement <code>Iterator</code> đang duyệt qua. Định nghĩa của trait <code>Iterator</code> như trong Listing 20-13.</p>
+<figure class="listing" id="listing-20-13">
+<pre><code class="language-rust noplayground">pub trait Iterator {
+    type Item;
+
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
+}</code></pre>
+<figcaption><a href="#listing-20-13">Listing 20-13</a>: Định nghĩa trait <code>Iterator</code> với associated type <code>Item</code></figcaption>
+</figure>
+<p>Kiểu <code>Item</code> là một placeholder, và định nghĩa của method <code>next</code> cho thấy nó sẽ trả về giá trị kiểu <code>Option&lt;Self::Item&gt;</code>. Những ai implement trait <code>Iterator</code> sẽ chỉ định kiểu cụ thể cho <code>Item</code>, và method <code>next</code> sẽ trả về <code>Option</code> chứa giá trị của kiểu cụ thể đó.</p>
+<p>Associated types trông có vẻ giống generics ở chỗ cả hai đều cho phép định nghĩa hàm mà không cần biết trước kiểu nó xử lý. Để hiểu sự khác biệt, hãy nhìn vào implementation của trait <code>Iterator</code> trên một kiểu tên <code>Counter</code> với <code>Item</code> là <code>u32</code>:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">struct Counter {
+</span><span class="boring">    count: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Counter {
+</span><span class="boring">    fn new() -&gt; Counter {
+</span><span class="boring">        Counter { count: 0 }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt; {
+        // --snip--
+<span class="boring">        if self.count &lt; 5 {
+</span><span class="boring">            self.count += 1;
+</span><span class="boring">            Some(self.count)
+</span><span class="boring">        } else {
+</span><span class="boring">            None
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</figure>
+<p>Cú pháp này trông khá giống generics. Vậy tại sao không định nghĩa trait <code>Iterator</code> bằng generics như trong Listing 20-14 luôn?</p>
+<figure class="listing" id="listing-20-14">
+<pre><code class="language-rust noplayground">pub trait Iterator&lt;T&gt; {
+    fn next(&amp;mut self) -&gt; Option&lt;T&gt;;
+}</code></pre>
+<figcaption><a href="#listing-20-14">Listing 20-14</a>: Định nghĩa giả định của trait <code>Iterator</code> dùng generics</figcaption>
+</figure>
+<p>Sự khác biệt nằm ở chỗ khi dùng generics như Listing 20-14, ta phải annotate kiểu ở mỗi implementation; vì ta có thể implement <code>Iterator&lt;String&gt; for Counter</code> hoặc bất kỳ kiểu nào khác, nên <code>Counter</code> có thể có nhiều implementation của <code>Iterator</code>. Nói cách khác, khi trait có generic parameter, nó có thể được implement cho một kiểu nhiều lần với các kiểu generic khác nhau. Khi gọi method <code>next</code> trên <code>Counter</code>, ta phải cung cấp type annotation để Rust biết dùng implementation nào.</p>
+<p>Với associated types, ta không cần annotate kiểu vì không thể implement trait trên một kiểu nhiều lần. Trong Listing 20-13 với associated types, ta chỉ chọn kiểu cho <code>Item</code> một lần duy nhất vì chỉ có thể có một <code>impl Iterator for Counter</code>. Ta không phải khai báo muốn iterator của <code>u32</code> ở mọi nơi gọi <code>next</code> trên <code>Counter</code>.</p>
+<p>Associated types cũng trở thành một phần trong "hợp đồng" của trait: Người implement trait phải cung cấp kiểu cụ thể cho associated type placeholder. Associated types thường có tên mô tả cách kiểu đó được sử dụng, và việc document chúng trong API documentation là một thói quen tốt.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="default-generic-type-parameters-and-operator-overloading"></a></p>
+<h3 id="using-default-generic-parameters-and-operator-overloading"><a class="header" href="#using-default-generic-parameters-and-operator-overloading">Dùng Default Generic Parameters và Operator Overloading</a></h3>
+<p>Khi dùng generic type parameters, ta có thể chỉ định một kiểu cụ thể mặc định cho generic đó. Nhờ vậy, người implement trait không cần chỉ định kiểu cụ thể nếu kiểu mặc định là đủ dùng. Ta khai báo kiểu mặc định khi khai báo generic type với cú pháp <code>&lt;PlaceholderType=ConcreteType&gt;</code>.</p>
+<p>Một ví dụ tuyệt vời cho kỹ thuật này là <em>operator overloading</em> — tùy chỉnh hành vi của toán tử (như <code>+</code>) trong các tình huống cụ thể.</p>
+<p>Rust không cho phép tạo toán tử mới hay overload toán tử tùy ý. Nhưng bạn có thể overload các phép toán và trait tương ứng được liệt kê trong <code>std::ops</code> bằng cách implement các trait liên kết với toán tử đó. Ví dụ, trong Listing 20-15, ta overload toán tử <code>+</code> để cộng hai instance của <code>Point</code> lại. Ta làm điều này bằng cách implement trait <code>Add</code> trên struct <code>Point</code>.</p>
+<figure class="listing" id="listing-20-15">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::ops::Add;
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, other: Point) -&gt; Point {
+        Point {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
+}
+
+fn main() {
+    assert_eq!(
+        Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+        Point { x: 3, y: 3 }
+    );
+}</code></pre>
+<figcaption><a href="#listing-20-15">Listing 20-15</a>: Implement trait <code>Add</code> để overload toán tử <code>+</code> cho các instance <code>Point</code></figcaption>
+</figure>
+<p>Method <code>add</code> cộng giá trị <code>x</code> của hai <code>Point</code> và giá trị <code>y</code> của hai <code>Point</code> để tạo ra một <code>Point</code> mới. Trait <code>Add</code> có associated type tên <code>Output</code> xác định kiểu trả về từ method <code>add</code>.</p>
+<p>Default generic type trong code này nằm trong trait <code>Add</code>. Đây là định nghĩa của nó:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait Add&lt;Rhs=Self&gt; {
+    type Output;
+
+    fn add(self, rhs: Rhs) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre>
+<p>Code này trông khá quen: một trait với một method và một associated type. Phần mới là <code>Rhs=Self</code>: đây gọi là <em>default type parameters</em>. Generic type parameter <code>Rhs</code> (viết tắt của "right-hand side" — vế phải) định nghĩa kiểu của tham số <code>rhs</code> trong method <code>add</code>. Nếu ta không chỉ định kiểu cụ thể cho <code>Rhs</code> khi implement trait <code>Add</code>, kiểu của <code>Rhs</code> sẽ mặc định là <code>Self</code> — tức kiểu ta đang implement <code>Add</code> cho.</p>
+<p>Khi ta implement <code>Add</code> cho <code>Point</code>, ta dùng giá trị mặc định của <code>Rhs</code> vì muốn cộng hai instance <code>Point</code>. Hãy xem một ví dụ implement trait <code>Add</code> với <code>Rhs</code> tùy chỉnh thay vì dùng mặc định.</p>
+<p>Ta có hai struct <code>Millimeters</code> và <code>Meters</code>, chứa giá trị ở các đơn vị khác nhau. Cách bọc một kiểu đã có vào struct mới như vậy gọi là <em>newtype pattern</em>, được mô tả chi tiết hơn trong phần <a href="ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern">"Implementing External Traits with the Newtype Pattern"</a>. Ta muốn cộng giá trị milimet với giá trị mét và để implementation của <code>Add</code> tự chuyển đổi đơn vị đúng. Ta có thể implement <code>Add</code> cho <code>Millimeters</code> với <code>Rhs</code> là <code>Meters</code>, như Listing 20-16.</p>
+<figure class="listing" id="listing-20-16">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">use std::ops::Add;
+
+struct Millimeters(u32);
+struct Meters(u32);
+
+impl Add&lt;Meters&gt; for Millimeters {
+    type Output = Millimeters;
+
+    fn add(self, other: Meters) -&gt; Millimeters {
+        Millimeters(self.0 + (other.0 * 1000))
+    }
+}</code></pre>
+<figcaption><a href="#listing-20-16">Listing 20-16</a>: Implement trait <code>Add</code> trên <code>Millimeters</code> để cộng <code>Millimeters</code> với <code>Meters</code></figcaption>
+</figure>
+<p>Để cộng <code>Millimeters</code> với <code>Meters</code>, ta khai báo <code>impl Add&lt;Meters&gt;</code> để set giá trị của type parameter <code>Rhs</code> thay vì dùng giá trị mặc định <code>Self</code>.</p>
+<p>Ta sẽ dùng default type parameters theo hai cách chính:</p>
+<ol>
+<li>Để mở rộng một kiểu mà không làm vỡ code hiện có</li>
+<li>Để cho phép tùy chỉnh trong những trường hợp đặc biệt mà hầu hết người dùng không cần đến</li>
+</ol>
+<p>Trait <code>Add</code> trong thư viện chuẩn là ví dụ cho mục đích thứ hai: thông thường bạn cộng hai giá trị cùng kiểu, nhưng trait <code>Add</code> cũng cho phép tùy chỉnh hơn thế. Nhờ default type parameter trong định nghĩa <code>Add</code>, bạn không cần khai báo thêm tham số trong hầu hết trường hợp. Nói cách khác, tiết kiệm được một chút boilerplate, khiến trait dễ dùng hơn.</p>
+<p>Mục đích thứ nhất tương tự nhưng ngược lại: Nếu bạn muốn thêm type parameter vào một trait đã có, hãy đặt giá trị mặc định cho nó để cho phép mở rộng chức năng của trait mà không làm hỏng code implementation hiện tại.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="fully-qualified-syntax-for-disambiguation-calling-methods-with-the-same-name"></a>
+<a id="disambiguating-between-methods-with-the-same-name"></a></p>
+<h3 id="disambiguating-between-identically-named-methods"><a class="header" href="#disambiguating-between-identically-named-methods">Phân biệt các Method Trùng Tên</a></h3>
+<p>Rust không cản bạn có trait với method trùng tên với method của trait khác, cũng không cản bạn implement cả hai trait trên cùng một kiểu. Ngoài ra, bạn cũng có thể implement method trực tiếp trên kiểu với tên trùng với method trong trait.</p>
+<p>Khi gọi method có tên trùng nhau, bạn cần chỉ rõ cho Rust biết bạn muốn dùng cái nào. Xem code trong Listing 20-17, nơi ta định nghĩa hai trait <code>Pilot</code> và <code>Wizard</code>, cả hai đều có method tên <code>fly</code>. Ta implement cả hai trait trên kiểu <code>Human</code> — kiểu này đã có sẵn method <code>fly</code> của riêng nó. Mỗi method <code>fly</code> làm điều khác nhau.</p>
+<figure class="listing" id="listing-20-17">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">trait Pilot {
+    fn fly(&amp;self);
+}
+
+trait Wizard {
+    fn fly(&amp;self);
+}
+
+struct Human;
+
+impl Pilot for Human {
+    fn fly(&amp;self) {
+        println!("This is your captain speaking.");
+    }
+}
+
+impl Wizard for Human {
+    fn fly(&amp;self) {
+        println!("Up!");
+    }
+}
+
+impl Human {
+    fn fly(&amp;self) {
+        println!("*waving arms furiously*");
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-20-17">Listing 20-17</a>: Hai trait được định nghĩa với method <code>fly</code> và đều được implement trên kiểu <code>Human</code>, cùng với method <code>fly</code> implement trực tiếp trên <code>Human</code>.</figcaption>
+</figure>
+<p>Khi gọi <code>fly</code> trên một instance của <code>Human</code>, compiler mặc định gọi method được implement trực tiếp trên kiểu, như Listing 20-18.</p>
+<figure class="listing" id="listing-20-18">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Pilot {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">trait Wizard {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Human;
+</span><span class="boring">
+</span><span class="boring">impl Pilot for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("This is your captain speaking.");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Wizard for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("Up!");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("*waving arms furiously*");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let person = Human;
+    person.fly();
+}</code></pre>
+<figcaption><a href="#listing-20-18">Listing 20-18</a>: Gọi <code>fly</code> trên một instance của <code>Human</code></figcaption>
+</figure>
+<p>Chạy code này sẽ in ra <code>*waving arms furiously*</code>, cho thấy Rust đã gọi method <code>fly</code> được implement trực tiếp trên <code>Human</code>.</p>
+<p>Để gọi method <code>fly</code> từ trait <code>Pilot</code> hay <code>Wizard</code>, ta cần dùng cú pháp rõ ràng hơn để chỉ định method <code>fly</code> nào mình muốn. Listing 20-19 minh họa cú pháp này.</p>
+<figure class="listing" id="listing-20-19">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Pilot {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">trait Wizard {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Human;
+</span><span class="boring">
+</span><span class="boring">impl Pilot for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("This is your captain speaking.");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Wizard for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("Up!");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("*waving arms furiously*");
+</span><span class="boring">}
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let person = Human;
+    Pilot::fly(&amp;person);
+    Wizard::fly(&amp;person);
+    person.fly();
+}</code></pre>
+<figcaption><a href="#listing-20-19">Listing 20-19</a>: Chỉ định method <code>fly</code> của trait nào mình muốn gọi</figcaption>
+</figure>
+<p>Khai báo tên trait trước tên method giúp Rust biết ta muốn gọi implementation nào. Ta cũng có thể viết <code>Human::fly(&amp;person)</code>, tương đương với <code>person.fly()</code> trong Listing 20-19, nhưng dài hơn một chút nếu không cần phân biệt.</p>
+<p>Chạy code này in ra như sau:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.46s
+     Running `target/debug/traits-example`
+This is your captain speaking.
+Up!
+*waving arms furiously*
+</code></pre>
+<p>Vì method <code>fly</code> nhận tham số <code>self</code>, nếu có hai <em>kiểu</em> cùng implement một <em>trait</em>, Rust có thể tự suy ra implementation nào cần dùng dựa vào kiểu của <code>self</code>.</p>
+<p>Tuy nhiên, associated functions không phải method thì không có tham số <code>self</code>. Khi có nhiều kiểu hoặc trait định nghĩa các hàm không phải method với cùng tên, Rust không phải lúc nào cũng biết bạn muốn kiểu nào trừ khi dùng fully qualified syntax. Ví dụ, trong Listing 20-20, ta tạo trait cho một trại thú cưng muốn đặt tên tất cả chó con là Spot. Ta tạo trait <code>Animal</code> với associated non-method function <code>baby_name</code>. Trait <code>Animal</code> được implement cho struct <code>Dog</code>, trên đó ta cũng khai báo associated non-method function <code>baby_name</code> trực tiếp.</p>
+<figure class="listing" id="listing-20-20">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">trait Animal {
+    fn baby_name() -&gt; String;
+}
+
+struct Dog;
+
+impl Dog {
+    fn baby_name() -&gt; String {
+        String::from("Spot")
+    }
+}
+
+impl Animal for Dog {
+    fn baby_name() -&gt; String {
+        String::from("puppy")
+    }
+}
+
+fn main() {
+    println!("A baby dog is called a {}", Dog::baby_name());
+}</code></pre>
+<figcaption><a href="#listing-20-20">Listing 20-20</a>: Trait với associated function và kiểu cũng có associated function cùng tên đồng thời implement trait đó</figcaption>
+</figure>
+<p>Ta implement code đặt tên tất cả chó con là Spot trong associated function <code>baby_name</code> định nghĩa trực tiếp trên <code>Dog</code>. Kiểu <code>Dog</code> cũng implement trait <code>Animal</code> mô tả đặc điểm chung của mọi động vật. Chó con được gọi là puppy, điều này được thể hiện trong implementation của trait <code>Animal</code> trên <code>Dog</code> thông qua function <code>baby_name</code> liên kết với trait <code>Animal</code>.</p>
+<p>Trong <code>main</code>, ta gọi function <code>Dog::baby_name</code>, tức là gọi associated function định nghĩa trực tiếp trên <code>Dog</code>. Code này in ra:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.54s
+     Running `target/debug/traits-example`
+A baby dog is called a Spot
+</code></pre>
+<p>Kết quả này không phải thứ ta muốn. Ta muốn gọi function <code>baby_name</code> từ trait <code>Animal</code> mà ta implement trên <code>Dog</code> để code in ra <code>A baby dog is called a puppy</code>. Kỹ thuật chỉ định tên trait từ Listing 20-19 không giúp ích ở đây; nếu ta đổi <code>main</code> thành code trong Listing 20-21, ta sẽ gặp lỗi compilation.</p>
+<figure class="listing" id="listing-20-21">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">trait Animal {
+</span><span class="boring">    fn baby_name() -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Dog;
+</span><span class="boring">
+</span><span class="boring">impl Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("Spot")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Animal for Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("puppy")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    println!("A baby dog is called a {}", Animal::baby_name());
+}</code></pre>
+<figcaption><a href="#listing-20-21">Listing 20-21</a>: Thử gọi function <code>baby_name</code> từ trait <code>Animal</code>, nhưng Rust không biết dùng implementation nào</figcaption>
+</figure>
+<p>Vì <code>Animal::baby_name</code> không có tham số <code>self</code>, và có thể có các kiểu khác implement trait <code>Animal</code>, Rust không thể xác định implementation của <code>Animal::baby_name</code> nào mình muốn. Ta sẽ gặp lỗi compiler này:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+  --&gt; src/main.rs:20:43
+   |
+ 2 |     fn baby_name() -&gt; String;
+   |     ------------------------- `Animal::baby_name` defined here
+...
+20 |     println!("A baby dog is called a {}", Animal::baby_name());
+   |                                           ^^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+   |
+help: use the fully-qualified path to the only available implementation
+   |
+20 |     println!("A baby dog is called a {}", &lt;Dog as Animal&gt;::baby_name());
+   |                                           +++++++       +
+
+For more information about this error, try `rustc --explain E0790`.
+error: could not compile `traits-example` (bin "traits-example") due to 1 previous error
+</code></pre>
+<p>Để làm rõ và chỉ cho Rust biết ta muốn dùng implementation của <code>Animal</code> cho <code>Dog</code> chứ không phải implementation cho kiểu khác, ta cần dùng fully qualified syntax. Listing 20-22 minh họa cách dùng fully qualified syntax.</p>
+<figure class="listing" id="listing-20-22">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Animal {
+</span><span class="boring">    fn baby_name() -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Dog;
+</span><span class="boring">
+</span><span class="boring">impl Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("Spot")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Animal for Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("puppy")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    println!("A baby dog is called a {}", &lt;Dog as Animal&gt;::baby_name());
+}</code></pre>
+<figcaption><a href="#listing-20-22">Listing 20-22</a>: Dùng fully qualified syntax để chỉ định ta muốn gọi function <code>baby_name</code> từ trait <code>Animal</code> như được implement trên <code>Dog</code></figcaption>
+</figure>
+<p>Ta cung cấp cho Rust một type annotation trong dấu ngoặc nhọn, cho biết ta muốn gọi method <code>baby_name</code> từ trait <code>Animal</code> như được implement trên <code>Dog</code> bằng cách nói rằng ta muốn coi kiểu <code>Dog</code> như một <code>Animal</code> cho lần gọi hàm này. Code này giờ sẽ in ra đúng thứ ta muốn:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/traits-example`
+A baby dog is called a puppy
+</code></pre>
+<p>Tổng quát, fully qualified syntax được định nghĩa như sau:</p>
+<pre><code class="language-rust ignore">&lt;Type as Trait&gt;::function(receiver_if_method, next_arg, ...);</code></pre>
+<p>Với associated functions không phải method, sẽ không có <code>receiver</code>: chỉ có danh sách các tham số khác. Bạn có thể dùng fully qualified syntax ở mọi nơi gọi hàm hay method. Tuy nhiên, bạn được phép bỏ qua bất kỳ phần nào mà Rust có thể tự suy ra từ thông tin khác trong chương trình. Bạn chỉ cần dùng cú pháp dài dòng hơn này khi có nhiều implementation dùng cùng tên và Rust cần thêm thông tin để xác định implementation nào bạn muốn gọi.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-supertraits-to-require-one-traits-functionality-within-another-trait"></a></p>
+<h3 id="using-supertraits"><a class="header" href="#using-supertraits">Dùng Supertraits</a></h3>
+<p>Đôi khi bạn viết một trait mà phụ thuộc vào một trait khác: Để một kiểu implement trait đầu tiên, bạn muốn yêu cầu kiểu đó cũng phải implement trait thứ hai. Bạn làm vậy để định nghĩa trait của mình có thể sử dụng các associated items của trait thứ hai. Trait mà định nghĩa trait của bạn dựa vào được gọi là <em>supertrait</em> của trait bạn.</p>
+<p>Ví dụ, giả sử ta muốn tạo trait <code>OutlinePrint</code> với method <code>outline_print</code> in ra một giá trị được format sao cho được bao quanh bởi dấu sao. Nghĩa là, với struct <code>Point</code> implement trait <code>Display</code> của thư viện chuẩn để in ra <code>(x, y)</code>, khi ta gọi <code>outline_print</code> trên một instance <code>Point</code> có <code>x = 1</code> và <code>y = 3</code>, nó sẽ in ra như sau:</p>
+<pre><code class="language-text">**********
+*        *
+* (1, 3) *
+*        *
+**********
+</code></pre>
+<p>Trong implementation của method <code>outline_print</code>, ta muốn dùng chức năng của trait <code>Display</code>. Do đó, ta cần chỉ định rằng trait <code>OutlinePrint</code> chỉ hoạt động với các kiểu cũng implement <code>Display</code> và cung cấp chức năng mà <code>OutlinePrint</code> cần. Ta làm điều đó trong định nghĩa trait bằng cách viết <code>OutlinePrint: Display</code>. Kỹ thuật này tương tự như thêm trait bound vào trait. Listing 20-23 cho thấy implementation của trait <code>OutlinePrint</code>.</p>
+<figure class="listing" id="listing-20-23">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::fmt;
+
+trait OutlinePrint: fmt::Display {
+    fn outline_print(&amp;self) {
+        let output = self.to_string();
+        let len = output.len();
+        println!("{}", "*".repeat(len + 4));
+        println!("*{}*", " ".repeat(len + 2));
+        println!("* {output} *");
+        println!("*{}*", " ".repeat(len + 2));
+        println!("{}", "*".repeat(len + 4));
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-20-23">Listing 20-23</a>: Implement trait <code>OutlinePrint</code> yêu cầu chức năng từ <code>Display</code></figcaption>
+</figure>
+<p>Vì ta đã chỉ định rằng <code>OutlinePrint</code> yêu cầu trait <code>Display</code>, ta có thể dùng function <code>to_string</code> được tự động implement cho bất kỳ kiểu nào implement <code>Display</code>. Nếu thử dùng <code>to_string</code> mà không thêm dấu hai chấm và chỉ định trait <code>Display</code> sau tên trait, ta sẽ gặp lỗi nói rằng không tìm thấy method tên <code>to_string</code> cho kiểu <code>&amp;Self</code> trong phạm vi hiện tại.</p>
+<p>Hãy xem điều gì xảy ra khi ta thử implement <code>OutlinePrint</code> trên một kiểu chưa implement <code>Display</code>, chẳng hạn struct <code>Point</code>:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span><span class="boring">trait OutlinePrint: fmt::Display {
+</span><span class="boring">    fn outline_print(&amp;self) {
+</span><span class="boring">        let output = self.to_string();
+</span><span class="boring">        let len = output.len();
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("* {output} *");
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl OutlinePrint for Point {}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 1, y: 3 };
+</span><span class="boring">    p.outline_print();
+</span><span class="boring">}</span></code></pre>
+</figure>
+<p>Ta sẽ gặp lỗi báo rằng <code>Display</code> là bắt buộc nhưng chưa được implement:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+error[E0277]: `Point` doesn't implement `std::fmt::Display`
+  --&gt; src/main.rs:20:23
+   |
+20 | impl OutlinePrint for Point {}
+   |                       ^^^^^ the trait `std::fmt::Display` is not implemented for `Point`
+   |
+note: required by a bound in `OutlinePrint`
+  --&gt; src/main.rs:3:21
+   |
+ 3 | trait OutlinePrint: fmt::Display {
+   |                     ^^^^^^^^^^^^ required by this bound in `OutlinePrint`
+
+error[E0277]: `Point` doesn't implement `std::fmt::Display`
+  --&gt; src/main.rs:24:7
+   |
+24 |     p.outline_print();
+   |       ^^^^^^^^^^^^^ the trait `std::fmt::Display` is not implemented for `Point`
+   |
+note: required by a bound in `OutlinePrint::outline_print`
+  --&gt; src/main.rs:3:21
+   |
+ 3 | trait OutlinePrint: fmt::Display {
+   |                     ^^^^^^^^^^^^ required by this bound in `OutlinePrint::outline_print`
+ 4 |     fn outline_print(&amp;self) {
+   |        ------------- required by a bound in this associated function
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `traits-example` (bin "traits-example") due to 2 previous errors
+</code></pre>
+<p>Để khắc phục, ta implement <code>Display</code> trên <code>Point</code> và thỏa mãn ràng buộc mà <code>OutlinePrint</code> yêu cầu, như sau:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">trait OutlinePrint: fmt::Display {
+</span><span class="boring">    fn outline_print(&amp;self) {
+</span><span class="boring">        let output = self.to_string();
+</span><span class="boring">        let len = output.len();
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("* {output} *");
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Point {
+</span><span class="boring">    x: i32,
+</span><span class="boring">    y: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl OutlinePrint for Point {}
+</span><span class="boring">
+</span>use std::fmt;
+
+impl fmt::Display for Point {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 1, y: 3 };
+</span><span class="boring">    p.outline_print();
+</span><span class="boring">}</span></code></pre>
+</figure>
+<p>Sau đó, việc implement trait <code>OutlinePrint</code> trên <code>Point</code> sẽ compile thành công, và ta có thể gọi <code>outline_print</code> trên một instance <code>Point</code> để hiển thị nó trong khung dấu sao.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-the-newtype-pattern-to-implement-external-traits-on-external-types"></a>
+<a id="using-the-newtype-pattern-to-implement-external-traits"></a></p>
+<h3 id="implementing-external-traits-with-the-newtype-pattern"><a class="header" href="#implementing-external-traits-with-the-newtype-pattern">Implement External Traits với Newtype Pattern</a></h3>
+<p>Trong phần <a href="ch10-02-traits.html#implementing-a-trait-on-a-type">"Implementing a Trait on a Type"</a> ở Chương 10, ta đã đề cập đến orphan rule — quy tắc nói rằng ta chỉ được implement một trait trên một kiểu nếu trait hoặc kiểu đó (hoặc cả hai) là local với crate của mình. Có thể lách qua ràng buộc này bằng newtype pattern — tức tạo một kiểu mới trong tuple struct. (Ta đã nói đến tuple struct trong phần <a href="ch05-01-defining-structs.html#creating-different-types-with-tuple-structs">"Creating Different Types with Tuple Structs"</a> ở Chương 5.) Tuple struct sẽ có một field và là một lớp bọc mỏng quanh kiểu mà ta muốn implement trait. Khi đó, kiểu wrapper này là local với crate của ta, và ta có thể implement trait lên wrapper đó. <em>Newtype</em> là thuật ngữ xuất phát từ ngôn ngữ lập trình Haskell. Không có chi phí hiệu năng runtime nào khi dùng pattern này, và kiểu wrapper được loại bỏ tại thời điểm compile.</p>
+<p>Ví dụ, giả sử ta muốn implement <code>Display</code> trên <code>Vec&lt;T&gt;</code>, nhưng orphan rule cản ta làm điều đó trực tiếp vì trait <code>Display</code> và kiểu <code>Vec&lt;T&gt;</code> đều được định nghĩa ngoài crate của ta. Ta có thể tạo struct <code>Wrapper</code> chứa một instance <code>Vec&lt;T&gt;</code>; sau đó ta có thể implement <code>Display</code> trên <code>Wrapper</code> và dùng giá trị <code>Vec&lt;T&gt;</code>, như Listing 20-24.</p>
+<figure class="listing" id="listing-20-24">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::fmt;
+
+struct Wrapper(Vec&lt;String&gt;);
+
+impl fmt::Display for Wrapper {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))
+    }
+}
+
+fn main() {
+    let w = Wrapper(vec![String::from("hello"), String::from("world")]);
+    println!("w = {w}");
+}</code></pre>
+<figcaption><a href="#listing-20-24">Listing 20-24</a>: Tạo kiểu <code>Wrapper</code> bao quanh <code>Vec&lt;String&gt;</code> để implement <code>Display</code></figcaption>
+</figure>
+<p>Implementation của <code>Display</code> dùng <code>self.0</code> để truy cập vào <code>Vec&lt;T&gt;</code> bên trong vì <code>Wrapper</code> là tuple struct và <code>Vec&lt;T&gt;</code> là phần tử tại index 0 trong tuple. Sau đó ta có thể dùng chức năng của trait <code>Display</code> trên <code>Wrapper</code>.</p>
+<p>Nhược điểm của kỹ thuật này là <code>Wrapper</code> là một kiểu mới, nên nó không có các method của giá trị mà nó đang chứa. Ta phải implement tất cả method của <code>Vec&lt;T&gt;</code> trực tiếp trên <code>Wrapper</code> sao cho các method đó delegate cho <code>self.0</code>, điều này mới cho phép ta đối xử với <code>Wrapper</code> hoàn toàn như <code>Vec&lt;T&gt;</code>. Nếu muốn kiểu mới có tất cả method của kiểu bên trong, giải pháp là implement trait <code>Deref</code> trên <code>Wrapper</code> để trả về kiểu bên trong (ta đã thảo luận về việc implement trait <code>Deref</code> trong phần <a href="ch15-02-deref.html#treating-smart-pointers-like-regular-references">"Treating Smart Pointers Like Regular References"</a> ở Chương 15). Nếu ta không muốn kiểu <code>Wrapper</code> có tất cả method của kiểu bên trong — ví dụ để hạn chế hành vi của <code>Wrapper</code> — thì ta chỉ cần implement thủ công những method mình muốn.</p>
+<p>Newtype pattern này cũng hữu ích ngay cả khi không liên quan đến trait. Hãy chuyển hướng và khám phá một số cách tương tác nâng cao hơn với hệ thống kiểu của Rust.</p>
+
+  <div class="page-nav bottom"><a href="ch20-01-unsafe-rust.html">← Trước</a><a href="ch20-03-advanced-types.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

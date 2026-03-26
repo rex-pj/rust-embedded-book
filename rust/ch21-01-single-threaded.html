@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xây dựng Web Server Đơn luồng — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="progress"></div>
+  <nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html" class="active">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Phụ lục</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+  <div id="content">
+    <div id="topbar">
+      <button id="hamburger">☰</button>
+      <a href="title-page.html">📖 The Rust Book</a>
+      <span class="sep">›</span>
+      <span class="current">Xây dựng Web Server Đơn luồng</span>
+      <span style="flex:1"></span>
+      <a href="ch21-00-final-project-a-web-server.html" class="topbar-nav">← Trước</a>
+      <a href="ch21-02-multithreaded.html" class="topbar-nav">Tiếp →</a>
+    </div>
+    <div id="main">
+
+<h2 id="building-a-single-threaded-web-server">Xây dựng Web Server Đơn luồng</h2>
+
+<p>Chúng ta sẽ bắt đầu bằng cách làm cho một web server đơn luồng hoạt động. Trước khi bắt đầu, hãy cùng xem qua tổng quan nhanh về các giao thức liên quan khi xây dựng web server. Chi tiết về các giao thức này nằm ngoài phạm vi cuốn sách, nhưng một cái nhìn tổng quan sẽ cung cấp đủ thông tin cần thiết.</p>
+
+<p>Hai giao thức chính liên quan đến web server là <em>Hypertext Transfer Protocol</em> <em>(HTTP)</em> và <em>Transmission Control Protocol</em> <em>(TCP)</em>. Cả hai đều là giao thức <em>request-response</em>, nghĩa là <em>client</em> khởi tạo request và <em>server</em> lắng nghe request rồi cung cấp response cho client. Nội dung của các request và response đó được định nghĩa bởi các giao thức.</p>
+
+<p>TCP là giao thức cấp thấp hơn, mô tả chi tiết cách thông tin được truyền từ server này sang server khác nhưng không chỉ định thông tin đó là gì. HTTP xây dựng trên TCP bằng cách định nghĩa nội dung của các request và response. Về mặt kỹ thuật, có thể dùng HTTP với các giao thức khác, nhưng trong phần lớn trường hợp, HTTP gửi dữ liệu qua TCP. Chúng ta sẽ làm việc với các byte thô của TCP và HTTP request, response.</p>
+
+<div class="note">
+  <span class="callout-icon">📌</span>
+  <div class="callout-body">
+    <div class="callout-title">Sơ đồ: Luồng xử lý Server Đơn luồng</div>
+    <p><strong>Single-threaded server flow:</strong><br>
+    TCP Listener → Nhận stream → <code>handle_connection()</code> → Đọc HTTP request → Trả về HTTP response → Đóng kết nối → (lặp lại — xử lý tuần tự)</p>
+    <p>Hạn chế: Mỗi lần chỉ xử lý được <strong>1 request</strong>. Nếu một request chậm, toàn bộ các request sau phải chờ.</p>
+  </div>
+</div>
+
+<h3 id="listening-to-the-tcp-connection">Lắng nghe kết nối TCP</h3>
+
+<p>Web server của chúng ta cần lắng nghe kết nối TCP, đó là phần đầu tiên chúng ta sẽ làm. Thư viện chuẩn cung cấp module <code>std::net</code> để thực hiện điều này. Hãy tạo một dự án mới theo cách thông thường:</p>
+
+<pre><code class="language-console">$ cargo new hello
+     Created binary (application) `hello` project
+$ cd hello
+</code></pre>
+
+<p>Bây giờ hãy nhập code ở Listing 21-1 vào <em>src/main.rs</em> để bắt đầu. Code này sẽ lắng nghe ở địa chỉ cục bộ <code>127.0.0.1:7878</code> cho các TCP stream đến. Khi nhận được stream, nó sẽ in <code>Connection established!</code>.</p>
+
+<figure class="listing" id="listing-21-1">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">use std::net::TcpListener;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        println!("Connection established!");
+    }
+}</code></pre>
+<figcaption><a href="#listing-21-1">Listing 21-1</a>: Lắng nghe stream đến và in thông báo khi nhận được stream</figcaption>
+</figure>
+
+<p>Dùng <code>TcpListener</code>, chúng ta có thể lắng nghe kết nối TCP tại địa chỉ <code>127.0.0.1:7878</code>. Trong địa chỉ, phần trước dấu hai chấm là địa chỉ IP đại diện cho máy tính của bạn (giống nhau trên mọi máy và không đại diện cho máy của các tác giả), và <code>7878</code> là port. Chúng ta chọn port này vì hai lý do: HTTP thường không được chấp nhận trên port này nên server của chúng ta khó xung đột với bất kỳ web server nào khác đang chạy trên máy, và 7878 là chữ <em>rust</em> gõ trên bàn phím điện thoại.</p>
+
+<p>Hàm <code>bind</code> trong kịch bản này hoạt động như hàm <code>new</code> ở chỗ nó trả về một <code>TcpListener</code> instance mới. Hàm được gọi là <code>bind</code> vì trong mạng, kết nối với một port để lắng nghe được gọi là "binding to a port" (gắn vào port).</p>
+
+<p>Hàm <code>bind</code> trả về <code>Result&lt;T, E&gt;</code>, cho biết việc binding có thể thất bại, ví dụ như khi chạy hai instance của chương trình và có hai chương trình lắng nghe trên cùng port. Vì chúng ta đang viết server cơ bản cho mục đích học, chúng ta sẽ không xử lý các lỗi này; thay vào đó dùng <code>unwrap</code> để dừng chương trình nếu xảy ra lỗi.</p>
+
+<p>Phương thức <code>incoming</code> trên <code>TcpListener</code> trả về iterator cung cấp một chuỗi stream (cụ thể hơn là stream kiểu <code>TcpStream</code>). Một <em>stream</em> đại diện cho một kết nối mở giữa client và server. <em>Connection</em> là tên cho toàn bộ quá trình request và response khi client kết nối với server, server tạo response và server đóng kết nối. Như vậy, chúng ta sẽ đọc từ <code>TcpStream</code> để xem client gửi gì rồi ghi response vào stream để gửi dữ liệu trở lại client. Tổng thể, vòng lặp <code>for</code> này sẽ xử lý từng kết nối lần lượt và tạo ra một chuỗi stream để chúng ta xử lý.</p>
+
+<p>Hiện tại, việc xử lý stream bao gồm gọi <code>unwrap</code> để kết thúc chương trình nếu stream có lỗi; nếu không có lỗi, chương trình in thông báo. Chúng ta sẽ thêm nhiều chức năng hơn cho trường hợp thành công ở listing tiếp theo.</p>
+
+<p>Hãy thử chạy code này! Gọi <code>cargo run</code> trong terminal rồi tải <em>127.0.0.1:7878</em> trong trình duyệt web. Trình duyệt sẽ hiển thị thông báo lỗi như "Connection reset" vì server hiện chưa gửi dữ liệu nào trở lại. Nhưng khi nhìn vào terminal, bạn sẽ thấy nhiều thông báo được in khi trình duyệt kết nối với server!</p>
+
+<pre><code class="language-text">     Running `target/debug/hello`
+Connection established!
+Connection established!
+Connection established!
+</code></pre>
+
+<p>Đôi khi bạn sẽ thấy nhiều thông báo được in cho một request từ trình duyệt; lý do có thể là trình duyệt đang thực hiện request cho trang cũng như request cho các tài nguyên khác, như icon <em>favicon.ico</em> xuất hiện trong tab trình duyệt.</p>
+
+<p>Cũng có thể trình duyệt đang cố kết nối nhiều lần vì server không phản hồi dữ liệu. Khi <code>stream</code> ra ngoài phạm vi và bị drop ở cuối vòng lặp, kết nối bị đóng như một phần của <code>drop</code> implementation. Trình duyệt đôi khi xử lý kết nối bị đóng bằng cách thử lại vì vấn đề có thể là tạm thời.</p>
+
+<p>Điều quan trọng là chúng ta đã nhận được một handle cho kết nối TCP thành công!</p>
+
+<p>Nhớ dừng chương trình bằng cách nhấn <kbd>ctrl</kbd>-<kbd>C</kbd> khi xong. Sau đó, khởi động lại chương trình bằng lệnh <code>cargo run</code> sau mỗi bộ thay đổi code để đảm bảo bạn đang chạy code mới nhất.</p>
+
+<h3 id="reading-the-request">Đọc Request</h3>
+
+<p>Hãy triển khai chức năng đọc request từ trình duyệt! Để tách biệt mối quan tâm giữa việc nhận kết nối và xử lý kết nối, chúng ta sẽ tạo một hàm mới để xử lý kết nối. Trong hàm <code>handle_connection</code> mới này, chúng ta sẽ đọc dữ liệu từ TCP stream và in ra để xem dữ liệu được gửi từ trình duyệt. Thay đổi code như Listing 21-2.</p>
+
+<figure class="listing" id="listing-21-2">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">use std::{
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        handle_connection(stream);
+    }
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    println!("Request: {http_request:#?}");
+}</code></pre>
+<figcaption><a href="#listing-21-2">Listing 21-2</a>: Đọc từ <code>TcpStream</code> và in dữ liệu</figcaption>
+</figure>
+
+<p>Chúng ta đưa <code>std::io::BufReader</code> và <code>std::io::prelude</code> vào phạm vi để truy cập trait và kiểu cho phép đọc và ghi vào stream. Trong vòng lặp <code>for</code> trong hàm <code>main</code>, thay vì in thông báo kết nối thành công, chúng ta gọi hàm <code>handle_connection</code> mới và truyền <code>stream</code> vào.</p>
+
+<p>Trong hàm <code>handle_connection</code>, chúng ta tạo instance <code>BufReader</code> mới bao quanh tham chiếu đến <code>stream</code>. <code>BufReader</code> thêm buffering bằng cách quản lý các lần gọi phương thức của trait <code>std::io::Read</code> cho chúng ta.</p>
+
+<p>Chúng ta tạo biến <code>http_request</code> để thu thập các dòng của request mà trình duyệt gửi đến server. Chúng ta chỉ ra muốn thu thập các dòng này vào một vector bằng cách thêm annotation kiểu <code>Vec&lt;_&gt;</code>.</p>
+
+<p><code>BufReader</code> implement trait <code>std::io::BufRead</code>, cung cấp phương thức <code>lines</code>. Phương thức <code>lines</code> trả về iterator của <code>Result&lt;String, std::io::Error&gt;</code> bằng cách tách stream dữ liệu khi gặp byte newline. Để lấy từng <code>String</code>, chúng ta <code>map</code> và <code>unwrap</code> từng <code>Result</code>.</p>
+
+<p>Trình duyệt báo hiệu kết thúc HTTP request bằng cách gửi hai ký tự newline liên tiếp, do đó để lấy một request từ stream, chúng ta lấy các dòng cho đến khi gặp dòng rỗng. Sau khi thu thập các dòng vào vector, chúng ta in chúng bằng pretty debug formatting.</p>
+
+<h3 id="looking-more-closely-at-an-http-request">Xem xét kỹ hơn về HTTP Request</h3>
+
+<p>HTTP là giao thức dựa trên text, và request có định dạng sau:</p>
+
+<pre><code class="language-text">Method Request-URI HTTP-Version CRLF
+headers CRLF
+message-body
+</code></pre>
+
+<p>Dòng đầu tiên là <em>request line</em> chứa thông tin về những gì client đang yêu cầu. Phần đầu tiên của request line cho biết method đang được dùng, như <code>GET</code> hay <code>POST</code>, mô tả cách client thực hiện request này. Client của chúng ta dùng GET request, nghĩa là đang yêu cầu thông tin.</p>
+
+<p>Phần tiếp theo của request line là <em>/</em>, cho biết <em>uniform resource identifier</em> <em>(URI)</em> mà client đang yêu cầu. Phần cuối là phiên bản HTTP mà client dùng, và request line kết thúc bằng chuỗi CRLF. (<em>CRLF</em> là viết tắt của <em>carriage return</em> và <em>line feed</em>, thuật ngữ từ thời máy đánh chữ!) Chuỗi CRLF phân tách request line với phần còn lại của dữ liệu request.</p>
+
+<p>Sau request line, các dòng còn lại bắt đầu từ <code>Host:</code> trở đi là header. GET request không có body.</p>
+
+<h3 id="writing-a-response">Viết Response</h3>
+
+<p>Chúng ta sẽ triển khai việc gửi dữ liệu để phản hồi client request. Response có định dạng sau:</p>
+
+<pre><code class="language-text">HTTP-Version Status-Code Reason-Phrase CRLF
+headers CRLF
+message-body
+</code></pre>
+
+<p>Dòng đầu tiên là <em>status line</em> chứa phiên bản HTTP dùng trong response, status code số tóm tắt kết quả của request, và reason phrase mô tả text của status code. Sau chuỗi CRLF là bất kỳ header nào, một chuỗi CRLF khác, và body của response.</p>
+
+<p>Đây là ví dụ response dùng HTTP version 1.1 với status code 200, reason phrase OK, không có header và không có body:</p>
+
+<pre><code class="language-text">HTTP/1.1 200 OK\r\n\r\n
+</code></pre>
+
+<p>Status code 200 là response thành công chuẩn. Hãy ghi điều này vào stream như response cho request thành công! Từ hàm <code>handle_connection</code>, xóa <code>println!</code> in dữ liệu request và thay bằng code ở Listing 21-3.</p>
+
+<figure class="listing" id="listing-21-3">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let response = "HTTP/1.1 200 OK\r\n\r\n";
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre>
+<figcaption><a href="#listing-21-3">Listing 21-3</a>: Ghi một HTTP response thành công nhỏ vào stream</figcaption>
+</figure>
+
+<p>Dòng mới đầu tiên định nghĩa biến <code>response</code> chứa dữ liệu thông báo thành công. Sau đó, chúng ta gọi <code>as_bytes</code> trên <code>response</code> để chuyển đổi dữ liệu chuỗi thành byte. Phương thức <code>write_all</code> trên <code>stream</code> nhận <code>&amp;[u8]</code> và gửi các byte đó trực tiếp qua kết nối.</p>
+
+<h3 id="returning-real-html">Trả về HTML thực</h3>
+
+<p>Hãy triển khai chức năng trả về nhiều hơn là một trang trống. Tạo file mới <em>hello.html</em> trong thư mục gốc của dự án, không phải trong thư mục <em>src</em>. Listing 21-4 cho thấy một ví dụ.</p>
+
+<figure class="listing" id="listing-21-4">
+<span class="file-name">Filename: hello.html</span>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello!&lt;/h1&gt;
+    &lt;p&gt;Hi from Rust&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<figcaption><a href="#listing-21-4">Listing 21-4</a>: File HTML mẫu để trả về trong response</figcaption>
+</figure>
+
+<p>Đây là tài liệu HTML5 tối giản với tiêu đề và một số text. Để trả về từ server khi nhận được request, chúng ta sẽ sửa <code>handle_connection</code> như Listing 21-5 để đọc file HTML, thêm vào response dưới dạng body, và gửi đi.</p>
+
+<figure class="listing" id="listing-21-5">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">use std::{
+    fs,
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+};
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let status_line = "HTTP/1.1 200 OK";
+    let contents = fs::read_to_string("hello.html").unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre>
+<figcaption><a href="#listing-21-5">Listing 21-5</a>: Gửi nội dung của <em>hello.html</em> làm body của response</figcaption>
+</figure>
+
+<p>Chúng ta đã thêm <code>fs</code> vào câu lệnh <code>use</code> để đưa module filesystem của thư viện chuẩn vào phạm vi. Chúng ta dùng <code>format!</code> để thêm nội dung file làm body của response thành công. Để đảm bảo HTTP response hợp lệ, chúng ta thêm header <code>Content-Length</code> với giá trị bằng kích thước body response.</p>
+
+<h3 id="validating-the-request-and-selectively-responding">Xác thực Request và Phản hồi có chọn lọc</h3>
+
+<p>Hiện tại, web server của chúng ta trả về HTML trong file bất kể client yêu cầu gì. Hãy thêm chức năng kiểm tra trình duyệt có đang yêu cầu <em>/</em> trước khi trả về file HTML và trả về lỗi nếu yêu cầu điều khác. Điều này cần sửa <code>handle_connection</code> như Listing 21-6.</p>
+
+<figure class="listing" id="listing-21-6">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+
+    if request_line == "GET / HTTP/1.1" {
+        let status_line = "HTTP/1.1 200 OK";
+        let contents = fs::read_to_string("hello.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    } else {
+        // một request khác
+    }
+}</code></pre>
+<figcaption><a href="#listing-21-6">Listing 21-6</a>: Xử lý request đến <em>/</em> khác với các request khác</figcaption>
+</figure>
+
+<p>Chúng ta chỉ xem xét dòng đầu tiên của HTTP request. Nếu <code>request_line</code> bằng GET request đến path <em>/</em>, block <code>if</code> trả về nội dung của file HTML. Nếu <em>không</em> bằng, block <code>else</code> sẽ phản hồi tất cả các request khác.</p>
+
+<p>Bây giờ hãy thêm code ở Listing 21-7 vào block <code>else</code> để trả về response với status code 404, báo hiệu nội dung cho request không tìm thấy. Chúng ta cũng trả về một số HTML cho trang hiển thị trong trình duyệt.</p>
+
+<figure class="listing" id="listing-21-7">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">    } else {
+        let status_line = "HTTP/1.1 404 NOT FOUND";
+        let contents = fs::read_to_string("404.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    }</code></pre>
+<figcaption><a href="#listing-21-7">Listing 21-7</a>: Phản hồi với status code 404 và trang lỗi nếu yêu cầu gì khác ngoài <em>/</em></figcaption>
+</figure>
+
+<p>Tạo file <em>404.html</em> cạnh <em>hello.html</em> cho trang lỗi; hãy dùng bất kỳ HTML nào bạn muốn, hoặc dùng HTML mẫu ở Listing 21-8.</p>
+
+<figure class="listing" id="listing-21-8">
+<span class="file-name">Filename: 404.html</span>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Oops!&lt;/h1&gt;
+    &lt;p&gt;Sorry, I don't know what you're asking for.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<figcaption><a href="#listing-21-8">Listing 21-8</a>: Nội dung mẫu cho trang trả về với bất kỳ response 404 nào</figcaption>
+</figure>
+
+<h3 id="refactoring">Tái cấu trúc</h3>
+
+<p>Hiện tại, hai block <code>if</code> và <code>else</code> có nhiều phần trùng lặp: cả hai đều đọc file và ghi nội dung file vào stream. Sự khác biệt duy nhất là status line và tên file. Hãy làm code ngắn gọn hơn bằng cách tách những khác biệt đó thành các dòng <code>if</code> và <code>else</code> riêng gán giá trị của status line và tên file vào biến; chúng ta có thể dùng các biến đó vô điều kiện trong code để đọc file và viết response. Listing 21-9 cho thấy code kết quả.</p>
+
+<figure class="listing" id="listing-21-9">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust no_run">fn handle_connection(mut stream: TcpStream) {
+    // --snip--
+    let buf_reader = BufReader::new(&amp;stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+
+    let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
+        ("HTTP/1.1 200 OK", "hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre>
+<figcaption><a href="#listing-21-9">Listing 21-9</a>: Tái cấu trúc block <code>if</code> và <code>else</code> để chỉ chứa code khác nhau giữa hai trường hợp</figcaption>
+</figure>
+
+<p>Bây giờ block <code>if</code> và <code>else</code> chỉ trả về giá trị phù hợp cho status line và tên file trong một tuple; chúng ta dùng destructuring để gán hai giá trị này cho <code>status_line</code> và <code>filename</code>.</p>
+
+<p>Code trùng lặp trước đây giờ nằm ngoài block <code>if</code> và <code>else</code> và dùng biến <code>status_line</code> và <code>filename</code>. Điều này giúp dễ thấy sự khác biệt giữa hai trường hợp và chỉ có một chỗ để cập nhật code nếu muốn thay đổi cách đọc file và ghi response.</p>
+
+<p>Tuyệt vời! Chúng ta đã có một web server đơn giản trong khoảng 40 dòng code Rust phản hồi một request với trang nội dung và phản hồi tất cả các request khác bằng response 404.</p>
+
+<p>Hiện tại, server chạy trong một thread, nghĩa là chỉ có thể phục vụ một request tại một thời điểm. Hãy xem xét đó có thể là vấn đề như thế nào bằng cách mô phỏng một số request chậm. Sau đó, chúng ta sẽ khắc phục để server có thể xử lý nhiều request cùng lúc.</p>
+
+      <nav class="chapter-nav">
+        <a href="ch21-00-final-project-a-web-server.html" class="nav-btn prev"><span class="nav-dir">← Trước</span><span class="nav-title">Tổng quan: Dự án Web Server</span></a>
+        <a href="ch21-02-multithreaded.html" class="nav-btn next"><span class="nav-dir">Tiếp →</span><span class="nav-title">Từ Server Đơn luồng sang Đa luồng</span></a>
+      </nav>
+    </div>
+  </div>
+  <script src="nav.js"></script>
+</body>
+</html>

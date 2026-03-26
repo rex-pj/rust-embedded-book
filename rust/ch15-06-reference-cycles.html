@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reference Cycles Có Thể Gây Rò Rỉ Bộ Nhớ - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html" class="active">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html">Advanced Traits</a><a href="ch20-03-advanced-types.html">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 15 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch15-05-interior-mutability.html">← Trước</a><a href="ch16-00-concurrency.html">Tiếp →</a></div>
+
+  <h2 id="reference-cycles-can-leak-memory">Reference Cycles Có Thể Gây Rò Rỉ Bộ Nhớ</h2>
+<p>Các đảm bảo an toàn bộ nhớ của Rust khiến việc vô tình tạo ra bộ nhớ không bao giờ được dọn dẹp (còn gọi là <em>memory leak</em>) trở nên khó khăn, nhưng không phải không thể. Ngăn chặn hoàn toàn memory leak không phải là một trong những đảm bảo của Rust, nghĩa là memory leak là an toàn về bộ nhớ trong Rust. Chúng ta có thể thấy Rust cho phép memory leak bằng cách dùng <code>Rc&lt;T&gt;</code> và <code>RefCell&lt;T&gt;</code>: có thể tạo các reference trong đó các phần tử tham chiếu lẫn nhau tạo thành một vòng tròn. Điều này tạo ra memory leak vì reference count của mỗi phần tử trong vòng tròn sẽ không bao giờ đạt 0, và các giá trị sẽ không bao giờ bị drop.</p>
+
+<h3 id="creating-a-reference-cycle">Tạo một Reference Cycle</h3>
+<p>Hãy xem cách một reference cycle có thể xảy ra và cách ngăn chặn nó, bắt đầu với định nghĩa của enum <code>List</code> và method <code>tail</code> trong Listing 15-25.</p>
+<figure class="listing" id="listing-15-25">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use crate::List::{Cons, Nil};
+use std::cell::RefCell;
+use std::rc::Rc;
+
+#[derive(Debug)]
+enum List {
+    Cons(i32, RefCell&lt;Rc&lt;List&gt;&gt;),
+    Nil,
+}
+
+impl List {
+    fn tail(&amp;self) -&gt; Option&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; {
+        match self {
+            Cons(_, item) =&gt; Some(item),
+            Nil =&gt; None,
+        }
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-15-25">Listing 15-25</a>: Định nghĩa cons list chứa <code>RefCell&lt;T&gt;</code> để chúng ta có thể thay đổi đích tham chiếu của variant <code>Cons</code></figcaption>
+</figure>
+<p>Chúng ta đang dùng một biến thể khác của định nghĩa <code>List</code> từ Listing 15-5. Phần tử thứ hai trong variant <code>Cons</code> giờ là <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, nghĩa là thay vì có khả năng sửa đổi giá trị <code>i32</code> như chúng ta đã làm ở Listing 15-24, chúng ta muốn sửa đổi giá trị <code>List</code> mà variant <code>Cons</code> đang trỏ tới. Chúng ta cũng thêm method <code>tail</code> để tiện truy cập phần tử thứ hai khi có variant <code>Cons</code>.</p>
+<p>Trong Listing 15-26, chúng ta thêm hàm <code>main</code> sử dụng các định nghĩa trong Listing 15-25. Code này tạo một danh sách trong <code>a</code> và một danh sách trong <code>b</code> trỏ tới danh sách trong <code>a</code>. Sau đó, nó sửa đổi danh sách trong <code>a</code> để trỏ tới <code>b</code>, tạo ra một reference cycle. Có các câu lệnh <code>println!</code> dọc đường để hiển thị reference count tại các điểm khác nhau trong quá trình này.</p>
+<figure class="listing" id="listing-15-26">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">use crate::List::{Cons, Nil};
+</span><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::Rc;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum List {
+</span><span class="boring">    Cons(i32, RefCell&lt;Rc&lt;List&gt;&gt;),
+</span><span class="boring">    Nil,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl List {
+</span><span class="boring">    fn tail(&amp;self) -&gt; Option&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; {
+</span><span class="boring">        match self {
+</span><span class="boring">            Cons(_, item) =&gt; Some(item),
+</span><span class="boring">            Nil =&gt; None,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+
+    println!("a initial rc count = {}", Rc::strong_count(&amp;a));
+    println!("a next item = {:?}", a.tail());
+
+    let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&amp;a))));
+
+    println!("a rc count after b creation = {}", Rc::strong_count(&amp;a));
+    println!("b initial rc count = {}", Rc::strong_count(&amp;b));
+    println!("b next item = {:?}", b.tail());
+
+    if let Some(link) = a.tail() {
+        *link.borrow_mut() = Rc::clone(&amp;b);
+    }
+
+    println!("b rc count after changing a = {}", Rc::strong_count(&amp;b));
+    println!("a rc count after changing a = {}", Rc::strong_count(&amp;a));
+
+    // Bỏ comment dòng tiếp theo để thấy chúng ta có một vòng tròn;
+    // nó sẽ tràn stack.
+    // println!("a next item = {:?}", a.tail());
+}</code></pre>
+<figcaption><a href="#listing-15-26">Listing 15-26</a>: Tạo một reference cycle gồm hai giá trị <code>List</code> trỏ tới nhau</figcaption>
+</figure>
+<p>Chúng ta tạo một instance <code>Rc&lt;List&gt;</code> giữ giá trị <code>List</code> trong biến <code>a</code> với danh sách ban đầu là <code>5, Nil</code>. Sau đó tạo một instance <code>Rc&lt;List&gt;</code> giữ giá trị <code>List</code> khác trong biến <code>b</code> chứa giá trị <code>10</code> và trỏ tới danh sách trong <code>a</code>.</p>
+<p>Chúng ta sửa <code>a</code> để nó trỏ tới <code>b</code> thay vì <code>Nil</code>, tạo ra vòng tròn. Chúng ta làm điều này bằng cách dùng method <code>tail</code> để lấy reference tới <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> trong <code>a</code>, đặt vào biến <code>link</code>. Sau đó dùng method <code>borrow_mut</code> trên <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> để thay đổi giá trị bên trong từ một <code>Rc&lt;List&gt;</code> giữ giá trị <code>Nil</code> thành <code>Rc&lt;List&gt;</code> trong <code>b</code>.</p>
+<p>Khi chạy code này, giữ nguyên <code>println!</code> cuối cùng được comment, chúng ta sẽ nhận được output này:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running `target/debug/cons-list`
+a initial rc count = 1
+a next item = Some(RefCell { value: Nil })
+a rc count after b creation = 2
+b initial rc count = 1
+b next item = Some(RefCell { value: Cons(5, RefCell { value: Nil }) })
+b rc count after changing a = 2
+a rc count after changing a = 2
+</code></pre>
+<p>Reference count của các instance <code>Rc&lt;List&gt;</code> trong cả <code>a</code> và <code>b</code> là 2 sau khi chúng ta thay đổi danh sách trong <code>a</code> để trỏ tới <code>b</code>. Ở cuối hàm <code>main</code>, Rust drop biến <code>b</code>, giảm reference count của instance <code>b</code> <code>Rc&lt;List&gt;</code> từ 2 xuống 1. Bộ nhớ mà <code>Rc&lt;List&gt;</code> có trên heap sẽ không bị drop lúc này vì reference count của nó là 1, không phải 0. Sau đó Rust drop <code>a</code>, giảm reference count của instance <code>a</code> <code>Rc&lt;List&gt;</code> từ 2 xuống 1 cũng vậy. Bộ nhớ của instance này cũng không thể bị drop, vì instance <code>Rc&lt;List&gt;</code> kia vẫn đang tham chiếu tới nó. Bộ nhớ được cấp phát cho danh sách sẽ tồn tại mãi mãi không được thu hồi. Để hình dung reference cycle này, chúng ta đã tạo sơ đồ trong Hình 15-4.</p>
+<img alt="Một hình chữ nhật nhãn 'a' trỏ tới một hình chữ nhật chứa số nguyên 5. Một hình chữ nhật nhãn 'b' trỏ tới một hình chữ nhật chứa số nguyên 10. Hình chữ nhật chứa 5 trỏ tới hình chứa 10, và hình chứa 10 trỏ lại hình chứa 5, tạo thành một vòng tròn." src="img/trpl15-04.svg" class="center" />
+<p><span class="caption">Hình 15-4: Một reference cycle gồm các danh sách <code>a</code> và <code>b</code> trỏ tới nhau</span></p>
+<p>Nếu bạn bỏ comment <code>println!</code> cuối và chạy chương trình, Rust sẽ cố in vòng tròn này với <code>a</code> trỏ tới <code>b</code> trỏ tới <code>a</code> và cứ thế cho đến khi tràn stack.</p>
+<p>So với một chương trình thực tế, hậu quả của việc tạo reference cycle trong ví dụ này không quá nghiêm trọng: ngay sau khi tạo reference cycle, chương trình kết thúc. Tuy nhiên, nếu một chương trình phức tạp hơn cấp phát nhiều bộ nhớ trong một vòng tròn và giữ nó lâu, chương trình sẽ dùng nhiều bộ nhớ hơn cần thiết và có thể làm hệ thống kiệt sức, gây ra tình trạng hết bộ nhớ khả dụng.</p>
+<p>Việc tạo reference cycle không dễ dàng, nhưng cũng không phải không thể. Nếu bạn có các giá trị <code>RefCell&lt;T&gt;</code> chứa các giá trị <code>Rc&lt;T&gt;</code> hoặc các kết hợp lồng nhau tương tự của các kiểu có interior mutability và reference counting, bạn phải đảm bảo rằng bạn không tạo cycle; bạn không thể trông cậy vào Rust để phát hiện chúng. Việc tạo reference cycle là một lỗi logic trong chương trình mà bạn nên dùng automated test, code review và các thực hành phát triển phần mềm khác để giảm thiểu.</p>
+<p>Một giải pháp khác để tránh reference cycle là tổ chức lại cấu trúc dữ liệu sao cho một số reference thể hiện ownership và một số thì không. Kết quả là bạn có thể có các vòng tròn bao gồm một số quan hệ ownership và một số quan hệ không-ownership, và chỉ các quan hệ ownership mới ảnh hưởng đến việc một giá trị có thể bị drop hay không. Trong Listing 15-25, chúng ta luôn muốn các variant <code>Cons</code> sở hữu danh sách của chúng, vì vậy việc tổ chức lại cấu trúc dữ liệu là không thể. Hãy xem một ví dụ dùng đồ thị gồm các nút cha và nút con để thấy khi nào các quan hệ không-ownership là cách phù hợp để ngăn reference cycle.</p>
+
+<h3 id="preventing-reference-cycles-using-weakt">Ngăn chặn Reference Cycle bằng <code>Weak&lt;T&gt;</code></h3>
+<p>Cho đến nay, chúng ta đã chứng minh rằng việc gọi <code>Rc::clone</code> tăng <code>strong_count</code> của một instance <code>Rc&lt;T&gt;</code>, và một instance <code>Rc&lt;T&gt;</code> chỉ được dọn dẹp khi <code>strong_count</code> của nó là 0. Bạn cũng có thể tạo một weak reference tới giá trị trong một instance <code>Rc&lt;T&gt;</code> bằng cách gọi <code>Rc::downgrade</code> và truyền một reference tới <code>Rc&lt;T&gt;</code>. <em>Strong reference</em> là cách bạn chia sẻ quyền sở hữu của một instance <code>Rc&lt;T&gt;</code>. <em>Weak reference</em> không thể hiện quan hệ ownership, và count của chúng không ảnh hưởng đến khi nào một instance <code>Rc&lt;T&gt;</code> được dọn dẹp. Chúng sẽ không gây ra reference cycle, vì bất kỳ cycle nào liên quan đến một số weak reference sẽ bị phá vỡ khi strong reference count của các giá trị liên quan về 0.</p>
+<p>Khi bạn gọi <code>Rc::downgrade</code>, bạn nhận được một smart pointer kiểu <code>Weak&lt;T&gt;</code>. Thay vì tăng <code>strong_count</code> trong instance <code>Rc&lt;T&gt;</code> lên 1, gọi <code>Rc::downgrade</code> tăng <code>weak_count</code> lên 1. Kiểu <code>Rc&lt;T&gt;</code> dùng <code>weak_count</code> để theo dõi có bao nhiêu reference <code>Weak&lt;T&gt;</code> tồn tại, tương tự <code>strong_count</code>. Điểm khác biệt là <code>weak_count</code> không cần bằng 0 để instance <code>Rc&lt;T&gt;</code> được dọn dẹp.</p>
+<p>Vì giá trị mà <code>Weak&lt;T&gt;</code> tham chiếu có thể đã bị drop, để làm gì đó với giá trị mà <code>Weak&lt;T&gt;</code> đang trỏ tới bạn phải đảm bảo giá trị đó vẫn tồn tại. Hãy làm điều này bằng cách gọi method <code>upgrade</code> trên một instance <code>Weak&lt;T&gt;</code>, sẽ trả về <code>Option&lt;Rc&lt;T&gt;&gt;</code>. Bạn sẽ nhận được kết quả là <code>Some</code> nếu giá trị <code>Rc&lt;T&gt;</code> chưa bị drop và là <code>None</code> nếu nó đã bị drop. Vì <code>upgrade</code> trả về <code>Option&lt;Rc&lt;T&gt;&gt;</code>, Rust sẽ đảm bảo cả trường hợp <code>Some</code> lẫn <code>None</code> đều được xử lý, và sẽ không có con trỏ không hợp lệ.</p>
+<p>Làm ví dụ, thay vì dùng danh sách mà các phần tử chỉ biết về phần tử tiếp theo, chúng ta sẽ tạo một cây mà các phần tử biết về cả các phần tử con <em>lẫn</em> các phần tử cha của chúng.</p>
+
+<h4 id="creating-a-tree-data-structure">Tạo một Cấu trúc Dữ liệu Cây</h4>
+<p>Để bắt đầu, chúng ta sẽ xây dựng một cây với các nút biết về các nút con của chúng. Chúng ta sẽ tạo một struct tên <code>Node</code> giữ giá trị <code>i32</code> của chính nó cũng như các reference tới các giá trị <code>Node</code> con:</p>
+<p><span class="filename">Tên file: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">use std::cell::RefCell;
+use std::rc::Rc;
+
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let leaf = Rc::new(Node {
+</span><span class="boring">        value: 3,
+</span><span class="boring">        children: RefCell::new(vec![]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    let branch = Rc::new(Node {
+</span><span class="boring">        value: 5,
+</span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+</span><span class="boring">    });
+</span><span class="boring">}</span></code></pre>
+<p>Chúng ta muốn một <code>Node</code> sở hữu các con của nó, và chúng ta muốn chia sẻ quyền sở hữu đó với các biến để chúng ta có thể truy cập trực tiếp từng <code>Node</code> trong cây. Để làm điều này, chúng ta định nghĩa các phần tử <code>Vec&lt;T&gt;</code> có kiểu là giá trị của <code>Rc&lt;Node&gt;</code>. Chúng ta cũng muốn sửa đổi nút nào là con của nút khác, vì vậy chúng ta có một <code>RefCell&lt;T&gt;</code> trong <code>children</code> bao quanh <code>Vec&lt;Rc&lt;Node&gt;&gt;</code>.</p>
+<p>Tiếp theo, chúng ta sẽ dùng định nghĩa struct và tạo một instance <code>Node</code> tên <code>leaf</code> với giá trị <code>3</code> và không có con, và một instance khác tên <code>branch</code> với giá trị <code>5</code> và <code>leaf</code> là một trong các con, như trong Listing 15-27.</p>
+<figure class="listing" id="listing-15-27">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::Rc;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        children: RefCell::new(vec![]),
+    });
+
+    let branch = Rc::new(Node {
+        value: 5,
+        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+    });
+}</code></pre>
+<figcaption><a href="#listing-15-27">Listing 15-27</a>: Tạo nút <code>leaf</code> không có con và nút <code>branch</code> với <code>leaf</code> là một trong các con</figcaption>
+</figure>
+<p>Chúng ta clone <code>Rc&lt;Node&gt;</code> trong <code>leaf</code> và lưu vào <code>branch</code>, nghĩa là <code>Node</code> trong <code>leaf</code> giờ có hai chủ sở hữu: <code>leaf</code> và <code>branch</code>. Chúng ta có thể đi từ <code>branch</code> tới <code>leaf</code> qua <code>branch.children</code>, nhưng không có cách nào đi từ <code>leaf</code> tới <code>branch</code>. Lý do là <code>leaf</code> không có reference tới <code>branch</code> và không biết chúng có quan hệ gì. Chúng ta muốn <code>leaf</code> biết rằng <code>branch</code> là cha của nó. Hãy làm điều đó tiếp theo.</p>
+
+<h4 id="adding-a-reference-from-a-child-to-its-parent">Thêm Reference từ Con tới Cha</h4>
+<p>Để nút con biết về nút cha của nó, chúng ta cần thêm field <code>parent</code> vào định nghĩa struct <code>Node</code>. Vấn đề là quyết định kiểu của <code>parent</code> là gì. Chúng ta biết nó không thể chứa <code>Rc&lt;T&gt;</code>, vì điều đó sẽ tạo ra reference cycle với <code>leaf.parent</code> trỏ tới <code>branch</code> và <code>branch.children</code> trỏ tới <code>leaf</code>, khiến <code>strong_count</code> của chúng không bao giờ về 0.</p>
+<p>Suy nghĩ về các quan hệ theo cách khác: nút cha nên sở hữu các con của nó — nếu một nút cha bị drop, các nút con của nó cũng nên bị drop. Tuy nhiên, một nút con không nên sở hữu nút cha của nó — nếu chúng ta drop một nút con, nút cha vẫn phải tồn tại. Đây chính là trường hợp dùng weak reference!</p>
+<p>Vì vậy, thay vì <code>Rc&lt;T&gt;</code>, chúng ta sẽ làm kiểu của <code>parent</code> dùng <code>Weak&lt;T&gt;</code>, cụ thể là <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code>. Giờ định nghĩa struct <code>Node</code> trông như thế này:</p>
+<p><span class="filename">Tên file: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">use std::cell::RefCell;
+use std::rc::{Rc, Weak};
+
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let leaf = Rc::new(Node {
+</span><span class="boring">        value: 3,
+</span><span class="boring">        parent: RefCell::new(Weak::new()),
+</span><span class="boring">        children: RefCell::new(vec![]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+</span><span class="boring">
+</span><span class="boring">    let branch = Rc::new(Node {
+</span><span class="boring">        value: 5,
+</span><span class="boring">        parent: RefCell::new(Weak::new()),
+</span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+</span><span class="boring">
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+</span><span class="boring">}</span></code></pre>
+<p>Một nút có thể tham chiếu tới nút cha của nó nhưng không sở hữu nút cha. Trong Listing 15-28, chúng ta cập nhật <code>main</code> để dùng định nghĩa mới này để nút <code>leaf</code> có cách tham chiếu tới nút cha của nó, <code>branch</code>.</p>
+<figure class="listing" id="listing-15-28">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::{Rc, Weak};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![]),
+    });
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+
+    let branch = Rc::new(Node {
+        value: 5,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+    });
+
+    *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+}</code></pre>
+<figcaption><a href="#listing-15-28">Listing 15-28</a>: Một nút <code>leaf</code> với weak reference tới nút cha <code>branch</code></figcaption>
+</figure>
+<p>Việc tạo nút <code>leaf</code> trông tương tự Listing 15-27 ngoại trừ field <code>parent</code>: <code>leaf</code> bắt đầu không có cha, vì vậy chúng ta tạo một instance <code>Weak&lt;Node&gt;</code> reference rỗng mới.</p>
+<p>Tại thời điểm này, khi chúng ta cố lấy reference tới cha của <code>leaf</code> bằng method <code>upgrade</code>, chúng ta nhận được giá trị <code>None</code>. Chúng ta thấy điều này trong output từ câu lệnh <code>println!</code> đầu tiên:</p>
+<pre><code class="language-text">leaf parent = None
+</code></pre>
+<p>Khi tạo nút <code>branch</code>, nó cũng sẽ có một reference <code>Weak&lt;Node&gt;</code> mới trong field <code>parent</code> vì <code>branch</code> không có nút cha. Chúng ta vẫn có <code>leaf</code> là một trong các con của <code>branch</code>. Sau khi có instance <code>Node</code> trong <code>branch</code>, chúng ta có thể sửa đổi <code>leaf</code> để cho nó có reference <code>Weak&lt;Node&gt;</code> tới cha. Chúng ta dùng method <code>borrow_mut</code> trên <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code> trong field <code>parent</code> của <code>leaf</code>, rồi dùng hàm <code>Rc::downgrade</code> để tạo reference <code>Weak&lt;Node&gt;</code> tới <code>branch</code> từ <code>Rc&lt;Node&gt;</code> trong <code>branch</code>.</p>
+<p>Khi in cha của <code>leaf</code> lần nữa, lần này chúng ta sẽ nhận được variant <code>Some</code> giữ <code>branch</code>: Bây giờ <code>leaf</code> có thể truy cập cha của nó! Khi in <code>leaf</code>, chúng ta cũng tránh được vòng lặp vô tận cuối cùng dẫn đến tràn stack như trong Listing 15-26; các reference <code>Weak&lt;Node&gt;</code> được in là <code>(Weak)</code>:</p>
+<pre><code class="language-text">leaf parent = Some(Node { value: 5, parent: RefCell { value: (Weak) },
+children: RefCell { value: [Node { value: 3, parent: RefCell { value: (Weak) },
+children: RefCell { value: [] } }] } })
+</code></pre>
+<p>Việc không có output vô tận cho thấy code này không tạo reference cycle. Chúng ta cũng có thể biết điều này bằng cách xem các giá trị nhận được khi gọi <code>Rc::strong_count</code> và <code>Rc::weak_count</code>.</p>
+
+<h4 id="visualizing-changes-to-strong_count-and-weak_count">Hình dung sự thay đổi của <code>strong_count</code> và <code>weak_count</code></h4>
+<p>Hãy xem <code>strong_count</code> và <code>weak_count</code> của các instance <code>Rc&lt;Node&gt;</code> thay đổi như thế nào bằng cách tạo một scope bên trong mới và chuyển việc tạo <code>branch</code> vào scope đó. Làm vậy, chúng ta có thể thấy điều gì xảy ra khi <code>branch</code> được tạo ra rồi bị drop khi ra khỏi scope. Các sửa đổi được hiển thị trong Listing 15-29.</p>
+<figure class="listing" id="listing-15-29">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::{Rc, Weak};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![]),
+    });
+
+    println!(
+        "leaf strong = {}, weak = {}",
+        Rc::strong_count(&amp;leaf),
+        Rc::weak_count(&amp;leaf),
+    );
+
+    {
+        let branch = Rc::new(Node {
+            value: 5,
+            parent: RefCell::new(Weak::new()),
+            children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+        });
+
+        *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+
+        println!(
+            "branch strong = {}, weak = {}",
+            Rc::strong_count(&amp;branch),
+            Rc::weak_count(&amp;branch),
+        );
+
+        println!(
+            "leaf strong = {}, weak = {}",
+            Rc::strong_count(&amp;leaf),
+            Rc::weak_count(&amp;leaf),
+        );
+    }
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+    println!(
+        "leaf strong = {}, weak = {}",
+        Rc::strong_count(&amp;leaf),
+        Rc::weak_count(&amp;leaf),
+    );
+}</code></pre>
+<figcaption><a href="#listing-15-29">Listing 15-29</a>: Tạo <code>branch</code> trong một scope bên trong và kiểm tra strong và weak reference count</figcaption>
+</figure>
+<p>Sau khi <code>leaf</code> được tạo, <code>Rc&lt;Node&gt;</code> của nó có strong count là 1 và weak count là 0. Trong scope bên trong, chúng ta tạo <code>branch</code> và liên kết nó với <code>leaf</code>; tại thời điểm in các count, <code>Rc&lt;Node&gt;</code> trong <code>branch</code> sẽ có strong count là 1 và weak count là 1 (do <code>leaf.parent</code> trỏ tới <code>branch</code> với một <code>Weak&lt;Node&gt;</code>). Khi in các count trong <code>leaf</code>, chúng ta sẽ thấy nó có strong count là 2 vì <code>branch</code> giờ có clone của <code>Rc&lt;Node&gt;</code> của <code>leaf</code> được lưu trong <code>branch.children</code>, nhưng vẫn có weak count là 0.</p>
+<p>Khi scope bên trong kết thúc, <code>branch</code> ra khỏi scope và strong count của <code>Rc&lt;Node&gt;</code> giảm xuống 0, vì vậy <code>Node</code> của nó bị drop. Weak count là 1 từ <code>leaf.parent</code> không ảnh hưởng đến việc <code>Node</code> có bị drop hay không, vì vậy chúng ta không gặp memory leak!</p>
+<p>Nếu chúng ta cố truy cập cha của <code>leaf</code> sau khi kết thúc scope, chúng ta sẽ nhận được <code>None</code> lần nữa. Ở cuối chương trình, <code>Rc&lt;Node&gt;</code> trong <code>leaf</code> có strong count là 1 và weak count là 0 vì biến <code>leaf</code> giờ là reference duy nhất tới <code>Rc&lt;Node&gt;</code> này.</p>
+<p>Toàn bộ logic quản lý các count và việc drop giá trị được tích hợp vào <code>Rc&lt;T&gt;</code> và <code>Weak&lt;T&gt;</code> và các implementation của trait <code>Drop</code>. Bằng cách chỉ định rằng quan hệ từ nút con tới nút cha nên là reference <code>Weak&lt;T&gt;</code> trong định nghĩa <code>Node</code>, bạn có thể để các nút cha trỏ tới các nút con và ngược lại mà không tạo reference cycle và memory leak.</p>
+
+<h2 id="summary">Tổng kết</h2>
+<p>Chương này đã đề cập đến cách dùng smart pointer để tạo ra các đảm bảo và đánh đổi khác nhau so với những gì Rust mặc định cung cấp với các reference thông thường. Kiểu <code>Box&lt;T&gt;</code> có kích thước xác định và trỏ tới dữ liệu được cấp phát trên heap. Kiểu <code>Rc&lt;T&gt;</code> theo dõi số reference tới dữ liệu trên heap để dữ liệu có thể có nhiều chủ sở hữu. Kiểu <code>RefCell&lt;T&gt;</code> với interior mutability cho chúng ta một kiểu có thể dùng khi cần một kiểu immutable nhưng lại cần thay đổi giá trị bên trong của kiểu đó; nó cũng kiểm tra các quy tắc borrowing lúc runtime thay vì lúc compile.</p>
+<p>Cũng đã thảo luận về các trait <code>Deref</code> và <code>Drop</code>, vốn cho phép rất nhiều chức năng của smart pointer. Chúng ta đã khám phá các reference cycle có thể gây memory leak và cách ngăn chặn chúng bằng <code>Weak&lt;T&gt;</code>.</p>
+<p>Nếu chương này đã khơi dậy hứng thú và bạn muốn implement smart pointer của riêng mình, hãy xem <a href="../nomicon/index.html">"The Rustonomicon"</a> để có thêm thông tin hữu ích.</p>
+<p>Tiếp theo, chúng ta sẽ nói về concurrency trong Rust. Bạn thậm chí sẽ học về một vài smart pointer mới.</p>
+
+  <div class="page-nav bottom"><a href="ch15-05-interior-mutability.html">← Trước</a><a href="ch16-00-concurrency.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

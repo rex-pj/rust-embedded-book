@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer Data Between Threads with Message Passing - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html" class="active">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch16-01-threads.html">← Trước</a>
+    <a href="ch16-03-shared-state.html">Tiếp →</a>
+  </div>
+
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-message-passing-to-transfer-data-between-threads"></a></p>
+<h2 id="transfer-data-between-threads-with-message-passing"><a class="header" href="#transfer-data-between-threads-with-message-passing">Truyền Dữ Liệu Giữa Các Thread Bằng Message Passing</a></h2>
+<p>Một trong những cách tiếp cận ngày càng phổ biến để đảm bảo concurrency an toàn là <em>message passing</em> — các thread hoặc actor giao tiếp với nhau bằng cách gửi tin nhắn chứa dữ liệu. Có một câu khẩu hiệu nổi tiếng từ <a href="https://golang.org/doc/effective_go.html#concurrency">tài liệu ngôn ngữ Go</a> diễn đạt ý tưởng này rất hay: "Đừng giao tiếp bằng cách chia sẻ bộ nhớ; thay vào đó, hãy chia sẻ bộ nhớ bằng cách giao tiếp."</p>
+<p>Để thực hiện concurrency kiểu message-sending, thư viện chuẩn của Rust cung cấp một triển khai channel. <em>Channel</em> là một khái niệm lập trình tổng quát cho phép gửi dữ liệu từ thread này sang thread khác.</p>
+<p>Bạn có thể hình dung channel trong lập trình như một dòng nước chảy một chiều — tựa như một con suối hay con sông. Nếu bạn thả một con vịt cao su xuống sông, nó sẽ trôi theo dòng nước đến cuối hành trình.</p>
+<p>Một channel có hai nửa: một transmitter (bên gửi) và một receiver (bên nhận). Nửa transmitter là nơi thượng nguồn — nơi bạn thả con vịt xuống sông — còn nửa receiver là nơi con vịt đến đích ở hạ lưu. Một phần code của bạn gọi các phương thức trên transmitter với dữ liệu muốn gửi, và một phần khác kiểm tra đầu nhận để xem có tin nhắn nào đến không. Channel được gọi là <em>đóng</em> khi một trong hai nửa — transmitter hoặc receiver — bị drop.</p>
+<p>Ở đây, chúng ta sẽ xây dựng một chương trình có một thread để tạo ra các giá trị và gửi chúng qua channel, và một thread khác sẽ nhận các giá trị đó rồi in ra. Chúng ta sẽ gửi những giá trị đơn giản giữa các thread thông qua channel để minh họa tính năng này. Khi đã quen với kỹ thuật này, bạn có thể dùng channel cho bất kỳ thread nào cần giao tiếp với nhau — chẳng hạn như hệ thống chat, hoặc hệ thống nhiều thread thực hiện các phần tính toán rồi gửi kết quả về một thread tổng hợp.</p>
+<p>Đầu tiên, trong Listing 16-6, chúng ta sẽ tạo một channel nhưng chưa làm gì với nó. Lưu ý: đoạn code này chưa compile được vì Rust không biết chúng ta muốn gửi kiểu dữ liệu gì qua channel.</p>
+<figure class="listing" id="listing-16-6">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+}</code></pre>
+<figcaption><a href="#listing-16-6">Listing 16-6</a>: Tạo một channel và gán hai nửa vào <code>tx</code> và <code>rx</code></figcaption>
+</figure>
+<p>Chúng ta tạo channel mới bằng hàm <code>mpsc::channel</code>; <code>mpsc</code> là viết tắt của <em>multiple producer, single consumer</em> (nhiều bên gửi, một bên nhận). Tóm lại, cách Rust triển khai channel có nghĩa là channel có thể có nhiều đầu <em>gửi</em> tạo ra giá trị, nhưng chỉ có một đầu <em>nhận</em> tiêu thụ chúng. Hãy tưởng tượng nhiều con suối nhỏ chảy vào một con sông lớn: mọi thứ gửi xuống bất kỳ suối nào cũng sẽ kết thúc ở con sông đó. Hiện tại chúng ta sẽ bắt đầu với một producer duy nhất, nhưng sẽ thêm nhiều producer khi ví dụ hoạt động được.</p>
+<p>Hàm <code>mpsc::channel</code> trả về một tuple, phần tử đầu là đầu gửi — transmitter — và phần tử thứ hai là đầu nhận — receiver. Các chữ viết tắt <code>tx</code> và <code>rx</code> được dùng truyền thống trong nhiều lĩnh vực cho <em>transmitter</em> và <em>receiver</em>, vì vậy chúng ta đặt tên biến theo quy ước đó. Chúng ta dùng câu lệnh <code>let</code> với pattern để destructure tuple; chúng ta sẽ bàn về việc dùng pattern trong <code>let</code> và destructuring ở Chương 19. Bây giờ cứ hiểu rằng dùng <code>let</code> theo cách này là cách tiện lợi để tách các phần của tuple trả về bởi <code>mpsc::channel</code>.</p>
+<p>Hãy chuyển đầu gửi vào một spawned thread và để nó gửi một chuỗi ký tự, như vậy spawned thread sẽ giao tiếp với main thread, như minh họa trong Listing 16-7. Điều này giống như thả con vịt cao su xuống sông ở thượng nguồn, hoặc gửi tin nhắn chat từ thread này sang thread khác.</p>
+<figure class="listing" id="listing-16-7">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+}</code></pre>
+<figcaption><a href="#listing-16-7">Listing 16-7</a>: Chuyển <code>tx</code> vào spawned thread và gửi chuỗi <code>"hi"</code></figcaption>
+</figure>
+<p>Lại một lần nữa, chúng ta dùng <code>thread::spawn</code> để tạo thread mới và dùng <code>move</code> để đưa <code>tx</code> vào closure để spawned thread sở hữu <code>tx</code>. Spawned thread cần sở hữu transmitter để có thể gửi tin nhắn qua channel.</p>
+<p>Transmitter có phương thức <code>send</code> nhận giá trị muốn gửi. Phương thức <code>send</code> trả về kiểu <code>Result&lt;T, E&gt;</code>, vì vậy nếu receiver đã bị drop và không còn nơi nào để gửi giá trị, thao tác gửi sẽ trả về lỗi. Trong ví dụ này chúng ta gọi <code>unwrap</code> để panic khi có lỗi. Nhưng trong ứng dụng thực tế, bạn nên xử lý lỗi đúng cách: hãy quay lại Chương 9 để ôn lại các chiến lược xử lý lỗi.</p>
+<p>Trong Listing 16-8, chúng ta sẽ lấy giá trị từ receiver ở main thread. Điều này giống như vớt con vịt cao su lên từ cuối sông, hoặc nhận tin nhắn chat.</p>
+<figure class="listing" id="listing-16-8">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {received}");
+}</code></pre>
+<figcaption><a href="#listing-16-8">Listing 16-8</a>: Nhận giá trị <code>"hi"</code> ở main thread và in ra</figcaption>
+</figure>
+<p>Receiver có hai phương thức hữu ích: <code>recv</code> và <code>try_recv</code>. Chúng ta dùng <code>recv</code>, viết tắt của <em>receive</em> — phương thức này sẽ block thread chính và chờ cho đến khi có giá trị được gửi qua channel. Khi có giá trị được gửi, <code>recv</code> sẽ trả về nó trong <code>Result&lt;T, E&gt;</code>. Khi transmitter đóng lại, <code>recv</code> sẽ trả về lỗi để báo hiệu rằng không còn giá trị nào đến nữa.</p>
+<p>Phương thức <code>try_recv</code> không block, mà thay vào đó trả về <code>Result&lt;T, E&gt;</code> ngay lập tức: một giá trị <code>Ok</code> chứa tin nhắn nếu có sẵn, hoặc <code>Err</code> nếu không có tin nhắn lúc này. Dùng <code>try_recv</code> rất hữu ích nếu thread có việc khác cần làm trong khi chờ tin nhắn: ta có thể viết một vòng lặp gọi <code>try_recv</code> định kỳ, xử lý tin nhắn nếu có, còn không thì làm việc khác một lúc rồi kiểm tra lại.</p>
+<p>Chúng ta đã dùng <code>recv</code> trong ví dụ này cho đơn giản; main thread không có việc gì khác ngoài chờ tin nhắn, nên block main thread là hợp lý.</p>
+<p>Khi chạy code trong Listing 16-8, chúng ta thấy giá trị được in từ main thread:</p>
+<pre><code class="language-text">Got: hi
+</code></pre>
+<p>Tuyệt vời!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="channels-and-ownership-transference"></a></p>
+<h3 id="transferring-ownership-through-channels"><a class="header" href="#transferring-ownership-through-channels">Chuyển Quyền Sở Hữu Qua Channel</a></h3>
+<p>Các quy tắc ownership đóng vai trò quan trọng trong việc gửi tin nhắn vì chúng giúp bạn viết code concurrent an toàn. Ngăn chặn lỗi trong lập trình concurrent chính là lợi thế của việc tư duy về ownership xuyên suốt chương trình Rust. Hãy làm một thí nghiệm để thấy channel và ownership hoạt động cùng nhau để ngăn sự cố: chúng ta sẽ thử dùng giá trị <code>val</code> trong spawned thread <em>sau khi</em> đã gửi nó qua channel. Hãy thử compile code trong Listing 16-9 để thấy tại sao code này bị cấm.</p>
+<figure class="listing" id="listing-16-9">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+        println!("val is {val}");
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {received}");
+}</code></pre>
+<figcaption><a href="#listing-16-9">Listing 16-9</a>: Cố dùng <code>val</code> sau khi đã gửi nó qua channel</figcaption>
+</figure>
+<p>Ở đây, chúng ta cố in <code>val</code> sau khi đã gửi nó qua channel qua <code>tx.send</code>. Làm vậy rất nguy hiểm: một khi giá trị đã được gửi cho thread khác, thread đó có thể thay đổi hoặc drop nó trước khi chúng ta dùng lại giá trị. Điều này có thể dẫn đến lỗi hoặc kết quả không mong muốn vì dữ liệu không nhất quán hoặc không còn tồn tại. Tuy nhiên, Rust sẽ báo lỗi nếu ta cố compile code trong Listing 16-9:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling message-passing v0.1.0 (file:///projects/message-passing)
+error[E0382]: borrow of moved value: `val`
+  --&gt; src/main.rs:10:27
+   |
+ 8 |         let val = String::from("hi");
+   |             --- move occurs because `val` has type `String`, which does not implement the `Copy` trait
+ 9 |         tx.send(val).unwrap();
+   |                 --- value moved here
+10 |         println!("val is {val}");
+   |                           ^^^ value borrowed here after move
+   |
+   = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `message-passing` (bin "message-passing") due to 1 previous error
+</code></pre>
+<p>Lỗi concurrent của chúng ta đã tạo ra lỗi compile-time. Hàm <code>send</code> lấy quyền sở hữu tham số của nó, và khi giá trị được move, receiver lấy quyền sở hữu nó. Điều này ngăn chúng ta vô tình dùng lại giá trị sau khi đã gửi; hệ thống ownership kiểm tra mọi thứ đều ổn.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="sending-multiple-values-and-seeing-the-receiver-waiting"></a></p>
+<h3 id="sending-multiple-values"><a class="header" href="#sending-multiple-values">Gửi Nhiều Giá Trị</a></h3>
+<p>Code trong Listing 16-8 đã compile và chạy được, nhưng nó chưa cho thấy rõ hai thread riêng biệt đang giao tiếp với nhau qua channel.</p>
+<p>Trong Listing 16-10, chúng ta đã thực hiện một số thay đổi sẽ chứng minh code trong Listing 16-8 chạy đồng thời: spawned thread giờ sẽ gửi nhiều tin nhắn và tạm dừng một giây giữa mỗi tin.</p>
+<figure class="listing" id="listing-16-10">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust noplayground">use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {received}");
+    }
+}</code></pre>
+<figcaption><a href="#listing-16-10">Listing 16-10</a>: Gửi nhiều tin nhắn và tạm dừng giữa mỗi cái</figcaption>
+</figure>
+<p>Lần này, spawned thread có một vector các chuỗi ký tự cần gửi cho main thread. Chúng ta duyệt qua chúng, gửi từng cái, và tạm dừng giữa mỗi lần bằng cách gọi hàm <code>thread::sleep</code> với giá trị <code>Duration</code> một giây.</p>
+<p>Trong main thread, chúng ta không gọi hàm <code>recv</code> trực tiếp nữa: thay vào đó, chúng ta đối xử với <code>rx</code> như một iterator. Với mỗi giá trị nhận được, chúng ta in nó. Khi channel đóng lại, quá trình lặp sẽ kết thúc.</p>
+<p>Khi chạy code trong Listing 16-10, bạn sẽ thấy output sau với khoảng dừng một giây giữa mỗi dòng:</p>
+<pre><code class="language-text">Got: hi
+Got: from
+Got: the
+Got: thread
+</code></pre>
+<p>Vì không có code nào tạm dừng hay trì hoãn trong vòng lặp <code>for</code> của main thread, chúng ta có thể biết rằng main thread đang chờ nhận giá trị từ spawned thread.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="creating-multiple-producers-by-cloning-the-transmitter"></a></p>
+<h3 id="creating-multiple-producers"><a class="header" href="#creating-multiple-producers">Tạo Nhiều Producer</a></h3>
+<p>Trước đó chúng ta đã đề cập rằng <code>mpsc</code> là từ viết tắt của <em>multiple producer, single consumer</em>. Hãy tận dụng <code>mpsc</code> và mở rộng code trong Listing 16-10 để tạo nhiều thread cùng gửi giá trị tới một receiver. Chúng ta có thể làm điều đó bằng cách clone transmitter, như minh họa trong Listing 16-11.</p>
+<figure class="listing" id="listing-16-11">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">use std::sync::mpsc;
+</span><span class="boring">use std::thread;
+</span><span class="boring">use std::time::Duration;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>    // --snip--
+
+    let (tx, rx) = mpsc::channel();
+
+    let tx1 = tx.clone();
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("more"),
+            String::from("messages"),
+            String::from("for"),
+            String::from("you"),
+        ];
+
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {received}");
+    }
+
+    // --snip--
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-16-11">Listing 16-11</a>: Gửi nhiều tin nhắn từ nhiều producer</figcaption>
+</figure>
+<p>Lần này, trước khi tạo spawned thread đầu tiên, chúng ta gọi <code>clone</code> trên transmitter. Điều này cho chúng ta một transmitter mới để truyền vào thread đầu tiên. Chúng ta truyền transmitter gốc vào spawned thread thứ hai. Điều này cho chúng ta hai thread, mỗi thread gửi các tin nhắn khác nhau tới cùng một receiver.</p>
+<p>Khi chạy code, output sẽ trông giống như thế này:</p>
+<pre><code class="language-text">Got: hi
+Got: more
+Got: from
+Got: messages
+Got: for
+Got: the
+Got: thread
+Got: you
+</code></pre>
+<p>Bạn có thể thấy các giá trị theo thứ tự khác nhau, tùy thuộc vào hệ thống của bạn. Đây chính là điều khiến concurrency vừa thú vị vừa đầy thách thức. Nếu bạn thử nghiệm với <code>thread::sleep</code>, đặt các giá trị khác nhau cho các thread khác nhau, mỗi lần chạy sẽ cho output khác nhau và thứ tự ngẫu nhiên hơn.</p>
+<p>Giờ chúng ta đã xem cách channel hoạt động, hãy cùng xem xét một phương pháp concurrency khác.</p>
+
+  <div class="page-nav bottom"><a href="ch16-01-threads.html">← Trước</a><a href="ch16-03-shared-state.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

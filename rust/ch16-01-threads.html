@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sử dụng Threads để Chạy Code Song Song - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html" class="active">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch16-00-concurrency.html">← Trước</a>
+    <a href="ch16-02-message-passing.html">Tiếp →</a>
+  </div>
+
+<h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Dùng Threads để Chạy Code Song Song</a></h2>
+
+<p>Trong hầu hết các hệ điều hành hiện đại, code của một chương trình đang chạy được thực thi trong một <em>process</em>, và hệ điều hành sẽ quản lý nhiều process cùng một lúc. Bên trong một chương trình, bạn cũng có thể có các phần độc lập chạy đồng thời. Các tính năng chạy những phần độc lập này được gọi là <em>thread</em>. Ví dụ, một web server có thể có nhiều thread để có thể phản hồi nhiều hơn một request cùng một lúc.</p>
+
+<p>Chia tách tính toán trong chương trình thành nhiều thread để chạy nhiều task đồng thời có thể cải thiện hiệu suất, nhưng cũng thêm vào sự phức tạp. Bởi vì các thread có thể chạy đồng thời, không có gì đảm bảo thứ tự thực thi các phần code trên các thread khác nhau. Điều này có thể dẫn đến các vấn đề như:</p>
+<ul>
+<li>Race condition, nơi các thread đang truy cập dữ liệu hoặc tài nguyên theo thứ tự không nhất quán</li>
+<li>Deadlock, nơi hai thread đang chờ nhau, ngăn cả hai thread tiếp tục</li>
+<li>Các bug chỉ xảy ra trong một số tình huống nhất định và khó tái tạo và sửa chữa một cách đáng tin cậy</li>
+</ul>
+
+<p>Rust cố gắng giảm thiểu tác động tiêu cực của việc dùng thread, nhưng lập trình trong ngữ cảnh đa luồng vẫn đòi hỏi suy nghĩ cẩn thận và yêu cầu cấu trúc code khác so với các chương trình chạy trong một thread duy nhất.</p>
+
+<p>Các ngôn ngữ lập trình triển khai thread theo một vài cách khác nhau, và nhiều hệ điều hành cung cấp API mà ngôn ngữ lập trình có thể gọi để tạo thread mới. Thư viện chuẩn của Rust dùng mô hình thread kiểu <em>1:1</em>, tức là một chương trình dùng một thread của hệ điều hành cho mỗi một thread của ngôn ngữ. Có những crate triển khai các mô hình thread khác với những đánh đổi khác so với mô hình 1:1. (Hệ thống async của Rust, mà chúng ta sẽ thấy ở chương tiếp theo, cũng cung cấp một cách tiếp cận khác với concurrency.)</p>
+
+<h3 id="creating-a-new-thread-with-spawn"><a class="header" href="#creating-a-new-thread-with-spawn">Tạo Thread Mới với <code>spawn</code></a></h3>
+
+<p>Để tạo một thread mới, chúng ta gọi hàm <code>thread::spawn</code> và truyền vào một closure (chúng ta đã nói về closure ở Chương 13) chứa code muốn chạy trong thread mới. Ví dụ ở Listing 16-1 in ra một vài đoạn text từ main thread và đoạn text khác từ thread mới.</p>
+
+<figure class="listing" id="listing-16-1">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::thread;
+use std::time::Duration;
+
+fn main() {
+    thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {i} from the spawned thread!");
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    for i in 1..5 {
+        println!("hi number {i} from the main thread!");
+        thread::sleep(Duration::from_millis(1));
+    }
+}</code></pre>
+<figcaption><a href="#listing-16-1">Listing 16-1</a>: Tạo một thread mới để in một thứ trong khi main thread in thứ khác</figcaption>
+</figure>
+
+<p>Lưu ý rằng khi main thread của chương trình Rust kết thúc, tất cả các thread được spawn cũng bị dừng lại, dù chúng có chạy xong hay chưa. Output của chương trình này có thể hơi khác nhau mỗi lần, nhưng sẽ trông đại khái như thế này:</p>
+
+<pre><code class="language-text">hi number 1 from the main thread!
+hi number 1 from the spawned thread!
+hi number 2 from the main thread!
+hi number 2 from the spawned thread!
+hi number 3 from the main thread!
+hi number 3 from the spawned thread!
+hi number 4 from the main thread!
+hi number 4 from the spawned thread!
+hi number 5 from the spawned thread!
+</code></pre>
+
+<p>Các lời gọi <code>thread::sleep</code> buộc thread dừng thực thi trong một khoảng thời gian ngắn, cho phép thread khác chạy. Các thread có thể luân phiên nhau, nhưng điều đó không được đảm bảo: nó phụ thuộc vào cách hệ điều hành lên lịch cho các thread. Trong lần chạy này, main thread in trước, mặc dù lệnh print từ spawned thread xuất hiện đầu tiên trong code. Và dù chúng ta bảo spawned thread in cho đến khi <code>i</code> bằng <code>9</code>, nó chỉ chạy đến <code>5</code> trước khi main thread dừng lại.</p>
+
+<p>Nếu bạn chạy code này và chỉ thấy output từ main thread, hoặc không thấy output xen kẽ nhau, hãy thử tăng các con số trong các khoảng range để tạo thêm cơ hội cho hệ điều hành chuyển đổi giữa các thread.</p>
+
+<p><a id="waiting-for-all-threads-to-finish-using-join-handles"></a></p>
+<h3 id="waiting-for-all-threads-to-finish"><a class="header" href="#waiting-for-all-threads-to-finish">Chờ Tất Cả Thread Kết Thúc</a></h3>
+
+<p>Code trong Listing 16-1 không chỉ dừng spawned thread sớm hơn mức cần thiết do main thread kết thúc, mà còn vì không có gì đảm bảo thứ tự các thread chạy, chúng ta cũng không thể đảm bảo spawned thread sẽ được chạy chút nào!</p>
+
+<p>Chúng ta có thể sửa vấn đề spawned thread không chạy hoặc kết thúc sớm bằng cách lưu giá trị trả về của <code>thread::spawn</code> vào một biến. Kiểu trả về của <code>thread::spawn</code> là <code>JoinHandle&lt;T&gt;</code>. Một <code>JoinHandle&lt;T&gt;</code> là một giá trị có ownership mà khi chúng ta gọi phương thức <code>join</code> trên nó, sẽ đợi thread của nó kết thúc. Listing 16-2 cho thấy cách dùng <code>JoinHandle&lt;T&gt;</code> của thread chúng ta đã tạo trong Listing 16-1 và cách gọi <code>join</code> để đảm bảo spawned thread hoàn thành trước khi <code>main</code> thoát.</p>
+
+<figure class="listing" id="listing-16-2">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let handle = thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {i} from the spawned thread!");
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    for i in 1..5 {
+        println!("hi number {i} from the main thread!");
+        thread::sleep(Duration::from_millis(1));
+    }
+
+    handle.join().unwrap();
+}</code></pre>
+<figcaption><a href="#listing-16-2">Listing 16-2</a>: Lưu một <code>JoinHandle&lt;T&gt;</code> từ <code>thread::spawn</code> để đảm bảo thread chạy đến hoàn thành</figcaption>
+</figure>
+
+<p>Gọi <code>join</code> trên handle chặn thread đang chạy cho đến khi thread được đại diện bởi handle đó kết thúc. <em>Blocking</em> một thread nghĩa là thread đó bị ngăn không thực hiện công việc hay thoát ra. Vì chúng ta đã đặt lời gọi <code>join</code> sau vòng lặp <code>for</code> của main thread, chạy Listing 16-2 sẽ tạo ra output tương tự thế này:</p>
+
+<pre><code class="language-text">hi number 1 from the main thread!
+hi number 2 from the main thread!
+hi number 1 from the spawned thread!
+hi number 3 from the main thread!
+hi number 2 from the spawned thread!
+hi number 4 from the main thread!
+hi number 3 from the spawned thread!
+hi number 4 from the spawned thread!
+hi number 5 from the spawned thread!
+hi number 6 from the spawned thread!
+hi number 7 from the spawned thread!
+hi number 8 from the spawned thread!
+hi number 9 from the spawned thread!
+</code></pre>
+
+<p>Hai thread tiếp tục luân phiên, nhưng main thread chờ do lời gọi <code>handle.join()</code> và không kết thúc cho đến khi spawned thread hoàn thành.</p>
+
+<p>Nhưng hãy xem chuyện gì xảy ra khi chúng ta di chuyển <code>handle.join()</code> lên trước vòng lặp <code>for</code> trong <code>main</code>, như thế này:</p>
+
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let handle = thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {i} from the spawned thread!");
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    handle.join().unwrap();
+
+    for i in 1..5 {
+        println!("hi number {i} from the main thread!");
+        thread::sleep(Duration::from_millis(1));
+    }
+}</code></pre>
+</figure>
+
+<p>Main thread sẽ đợi spawned thread hoàn thành rồi mới chạy vòng lặp <code>for</code> của mình, vì vậy output sẽ không còn xen kẽ nữa, như thế này:</p>
+
+<pre><code class="language-text">hi number 1 from the spawned thread!
+hi number 2 from the spawned thread!
+hi number 3 from the spawned thread!
+hi number 4 from the spawned thread!
+hi number 5 from the spawned thread!
+hi number 6 from the spawned thread!
+hi number 7 from the spawned thread!
+hi number 8 from the spawned thread!
+hi number 9 from the spawned thread!
+hi number 1 from the main thread!
+hi number 2 from the main thread!
+hi number 3 from the main thread!
+hi number 4 from the main thread!
+</code></pre>
+
+<p>Những chi tiết nhỏ như vị trí gọi <code>join</code> có thể ảnh hưởng đến việc các thread có chạy cùng lúc hay không.</p>
+
+<h3 id="using-move-closures-with-threads"><a class="header" href="#using-move-closures-with-threads">Dùng Closure <code>move</code> với Threads</a></h3>
+
+<p>Chúng ta thường sử dụng từ khóa <code>move</code> với các closure truyền vào <code>thread::spawn</code> vì closure sẽ lấy ownership của các giá trị nó dùng từ môi trường, do đó chuyển ownership của các giá trị đó từ thread này sang thread khác. Trong phần <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">"Capturing References or Moving Ownership"</a><!-- ignore --> ở Chương 13, chúng ta đã thảo luận về <code>move</code> trong ngữ cảnh closure. Bây giờ chúng ta sẽ tập trung hơn vào sự tương tác giữa <code>move</code> và <code>thread::spawn</code>.</p>
+
+<p>Hãy để ý trong Listing 16-1 rằng closure chúng ta truyền vào <code>thread::spawn</code> không có tham số nào: chúng ta không dùng bất kỳ dữ liệu nào từ main thread trong code của spawned thread. Để dùng dữ liệu từ main thread trong spawned thread, closure của spawned thread phải capture các giá trị mà nó cần. Listing 16-3 cho thấy một cố gắng tạo vector trong main thread và dùng nó trong spawned thread. Tuy nhiên, cái này chưa hoạt động, như bạn sẽ thấy ngay.</p>
+
+<figure class="listing" id="listing-16-3">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::thread;
+
+fn main() {
+    let v = vec![1, 2, 3];
+
+    let handle = thread::spawn(|| {
+        println!("Here's a vector: {v:?}");
+    });
+
+    handle.join().unwrap();
+}</code></pre>
+<figcaption><a href="#listing-16-3">Listing 16-3</a>: Cố dùng vector được tạo bởi main thread trong thread khác</figcaption>
+</figure>
+
+<p>Closure dùng <code>v</code>, vì vậy nó sẽ capture <code>v</code> và biến nó thành một phần của môi trường closure. Vì <code>thread::spawn</code> chạy closure này trong thread mới, chúng ta cần có thể truy cập <code>v</code> bên trong thread mới đó. Nhưng khi biên dịch ví dụ này, chúng ta gặp lỗi sau:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling threads v0.1.0 (file:///projects/threads)
+error[E0373]: closure may outlive the current function, but it borrows `v`, which is owned by the current function
+ --&gt; src/main.rs:6:32
+  |
+6 |     let handle = thread::spawn(|| {
+  |                                ^^ may outlive borrowed value `v`
+7 |         println!("Here's a vector: {v:?}");
+  |                                     - `v` is borrowed here
+  |
+note: function requires argument type to outlive `'static`
+ --&gt; src/main.rs:6:18
+  |
+6 |       let handle = thread::spawn(|| {
+  |  __________________^
+7 | |         println!("Here's a vector: {v:?}");
+8 | |     });
+  | |______^
+help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
+  |
+6 |     let handle = thread::spawn(move || {
+  |                                ++++
+
+For more information about this error, try `rustc --explain E0373`.
+error: could not compile `threads` (bin "threads") due to 1 previous error
+</code></pre>
+
+<p>Rust <em>suy luận</em> cách capture <code>v</code>, và vì <code>println!</code> chỉ cần reference đến <code>v</code>, closure cố borrow <code>v</code>. Tuy nhiên, có một vấn đề: Rust không thể biết spawned thread sẽ chạy bao lâu, vì vậy nó không biết liệu reference đến <code>v</code> có luôn hợp lệ hay không.</p>
+
+<p>Listing 16-4 cung cấp một kịch bản có nhiều khả năng có reference đến <code>v</code> không hợp lệ hơn.</p>
+
+<figure class="listing" id="listing-16-4">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::thread;
+
+fn main() {
+    let v = vec![1, 2, 3];
+
+    let handle = thread::spawn(|| {
+        println!("Here's a vector: {v:?}");
+    });
+
+    drop(v); // oh no!
+
+    handle.join().unwrap();
+}</code></pre>
+<figcaption><a href="#listing-16-4">Listing 16-4</a>: Một thread với closure cố capture reference đến <code>v</code> từ main thread đã drop <code>v</code></figcaption>
+</figure>
+
+<p>Nếu Rust cho phép chúng ta chạy code này, có khả năng spawned thread sẽ ngay lập tức được đưa vào background mà không chạy tí nào. Spawned thread có reference đến <code>v</code> bên trong, nhưng main thread ngay lập tức drop <code>v</code> bằng hàm <code>drop</code> chúng ta đã thảo luận ở Chương 15. Rồi khi spawned thread bắt đầu thực thi, <code>v</code> không còn hợp lệ nữa, vì vậy reference đến nó cũng không hợp lệ. Ôi không!</p>
+
+<p>Để sửa lỗi compiler ở Listing 16-3, chúng ta có thể làm theo lời khuyên của thông báo lỗi:</p>
+
+<pre><code class="language-text">help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
+  |
+6 |     let handle = thread::spawn(move || {
+  |                                ++++
+</code></pre>
+
+<p>Bằng cách thêm từ khóa <code>move</code> trước closure, chúng ta buộc closure lấy ownership của các giá trị nó đang dùng thay vì để Rust suy luận rằng nó nên borrow chúng. Sửa đổi Listing 16-3 như trong Listing 16-5 sẽ biên dịch và chạy như chúng ta muốn.</p>
+
+<figure class="listing" id="listing-16-5">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::thread;
+
+fn main() {
+    let v = vec![1, 2, 3];
+
+    let handle = thread::spawn(move || {
+        println!("Here's a vector: {v:?}");
+    });
+
+    handle.join().unwrap();
+}</code></pre>
+<figcaption><a href="#listing-16-5">Listing 16-5</a>: Dùng từ khóa <code>move</code> để buộc closure lấy ownership của các giá trị nó dùng</figcaption>
+</figure>
+
+<p>Chúng ta có thể bị cám dỗ thử cách tương tự để sửa code trong Listing 16-4 nơi main thread gọi <code>drop</code> bằng cách dùng closure <code>move</code>. Tuy nhiên, cách sửa này sẽ không hoạt động vì Listing 16-4 đang cố làm điều bị cấm vì lý do khác. Nếu chúng ta thêm <code>move</code> vào closure, chúng ta sẽ chuyển <code>v</code> vào môi trường closure, và chúng ta không thể gọi <code>drop</code> trên nó trong main thread nữa. Thay vào đó chúng ta sẽ gặp lỗi compiler này:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling threads v0.1.0 (file:///projects/threads)
+error[E0382]: use of moved value: `v`
+  --&gt; src/main.rs:10:10
+   |
+ 4 |     let v = vec![1, 2, 3];
+   |         - move occurs because `v` has type `Vec&lt;i32&gt;`, which does not implement the `Copy` trait
+ 5 |
+ 6 |     let handle = thread::spawn(move || {
+   |                                ------- value moved into closure here
+ 7 |         println!("Here's a vector: {v:?}");
+   |                                     - variable moved due to use in closure
+...
+10 |     drop(v); // oh no!
+   |          ^ value used here after move
+   |
+help: consider cloning the value before moving it into the closure
+   |
+ 6 ~     let value = v.clone();
+ 7 ~     let handle = thread::spawn(move || {
+ 8 ~         println!("Here's a vector: {value:?}");
+   |
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `threads` (bin "threads") due to 1 previous error
+</code></pre>
+
+<p>Các quy tắc ownership của Rust lại một lần nữa cứu chúng ta! Chúng ta gặp lỗi từ code trong Listing 16-3 vì Rust đang thận trọng và chỉ borrow <code>v</code> cho thread, tức là main thread về lý thuyết có thể làm hỏng reference của spawned thread. Bằng cách bảo Rust chuyển ownership của <code>v</code> vào spawned thread, chúng ta đảm bảo với Rust rằng main thread sẽ không dùng <code>v</code> nữa. Nếu chúng ta thay đổi Listing 16-4 theo cách tương tự, chúng ta vi phạm các quy tắc ownership khi cố dùng <code>v</code> trong main thread. Từ khóa <code>move</code> override mặc định borrow thận trọng của Rust; nó không cho phép chúng ta vi phạm các quy tắc ownership.</p>
+
+<p>Giờ chúng ta đã hiểu thread là gì và các phương thức cung cấp bởi thread API, hãy nhìn vào một số tình huống mà chúng ta có thể dùng thread.</p>
+
+  <div class="page-nav bottom"><a href="ch16-00-concurrency.html">← Trước</a><a href="ch16-02-message-passing.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

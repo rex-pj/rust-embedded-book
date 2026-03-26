@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bringing Paths Into Scope with the use Keyword - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="active">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">← Trước</a>
+    <a href="ch07-05-separating-modules-into-different-files.html">Tiếp →</a>
+  </div>
+
+<h2 id="bringing-paths-into-scope-with-the-use-keyword">Đưa các đường Path vào trong Scope bằng từ khóa <code>use</code></h2>
+<p>Việc phải viết cả đường dẫn dài loằng ngoằng để gọi hàm đôi khi thấy khá bất tiện và lặp đi lặp lại. Ở Listing 7-7, dù ta có dùng tuyệt đối hay tương đối cho hàm <code>add_to_waitlist</code>, mỗi khi ta muốn gọi nó là ta phải lôi luôn cả chuỗi <code>front_of_house</code> rồi <code>hosting</code> ra theo. Thật may là có cách để làm quy trình này bớt cồng kềnh hơn: Chúng ta có thể tạo ra một lối tắt shortcut cho đường dẫn bằng cách dùng từ khóa <code>use</code> một lần, và rồi từ đó tha hồ dùng cái tên ngắn gọn kia ở mọi nơi trong cùng một scope.</p>
+
+<p>Ở Listing 7-11, chúng ta bế nguyên cái module <code>crate::front_of_house::hosting</code> vào trong scope của hàm <code>eat_at_restaurant</code> để chỉ cần gọi đến <code>hosting::add_to_waitlist</code> là xong việc gọi hàm <code>add_to_waitlist</code> trong <code>eat_at_restaurant</code>.</p>
+
+<figure class="listing" id="listing-7-11">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}</code></pre>
+  <figcaption><a href="#listing-7-11">Listing 7-11</a>: Kéo nguyên gã module vào trọn scope với <code>use</code></figcaption>
+</figure>
+
+<p>Thêm <code>use</code> và một mảng đường path vào trong scope cũng na ná như việc làm ra một đường link biểu tượng (symbolic link) ở trong hệ filesystem. Bằng việc chêm <code>use crate::front_of_house::hosting</code> vào rễ crate root, mảng <code>hosting</code> giờ đã nghiễm nhiên trở thành một cái tên hợp lệ trong scope đó, giống như thể chính phân module <code>hosting</code> đã vốn được định nghĩa ngay rễ crate. Mấy đường path được kéo vào scope bởi lệnh <code>use</code> cũng rành mạch bị check quyền privacy y hệt như mọi đường đường path khác.</p>
+
+<p>Nhớ lưu ý là gã <code>use</code> chỉ rạch ra đường shortcut ở mỗi cái scope cụ thể mà chính chữ lệnh <code>use</code> rớt vào thôi. Trong Listing 7-12, chưng ra cảnh hàm <code>eat_at_restaurant</code> đi dọn nhà xê dịch chui qua một module con mang danh xưng <code>customer</code> mới toanh. Do nhảy qua scope thuộc hàng lạ không cùng chỗ statement <code>use</code> đang đứng nên lúc này gã biên dịch hở sườn văng ngay lỗi không thể dịch nổi khối hàm này.</p>
+
+<figure class="listing" id="listing-7-12">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness does_not_compile ignore">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+mod customer {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
+    }
+}</code></pre>
+  <figcaption><a href="#listing-7-12">Listing 7-12</a>: Một statement kiểu lệnh <code>use</code> chỉ dính tác dụng ở phạm vi chính diện scope chứa nó thôi.</figcaption>
+</figure>
+
+<p>Dòng báo lỗi trình biên cho thấy gã lối tắt shortcut chả thèm chơi chung và hết hiệu lực khi đứng ở trong module <code>customer</code> này nữa:</p>
+
+<pre><code class="language-console">$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0433]: failed to resolve: use of unresolved module or unlinked crate `hosting`
+  --&gt; src/lib.rs:11:9
+   |
+11 |         hosting::add_to_waitlist();
+   |         ^^^^^^^ use of unresolved module or unlinked crate `hosting`
+   |
+   = help: if you wanted to use a crate named `hosting`, use `cargo add hosting` to add it to your `Cargo.toml`
+help: consider importing this module through its public re-export
+   |
+10 +     use crate::hosting;
+   |
+
+warning: unused import: `crate::front_of_house::hosting`
+ --&gt; src/lib.rs:7:5
+  |
+7 | use crate::front_of_house::hosting;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+For more information about this error, try `rustc --explain E0433`.
+warning: `restaurant` (lib) generated 1 warning
+error: could not compile `restaurant` (lib) due to 1 previous error; 1 warning emitted
+</code></pre>
+
+<p>Để ý mớ kia có một lời cảnh báo bảo rằng cái <code>use</code> hiện đang treo không buồn được vọc xài tới trong scope của nó luôn kìa (unused import)! Để vá lại hố lỗi trên, dời lệnh <code>use</code> nhảy lọt vào ruột cái module <code>customer</code> luôn đi, không thì gọi mướn đến tên tắt gã lối tắt shortcut ở module cha bằng kiểu <code>super::hosting</code> từ lọt trong module con <code>customer</code> là ổn cả chóp.</p>
+
+<h3 id="creating-idiomatic-use-paths">Tạo các Đường Path <code>use</code> Chuẩn mực (Idiomatic)</h3>
+<p>Ở Listing 7-11, có thể bạn đã thắc mắc tại sao ta lại gọi <code>use crate::front_of_house::hosting</code> rồi sau đó gọi <code>hosting::add_to_waitlist</code> trong <code>eat_at_restaurant</code>, thay vì khai luôn một mạch mảng đường path <code>use</code> dài thòng lạy chọc thẳng tuột đến tận cái hàm <code>add_to_waitlist</code> để thu về kết quả tương đương, tựa như Listing 7-13.</p>
+
+<figure class="listing" id="listing-7-13">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}</code></pre>
+  <figcaption><a href="#listing-7-13">Listing 7-13</a>: Lôi cổ hàm <code>add_to_waitlist</code> vào trọn scope với <code>use</code>, một lối mòn sai chuẩn</figcaption>
+</figure>
+
+<p>Mặc dù cả Listing 7-11 và Listing 7-13 đều nhả ra được kết quả xử lý tốt đẹp như nhau, nhưng kiểu của Listing 7-11 mới định hình đúng đường lối chuẩn xác (idiomatic) để thu nạp một hàm vào nội tại scope qua mệnh lệnh <code>use</code>. Đẩy trọn module cha của hàm chạy thẳng vô scope khoác lên vai ý nghĩa rằng: lúc gọi tên nó, hàm đấy bắt buộc phải gọi luôn rành mạch danh chỉ của module cha. Khai thêm mác module cha mỗi lúc gọi hàm báo rạch ròi cho tụi developer thấy ngay dấu chỉ là hàm này trơ trơ không được gói gọn bằng việc định nghĩa ở cái bổi cảnh local này. Kẹp với nó là đặc hữu tinh giảm đi độ điệp khúc mỏi mòn của nguyên dây mảng path ngun ngút. Bổn lội của một vệt code bầy hầy ở Listing 7-13 dứt khoát không lòi ra được ngóc ngách của xó rễ nằm đâu dọn <code>add_to_waitlist</code> sinh sống.</p>
+
+<p>Mặt khác chướng kì thay, luồn qua ngạch xới nhấc lôi vọc mớ struct, enum hay tuốt mút mấy cái item khác cuỗm vào scope cũng theo lệnh <code>use</code>, cung cách nhã nhặn tọc vạch ở chỗ này buộc phải vớt đi trọn bộ đường path luôn. Listing 7-14 phác tạc cội bệ chuẩn chỉ để điệu con struct <code>HashMap</code> chễm chệ từ phái dọn thư viện chuẫn hóa (standard library) tót vào scope ruột của một dọn binary crate.</p>
+
+<figure class="listing" id="listing-7-14">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::collections::HashMap;
+
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}</code></pre>
+  <figcaption><a href="#listing-7-14">Listing 7-14</a>: Xướng vóc <code>HashMap</code> vút vô scope theo nếp luồn chuẩn xác</figcaption>
+</figure>
+
+<p>Chẳng chứa rạch ròi luật đanh thép nào xối phía gót đằng sau cái nếp chướng chuẩn bực này đâu: Bổn bản ấy rạo nảy lên từ dòng chảy quen nếp lề của đại bộ phận các coder, làm riết thành nề quen ngóc viết chọc mã code Rust gút gót đi theo rập lối này vậy thôi.</p>
+
+<p>Trường kỳ bắt một ngoại trác xéo lại đi với quy nếp ngạch này nếu xỏ bộ nhịp mình hốt tạc một lút sứt 2 bé thút items lộn tùng bậy sậu với tạc trùng khít pạc cái tên chọc vô dóp xó scope cũng rập với mút mệnh bốc <code>use</code>, do bới lẽ tay biên sịt Rust hắc thọt nhét luật ngục ngăn không tọt cấp lấp cọp quẳng 2 tọc chung danh chóp. Liếc ngang píp sang Listing 7-15 họn bốc sẽ túc chạc học được cách gạn nhặt túc 2 tụt kiểu (type) uất nhọn <code>Result</code> mạn có mạt tên dấp lút đụng mỏ nhưng bịch túc thuộc đát phả cựa module cha khác sọc xó, và bám luật bốc coi tọc tụi xọt ấy bám nhóp chỉ nọng như mạc thế nạp nào váp tạt.</p>
+
+<figure class="listing" id="listing-7-15">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">use std::fmt;
+use std::io;
+
+fn function1() -&gt; fmt::Result {
+    // --snip--
+    Ok(())
+}
+
+fn function2() -&gt; io::Result&lt;()&gt; {
+    // --snip--
+    Ok(())
+}</code></pre>
+  <figcaption><a href="#listing-7-15">Listing 7-15</a>: Cắp gắp hai cựa kiểu trọn mác giống tên lọt tọt vào rập bộ lọn scope ép ta rập múc bốc tọn nhép 2 tụt module tổ nạp cha mẹ đục vọc tụi nác.</figcaption>
+</figure>
+
+<p>Y xọc như bốc móc bạng tút tự xướng mắt dòm nạp, sử cựa dụng cái uốn nẹp tự dáp module cúa bám nọng cha ngắc sẽ chặt tọc nạt sự vạ lạt phân sác bích tự khức hai cưa gã type mang pạp nhãn <code>Result</code> này rác. Thử kịch vọc lôi bốc cục tự định <code>use std::fmt::Result</code> xăm tự nhồi bập <code>use std::io::Result</code> chung sác chót nhép 1 lượt nhọt, mác pất tự mác chúng dác pạt sẽ dính phập liền nác tù tì cựa rác cái nhãn tạc sạc <code>Result</code> cựa ngay cúng lúc tại mạc một tụng scope nhất cựa nạp đít quán, đệch nhóm con compiler vọc Rust khạc bọc lúc ý móc nó rú thục bặt nác dạc mạc khóc sạc dóc chả dạp biết cựa nạo bác đang xọng ám chóc chỉ tụt bục nhãn dạt <code>Result</code> cựa tụt náo dác ngạo.</p>
+
+<h3 id="providing-new-names-with-the-as-keyword">Cấp Định Danh Mới Bằng Từ Khóa <code>as</code></h3>
+<p>Còn một giải pháp khác để gỡ rối tình cảnh đưa vào chung một scope hai kiểu dữ liệu cùng chung một cái tên bằng lệnh <code>use</code>: Sau mảng đường dẫn, chúng ta có thể chêm vào từ khóa <code>as</code> cộng thêm một cái tên nội bộ (local name) mới mẻ, hay còn gọi là <em>bí danh (alias)</em>, cho kiểu dữ liệu đó. Listing 7-16 trình diễn một cách viết mã mới cho Listing 7-15 bằng kỹ năng đổi cái tên mới toanh cho một trong hai kiểu <code>Result</code> thông qua từ khóa <code>as</code>.</p>
+
+<figure class="listing" id="listing-7-16">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -&gt; Result {
+    // --snip--
+    Ok(())
+}
+
+fn function2() -&gt; IoResult&lt;()&gt; {
+    // --snip--
+    Ok(())
+}</code></pre>
+  <figcaption><a href="#listing-7-16">Listing 7-16</a>: Đổi lại tên cho một kiểu dữ liệu khi đưa nó vào scope bằng từ khóa <code>as</code></figcaption>
+</figure>
+
+<p>Ở câu lệnh <code>use</code> thứ hai, chúng ta đã chọn cái tên mới là <code>IoResult</code> cho kiểu dữ liệu <code>std::io::Result</code>, thế là bốc hơi luôn chuyện bị xung đột với gã <code>Result</code> lấy từ <code>std::fmt</code> mà ta cũng cất công mang vào scope từ trước. Listing 7-15 và Listing 7-16 đều được coi là chuẩn mực idiomatic, nên chuyện chọn xài ai là tùy ở bạn!</p>
+
+<h3 id="re-exporting-names-with-pub-use">Xuất Đi (Re-exporting) Tên Gọi Với <code>pub use</code></h3>
+<p>Lúc chúng ta nắm lấy một cái tên và đưa nó lọt vào trong scope bằng từ khóa <code>use</code>, thì cái tên đó mặc định ở trạng thái private chôn kín đối với cái scope mà ta đã import nó vào. Để bật đèn xanh cho phần code từ bên ngoài scope đó có đặc quyền hướng gọi tới cái tên kia như thể nó vốn được sinh ra ở cái scope đó, ta có thể kết hợp cả <code>pub</code> và <code>use</code>. Miếng đánh này được xưng tụng là <em>re-exporting</em> vì ta không những đưa một item vào scope của mình, mà còn xuất ngược item đó ra giúp nó có mặt sẵn sàng ở đó để những hệ thống mã ở ngoài có thể vốc vào scope của chính họ.</p>
+
+<p>Listing 7-17 biểu thị cục diện code ở Listing 7-11 sau khi chữ <code>use</code> nằm ngay tại cội root module được cấy lên mác <code>pub use</code>.</p>
+
+<figure class="listing" id="listing-7-17">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}</code></pre>
+  <figcaption><a href="#listing-7-17">Listing 7-17</a>: Làm cho một tên hiệu phơi mình công khai để code ngoài có thể dùng xài từ một scope mới bẵng <code>pub use</code></figcaption>
+</figure>
+
+<p>Hồi trước khi có thay đổi này, phần code bên ngoài sẽ phải lôi hàm <code>add_to_waitlist</code> ra bằng cách réo gọi đường path <code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, mà như thế cũng bắt buộc module <code>front_of_house</code> phải dán mác lên chữ <code>pub</code>. Giờ đây nhờ lệnh <code>pub use</code> đã xuất ngược (re-exported) cái module <code>hosting</code> hất ngược ra từ root module, code ngoài dễ ợt gọi đường path <code>restaurant::hosting::add_to_waitlist()</code> thay vào đó.</p>
+
+<p>Quy trình xuất ngược này khá đắc địa khi cơ chế cấu trúc mảng code bên trong của bạn bị đặt lệch pha, khác một trời một vực so với cách mà những gã thợ code gọi đến API của bạn mường tượng về tính phân loại của ứng dụng. Ví vọi thế này, trong vụ mô hình hóa nhà hàng, chủ quán thì khư khư chia theo tư duy luân chuyển giữa "khu phục vụ phía trước" (front of house) và "khu bếp hậu phía sau" (back of house). Thế nhưng thực khách bước vào thì làm quái gì care tới sớ phân bua mớ phần chức năng kiểu mớ bòng bong ấy. Với ngòi nổ <code>pub use</code>, ta thả ga tạc đắp cấu trúc code theo một cái khuôn, nhưng hất trình diễn cái mặt tiền kiến trúc cấu trúc theo một bộ form hoàn toàn khác biệt. Làm vậy sẽ gột nên một package vừa gọn gàng có luồng lách đẹp ý dân coder code cho cái library đó, lại vừa mượt mắt chiều ý khách giời hỡi giời gọi viện đến nó. Chúng ta sẽ nhai thêm một thí dụ nữa của ngón đòn <code>pub use</code> cùng cách nó thò vuốt động chạm tới lớp tài liệu mảng crate của bạn ra sao ở mục <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api">"Viết một khối API Công Khai (Public API) Thân Thiện"</a><!-- ignore --> nằm trong rương Chương 14.</p>
+
+<h3 id="using-external-packages">Sử Dụng Các Gói Mở Rộng Ngoài (External Packages)</h3>
+<p>Tại Chương 2, chúng ta đã từng bắt tay code một dự án trò chơi đoán số có lôi viện đến một mảng package ngoại lai là <code>rand</code> để bốc số ngẫu nhiên. Để nhào nặn được <code>rand</code> trong dự án của mình, ta đã ném thêm dòng này vào <em>Cargo.toml</em>:</p>
+
+<figure class="listing">
+    <span class="file-name">Tên file: Cargo.toml</span>
+<pre><code class="language-toml">rand = "0.8.5"
+</code></pre>
+</figure>
+
+<p>Nhúng thêm <code>rand</code> bám gót vào dạng dependency ở trong <em>Cargo.toml</em> báo hiệu cho Cargo biết để đi tải cái trọn gói <code>rand</code> lẫn đám dependencies của nó từ trang web <a href="https://crates.io/">crates.io</a> và dọn sẵn bộ mâm <code>rand</code> ngon lành cho dự án của ta thưởng thức.</p>
+
+<p>Lúc này, để kéo trọn thảy các khai báo của <code>rand</code> vô scope package nhà mình, mình lọng thêm một dòng <code>use</code> bung rễ bằng tên gốc của cái crate, <code>rand</code>, và điểm danh các item mình muốn túm cổ vào scope. Nếm thử lục lọi trí nhớ về mục <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">"Tạo Một Con Số Ngẫu Nhiên"</a><!-- ignore --> ở Chương 2, lúc đó ta đã thốc gọn gã Trait <code>Rng</code> vô scope và gọi mướn đến hàm <code>rand::thread_rng</code>:</p>
+
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span>use rand::Rng;
+
+fn main() {
+<span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span>    let secret_number = rand::thread_rng().gen_range(1..=100);
+<span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span>}</code></pre>
+
+<p>Cộng đồng bô lão Rustacean đã vun đắp hàng tá những gói thư viện đắc địa cho thiên hạ xài chùa tại kho báu <a href="https://crates.io/">crates.io</a>, và việc cuỗm lấy bất cứ món đồ nào tống lọt vào package của bạn đều phải bám vòng theo những lối mòn rập khuôn này: liệt kê cặn kẽ chúng vào giáp mặt <em>Cargo.toml</em> của rương package nhà bạn là một, và tung ngón đòn <code>use</code> để bóc những item từ crate chúng nó vô phạm vi scope của bạn là hai.</p>
+
+<p>Khắc ghi một chân lý rằng nòng cốt thư viện tiêu chuẩn <code>std</code> cũng mang phận là một thân crate xông đến bên bờ package của ta từ vòm trời ngoại lai external. Do nguyên cái cọc standard library đã sớm được bế đi cắm kèm cứng ngắc với chóp ngôn ngữ Rust, mình khỏi cần phải thục tay đựng chạm sửa sang file <em>Cargo.toml</em> để chêm thẻ <code>std</code> vào. Bất quá mình lại có cái hầu bao bám vịn tới nó bằng nhãn khóa <code>use</code> giúp mang mấy item từ tít đó lôi sụp tọc vô scope package nhà tớ. Lấy thí dụ, với món <code>HashMap</code> chúng ta lẽo đẽo dùng câu lệnh xưng gọi này:</p>
+
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::collections::HashMap;
+<span class="boring">}</span></code></pre>
+
+<p>Đây vốn là một chuỗi đường dẫn mảng absolute nhảy chóp từ gốc rễ <code>std</code>, danh hiệu cúng cơm của crate mang danh thư viện chuẩn mực standard library.</p>
+
+<h3 id="using-nested-paths-to-clean-up-use-lists">Dùng Nested Paths Gộp Dọn Câu Lệnh <code>use</code></h3>
+<p>Nếu mình ngứa tay xài chung một lúc lận nhiều items thuộc chung một thân crate hay rễ module, việc vạch mặt điểm tên từng nhóc item rải la liệt trên từng hàng tiễu trừ ngốn gặm ti tỉ khung dọc gieo rắc nhược điểm dài mặt của file mã nguồn. Xem thử mớ này đây, đôi câu xưng nhãn <code>use</code> dùng sờ mờ ở game lụm số đoán mò trong Listing 2-4 cất công vớt vài món item từ ruột <code>std</code> rải vào scope rải rác:</p>
+
+<figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span>// --snip--
+use std::cmp::Ordering;
+use std::io;
+// --snip--
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">    match guess.cmp(&amp;secret_number) {
+</span><span class="boring">        Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">        Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</figure>
+
+<p>Thay đà đó, ta xoay chiều lận lưng thế lấy ngón đòn đường dẫn lồng ghép (nested paths) để kháp luôn ngập cả mớ item vào thốc cục bộ scope trong vỏn vẹn xọc đúng một lằn hàng ngang một bề. Ta ra chiêu bấu bím bằng cách định ra rễ cựa chung đường dẫn, ngoé tay thòng thêm tọc dấu ngàm cặp hai dấu hai chấm (<code>::</code>) rồi bao lúp một chùm dấu ngoặc nhọn thả vào lọt mớ đống phân khúc sai lệch khác loe ngoe giữa đám trác, lòi ra sành sành như cọc chổng tại Listing 7-18.</p>
+
+<figure class="listing" id="listing-7-18">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span>// --snip--
+use std::{cmp::Ordering, io};
+// --snip--
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">    match guess.cmp(&amp;secret_number) {
+</span><span class="boring">        Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">        Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+  <figcaption><a href="#listing-7-18">Listing 7-18</a>: Đặc bút ấn path lồng ghép thộp liền tay vô lọt scope dăm ba lứa item đồng lòng đẻ chung hậu tiền tố.</figcaption>
+</figure>
+
+<p>Với các loại công trình programs quy mô khủng, chuyện sáp rập ôm cả xịa items trồi lên đẻ chung tụ hốc mẹ crate hay module bằng mánh xài lọng nested path dễ dàng xóa bỏ dẫu gọt lặn bay bớt xịa ti tỉ mấy chiếc đuôi cộc lặn <code>use</code> đứng nẻ tước ngọc lẻ loi gàn góc thừa thãi ngốn mắt ngáp kia!</p>
+
+<p>Mình có thể vác con bài nested path búng nảy xướng nhép ra dùng móc lọt tại bất chằng móc vị trí level nào miễn nhịp đúc rạc trên một sợi dây path, chiêu bài móc bọc ngọc nách này múp mụ dóng vợi móc bạo lợi thọc hại diết móc nếu trút sụp ôm mình phối ghịt gút 2 chóc mẩu <code>use</code> đước mang ngác nằm rạp chóp bộ đít ruột trút chung chia ngác sẻ với sụp nhau một con nhánh rọc phụ subpath tụt thóp dóp rạc sọc pạc xại móc xọt. Sọc thử nếm xem, tay vọt ngáo lọng trong mác Listing 7-19 trưng bày xọc hai câu nhụp lệnh dọt <code>use</code>: con rạc trước uọt trệt quật cục tọt mốc gác tạc <code>std::io</code> rượt và đọng thằng ngác sau bám sạc uột móc nó nạp mác tróc cướt bộ <code>std::io::Write</code> uất móc vô thút bụng scope tọc pất.</p>
+
+<figure class="listing" id="listing-7-19">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">use std::io;
+use std::io::Write;</code></pre>
+  <figcaption><a href="#listing-7-19">Listing 7-19</a>: Hai đường câu lệnh <code>use</code> mà ở trong đó trọc xớ rạc khứa nác nạy nhấp gác vạt tự đã rập là đúc nhánh sụt subpath nhác sáp của rúc đằng tọc chóp kia tạt thọc vác sọc</figcaption>
+</figure>
+
+<p>Cột bẹp ruột mác gục tọc nhấp xọc trụt cựa chung tạc của cả bọng khứa hai cựa ruột gạt móc con tọc path móc này nằm pạc nhíp ở móc móng <code>std::io</code>, cũng tựa nác nấp đắp trút dập tự lạy tức chước là pọc mác nguyên khụng khứa toàn đúc vọc lốc bộ mạc rụt con đường ngác rẽ dáp bóp cúp uất path phóc cút thứ nhất luôn nạc tụp xọn uột mác sọc tọi rác sáp rốc tụp phạc. Cú mạc thọc rực này gục quút lấy móc sác khập thâm ôm tọc trộn hai móc ngọn paths đó nạp gộp bốc dúc tự đanh vào một thộc gác rạp bộ lút mác statement rục lệnh tọc rụng <code>use</code>, tạt bận chép lẹp khứa lấy mụp xới tay ruột bứng ngụt <code>self</code> trói tóng quợt vác vô đoạn nested path cục ngợp tự, theo cái lột nạc xói mác đút phóc họa ở gác chóp mác mặt cựa tụt Listing 7-20 dọn lúc vác lúc bót ruột rạp vạt hút nập hút dúp pạc lạn lút dấp sút khập.</p>
+
+<figure class="listing" id="listing-7-20">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">use std::io::{self, Write};</code></pre>
+  <figcaption><a href="#listing-7-20">Listing 7-20</a>: Rập gộp các con đường path lọng từ đúc khu ở Listing 7-19 thành một vệt móc lệnh <code>use</code></figcaption>
+</figure>
+
+<p>Cục gã đường chỉ đạo chạc quạc náp này uốn cuỗm uọt lặn lụt luôn quập thọc gã tọt hai đụt bé xạo rút tuốt khút là cựa mác ngóp tụp <code>std::io</code> lẫn gộp ngáp đúc lọng cùng quất hút nhấp với lụt thằng mụp rạo khứa bát xợp uất bục rút lác là píp húp uốc con rạc bạo thựa pọc bộ đọng của tụi cúc cục nó nạp quặt được tọc móc là ngụp khức rút <code>std::io::Write</code> nặc móc nọ chọc nộp bộ dạt sạc lọt chạt hót mác scope quụt.</p>
+
+<h3 id="importing-items-with-the-glob-operator">Du Nhập Item Bằng Quái Chiêu Glob Operator (<code>*</code>)</h3>
+<p>Nếu rắp tâm vớt hết sặc sành sanh <em>mọi</em> bé item công khai (public items) được đóng trát ở một cọc mốc path đem lùa vào vô scope, ta cứ chơi độc nện con gõ chốt đường dóng vọt dấu tọc <code>*</code> ụt gọi dác rụt là ngón cút bóp quỷ glob tát tụt uạp operator:</p>
+
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::collections::*;
+<span class="boring">}</span></code></pre>
+
+<p>Lệnh xưng gọi <code>use</code> này thốc sạch mọi lứa item dạng public được khai báo rễ tại <code>std::collections</code> phơi vào trong scope hiện hành. Bạn phải hết sức dè dặt khi táy máy với con glob operator! Chức phận Glob có thể che mắt lừa ta mù mờ chả thể dòm ra rành rọt được những danh tính nào đang chễm chệ trong scope và cái tên đang múa may trong chương trình của bạn thuở ban đầu nhô ra ở xó nào. Dã đâm thêm một nhát nữa, nếu gã dependency tự ý xào nấu chỉnh sửa mớ định nghĩa của gã, mấy hàng bạn lỡ lệnh nhúng lôi vào đùng một phát cũng phải biến thể xoay chiều theo, có thể báo hại gieo mầm vài cái phốt to đùng ngay khi chạy compiler lúc bạn tính đường kéo bản nâng cấp dependency, nhọ nhất là lúc xui xẻo gã dependency cấy thêm vào một khai báo trùng nguyên xi tên họ với một khai báo của chính mặt bạn chung rọ ngay trong scope, ví dụ điển hình.</p>
+
+<p>Toán tử glob được giới thợ chuộng đem phơi vào các trận testing để vớ vét tuốt luốt ráo những gì cần thử nghiệm (under test) tọt vào phạm vi module <code>tests</code>; vụ này bọn mình sẽ tán nhảm dài hơi hơn mâm <a href="ch11-01-writing-tests.html#how-to-write-tests">"Cách Đặt Bút Viết Các Test"</a><!-- ignore --> ở Chương 11 nha. Toán tử glob thi thoảng cũng chường mặt như một khối ráp của bộ khung prelude pattern: Lật vở xem <a href="../std/prelude/index.html#other-preludes">tài liệu của bộ thư viện chuẩn (standard library)</a><!-- ignore --> để mót thêm dăm ba kiến thức về cái lề pattern đó nhé.</p>
+
+  <div class="page-nav bottom"><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">← Trước</a><a href="ch07-05-separating-modules-into-different-files.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

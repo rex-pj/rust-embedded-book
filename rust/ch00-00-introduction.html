@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giới thiệu — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link active">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 0 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="foreword.html">← Trước</a><a href="ch01-00-getting-started.html">Tiếp →</a></div>
+
+  <h1 id="introduction">🎯 Giới thiệu</h1>
+
+  <div class="note">
+    <p><strong>Lưu ý:</strong> Phiên bản này của cuốn sách tương đương với ấn bản <a href="https://nostarch.com/rust-programming-language-3rd-edition"><em>The Rust Programming Language</em></a> được xuất bản dạng in và ebook bởi <a href="https://nostarch.com/">No Starch Press</a>.</p>
+  </div>
+
+  <p>Chào mừng bạn đến với <em>The Rust Programming Language</em> — cuốn sách nhập môn về ngôn ngữ lập trình Rust. Rust giúp bạn viết phần mềm nhanh hơn và đáng tin cậy hơn. Trong thiết kế ngôn ngữ lập trình, sự thuận tiện ở tầng cao và khả năng kiểm soát ở tầng thấp thường mâu thuẫn với nhau; Rust đã thách thức sự đánh đổi đó. Bằng cách cân bằng giữa năng lực kỹ thuật mạnh mẽ và trải nghiệm lập trình tuyệt vời, Rust cho phép bạn kiểm soát các chi tiết tầng thấp (như quản lý bộ nhớ) mà không phải chịu đựng những phiền phức vốn gắn liền với sự kiểm soát đó.</p>
+
+  <h2 id="who-rust-is-for">👥 Rust dành cho ai?</h2>
+
+  <p>Rust phù hợp với nhiều đối tượng vì nhiều lý do khác nhau. Hãy cùng xem qua một số nhóm tiêu biểu nhất.</p>
+
+  <h3 id="teams-of-developers">🏢 Đội nhóm lập trình viên</h3>
+
+  <p>Rust đang chứng tỏ là một công cụ năng suất cao khi làm việc nhóm lớn với trình độ kiến thức lập trình hệ thống khác nhau. Code tầng thấp thường tiềm ẩn nhiều lỗi vi tế — ở hầu hết các ngôn ngữ khác, những lỗi này chỉ được phát hiện qua kiểm thử kỹ lưỡng và review code cẩn thận bởi các lập trình viên kỳ cựu. Với Rust, trình biên dịch đóng vai trò người gác cổng — nó từ chối biên dịch những đoạn code chứa các lỗi tiềm ẩn này, kể cả lỗi liên quan đến concurrency. Nhờ cộng tác cùng trình biên dịch, cả đội có thể tập trung vào logic của chương trình thay vì mải mê săn lùng bug.</p>
+
+  <p>Rust cũng mang những công cụ lập trình hiện đại vào thế giới lập trình hệ thống:</p>
+  <ul>
+    <li><strong>Cargo</strong> — trình quản lý dependency và build tool tích hợp sẵn, giúp việc thêm, biên dịch và quản lý dependency trở nên đơn giản và nhất quán trong toàn hệ sinh thái Rust.</li>
+    <li>Công cụ định dạng <code>rustfmt</code> đảm bảo phong cách code nhất quán giữa các thành viên trong đội.</li>
+    <li>Rust Language Server cung cấp tích hợp IDE với tính năng tự động hoàn thành code và hiển thị lỗi trực tiếp.</li>
+  </ul>
+
+  <p>Bằng cách sử dụng những công cụ này cùng với hệ sinh thái Rust phong phú, lập trình viên có thể làm việc hiệu quả ngay cả khi viết code tầng hệ thống.</p>
+
+  <h3 id="students">🎓 Sinh viên và người học</h3>
+
+  <p>Rust dành cho sinh viên và những ai muốn tìm hiểu về các khái niệm hệ thống. Qua Rust, nhiều người đã học được các chủ đề như phát triển hệ điều hành. Cộng đồng Rust rất thân thiện và luôn sẵn lòng giải đáp thắc mắc của người mới. Thông qua những nỗ lực như cuốn sách này, đội ngũ Rust muốn làm cho các khái niệm hệ thống trở nên dễ tiếp cận hơn với mọi người, đặc biệt là những bạn mới bắt đầu lập trình.</p>
+
+  <h3 id="companies">🏭 Doanh nghiệp</h3>
+
+  <p>Hàng trăm công ty lớn nhỏ đang dùng Rust trong môi trường production cho nhiều mục đích: công cụ dòng lệnh, dịch vụ web, công cụ DevOps, thiết bị nhúng, phân tích và chuyển mã âm thanh/video, tiền mã hóa, tin sinh học, công cụ tìm kiếm, ứng dụng IoT, học máy, và thậm chí là những phần quan trọng của trình duyệt Firefox.</p>
+
+  <h3 id="open-source-developers">🌐 Lập trình viên mã nguồn mở</h3>
+
+  <p>Rust dành cho những người muốn đóng góp vào bản thân ngôn ngữ Rust, cộng đồng, công cụ lập trình và các thư viện. Chúng tôi rất hân hạnh được có bạn đóng góp cho ngôn ngữ Rust.</p>
+
+  <h3 id="people-who-value-speed-and-stability">⚡ Những người coi trọng tốc độ và sự ổn định</h3>
+
+  <p>Rust dành cho những người khao khát tốc độ và sự ổn định trong một ngôn ngữ. Tốc độ ở đây có hai nghĩa: tốc độ thực thi của chương trình Rust và tốc độ viết code với Rust. Các kiểm tra của trình biên dịch Rust đảm bảo sự ổn định khi thêm tính năng mới và tái cấu trúc code — điều khác hẳn với những codebase cũ kỹ dễ vỡ trong các ngôn ngữ không có cơ chế kiểm tra này, khiến lập trình viên thường sợ phải chỉnh sửa. Bằng cách hướng tới <em>zero-cost abstractions</em> — các tính năng tầng cao được biên dịch thành code tầng thấp nhanh tương đương code viết tay — Rust nỗ lực để code an toàn cũng là code nhanh.</p>
+
+  <p>Ngôn ngữ Rust hy vọng sẽ hỗ trợ nhiều đối tượng người dùng khác nữa; những nhóm được đề cập ở đây chỉ là một số đối tác quan trọng nhất. Nhìn chung, tham vọng lớn nhất của Rust là xóa bỏ những đánh đổi mà lập trình viên đã chấp nhận hàng thập kỷ qua, bằng cách mang lại cả sự an toàn <em>lẫn</em> năng suất, tốc độ <em>lẫn</em> sự tiện lợi. Hãy thử Rust và xem liệu những lựa chọn thiết kế của nó có phù hợp với bạn không.</p>
+
+  <h2 id="who-this-book-is-for">📚 Cuốn sách này dành cho ai?</h2>
+
+  <p>Cuốn sách này giả định rằng bạn đã từng viết code bằng một ngôn ngữ lập trình khác, nhưng không đặt giả định về ngôn ngữ cụ thể đó là gì. Chúng tôi đã cố gắng làm cho tài liệu tiếp cận được với người đến từ nhiều nền tảng lập trình khác nhau. Chúng tôi không dành nhiều thời gian để nói về lập trình <em>là gì</em> hay cách tư duy về nó. Nếu bạn hoàn toàn chưa có kinh nghiệm lập trình, bạn nên đọc một cuốn sách dành riêng cho người mới bắt đầu trước.</p>
+
+  <h2 id="how-to-use-this-book">🗺️ Cách sử dụng cuốn sách này</h2>
+
+  <p>Nhìn chung, cuốn sách này được thiết kế để đọc theo thứ tự từ đầu đến cuối. Các chương sau xây dựng trên khái niệm của chương trước, và các chương đầu có thể không đi sâu vào một chủ đề nhất định nhưng sẽ quay lại chủ đề đó ở chương sau.</p>
+
+  <p>Bạn sẽ thấy hai loại chương trong cuốn sách này: chương khái niệm và chương dự án. Trong chương khái niệm, bạn học về một khía cạnh của Rust. Trong chương dự án, chúng ta cùng nhau xây dựng các chương trình nhỏ, áp dụng những gì đã học. Chương 2, Chương 12 và Chương 21 là chương dự án; còn lại là chương khái niệm.</p>
+
+  <p><strong>Chương 1</strong> giải thích cách cài đặt Rust, cách viết chương trình "Hello, world!" và cách dùng Cargo — trình quản lý package và build tool của Rust. <strong>Chương 2</strong> là phần nhập môn thực hành — bạn sẽ xây dựng trò chơi đoán số. Ở đây chúng ta đề cập các khái niệm ở mức tổng quan, còn chi tiết sẽ được trình bày ở các chương sau. Nếu bạn muốn xắn tay vào làm ngay, Chương 2 chính là điểm bắt đầu. Nếu bạn là người học có phương pháp và thích nắm vững từng chi tiết trước khi chuyển sang phần tiếp theo, bạn có thể bỏ qua Chương 2 và đọc thẳng <strong>Chương 3</strong> — phần đề cập các tính năng Rust tương tự các ngôn ngữ khác — rồi quay lại Chương 2 khi muốn thực hành dự án.</p>
+
+  <p><strong>Chương 4</strong> đề cập hệ thống ownership của Rust. <strong>Chương 5</strong> thảo luận về struct và method. <strong>Chương 6</strong> đề cập enum, biểu thức <code>match</code>, và các cấu trúc điều khiển <code>if let</code> và <code>let...else</code>. Bạn sẽ dùng struct và enum để tạo các kiểu dữ liệu tùy chỉnh.</p>
+
+  <p><strong>Chương 7</strong> đề cập hệ thống module của Rust và các quy tắc về phạm vi truy cập để tổ chức code và API công khai. <strong>Chương 8</strong> thảo luận về một số cấu trúc dữ liệu collection phổ biến mà thư viện chuẩn cung cấp: vector, string và hash map. <strong>Chương 9</strong> khám phá triết lý và kỹ thuật xử lý lỗi của Rust.</p>
+
+  <p><strong>Chương 10</strong> đào sâu vào generics, trait và lifetime — những thứ cho phép bạn định nghĩa code áp dụng được cho nhiều kiểu dữ liệu. <strong>Chương 11</strong> tập trung hoàn toàn vào kiểm thử, vốn vẫn cần thiết ngay cả với các đảm bảo an toàn của Rust. Trong <strong>Chương 12</strong>, chúng ta sẽ tự xây dựng một tập hợp con chức năng của công cụ dòng lệnh <code>grep</code> để tìm kiếm văn bản trong file, áp dụng nhiều khái niệm đã học.</p>
+
+  <p><strong>Chương 13</strong> khám phá closure và iterator — những tính năng của Rust đến từ các ngôn ngữ lập trình hàm. <strong>Chương 14</strong> xem xét Cargo sâu hơn và thảo luận về các thực hành tốt nhất để chia sẻ thư viện. <strong>Chương 15</strong> đề cập smart pointer mà thư viện chuẩn cung cấp và các trait kích hoạt chức năng của chúng.</p>
+
+  <p><strong>Chương 16</strong> đi qua các mô hình lập trình concurrent và nói về cách Rust giúp bạn lập trình đa luồng mà không sợ hãi. <strong>Chương 17</strong> xây dựng trên đó bằng cách khám phá cú pháp async và await của Rust, cùng với task, future, stream và mô hình concurrency nhẹ mà chúng tạo ra.</p>
+
+  <p><strong>Chương 18</strong> so sánh các idiom của Rust với các nguyên tắc lập trình hướng đối tượng mà bạn có thể đã quen. <strong>Chương 19</strong> là tài liệu tham khảo về pattern và pattern matching — những cách biểu đạt ý tưởng mạnh mẽ trong Rust. <strong>Chương 20</strong> chứa đựng nhiều chủ đề nâng cao thú vị, bao gồm unsafe Rust, macro và nhiều hơn nữa về lifetime, trait, type, function và closure.</p>
+
+  <p><strong>Chương 21</strong> sẽ hoàn thiện một dự án trong đó chúng ta implement một web server đa luồng tầng thấp!</p>
+
+  <p>Cuối cùng, một số phụ lục chứa thông tin hữu ích về ngôn ngữ theo dạng tài liệu tham khảo. <strong>Phụ lục A</strong> đề cập keyword của Rust, <strong>Phụ lục B</strong> đề cập toán tử và ký hiệu, <strong>Phụ lục C</strong> đề cập các derivable trait do thư viện chuẩn cung cấp, <strong>Phụ lục D</strong> đề cập các công cụ lập trình hữu ích, và <strong>Phụ lục E</strong> giải thích các Rust edition. Trong <strong>Phụ lục F</strong>, bạn có thể tìm bản dịch của cuốn sách, và <strong>Phụ lục G</strong> đề cập cách Rust được tạo ra và nightly Rust là gì.</p>
+
+  <p>Không có cách đọc sai cuốn sách này: nếu bạn muốn bỏ qua một phần, cứ tự nhiên! Bạn có thể cần quay lại các chương trước nếu gặp khó hiểu, nhưng hãy làm theo cách phù hợp với bạn nhất.</p>
+
+  <h2 id="ferris">🦀 Về Ferris</h2>
+
+  <p>Một phần quan trọng trong quá trình học Rust là học cách đọc hiểu các thông báo lỗi từ trình biên dịch — chúng sẽ dẫn đường cho bạn đến code chạy được. Do đó, chúng tôi sẽ cung cấp nhiều ví dụ không thể biên dịch kèm theo thông báo lỗi mà trình biên dịch sẽ hiển thị. Hãy lưu ý rằng nếu bạn nhập và chạy một ví dụ ngẫu nhiên, nó có thể không biên dịch! Hãy đọc văn bản xung quanh để biết ví dụ đó có chủ đích gây lỗi hay không. Ferris sẽ giúp bạn phân biệt các đoạn code không hoạt động như mong muốn:</p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Ferris</th><th>Ý nghĩa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><img src="img/ferris/does_not_compile.svg" style="width:60px" alt="Ferris cua với dấu hỏi" /></td><td>Đoạn code này <strong>không biên dịch được!</strong></td></tr>
+        <tr><td><img src="img/ferris/panics.svg" style="width:60px" alt="Ferris cua giơ tay" /></td><td>Đoạn code này <strong>gây panic!</strong></td></tr>
+        <tr><td><img src="img/ferris/not_desired_behavior.svg" style="width:60px" alt="Ferris cua nhún vai" /></td><td>Đoạn code này <strong>không cho kết quả như mong muốn.</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Trong hầu hết các trường hợp, chúng tôi sẽ dẫn bạn đến phiên bản đúng của bất kỳ đoạn code nào không biên dịch.</p>
+
+  <h2 id="source-code">💾 Mã nguồn</h2>
+
+  <p>Các file nguồn để tạo ra cuốn sách này có thể tìm thấy trên <a href="https://github.com/rust-lang/book/tree/main/src">GitHub</a>.</p>
+
+  <div class="page-nav bottom"><a href="foreword.html">← Trước</a><a href="ch01-00-getting-started.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

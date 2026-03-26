@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recoverable Errors with Result - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html" class="active">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch09-01-unrecoverable-errors-with-panic.html">← Trước</a>
+    <a href="ch09-03-to-panic-or-not-to-panic.html">Tiếp →</a>
+  </div>
+
+<h2 id="recoverable-errors-with-result"><a class="header" href="#recoverable-errors-with-result">Lỗi Có Thể Phục Hồi với <code>Result</code></a></h2>
+<p>Hầu hết các lỗi không đến mức nghiêm trọng cần phải dừng hẳn chương trình. Đôi khi khi một hàm thất bại, đó là vì một lý do mà bạn có thể hiểu được và xử lý dễ dàng. Ví dụ, nếu bạn cố mở một file nhưng thao tác thất bại vì file không tồn tại, bạn có thể muốn tạo file đó thay vì ngắt quá trình.</p>
+<p>Nhớ lại từ <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-result">"Xử Lý Thất Bại Tiềm Năng với <code>Result</code>"</a> trong Chương 2 rằng enum <code>Result</code> được định nghĩa với hai biến thể, <code>Ok</code> và <code>Err</code>, như sau:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+<span class="boring">}</span></code></pre>
+<p>Cặp <code>T</code> và <code>E</code> là các tham số kiểu generic: Ta sẽ thảo luận chi tiết hơn về generics ở Chương 10. Điều bạn cần biết ngay bây giờ là <code>T</code> đại diện cho kiểu của giá trị sẽ được trả về trong trường hợp thành công bên trong biến thể <code>Ok</code>, và <code>E</code> đại diện cho kiểu của lỗi sẽ được trả về trong trường hợp thất bại bên trong biến thể <code>Err</code>. Vì <code>Result</code> có các tham số kiểu generic này, ta có thể dùng kiểu <code>Result</code> và các hàm được định nghĩa trên nó trong nhiều tình huống khác nhau nơi giá trị thành công và giá trị lỗi mà ta muốn trả về có thể khác nhau.</p>
+<p>Hãy gọi một hàm trả về giá trị <code>Result</code> vì hàm đó có thể thất bại. Trong Listing 9-3, ta thử mở một file.</p>
+<figure class="listing" id="listing-9-3">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+}</code></pre>
+<figcaption><a href="#listing-9-3">Listing 9-3</a>: Mở một file</figcaption>
+</figure>
+<p>Kiểu trả về của <code>File::open</code> là <code>Result&lt;T, E&gt;</code>. Tham số generic <code>T</code> đã được implementation của <code>File::open</code> điền vào với kiểu của giá trị thành công, <code>std::fs::File</code>, là một file handle. Kiểu <code>E</code> dùng trong giá trị lỗi là <code>std::io::Error</code>. Kiểu trả về này có nghĩa là lời gọi <code>File::open</code> có thể thành công và trả về một file handle mà ta có thể đọc hoặc ghi. Lời gọi hàm cũng có thể thất bại: Ví dụ, file có thể không tồn tại, hoặc ta có thể không có quyền truy cập file. Hàm <code>File::open</code> cần có cách để cho ta biết nó thành công hay thất bại và đồng thời cho ta hoặc file handle hoặc thông tin lỗi. Chính xác đây là điều mà enum <code>Result</code> truyền đạt.</p>
+<p>Trong trường hợp <code>File::open</code> thành công, giá trị trong biến <code>greeting_file_result</code> sẽ là một instance của <code>Ok</code> chứa file handle. Trong trường hợp thất bại, giá trị trong <code>greeting_file_result</code> sẽ là một instance của <code>Err</code> chứa thêm thông tin về loại lỗi đã xảy ra.</p>
+<p>Ta cần thêm vào code trong Listing 9-3 để thực hiện các hành động khác nhau tùy thuộc vào giá trị mà <code>File::open</code> trả về. Listing 9-4 cho thấy một cách xử lý <code>Result</code> dùng công cụ cơ bản là biểu thức <code>match</code> mà ta đã thảo luận trong Chương 6.</p>
+<figure class="listing" id="listing-9-4">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; panic!("Problem opening the file: {error:?}"),
+    };
+}</code></pre>
+<figcaption><a href="#listing-9-4">Listing 9-4</a>: Dùng biểu thức <code>match</code> để xử lý các biến thể <code>Result</code> có thể được trả về</figcaption>
+</figure>
+<p>Lưu ý rằng, giống như enum <code>Option</code>, enum <code>Result</code> và các biến thể của nó đã được đưa vào scope bởi prelude, nên ta không cần ghi <code>Result::</code> trước <code>Ok</code> và <code>Err</code> trong các nhánh <code>match</code>.</p>
+<p>Khi kết quả là <code>Ok</code>, code này sẽ trả về giá trị <code>file</code> bên trong biến thể <code>Ok</code>, và ta gán giá trị file handle đó vào biến <code>greeting_file</code>. Sau lệnh <code>match</code>, ta có thể dùng file handle để đọc hoặc ghi.</p>
+<p>Nhánh còn lại của <code>match</code> xử lý trường hợp ta nhận được giá trị <code>Err</code> từ <code>File::open</code>. Trong ví dụ này, ta chọn gọi macro <code>panic!</code>. Nếu không có file nào tên <em>hello.txt</em> trong thư mục hiện tại và ta chạy code này, ta sẽ thấy output sau từ macro <code>panic!</code>:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/error-handling`
+
+thread 'main' panicked at src/main.rs:8:23:
+Problem opening the file: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>Như thường lệ, output này cho ta biết chính xác điều gì đã xảy ra.</p>
+<h3 id="matching-on-different-errors"><a class="header" href="#matching-on-different-errors">Khớp Với Các Loại Lỗi Khác Nhau</a></h3>
+<p>Code trong Listing 9-4 sẽ <code>panic!</code> bất kể lý do tại sao <code>File::open</code> thất bại. Tuy nhiên, ta muốn thực hiện các hành động khác nhau cho các lý do thất bại khác nhau. Nếu <code>File::open</code> thất bại vì file không tồn tại, ta muốn tạo file và trả về handle của file mới. Nếu <code>File::open</code> thất bại vì bất kỳ lý do nào khác — ví dụ vì ta không có quyền mở file — ta vẫn muốn code <code>panic!</code> theo cách như trong Listing 9-4. Để làm điều này, ta thêm một biểu thức <code>match</code> bên trong, như thể hiện trong Listing 9-5.</p>
+<figure class="listing" id="listing-9-5">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; match error.kind() {
+            ErrorKind::NotFound =&gt; match File::create("hello.txt") {
+                Ok(fc) =&gt; fc,
+                Err(e) =&gt; panic!("Problem creating the file: {e:?}"),
+            },
+            _ =&gt; {
+                panic!("Problem opening the file: {error:?}");
+            }
+        },
+    };
+}</code></pre>
+<figcaption><a href="#listing-9-5">Listing 9-5</a>: Xử lý các loại lỗi khác nhau theo cách khác nhau</figcaption>
+</figure>
+<p>Kiểu của giá trị mà <code>File::open</code> trả về bên trong biến thể <code>Err</code> là <code>io::Error</code>, một struct được cung cấp bởi standard library. Struct này có một method là <code>kind</code> mà ta có thể gọi để lấy giá trị <code>io::ErrorKind</code>. Enum <code>io::ErrorKind</code> được cung cấp bởi standard library và có các biến thể đại diện cho các loại lỗi khác nhau có thể phát sinh từ một thao tác <code>io</code>. Biến thể ta muốn dùng là <code>ErrorKind::NotFound</code>, cho biết file ta đang cố mở chưa tồn tại. Vậy ta match trên <code>greeting_file_result</code>, nhưng cũng có một match bên trong trên <code>error.kind()</code>.</p>
+<p>Điều kiện ta muốn kiểm tra trong match bên trong là liệu giá trị trả về bởi <code>error.kind()</code> có phải là biến thể <code>NotFound</code> của enum <code>ErrorKind</code> không. Nếu có, ta thử tạo file bằng <code>File::create</code>. Tuy nhiên, vì <code>File::create</code> cũng có thể thất bại, ta cần một nhánh thứ hai trong biểu thức <code>match</code> bên trong. Khi file không thể được tạo, một thông báo lỗi khác sẽ được in ra. Nhánh thứ hai của <code>match</code> bên ngoài giữ nguyên, vậy chương trình panic với bất kỳ lỗi nào ngoài lỗi thiếu file.</p>
+<section class="note" aria-role="note">
+<h4 id="alternatives-to-using-match-with-resultt-e"><a class="header" href="#alternatives-to-using-match-with-resultt-e">Thay Thế Cho <code>match</code> với <code>Result&lt;T, E&gt;</code></a></h4>
+<p>Nhiều <code>match</code> quá nhỉ! Biểu thức <code>match</code> rất hữu ích nhưng cũng khá nguyên thủy. Trong Chương 13, bạn sẽ học về closures, được dùng với nhiều method được định nghĩa trên <code>Result&lt;T, E&gt;</code>. Các method này có thể ngắn gọn hơn so với dùng <code>match</code> khi xử lý các giá trị <code>Result&lt;T, E&gt;</code> trong code của bạn.</p>
+<p>Ví dụ, đây là cách khác để viết logic tương tự như Listing 9-5, lần này dùng closures và method <code>unwrap_or_else</code>:</p>
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {error:?}");
+            })
+        } else {
+            panic!("Problem opening the file: {error:?}");
+        }
+    });
+}</code></pre>
+<p>Mặc dù code này có cùng hành vi như Listing 9-5, nó không chứa bất kỳ biểu thức <code>match</code> nào và dễ đọc hơn. Quay lại ví dụ này sau khi bạn đã đọc Chương 13 và tra cứu method <code>unwrap_or_else</code> trong tài liệu standard library. Nhiều method hơn nữa có thể dọn dẹp các biểu thức <code>match</code> lồng nhau khổng lồ khi bạn xử lý lỗi.</p>
+</section>
+<p><a id="shortcuts-for-panic-on-error-unwrap-and-expect"></a></p>
+<h4 id="shortcuts-for-panic-on-error"><a class="header" href="#shortcuts-for-panic-on-error">Phím Tắt Để Panic Khi Có Lỗi</a></h4>
+<p>Dùng <code>match</code> hoạt động tốt, nhưng có thể hơi dài dòng và không phải lúc nào cũng truyền đạt ý định rõ ràng. Kiểu <code>Result&lt;T, E&gt;</code> có nhiều helper method được định nghĩa trên nó để thực hiện các tác vụ cụ thể hơn, đa dạng hơn. Method <code>unwrap</code> là một shortcut method được implement giống y chang biểu thức <code>match</code> ta đã viết trong Listing 9-4. Nếu giá trị <code>Result</code> là biến thể <code>Ok</code>, <code>unwrap</code> sẽ trả về giá trị bên trong <code>Ok</code>. Nếu <code>Result</code> là biến thể <code>Err</code>, <code>unwrap</code> sẽ gọi macro <code>panic!</code> giúp ta. Đây là ví dụ về <code>unwrap</code> trong action:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap();
+}</code></pre>
+</figure>
+<p>Nếu ta chạy code này mà không có file <em>hello.txt</em>, ta sẽ thấy thông báo lỗi từ lời gọi <code>panic!</code> mà method <code>unwrap</code> thực hiện:</p>
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:4:49:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+</code></pre>
+<p>Tương tự, method <code>expect</code> cho phép ta chọn thông báo lỗi <code>panic!</code>. Dùng <code>expect</code> thay vì <code>unwrap</code> và cung cấp thông báo lỗi có ý nghĩa có thể truyền đạt ý định của bạn và giúp truy tìm nguồn gốc panic dễ hơn. Cú pháp của <code>expect</code> trông như thế này:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}</code></pre>
+</figure>
+<p>Ta dùng <code>expect</code> theo cách tương tự như <code>unwrap</code>: để trả về file handle hoặc gọi macro <code>panic!</code>. Thông báo lỗi được dùng bởi <code>expect</code> trong lời gọi <code>panic!</code> của nó sẽ là tham số mà ta truyền vào <code>expect</code>, thay vì thông báo <code>panic!</code> mặc định mà <code>unwrap</code> dùng. Kết quả trông như thế này:</p>
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:5:10:
+hello.txt should be included in this project: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+</code></pre>
+<p>Trong code production-quality, hầu hết Rustaceans chọn <code>expect</code> thay vì <code>unwrap</code> và đưa ra thêm ngữ cảnh về lý do tại sao thao tác được mong đợi luôn thành công. Như vậy, nếu các giả định của bạn từng bị chứng minh là sai, bạn sẽ có nhiều thông tin hơn để dùng khi debug.</p>
+<h3 id="propagating-errors"><a class="header" href="#propagating-errors">Lan Truyền Lỗi</a></h3>
+<p>Khi implementation của một hàm gọi thứ gì đó có thể thất bại, thay vì xử lý lỗi ngay bên trong hàm đó, bạn có thể trả lỗi về cho code gọi nó để code đó quyết định phải làm gì. Đây được gọi là <em>propagating</em> (lan truyền) lỗi và trao thêm quyền kiểm soát cho code gọi, nơi có thể có nhiều thông tin hoặc logic hơn để quyết định cách xử lý lỗi so với những gì bạn có trong ngữ cảnh code của mình.</p>
+<p>Ví dụ, Listing 9-6 cho thấy một hàm đọc tên người dùng từ một file. Nếu file không tồn tại hoặc không thể đọc được, hàm này sẽ trả những lỗi đó về cho code đã gọi hàm.</p>
+<figure class="listing" id="listing-9-6">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let username_file_result = File::open("hello.txt");
+
+    let mut username_file = match username_file_result {
+        Ok(file) =&gt; file,
+        Err(e) =&gt; return Err(e),
+    };
+
+    let mut username = String::new();
+
+    match username_file.read_to_string(&amp;mut username) {
+        Ok(_) =&gt; Ok(username),
+        Err(e) =&gt; Err(e),
+    }
+}
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-6">Listing 9-6</a>: Một hàm trả lỗi về cho code gọi nó dùng <code>match</code></figcaption>
+</figure>
+<p>Hàm này có thể được viết theo cách ngắn hơn nhiều, nhưng ta sẽ bắt đầu bằng cách làm nhiều thứ thủ công để khám phá error handling; cuối cùng ta sẽ chỉ cách ngắn hơn. Hãy nhìn vào kiểu trả về của hàm trước: <code>Result&lt;String, io::Error&gt;</code>. Điều này có nghĩa là hàm đang trả về một giá trị kiểu <code>Result&lt;T, E&gt;</code>, nơi tham số generic <code>T</code> đã được điền bằng kiểu cụ thể <code>String</code> và kiểu generic <code>E</code> đã được điền bằng kiểu cụ thể <code>io::Error</code>.</p>
+<p>Nếu hàm này thành công không có vấn đề gì, code gọi hàm sẽ nhận được giá trị <code>Ok</code> chứa <code>String</code> — tên người dùng mà hàm này đọc từ file. Nếu hàm gặp bất kỳ vấn đề nào, code gọi sẽ nhận được giá trị <code>Err</code> chứa một instance của <code>io::Error</code> có thêm thông tin về những vấn đề gì đã xảy ra. Ta chọn <code>io::Error</code> làm kiểu trả về của hàm này vì đó là kiểu của giá trị lỗi được trả về từ cả hai thao tác ta gọi trong thân hàm có thể thất bại: hàm <code>File::open</code> và method <code>read_to_string</code>.</p>
+<p>Thân của hàm bắt đầu bằng cách gọi hàm <code>File::open</code>. Sau đó, ta xử lý giá trị <code>Result</code> bằng một <code>match</code> tương tự như <code>match</code> trong Listing 9-4. Nếu <code>File::open</code> thành công, file handle trong biến pattern <code>file</code> trở thành giá trị trong biến mutable <code>username_file</code> và hàm tiếp tục. Trong trường hợp <code>Err</code>, thay vì gọi <code>panic!</code>, ta dùng từ khóa <code>return</code> để thoát sớm ra khỏi hàm hoàn toàn và truyền giá trị lỗi từ <code>File::open</code>, hiện ở biến pattern <code>e</code>, về cho code gọi như là giá trị lỗi của hàm này.</p>
+<p>Vậy, nếu ta có file handle trong <code>username_file</code>, hàm sau đó tạo một <code>String</code> mới trong biến <code>username</code> và gọi method <code>read_to_string</code> trên file handle trong <code>username_file</code> để đọc nội dung của file vào <code>username</code>. Method <code>read_to_string</code> cũng trả về một <code>Result</code> vì nó có thể thất bại, dù <code>File::open</code> đã thành công. Vậy ta cần một <code>match</code> khác để xử lý <code>Result</code> đó: Nếu <code>read_to_string</code> thành công, hàm của ta đã thành công, và ta trả về tên người dùng từ file hiện đang ở <code>username</code>, được bọc trong một <code>Ok</code>. Nếu <code>read_to_string</code> thất bại, ta trả về giá trị lỗi theo cách tương tự như ta đã trả về giá trị lỗi trong <code>match</code> xử lý giá trị trả về của <code>File::open</code>. Tuy nhiên, ta không cần nói rõ <code>return</code>, vì đây là biểu thức cuối cùng trong hàm.</p>
+<p>Code gọi hàm này sau đó sẽ xử lý việc nhận được giá trị <code>Ok</code> chứa tên người dùng hoặc giá trị <code>Err</code> chứa một <code>io::Error</code>. Code gọi quyết định phải làm gì với những giá trị đó. Nếu code gọi nhận được giá trị <code>Err</code>, nó có thể gọi <code>panic!</code> và crash chương trình, dùng tên người dùng mặc định, hoặc tra cứu tên người dùng từ nơi khác thay vì từ file, chẳng hạn. Ta không có đủ thông tin về những gì code gọi thực sự đang cố làm, nên ta propagate tất cả thông tin thành công hoặc lỗi lên trên để nó xử lý phù hợp.</p>
+<p>Pattern lan truyền lỗi này rất phổ biến trong Rust đến mức Rust cung cấp toán tử dấu hỏi <code>?</code> để làm điều này dễ dàng hơn.</p>
+<p><a id="a-shortcut-for-propagating-errors-the--operator"></a></p>
+<h4 id="the--operator-shortcut"><a class="header" href="#the--operator-shortcut">Toán Tử <code>?</code> — Phím Tắt Siêu Đỉnh</a></h4>
+<p>Listing 9-7 cho thấy một implementation của <code>read_username_from_file</code> có cùng chức năng như trong Listing 9-6, nhưng implementation này dùng toán tử <code>?</code>.</p>
+<figure class="listing" id="listing-9-7">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&amp;mut username)?;
+    Ok(username)
+}
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-7">Listing 9-7</a>: Một hàm trả lỗi về cho code gọi dùng toán tử <code>?</code></figcaption>
+</figure>
+<p>Dấu <code>?</code> đặt sau giá trị <code>Result</code> được định nghĩa để hoạt động gần giống như các biểu thức <code>match</code> ta đã định nghĩa để xử lý các giá trị <code>Result</code> trong Listing 9-6. Nếu giá trị của <code>Result</code> là <code>Ok</code>, giá trị bên trong <code>Ok</code> sẽ được trả về từ biểu thức này, và chương trình tiếp tục. Nếu giá trị là <code>Err</code>, <code>Err</code> sẽ được trả về từ toàn bộ hàm như thể ta đã dùng từ khóa <code>return</code> để giá trị lỗi được propagate về cho code gọi.</p>
+<p>Có một điểm khác biệt giữa những gì biểu thức <code>match</code> từ Listing 9-6 làm và những gì toán tử <code>?</code> làm: Các giá trị lỗi có toán tử <code>?</code> được gọi trên đó sẽ đi qua hàm <code>from</code>, được định nghĩa trong trait <code>From</code> của standard library, dùng để chuyển đổi giá trị từ kiểu này sang kiểu khác. Khi toán tử <code>?</code> gọi hàm <code>from</code>, kiểu lỗi nhận được sẽ được chuyển đổi thành kiểu lỗi được định nghĩa trong kiểu trả về của hàm hiện tại. Điều này hữu ích khi một hàm trả về một kiểu lỗi để đại diện cho tất cả các cách một hàm có thể thất bại, dù các phần có thể thất bại vì nhiều lý do khác nhau.</p>
+<p>Ví dụ, ta có thể thay đổi hàm <code>read_username_from_file</code> trong Listing 9-7 để trả về một kiểu lỗi custom tên <code>OurError</code> mà ta định nghĩa. Nếu ta cũng định nghĩa <code>impl From&lt;io::Error&gt; for OurError</code> để xây dựng một instance của <code>OurError</code> từ một <code>io::Error</code>, thì các lời gọi toán tử <code>?</code> trong thân hàm <code>read_username_from_file</code> sẽ gọi <code>from</code> và chuyển đổi các kiểu lỗi mà không cần thêm bất kỳ code nào vào hàm.</p>
+<p>Trong ngữ cảnh của Listing 9-7, dấu <code>?</code> ở cuối lời gọi <code>File::open</code> sẽ trả về giá trị bên trong một <code>Ok</code> vào biến <code>username_file</code>. Nếu có lỗi xảy ra, toán tử <code>?</code> sẽ thoát sớm ra khỏi toàn bộ hàm và đưa bất kỳ giá trị <code>Err</code> nào về cho code gọi. Điều tương tự áp dụng cho dấu <code>?</code> ở cuối lời gọi <code>read_to_string</code>.</p>
+<p>Toán tử <code>?</code> loại bỏ rất nhiều boilerplate và làm cho implementation của hàm này đơn giản hơn. Ta thậm chí có thể rút ngắn code này hơn nữa bằng cách nối chuỗi các lời gọi method ngay sau <code>?</code>, như thể hiện trong Listing 9-8.</p>
+<figure class="listing" id="listing-9-8">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username = String::new();
+
+    File::open("hello.txt")?.read_to_string(&amp;mut username)?;
+
+    Ok(username)
+}
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-8">Listing 9-8</a>: Nối chuỗi các lời gọi method sau toán tử <code>?</code></figcaption>
+</figure>
+<p>Ta đã chuyển việc tạo <code>String</code> mới trong <code>username</code> lên đầu hàm; phần đó không thay đổi. Thay vì tạo biến <code>username_file</code>, ta đã nối chuỗi lời gọi <code>read_to_string</code> trực tiếp vào kết quả của <code>File::open("hello.txt")?</code>. Ta vẫn có dấu <code>?</code> ở cuối lời gọi <code>read_to_string</code>, và ta vẫn trả về giá trị <code>Ok</code> chứa <code>username</code> khi cả <code>File::open</code> và <code>read_to_string</code> đều thành công thay vì trả lỗi. Chức năng vẫn giống như trong Listing 9-6 và Listing 9-7; đây chỉ là cách viết khác, ergonomic hơn.</p>
+<p>Listing 9-9 cho thấy cách rút ngắn hơn nữa bằng cách dùng <code>fs::read_to_string</code>.</p>
+<figure class="listing" id="listing-9-9">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs;
+use std::io;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    fs::read_to_string("hello.txt")
+}
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-9">Listing 9-9</a>: Dùng <code>fs::read_to_string</code> thay vì mở rồi đọc file</figcaption>
+</figure>
+<p>Đọc file vào một string là thao tác khá phổ biến, vậy nên standard library cung cấp hàm tiện lợi <code>fs::read_to_string</code> mở file, tạo một <code>String</code> mới, đọc nội dung file, đặt nội dung vào <code>String</code> đó, và trả về. Tất nhiên, dùng <code>fs::read_to_string</code> không cho ta cơ hội giải thích toàn bộ error handling, vậy nên ta đã làm theo cách dài hơn trước.</p>
+<p><a id="where-the--operator-can-be-used"></a></p>
+<h4 id="where-to-use-the--operator"><a class="header" href="#where-to-use-the--operator">Dùng Toán Tử <code>?</code> Ở Đâu Được?</a></h4>
+<p>Toán tử <code>?</code> chỉ có thể được dùng trong các hàm có kiểu trả về tương thích với giá trị mà <code>?</code> được dùng trên đó. Điều này là vì toán tử <code>?</code> được định nghĩa để thực hiện early return của một giá trị ra khỏi hàm, theo cách tương tự như biểu thức <code>match</code> ta đã định nghĩa trong Listing 9-6. Trong Listing 9-6, <code>match</code> đang dùng giá trị <code>Result</code>, và nhánh early return đã trả về giá trị <code>Err(e)</code>. Kiểu trả về của hàm phải là một <code>Result</code> để tương thích với <code>return</code> này.</p>
+<p>Trong Listing 9-10, hãy xem lỗi ta sẽ nhận được nếu dùng toán tử <code>?</code> trong hàm <code>main</code> với kiểu trả về không tương thích với kiểu của giá trị ta dùng <code>?</code> trên đó.</p>
+<figure class="listing" id="listing-9-10">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")?;
+}</code></pre>
+<figcaption><a href="#listing-9-10">Listing 9-10</a>: Cố dùng <code>?</code> trong hàm <code>main</code> trả về <code>()</code> sẽ không compile được.</figcaption>
+</figure>
+<p>Code này mở một file, thao tác có thể thất bại. Toán tử <code>?</code> theo sau giá trị <code>Result</code> được trả về bởi <code>File::open</code>, nhưng hàm <code>main</code> này có kiểu trả về là <code>()</code>, không phải <code>Result</code>. Khi compile code này, ta nhận được thông báo lỗi sau:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+ --&gt; src/main.rs:4:48
+  |
+3 | fn main() {
+  | --------- this function should return `Result` or `Option` to accept `?`
+4 |     let greeting_file = File::open("hello.txt")?;
+  |                                                ^ cannot use the `?` operator in a function that returns `()`
+  |
+help: consider adding return type
+  |
+3 ~ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+4 |     let greeting_file = File::open("hello.txt")?;
+5 +     Ok(())
+  |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `error-handling` (bin "error-handling") due to 1 previous error
+</code></pre>
+<p>Thông báo lỗi này chỉ ra rằng ta chỉ được phép dùng toán tử <code>?</code> trong hàm trả về <code>Result</code>, <code>Option</code>, hoặc kiểu khác implement <code>FromResidual</code>.</p>
+<p>Để sửa lỗi, bạn có hai lựa chọn. Một là thay đổi kiểu trả về của hàm để tương thích với giá trị bạn đang dùng toán tử <code>?</code> trên đó, miễn là không có ràng buộc nào ngăn cản điều đó. Lựa chọn kia là dùng <code>match</code> hoặc một trong các method của <code>Result&lt;T, E&gt;</code> để xử lý <code>Result&lt;T, E&gt;</code> theo cách phù hợp.</p>
+<p>Thông báo lỗi cũng đề cập rằng <code>?</code> có thể được dùng với các giá trị <code>Option&lt;T&gt;</code>. Cũng như dùng <code>?</code> trên <code>Result</code>, bạn chỉ có thể dùng <code>?</code> trên <code>Option</code> trong hàm trả về <code>Option</code>. Hành vi của toán tử <code>?</code> khi được gọi trên <code>Option&lt;T&gt;</code> tương tự như hành vi của nó khi được gọi trên <code>Result&lt;T, E&gt;</code>: Nếu giá trị là <code>None</code>, <code>None</code> sẽ được trả về sớm từ hàm tại điểm đó. Nếu giá trị là <code>Some</code>, giá trị bên trong <code>Some</code> là giá trị kết quả của biểu thức, và hàm tiếp tục. Listing 9-11 có ví dụ về hàm tìm ký tự cuối cùng của dòng đầu tiên trong text đã cho.</p>
+<figure class="listing" id="listing-9-11">
+<pre class="playground"><code class="language-rust edition2024">fn last_char_of_first_line(text: &amp;str) -&gt; Option&lt;char&gt; {
+    text.lines().next()?.chars().last()
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    assert_eq!(
+</span><span class="boring">        last_char_of_first_line("Hello, world\nHow are you today?"),
+</span><span class="boring">        Some('d')
+</span><span class="boring">    );
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(last_char_of_first_line(""), None);
+</span><span class="boring">    assert_eq!(last_char_of_first_line("\nhi"), None);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-11">Listing 9-11</a>: Dùng toán tử <code>?</code> trên giá trị <code>Option&lt;T&gt;</code></figcaption>
+</figure>
+<p>Hàm này trả về <code>Option&lt;char&gt;</code> vì có thể có một ký tự ở đó, nhưng cũng có thể không. Code này lấy string slice argument <code>text</code> và gọi method <code>lines</code> trên nó, method này trả về một iterator qua các dòng trong string. Vì hàm này muốn kiểm tra dòng đầu tiên, nó gọi <code>next</code> trên iterator để lấy giá trị đầu tiên từ iterator. Nếu <code>text</code> là string rỗng, lời gọi <code>next</code> này sẽ trả về <code>None</code>, và khi đó ta dùng <code>?</code> để dừng và trả về <code>None</code> từ <code>last_char_of_first_line</code>. Nếu <code>text</code> không phải string rỗng, <code>next</code> sẽ trả về giá trị <code>Some</code> chứa một string slice của dòng đầu tiên trong <code>text</code>.</p>
+<p>Dấu <code>?</code> trích xuất string slice, và ta có thể gọi <code>chars</code> trên string slice đó để lấy iterator của các ký tự. Ta quan tâm đến ký tự cuối cùng trong dòng đầu tiên này, vậy ta gọi <code>last</code> để trả về item cuối cùng trong iterator. Đây là một <code>Option</code> vì có thể dòng đầu tiên là string rỗng; ví dụ, nếu <code>text</code> bắt đầu với dòng trống nhưng có ký tự ở các dòng khác, như trong <code>"\nhi"</code>. Tuy nhiên, nếu có ký tự cuối cùng ở dòng đầu tiên, nó sẽ được trả về trong biến thể <code>Some</code>. Toán tử <code>?</code> ở giữa cung cấp cho ta cách ngắn gọn để biểu diễn logic này, cho phép ta implement hàm trong một dòng. Nếu ta không thể dùng toán tử <code>?</code> trên <code>Option</code>, ta sẽ phải implement logic này dùng nhiều lời gọi method hơn hoặc một biểu thức <code>match</code>.</p>
+<p>Lưu ý rằng bạn có thể dùng toán tử <code>?</code> trên <code>Result</code> trong hàm trả về <code>Result</code>, và bạn có thể dùng toán tử <code>?</code> trên <code>Option</code> trong hàm trả về <code>Option</code>, nhưng bạn không thể pha trộn và kết hợp. Toán tử <code>?</code> sẽ không tự động chuyển đổi <code>Result</code> thành <code>Option</code> hoặc ngược lại; trong những trường hợp đó, bạn có thể dùng các method như method <code>ok</code> trên <code>Result</code> hoặc method <code>ok_or</code> trên <code>Option</code> để thực hiện chuyển đổi một cách tường minh.</p>
+<p>Cho đến nay, tất cả các hàm <code>main</code> ta đã dùng trả về <code>()</code>. Hàm <code>main</code> đặc biệt vì nó là điểm vào và điểm ra của một chương trình executable, và có các ràng buộc về kiểu trả về của nó để chương trình hoạt động như mong đợi.</p>
+<p>May mắn thay, <code>main</code> cũng có thể trả về <code>Result&lt;(), E&gt;</code>. Listing 9-12 có code từ Listing 9-10, nhưng ta đã thay đổi kiểu trả về của <code>main</code> thành <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code> và thêm giá trị trả về <code>Ok(())</code> vào cuối. Code này bây giờ sẽ compile được.</p>
+<figure class="listing" id="listing-9-12">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore">use std::error::Error;
+use std::fs::File;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let greeting_file = File::open("hello.txt")?;
+
+    Ok(())
+}</code></pre>
+<figcaption><a href="#listing-9-12">Listing 9-12</a>: Thay đổi <code>main</code> để trả về <code>Result&lt;(), E&gt;</code> cho phép dùng toán tử <code>?</code> trên các giá trị <code>Result</code>.</figcaption>
+</figure>
+<p>Kiểu <code>Box&lt;dyn Error&gt;</code> là một trait object, ta sẽ nói về nó trong <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">"Dùng Trait Objects để Trừu Tượng Hóa Hành Vi Chung"</a> trong Chương 18. Hiện tại, bạn có thể đọc <code>Box&lt;dyn Error&gt;</code> là "bất kỳ loại lỗi nào." Dùng <code>?</code> trên giá trị <code>Result</code> trong hàm <code>main</code> với kiểu lỗi <code>Box&lt;dyn Error&gt;</code> được phép vì nó cho phép bất kỳ giá trị <code>Err</code> nào được trả về sớm. Dù thân hàm <code>main</code> này chỉ trả về lỗi kiểu <code>std::io::Error</code>, bằng cách chỉ định <code>Box&lt;dyn Error&gt;</code>, signature này sẽ tiếp tục đúng ngay cả khi thêm nhiều code trả về lỗi khác vào thân <code>main</code>.</p>
+<p>Khi hàm <code>main</code> trả về <code>Result&lt;(), E&gt;</code>, executable sẽ thoát với giá trị <code>0</code> nếu <code>main</code> trả về <code>Ok(())</code> và sẽ thoát với giá trị khác không nếu <code>main</code> trả về giá trị <code>Err</code>. Các executable viết bằng C trả về integers khi thoát: Các chương trình thoát thành công trả về integer <code>0</code>, và các chương trình có lỗi trả về một integer khác <code>0</code>. Rust cũng trả về integers từ executables để tương thích với convention này.</p>
+<p>Hàm <code>main</code> có thể trả về bất kỳ kiểu nào implement <a href="../std/process/trait.Termination.html">trait <code>std::process::Termination</code></a>, chứa hàm <code>report</code> trả về một <code>ExitCode</code>. Tham khảo tài liệu standard library để biết thêm thông tin về cách implement trait <code>Termination</code> cho các kiểu của riêng bạn.</p>
+<p>Bây giờ ta đã thảo luận xong chi tiết về việc gọi <code>panic!</code> hoặc trả về <code>Result</code>, hãy quay lại chủ đề làm thế nào để quyết định cái nào phù hợp để dùng trong tình huống nào.</p>
+
+  <div class="page-nav bottom"><a href="ch09-01-unrecoverable-errors-with-panic.html">← Trước</a><a href="ch09-03-to-panic-or-not-to-panic.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

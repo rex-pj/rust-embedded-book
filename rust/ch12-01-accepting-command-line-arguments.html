@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đọc Tham Số Dòng Lệnh - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html" class="active">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch12-00-an-io-project.html">← Trước</a>
+    <a href="ch12-02-reading-a-file.html">Tiếp →</a>
+  </div>
+
+<h2 id="accepting-command-line-arguments">Đọc Tham Số Dòng Lệnh</h2>
+<p>Hãy tạo project mới với công thức quen thuộc muôn thuở, <code>cargo new</code>. Chúng ta sẽ đặt tên dự án là <code>minigrep</code> để phân biệt với công cụ <code>grep</code> có thể đã có sẵn trên hệ thống của bạn:</p>
+<pre><code class="language-console">$ cargo new minigrep
+     Created binary (application) `minigrep` project
+$ cd minigrep
+</code></pre>
+<p>Nhiệm vụ đầu tiên là bắt <code>minigrep</code> chấp nhận hai tham số dòng lệnh: đường dẫn file và chuỗi cần tìm. Tức là chúng ta muốn chạy chương trình bằng <code>cargo run</code>, hai dấu gạch ngang để báo rằng những gì tiếp theo là tham số cho chương trình chứ không phải cho <code>cargo</code>, tiếp theo là chuỗi cần tìm, và đường dẫn file cần tìm trong đó, kiểu như này:</p>
+<pre><code class="language-console">$ cargo run -- searchstring example-filename.txt
+</code></pre>
+<p>Hiện tại, chương trình mà <code>cargo new</code> sinh ra không thể xử lý tham số nào ta truyền vào. Có một số thư viện sẵn có trên <a href="https://crates.io/">crates.io</a> có thể giúp viết chương trình nhận tham số dòng lệnh, nhưng vì bạn đang học khái niệm này, hãy tự mình triển khai nhé.</p>
+<h3 id="reading-the-argument-values">Đọc Giá Trị Tham Số</h3>
+<p>Để <code>minigrep</code> có thể đọc các tham số dòng lệnh được truyền vào, chúng ta cần dùng hàm <code>std::env::args</code> từ thư viện chuẩn của Rust. Hàm này trả về một iterator chứa các tham số dòng lệnh truyền cho <code>minigrep</code>. Chúng ta sẽ nói kỹ hơn về iterator ở <a href="ch13-00-functional-features.html">Chương 13</a>. Còn bây giờ chỉ cần biết hai điều: iterator sinh ra một chuỗi giá trị, và ta có thể gọi phương thức <code>collect</code> trên iterator để biến nó thành một collection — chẳng hạn như một vector — chứa tất cả các phần tử mà iterator sinh ra.</p>
+<p>Đoạn code ở Listing 12-1 cho phép chương trình <code>minigrep</code> đọc mọi tham số dòng lệnh truyền vào, rồi thu thập các giá trị đó thành một vector.</p>
+<figure class="listing" id="listing-12-1">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::env;
+
+fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+    dbg!(args);
+}</code></pre>
+<figcaption><a href="#listing-12-1">Listing 12-1</a>: Thu thập các tham số dòng lệnh vào vector rồi in ra</figcaption>
+</figure>
+<p>Đầu tiên, chúng ta đưa module <code>std::env</code> vào scope bằng câu lệnh <code>use</code> để có thể dùng hàm <code>args</code> của nó. Lưu ý rằng hàm <code>std::env::args</code> nằm lồng sâu hai tầng module. Như đã bàn ở <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#creating-idiomatic-use-paths">Chương 7</a>, khi hàm cần dùng nằm lồng trong nhiều hơn một module, ta chọn đưa module cha vào scope thay vì đưa thẳng hàm vào. Làm vậy giúp ta dễ dùng các hàm khác của <code>std::env</code> hơn. Ngoài ra nó cũng ít gây nhầm lẫn hơn so với việc <code>use std::env::args</code> rồi gọi bằng tên trần <code>args</code>, vì <code>args</code> có thể bị nhầm thành một hàm được định nghĩa trong module hiện tại.</p>
+<section class="note" aria-role="note">
+<h3 id="the-args-function-and-invalid-unicode">Hàm <code>args</code> và Unicode Không Hợp Lệ</h3>
+<p>Lưu ý rằng <code>std::env::args</code> sẽ panic nếu bất kỳ tham số nào chứa Unicode không hợp lệ. Nếu chương trình của bạn cần nhận tham số chứa Unicode không hợp lệ, hãy dùng <code>std::env::args_os</code> thay thế. Hàm đó trả về iterator sinh ra các giá trị <code>OsString</code> thay vì <code>String</code>. Ở đây chúng ta chọn <code>std::env::args</code> cho đơn giản, vì các giá trị <code>OsString</code> khác nhau theo từng nền tảng và phức tạp hơn để xử lý so với <code>String</code>.</p>
+</section>
+<p>Ở dòng đầu tiên của <code>main</code>, chúng ta gọi <code>env::args</code> và ngay lập tức dùng <code>collect</code> để biến iterator thành một vector chứa tất cả các giá trị mà iterator sinh ra. Ta có thể dùng hàm <code>collect</code> để tạo ra nhiều loại collection khác nhau, vì vậy chúng ta khai báo rõ kiểu của <code>args</code> là vector of strings. Dù hiếm khi phải khai báo kiểu trong Rust, <code>collect</code> lại là một hàm thường xuyên cần khai báo vì Rust không thể tự suy ra bạn muốn tạo kiểu collection gì.</p>
+<p>Cuối cùng, chúng ta in vector bằng debug macro. Hãy thử chạy code trước với không có tham số, rồi thử với hai tham số:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running `target/debug/minigrep`
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+]
+</code></pre>
+<pre><code class="language-console">$ cargo run -- needle haystack
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.57s
+     Running `target/debug/minigrep needle haystack`
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+    "needle",
+    "haystack",
+]
+</code></pre>
+<p>Để ý rằng giá trị đầu tiên trong vector là <code>"target/debug/minigrep"</code>, chính là tên của binary. Điều này khớp với hành vi của danh sách tham số trong C, cho phép chương trình biết được tên mà nó được gọi. Việc có tên chương trình trong tay thường tiện lợi khi bạn muốn in nó trong thông báo hoặc thay đổi hành vi dựa vào alias dòng lệnh nào được dùng. Nhưng trong chương này, chúng ta sẽ bỏ qua nó và chỉ lưu hai tham số cần dùng thôi.</p>
+<h3 id="saving-the-argument-values-in-variables">Lưu Giá Trị Tham Số Vào Biến</h3>
+<p>Chương trình hiện đã có thể truy cập các giá trị được truyền vào qua dòng lệnh. Bây giờ chúng ta cần lưu giá trị của hai tham số vào biến để có thể dùng chúng xuyên suốt phần còn lại của chương trình. Chúng ta làm vậy trong Listing 12-2.</p>
+<figure class="listing" id="listing-12-2">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust should_panic noplayground">use std::env;
+
+fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let query = &amp;args[1];
+    let file_path = &amp;args[2];
+
+    println!("Searching for {query}");
+    println!("In file {file_path}");
+}</code></pre>
+<figcaption><a href="#listing-12-2">Listing 12-2</a>: Tạo biến để lưu tham số query và đường dẫn file</figcaption>
+</figure>
+<p>Như chúng ta thấy khi in vector, tên chương trình chiếm giá trị đầu tiên ở <code>args[0]</code>, nên ta bắt đầu đọc tham số từ chỉ số 1. Tham số đầu tiên mà <code>minigrep</code> nhận là chuỗi cần tìm, nên ta đặt tham chiếu đến tham số đầu tiên vào biến <code>query</code>. Tham số thứ hai sẽ là đường dẫn file, nên ta đặt tham chiếu đến tham số thứ hai vào biến <code>file_path</code>.</p>
+<p>Chúng ta tạm thời in giá trị của các biến này để kiểm tra code chạy đúng như mong muốn. Hãy chạy lại chương trình với tham số <code>test</code> và <code>sample.txt</code>:</p>
+<pre><code class="language-console">$ cargo run -- test sample.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep test sample.txt`
+Searching for test
+In file sample.txt
+</code></pre>
+<p>Tuyệt! Chương trình đang chạy đúng rồi! Các giá trị tham số cần dùng đã được lưu vào đúng biến. Sau này chúng ta sẽ thêm xử lý lỗi để đối phó với các tình huống lỗi tiềm tàng — chẳng hạn như khi người dùng không truyền tham số nào — nhưng bây giờ hãy bỏ qua điều đó và tập trung vào tính năng đọc file đã.</p>
+
+  <div class="page-nav bottom"><a href="ch12-00-an-io-project.html">← Trước</a><a href="ch12-02-reading-a-file.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsafe Rust - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html" class="active">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 20 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch20-00-advanced-features.html">← Trước</a>
+    <a href="ch20-02-advanced-traits.html">Tiếp →</a>
+  </div>
+
+<h2 id="unsafe-rust">Unsafe Rust</h2>
+<p>Toàn bộ code chúng ta đã bàn từ trước tới nay đều được Rust thực thi bảo đảm an toàn bộ nhớ (memory safety) ngay tại thời điểm compile. Tuy nhiên, Rust còn che giấu bên trong mình một ngôn ngữ thứ hai, không thực thi những đảm bảo an toàn bộ nhớ đó: nó được gọi là <em>unsafe Rust</em> và hoạt động y hệt Rust thông thường nhưng lại trao cho chúng ta thêm những siêu năng lực bí ẩn.</p>
+<p>Unsafe Rust tồn tại bởi vì, theo bản chất, phân tích tĩnh (static analysis) luôn có xu hướng thận trọng. Khi compiler cố xác định xem code có đảm bảo các điều kiện hay không, thà từ chối vài chương trình hợp lệ còn hơn chấp nhận vài chương trình không hợp lệ. Dù code <em>có thể</em> ổn, nếu Rust compiler không có đủ thông tin để tự tin, nó sẽ từ chối. Trong những trường hợp đó, bạn có thể dùng unsafe code để nói với compiler rằng: "Tin tao đi, tao biết tao đang làm gì." Nhưng hãy nhớ rằng bạn sử dụng unsafe Rust hoàn toàn tự chịu trách nhiệm: nếu dùng unsafe code sai, các vấn đề có thể phát sinh do memory unsafety, chẳng hạn như null pointer dereferencing.</p>
+<p>Một lý do khác khiến Rust có cái bản ngã unsafe này là vì phần cứng máy tính bên dưới vốn dĩ không an toàn. Nếu Rust không cho phép bạn thực hiện các thao tác unsafe, bạn sẽ không thể hoàn thành một số tác vụ nhất định. Rust cần cho phép bạn làm lập trình hệ thống cấp thấp (low-level systems programming), chẳng hạn như tương tác trực tiếp với hệ điều hành hay thậm chí viết hẳn một hệ điều hành. Làm việc với lập trình hệ thống cấp thấp là một trong những mục tiêu của ngôn ngữ. Hãy cùng khám phá những gì chúng ta có thể làm với unsafe Rust và cách làm như thế nào.</p>
+<p><a id="unsafe-superpowers"></a></p>
+<h3 id="performing-unsafe-superpowers">Thực Hành Các Siêu Năng Lực Unsafe</h3>
+<p>Để chuyển sang unsafe Rust, hãy dùng từ khóa <code>unsafe</code> rồi mở ra một block mới chứa đựng code unsafe. Bạn có thể thực hiện năm hành động trong unsafe Rust mà không thể làm trong safe Rust, những thứ chúng ta gọi là <em>unsafe superpowers</em>. Bộ siêu năng lực đó bao gồm khả năng:</p>
+<ol>
+<li>Dereference một raw pointer.</li>
+<li>Gọi một unsafe function hoặc method.</li>
+<li>Truy cập hoặc chỉnh sửa một mutable static variable.</li>
+<li>Implement một unsafe trait.</li>
+<li>Truy cập các field của <code>union</code>.</li>
+</ol>
+<p>Cần hiểu rõ rằng <code>unsafe</code> không tắt borrow checker hay vô hiệu hóa bất kỳ kiểm tra an toàn nào khác của Rust: Nếu bạn dùng một reference trong unsafe code, nó vẫn sẽ được kiểm tra. Từ khóa <code>unsafe</code> chỉ cho phép bạn tiếp cận năm tính năng này, những thứ không được compiler kiểm tra về memory safety. Bạn vẫn được hưởng một mức độ an toàn nhất định bên trong một unsafe block.</p>
+<p>Ngoài ra, <code>unsafe</code> không có nghĩa là code bên trong block đó nhất thiết phải nguy hiểm hay chắc chắn có vấn đề về memory safety: Ý định là với tư cách lập trình viên, bạn sẽ đảm bảo rằng code bên trong <code>unsafe</code> block sẽ truy cập bộ nhớ theo cách hợp lệ.</p>
+<p>Con người vẫn hay mắc sai lầm và lỗi luôn xảy ra, nhưng bằng cách yêu cầu năm thao tác unsafe này phải nằm bên trong các block được đánh dấu <code>unsafe</code>, bạn sẽ biết rằng bất kỳ lỗi nào liên quan đến memory safety đều phải nằm trong <code>unsafe</code> block. Hãy giữ cho các <code>unsafe</code> block nhỏ gọn; bạn sẽ biết ơn điều này sau này khi phải truy tìm lỗi bộ nhớ.</p>
+<p>Để cô lập unsafe code càng nhiều càng tốt, cách tốt nhất là bọc code đó trong một safe abstraction và cung cấp một safe API, điều mà tụi mình sẽ bàn ở phần sau trong chương khi chúng ta xem xét unsafe functions và methods. Một phần của thư viện chuẩn được implement dưới dạng safe abstraction trên unsafe code đã được kiểm toán kỹ. Việc bọc unsafe code trong một safe abstraction ngăn không cho việc sử dụng <code>unsafe</code> rò rỉ ra mọi nơi mà bạn hay người dùng của bạn muốn sử dụng tính năng được implement với <code>unsafe</code>, bởi vì dùng safe abstraction thì an toàn.</p>
+<p>Hãy cùng ngó qua từng trong số năm siêu năng lực unsafe. Chúng ta cũng sẽ nhìn vào một số abstraction cung cấp interface an toàn cho unsafe code.</p>
+<h3 id="dereferencing-a-raw-pointer">Dereference Một Raw Pointer</h3>
+<p>Ở Chương 4, trong phần <a href="ch04-02-references-and-borrowing.html#dangling-references">"Dangling References"</a>, chúng ta đề cập rằng compiler đảm bảo các references luôn hợp lệ. Unsafe Rust có hai kiểu mới gọi là <em>raw pointers</em> tương tự như references. Cũng như references, raw pointers có thể là immutable hay mutable và được viết lần lượt là <code>*const T</code> và <code>*mut T</code>. Dấu hoa thị không phải là toán tử dereference; nó là một phần của tên kiểu. Trong bối cảnh raw pointers, <em>immutable</em> có nghĩa là pointer không thể được gán trực tiếp sau khi được dereference.</p>
+<p>Khác với references và smart pointers, raw pointers:</p>
+<ul>
+<li>Được phép bỏ qua các quy tắc borrowing bằng cách có cả immutable và mutable pointers, hoặc nhiều mutable pointers tới cùng một vị trí</li>
+<li>Không được đảm bảo trỏ tới bộ nhớ hợp lệ</li>
+<li>Được phép là null</li>
+<li>Không implement bất kỳ cơ chế cleanup tự động nào</li>
+</ul>
+<p>Bằng cách từ bỏ việc để Rust đảm bảo những điều này, bạn có thể đánh đổi sự an toàn được đảm bảo để lấy hiệu suất cao hơn hoặc khả năng tương tác với ngôn ngữ khác hay phần cứng mà các đảm bảo của Rust không áp dụng được.</p>
+<p>Listing 20-1 cho thấy cách tạo ra một immutable và một mutable raw pointer.</p>
+<figure class="listing" id="listing-20-1">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut num = 5;
+
+    let r1 = &amp;raw const num;
+    let r2 = &amp;raw mut num;
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-1">Listing 20-1</a>: Tạo raw pointers với raw borrow operators</figcaption>
+</figure>
+<p>Hãy chú ý rằng chúng ta không dùng từ khóa <code>unsafe</code> trong code này. Ta có thể tạo raw pointers trong safe code; chỉ là không thể dereference raw pointers bên ngoài unsafe block thôi, như bạn sẽ thấy ngay sau đây.</p>
+<p>Chúng ta đã tạo raw pointers bằng cách dùng raw borrow operators: <code>&amp;raw const num</code> tạo ra một <code>*const i32</code> immutable raw pointer, và <code>&amp;raw mut num</code> tạo ra một <code>*mut i32</code> mutable raw pointer. Vì chúng ta tạo chúng trực tiếp từ một biến cục bộ, chúng ta biết những raw pointer cụ thể này hợp lệ, nhưng ta không thể đưa ra giả định đó cho bất kỳ raw pointer nào.</p>
+<p>Để minh họa điều này, tiếp theo ta sẽ tạo một raw pointer mà tính hợp lệ của nó không chắc chắn, bằng cách dùng từ khóa <code>as</code> để cast một giá trị thay vì dùng raw borrow operator. Listing 20-2 cho thấy cách tạo một raw pointer tới một vị trí tùy ý trong bộ nhớ. Cố dùng bộ nhớ tùy ý là hành vi không xác định: Có thể có dữ liệu ở địa chỉ đó hoặc không, compiler có thể tối ưu hóa code để không còn truy cập bộ nhớ đó, hoặc chương trình có thể bị kết thúc với segmentation fault. Thông thường, không có lý do tốt nào để viết code như vậy, đặc biệt trong các trường hợp có thể dùng raw borrow operator thay thế, nhưng vẫn có thể làm được.</p>
+<figure class="listing" id="listing-20-2">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let address = 0x012345usize;
+    let r = address as *const i32;
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-2">Listing 20-2</a>: Tạo raw pointer tới một địa chỉ bộ nhớ tùy ý</figcaption>
+</figure>
+<p>Nhớ rằng ta có thể tạo raw pointers trong safe code, nhưng không thể dereference raw pointers và đọc dữ liệu được trỏ tới. Trong Listing 20-3, chúng ta dùng toán tử dereference <code>*</code> trên một raw pointer đòi hỏi phải có <code>unsafe</code> block.</p>
+<figure class="listing" id="listing-20-3">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut num = 5;
+
+    let r1 = &amp;raw const num;
+    let r2 = &amp;raw mut num;
+
+    unsafe {
+        println!("r1 is: {}", *r1);
+        println!("r2 is: {}", *r2);
+    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-3">Listing 20-3</a>: Dereference raw pointers bên trong <code>unsafe</code> block</figcaption>
+</figure>
+<p>Tạo ra một pointer không gây hại gì; chỉ khi ta cố truy cập giá trị mà nó trỏ tới thì ta mới có thể gặp phải giá trị không hợp lệ.</p>
+<p>Cũng lưu ý rằng trong Listings 20-1 và 20-3, chúng ta đã tạo cả <code>*const i32</code> và <code>*mut i32</code> raw pointers đều trỏ tới cùng một vị trí bộ nhớ, nơi <code>num</code> được lưu. Nếu thay vào đó chúng ta cố tạo một immutable và một mutable reference tới <code>num</code>, code sẽ không compile vì các quy tắc ownership của Rust không cho phép có mutable reference đồng thời với bất kỳ immutable reference nào. Với raw pointers, chúng ta có thể tạo một mutable pointer và một immutable pointer tới cùng một vị trí và thay đổi dữ liệu qua mutable pointer, có thể tạo ra data race. Cẩn thận nhé!</p>
+<p>Với tất cả những nguy hiểm đó, tại sao bạn lại muốn dùng raw pointers? Một trường hợp sử dụng lớn là khi tương tác với C code, như bạn sẽ thấy ở phần tiếp theo. Trường hợp khác là khi xây dựng các safe abstraction mà borrow checker không thể hiểu được. Chúng ta sẽ giới thiệu unsafe functions và sau đó xem xét một ví dụ về safe abstraction sử dụng unsafe code.</p>
+<h3 id="calling-an-unsafe-function-or-method">Gọi Một Unsafe Function hoặc Method</h3>
+<p>Loại thao tác thứ hai bạn có thể thực hiện trong unsafe block là gọi các unsafe functions. Unsafe functions và methods trông y hệt như các functions và methods thông thường, nhưng chúng có thêm từ <code>unsafe</code> trước phần còn lại của định nghĩa. Từ khóa <code>unsafe</code> trong ngữ cảnh này cho biết function có những yêu cầu mà chúng ta cần đáp ứng khi gọi nó, vì Rust không thể đảm bảo chúng ta đã đáp ứng. Bằng cách gọi một unsafe function trong <code>unsafe</code> block, chúng ta đang nói rằng mình đã đọc tài liệu của function này và nhận trách nhiệm tuân thủ các điều khoản của nó.</p>
+<p>Đây là một unsafe function tên <code>dangerous</code> không làm gì trong thân hàm:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    unsafe fn dangerous() {}
+
+    unsafe {
+        dangerous();
+    }
+<span class="boring">}</span></code></pre>
+<p>Chúng ta phải gọi function <code>dangerous</code> trong một <code>unsafe</code> block riêng biệt. Nếu cố gọi <code>dangerous</code> mà không có <code>unsafe</code> block, chúng ta sẽ gặp lỗi:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+error[E0133]: call to unsafe function `dangerous` is unsafe and requires unsafe block
+ --&gt; src/main.rs:4:5
+  |
+4 |     dangerous();
+  |     ^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+
+For more information about this error, try `rustc --explain E0133`.
+error: could not compile `unsafe-example` (bin "unsafe-example") due to 1 previous error
+</code></pre>
+<p>Với <code>unsafe</code> block, chúng ta đang khẳng định với Rust rằng mình đã đọc tài liệu của function, hiểu cách dùng đúng, và đã xác minh rằng mình đang tuân thủ hợp đồng của function.</p>
+<p>Để thực hiện các thao tác unsafe trong thân của một <code>unsafe</code> function, bạn vẫn cần dùng <code>unsafe</code> block, giống như trong một function thông thường, và compiler sẽ cảnh báo nếu bạn quên. Điều này giúp giữ cho các <code>unsafe</code> block nhỏ nhất có thể, vì các thao tác unsafe có thể không cần thiết trong toàn bộ thân function.</p>
+<h4 id="creating-a-safe-abstraction-over-unsafe-code">Tạo Safe Abstraction Trên Unsafe Code</h4>
+<p>Chỉ vì một function chứa unsafe code không có nghĩa là chúng ta cần đánh dấu toàn bộ function là unsafe. Thực ra, bọc unsafe code trong một safe function là một abstraction phổ biến. Ví dụ điển hình, hãy nghiên cứu function <code>split_at_mut</code> từ thư viện chuẩn, vốn đòi hỏi một số unsafe code. Chúng ta sẽ khám phá cách có thể implement nó. Safe method này được định nghĩa trên mutable slices: Nó nhận một slice và tạo ra hai bằng cách tách slice tại index được đưa ra làm tham số. Listing 20-4 cho thấy cách dùng <code>split_at_mut</code>.</p>
+<figure class="listing" id="listing-20-4">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut v = vec![1, 2, 3, 4, 5, 6];
+
+    let r = &amp;mut v[..];
+
+    let (a, b) = r.split_at_mut(3);
+
+    assert_eq!(a, &amp;mut [1, 2, 3]);
+    assert_eq!(b, &amp;mut [4, 5, 6]);
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-4">Listing 20-4</a>: Sử dụng safe function <code>split_at_mut</code></figcaption>
+</figure>
+<p>Chúng ta không thể implement function này chỉ dùng safe Rust. Một nỗ lực có thể trông như Listing 20-5, sẽ không compile được. Để đơn giản, chúng ta sẽ implement <code>split_at_mut</code> như một function thay vì method và chỉ cho slices của giá trị <code>i32</code> thay vì kiểu generic <code>T</code>.</p>
+<figure class="listing" id="listing-20-5">
+<pre><code class="language-rust ignore does_not_compile">fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+    let len = values.len();
+
+    assert!(mid &lt;= len);
+
+    (&amp;mut values[..mid], &amp;mut values[mid..])
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let mut vector = vec![1, 2, 3, 4, 5, 6];
+</span><span class="boring">    let (left, right) = split_at_mut(&amp;mut vector, 3);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-5">Listing 20-5</a>: Một cách implement <code>split_at_mut</code> chỉ dùng safe Rust nhưng không compile được</figcaption>
+</figure>
+<p>Function này đầu tiên lấy tổng chiều dài của slice. Sau đó, nó kiểm tra rằng index được truyền làm tham số nằm trong slice bằng cách kiểm tra xem nó có nhỏ hơn hoặc bằng độ dài không. Phép kiểm tra này có nghĩa là nếu ta truyền một index lớn hơn độ dài, function sẽ panic trước khi cố dùng index đó.</p>
+<p>Sau đó, chúng ta trả về hai mutable slices trong một tuple: một từ đầu slice gốc tới index <code>mid</code> và một từ <code>mid</code> tới cuối slice.</p>
+<p>Khi cố compile code trong Listing 20-5, chúng ta sẽ gặp lỗi:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+error[E0499]: cannot borrow `*values` as mutable more than once at a time
+ --&gt; src/main.rs:6:31
+  |
+1 | fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+  |                         - let's call the lifetime of this reference `'1`
+...
+6 |     (&amp;mut values[..mid], &amp;mut values[mid..])
+  |     --------------------------^^^^^^--------
+  |     |     |                   |
+  |     |     |                   second mutable borrow occurs here
+  |     |     first mutable borrow occurs here
+  |     returning this value requires that `*values` is borrowed for `'1`
+  |
+  = help: use `.split_at_mut(position)` to obtain two mutable non-overlapping sub-slices
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `unsafe-example` (bin "unsafe-example") due to 1 previous error
+</code></pre>
+<p>Borrow checker của Rust không thể hiểu rằng chúng ta đang borrow các phần khác nhau của slice; nó chỉ biết chúng ta đang borrow từ cùng một slice hai lần. Borrow các phần khác nhau của một slice về cơ bản là ổn vì hai slice không chồng lên nhau, nhưng Rust không đủ thông minh để biết điều này. Khi ta biết code ổn nhưng Rust không biết, đây là lúc chúng ta cần tới unsafe code.</p>
+<p>Listing 20-6 cho thấy cách dùng <code>unsafe</code> block, raw pointer, và một số lời gọi hàm unsafe để làm cho việc implement <code>split_at_mut</code> hoạt động được.</p>
+<figure class="listing" id="listing-20-6">
+<pre class="playground"><code class="language-rust edition2024">use std::slice;
+
+fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+    let len = values.len();
+    let ptr = values.as_mut_ptr();
+
+    assert!(mid &lt;= len);
+
+    unsafe {
+        (
+            slice::from_raw_parts_mut(ptr, mid),
+            slice::from_raw_parts_mut(ptr.add(mid), len - mid),
+        )
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let mut vector = vec![1, 2, 3, 4, 5, 6];
+</span><span class="boring">    let (left, right) = split_at_mut(&amp;mut vector, 3);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-6">Listing 20-6</a>: Dùng unsafe code trong việc implement function <code>split_at_mut</code></figcaption>
+</figure>
+<p>Nhớ lại từ phần <a href="ch04-03-slices.html#the-slice-type">"The Slice Type"</a> ở Chương 4 rằng một slice là một pointer tới một số dữ liệu và độ dài của slice. Chúng ta dùng method <code>len</code> để lấy độ dài của slice và method <code>as_mut_ptr</code> để truy cập raw pointer của slice. Trong trường hợp này, vì chúng ta có mutable slice của các giá trị <code>i32</code>, <code>as_mut_ptr</code> trả về một raw pointer với kiểu <code>*mut i32</code>, được lưu trong biến <code>ptr</code>.</p>
+<p>Chúng ta giữ phép kiểm tra rằng index <code>mid</code> nằm trong slice. Sau đó, chúng ta đến phần unsafe code: Function <code>slice::from_raw_parts_mut</code> nhận một raw pointer và một độ dài, rồi tạo ra một slice. Chúng ta dùng function này để tạo một slice bắt đầu từ <code>ptr</code> và có độ dài <code>mid</code> item. Sau đó, chúng ta gọi method <code>add</code> trên <code>ptr</code> với <code>mid</code> làm tham số để lấy raw pointer bắt đầu tại <code>mid</code>, và tạo một slice dùng pointer đó và số item còn lại sau <code>mid</code> làm độ dài.</p>
+<p>Function <code>slice::from_raw_parts_mut</code> là unsafe vì nó nhận một raw pointer và phải tin tưởng rằng pointer này hợp lệ. Method <code>add</code> trên raw pointers cũng unsafe vì nó phải tin tưởng rằng vị trí offset cũng là một pointer hợp lệ. Do đó, chúng ta phải đặt <code>unsafe</code> block xung quanh các lời gọi tới <code>slice::from_raw_parts_mut</code> và <code>add</code> để có thể gọi chúng. Bằng cách nhìn vào code và thêm phép kiểm tra rằng <code>mid</code> phải nhỏ hơn hoặc bằng <code>len</code>, chúng ta có thể nói rằng tất cả các raw pointer được dùng trong <code>unsafe</code> block sẽ là các pointer hợp lệ tới dữ liệu trong slice. Đây là cách dùng <code>unsafe</code> chấp nhận được và phù hợp.</p>
+<p>Lưu ý rằng chúng ta không cần đánh dấu function <code>split_at_mut</code> kết quả là <code>unsafe</code>, và ta có thể gọi function này từ safe Rust. Chúng ta đã tạo một safe abstraction cho unsafe code với một implement của function dùng <code>unsafe</code> code theo cách an toàn, vì nó chỉ tạo các pointer hợp lệ từ dữ liệu mà function này có quyền truy cập.</p>
+<p>Ngược lại, việc dùng <code>slice::from_raw_parts_mut</code> trong Listing 20-7 có thể bị crash khi slice được sử dụng. Code này lấy một vị trí bộ nhớ tùy ý và tạo một slice dài 10.000 item.</p>
+<figure class="listing" id="listing-20-7">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::slice;
+
+    let address = 0x01234usize;
+    let r = address as *mut i32;
+
+    let values: &amp;[i32] = unsafe { slice::from_raw_parts_mut(r, 10000) };
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-7">Listing 20-7</a>: Tạo slice từ một vị trí bộ nhớ tùy ý</figcaption>
+</figure>
+<p>Chúng ta không sở hữu bộ nhớ tại vị trí tùy ý này, và không có gì đảm bảo slice mà code này tạo ra chứa các giá trị <code>i32</code> hợp lệ. Cố dùng <code>values</code> như thể nó là một slice hợp lệ dẫn đến hành vi không xác định.</p>
+<h4 id="using-extern-functions-to-call-external-code">Dùng <code>extern</code> Functions để Gọi Code Bên Ngoài</h4>
+<p>Đôi khi Rust code của bạn có thể cần tương tác với code viết bằng ngôn ngữ khác. Để làm điều này, Rust có từ khóa <code>extern</code> giúp tạo và sử dụng <em>Foreign Function Interface (FFI)</em>, đây là cách để một ngôn ngữ lập trình định nghĩa các functions và cho phép một ngôn ngữ lập trình khác (ngoại lai) gọi các functions đó.</p>
+<p>Listing 20-8 minh họa cách thiết lập tích hợp với function <code>abs</code> từ thư viện chuẩn C. Các functions được khai báo trong các <code>extern</code> blocks thường unsafe khi gọi từ Rust code, vì vậy <code>extern</code> blocks phải được đánh dấu là <code>unsafe</code>. Lý do là ngôn ngữ khác không thực thi các quy tắc và bảo đảm của Rust, và Rust không thể kiểm tra chúng, vì vậy trách nhiệm đảm bảo an toàn đặt lên vai lập trình viên.</p>
+<figure class="listing" id="listing-20-8">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">unsafe extern "C" {
+    fn abs(input: i32) -&gt; i32;
+}
+
+fn main() {
+    unsafe {
+        println!("Absolute value of -3 according to C: {}", abs(-3));
+    }
+}</code></pre>
+<figcaption><a href="#listing-20-8">Listing 20-8</a>: Khai báo và gọi một <code>extern</code> function được định nghĩa trong ngôn ngữ khác</figcaption>
+</figure>
+<p>Trong block <code>unsafe extern "C"</code>, chúng ta liệt kê tên và chữ ký của các external functions từ ngôn ngữ khác mà ta muốn gọi. Phần <code>"C"</code> định nghĩa <em>application binary interface (ABI)</em> mà external function sử dụng: ABI định nghĩa cách gọi function ở cấp độ assembly. ABI <code>"C"</code> phổ biến nhất và tuân theo ABI của ngôn ngữ lập trình C.</p>
+<p>Mọi item khai báo trong <code>unsafe extern</code> block đều ngầm định là unsafe. Tuy nhiên, một số FFI functions <em>thực sự</em> an toàn để gọi. Ví dụ, function <code>abs</code> từ thư viện chuẩn của C không có bất kỳ vấn đề memory safety nào, và ta biết nó có thể được gọi với bất kỳ <code>i32</code> nào. Trong những trường hợp như vậy, chúng ta có thể dùng từ khóa <code>safe</code> để nói rằng function cụ thể này an toàn để gọi dù nó nằm trong <code>unsafe extern</code> block. Khi đã thay đổi như vậy, gọi nó không còn yêu cầu <code>unsafe</code> block nữa, như được thể hiện trong Listing 20-9.</p>
+<figure class="listing" id="listing-20-9">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">unsafe extern "C" {
+    safe fn abs(input: i32) -&gt; i32;
+}
+
+fn main() {
+    println!("Absolute value of -3 according to C: {}", abs(-3));
+}</code></pre>
+<figcaption><a href="#listing-20-9">Listing 20-9</a>: Đánh dấu tường minh một function là <code>safe</code> trong <code>unsafe extern</code> block và gọi nó an toàn</figcaption>
+</figure>
+<p>Đánh dấu một function là <code>safe</code> không tự nhiên làm nó an toàn! Thay vào đó, đó là một lời hứa bạn đưa ra với Rust rằng nó an toàn. Bạn vẫn có trách nhiệm đảm bảo lời hứa đó được giữ!</p>
+<h4 id="calling-rust-functions-from-other-languages">Gọi Rust Functions từ Ngôn Ngữ Khác</h4>
+<p>Chúng ta cũng có thể dùng <code>extern</code> để tạo interface cho phép ngôn ngữ khác gọi Rust functions. Thay vì tạo cả một <code>extern</code> block, chúng ta thêm từ khóa <code>extern</code> và chỉ định ABI cần dùng ngay trước từ khóa <code>fn</code> cho function liên quan. Chúng ta cũng cần thêm annotation <code>#[unsafe(no_mangle)]</code> để nói với Rust compiler không thực hiện name mangling trên function này. <em>Mangling</em> là khi compiler thay đổi tên hàm chúng ta đặt thành một tên khác có chứa thêm thông tin cho các phần khác của quá trình biên dịch nhưng kém đọc được hơn. Mỗi compiler ngôn ngữ lập trình thực hiện mangling hơi khác nhau, vì vậy để một Rust function có thể được đặt tên từ ngôn ngữ khác, chúng ta phải tắt name mangling của Rust compiler. Đây là unsafe vì có thể có các xung đột tên giữa các thư viện khi không có mangling sẵn có, vì vậy là trách nhiệm của chúng ta đảm bảo tên mà ta chọn an toàn để export mà không cần mangling.</p>
+<p>Trong ví dụ sau, chúng ta làm cho function <code>call_from_c</code> có thể truy cập được từ C code, sau khi được compile thành shared library và linked từ C:</p>
+<pre><code>#[unsafe(no_mangle)]
+pub extern "C" fn call_from_c() {
+    println!("Just called a Rust function from C!");
+}
+</code></pre>
+<p>Cách dùng <code>extern</code> này chỉ cần <code>unsafe</code> trong attribute, không cần ở <code>extern</code> block.</p>
+<h3 id="accessing-or-modifying-a-mutable-static-variable">Truy Cập hoặc Chỉnh Sửa Mutable Static Variable</h3>
+<p>Trong cuốn sách này, chúng ta chưa từng bàn về global variables, thứ mà Rust có hỗ trợ nhưng có thể gây vấn đề với ownership rules của Rust. Nếu hai thread đang truy cập cùng một mutable global variable, có thể gây ra data race.</p>
+<p>Trong Rust, global variables được gọi là <em>static</em> variables. Listing 20-10 cho thấy ví dụ khai báo và dùng static variable với một string slice làm giá trị.</p>
+<figure class="listing" id="listing-20-10">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">static HELLO_WORLD: &amp;str = "Hello, world!";
+
+fn main() {
+    println!("value is: {HELLO_WORLD}");
+}</code></pre>
+<figcaption><a href="#listing-20-10">Listing 20-10</a>: Định nghĩa và dùng immutable static variable</figcaption>
+</figure>
+<p>Static variables tương tự như constants, thứ chúng ta đã bàn trong phần <a href="ch03-01-variables-and-mutability.html#declaring-constants">"Khai Báo Constants"</a> ở Chương 3. Tên của static variables theo quy ước là <code>SCREAMING_SNAKE_CASE</code>. Static variables chỉ có thể lưu các references với lifetime <code>'static</code>, có nghĩa là Rust compiler có thể tự tính ra lifetime và chúng ta không cần phải chú thích tường minh. Truy cập một immutable static variable là an toàn.</p>
+<p>Sự khác biệt tinh tế giữa constants và immutable static variables là các giá trị trong static variable có một địa chỉ cố định trong bộ nhớ. Sử dụng giá trị sẽ luôn truy cập cùng một dữ liệu. Constants, mặt khác, được phép duplicate dữ liệu của chúng bất cứ khi nào chúng được dùng. Sự khác biệt khác là static variables có thể là mutable. Truy cập và chỉnh sửa mutable static variables là <em>unsafe</em>. Listing 20-11 cho thấy cách khai báo, truy cập và chỉnh sửa một mutable static variable tên <code>COUNTER</code>.</p>
+<figure class="listing" id="listing-20-11">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">static mut COUNTER: u32 = 0;
+
+/// SAFETY: Calling this from more than a single thread at a time is undefined
+/// behavior, so you *must* guarantee you only call it from a single thread at
+/// a time.
+unsafe fn add_to_count(inc: u32) {
+    unsafe {
+        COUNTER += inc;
+    }
+}
+
+fn main() {
+    unsafe {
+        // SAFETY: This is only called from a single thread in `main`.
+        add_to_count(3);
+        println!("COUNTER: {}", *(&amp;raw const COUNTER));
+    }
+}</code></pre>
+<figcaption><a href="#listing-20-11">Listing 20-11</a>: Đọc hoặc ghi vào mutable static variable là unsafe.</figcaption>
+</figure>
+<p>Cũng như regular variables, chúng ta chỉ định mutability bằng từ khóa <code>mut</code>. Bất kỳ code nào đọc hoặc ghi từ <code>COUNTER</code> phải nằm trong <code>unsafe</code> block. Code trong Listing 20-11 compile và in <code>COUNTER: 3</code> như mong đợi vì nó single-threaded. Nếu nhiều thread truy cập <code>COUNTER</code> sẽ dẫn tới data races, vì vậy đây là hành vi không xác định. Do đó, chúng ta cần đánh dấu toàn bộ function là <code>unsafe</code> và ghi lại giới hạn an toàn để bất kỳ ai gọi function biết điều gì họ được và không được phép làm.</p>
+<p>Bất cứ khi nào chúng ta viết một unsafe function, quy ước là viết một comment bắt đầu bằng <code>SAFETY</code> giải thích người gọi cần làm gì để gọi function an toàn. Tương tự, bất cứ khi nào chúng ta thực hiện một thao tác unsafe, quy ước là viết một comment bắt đầu bằng <code>SAFETY</code> giải thích các quy tắc an toàn được tuân thủ như thế nào.</p>
+<p>Ngoài ra, compiler mặc định sẽ từ chối bất kỳ nỗ lực nào tạo references tới mutable static variable thông qua một compiler lint. Bạn phải hoặc là tường minh bỏ qua các bảo vệ của lint đó bằng cách thêm annotation <code>#[allow(static_mut_refs)]</code> hoặc truy cập mutable static variable qua raw pointer được tạo với một trong các raw borrow operators. Điều đó bao gồm các trường hợp reference được tạo không hiển thị, như khi nó được dùng trong <code>println!</code> trong code listing này. Yêu cầu references tới static mutable variables phải được tạo qua raw pointers giúp làm cho các yêu cầu an toàn để sử dụng chúng rõ ràng hơn.</p>
+<p>Với dữ liệu mutable có thể truy cập toàn cục, thật khó để đảm bảo không có data races, đó là lý do tại sao Rust xem mutable static variables là unsafe. Khi có thể, tốt hơn là sử dụng các kỹ thuật concurrency và thread-safe smart pointers chúng ta đã bàn trong Chương 16 để compiler kiểm tra việc truy cập dữ liệu từ các thread khác nhau được thực hiện an toàn.</p>
+<h3 id="implementing-an-unsafe-trait">Implement Một Unsafe Trait</h3>
+<p>Chúng ta có thể dùng <code>unsafe</code> để implement một unsafe trait. Một trait là unsafe khi ít nhất một trong các methods của nó có một số điều kiện bất biến mà compiler không thể xác minh. Chúng ta khai báo một trait là <code>unsafe</code> bằng cách thêm từ khóa <code>unsafe</code> trước <code>trait</code> và đánh dấu việc implement trait là <code>unsafe</code> cũng vậy, như được thể hiện trong Listing 20-12.</p>
+<figure class="listing" id="listing-20-12">
+<pre class="playground"><code class="language-rust edition2024">unsafe trait Foo {
+    // methods go here
+}
+
+unsafe impl Foo for i32 {
+    // method implementations go here
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-20-12">Listing 20-12</a>: Định nghĩa và implement một unsafe trait</figcaption>
+</figure>
+<p>Bằng cách dùng <code>unsafe impl</code>, chúng ta đang hứa rằng mình sẽ tuân thủ các điều kiện bất biến mà compiler không thể xác minh.</p>
+<p>Ví dụ điển hình, nhớ lại marker traits <code>Send</code> và <code>Sync</code> chúng ta đã bàn trong phần <a href="ch16-04-extensible-concurrency-sync-and-send.html">"Extensible Concurrency with <code>Send</code> and <code>Sync</code>"</a> ở Chương 16: Compiler implement các traits này tự động nếu các types của ta được cấu thành từ những types khác đều implement <code>Send</code> và <code>Sync</code>. Nếu chúng ta implement một type chứa một type không implement <code>Send</code> hoặc <code>Sync</code>, chẳng hạn raw pointers, và ta muốn đánh dấu type đó là <code>Send</code> hay <code>Sync</code>, thì phải dùng <code>unsafe</code>. Rust không thể xác minh type của chúng ta đáp ứng các đảm bảo rằng nó có thể được gửi an toàn qua các thread hoặc truy cập từ nhiều thread; do đó, chúng ta cần tự kiểm tra thủ công và chỉ ra điều đó với <code>unsafe</code>.</p>
+<h3 id="accessing-fields-of-a-union">Truy Cập Các Field Của Union</h3>
+<p>Hành động cuối cùng chỉ hoạt động với <code>unsafe</code> là truy cập các field của union. Một <em>union</em> tương tự như <code>struct</code>, nhưng chỉ một field được khai báo được sử dụng trong một instance cụ thể tại một thời điểm. Unions chủ yếu được dùng để tương tác với unions trong C code. Truy cập các field của union là unsafe vì Rust không thể đảm bảo kiểu dữ liệu đang được lưu trong instance union hiện tại. Bạn có thể tìm hiểu thêm về unions trong <a href="../reference/items/unions.html">the Rust Reference</a>.</p>
+<h3 id="using-miri-to-check-unsafe-code">Dùng Miri để Kiểm Tra Unsafe Code</h3>
+<p>Khi viết unsafe code, bạn có thể muốn kiểm tra rằng những gì mình viết thực sự an toàn và đúng đắn. Một trong những cách tốt nhất để làm điều đó là dùng Miri, một công cụ Rust chính thức để phát hiện hành vi không xác định (undefined behavior). Trong khi borrow checker là một công cụ <em>static</em> hoạt động lúc compile time, Miri là một công cụ <em>dynamic</em> hoạt động lúc runtime. Nó kiểm tra code của bạn bằng cách chạy chương trình, hoặc test suite của nó, và phát hiện khi bạn vi phạm các quy tắc mà nó hiểu về cách Rust nên hoạt động.</p>
+<p>Dùng Miri yêu cầu một nightly build của Rust (thứ chúng ta bàn nhiều hơn trong <a href="appendix-07-nightly-rust.html">Phụ lục G: How Rust is Made and "Nightly Rust"</a>). Bạn có thể cài đặt cả nightly version của Rust và công cụ Miri bằng cách gõ <code>rustup +nightly component add miri</code>. Điều này không thay đổi phiên bản Rust mà dự án bạn sử dụng; nó chỉ thêm công cụ vào hệ thống của bạn để bạn có thể dùng khi muốn. Bạn có thể chạy Miri trên một dự án bằng cách gõ <code>cargo +nightly miri run</code> hoặc <code>cargo +nightly miri test</code>.</p>
+<p>Để thấy điều này hữu ích thế nào, hãy xem điều gì xảy ra khi chúng ta chạy nó với Listing 20-7.</p>
+<pre><code class="language-console">$ cargo +nightly miri run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `file:///home/.rustup/toolchains/nightly/bin/cargo-miri runner target/miri/debug/unsafe-example`
+warning: integer-to-pointer cast
+ --&gt; src/main.rs:5:13
+  |
+5 |     let r = address as *mut i32;
+  |             ^^^^^^^^^^^^^^^^^^^ integer-to-pointer cast
+  |
+  = help: this program is using integer-to-pointer casts or (equivalently) `ptr::with_exposed_provenance`, which means that Miri might miss pointer bugs in this program
+  = help: see https://doc.rust-lang.org/nightly/std/ptr/fn.with_exposed_provenance.html for more details on that operation
+  = help: to ensure that Miri does not miss bugs in your program, use Strict Provenance APIs (https://doc.rust-lang.org/nightly/std/ptr/index.html#strict-provenance, https://crates.io/crates/sptr) instead
+  = help: you can then set `MIRIFLAGS=-Zmiri-strict-provenance` to ensure you are not relying on `with_exposed_provenance` semantics
+  = help: alternatively, `MIRIFLAGS=-Zmiri-permissive-provenance` disables this warning
+  = note: BACKTRACE:
+  = note: inside `main` at src/main.rs:5:13: 5:32
+
+error: Undefined Behavior: pointer not dereferenceable: pointer must be dereferenceable for 40000 bytes, but got 0x1234[noalloc] which is a dangling pointer (it has no provenance)
+ --&gt; src/main.rs:7:35
+  |
+7 |     let values: &amp;[i32] = unsafe { slice::from_raw_parts_mut(r, 10000) };
+  |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Undefined Behavior occurred here
+  |
+  = help: this indicates a bug in the program: it performed an invalid operation, and caused Undefined Behavior
+  = help: see https://doc.rust-lang.org/nightly/reference/behavior-considered-undefined.html for further information
+  = note: BACKTRACE:
+  = note: inside `main` at src/main.rs:7:35: 7:70
+
+note: some details are omitted, run with `MIRIFLAGS=-Zmiri-backtrace=full` for a verbose backtrace
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+</code></pre>
+<p>Miri đúng đắn cảnh báo chúng ta rằng ta đang cast integer thành pointer, điều có thể là vấn đề, nhưng Miri không thể xác định xem có vấn đề hay không vì nó không biết pointer xuất phát từ đâu. Sau đó, Miri trả về lỗi ở Listing 20-7 có hành vi không xác định vì chúng ta có dangling pointer. Nhờ Miri, chúng ta biết có nguy cơ về hành vi không xác định, và có thể suy nghĩ cách làm code an toàn. Trong một số trường hợp, Miri thậm chí có thể đưa ra gợi ý để sửa lỗi.</p>
+<p>Miri không bắt mọi thứ có thể sai khi viết unsafe code. Miri là công cụ dynamic analysis, nên nó chỉ bắt các vấn đề với code thực sự được chạy. Điều đó có nghĩa là bạn sẽ cần dùng nó kết hợp với các kỹ thuật testing tốt để tăng sự tự tin về unsafe code bạn đã viết. Miri cũng không bao phủ mọi cách code của bạn có thể bị unsound.</p>
+<p>Nói cách khác: Nếu Miri <em>có</em> bắt được vấn đề, bạn biết có bug, nhưng chỉ vì Miri <em>không</em> bắt được bug không có nghĩa là không có vấn đề. Nó có thể bắt rất nhiều thứ. Hãy thử chạy nó trên các ví dụ khác về unsafe code trong chương này và xem nó nói gì!</p>
+<p>Bạn có thể tìm hiểu thêm về Miri tại <a href="https://github.com/rust-lang/miri">GitHub repository của nó</a>.</p>
+<p><a id="when-to-use-unsafe-code"></a></p>
+<h3 id="using-unsafe-code-correctly">Dùng Unsafe Code Đúng Cách</h3>
+<p>Dùng <code>unsafe</code> để sử dụng một trong năm siêu năng lực vừa bàn tới không phải là sai hay đáng chê bai, nhưng nó đòi hỏi sự khéo léo hơn để làm đúng vì compiler không thể hỗ trợ duy trì memory safety. Khi bạn có lý do để dùng <code>unsafe</code> code, bạn cứ làm thôi, và việc có annotation <code>unsafe</code> tường minh giúp dễ truy tìm nguồn gốc vấn đề khi chúng xảy ra. Bất cứ khi nào bạn viết unsafe code, bạn có thể dùng Miri để giúp tự tin hơn rằng code bạn đã viết tuân thủ các quy tắc của Rust.</p>
+<p>Để khám phá sâu hơn nhiều về cách làm việc hiệu quả với unsafe Rust, hãy đọc hướng dẫn chính thức của Rust về <code>unsafe</code>, <a href="https://doc.rust-lang.org/nomicon/">The Rustonomicon</a>.</p>
+
+  <div class="page-nav bottom"><a href="ch20-00-advanced-features.html">← Trước</a><a href="ch20-02-advanced-traits.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

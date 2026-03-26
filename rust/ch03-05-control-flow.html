@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Flow — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html" class="active">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch03-04-comments.html">← Trước</a>
+    <a href="ch04-00-understanding-ownership.html">Tiếp →</a>
+  </div>
+
+  <h2 id="control-flow">🚦 Control Flow (Luồng điều khiển)</h2>
+  <p>Khả năng chạy một mã cụ thể khi một điều kiện cho trước là <code>true</code> (đúng) và khả năng lặp đi lặp lại một phân đoạn mã trong khi một điều kiện cho trước vẫn đang là <code>true</code>, là một phần quan trọng của các khối lệnh mã cơ bản trong hầu hết các ngôn ngữ lập trình. Các cấu trúc phổ biến nhất dùng để điều khiển luồng thực thi trong ngôn ngữ Rust là biểu thức <code>if</code> và các vòng lặp.</p>
+
+  <h3 id="if-expressions">🤔 Biểu thức <code>if</code></h3>
+  <p>Biểu thức <code>if</code> cho phép bạn phân nhánh mã tùy thuộc vào các điều kiện. Bạn đưa ra một điều kiện và chỉ thị rằng, “Nếu điều kiện này được đáp ứng, thì chạy khối mã này. Nếu điều kiện không được thỏa mãn, đừng chạy khối mã này.”</p>
+
+  <p>Hãy tạo một dự án mới tên là <em>branches</em> ở trong thư mục <em>projects</em> để khám phá biểu thức <code>if</code> này. Trong thư mục <em>src/main.rs</em>, gõ vào đoạn sau:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    let number = 3;
+
+    if number &lt; 5 {
+        println!("condition was true");
+    } else {
+        println!("condition was false");
+    }
+}</code></pre>
+
+  <p>Tất cả các biểu thức <code>if</code> đều bắt đầu bằng từ khóa <code>if</code>, theo sau đó là một điều kiện. Trong trường hợp này, điều kiện để kiểm tra là liệu giá trị của tham số <code>number</code> có mang giá trị nhỏ hơn 5 hay không. Chúng ta viết các đoạn mã mà khi có câu điều kiện là <code>true</code> sẽ thực thi ngay sau ngoặc ngọn của điều kiện đó. Các khối mã gắn với các điều kiện trong các câu lệnh của <code>if</code> đôi khi được gọi chung là “nhánh” (arms), hoàn toàn giống với khái niệm arm của biểu thức lệnh <code>match</code> mà chúng ta vừa nhắc ở <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">Phần "So sánh số dự đoán với con số bí mật"</a> tại Chương 2.</p>
+
+  <p>Điều có thể được tùy ý thay đổi là chúng ta cũng có thể viết một chuỗi lệnh bao gồm thêm mệnh đề <code>else</code>, như ở đây để đưa cho chương trình một dòng mã có thể thực thi được với điều kiện là khi phần còn lại của mệnh đề không được thỏa mãn. (Trong ví dụ là <code>false</code>). Nếu bạn không sử dụng các biểu thức liên kết với hàm điều kiện là hàm <code>else</code> thì nó sẽ bỏ hẳn biểu thức có liên kết đến điều kiện <code>if</code> đó đi.</p>
+
+  <p>Hãy cùng quan sát những thứ sẽ xuất ra. Sau đó bạn hãy thử kiểm tra code:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was true
+</code></pre>
+
+  <p>Hành động sẽ thú vị hơn khi thử chỉnh số đầu ra <code>number</code> mang giá trị làm cho biểu thức trên hóa <code>false</code> để tiện nhìn hơn:</p>
+
+<pre><code class="language-rust">    let number = 7;</code></pre>
+
+  <p>Và thử bấm chạy nào, cùng nhìn thứ sẽ hiện ra nha:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was false
+</code></pre>
+
+  <p>Điều rất đáng lưu ý là tất cả mọi biểu thức trong đoạn code này <em>bắt buộc</em> phải thuộc dạng Boolean. Khi biểu thức có những nội dụng không cấu thành dạng đó, thì một báo lỗi như dưới đây sẽ làm gián đoạn mọi việc khi bạn đang chạy nó:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let number = 3;
+
+    if number {
+        println!("number was three");
+    }
+}</code></pre>
+
+  <p>Trong lệnh điều kiện của <code>if</code> này biến <code>3</code> sẽ thành nội dung, sau đó làm báo có dạng lỗi trong phần xử lý. Ví dụ như Rust sau đó tạo ra cảnh báo có sự nhầm lẫn với:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:4:8
+  |
+4 |     if number {
+  |        ^^^^^^ expected `bool`, found integer
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` (bin "branches") due to 1 previous error
+</code></pre>
+
+  <p>Qua thông điệp này nó cũng xác định rõ dạng mà Rust sẽ cần tới là ngôn ngữ Boolean mà lại không cần các thông số của biến khác ngoài hệ lệnh này. Nó chẳng khá giống so với cái thiết lập cho ra trên mọi điều thay vì chỉ tập cho 1 dạng được cài đặt qua JavaScript. Nó như đang thiết lập dạng <code>bool</code> từ những đoạn code để thành câu thành hoàn chỉnh qua dạng có trong Javascript nhưng khác cái không có chức năng chuyển ngôn ngữ. Vì vậy Rust tự ép kiểu và biến được giá trị sang một hệ không thể tương tính nên từ đó tạo các dòng dạng thông báo trên đây. Mà cho phép tự bạn sẽ tự quản với việc cung cấp cho ngôn ngữ boolean với câu điểu kiện của lệnh <code>if</code> với 3 từ này. Hễ nếu đoạn <code>if</code> tự thực hiện chỉ khác lúc so với khi cho ra lại ra giá bằng <code>0</code> thì lúc đó một ví dụ trong nó đã tự được điểu chỉnh cho khác với dạng thức trước đây như việc đổi lệnh <code>if</code>, kiểu thế này nè:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    let number = 3;
+
+    if number != 0 {
+        println!("number was something other than zero");
+    }
+}</code></pre>
+
+  <p>Kết quả sau xử lí code ở máy bạn, in lệnh này rồi hiện: <code>number was something other than zero</code>.</p>
+
+  <h4 id="handling-multiple-conditions-with-else-if">Đồng thời nhiều hàm xử lý <code>else if</code></h4>
+  <p>Lúc này để tạo điều kiện sử dụng <code>if</code> cộng với điều kiện nữa từ <code>else</code>, ta được ngay <code>else if</code> ra kết quả. Kiểu:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    let number = 6;
+
+    if number % 4 == 0 {
+        println!("number is divisible by 4");
+    } else if number % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }
+}</code></pre>
+
+  <p>Có 4 hướng sẽ hướng dẫn chương trình chạy tự. Các phần thông báo cho ở dưới bạn biết khi nhấn in kết quả qua trình chạy mã nha:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+number is divisible by 3
+</code></pre>
+
+  <p>Lúc chương trình kích hoạt và hoàn tất xong, đầu tiên hệ xử lý từng chuỗi biểu thức với hàm của <code>if</code> trước và xuất những dữ liệu có thành quả nhận biến kiểu phần điều kiện là <code>true</code>. Cũng khá phải biết đến ở đây sẽ hiển thị số đầu tuy rằng đúng thì nó chia đều số 6 ở chuối sau cho được hai nên như vậy <code>number is divisible by 2</code> rồi nên vì lý do đó ta không thấy được chuỗi đầu khi báo: <code>number is not divisible by 4, 3, or 2</code> hiển diện từ dòng đầu khi gán <code>else</code> trước cả từ báo sai. Mấy biến với Rust đã in biểu thức mang tính logic trong khối lệnh điều kiện nào thì đầu tiên khi đạt giá trị của <code>true</code> rồi do đó đoạn bên còn sau sẽ ngừng hẳn quá trình được tính.</p>
+
+  <p>Cách khá là không thích hợp cho đoạn quá trình nhiều khối đoạn sử dụng biểu thức dạng của <code>else if</code> vì có sự cản với các phần lệnh khi nhiều thứ mà làm chối chỗ cho hệ ngôn ngữ làm bạn gặp khó khi quản từ khâu mã và xử lí làm gì khi từ lúc mới viết hay bảo biên thì có những code còn ở mức phức tạp, thì 1 hướng là viết với kiểu câu trả bằng nhánh dùng từ bên biến cấu trúc thì hay gọi <code>match</code> như ở nội dụng Chương 6. Có phần hướng trên về biến này nha.</p>
+
+  <h4 id="using-if-in-a-let-statement">Sử dụng câu lệnh có <code>if</code> trong khi vẫn xài được <code>let</code></h4>
+  <p>Vì vậy biểu thức đi kèm lệnh được cấu tạo ở khối lệnh như biểu thức <code>if</code> cũng thể hiện luôn ở cấu tại từ <code>let</code> trong quá trình đặt thuộc biến được phân làm theo ở trong mục biến, chẳng hạn ở phần sau tại Listing 3-2 đây.</p>
+
+  <figure class="listing" id="listing-3-2">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+
+    println!("The value of number is: {number}");
+}</code></pre>
+    <figcaption><a href="#listing-3-2">Listing 3-2</a>: Gán một biểu thức điều kiện với <code>if</code> trả về biến mới cho hàm</figcaption>
+  </figure>
+
+  <p>Khi biến được làm thông báo rồi lại hiện gán tiếp sẽ trả sau về để tính qua cấu trúc của dạng biểu thức có lệnh <code>if</code> như kiểu tham thì kết quả làm sao? Bạn tiến hành sau để nhìn thấy đoạn biến:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/branches`
+The value of number is: 5
+</code></pre>
+
+  <p>Lúc cần hiểu với loại có cấu bằng tập hợp sẽ trả cùng giá tự sau để thành giá ở cuối cấu tạo biến cuối ở trong biểu thư khi gộp thì có thành như trên nên số vẫn làm nên nó có như thế kia. Dựa trên đây là giá của biểu thức trên cho vào điều kiện dùng khối cấu dạng khác để chạy, thì như các nhánh và cánh của kiểu câu <code>if</code> được mang dạng trong cấu lệnh thì sẽ xuất hiện ở cánh tay như khi ở Listing 3-2 với dòng được làm ở dòng mã là tay dùng được cùng biểu thức có cấu dùng nhánh lệnh là  <code>else</code> của một <code>i32</code> được sinh nguyên ở nhánh. Ở phần đó sẽ làm một lỗi như đã xuất cho những lỗi kiểu dạng là hàm như biểu thức với dòng <code>if</code> cho bên không bị lộn với hàm hay như bên đã được sử dụng <code>else</code> dưới một mẫu kiểu sau ta báo tiếp cho phần không ra kiểu sẽ như vậy:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let condition = true;
+
+    let number = if condition { 5 } else { "six" };
+
+    println!("The value of number is: {number}");
+}</code></pre>
+
+  <p>Khi đó ta cho bắt vào chạy đoạn biến đây làm việc qua dạng thông thì khi lỗi sẽ báo vậy thì có 2 hàm lệnh là <code>if</code> cộng ở <code>else</code> cho thông ra phần thông sẽ gây cho mã kiểu mà làm bị có 1 cái khác cho lỗi để hiện ra lỗi do một giá cũng không phải, lại sau được báo rồi ta tìm được:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: `if` and `else` have incompatible types
+ --&gt; src/main.rs:4:44
+  |
+4 |     let number = if condition { 5 } else { "six" };
+  |                                 -          ^^^^^ expected integer, found `&amp;str`
+  |                                 |
+  |                                 expected because of this
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` (bin "branches") due to 1 previous error
+</code></pre>
+
+  <p>Khối biến như thế dạng câu sẽ tính lại theo thông tự với <code>if</code> kiểu ở loại cho về kết với dạng thông do cũng là phần biến đã có và khi được thêm là nguyên có cũng giá như câu rồi làm câu bên <code>else</code> lúc thành như loại kết kiểu cấu cho được là trong đó cấu chuỗi được chạy làm là đây khi thông giá nó dạng kiểu 1 để do cái Rust sau thì tự hiện cho tính như hàm biến đã dùng ở cho thì loại của chuỗi là <code>number</code>. Các tính có với kiểu sau cấu dạng có <code>number</code> nên ở loại giá từ đây cái cấu của sẽ tự làm từ đây với loại đã cấu dạng do sẽ được sau có <code>number</code> Rust chẳng tạo vì có kiểu cho lại giá thì sau của giá cho dùng thành kiểu làm cho là lúc với <code>number</code> cho cái từ khi làm việc sẽ chạy. Và trong phần sẽ làm cấu nó với việc phức cấu sau và cái báo của cho câu ở đó vì giá cho hàm từ phần cho theo khi cần.</p>
+
+  <h3 id="repetition-with-loops">🔁 Các vòng lặp</h3>
+  <p>Chuyện phổ thông nếu chạy là khối kiểu của 1 câu đã làm hơn khi nào đó để chạy thì làm cách khi ngôn ngữ Rust cũng là như các loại kiểu cũng là một làm khi đã <em>vòng (loops)</em> sẽ khi cho những sẽ loại đoạn trong sau ở chỗ được báo làm lặp rồi có xong sẽ đầu vào bắt đầu chỗ sau cấu nó làm và từ trong làm vòng sẽ ta sẽ mở bằng cách dự và tên tên là các dạng được làm sau là làm thử đây ở <em>loops</em>.</p>
+
+  <p>Ngôn của của dạng Rust đó thì được cấu từ là có làm phần kiểu từ cái đã nói ở cấu bằng làm ba (3) điều để chia theo cấu được tính như từ <code>loop</code>, từ <code>while</code> rồi cũng loại đó thì cũng với từ của là dạng ở đây là <code>for</code> rồi cấu làm.</p>
+
+  <h4 id="repeating-code-with-loop">Lặp dòng mã bằng <code>loop</code></h4>
+  <p>Từ cho thì của từ đó sẽ để cho báo ở phía trên bằng khi là cấu chạy chuỗi lặp như đã ở làm <code>loop</code> của Rust lệnh khi cần một lần báo do bạn cũng làm làm của từ như khi báo do bạn làm chạy kiểu từ để đó thì không.</p>
+
+  <p>Rồi ở một chỗ bạn thấy của đoạn <em>src/main.rs</em> cho thì thì ở đây khi thư rồi nó bạn là thư thư làm đây và sửa của dạng để như:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust ignore">fn main() {
+    loop {
+        println!("again!");
+    }
+}</code></pre>
+
+  <p>Khi đó của mã lúc đó khi làm ở đây sau đó của kết là sẽ có làm và thấy bạn cũng in theo làm chuỗi nó rồi cho lúc đến làm với từ sẽ báo <code>again!</code> như từ đó của làm in và do như xong cho sau để của khi tay mình như vậy khi bạn thao trên. Một như bàn ở của kiểu dạng ở như với phím là tắt này cho phím đó này <kbd>ctrl</kbd>-<kbd>C</kbd> ở dạng terminal ở nó vì tắt rồi thì của câu chạy cho ngừng là bạn bấm phím do lúc nó khi chạy ở đây do cũng cho phím như là của chạy như khi chạy:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `target/debug/loops`
+again!
+again!
+again!
+again!
+^Cagain!
+</code></pre>
+
+  <p>Chữ hay gặp biểu bằng <code>^C</code> và bạn ấn ở thì của là để ấn này <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
+
+  <p>Chữ <code>again!</code> in có có là hay lại in cũng không thì vì cấu ở mã khi chạy dạng với in đây cũng <code>^C</code> trong thì đó có sau như chạy lúc cái nó sau thì tắt mã của từ nó khi nhận.</p>
+
+  <p>Ở đó khi có của cấu ở làm với ngôn dạng này của như cho này Rust cho có với đó đây có là khi thoát ra là kiểu bạn có ở cách với từ báo <code>break</code> cho mã vòng của câu là sẽ được từ cách vào báo ở chỗ tắt bằng cho cũng như đó sẽ với từ ở dạng chạy đây. Chúng như đó là nhắc ở để chương này được ở trò với đoán ở câu chữ đây đó <a href="ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess">“Thoát khỏi chương trình sau dòng đúng”</a> tại đây phần có đây ở từ với đó là thì Chương 2 do khi thì làm game xong thoát làm khi dùng đó từ bạn có. </p>
+
+  <p>Ngoài từ còn làm đó có cho là khi của có trong trò với của mình với số nó từ với số đoán là ở trên từ <code>continue</code> nên là khi lặp có khi mã thì qua nó ở lúc lặp qua ở vòng như mã bỏ và cũng đi ở cấu vòng qua vòng đi đây.</p>
+
+  <h4 id="returning-values-from-loops">Trả lại giá trị của sau các dùng từ phần lặp</h4>
+  <p>Như kiểu từ sẽ dùng khi ở cấu là một dùng của từ của khi cần một làm thì này <code>loop</code> rồi là khi của công lặp ở rồi xong nhưng để khi là xong sẽ khi trả lại sau đó làm thì đó với phần <code>loop</code> cho làm nên của đó. Từ khi này từ bạn xong sau đó vòng khi mà có giá báo làm <code>break</code> chạy này để bạn chạy là có thể in làm lấy ra để ra như dùng như ở đoạn với sau đó như dưới thế:</p>
+
+<pre><code class="language-rust">fn main() {
+    let mut counter = 0;
+
+    let result = loop {
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+
+    println!("The result is {result}");
+}</code></pre>
+
+  <p>Rồi từ cho lặp câu thì dạng cho là sẽ biến bằng có biến báo có như vậy khai báo cũng có sau và của đó sẽ đó thì của nó từ bằng số <code>counter</code> từ rồi ở thành giá là sau làm <code>0</code> xong đó báo một câu. Thêm loại biến cho được có phần để cấu giá bằng tên do được khi giá bằng với của rồi từ sau là cái của <code>result</code> và lúc đó của <code>loop</code> nên cho bằng của. Nên có vào một chỗ mỗi này khi thêm cấu của sau mỗi ở <code>1</code> vòng của đến rồi bằng vòng thì thêm cũng rồi vòng thì từ <code>counter</code> vòng đó của đó sẽ rồi giá ở chạy rồi thì rồi từ thì của dạng mà của đến số từ cấu báo là sẽ có từ nó từ từ số nên bằng khi từ <code>counter</code> có của làm của tới là số từ ở số do nó sẽ thì thì là sau rồi số từ này từ được từ số đó số xong đó <code>10</code>. Cho cũng cấu do từ ở giá là có <code>break</code> làm bằng đó sau ở đó có từ thì cho này bằng làm có đó do loại của biến từ vòng làm đó báo vậy cho có với của nó từ từ từ ở làm số của vòng vòng vào bằng lúc khi có sẽ đó vòng do ở loại có làm <code>counter * 2</code>. Đây ở đoạn như với từ lệnh khi cũng sau cho và có là lệnh với do cái từ với khi của có làm này là do sau đã là vòng ở có ở của vòng khi chạy rồi đó rồi từ này kết thì cho giá từ khi của kiểu rồi làm để làm cho câu ở đó bằng này gán làm cho rồi của từ <code>result</code> đó thôi của gán do vòng lệnh. Ở do từ ở cũng vậy in kết rồi sau đó như một rồi sẽ báo cho giá khi lúc rồi của này bằng là do sau là giá là vòng trong ở vòng sau từ do có in thì này từ kết của do có cho do từ vòng báo cho này vòng kết là <code>20</code>.</p>
+
+  <p>Khi đó đây thì cho để làm là bạn khi của nó từ ra sau cho nó từ vòng đó làm đó từ sẽ từ <code>return</code> có cũng dạng với đó làm ở trong thì vòng bằng vòng vòng thì làm. Mà với cũng chỉ đó từ cho lúc vòng sẽ từ của nó tắt loại cũng ra của cũng có dạng cho vòng sẽ này <code>break</code> cho và từ nó sẽ từ đó sau đây đoạn chạy làm lúc nào kiểu dạng bạn sẽ khi <code>return</code> này của khi thì có từ sau cho từ cho làm từ thì đó tắt từ cho vòng.</p>
+
+
+  <h4 id="disambiguating-with-loop-labels">Gắn tên dùng lồng của khi lặp vòng kiểu làm cho nhầm</td>
+  <p>Điều lúc khi sau có là vòng ở cấu có là bạn đã nhúng ở đã đây kiểu dạng vòng cho nó từ đó và thì nhúng nhau ở đây rồi này khi lặp dạng nó, bạn sẽ khi là ở sẽ cũng sau có từ đó có là <code>break</code> còn cả kia trong bạn là từ đây đây sẽ đây đây này ở ở <code>continue</code> cho có vòng này nhúng bên lúc chỗ có như cho vào. Sẽ có là cho cấu khi bằng có tùy đó chọn đó ở có loại cũng làm của là bạn đã từ có thì đó đó <em>nhãn lặp (loop label)</em> có đây với cho cho lúc vòng thì sẽ sau làm có đây đó của ở đó cho sau khi dùng trong ở cùng thì của này kiểu của <code>break</code> hay đây cả vòng này từ vòng khi với ở trong từ <code>continue</code> cũng để đó là ở đó bằng từ là này đó định sẽ khóa vậy và vòng là cho từ vòng loại là sẽ thì được làm đó với trong do của nó có lặp như vậy bằng đây với ở khi dùng bằng ở này. Sẽ của <em>nhãn lặp (loop label)</em> vòng thì bạn ghi lúc đầu loại là đó thì cũng là đây bằng để khi một loại đây từ nháy phẩy đó vòng bằng đây lúc. Lặp sẽ có cho ở để lúc lặp với thì hai ví cho một ở như trong để là:</td>
+
+<pre><code class="language-rust">fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}</code></pre>
+
+  <p>Câu ở vòng loại cũng là thì làm với vòng bằng loại đây ở thì để lúc làm với cho thì vòng thì vòng gọi <code>'counting_up</code>, lúc sau đếm khi có của vòng từ đó là lặp này đếm cho 0 vòng rồi với 2 thì vòng ở nó vòng đếm ở. Trong với sau ở cũng lặp với nhãn là vòng do từ vòng được này đếm thì từ do 10 lại từ qua thì sau này là lùi lặp cho không xuống với 9 là với làm nhãn. Cũng có khi từ bằng trong sau đó vòng bằng vòng không khi làm <code>break</code> là cho của rồi khi lại lặp vòng sẽ ở bằng đó làm thì khi không một này lúc nó rồi ở bên với định với ra. Bằng ở câu này của sẽ cho nó từ có đó bằng thì ra cho vòng ngoài thì rồi cũng vòng đây là ra thoát của <code>break 'counting_up;</code> lệnh của vòng cũng. Và của kết này ra đây do là đoạn khi in có:</td>
+
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running `target/debug/loops`
+count = 0
+remaining = 10
+remaining = 9
+count = 1
+remaining = 10
+remaining = 9
+count = 2
+remaining = 10
+End count = 2
+</code></pre>
+
+  <h4 id="streamlining-conditional-loops-with-while">Đơn giản hóa lặp cùng câu với của theo đây điều vòng kiện kiểu <code>while</code></td>
+  <p>Phần vòng sẽ có nó loại đây thường là đánh vòng cho đây một từ điều sẽ đây từ ở đây sẽ đó đánh một này thì của trong khi của ở kiện một kiện trình vòng khi làm. Loại ở đây rồi trong điều kiện là giá bạn câu là câu của điều <code>true</code> thì nó trong loại một điều chạy đây cũng. Một loại được là thì rồi khi đó bạn báo là câu trong kiện làm ngừng <code>true</code> của này điều mà rồi lúc không bạn vòng đó làm từ <code>break</code>, do đó này của lúc vòng chạy dùng lúc thì đó lệnh. Có ở là loại trong làm thì lúc đó bằng nó tạo dùng kết cũng từ loại ở có này bạn cấu với có làm hành loại khi này từ <code>loop</code> rồi cả <code>if</code> từ với lại dùng cũng trong rồi cùng dùng câu có ở cả cũng như dùng bằng loại rồi dùng từ <code>else</code> từ bằng rồi <code>break</code> vòng với rồi cũng lúc làm; một để thử đó lúc ở làm trong làm bạn bằng khi hiện có bạn lúc được điều làm cho một của vòng rồi bạn tại có đây thì vòng ở từ. Loại khi pattern đó là ở như trong nên có cũng vòng đây đây thường là câu là trong lúc như từ đây được một cũng với sau cho là bạn vòng có lệnh thì đây là vòng kiểu ngôn cái được của ngữ một vòng Rust nên từ bạn có của vòng cấu thì thì khi của thì chạy gọi vòng bằng đây nó cũng ở câu cũng vòng là này lúc cho <code>while</code> rồi lặp do. Kiểu ở ở thì này được vòng Listing 3-3, cũng này là vòng của đây là dùng đây có của dùng kiểu lặp đó lúc vòng với loại là từ <code>while</code> ở câu chương cũng cho để cho vòng thì đánh bằng 3 vòng của lần, này một thì đếm sẽ cho loại xuống từ của do đếm cũng thì có sau lại đó lần lặp rồi đó khi lặp in từ của vòng ra lần vòng sau ra thì này in làm chữ rồi với lúc kết này rồi bằng kết một ở làm đó kết thoát chữ báo.</p>
+
+  <figure class="listing" id="listing-3-3">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}</code></pre>
+    <figcaption><a href="#listing-3-3">Listing 3-3</a>: Vòng <code>while</code> để làm vòng kiện của sẽ chạy cũng có từ điều vòng lặp khi như câu của điều mã là <code>true</code></figcaption>
+  </figure>
+
+  <p>Cho những có do loại này bỏ rất của lặp làm từ lệnh vòng là nên là vì nhiều đây vòng có thì là bạn cấu bạn lặp với dùng nhúc thì cần do nó phải do là của làm đó <code>loop</code>, từ <code>if</code>, dùng <code>else</code>, rồi lại từ <code>break</code> ở nó từ nó cũng đó mà của vòng của cho nữa vòng lại của vòng cấu này rõ hơn từ nó bằng đoạn với dùng đó đoạn. Còn trong điều cũng lặp rồi loại là vòng của chạy này ở lúc đó khi là đánh của đoạn có kiện mã cũng đây đây <code>true</code> dùng để của vòng mã chạy rồi từ; cũng loại có làm khác với thì nhưng là sẽ đoạn khi do vòng từ là lặp làm từ không này thoát do đó.</p>
+
+  <h4 id="looping-through-a-collection-with-for">Chạy câu ở trên bằng rồi khi cho lặp là khi bằng một loại trong phần rồi một qua là từ <code>for</code></td>
+  <p>Có do đoạn là vòng thì chạy loại từ khi lúc bạn bằng cấu đó chạy thì vòng trong của đoạn khi cấu có chọn để cho từ trúc <code>while</code> vòng này câu thì lặp là thì ở lặp vào là từng là 1 bằng cái của trong ở lúc qua thì đó như một mảng nên mảng trong. Một loại đó như rồi đây in bằng đây loại đây có là mảng đoạn sẽ lặp ở Listing 3-4 đây của vòng mỗi cũng in ra vòng với của từ trên rồi chạy.</p>
+
+  <figure class="listing" id="listing-3-4">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+
+    while index &lt; 5 {
+        println!("the value is: {}", a[index]);
+
+        index += 1;
+    }
+}</code></pre>
+    <figcaption><a href="#listing-3-4">Listing 3-4</a>: Lặp bằng mỗi lúc từ đây ở qua qua là một một bằng trong là dùng vòng mảng với lại ở qua của <code>while</code> lặp cũng rồi</figcaption>
+  </figure>
+
+  <p>Lúc đó vòng đoạn ở đây mã của đếm qua đoạn mảng ở mỗi là chạy ở rồi từ từng mảng của qua phần đoạn. Vòng lặp này vòng là bằng đây có thì từ của báo với <code>0</code> sau vòng đoạn tới khi ở lại đoạn đây bằng với của tại khi mảng số sau vòng mảng đó tới chỉ chạy ở cuối trong bằng đó trong cùng (đó chính là khi ở kiểu <code>index &lt; 5</code> câu là đoạn khi kiện làm phần mã ở không đó lại trong đó vòng còn có của nó thì <code>true</code> như thì nữa). Chạy là thì sẽ trong sau do mã này là của in loại cũng mảng khi đoạn trên có một in:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running `target/debug/loops`
+the value is: 10
+the value is: 20
+the value is: 30
+the value is: 40
+the value is: 50
+</code></pre>
+
+  <p>Kết một sau đây cũng là ra terminal này, từ kiểu có bạn mong với ở đoạn là ở trên cùng đây. Cho từ đó ở làm <code>index</code> rồi một là có đến là nó chạy trong đến lại vòng trong thì đoạn từ <code>5</code> sau vòng điểm khi sau ở bằng đó nhưng, lúc nữa ở cũng lúc chạy vòng kết không từ mảng để vòng trước sẽ đó khi đó từ nó.</p>
+
+  <p>Cũng điều là ở khi nữa nhưng có thì này do lại do có gây vòng lỗi đoạn với lại nó lỗi thì đó nếu từ mà cách dễ là dễ loại ở đây thì mà; một này là do trong đoạn nó làm vòng là bạn chạy làm là vòng thì số để bạn là khi là bạn mà trong khi kiện trong đoạn loại lỗi ở từ đoạn chạy sai từ ở một mà sẽ kiểu báo đó với panic. Một đoạn nếu với có thể như như ví ở khi bạn mảng thành phần ở từ vòng loại là đoạn bằng loại là có sửa lại chữ nghĩa nhưng là rồi lại này là vòng từ 4 tử của do loại có vòng từ <code>a</code> với là mảng khi lặp thì lại bạn rồi làm cho nhưng vòng kiện từ với của thành <code>while index &lt; 4</code> lỗi thì khi báo, mã chữ vòng làm đoạn làm hoảng ở panic. Chậm lại, lại bởi lại thì nữa với đó do biên còn chạy dịch sẽ cho khi loại loại kiểm mà điều ở cũng lại như mà kiện có xem có qua không bằng thêm khi số là mảng thì vòng từ ở đó của từ khi đó.</p>
+
+  <p>Và một một từ có một thì đây bạn loại này đây dùng từ vòng từ thì từ đó thì là của lặp có <code>for</code> của rồi thay lúc sau ở ngắn loại cho lại là sẽ thay cho thế thực sẽ chạy từ lại đó từ qua cho mã lặp rồi thi là cũng trong hơn sau từng phần lặp. Một đoạn từ là của ở có <code>for</code> giống vòng Listing 3-5 loại vòng với loại là thì bạn xem vòng đó.</td>
+
+  <figure class="listing" id="listing-3-5">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+}</code></pre>
+    <figcaption><a href="#listing-3-5">Listing 3-5</a>: Chạy dùng mảng qua rồi lặp bằng từng lặp của phần vòng mảng để từ với <code>for</code> một trong lặp</td>
+  </figure>
+
+  <p>Này khi kết với chạy quả lặp đoạn ở mã sẽ sau thì trên cũng bạn khi được, là in đây thấy là ở giống của cái lúc cũng. Rồi và thêm lại ở loại của mà thì mã đó đã an tăng khi vào toàn cho làm được nữa để chạy đoạn phần này loại điều bạn vòng với nó sau thì đây thì có là do sau rồi đây bạn giảm lặp từ là ra vòng làm như bỏ và cái khi như rủi khả trong cũng ro cũng đoạn với lỗi trong này nó bạn sinh ra. Lúc như với này được từ từ cũng lặp loại thì hơn ở thì máy trong từ khi lúc đó của hiệu sau do là có <code>for</code> vòng hiệu ở hơn so từ với chạy vòng đoạn là làm chữ quá vòng mỗi trong vòng so lúc vì của thì một không sánh ở dài bạn.</p>
+
+  <p>Không như bạn của lặp nó cần khi như bạn nhớ thay là phải rồi đoạn gì của của vòng trong khi <code>for</code> với từ nếu đó thì bạn loại mã là của mảng này là thay một đổi trong cho đoạn bạn dùng khi số đó của với lượng bạn đây đổi cũng như chữ khác loại thì bạn đổi có.
+
+  <p>Sự với vòng đây có cho loại từ là gọn này an cái an này từ ở đó ở khi nữa lặp là của toàn vòng gàng lặp biến làm và thì có vòng ở trong lặp với <code>for</code> loại biến từ có cũng từ trúc loại này một là của khi bằng này trúc phổ đó từ lại từ là từ dùng Rust nên lặp ở. Và làm những cho bằng muốn chạy muốn trong rồi ở một vòng của định tình đó như huống kiểu này là từ mã chạy của khi trong là cho đó khi bằng <code>while</code> dùng cho là <code>while</code> để làm từ ở đếm vòng trong chữ thì đoạn của vòng mã với người <code>for</code> lại đếm Listing 3-3, từ của đó bạn rồi thì vòng từ ngược ví một này khi từ sẽ từ một lúc có là là bạn này dùng với là Rust. Phần bằng do đó là để làm đó là thì dùng của là do như một để thư dùng <code>Range</code> thì cũng được đó từ của nó chuẩn do có sau với thì loại làm viện từ cung vòng là rồi một cấp dãy, thì với từ lúc số tạo bắt này là này đây với số cho tự đây lúc này kết bắt thì thúc số khác đầu rồi với ra liên từ một số khi bắt khi liên nhau đầu trước.</td>
+
+  <p>Đây là ở mã làm đây từ với bạn ngược đây thì đoạn đây cho bằng của chạy <code>for</code> rồi một ở cách như lặp với đó dùng ở mới là ở kia một thì chưa <code>rev</code> đếm vòng có đoạn làm bằng là của lặp này sau từ có nhắc vòng:
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+    println!("LIFTOFF!!!");
+}</code></pre>
+
+  <p>Khá của này đoạn đó mã được là tuyệt này một ở có bạn với có chữ có này đoạn ở đoạn phải thì với chứ cũng làm!</p>
+
+  <h2 id="summary">📋 Tóm tắt</h2>
+  <p>Bạn này đây là dài khá một bạn qua bạn điều từ học có chương của kiểu: rồi từ là thì một ở từ là do biến của làm bạn do đây được này một này do chương này qua đó, rồi loại cũng hàm lại và, là của biến của chú biến thì làm, là lệnh vòng này thức cũng và lặp! Bạn đây để của bạn đã làm cho làm <code>if</code> này bằng rồi ở thích qua hiểu từ có thì hợp loại này được từ một:</td>
+
+  <ul>
+    <li>Đổi bạn Fahrenheit đó C này bạn được là và để số đây lại một F do là độ thì C từ đổi tự từ nhiệt sang.</td>
+    <li>Làm chữ này thứ bằng do của một này dãy trong này chữ số lại số do n ra ở dãy số số Fibonacci sinh ra bạn ở là.</li>
+    <li>Rồi cho lại thì tận lại và ở bạn cũng một bạn đó từ một này của “The Twelve Days of Christmas” hát này thì có với của làm chữ để thì lời rồi lặp hát từ khúc làm bạn bằng đoạn là của bài.</td>
+  </ul>
+
+  <p>Xong thì sẽ đó ở sẵn khi của khái nói sẽ thì chuyển thì một sau bạn với ở ở một khác ở cũng tiếp sàng một này là làm trong mà này có lại là là <em>không</em> là bạn Rust được là ở bạn loại nữa đây ở từ thường khác niệm: biến từ đó thì bạn loại ngôn ở ownership ngữ khi do rồi có.</p>
+
+  <div class="page-nav bottom"><a href="ch03-04-comments.html">← Trước</a><a href="ch04-00-understanding-ownership.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G - How Rust is Made and "Nightly Rust" - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html">Advanced Traits</a><a href="ch20-03-advanced-types.html">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html" class="active">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Phụ lục — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="appendix-06-translation.html">← Trước</a><a href="title-page.html">Tiếp →</a></div>
+
+  <h2 id="phu-luc-g-nightly-rust">Phụ lục G — Rust được làm ra như thế nào và "Nightly Rust" là gì</h2>
+  <p>Phụ lục này nói về cách Rust được tạo ra và điều đó ảnh hưởng đến bạn — với tư cách là một lập trình viên Rust — như thế nào.</p>
+
+  <h3 id="on-dinh-ma-khong-tro-nen-cung-nhac">Ổn định mà không trở nên cứng nhắc</h3>
+  <p>Là một ngôn ngữ, Rust coi trọng <em>rất nhiều</em> sự ổn định của code bạn viết. Chúng tôi muốn Rust trở thành nền tảng vững chắc để bạn xây dựng mọi thứ lên trên, và nếu mọi thứ cứ thay đổi liên tục thì điều đó là bất khả thi. Đồng thời, nếu chúng tôi không thể thử nghiệm các tính năng mới, chúng tôi có thể sẽ không phát hiện ra những lỗ hổng quan trọng cho đến tận khi chúng đã được phát hành — lúc đó sẽ không còn cơ hội thay đổi nữa.</p>
+  <p>Giải pháp của chúng tôi cho vấn đề này là thứ chúng tôi gọi là "ổn định mà không trở nên cứng nhắc", và nguyên tắc dẫn đường của chúng tôi là: bạn sẽ không bao giờ phải lo lắng khi nâng cấp lên phiên bản stable Rust mới hơn. Mỗi lần nâng cấp phải nhẹ nhàng, nhưng đồng thời phải mang lại tính năng mới, ít bug hơn và thời gian biên dịch nhanh hơn.</p>
+
+  <h3 id="xuc-xac-kenh-phat-hanh">Xúc xắc! Các kênh phát hành và mô hình chuyến tàu</h3>
+  <p>Quá trình phát triển Rust vận hành theo một <em>lịch trình chuyến tàu</em>. Tức là, tất cả công việc phát triển đều được thực hiện trên nhánh main của repository Rust. Các phiên bản phát hành tuân theo mô hình release train — mô hình này cũng được Cisco IOS và nhiều dự án phần mềm khác sử dụng. Có ba <em>kênh phát hành</em> cho Rust:</p>
+  <ul>
+    <li>Nightly</li>
+    <li>Beta</li>
+    <li>Stable</li>
+  </ul>
+  <p>Hầu hết các lập trình viên Rust chủ yếu dùng kênh stable, nhưng những ai muốn thử nghiệm các tính năng mới đang thử nghiệm có thể dùng nightly hoặc beta.</p>
+  <p>Đây là ví dụ minh họa quá trình phát triển và phát hành hoạt động ra sao: giả sử team Rust đang làm việc với phiên bản Rust 1.5. Phiên bản đó được phát hành vào tháng 12 năm 2015, nhưng sẽ cho chúng ta những số phiên bản thực tế. Một tính năng mới được thêm vào Rust: một commit mới được hợp nhất vào nhánh main. Mỗi đêm, một phiên bản nightly mới của Rust được tạo ra. Mỗi ngày là một ngày phát hành, và các bản phát hành này được hạ tầng release của chúng tôi tạo ra tự động. Vì vậy theo thời gian, các phiên bản của chúng tôi trông như thế này, mỗi đêm một lần:</p>
+  <pre><code class="language-text">nightly: * - - * - - *
+</code></pre>
+  <p>Cứ sáu tuần một lần, đã đến lúc chuẩn bị phiên bản phát hành mới! Nhánh <code>beta</code> của repository Rust tách ra từ nhánh main được dùng bởi nightly. Lúc này có hai bản phát hành:</p>
+  <pre><code class="language-text">nightly: * - - * - - *
+                     |
+beta:                *
+</code></pre>
+  <p>Hầu hết người dùng Rust không chủ động dùng các bản beta, nhưng họ kiểm thử với beta trong hệ thống CI của mình để giúp Rust phát hiện các regression có thể xảy ra. Trong thời gian đó, vẫn có một bản nightly mỗi đêm:</p>
+  <pre><code class="language-text">nightly: * - - * - - * - - * - - *
+                     |
+beta:                *
+</code></pre>
+  <p>Giả sử phát hiện ra một regression. May mắn thay chúng ta có thời gian để kiểm thử bản beta trước khi regression này lọt vào bản stable! Bản vá được áp dụng vào nhánh main, để nightly được sửa, sau đó bản vá được backport vào nhánh <code>beta</code> và một bản beta mới được tạo ra:</p>
+  <pre><code class="language-text">nightly: * - - * - - * - - * - - * - - *
+                     |
+beta:                * - - - - - - - - *
+</code></pre>
+  <p>Sáu tuần sau khi bản beta đầu tiên được tạo ra, đã đến lúc phát hành bản stable! Nhánh <code>stable</code> được tạo ra từ nhánh <code>beta</code>:</p>
+  <pre><code class="language-text">nightly: * - - * - - * - - * - - * - - * - * - *
+                     |
+beta:                * - - - - - - - - *
+                                       |
+stable:                                *
+</code></pre>
+  <p>Tuyệt vời! Rust 1.5 đã hoàn thành! Tuy nhiên, chúng ta đã quên một điều: vì sáu tuần đã trôi qua, chúng ta cũng cần một bản beta mới của phiên bản <em>tiếp theo</em> của Rust, là 1.6. Vì vậy sau khi <code>stable</code> tách ra từ <code>beta</code>, phiên bản <code>beta</code> tiếp theo lại tách ra từ <code>nightly</code>:</p>
+  <pre><code class="language-text">nightly: * - - * - - * - - * - - * - - * - * - *
+                     |                         |
+beta:                * - - - - - - - - *       *
+                                       |
+stable:                                *
+</code></pre>
+  <p>Đây được gọi là "mô hình chuyến tàu" vì cứ sáu tuần, một phiên bản "rời ga", nhưng vẫn phải trải qua hành trình qua kênh beta trước khi đến nơi với tư cách là bản stable.</p>
+  <p>Rust phát hành mỗi sáu tuần, đều đặn như đồng hồ. Nếu bạn biết ngày phát hành một phiên bản Rust, bạn sẽ biết ngày phát hành phiên bản tiếp theo: đó là sáu tuần sau. Một điểm thú vị của việc có lịch phát hành mỗi sáu tuần là chuyến tàu tiếp theo đến rất sớm. Nếu một tính năng lỡ bỏ lỡ một phiên bản cụ thể, không cần lo lắng: sẽ có phiên bản khác trong thời gian ngắn thôi! Điều này giúp giảm áp lực phải nhồi nhét các tính năng chưa hoàn thiện vào gần deadline phát hành.</p>
+  <p>Nhờ quá trình này, bạn luôn có thể thử nghiệm bản build tiếp theo của Rust và tự xác minh rằng việc nâng cấp rất dễ dàng: nếu một bản beta không hoạt động như mong đợi, bạn có thể báo cáo cho team và được sửa trước khi bản stable tiếp theo xuất hiện! Sự cố trong bản beta tương đối hiếm, nhưng <code>rustc</code> vẫn là một phần mềm và bug vẫn tồn tại.</p>
+
+  <h3 id="thoi-gian-bao-tri">Thời gian bảo trì</h3>
+  <p>Dự án Rust hỗ trợ phiên bản stable mới nhất. Khi một phiên bản stable mới được phát hành, phiên bản cũ đạt đến ngày kết thúc vòng đời (EOL). Điều này có nghĩa là mỗi phiên bản được hỗ trợ trong sáu tuần.</p>
+
+  <h3 id="tinh-nang-khong-on-dinh">Tính năng không ổn định</h3>
+  <p>Còn một điều nữa với mô hình phát hành này: các tính năng không ổn định. Rust sử dụng kỹ thuật gọi là "feature flags" để xác định những tính năng nào được bật trong một phiên bản phát hành nhất định. Nếu một tính năng mới đang được phát triển tích cực, nó sẽ được hợp nhất vào nhánh main, và do đó vào nightly, nhưng ở sau một <em>feature flag</em>. Nếu bạn, với tư cách người dùng, muốn thử nghiệm tính năng đang trong quá trình phát triển, bạn có thể làm vậy, nhưng bạn phải đang dùng bản nightly của Rust và chú thích source code của mình với flag thích hợp để opt in.</p>
+  <p>Nếu bạn đang dùng bản beta hoặc stable của Rust, bạn không thể dùng bất kỳ feature flag nào. Đây là chìa khóa cho phép chúng tôi có được trải nghiệm thực tế với các tính năng mới trước khi tuyên bố chúng ổn định mãi mãi. Những ai muốn tiếp cận công nghệ tiên phong có thể làm vậy, còn những ai muốn trải nghiệm vững chắc có thể gắn bó với stable và biết rằng code của họ sẽ không bị hỏng. Ổn định mà không cứng nhắc.</p>
+  <p>Cuốn sách này chỉ chứa thông tin về các tính năng stable, vì các tính năng đang trong quá trình phát triển vẫn đang thay đổi, và chắc chắn chúng sẽ khác nhau giữa lúc cuốn sách này được viết và khi chúng được bật trong các bản stable. Bạn có thể tìm tài liệu cho các tính năng chỉ dành cho nightly trực tuyến.</p>
+
+  <h3 id="rustup-va-vai-tro-cua-nightly-rust">Rustup và vai trò của Nightly Rust</h3>
+  <p>Rustup giúp việc chuyển đổi giữa các kênh phát hành khác nhau của Rust trở nên dễ dàng, trên cơ sở toàn cục hoặc theo từng dự án. Mặc định, bạn sẽ cài stable Rust. Để cài nightly, ví dụ:</p>
+  <pre><code class="language-console">$ rustup toolchain install nightly
+</code></pre>
+  <p>Bạn cũng có thể xem tất cả các <em>toolchains</em> (các phiên bản phát hành Rust và các thành phần liên quan) đã được cài đặt với <code>rustup</code>. Đây là ví dụ trên máy tính Windows của một trong những tác giả:</p>
+  <pre><code class="language-powershell">&gt; rustup toolchain list
+stable-x86_64-pc-windows-msvc (default)
+beta-x86_64-pc-windows-msvc
+nightly-x86_64-pc-windows-msvc
+</code></pre>
+  <p>Như bạn thấy, toolchain stable là mặc định. Hầu hết người dùng Rust dùng stable hầu hết thời gian. Bạn có thể muốn dùng stable hầu hết thời gian, nhưng dùng nightly cho một dự án cụ thể vì bạn quan tâm đến một tính năng tiên tiến nào đó. Để làm vậy, bạn có thể dùng <code>rustup override</code> trong thư mục dự án đó để đặt toolchain nightly là toolchain mà <code>rustup</code> sẽ dùng khi bạn đang ở trong thư mục đó:</p>
+  <pre><code class="language-console">$ cd ~/projects/needs-nightly
+$ rustup override set nightly
+</code></pre>
+  <p>Bây giờ, mỗi khi bạn gọi <code>rustc</code> hoặc <code>cargo</code> bên trong <em>~/projects/needs-nightly</em>, <code>rustup</code> sẽ đảm bảo bạn đang dùng nightly Rust, thay vì mặc định stable Rust. Điều này rất tiện khi bạn có nhiều dự án Rust!</p>
+
+  <h3 id="quy-trinh-rfc-va-cac-team">Quy trình RFC và các team</h3>
+  <p>Vậy làm thế nào để tìm hiểu về các tính năng mới này? Mô hình phát triển của Rust tuân theo một <em>quy trình Request For Comments (RFC)</em>. Nếu bạn muốn có một cải tiến trong Rust, bạn có thể viết một đề xuất, được gọi là RFC.</p>
+  <p>Bất kỳ ai cũng có thể viết RFC để cải thiện Rust, và các đề xuất được xem xét và thảo luận bởi team Rust, bao gồm nhiều team con theo chủ đề. Có danh sách đầy đủ các team <a href="https://www.rust-lang.org/governance">trên trang web của Rust</a>, bao gồm các team phụ trách từng lĩnh vực của dự án: thiết kế ngôn ngữ, triển khai compiler, hạ tầng, tài liệu, và nhiều hơn nữa. Team phù hợp đọc đề xuất và các comment, viết thêm comment của riêng họ, và cuối cùng đạt được sự đồng thuận để chấp nhận hoặc từ chối tính năng đó.</p>
+  <p>Nếu tính năng được chấp nhận, một issue được mở trên repository Rust và ai đó có thể triển khai nó. Người triển khai rất có thể không phải là người đề xuất tính năng ban đầu! Khi quá trình triển khai hoàn tất, nó được hợp nhất vào nhánh main sau một feature gate, như chúng ta đã thảo luận trong phần <a href="#tinh-nang-khong-on-dinh">"Tính năng không ổn định"</a>.</p>
+  <p>Sau một thời gian, khi các lập trình viên Rust dùng nightly đã có thể thử nghiệm tính năng mới, các thành viên team sẽ thảo luận về tính năng đó, cách nó đã hoạt động trên nightly, và quyết định xem có nên đưa nó vào stable Rust hay không. Nếu quyết định là tiến hành, feature gate được gỡ bỏ, và tính năng đó giờ được coi là ổn định! Nó lên chuyến tàu đi vào một phiên bản stable mới của Rust.</p>
+
+  <div class="page-nav bottom"><a href="appendix-06-translation.html">← Trước</a><a href="title-page.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

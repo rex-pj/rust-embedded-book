@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiểu Dữ Liệu — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html" class="active">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch03-01-variables-and-mutability.html">← Trước</a>
+    <a href="ch03-03-how-functions-work.html">Tiếp →</a>
+  </div>
+
+  <h2 id="kieu-du-lieu">🗂️ Kiểu Dữ Liệu</h2>
+  <p>Mọi giá trị trong Rust đều thuộc một <em>kiểu dữ liệu</em> nhất định, cho Rust biết loại dữ liệu nào đang được chỉ định để biết cách làm việc với dữ liệu đó. Chúng ta sẽ xem xét hai tập con kiểu dữ liệu: scalar (vô hướng) và compound (phức hợp).</p>
+
+  <p>Hãy nhớ rằng Rust là ngôn ngữ <em>kiểu tĩnh</em> (statically typed), nghĩa là nó phải biết kiểu của tất cả các biến tại thời điểm biên dịch. Trình biên dịch thường có thể suy luận kiểu chúng ta muốn dùng dựa trên giá trị và cách sử dụng. Trong những trường hợp có nhiều kiểu có thể xảy ra, chẳng hạn khi chuyển đổi <code>String</code> sang kiểu số bằng <code>parse</code> trong phần <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">"So sánh số đoán với số bí mật"</a> ở Chương 2, chúng ta phải thêm chú thích kiểu (type annotation), như sau:</p>
+
+<pre><code class="language-rust">let guess: u32 = "42".parse().expect("Not a number!");</code></pre>
+
+  <p>Nếu không thêm chú thích kiểu <code>: u32</code> như trên, Rust sẽ hiển thị lỗi sau, nghĩa là trình biên dịch cần thêm thông tin để biết kiểu chúng ta muốn dùng:</p>
+
+<pre><code class="language-console">$ cargo build
+   Compiling no_type_annotations v0.1.0 (file:///projects/no_type_annotations)
+error[E0284]: type annotations needed
+ --&gt; src/main.rs:2:9
+  |
+2 |     let guess = "42".parse().expect("Not a number!");
+  |         ^^^^^        ----- type must be known at this point
+  |
+  = note: cannot satisfy `&lt;_ as FromStr&gt;::Err == _`
+help: consider giving `guess` an explicit type
+  |
+2 |     let guess: /* Type */ = "42".parse().expect("Not a number!");
+  |              ++++++++++++
+
+For more information about this error, try `rustc --explain E0284`.
+error: could not compile `no_type_annotations` (bin "no_type_annotations") due to 1 previous error</code></pre>
+
+  <p>Bạn sẽ thấy các chú thích kiểu khác nhau cho các kiểu dữ liệu khác.</p>
+
+  <h3 id="scalar-types">🔢 Kiểu Scalar (Vô hướng)</h3>
+  <p>Kiểu <em>scalar</em> đại diện cho một giá trị duy nhất. Rust có bốn kiểu scalar chính: số nguyên (integer), số thực dấu phẩy động (floating-point), Boolean, và ký tự (character). Bạn có thể nhận ra chúng từ các ngôn ngữ lập trình khác. Hãy cùng khám phá cách chúng hoạt động trong Rust.</p>
+
+  <h4 id="integer-types">🔵 Kiểu Integer (Số nguyên)</h4>
+  <p><em>Integer</em> là một số không có phần thập phân. Chúng ta đã dùng một kiểu integer trong Chương 2, kiểu <code>u32</code>. Khai báo kiểu này cho biết giá trị liên kết phải là số nguyên không dấu (số nguyên có dấu bắt đầu bằng <code>i</code> thay vì <code>u</code>) chiếm 32 bit bộ nhớ. Bảng 3-1 liệt kê các kiểu integer tích hợp sẵn trong Rust.</p>
+
+  <p><span class="caption">Bảng 3-1: Các kiểu Integer trong Rust</span></p>
+  <div class="table-wrapper">
+  <table>
+    <thead>
+      <tr><th>Độ dài</th><th>Có dấu (Signed)</th><th>Không dấu (Unsigned)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>8-bit</td><td><code>i8</code></td><td><code>u8</code></td></tr>
+      <tr><td>16-bit</td><td><code>i16</code></td><td><code>u16</code></td></tr>
+      <tr><td>32-bit</td><td><code>i32</code></td><td><code>u32</code></td></tr>
+      <tr><td>64-bit</td><td><code>i64</code></td><td><code>u64</code></td></tr>
+      <tr><td>128-bit</td><td><code>i128</code></td><td><code>u128</code></td></tr>
+      <tr><td>Phụ thuộc kiến trúc</td><td><code>isize</code></td><td><code>usize</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Mỗi biến thể có thể là có dấu hoặc không dấu và có kích thước tường minh. <em>Có dấu</em> và <em>không dấu</em> đề cập đến việc liệu số đó có thể âm hay không — nói cách khác, liệu số đó có cần dấu đi kèm (có dấu) hay chỉ luôn dương và do đó có thể biểu diễn không cần dấu (không dấu). Giống như viết số trên giấy: khi dấu quan trọng, số được viết kèm dấu cộng hoặc trừ; khi có thể giả định số là dương, số được viết không cần dấu. Số có dấu được lưu trữ bằng biểu diễn <a href="https://en.wikipedia.org/wiki/Two%27s_complement">bù hai</a>.</p>
+
+  <p>Mỗi biến thể có dấu có thể lưu các số từ −(2<sup>n − 1</sup>) đến 2<sup>n − 1</sup> − 1 (bao gồm), trong đó <em>n</em> là số bit. Vì vậy, <code>i8</code> có thể lưu các số từ −128 đến 127. Các biến thể không dấu có thể lưu các số từ 0 đến 2<sup>n</sup> − 1, vì vậy <code>u8</code> có thể lưu từ 0 đến 255.</p>
+
+  <p>Ngoài ra, kiểu <code>isize</code> và <code>usize</code> phụ thuộc vào kiến trúc máy tính: 64 bit trên kiến trúc 64-bit và 32 bit trên kiến trúc 32-bit.</p>
+
+  <p>Bạn có thể viết các literal integer theo các dạng trong Bảng 3-2. Lưu ý rằng các literal số có thể thuộc nhiều kiểu số cho phép dùng hậu tố kiểu, chẳng hạn <code>57u8</code>. Literal số cũng có thể dùng <code>_</code> làm dấu phân cách trực quan cho dễ đọc, chẳng hạn <code>1_000</code> có cùng giá trị với <code>1000</code>.</p>
+
+  <p><span class="caption">Bảng 3-2: Các dạng Integer Literal trong Rust</span></p>
+  <div class="table-wrapper">
+  <table>
+    <thead>
+      <tr><th>Dạng literal</th><th>Ví dụ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Thập phân (Decimal)</td><td><code>98_222</code></td></tr>
+      <tr><td>Thập lục phân (Hex)</td><td><code>0xff</code></td></tr>
+      <tr><td>Bát phân (Octal)</td><td><code>0o77</code></td></tr>
+      <tr><td>Nhị phân (Binary)</td><td><code>0b1111_0000</code></td></tr>
+      <tr><td>Byte (chỉ <code>u8</code>)</td><td><code>b'A'</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Vậy làm sao bạn biết nên dùng kiểu integer nào? Nếu không chắc, mặc định của Rust thường là lựa chọn tốt: Kiểu integer mặc định là <code>i32</code>. Tình huống chính cần dùng <code>isize</code> hoặc <code>usize</code> là khi lập chỉ mục cho một collection nào đó.</p>
+
+  <section class="note">
+    <h5 id="integer-overflow">⚠️ Integer Overflow (Tràn số nguyên)</h5>
+    <p>Giả sử bạn có biến kiểu <code>u8</code> chứa giá trị từ 0 đến 255. Nếu bạn thay đổi biến sang giá trị nằm ngoài phạm vi đó, chẳng hạn 256, <em>integer overflow</em> (tràn số nguyên) sẽ xảy ra, dẫn đến một trong hai hành vi. Khi biên dịch ở chế độ debug, Rust bao gồm kiểm tra tràn số nguyên, khiến chương trình <em>panic</em> tại thời điểm chạy nếu điều này xảy ra. Rust dùng thuật ngữ <em>panicking</em> khi chương trình thoát ra với lỗi; chúng ta sẽ thảo luận về panic sâu hơn trong phần <a href="ch09-01-unrecoverable-errors-with-panic.html">"Lỗi không thể phục hồi với panic!"</a> ở Chương 9.</p>
+    <p>Khi biên dịch ở chế độ release với cờ <code>--release</code>, Rust <em>không</em> bao gồm kiểm tra tràn số nguyên gây ra panic. Thay vào đó, nếu xảy ra tràn, Rust thực hiện <em>bù hai wrapping</em>. Nói ngắn gọn, các giá trị lớn hơn giá trị tối đa mà kiểu có thể chứa sẽ "quay vòng" về giá trị tối thiểu. Với <code>u8</code>, giá trị 256 trở thành 0, 257 trở thành 1, v.v. Chương trình sẽ không panic, nhưng biến sẽ có giá trị khác với bạn mong đợi. Việc dựa vào hành vi wrapping của integer overflow được coi là một lỗi.</p>
+    <p>Để xử lý khả năng tràn một cách rõ ràng, bạn có thể dùng các nhóm phương thức sau mà thư viện chuẩn cung cấp cho các kiểu số nguyên thô:</p>
+    <ul>
+      <li>Wrap trong mọi chế độ với các phương thức <code>wrapping_*</code>, chẳng hạn <code>wrapping_add</code>.</li>
+      <li>Trả về giá trị <code>None</code> nếu tràn với các phương thức <code>checked_*</code>.</li>
+      <li>Trả về giá trị và Boolean cho biết có tràn hay không với các phương thức <code>overflowing_*</code>.</li>
+      <li>Bão hòa tại giá trị tối thiểu hoặc tối đa với các phương thức <code>saturating_*</code>.</li>
+    </ul>
+  </section>
+
+  <h4 id="floating-point-types">🔵 Kiểu Floating-Point (Số thực dấu phẩy động)</h4>
+  <p>Rust cũng có hai kiểu nguyên thủy cho <em>số thực dấu phẩy động</em>, là các số có dấu thập phân. Kiểu floating-point của Rust là <code>f32</code> và <code>f64</code>, có kích thước lần lượt là 32 và 64 bit. Kiểu mặc định là <code>f64</code> vì trên CPU hiện đại, tốc độ gần như tương đương <code>f32</code> nhưng độ chính xác cao hơn. Tất cả kiểu floating-point đều là có dấu.</p>
+
+  <p>Đây là ví dụ minh họa số floating-point:</p>
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let x = 2.0; // f64
+
+    let y: f32 = 3.0; // f32
+}</code></pre>
+
+  <p>Số floating-point được biểu diễn theo chuẩn IEEE-754.</p>
+
+  <h4 id="numeric-operations">🔵 Phép toán số học</h4>
+  <p>Rust hỗ trợ các phép toán toán học cơ bản cho tất cả kiểu số: cộng, trừ, nhân, chia và phần dư. Phép chia số nguyên cắt về phía không đến số nguyên gần nhất. Đoạn mã dưới đây minh họa cách dùng từng phép toán trong câu lệnh <code>let</code>:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    // cộng
+    let sum = 5 + 10;
+
+    // trừ
+    let difference = 95.5 - 4.3;
+
+    // nhân
+    let product = 4 * 30;
+
+    // chia
+    let quotient = 56.7 / 32.2;
+    let truncated = -5 / 3; // Kết quả là -1
+
+    // phần dư
+    let remainder = 43 % 5;
+}</code></pre>
+
+  <p>Mỗi biểu thức trong các câu lệnh này dùng một toán tử toán học và cho ra một giá trị duy nhất, sau đó được gán vào biến. <a href="appendix-02-operators.html">Phụ lục B</a> có danh sách tất cả toán tử mà Rust cung cấp.</p>
+
+  <h4 id="the-boolean-type">🔵 Kiểu Boolean</h4>
+  <p>Như hầu hết ngôn ngữ lập trình khác, kiểu Boolean trong Rust có hai giá trị có thể: <code>true</code> và <code>false</code>. Boolean có kích thước một byte. Kiểu Boolean trong Rust được chỉ định bằng <code>bool</code>. Ví dụ:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let t = true;
+
+    let f: bool = false; // với chú thích kiểu tường minh
+}</code></pre>
+
+  <p>Cách dùng chính của giá trị Boolean là qua các biểu thức điều kiện, chẳng hạn biểu thức <code>if</code>. Chúng ta sẽ đề cập cách biểu thức <code>if</code> hoạt động trong Rust ở phần <a href="ch03-05-control-flow.html#control-flow">"Control Flow"</a>.</p>
+
+  <h4 id="the-character-type">🔵 Kiểu Character (Ký tự)</h4>
+  <p>Kiểu <code>char</code> của Rust là kiểu bảng chữ cái nguyên thủy nhất của ngôn ngữ. Dưới đây là một số ví dụ khai báo giá trị <code>char</code>:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let c = 'z';
+    let z: char = 'ℤ'; // với chú thích kiểu tường minh
+    let heart_eyed_cat = '😻';
+}</code></pre>
+
+  <p>Lưu ý rằng chúng ta chỉ định literal <code>char</code> bằng dấu nháy đơn, khác với literal chuỗi dùng dấu nháy kép. Kiểu <code>char</code> của Rust có kích thước 4 byte và đại diện cho một giá trị Unicode scalar, nghĩa là nó có thể biểu diễn nhiều hơn chỉ ASCII. Chữ có dấu; ký tự Trung, Nhật, Hàn; emoji; và khoảng trắng có độ rộng bằng không đều là các giá trị <code>char</code> hợp lệ trong Rust. Giá trị Unicode scalar nằm trong khoảng <code>U+0000</code> đến <code>U+D7FF</code> và <code>U+E000</code> đến <code>U+10FFFF</code>. Tuy nhiên, "ký tự" thực ra không phải là khái niệm trong Unicode, vì vậy trực giác của con người về "ký tự" có thể không khớp với kiểu <code>char</code> trong Rust. Chúng ta sẽ thảo luận chi tiết về chủ đề này trong <a href="ch08-02-strings.html#storing-utf-8-encoded-text-with-strings">"Lưu trữ văn bản mã hóa UTF-8 với Strings"</a> ở Chương 8.</p>
+
+  <h3 id="compound-types">🧩 Kiểu Compound (Phức hợp)</h3>
+  <p><em>Kiểu compound</em> có thể nhóm nhiều giá trị vào một kiểu. Rust có hai kiểu compound nguyên thủy: tuple và array.</p>
+
+  <h4 id="the-tuple-type">🔵 Kiểu Tuple</h4>
+  <p><em>Tuple</em> là cách chung để nhóm một số giá trị với nhiều kiểu khác nhau thành một kiểu compound. Tuple có độ dài cố định: một khi được khai báo, chúng không thể tăng hay giảm kích thước.</p>
+
+  <p>Chúng ta tạo tuple bằng cách viết danh sách giá trị phân cách bởi dấu phẩy trong dấu ngoặc đơn. Mỗi vị trí trong tuple có một kiểu, và các kiểu của các giá trị khác nhau trong tuple không cần phải giống nhau. Chúng ta đã thêm chú thích kiểu tùy chọn trong ví dụ này:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let tup: (i32, f64, u8) = (500, 6.4, 1);
+}</code></pre>
+
+  <p>Biến <code>tup</code> liên kết với toàn bộ tuple vì một tuple được coi là một phần tử compound duy nhất. Để lấy các giá trị riêng lẻ từ tuple, chúng ta có thể dùng pattern matching để destructure một giá trị tuple, như sau:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let tup = (500, 6.4, 1);
+
+    let (x, y, z) = tup;
+
+    println!("The value of y is: {y}");
+}</code></pre>
+
+  <p>Chương trình này đầu tiên tạo một tuple và liên kết nó với biến <code>tup</code>. Sau đó nó dùng pattern với <code>let</code> để lấy <code>tup</code> và biến thành ba biến riêng biệt <code>x</code>, <code>y</code>, và <code>z</code>. Đây được gọi là <em>destructuring</em> vì nó phá vỡ một tuple thành ba phần. Cuối cùng, chương trình in giá trị của <code>y</code>, là <code>6.4</code>.</p>
+
+  <p>Chúng ta cũng có thể truy cập phần tử tuple trực tiếp bằng dấu chấm (<code>.</code>) theo sau là chỉ mục của giá trị muốn truy cập. Ví dụ:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let x: (i32, f64, u8) = (500, 6.4, 1);
+
+    let five_hundred = x.0;
+
+    let six_point_four = x.1;
+
+    let one = x.2;
+}</code></pre>
+
+  <p>Chương trình này tạo tuple <code>x</code> rồi truy cập từng phần tử bằng chỉ mục tương ứng. Giống như hầu hết ngôn ngữ lập trình, chỉ mục đầu tiên trong tuple là 0.</p>
+
+  <p>Tuple không có giá trị nào có tên đặc biệt là <em>unit</em>. Giá trị này và kiểu tương ứng đều được viết là <code>()</code> và đại diện cho giá trị rỗng hoặc kiểu trả về rỗng. Các biểu thức trả về ngầm định giá trị unit nếu chúng không trả về giá trị nào khác.</p>
+
+  <h4 id="the-array-type">🔵 Kiểu Array (Mảng)</h4>
+  <p>Một cách khác để có tập hợp nhiều giá trị là với <em>array</em>. Khác với tuple, mọi phần tử của array phải có cùng kiểu. Khác với array trong một số ngôn ngữ khác, array trong Rust có độ dài cố định.</p>
+
+  <p>Chúng ta viết các giá trị trong array dưới dạng danh sách phân cách bởi dấu phẩy trong dấu ngoặc vuông:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let a = [1, 2, 3, 4, 5];
+}</code></pre>
+
+  <p>Array hữu ích khi bạn muốn dữ liệu được cấp phát trên stack, giống các kiểu khác chúng ta đã thấy, thay vì heap (chúng ta sẽ thảo luận về stack và heap ở <a href="ch04-01-what-is-ownership.html#the-stack-and-the-heap">Chương 4</a>), hoặc khi bạn muốn đảm bảo luôn có số lượng phần tử cố định. Array không linh hoạt như kiểu vector. Vector là kiểu collection tương tự do thư viện chuẩn cung cấp, cho phép tăng hoặc giảm kích thước vì nội dung của nó sống trên heap. Nếu không chắc nên dùng array hay vector, rất có thể bạn nên dùng vector. <a href="ch08-01-vectors.html">Chương 8</a> thảo luận chi tiết về vectors.</p>
+
+  <p>Tuy nhiên, array hữu ích hơn khi bạn biết số lượng phần tử sẽ không cần thay đổi. Ví dụ, nếu dùng tên các tháng trong chương trình, bạn có thể dùng array thay vì vector vì bạn biết nó luôn chứa 12 phần tử:</p>
+
+<pre><code class="language-rust">let months = ["January", "February", "March", "April", "May", "June", "July",
+              "August", "September", "October", "November", "December"];</code></pre>
+
+  <p>Bạn viết kiểu của array bằng dấu ngoặc vuông với kiểu của từng phần tử, dấu chấm phẩy, rồi số lượng phần tử trong array, như sau:</p>
+
+<pre><code class="language-rust">let a: [i32; 5] = [1, 2, 3, 4, 5];</code></pre>
+
+  <p>Ở đây, <code>i32</code> là kiểu của từng phần tử. Sau dấu chấm phẩy, số <code>5</code> cho biết array chứa năm phần tử.</p>
+
+  <p>Bạn cũng có thể khởi tạo array chứa cùng một giá trị cho mỗi phần tử bằng cách chỉ định giá trị ban đầu, theo sau là dấu chấm phẩy, rồi độ dài của array trong dấu ngoặc vuông, như sau:</p>
+
+<pre><code class="language-rust">let a = [3; 5];</code></pre>
+
+  <p>Array tên <code>a</code> sẽ chứa <code>5</code> phần tử được khởi tạo với giá trị <code>3</code>. Đây tương đương với <code>let a = [3, 3, 3, 3, 3];</code> nhưng ngắn gọn hơn.</p>
+
+  <h4 id="array-element-access">🔵 Truy cập phần tử Array</h4>
+  <p>Array là một khối bộ nhớ liên tục với kích thước đã biết, cố định, có thể được cấp phát trên stack. Bạn có thể truy cập phần tử của array bằng cách lập chỉ mục, như sau:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    let first = a[0];
+    let second = a[1];
+}</code></pre>
+
+  <p>Trong ví dụ này, biến <code>first</code> sẽ có giá trị <code>1</code> vì đó là giá trị tại chỉ mục <code>[0]</code> trong array. Biến <code>second</code> sẽ có giá trị <code>2</code> từ chỉ mục <code>[1]</code>.</p>
+
+  <h4 id="invalid-array-element-access">🔵 Truy cập phần tử Array không hợp lệ</h4>
+  <p>Hãy xem điều gì xảy ra nếu bạn cố truy cập phần tử của array vượt quá phần cuối. Giả sử bạn chạy đoạn mã này, tương tự trò chơi đoán số ở Chương 2, để lấy chỉ mục array từ người dùng:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust">use std::io;
+
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    println!("Please enter an array index.");
+
+    let mut index = String::new();
+
+    io::stdin()
+        .read_line(&amp;mut index)
+        .expect("Failed to read line");
+
+    let index: usize = index
+        .trim()
+        .parse()
+        .expect("Index entered was not a number");
+
+    let element = a[index];
+
+    println!("The value of the element at index {index} is: {element}");
+}</code></pre>
+
+  <p>Đoạn mã này biên dịch thành công. Nếu bạn chạy với <code>cargo run</code> và nhập <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, hoặc <code>4</code>, chương trình sẽ in ra giá trị tương ứng tại chỉ mục đó. Nếu bạn nhập số vượt quá cuối array, chẳng hạn <code>10</code>, bạn sẽ thấy đầu ra như sau:</p>
+
+<pre><code class="language-console">thread 'main' panicked at src/main.rs:19:19:
+index out of bounds: the len is 5 but the index is 10
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</code></pre>
+
+  <p>Chương trình dẫn đến lỗi tại thời điểm chạy khi sử dụng giá trị không hợp lệ trong thao tác lập chỉ mục. Chương trình thoát ra với thông báo lỗi và không thực thi câu lệnh <code>println!</code> cuối cùng. Khi bạn cố truy cập một phần tử bằng chỉ mục, Rust sẽ kiểm tra chỉ mục bạn chỉ định có nhỏ hơn độ dài array không. Nếu chỉ mục lớn hơn hoặc bằng độ dài, Rust sẽ panic. Kiểm tra này phải xảy ra tại thời điểm chạy, đặc biệt trong trường hợp này, vì trình biên dịch không thể biết trước giá trị người dùng sẽ nhập khi chạy code.</p>
+
+  <p>Đây là ví dụ về các nguyên tắc an toàn bộ nhớ của Rust trong thực tế. Trong nhiều ngôn ngữ cấp thấp, kiểm tra này không được thực hiện, và khi bạn cung cấp chỉ mục sai, bộ nhớ không hợp lệ có thể bị truy cập. Rust bảo vệ bạn khỏi loại lỗi này bằng cách thoát ngay lập tức thay vì cho phép truy cập bộ nhớ và tiếp tục. Chương 9 thảo luận thêm về xử lý lỗi của Rust và cách viết code dễ đọc, an toàn không panic và không cho phép truy cập bộ nhớ không hợp lệ.</p>
+
+  <div class="page-nav bottom"><a href="ch03-01-variables-and-mutability.html">← Trước</a><a href="ch03-03-how-functions-work.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

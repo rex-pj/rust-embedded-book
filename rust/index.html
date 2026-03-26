@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rust Programming Language — Bản dịch Tiếng Việt</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .hero {
+      text-align: center;
+      padding: 60px 24px 40px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+    .hero-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+      line-height: 1.2;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #a8c0e0;
+      max-width: 560px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(206,66,43,0.85);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: #CE422B;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .cta-btn:hover {
+      background: #b8381f;
+      transform: translateY(-1px);
+    }
+    .diagram-container {
+      background: var(--surface, #f8f9fa);
+      border: 1px solid var(--border, #e0e0e0);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    .diagram-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent, #CE422B);
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .chapter-card {
+      background: var(--surface, #f8f9fa);
+      border: 1px solid var(--border, #e0e0e0);
+      border-radius: 10px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chapter-card:hover {
+      border-color: #CE422B;
+      box-shadow: 0 4px 20px rgba(206,66,43,0.12);
+      transform: translateY(-2px);
+    }
+    .card-icon {
+      font-size: 2rem;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text, #1a1a1a);
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--muted, #666);
+      line-height: 1.5;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text, #1a1a1a);
+    }
+    .intro-text {
+      font-size: 1rem;
+      color: var(--muted, #555);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 720px;
+    }
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+  <nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+  <div id="content">
+    <div id="topbar">
+      <button id="hamburger">☰</button>
+      <a href="index.html">📖 The Rust Book</a>
+      <span class="sep">›</span>
+      <span class="current">Trang chủ</span>
+      <span style="flex:1"></span>
+      <a href="title-page.html" style="color:var(--muted);font-size:13px;text-decoration:none">Bắt đầu đọc →</a>
+    </div>
+    <div id="main">
+
+      <div class="hero">
+        <div class="hero-badge">Bản dịch Tiếng Việt</div>
+        <div class="hero-logo">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <rect width="56" height="56" rx="10" fill="#CE422B"/>
+            <text x="28" y="40" text-anchor="middle" fill="white" font-size="34" font-weight="bold" font-family="serif">R</text>
+          </svg>
+        </div>
+        <h1>The Rust Programming Language</h1>
+        <p>Cuốn sách chính thức về Rust — được dịch sang Tiếng Việt để hỗ trợ cộng đồng lập trình viên Việt Nam tiếp cận ngôn ngữ lập trình hệ thống mạnh mẽ nhất hiện nay.</p>
+        <a href="title-page.html" class="cta-btn">Bắt đầu đọc ngay →</a>
+      </div>
+
+      <div class="diagram-container">
+        <div class="diagram-title">Lộ trình học Rust</div>
+        <svg viewBox="0 0 700 120" style="width:100%;max-width:700px;display:block;margin:0 auto">
+          <!-- Nodes -->
+          <rect x="10" y="40" width="110" height="40" rx="8" fill="#CE422B"/>
+          <text x="65" y="65" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Cơ bản</text>
+
+          <line x1="120" y1="60" x2="148" y2="60" stroke="#CE422B" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <rect x="150" y="40" width="110" height="40" rx="8" fill="#d95f3b"/>
+          <text x="205" y="65" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Ownership</text>
+
+          <line x1="260" y1="60" x2="288" y2="60" stroke="#CE422B" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <rect x="290" y="40" width="110" height="40" rx="8" fill="#e07050"/>
+          <text x="345" y="65" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Types &amp; Trait</text>
+
+          <line x1="400" y1="60" x2="428" y2="60" stroke="#CE422B" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <rect x="430" y="40" width="120" height="40" rx="8" fill="#a83820"/>
+          <text x="490" y="65" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Concurrency</text>
+
+          <line x1="550" y1="60" x2="578" y2="60" stroke="#CE422B" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <rect x="580" y="40" width="110" height="40" rx="8" fill="#8b2e18"/>
+          <text x="635" y="65" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Advanced</text>
+
+          <!-- Step labels -->
+          <text x="65" y="100" text-anchor="middle" fill="#888" font-size="10">Ch. 1–3</text>
+          <text x="205" y="100" text-anchor="middle" fill="#888" font-size="10">Ch. 4–6</text>
+          <text x="345" y="100" text-anchor="middle" fill="#888" font-size="10">Ch. 10–13</text>
+          <text x="490" y="100" text-anchor="middle" fill="#888" font-size="10">Ch. 16–17</text>
+          <text x="635" y="100" text-anchor="middle" fill="#888" font-size="10">Ch. 18–21</text>
+
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#CE422B"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <h2 class="section-title">Giới thiệu về cuốn sách</h2>
+      <p class="intro-text">
+        <em>The Rust Programming Language</em> là cuốn sách chính thức, toàn diện nhất về Rust — viết bởi Steve Klabnik, Carol Nichols và Chris Krycho cùng sự đóng góp của cộng đồng Rust. Cuốn sách này được dịch sang Tiếng Việt nhằm giúp các lập trình viên Việt Nam dễ dàng tiếp cận Rust, ngôn ngữ kết hợp hiệu suất của C/C++ với sự an toàn bộ nhớ mà không cần garbage collector.
+      </p>
+
+      <h2 class="section-title">Các chủ đề chính</h2>
+      <div class="chapter-grid">
+        <a href="ch01-00-getting-started.html" class="chapter-card">
+          <div class="card-icon">🚀</div>
+          <div class="card-title">Bắt đầu với Rust</div>
+          <div class="card-desc">Cài đặt Rust, viết chương trình Hello World đầu tiên và làm quen với Cargo — hệ thống build và quản lý package của Rust.</div>
+        </a>
+        <a href="ch04-00-understanding-ownership.html" class="chapter-card">
+          <div class="card-icon">🔑</div>
+          <div class="card-title">Ownership &amp; Borrowing</div>
+          <div class="card-desc">Hiểu hệ thống ownership độc đáo của Rust — nền tảng đảm bảo an toàn bộ nhớ mà không cần garbage collector.</div>
+        </a>
+        <a href="ch08-00-common-collections.html" class="chapter-card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">Collections</div>
+          <div class="card-desc">Làm việc với Vec, String, HashMap và các cấu trúc dữ liệu phổ biến trong thư viện chuẩn của Rust.</div>
+        </a>
+        <a href="ch09-00-error-handling.html" class="chapter-card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Xử lý lỗi</div>
+          <div class="card-desc">Triết lý xử lý lỗi của Rust với Result và Option — viết code vừa an toàn vừa rõ ràng về các trường hợp lỗi.</div>
+        </a>
+        <a href="ch16-00-concurrency.html" class="chapter-card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">Fearless Concurrency</div>
+          <div class="card-desc">Lập trình đồng thời an toàn với threads, message passing và shared state — Rust giúp bạn tránh các lỗi race condition tại compile time.</div>
+        </a>
+        <a href="ch20-00-advanced-features.html" class="chapter-card">
+          <div class="card-icon">🔬</div>
+          <div class="card-title">Tính năng nâng cao</div>
+          <div class="card-desc">Unsafe Rust, advanced traits, macros, closures nâng cao và nhiều tính năng mạnh mẽ khác dành cho Rustacean có kinh nghiệm.</div>
+        </a>
+      </div>
+
+      <nav class="chapter-nav">
+        <a href="title-page.html" class="nav-btn next"><span class="nav-dir">Tiếp theo →</span><span class="nav-title">Trang tiêu đề</span></a>
+      </nav>
+    </div>
+  </div>
+  <script src="nav.js"></script>
+</body>
+</html>

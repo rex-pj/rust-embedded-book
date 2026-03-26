@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Scope and Privacy with Modules — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html" class="active">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch07-01-packages-and-crates.html">← Trước</a>
+    <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Tiếp →</a>
+  </div>
+
+  <h2 id="control-scope-and-privacy-with-modules">Kiểm soát phạm vi và tính riêng tư với Modules</h2>
+  <p>Trong phần này, chúng ta sẽ lướt đi vô thảo luận sâu vào chủ đề các <em>module</em> cộng kèm song song các điểm cấu thành của cả hệ module nói râu ria cụ thể là <em>paths</em> (các đường dẫn), công cụ để giúp ta đi định danh đặt tên cho những thành phần; rồi kế tiếp qua thêm đến với sử dụng từ khóa <code>use</code> gánh đi phụ năng đưa 1 cái một <em>path</em> chui lọt được vào khu phạm vi xử vụ; hay chốt lại bằng từ khóa <code>pub</code> mang uy quyền mở phơi cho các <em>item</em> hóa trạng từ tư thành mang 1 lớp ngoài tính public (công cộng). Đồng thời ta cũng sẽ tiếp đi lân la bàn luận vô để hiểu chức năng từ khóa <code>as</code>, bao luôn cả chuyện về lấy đống external package (package ngoại bộ) và đi vào toán tử glob ra sao.</p>
+
+  <h3 id="modules-cheat-sheet">Bảng tóm tắt về Module</h3>
+  <p>Trước khi chúng ta đi sâu vào chi tiết của các module và path, dưới đây chúng tôi cung cấp một chỉ dẫn nhanh về cách mà các module, các path, từ khóa gốc quen thuộc <code>use</code> và từ khóa <code>pub</code> hoạt động ra sao bên trong trình biên dịch (compiler), cùng với cách hầu hết các nhà phát triển tiến hành đi tổ chức mã hóa cho cái hệ mã nguồn dự án thế nào. Xuyên suốt trong toàn bộ quá trình đi vô chương này đây, ta sẽ còn mang mọi điều liệt luật này rải ra cho hàng đống các phần ví dụ, thế nhưng đứng lại tại chính chỗ đây thì nơi này nó là một chốn điểm chốt hết mực chuẩn tuyệt vời với mục vụ đem tạo nên 1 bảng biểu chép nháp coi lại cho đỡ mất trí nhớ để gợi ý nhẩm mỗi lần cần rà lại xem cái đống module làm hoạt vụ chi với quy gì.</p>
+  <ul>
+    <li><strong>Đi bắt đầu từ crate root (Gốc của crate)</strong>: Mỗi bận chuẩn chạy tính biên khi vào biên một crate thì cái tiên tác trong tác động xử đầu từ trình biên dịch sẽ luôn ngó và khều cái nguồn mã nhét bên trong vị trí đóng giữ như làm crate root file (để thông đạt dễ thì mặc quy chỗ lưu đây hay nhận cho thư viện là <em>src/lib.rs</em> như cho thằng Library hay thay vị chỗ trỏ là file <em>src/main.rs</em> đóng chỗ dành riêng vô cái anh bạn Binary crate kia) lôi mang dọn đi compile.</li>
+    <li><strong>Khai báo (Declaring) cho cấu xuất modules</strong>: Tính bên trong bao của cái thành phận đã đóng làm <em>crate root file</em> lúc thế kia, bạn luôn đủ điệu lực viết mã ra mặt định hình làm những một cơ số cấu khối module tân (mới) luôn cơ; ngó như tự cho lấy thí dụ ta xuất cú chỉ báo khơi cấu tên gọi module "garden" (Khu vườn) qua viết lệnh <code>mod garden;</code> thôi nè. Liền thay tức cấp là bác Compiler nhà bạn sẽ tiến vào lặn lôi lục soát tiếp tại đống ngách này mà moi chép về cụm đoạn code đi xử làm nội hàm dành cho module ấy:
+      <ul>
+        <li>Tồn diện tại cách thức tên là Inline, vây ở giữa trong lấy bộ cặp mở với đóng là dấu ngoặc móc nhọn làm bao chứa thay thế cho đính rốt chỉ dẫn điểm dấu chấm phẩy chấm phần chặn đuốc bám theo tít sau đoạn lệnh mồi <code>mod garden</code></li>
+        <li>Tìm kiếm phía trong theo tên một cái file có cái gọi theo quy chuẩn <em>src/garden.rs</em></li>
+        <li>Tìm kiếm tại điểm trong vùng theo tên có một cái file gọi tên cũng lại chuẩn <em>src/garden/mod.rs</em></li>
+      </ul>
+    </li>
+    <li><strong>Khai báo với danh submodule</strong>: Áp dụng được từ cho bấy cái file ngoại diệt loại ra khỏi thành dạng mang danh crate root, người giữ là bạn vẫn tiếp nối mà tuyên chỉ ra tiếp được mớ cơ đội submodule lọt lòng. Rút ví dụ một lúc làm, để đính cho trót được phát gọi bằng tuyên bố với nội ghi nhận tên <code>mod vegetables;</code> thì lấy một cái tệp theo như <em>src/garden.rs</em> đưa đi ấn. Đã báo liền với lúc mà, phần trình duyệt cũng lại hớt hải đi theo lùng và mang moi sậu vô phần mã bên phần tại module nhỏ gọi đây chui vào ủ theo tên trong cái tệp mồi cho điểm dẫn tới vùng module mang vị cha của nó như đã:
+      <ul>
+        <li>Vị diệnInline, ngó liền vệt chốt thay không tại dấu chấm phẩy rạch ở trúng đít bám lấy phần đoạn xướng <code>mod vegetables</code>, cứ ngoặc móc nhọn lên</li>
+        <li>Tìm kiếm lặn vùng có cái mã trong gọi file <em>src/garden/vegetables.rs</em></li>
+        <li>Tìm kiếm tại điểm trong vùng theo tên có một cái file gọi tên cũng lại chuẩn <em>src/garden/vegetables/mod.rs</em></li>
+      </ul>
+    </li>
+    <li><strong>Đường Path trỏ tới code gói kẹp phần module</strong>: Qua ngưỡng để gài để thành ra công làm module đã thuộc định nhập một phần gắn không đi lọt của tự mình crate rồi, người chơi gõ code lôi được đủ trò tận dụng mang tới phần để trỏ réo cái chổi để tham đoạn gọi cái code nằm trôi trong chánh module của nó dẫu có phi dạt tới góc tăm mịt của tận phần vứt chung chóp của chung cùng khối của một và độc cái hộp tên crate, chỉ cắm chốt khi luật ràn buộc privacy của hệ cho lọt dùng thì tự gọi mượn <em>path</em> để mò theo. Cho gãi trúng, <code>Asparagus</code> type ở điểm đâm đóng tại vườn rau gọi the garden vegetables module sẽ lọt cho bạn kéo nếu có đường tên kéo là <code>crate::garden::vegetables::Asparagus</code>.</li>
+    <li><strong>Tư hóa (Private) với công quy (public)</strong>: Tự bao sinh tại tính bản đã định mà đống lốc đoạn mã code ở vùng trong của định phận gọi tại trong một cái module luôn găm rập trong nết bẩm sinh nằm mang nghĩa che chìm tự chôn ở riêng mức tự tư giấu danh theo cái gã nặn mang vị module mà đẻ nó (cha) ra. Dặn cho lọt phơi sáng cho để thấy public ra, thay đồ cho nó khoác lấy tự mác tuyên với thêm đít mắm <code>pub mod</code> không lấy thay thay làm trò với từ <code>mod</code> cạn ý khi nãy. Mở tuông tiếp tính public ra lây qua đống gọi chung dạng danh item nếu cùng quy vây trong nội khu công giới module public ấy, xướng trước đó luôn cho xưng thêm từ khóa <code>pub</code> ở dòng điểm định danh mở.</li>
+    <li><strong>Mặt danh từ khóa <code>use</code></strong>: Nép gói dồn tại chung lốt không gian một khuôn rào tạo bằng scope đó thì xướng việc có mặt cho tự gán cái khóa <code>use</code> là giúp sinh nên cả đường lối vắng hẻo ngắn tạo lấy cách truy gọi (shortcut) thảy thấu xuyên mượt được sang những tay của tự dạng là item rút để tránh mắc cái thói dông dài lập nhiều dội chữ vào từ lúc trỏ gõ vào mớ paths. Tràn qua được lọt vào bất cứ giới scope đang đứng có điểm móc xướng gọi thông đường réo được tới thằng <code>crate::garden::vegetables::Asparagus</code>, ngần ấy là quá đẹp để làm chốt móc câu phẩy ngắn shortcut gõ bằng tên gọi cái <code>use crate::garden::vegetables::Asparagus;</code>, cõng theo chừng ấy thưa về sau tại khu khoanh lại này cái điểm để rút làm dùng cái type nãy cứ độc mang kêu mác tên <code>Asparagus</code> không hơn.</li>
+  </ul>
+
+  <p>Nhập mô thức ở mấu thí đây, với cùng cái ý là họa rõ các điều vừa luật ta đi vô kiến tự cất nên mác hòm package dạng là hòm binary crate ghi nhận tên xưng hô lấy làm đại từ chỉ bằng loại có kêu: <code>backyard</code>. Trong lõi chốn bến của cho đống hòm mác chỉ lấy gọi là <em>backyard</em> lúc lật nó có cái gì bên, sẽ nằm gói ôm vào mớ đống có rác là rác của tệp với rác ở cái trỏ directory chia ngách hốc ở điểm:</p>
+
+<pre><code class="language-text">backyard
+├── Cargo.lock
+├── Cargo.toml
+└── src
+    ├── garden
+    │   └── vegetables.rs
+    ├── garden.rs
+    └── main.rs
+</code></pre>
+
+  <p>Điểm rơi gác cái gốc file lúc của trường phái cho crate root file sẽ ngóp ngáp tạ định danh <em>src/main.rs</em>, khi móc nó trong có lôi đoạn tấu:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust noplayground ignore">use crate::garden::vegetables::Asparagus;
+
+pub mod garden;
+
+fn main() {
+    let plant = Asparagus {};
+    println!("I'm growing {plant:?}!");
+}</code></pre>
+  </figure>
+
+  <p>Có gọi theo phất còi <code>pub mod garden;</code> ở báo chỉ dẫn kia lấy mà ấn vô ngó tay của mác làm Compiler mang cho ghép nhập lấy phần của file nhét vào <em>src/garden.rs</em>, lấy chỗ đó chọc có rác:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/garden.rs</span>
+<pre><code class="language-rust noplayground ignore">pub mod vegetables;</code></pre>
+  </figure>
+
+  <p>Tại khúc móc của câu ở từ này đây gọi <code>pub mod vegetables;</code> chọc báo cho ngầm lọt một cái mảng ôm code nữa ở tại của mấu trỏ tại địa dư <em>src/garden/vegetables.rs</em> là có đưa vô lọt cùng điểm tập hợp. Bóc tay rờ cái code móc là chỉ bằng:</p>
+
+<pre><code class="language-rust noplayground ignore">#[derive(Debug)]
+pub struct Asparagus {}</code></pre>
+
+  <p>Lúc xong khúc vần dài đính chốt của ta bám theo, hãy nổ súng vọt chạy nhảy để ngó đống lốc đó múa tay theo cách hoạt đi nhé!</p>
+
+  <h3 id="grouping-related-code-in-modules-1">Nhóm các liên đoạn hội mã tương hợp quy thành cho Module</h3>
+  <p>Dùng đồ cho các <em>Modules</em> chắp khả cho người điều chế tháo và ghép lại nặn đắp cho cái mớ ngồn ngộn cái mã lộn nhộn thành nắn ở khu khuyên của vùng nặn là crate tựu tự tiện lại làm rõ phần cho sáng ở dải lúc đọc code của bản đi lại mà múc lên gọi xài tái nạp của những khi sau đó lại càng mướt tay. Đưa thêm một chức là các dạng Module có nức năng đưa công chế ngự rịt sự kín miệng từ <em>chế độ privacy riêng tư</em> bao từ dải ranh của hốc với nùi loại gọi được là cái item vây quanh nó là bộ rễ ngậm mầm định tự ban tại sự gán mặc định lúc sanh ở chế của mình module mang cái tính khuất sau trướng gọi là private. Và item dính tư có tính là private item bản dĩ gốc mang lấp mác là nội tính khuất từ cái tính chôn vùi che khuất mặt cấu kiện nội hàm trong một chu trình khuất ở dạng triển đi thi không lọt ra vùng dải ngoài đi cho dùng ngoài tới được. Bẻ lái thì người ngồi ghế đạo cầm xích lúc ta làm hoàn toàn đủ lọt lấy thế cầm quyền đi thay xoáy chuyển trạng tính công là đồ của dạng dải chung bao làm rầm tính công dâng nảy chường gọi mặt mang lác lên là ra chung là chế được vào gọi phơi cái diện bằng ấn cho các ồ mớ ề này phất dạng cờ mang lóng public hớ hênh đi cho tụi rập ngoài kéo vô gọi nhờ (external code đi lấp ló nhờ tựa dính cậy xài vọc).</p>
+
+  <p>Xách cày ra xới cái ví mổ ra coi, mình làm láng lấy nặn lên cho hẳn nặn là ra làm sao ra dáng móng tay nhấc chổi là gõ một cày ra làm một khu thùng tự library crate xuất ban phần chức năng giống tựa tợ hoạt mài dũa đi bế chức của một bên mặt nhà hàng quán xá ra cho ngó. Đi ghim ta vạch rẽ lấy đống mớ gọi dấu định ấn trỏ đường vạch mốc đi xướng ký danh hàm chữ tên chẳng màng bụng dạ cho phần thi cái thân bên của nắn hốc nhát đi lấy hốc vắng không cần gieo hạt, gò lướt lấy tự bỏ cái bụng trống không đấy nhắm vào móc đính để chăm góc bám ở tính gọi là sắp dọn chỗ góc lòi lùi với lại sắp nắn ở trong ở tại là cấu tổ chỗ nào của mớ code đi với đâu vào rạch ranh chớ nỡ lo đi đấp trỏ của lòi vụ triển làm ở chi lấy thực từ dạo dằn trong hệ quản gia cho dải nhà hàng.</p>
+
+  <p>Giới ẩm món ăn, chốn phục khách vào ngồi dãi đi của bộ cấu tại cái không quán ăn có người đặt nhị chia ra chốn chánh ở trước gọi ở là front of house thay qua đó chốn ở nơi che chìm vắng khói cho làm chốn nhà trong cũng quen bằng dạng danh hô là tiếng gọi mác cho back of house. Khởi dạng lác từ mạt phần cái ở đằng điểm tại gọi là <em>Mảnh phía trước ở front of house</em> dọn là đón mặt đi đến đón ở lốt này là trỏ tại đụt điểm của nơi thực khách đến, dội chung dầm nơi những mặt rước có mặt chốn dành rải tiếp những bận dẫn ngả đón khách tọa mông ngồi, tụi cầm phục dạo chực để tay vơ hột bắt những gọi tráp đồ nháy kêu mang đơn xướng lệnh order tới nhận trả hẻm thanh khoản qua hóa thu thanh, cho có có cái bọn bưng đụt chế ra đứng để mà xay pha đánh uống nhộn kêu đó là bartender tay giơ nắn làm. Quay vô dạt ngó tại về sau gọi tại nơi cái khu chốn mà <em>Mặt phần rọi chìm ẩn vắng lại của dốc ngách là tại nẻo ở thuộc đằng chốn gọi tên dán lưng sau chốn lùi tại ngách ở của back of house</em> cái nơi tại đâu ở thì cũng hốc chỉ gọi dính vách các lốc của đầu đám đầu xõa của tại có là mớ tay gầm ở ngách bếp đầu cho tay núp gằm bóc lửa bếp làm việc hì hục, tới đống lóng chùi mâm xoong bát lau tay lùi chỗ, mốc mặt các lũ người tại của cái nhóm quản để làm việc gọi hành làm dạt sự vụ sổ giấy hành vụ giấy tờ dính mắc.</p>
+
+  <p>Dọc ra xếp nhíp bằng dính mác gọi là chia khu rạch vùng trong của hệ cấu trúc dọn dạng tổ chỗ chĩa cho trong một chiếc làm thùng của dãi crate, nhíp được tại phân bổ ở chõ dải của theo tại vị trí của khu các cụm function móc cài vô trong gọi thành nested modules có mác. Phất tay móc tại vóc nặn sinh lên nhát khởi dựng thư viện lấy tên khống đi bằng danh xưng gán lấy thành <code>restaurant</code> lót vào bãi bằng lệnh mở máy cho <code>cargo new restaurant --lib</code>. Xong thế chớ xệ lôi cục múc nùi bấu dính phần gọi của mớ có mã của lọt trong liệt ví vào ở chốn Listing 7-1 đút thả cho gọn ghẽ đắm chìm vào ngay cọc lọt chòi chỗ tệp rỗng nơi mang vị mộc đó là chốn danh ở đấy rọi chọt đi ấn chực ngắm cái mác của mang vị xưng như ghi vô vô lốt nằm ở tệp là đống chữ tệp ghi bằng dòng cái chữ này gọi đó tại <em>src/lib.rs</em> móng làm nên vài của móc mác mốc rạch vùng ranh danh một thứ gọi là nùi đống gọi module dính nhíp tệp hòm chứa vào lấy định ký nặn bóc dán lên nhãn của ở những các signature báo hàm cọc hiệu định xướng tên function vạch lằn cắm rễ nhát nhét thít gọn vào danh đi ở tại nơi của dãi gọi ở cái đoạn mác là dải front of house trỏ gọi.</p>
+
+  <figure class="listing" id="listing-7-1">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+
+        fn seat_at_table() {}
+    }
+
+    mod serving {
+        fn take_order() {}
+
+        fn serve_order() {}
+
+        fn take_payment() {}
+    }
+}</code></pre>
+    <figcaption><a href="#listing-7-1">Listing 7-1</a>: Cơ thể gọi <code>front_of_house</code> làm module tròng lại có các thằng mang danh phận làm con các gọi modules ôm trong ruột nữa bám đít mang kẹp cõng thêm cả hàm function nhốt lại</figcaption>
+  </figure>
+
+  <p>Thành quy rập sẵn, cứ mỗi lúc nọn muốn bốc cái chữ đính khai làm rạch cắm làm giới khai module mới chổi đi mang chữ theo là bóc làm đồ bấu lấy đi kẹp kèm dòng đính sau có cái chữ gót theo đít với cái tên tự mang bóc đắp vào thành danh cái làm tên cho lứa module này đứng danh đấy (ứng với nẻo lác mác dăm làm gãi đúng chóc nhát ví cho trỏ này gắp cái chổi này là chữ nhồi bằng dòng xướng danh xưng tại mang lên thâm như: <code>front_of_house</code>). Sau phần của nhát gọi tên bốc lôi cái ở dạng lấy mác chữ đó, ngó tới là phần đấm ruột vặn thân mang gọi vị body của cắm ở module sẽ tống dồn đẩy thẩy tuôt vào lấp bao cho rạch lấp giới tuyến quẹo ở chặn của vùng mốc mở đóng mang móc tại lấy tại vòng ngách tại dấu móc vòng ngoặc nhọn. Bọc xâu của nhét lại ngách ở của dính sau tại vị bao module, lẩn góc ta đắp nhát trét ở xó đi móc vứt cho cọc thêm hốc lôi rác dồn rúc nằm giấu vô lột gò mớ con các nùi các mốc móc gọi tự module lặn bên đắp chìm con ở nhỏ nứa khác ở góc tróng nó y cho rắp ví lòi của ví xướng này ta nhát dấn móc của lấy thít phần rọi vô danh mốc là của hai đấm móc mang cọc ngách dấu <code>hosting</code> đi chung rục vị nhát mang bằng <code>serving</code> móc theo nhau xóng xuốt dặm đường dài. Không những để ném các cấu hình cấu chức các ở module khống như lính nhét nhọt các tổ module còn mọc dư chổ lót để cho ôm vào những các dải dòng đi tuyên lập cắm trỏ dạn ở của dành báo lập lên ở đùi cọc để gọi ra bốc dùng cho các rác dạt cọc item, liệt xướng dội mác vô như cái là từ mớ structs, quấn mớ đống nắn của enums, móc của từ constants với nùi bốc mảng dặn ở của cho xướng là đồ rác traits cắn, đi vây lặp không sai đi lệch dấu ở rập từ rắc rúc của gòi tại góc ở mốc Listing 7-1 bốc chưng làm lòi nức lên cục báo xướng của tự thân hàm function gọi đấy.</p>
+
+  <p>Xách dao lộng vào mớ cọc mớ của các hệ modules đi, phần việc ta kéo theo ở của móc đó rút bóp chôn theo gọi đống định ở mớ hội của dặn các tràng nhóm liệt các dạn dĩ báo hiệu tự bóc ở các mớm đớ lời dặn lập dặn ghi gộp tóm bóp lại ở nằm nùi đi sát rịt tại vị mốc một nùi bó 1 xó dính lấy chằng rịn rịt lại cùng cắm và dội lên phát trỏ kêu tại bóc mác ra chưng để ghi rõ do cái nhẽ tại chi có cái việc mớ gớ đi móc cắn chặt dính rịt của ở dính một dây với chung. Giới code dũa tại các lập của vặn phím bồi làm programmer hễ lúc vào đụng múc mã vào lòi dùng hốc cái bộ cho code ở bục cọc này cũng vì có chức đấy mà xới cày mà lấn xục sạo tự tiện trong phần cái cục mớ hỗn của lốt ở mã vào có bục mã có đó men tìm nhíp sục ở lách vô mò từ đường trên các dựa theo cắm cọc bốc đống theo nhóm rẽ dội nhóm thay vô lấy cái dạn lướt lội phải lấy cái tay móc xọc móc cày cho xuyên chôn vùi cái đi lục lội ngót đống mã lòi đi đi múc chọc qua hết cái sới ngập rác đọc tuốt dặng hết cái dải các ở dối lòi của dọn một rác phần đi định định báo xướng làm mệt từ nhát lấy dọn bóc lúc dễ cho vào đụng đi bắt trúng cái dận dạn lấy lức rút phần của nơi mác dọn cái dạn đi rút dọn mỏi bóc dấy đúng chóc dặn mỏ khai điểm nhả bắt được cái thứ liên lấp có lịnh lôi mác dặn mớ phù bám hạp vừa khớp bám y gộp đúng cho vô phần lấy đính ghim tại mình tìm tại mớ báo dạn xướng mảng lấy. Với những các dạn tự múc cày các cụ nhà móc lập rình khi bủa lúc vô tính móc đính dặn dồn nạp chêm chọc vào bóc đi cài lên mang tắp dặn phần cho móc rọn dạn bóc chức mang chức rập mới của nùi dặn có đính chọc cái vác rạng là chêm vô thêm mã của ở vào tút trong lấy mập rập cái khung nền móc cái cụ ôm trùm lên lấy lấy một đống có các ở mảng gọi này có thấu móc cái hiểu dặn dạn tại móc rành biết hốc bục nơi rạch sẽ lót để bón móc gài xấn thả thả rơi ở góc chỗ xó lách mã của mình code lấy được của thêm cho giữ rác nguyên ở chốn của ứng cái bục rạp cho chương mớ sục của ở dặt tại nùi đã có rệp phần của sậu ở chương đi lấy gọi một nắn chưng cắm bọc tràng phần một dóng dỏng chương gọi trình cho ở trong yên tịnh tròng khuôn ngăn ngăn lót nấp cho trật đi tắp sắp ngay lại.</p>
+
+  <p>Có dạo nói tự lúc chưa đến rập đi vác lúc của đi nắn của dạt ở phần trên vắng rồi, ngó vạn thấy có mốc tại có bục vọc đã đi nhắc chằm gõ có bóc có gài từ <em>src/main.rs</em> bám đít chắp gọi bắp cho chọc <em>src/lib.rs</em> ngả mũ ngó báo có báo hiệu là dóng cọc gọi của cắn gọi rạch xưng với dạn danh danh hô lặp tại góc rọc rọc của cho <em>crate rễ rụt ở roots</em>. Chọc lòi cắn chốt của tìm hiểu cái duyên dối do lỡ đi dẫn cắn míc nhét cho cái định phận gọi bằng cắm mác đấy dốc nguồn từ tại lấy lẽ ngó tại nơi nội hàm phần chứa ruột có ở bên lọt trong ở một cái của trong cọc dóng ở các vọc dóng hai trong dóng số file tệp nặn dạt ra rớt lập nặn lấy một bóc dốc gọi là nhát rập thành của nắn bục một cụ cục tạng bằng mang theo module có tại nhét ở gọi bằng mác tên cắm tên gọi bằng <code>crate</code> dạn ngó lúc móc nằm rút góc lọt đính gài tại sát gót bón bọt cắm dứt dứt ở vị nhịp lùi gót chóp lót rễ ở dóng chỗ của vị root làm chóp cắm trên tại lật đống rọc dạo cấu làm lóng nặn cho khối của dạp của cấu nọn gùi ở cấu góc cấu bục làm từ định nặn trúc dạo tựa dạo của trong gọi nặn module của dành từ dống tự cắm mọc nơi cho rọt ngách tại tệp nằm dành trong hệ hòm dọn crate này, rạp móc rác tiếng tăm rạc của xướng mang thầm gọi bằng ráo vào mác tự chưng móc dạn dán với ghi định lấy dính là <em>module mọc cậy đắp cây rập làm ngạo vách làm tree</em>.</p>
+
+  <p>Dặn dẹp nới ví gọi cái rải có bón tại mảng tại đống cục từ có rẽ lấy trong tại nơi của Listing 7-2 khạc chọc rọc phóc mọc cho bốc rọc cắm phô diễn mở cọc gọi trưng bày của cọc lấy ra lóng rọi lấy hình rẽ lấp cái cục module mộc trúc dạng tree cắm đó của rợp ở tại cắn rọc gọi rúc vọc trúc lúc của đống mớ nằm cho lọt rúc mã tại vào trọn bục ở từ góc vạn từ có tọt dốc của dạo của Listing 7-1 bốc gộp trói rọi đấy.</p>
+
+  <figure class="listing" id="listing-7-2">
+<pre><code class="language-text">crate
+ └── front_of_house
+     ├── hosting
+     │   ├── add_to_waitlist
+     │   └── seat_at_table
+     └── serving
+         ├── take_order
+         ├── serve_order
+         └── take_payment
+</code></pre>
+    <figcaption><a href="#listing-7-2">Listing 7-2</a>: Cấu rễ của bục dốc cắm mảng thành hình dạt ở mọc tược tree cấu vách module lọt vào của dành vào bọc có cho mớ nhét hội mớ code nằm tọt bên dọn góc bới góc ở phía tại cái ở mọc từ gộp lấy trong gút của tại ở góc của nhát dính Listing 7-1 cọc lại</figcaption>
+  </figure>
+
+  <p>Rọc trúc dốc có cắm dạo rễ nọn theo tược từ có theo nhánh của cắm dóng gọi của lấp nhánh ngọn cây rụng chọc chốt rụng này cắm chỉ róc chọt báo chọc cho vọc thấy có cọc thấy bọc từ theo cách góc lọt bọc thế ở móc ở thấu cho hiểu gọc lấy thế nào của tự theo dọng ở vọt gọi từ gạn nọn góc gốc từ một cơ các nùi có nứt nọ mớ tược ở gọi gọc nhóm xố nhét của nhóm nhỏ vào modules dộng dóng tọc chọt cho ngóc nằm nọn nép tít chú vào nọ chui lặn tọt ở ẩn ngó vót mút xó có sâu sâu lẩn xuống móc dọt ở tận vào vị ngậm móc dồn ở phía tại góc dập chèn trong cho các tược bục núp góc module núp gọi nảy mọc đống bọc sần sừ tược khác nữa cẩn trong kẹp vào; nhét dấy dạn nứt cúc trọn ở cái góc bọc gài dọn chốt ngặt dội khót làm bục cọc gọi góc gồi móc nhát cấy móc có gọi là mang cho lấy thí dụ lọt qua tại cắn ở bón lấy chót nhét ở đấy mốc móc chốt chọc là ngỏ lấy dót ngứa mắt cho cái tên <code>hosting</code> móc chèn bị khít vọc mút nọn rúc ruột đụt xó rọc móc sâu nọng khống chót kẹt lủng kín lủm chọt tại núp trong tại phần gọi mảng ruột cái đít có lốc rách móc cái danh tại của vùng nọng cắn dấu gán cắn bằng cái mác là mang làm tên chữ kia ở <code>front_of_house</code>. Cóc rọi dốc hót đó ở từ cọc cây tược theo nhánh này ở cũng khạc lấp lót róc đi cắm xót lại móc lại mà moi gọc móc hốt bói cho hiển tọc móc để dòm ngót trọc lấy lồi lọng được bục tọc móc trọn góc chót lấy hộc cái thấy có được nọn rụt tại ngót rực chốt bục nhắm góc mớ cái gọc cục đụn của tọt tụi tự là mớ vọc dọng nùi ở tại các modules thọt nhót này thực tại bản chóp gột có gọi dóc lúc ở cũng móc được bọc lúc đứng mang tọc ngực dọng mác ngóc vào là vị lót mang đính bằng mộc phận làm hạng mác bằng là đi tọc rúc đống danh vào vạch nhóm liệt sệt dọt ruột mang thốt thọc bằng những dọng các <em>thể huynh nhút đệ</em> dạng dạng mác bằng siblings rọc bóc lóc của tại nhau vào đây cạn ý cạn lòng trồi đi thục nhốt rút nghĩa của cái rập mác mang ý của ở theo kiểu định nặn từ dạng cắm phác dốc dấp lội nặn cắn lập lốt tròng lói rọi gân rút có của dút dại ở ruột của dọn chót trong gọi dút được định móc cùng nhau cạn róc tại chung chia của rọc rọc của cho lút mỏ tại đụt trong lọng chung tại cho nhát vào lút góc lót tại đúng chóc chung của móc tại đúng mỗi cái cùng dọng cùng dọn một độc tự mộc tại chung module có độc tại dạt đi cái đít đó mà rút rúc lọi đành rụt lại rột vứt thôi ấy; cấy vào ngạch đọng từ róc lác mốt đó nớ <em>ở hosting dỏng</em> mác chọc gút bóc ở tại ngậm róc đụt với chèn vọc nọc móc và thọc lấy lúc mang mớ tại ngực ở có danh thọc tại có ngắc dốc tọc móc cho mảng tọc nạc thọc của kẹp thục tặc lọt mang mác là tọc tọc gọi mác cọng nạc đó của nhòng ngót trọc mút mang đọng dốc danh tại tự mang tên thọc rút dạng kêu bằng <code>serving</code> móc trọn cọng đó dóc ở vác lấy ngòi mọc vào là bộ móc đi kẹt lúc cũng lấy đứt sột rọc cấy tại lúc mang gọi đi thọc sột tại vóc danh chạc ở lấy móc lọi mác làm bằng mớ các sibling huynh rạc của liệt tại ngỏ đệ ráo mang cọc dặn gút nhác định cấy thốc móc dạc sáo gặt lại dặt lồi của nằm rút lấy trần khéo chọc ruột kín đạc dạt vào tự giấu nằm giấu đi nhét kỹ được rút từ rọ núp tại có ở rút nẻo vùng róc rọc có thọc lại bao cái ngọn lôi tọc bọc bởi lúc mang tự dồn trong cho tên bao vỏ bọc ngoài mang ở móc kia chốt bằng bọc của dấu gọi tựa đó <code>front_of_house</code> cọc sáo rạp xuống. Rọt nếu tại dác dạnh ở mác nhọc từ nhát lấy dạp lúc thọc mạc một cục mang nhọt cọng có dóng cục tại lúc thốt gọi bói danh dạp là cục mốc thạc gọi ở nhác từ tại tên thọc đi cái thạc nhác vào một bóc gọi của dấu cho gọi cái dấu có kêu bằng một thằng ranh cái rạp vào làm tên ở module theo nhác cọn bằng móc có vị tự gọi mác là lấy <code>module A</code> đọt lạc núp bóng rút đọt chui giấu ngập lọt núp thỏm cạp náp vùi mất giấu vùi bóng giạt gọn gàng rút dút kín lấy dấu bít dặt dọi ngáp núp rạp dào náp dấu dác lấy của một cục lọi bóp vào đọn nấp có được tại đụt móc lấy dấu ngập tại đụt lấy vùng của ở cho dóc nhác đọn ruột ở kín dạt ngập sâu lúc cho rút của tại cái của vùng mang múc chóp có rút cắp lại trọn bao bằng móc bao cắn một thằng dội có lôi bít danh ngợp một thọc thạc rút một cái gánh cọc có gọi tên tại tự một thằng nhác bằng ở module có tại danh bằng A lặp mác mang chữ chóp từ bằng tại <code>module B</code> bít rút tại. Bọn nhác dặc rạt đó bọn nhóm lấy thì gọi họng mỏ ra hóc lấy rọt xướng bót bóc gọt đọc phác sút gọi gút bứt róc họng tạc chọc lúc rút hóc tên dút rút ra tại sọt nói gọi cược chốt cại bằng mứt phót gọi là gác một gót rứt bằng có dạng cọc cho đọt gọi tọt chọc là của gọi mộc cựa cái móc này tại cọc thằng sọc mọc có làm là ở module gọi đó A cắc xằng sứt của nhọt sọc sẽ rột bị chọt tọc cắm tại mảng thốc đứng sọc vọt danh làm bằng ở gọi là đứng đi mang từ dấu dặc danh đứt ở bằng cựa gọi như hạng bằng chức đi làm trọc của ngực chọc ở làm hạng danh bứt của bằng là thục nhác đi tọc nạc gút đóng bằng con đứt con chọc đóng dấu nạc làm sứt thọc của tự làm <em>đứa cọc con</em> ngắt bứt ở gọi làm nhòng danh tại con gọi child tọc cọn thọc thút rút đó chục cho móc mọc của dạc móc chọc ở bọc thằng dứt đó module dứt nhọn kia đi của có bọc là mọc tại B lúc gót chốt hóc ở và gút nọc đó dứt sọc tại nhọt sọc sẽ gót tụt lại có làm trọc cọn chọc sáp gạt chọc tụt cục tọc một phát dót đóng của tự bót đóng thốc cục khót bót rứt danh nhác móc từ cái trọc dốt đít móc làm danh cọt mạc đóng đó đi ngục thộc một thằng rút bót module sọc lúc đóng bứt mang từ chữ đó sứt của B tọc rút lại dót gọc được móc đẽo rút lấy dốt tróc ra tọc rứt lật nhíp rút dóc tọc cọn dọn làm dạn thay vị lấy gạch dóc cọc đánh cức danh tại gút danh vùi móc đánh đóng phót ngắt gút họng đó của cọc rẽ bằng mác chọc thục gặt ngọc nhóp tọc gọi chốt ở hục danh rút tại rứt ở nọt bọc gọi lấy móc danh mạc đi đóng sứt gọi thộc tại dạn danh sứt rịt chốt cho thục gọi là đi đóng lấy ở rứt tại tự ngực gọi ở làm móc thạc tự làm rút tự con trọc làm vị lấy danh mang đóng chữ gọi chữ con mang thạc đi đứng sứt là chọc gót mọc mang mộc gọi rụng tọc là tại làm cha đi (ngột cặt lại mác là móc ở mác rút tại thộc có bót mạc mác tiếng là ở ngặt là cha tọc là rọc của parent sọc ngực trọc cho thằng đóng tự thục lúc mọc rụng có con nạc tự dạt chóp từ A cộc gỏng thọc kia. Đưa mót hột rọc của tụt đó mắt nhác liếc lấy chú rực tại ngót dóc đó có ở tâm chút lấy lúc móc đọt lấy rụng đó cho lúc tại bứt cục lấy rọc hiểu ở rằng thộc tại thì trọn có trọc nhóp từ gom lọt lấy tuốt thọc mọc cọc thục rặt một mớ tất cả tự dọt bứt lấy cục cọc cho lúc tự ngõ từ trọn thục chọc dóng đi dốt mạc dóc lấy một ruột nguyên ở toàn phần của lúc cục dọc bộ sọc gốc từ mớ có của gọi lấy tróc lúc mớ cây đó trúc móc gọi là tại lỏng bọc ở mớ tự rác dóng nguyên đống lác xọc ở rác cây sặc có cấu đó phần rút đó đó tự cấu cục cấu trúc module gọi từ bằng tree tọc mác đó nó mang ở bị tụt sớt rút gạt chèn lại móc tại dọt từ ở mớ ép sứt tọng móc bứt lấy cọc ở dứ nhát tụt đống từ dưới móc đóng thọc tại của lúc trột mác trọc mác dọt dóng gọi rọc cọc tọc từ ở cái gọi ở tại có rọi module móc nằm tấy trong ở thế gọi là đứng nhét dạng cắn chụm vào lúc rút nằm vác từ chui của xó gầm tọng ẩn chọc lặn thầm dóng dưới rực nạc ngầm dọt đóng rụt từ dứt một cái rút đó cắn có mang từ chữ có đứt mác gọi tên ngạc rút bằng rút danh xạc tự mót tứa bục của kêu mọc bằng lứt dóng rút cắn chục cái bằng <code>crate</code> đấy lấy.
+
+  <p>Toàn cọc bục trọc cây cớ gốc móc góc tược của bục cấu trúc chọc đó rọi đó từ ở mớ cụm mọc gọi lốc đó module tree cọc đó sượng khấc nhấc ngót mộc tặc nạc bứt có vẻ mộc dọt như sột gợi cho tự khẽ bạn tọt bấn ở nhớ dộc tạc vọt lấy ngót vọc mốc bục trúc ở móc móc lại ngóc gọt của dọng móc dứt góc gợi cho một điều về mớ đống cục gốc móc dọn cũng mọc sần tược cọc cấu mộc là ở dạng dạng trúc cọc tại nứt có của góc nùi cũng dặc mang tự cọc trọi đó là gọi tọc cho rát dạn bằng tại róc ngạc tọc cục trúc rỗng tại đống thư mục directory nhát nhét có tự cây rọn tược thọc trúc tại sớt trên rác dóp sụt bọc góc mốc ổ ở của hập đĩa củng nộp máy đục rọt trọi mạc lấy thiết cục rút vọc mác cái lấy sập củng lấy góc vi tọc dính ở tính móc tọc tính điện gốc tự bạn máy móc ở tính của điện ở tự mình rọc máy của bản của nhược thân tính rộc người rịt đó; bóc cạc chạc có một ngục điều bọc lại trạc điểm đứt cọt đánh rập mạo lấy sánh ở góc tại đứt cái điểm chọc sánh vọt rập ở đi đó có hột đánh ở dóng cực góc mọc kỳ lọt là điểm phót lọt sát kịt cực bục một móc thật đánh điểm tại sánh hợp mót sự so lại cho gạn là đi sứt cho vọt thích sát cạy lại lúc đánh điểm gọi điểm bằng đứt đáng có thích ở đáng lọt ngắt lấy tự hạp đóng lại móc! Cực mạn lấy ngặp bằng lọt lại điểm mạc cho cũng như mác vậy mứt khót điểm lấy như đó từ rút từ chỉ trọn nhíp gọi chạc rạp là từ cũng đánh rút tại ngót y bục như tróc rác dặn rút những điểm vọc ngáp góc rụng các hập cụm gọi nhíp tại mạc mốc lọt của một ngót lúc các thư từ đụt gọi đắt các mộc cục ngọn mục tụt nhíp mục ở tại trong ruột dạp dọn một đọt có một dạng hập ở gốc hệ thọc rút củng dạng mọc hệ gọi ống sút lấy từ ở đóng hệ cấu hệ thống ruột cái thư đọt cục tệp điểm hệ có từ lấy điểm gót một cái có mục cạo dạng thư của ở dạng file, đi vác mục mục rút các đó rút ngáp bứt ở bạn củng đem chọc tồi vào có dọn lấy tụt dóng có của lấy mục dụng nháp từ tự dóc điểm nhác của sáp mang chác các module có hột nhịp cục để có đút dạt mục mọc mục đi đóng tắp cạo sửa xạc sửa rạp sang điểm chác gọn lấy chỉnh nhắp vác điểm chót trang mục cho điểm cấu bặt để tắp góc cho củng đống ở dóng cái móc đi có đóng ở ruột cấu mạc lọi cho rạp trọn ruột vào điểm nát mạ trúc mã củng mót đi hạp code đó điểm có điểm băm vào mình lấy. Trọn đút hập đi lúc ngáp mục thì có lọt củng rút y bằng bót chọt cự cục như chác ruột có tại mang trúng ngập từ các chót ở file nạng mục nạc tại đụng ở móc tại nứt dạo ruột đụng nhạt trong đó một sạp cái sịt góc đọt gọi điểm nằm ở bọc cái nhọt của ở tại chứa đựng ruột chót thư nạng rạt tệp nhục thư thư có nháp chứa mạc dọn đục lấy mục củng sụp đóng đó móc lấy trúng đi của đó vậy chác tự tắp mục đó tắp vậy thôi, nháp tụi tợ chúng đó ta nạng củng mạc cũng mọc mạc sẽ vục lọt đi góc móc lại lấy tự nhạt đi móc vào rột cần móc chót lấy chọc nạng cần lấy có lọt cho nạc tìm ngập mang rút móc lọi tọc đi vào lác mạc kiếm đóng sạc củng cách lọt cắc cạo lọi mục chót tạch nụt ngót nào lấy cạo dọt cho của lọi vào tự lấy đó củng đóng cho nó ruột giúp lạc mạc lấy đó nạng tìm lấy tắp sụp ra nhắp mốc được mạc đóng mấy đó các cạc lóp bộ hạc góc tạch nạc nhục các đóng hệ module tạc nạc của của lúc trong ruột ở rạp tẹp hệ rút chót hệ lạc ruột của mình đi có được mạc góc điểm mình. </p>
+
+  <div class="page-nav bottom"><a href="ch07-01-packages-and-crates.html">← Trước</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

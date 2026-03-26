@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generic Types, Traits, and Lifetimes - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html" class="active">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 10 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch09-03-to-panic-or-not-to-panic.html">← Trước</a>
+    <a href="ch10-01-syntax.html">Tiếp →</a>
+  </div>
+
+<h1 id="generic-types-traits-and-lifetimes">Generic Types, Traits, và Lifetimes</h1>
+<p>Mọi ngôn ngữ lập trình đều có những chiêu thức riêng để xử lý gọn tình trạng code bị trùng lặp ý tưởng. Trong Rust, một trong những vũ khí bá đạo nhất chính là <em>generics</em>: những cái placeholder trừu tượng đại diện cho các kiểu cụ thể hoặc các thuộc tính khác. Ta có thể diễn đạt hành vi của generics hay cách chúng liên quan tới nhau mà chẳng cần biết trước lúc biên dịch và chạy code thì thực chất chúng sẽ là kiểu gì.</p>
+<p>Hàm có thể nhận tham số thuộc một kiểu generic nào đó, thay vì phải khóa cứng vào kiểu cụ thể như <code>i32</code> hay <code>String</code> — y chang cách hàm nhận tham số với giá trị chưa biết để chạy cùng một đoạn logic trên nhiều giá trị cụ thể khác nhau. Thực ra bọn mình đã xài generics từ trước rồi đấy: Chương 6 với <code>Option&lt;T&gt;</code>, Chương 8 với <code>Vec&lt;T&gt;</code> và <code>HashMap&lt;K, V&gt;</code>, Chương 9 với <code>Result&lt;T, E&gt;</code>. Trong chương này, bạn sẽ khám phá cách tự tay định nghĩa các kiểu, hàm, và method của riêng mình bằng generics!</p>
+<p>Đầu tiên, chúng mình sẽ xem lại cách tách code ra thành hàm để giảm trùng lặp. Sau đó, dùng đúng kỹ thuật đó để biến hai hàm chỉ khác nhau ở kiểu tham số thành một hàm generic duy nhất. Chúng mình cũng sẽ giải thích cách dùng kiểu generic trong định nghĩa struct và enum.</p>
+<p>Tiếp theo, bạn sẽ học cách dùng trait để định nghĩa hành vi theo kiểu generic. Kết hợp trait với kiểu generic giúp ta ràng buộc một kiểu generic sao cho nó chỉ chấp nhận những kiểu có hành vi nhất định, thay vì cứ bừa bãi nhận tất.</p>
+<p>Cuối cùng, chúng mình sẽ bàn về <em>lifetimes</em>: một dạng generic đặc biệt cung cấp cho trình biên dịch thông tin về cách các references liên hệ với nhau. Lifetimes giúp ta cung cấp đủ thông tin cho trình biên dịch để nó đảm bảo rằng các references hợp lệ trong nhiều tình huống hơn là nếu ta không khai báo gì cả.</p>
+
+<h2 id="removing-duplication-by-extracting-a-function">Diệt Trùng Lặp Bằng Cách Tách Ra Thành Hàm</h2>
+<p>Generics cho phép ta thay các kiểu cụ thể bằng một placeholder đại diện cho nhiều kiểu, nhằm loại bỏ code trùng lặp. Trước khi lao vào cú pháp generics, hãy cùng ngó xem cách loại bỏ trùng lặp theo kiểu không dùng generics — tức là tách code ra thành hàm để thay thế các giá trị cụ thể bằng một placeholder đại diện cho nhiều giá trị. Rồi mình sẽ áp dụng đúng kỹ thuật đó để tách ra hàm generic! Bằng cách nhận diện được những đoạn code trùng lặp có thể gom vào hàm, bạn sẽ bắt đầu nhạy cảm hơn với những đoạn code trùng lặp có thể xài generics được.</p>
+<p>Bắt đầu với cái chương trình nho nhỏ ở Listing 10-1, dùng để tìm số lớn nhất trong một danh sách.</p>
+<figure class="listing" id="listing-10-1">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let mut largest = &amp;number_list[0];
+
+    for number in &amp;number_list {
+        if number &gt; largest {
+            largest = number;
+        }
+    }
+
+    println!("The largest number is {largest}");
+<span class="boring">    assert_eq!(*largest, 100);
+</span>}</code></pre>
+<figcaption><a href="#listing-10-1">Listing 10-1</a>: Tìm số lớn nhất trong một danh sách số</figcaption>
+</figure>
+<p>Ta lưu một danh sách số nguyên vào biến <code>number_list</code>, rồi đặt tham chiếu đến phần tử đầu tiên vào biến <code>largest</code>. Sau đó duyệt qua toàn bộ các số trong danh sách, và nếu số hiện tại lớn hơn số đang giữ trong <code>largest</code>, ta thay tham chiếu trong biến đó. Nhưng nếu số hiện tại nhỏ hơn hoặc bằng số lớn nhất đã thấy, biến không đổi và code tiến sang số tiếp theo. Sau khi xét hết tất cả, <code>largest</code> sẽ trỏ tới số lớn nhất — trong trường hợp này là 100.</p>
+<p>Giờ ta bị giao nhiệm vụ tìm số lớn nhất trong hai danh sách khác nhau. Để làm vậy, ta có thể copy y chang đoạn code trong Listing 10-1 và dùng cùng logic ở hai chỗ khác nhau trong chương trình, như ở Listing 10-2.</p>
+<figure class="listing" id="listing-10-2">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let mut largest = &amp;number_list[0];
+
+    for number in &amp;number_list {
+        if number &gt; largest {
+            largest = number;
+        }
+    }
+
+    println!("The largest number is {largest}");
+
+    let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+
+    let mut largest = &amp;number_list[0];
+
+    for number in &amp;number_list {
+        if number &gt; largest {
+            largest = number;
+        }
+    }
+
+    println!("The largest number is {largest}");
+}</code></pre>
+<figcaption><a href="#listing-10-2">Listing 10-2</a>: Code tìm số lớn nhất trong <em>hai</em> danh sách số</figcaption>
+</figure>
+<p>Mặc dù code này chạy được, nhưng copy-paste như thế rất nhàm chán và dễ phát sinh lỗi. Hơn nữa, mỗi lần muốn sửa logic, ta phải nhớ sửa ở nhiều chỗ một lúc.</p>
+<p>Để dứt điểm cái trùng lặp này, ta sẽ tạo một abstraction bằng cách định nghĩa một hàm hoạt động trên bất kỳ danh sách số nguyên nào được truyền vào làm tham số. Cách này giúp code sáng sủa hơn và thể hiện khái niệm "tìm số lớn nhất trong danh sách" một cách trừu tượng hơn.</p>
+<p>Ở Listing 10-3, ta tách code tìm số lớn nhất vào một hàm riêng tên là <code>largest</code>. Rồi gọi hàm đó trên cả hai danh sách từ Listing 10-2. Hàm này cũng có thể dùng cho bất kỳ danh sách <code>i32</code> nào ta cần sau này.</p>
+<figure class="listing" id="listing-10-3">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn largest(list: &amp;[i32]) -&gt; &amp;i32 {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&amp;number_list);
+    println!("The largest number is {result}");
+<span class="boring">    assert_eq!(*result, 100);
+</span>
+    let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+
+    let result = largest(&amp;number_list);
+    println!("The largest number is {result}");
+<span class="boring">    assert_eq!(*result, 6000);
+</span>}</code></pre>
+<figcaption><a href="#listing-10-3">Listing 10-3</a>: Code đã được trừu tượng hóa để tìm số lớn nhất trong hai danh sách</figcaption>
+</figure>
+<p>Hàm <code>largest</code> có một tham số tên là <code>list</code>, đại diện cho bất kỳ slice <code>i32</code> cụ thể nào ta có thể truyền vào. Kết quả là khi ta gọi hàm, code sẽ chạy trên chính xác các giá trị được truyền vào.</p>
+<p>Tóm gọn lại, đây là những bước ta đã thực hiện để chuyển từ Listing 10-2 sang Listing 10-3:</p>
+<ol>
+<li>Xác định các đoạn code trùng lặp.</li>
+<li>Tách đoạn code đó vào thân hàm, và chỉ rõ input, output của hàm trong chữ ký hàm.</li>
+<li>Cập nhật hai chỗ dùng code trùng lặp để gọi hàm thay thế.</li>
+</ol>
+<p>Tiếp theo, ta sẽ dùng đúng những bước này với generics để giảm trùng lặp code. Giống như thân hàm có thể hoạt động trên một <code>list</code> trừu tượng thay vì các giá trị cụ thể, generics cho phép code hoạt động trên các kiểu trừu tượng.</p>
+<p>Ví dụ, giả sử ta có hai hàm: một cái tìm phần tử lớn nhất trong slice <code>i32</code> và một cái tìm trong slice <code>char</code>. Làm thế nào để loại bỏ sự trùng lặp đó? Cùng tìm hiểu thôi!</p>
+
+  <div class="page-nav bottom"><a href="ch09-03-to-panic-or-not-to-panic.html">← Trước</a><a href="ch10-01-syntax.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

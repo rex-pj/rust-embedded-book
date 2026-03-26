@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hàm — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html" class="active">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch03-02-data-types.html">← Trước</a>
+    <a href="ch03-04-comments.html">Tiếp →</a>
+  </div>
+
+  <h2 id="functions">⚙️ Hàm</h2>
+  <p>Hàm rất phổ biến trong mã nguồn Rust. Bạn đã thấy một trong những hàm quan trọng nhất trong ngôn ngữ này: hàm <code>main</code>, là điểm bắt đầu của nhiều chương trình. Bạn cũng đã thấy từ khóa <code>fn</code>, cho phép bạn khai báo hàm mới.</p>
+
+  <p>Mã Rust sử dụng <em>snake case</em> như một phong cách thông thường cho tên hàm và biến, trong đó tất cả các chữ cái đều là chữ thường và ngăn cách các từ bằng dấu gạch dưới. Dưới đây là chương trình chứa ví dụ về khai báo hàm:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    println!("Hello, world!");
+
+    another_function();
+}
+
+fn another_function() {
+    println!("Another function.");
+}</code></pre>
+
+  <p>Chúng ta định nghĩa một hàm trong Rust bằng cách gõ <code>fn</code> theo sau là tên hàm và một cặp dấu ngoặc đơn. Cặp dấu ngoặc nhọn cho trình biên dịch biết thân hàm bắt đầu và kết thúc ở đâu.</p>
+
+  <p>Chúng ta có thể gọi bất kỳ hàm nào đã định nghĩa bằng cách gõ tên của nó kèm theo một cặp ngoặc đơn. Bởi vì <code>another_function</code> được định nghĩa trong chương trình, nó có thể được gọi từ bên trong hàm <code>main</code>. Lưu ý rằng chúng ta định nghĩa <code>another_function</code> <em>sau</em> hàm <code>main</code> trong mã nguồn; chúng ta cũng có thể định nghĩa nó trước đó. Rust không quan trọng bạn định nghĩa hàm ở đâu, chỉ cần nó được định nghĩa trong phạm vi mà trình gọi hàm có thể nhìn thấy.</p>
+
+  <p>Hãy cùng bắt đầu một dự án nhị phân mới tên là <em>functions</em> để khám phá thêm về hàm. Đặt ví dụ <code>another_function</code> vào trong thư mục <em>src/main.rs</em> và chạy nó. Bạn sẽ thấy kết quả như sau:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running `target/debug/functions`
+Hello, world!
+Another function.
+</code></pre>
+
+  <p>Các dòng lệnh thực thi theo thứ tự mà chúng xuất hiện trong hàm <code>main</code>. Đầu tiên tin nhắn "Hello, world!" được in ra, và sau đó <code>another_function</code> được gọi và kêt quả được in.</p>
+
+  <h3 id="parameters">📥 Tham số</h3>
+  <p>Chúng ta có thể định nghĩa hàm có <em>tham số (parameters)</em>, là các biến đặc biệt thuộc về chữ ký (signature) của một hàm. Khi một hàm có tham số, bạn có thể truyền cho nó các giá trị cụ thể. Nói một cách kỹ thuật, những giá trị cụ thể đó được gọi là <em>đối số (arguments)</em>, nhưng trong giao tiếp thông thường, mọi người hay dùng từ <em>tham số</em> hoặc <em>đối số</em> để chỉ cả biến trong định nghĩa hàm lẫn giá trị truyền vào khi gọi hàm.</p>
+
+  <p>Trong phiên bản <code>another_function</code> này, chúng ta thêm một tham số:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    another_function(5);
+}
+
+fn another_function(x: i32) {
+    println!("The value of x is: {x}");
+}</code></pre>
+
+  <p>Hãy thử chạy chương trình này; bạn sẽ nhận được kết quả như sau:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.21s
+     Running `target/debug/functions`
+The value of x is: 5
+</code></pre>
+
+  <p>Khai báo của <code>another_function</code> có một tham số tên <code>x</code>. Kiểu của <code>x</code> được xác định là <code>i32</code>. Khi chúng ta truyền <code>5</code> vào <code>another_function</code>, macro <code>println!</code> đặt số <code>5</code> vào vị trí cặp ngoặc nhọn chứa <code>x</code> trong chuỗi định dạng.</p>
+
+  <p>Trong chữ ký của hàm, bạn <em>bắt buộc</em> phải khai báo kiểu của từng tham số. Đây là một quyết định có chủ ý trong thiết kế của Rust: Yêu cầu chú thích kiểu dữ liệu trong định nghĩa hàm có nghĩa là trình biên dịch gần như không bao giờ yêu cầu bạn sử dụng chúng ở những nơi khác trong code để tìm ra loại kiểu dữ liệu mà bạn muốn sử dụng. Trình biên dịch cũng có thể đưa ra các thông báo lỗi hữu ích hơn nếu nó biết hàm mong đợi các kiểu dữ liệu nào.</p>
+
+  <p>Khi khai báo nhiều tham số, hãy dùng dấu phẩy để phân cách chúng, như sau:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    print_labeled_measurement(5, 'h');
+}
+
+fn print_labeled_measurement(value: i32, unit_label: char) {
+    println!("The measurement is: {value}{unit_label}");
+}</code></pre>
+
+  <p>Ví dụ này tạo ra một hàm có tên là <code>print_labeled_measurement</code> với hai tham số. Tham số đầu tiên có tên là <code>value</code> và là một <code>i32</code>. Tham số thứ hai có tên là <code>unit_label</code> có kiểu <code>char</code>. Hàm sau đó in ra đoạn văn bản chứa cả <code>value</code> và <code>unit_label</code>.</p>
+
+  <p>Hãy thử chạy đoạn mã này. Thay mã hiện tại trong file <em>src/main.rs</em> ở dự án <em>functions</em> của bạn bằng ví dụ trên và dùng <code>cargo run</code> để chạy:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/functions`
+The measurement is: 5h
+</code></pre>
+
+  <p>Bởi vì chúng ta đã gọi hàm với hàm bằng giá trị <code>5</code> cho <code>value</code> và <code>'h'</code> cho <code>unit_label</code>, nên kết quả chương trình in ra chứa các giá trị đó.</p>
+
+  <h3 id="statements-and-expressions">📜 Statements (Câu lệnh) và Expressions (Biểu thức)</h3>
+  <p>Thân hàm là một chuỗi các <em>câu lệnh (statements)</em> tự chọn và theo sau là một <em>biểu thức (expression)</em> ở cuối cùng. Tính đến nay thì chúng ta chưa đề cập đến biểu thức kết thúc, nhưng bạn có thể đã thấy một biểu thức như là một phần của câu lệnh. Vì Rust là một ngôn ngữ dạng biểu thức (expression-based language), đây là một sự khác biệt quan trọng cần hiểu. Các ngôn ngữ khác thường không có sự phân biệt này, vì vậy hãy xem câu lệnh và biểu thức là gì và ảnh hưởng của sự khác biệt này đến nội dung của hàm ra sao.</p>
+
+  <ul>
+    <li><em>Statements (Câu lệnh)</em> là các chỉ thị thực hiện một hành động nào đó và không trả về giá trị.</li>
+    <li><em>Expressions (Biểu thức)</em> tính toán để tạo một giá trị kết quả.</li>
+  </ul>
+
+  <p>Hãy cùng xem xét một số ví dụ.</p>
+
+  <p>Thực tế chúng ta đã sử dụng các câu lệnh và biểu thức. Tạo một biến và gán giá trị cho nó với bằng khóa <code>let</code> thì đây là một câu lệnh. Trong Listing 3-1, <code>let y = 6;</code> là một câu lệnh.</p>
+
+  <figure class="listing" id="listing-3-1">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let y = 6;
+}</code></pre>
+    <figcaption><a href="#listing-3-1">Listing 3-1</a>: Việc khai báo hàm chứa một câu lệnh</figcaption>
+  </figure>
+
+  <p>Các khai báo hàm cũng là các câu lệnh; toàn bộ ví dụ trên bản thân nó cũng là một câu lệnh. (Như chúng ta sẽ thấy ở phần sau, việc gọi lại một hàm lại không phải là câu lệnh.)</p>
+
+  <p>Các câu lệnh không trả về giá trị nào. Vì vậy, bạn không thể gán một <code>let</code> câu lệnh cho một biến khác, như ví dụ dưới đây cố thực hiện; bạn sẽ gặp một lỗi:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x = (let y = 6);
+}</code></pre>
+
+  <p>Khi bạn chạy chương trình này, thông báo lỗi trông như sau:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+error: expected expression, found `let` statement
+ --&gt; src/main.rs:2:14
+  |
+2 |     let x = (let y = 6);
+  |              ^^^
+  |
+  = note: only supported directly in conditions of `if` and `while` expressions
+
+warning: unnecessary parentheses around assigned value
+ --&gt; src/main.rs:2:13
+  |
+2 |     let x = (let y = 6);
+  |             ^         ^
+  |
+  = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+  |
+2 -     let x = (let y = 6);
+2 +     let x = let y = 6;
+  |
+
+warning: `functions` (bin "functions") generated 1 warning
+error: could not compile `functions` (bin "functions") due to 1 previous error; 1 warning emitted
+</code></pre>
+
+  <p>Câu lệnh <code>let y = 6</code> không trả về một giá trị, vì vậy không có gì để biến <code>x</code> gán cả. Điều này khác biệt so với những gì xảy ra ở các ngôn ngữ khác, như C và Ruby, nơi phép gán trả về của phép gán đó. Trong những ngôn ngữ đó, bạn có thể viết <code>x = y = 6</code> và có cả <code>x</code> lẫn <code>y</code> đều bằng giá trị là <code>6</code>; nhưng Rust thì không như thế.</p>
+
+  <p>Các biểu thức tính toán thành một giá trị chiếm phần lớn của các đoạn code tiếp theo mà bạn sẽ viết bằng ngôn ngữ Rust. Hãy xem xét một phép toán, ví dụ như <code>5 + 6</code>, mà biểu thức này trả về giá trị <code>11</code>. Biểu thức có thể làm một phần của câu lệnh: Trong Listing 3-1, con số <code>6</code> trong ví dụ <code>let y = 6;</code> là một biểu thức trả về giá trị <code>6</code>. Gọi hàm cũng là một biểu thức. Gọi macro cũng là một biểu thức. Một khối phạm vi mới được tạo bằng dấu ngoặc nhọn là một biểu thức, lấy ví dụ sau:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    let y = {
+        let x = 3;
+        x + 1
+    };
+
+    println!("The value of y is: {y}");
+}</code></pre>
+
+  <p>Biểu thức sau:</p>
+
+<pre><code class="language-rust ignore">{
+    let x = 3;
+    x + 1
+}</code></pre>
+
+  <p>là một khối tính toán cho giá trị là <code>4</code>. Giá trị đó được gán cho <code>y</code> đóng vai trò là một phần bên của câu lệnh <code>let</code>. Lưu ý dòng <code>x + 1</code> không có dấu chấm phẩy ở cuối, khác với hầu hết các dòng bạn đã thấy cho đến hiện tại. Các biểu thức thì không có dấu phẩy ở cuối. Nếu bạn thêm dấu chấm phẩy vào một biểu thức, bạn sẽ biến nó thành câu lệnh, lệnh này sau đó sẽ không trả về giá trị nào đấy do tác động của câu lệnh trên. Hãy ghi nhớ điều này khi bạn khám phá các biểu thức và giá trị trả về của hàm.</p>
+
+  <h3 id="functions-with-return-values">📤 Hàm trả về giá trị</h3>
+  <p>Các hàm có thể trả về các giá trị cho đối tượng gọi chúng. Chúng ta không đặt tên cho các giá trị trả về, thay vào đó ta khai báo cho kiểu giá trị qua dấu mũi tên (<code>-&gt;</code>). Trong ngôn ngữ Rust, giá trị trả lại của hàm cũng giống với giá trị của biểu thức cuối cùng trong cặp dấu ngoặc bao lấy thân hàm. Bạn có thể sử dụng từ khóa <code>return</code> để trả về sớm một giá trị như ví dụ sau đây là một hàm trả về một giá trị:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn five() -&gt; i32 {
+    5
+}
+
+fn main() {
+    let x = five();
+
+    println!("The value of x is: {x}");
+}</code></pre>
+
+  <p>Trong hàm <code>five</code> không có lệnh gọi hàm nào, cũng không có macro hoặc câu lệnh <code>let</code> nào—chỉ là giá trị <code>5</code> đứng một mình. Một hàm vẫn có thể chạy hoàn toàn ổn định tại Rust. Lưu ý rằng giá trị cũng được thiết lập kiểu dữ liệu như là <code>-&gt; i32</code>. Thử chạy mã xem vì sao nó sẽ có kết quả như này:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/functions`
+The value of x is: 5
+</code></pre>
+
+  <p>Số <code>5</code> nằm ở hàm <code>five</code> là giá trị của hàm trả về, đó là nguyên nhân vì sao có kiểu trả lại mà hàm này sở hữu tên <code>i32</code>. Hãy cùng xem xét vấn đề một cách kỹ hơn nào. Có hai yếu tố quan trọng: Đó là tại dòng <code>let x = five();</code> thể hiện tại một tính năng mà sử dụng hàm trả giá trị như để khởi động lại một biến. Vì hàm <code>five</code> giá trị trả về là <code>5</code>, mà các dòng đó lại đồng thời chứa định dạng bên phía cùng:</p>
+
+<pre><code class="language-rust">let x = 5;</code></pre>
+
+  <p>Tiếp đến, hàm <code>five</code> không có những tham số cũng như nó sẽ xác lập phương hướng trả lại số lượng, mà trong hàm lại có duy nhất một giá trị là số <code>5</code> nằm lẻ loi không hề đi kèm theo có là dạng ngắt từ và vì nó là biểu thức thì sẽ dẫn giá trị đến chỗ mà bạn thích.</p>
+
+  <p>Cùng ngó vào một cái được ví dụ nữa nào:</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust">fn main() {
+    let x = plus_one(5);
+
+    println!("The value of x is: {x}");
+}
+
+fn plus_one(x: i32) -&gt; i32 {
+    x + 1
+}</code></pre>
+
+  <p>Nếu bạn thực thi code này thì giá trị in ra sẽ là <code>The value of x is: 6</code>. Vậy khi ta đưa về cùng một kí tự ngắt khi dấu chấm phẩy thay vào cuối thay vì để <code>x + 1</code> thì có ra biểu thức rồi hay trở thành dạng câu lệnh luôn nha?</p>
+
+  <p><span class="filename">Tên file: src/main.rs</span></p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x = plus_one(5);
+
+    println!("The value of x is: {x}");
+}
+
+fn plus_one(x: i32) -&gt; i32 {
+    x + 1;
+}</code></pre>
+
+  <p>Nếu bạn biên soạn theo code đó thì một thông điệp như phía trên sẽ báo lỗi:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:7:24
+  |
+7 | fn plus_one(x: i32) -&gt; i32 {
+  |    --------            ^^^ expected `i32`, found `()`
+  |    |
+  |    implicitly returns `()` as its body has no tail or `return` expression
+8 |     x + 1;
+  |          - help: remove this semicolon to return this value
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `functions` (bin "functions") due to 1 previous error
+</code></pre>
+
+  <p>Dòng thông báo sự chênh lệch sẽ biểu hiện như, <code>mismatched types</code>, trong bản thông báo khi xảy ra sự cố do code này đưa ra. Dù nó sẽ trở lại thành i32. Một khi phần xác định tại câu lệnh trong phạm vi như thế kia thì có điều là sẽ không định cho một giá trị trở lại khi trong <code>()</code> còn là tên unit type. Cũng vậy không những tại trường một khi trở thành phần thông báo lỗi và đã thành một câu lệnh. Một số giải thích thêm về sửa đi những vấn đề do nó đem lại được hiển thị cho là nó thì ta hãy bỏ bớt nó đi, như là bỏ một phần đi nhé có dấu phẩy rồi và loại thì đi, và sau khi bỏ dấu câu đó chúng mình lại sửa được luôn cơ.</p>
+
+  <div class="page-nav bottom"><a href="ch03-02-data-types.html">← Trước</a><a href="ch03-04-comments.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

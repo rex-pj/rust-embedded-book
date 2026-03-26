@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biến và Mutability — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html" class="active">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch03-00-common-programming-concepts.html">← Trước</a>
+    <a href="ch03-02-data-types.html">Tiếp →</a>
+  </div>
+
+  <h1>📦 Biến và Mutability</h1>
+
+  <p>Như đã đề cập trong phần <a href="ch02-00-guessing-game-tutorial.html">Trò chơi đoán số</a>, mặc định các biến trong Rust là <strong>bất biến (immutable)</strong>. Đây là một trong những cơ chế mà Rust khuyến khích bạn viết code theo hướng tận dụng lợi thế về tính an toàn và tính đồng thời dễ dàng mà Rust mang lại. Tuy nhiên, bạn vẫn có tùy chọn để làm cho biến trở nên có thể thay đổi (mutable). Hãy cùng khám phá tại sao Rust lại khuyến khích tính bất biến và khi nào bạn nên chọn khác.</p>
+
+  <p>Khi một biến là bất biến, nghĩa là sau khi một giá trị được gán vào tên đó, bạn không thể thay đổi giá trị đó nữa. Để minh họa, hãy tạo một dự án mới tên <em>variables</em> trong thư mục <em>projects</em> bằng lệnh <code>cargo new variables</code>.</p>
+
+  <p>Sau đó, trong thư mục <em>variables</em> mới của bạn, mở <em>src/main.rs</em> và thay thế code bằng đoạn sau — đoạn code này sẽ chưa biên dịch được:</p>
+
+  <p><strong>Tên file: src/main.rs</strong></p>
+  <pre><code class="language-rust">fn main() {
+    let x = 5;
+    println!("Giá trị của x là: {x}");
+    x = 6;
+    println!("Giá trị của x là: {x}");
+}</code></pre>
+
+  <p>Lưu và chạy chương trình bằng <code>cargo run</code>. Bạn sẽ nhận được thông báo lỗi liên quan đến tính bất biến, như trong output sau:</p>
+
+  <pre><code>$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+error[E0384]: cannot assign twice to immutable variable `x`
+ --> src/main.rs:4:5
+  |
+2 |     let x = 5;
+  |         -
+  |         |
+  |         first assignment to `x`
+  |         help: consider making this binding mutable: `mut x`
+3 |     println!("Giá trị của x là: {x}");
+4 |     x = 6;
+  |     ^^^^^ cannot assign twice to immutable variable
+
+For more information about this error, try `rustc --explain E0384`.
+error: could not compile `variables` due to 1 previous error</code></pre>
+
+  <p>Ví dụ này cho thấy cách trình biên dịch giúp bạn tìm lỗi trong chương trình. Các lỗi biên dịch có thể gây bực bội, nhưng thực ra chúng chỉ có nghĩa là chương trình của bạn chưa làm được điều bạn muốn một cách an toàn; chúng <em>không</em> có nghĩa là bạn là một lập trình viên kém! Các Rustacean giàu kinh nghiệm vẫn gặp lỗi biên dịch như thường.</p>
+
+  <p>Thông báo lỗi nói rằng nguyên nhân là <code>cannot assign twice to immutable variable x</code> (không thể gán hai lần cho biến bất biến <code>x</code>), vì bạn đã cố gán giá trị thứ hai cho biến bất biến <code>x</code>.</p>
+
+  <p>Điều quan trọng là chúng ta nhận được lỗi thời điểm biên dịch khi cố thay đổi một giá trị được chỉ định là bất biến, vì tình huống này có thể dẫn đến bug. Nếu một phần code của bạn hoạt động dựa trên giả định rằng một giá trị sẽ không bao giờ thay đổi, và một phần code khác lại thay đổi giá trị đó, thì phần code đầu tiên có thể sẽ không làm được điều nó được thiết kế để làm. Loại bug này rất khó theo dõi, đặc biệt khi phần code thứ hai chỉ thỉnh thoảng thay đổi giá trị đó.</p>
+
+  <p>Trong Rust, trình biên dịch đảm bảo rằng khi bạn khai báo một giá trị là không thay đổi, nó thực sự sẽ không thay đổi. Điều đó có nghĩa là khi bạn đọc và viết code, bạn không phải theo dõi xem một giá trị có thể thay đổi ở đâu và như thế nào. Code của bạn vì vậy sẽ dễ lý luận hơn.</p>
+
+  <p>Nhưng mutability cũng rất hữu ích và có thể làm code dễ viết hơn. Mặc dù các biến là bất biến theo mặc định, bạn có thể làm cho chúng mutable bằng cách thêm <code>mut</code> trước tên biến như bạn đã làm trong <a href="ch02-00-guessing-game-tutorial.html">Chương 2</a>. Việc thêm <code>mut</code> cũng truyền đạt ý định đến những người đọc code trong tương lai bằng cách chỉ ra rằng các phần code khác sẽ thay đổi giá trị của biến này.</p>
+
+  <p>Ví dụ, hãy thay đổi <em>src/main.rs</em> như sau:</p>
+
+  <p><strong>Tên file: src/main.rs</strong></p>
+  <pre><code class="language-rust">fn main() {
+    let mut x = 5;
+    println!("Giá trị của x là: {x}");
+    x = 6;
+    println!("Giá trị của x là: {x}");
+}</code></pre>
+
+  <p>Khi chạy chương trình bây giờ, chúng ta nhận được:</p>
+
+  <pre><code>$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/variables`
+Giá trị của x là: 5
+Giá trị của x là: 6</code></pre>
+
+  <p>Chúng ta được phép thay đổi giá trị gán cho <code>x</code> từ <code>5</code> thành <code>6</code> khi dùng <code>mut</code>. Cuối cùng, việc sử dụng mutability hay không là tùy thuộc vào bạn và những gì bạn nghĩ là rõ ràng nhất trong tình huống cụ thể đó.</p>
+
+  <h2>🔒 Hằng số (Constants)</h2>
+
+  <p>Giống như các biến bất biến, <em>hằng số</em> là các giá trị được gán vào một tên và không được phép thay đổi, nhưng có một số khác biệt giữa hằng số và biến.</p>
+
+  <p>Trước tiên, bạn không được phép dùng <code>mut</code> với hằng số. Hằng số không chỉ bất biến theo mặc định — chúng <em>luôn luôn</em> bất biến. Bạn khai báo hằng số bằng từ khóa <code>const</code> thay vì từ khóa <code>let</code>, và kiểu của giá trị <em>phải</em> được chú thích. Chúng ta sẽ đề cập đến kiểu và chú thích kiểu trong phần tiếp theo, <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>, vì vậy đừng lo lắng về chi tiết bây giờ. Chỉ cần biết rằng bạn phải luôn chú thích kiểu.</p>
+
+  <p>Hằng số có thể được khai báo trong bất kỳ phạm vi nào, kể cả phạm vi toàn cục, điều này làm cho chúng hữu ích cho các giá trị mà nhiều phần code cần biết.</p>
+
+  <p>Sự khác biệt cuối cùng là hằng số chỉ có thể được đặt thành một biểu thức hằng, không phải kết quả của một giá trị chỉ có thể được tính toán lúc runtime.</p>
+
+  <p>Đây là ví dụ về khai báo hằng số:</p>
+
+  <pre><code class="language-rust">const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;</code></pre>
+
+  <p>Tên hằng số là <code>THREE_HOURS_IN_SECONDS</code> và giá trị của nó được đặt thành kết quả của phép nhân 60 (số giây trong một phút) nhân 60 (số phút trong một giờ) nhân 3 (số giờ chúng ta muốn đếm trong chương trình này). Quy ước đặt tên của Rust cho hằng số là sử dụng tất cả chữ hoa với dấu gạch dưới giữa các từ. Trình biên dịch có thể ước tính một tập hữu hạn các phép toán tại thời điểm biên dịch, điều này cho phép chúng ta chọn cách viết giá trị này theo cách dễ hiểu và dễ kiểm tra hơn, thay vì đặt hằng số này thành giá trị 10.800.</p>
+
+  <p>Hằng số có giá trị trong toàn bộ thời gian chạy của chương trình, trong phạm vi mà chúng được khai báo. Thuộc tính này làm cho hằng số hữu ích cho các giá trị trong miền ứng dụng của bạn mà nhiều phần chương trình có thể cần biết, chẳng hạn như số điểm tối đa mà bất kỳ người chơi trò chơi nào được phép kiếm được hoặc tốc độ ánh sáng.</p>
+
+  <p>Đặt tên cho các giá trị được mã hóa cứng được sử dụng khắp chương trình của bạn thành hằng số rất hữu ích để truyền đạt ý nghĩa của giá trị đó cho những người bảo trì code trong tương lai. Nó cũng giúp ích nếu chỉ có một nơi trong code của bạn mà bạn cần thay đổi nếu giá trị được mã hóa cứng cần được cập nhật trong tương lai.</p>
+
+  <h2>🌑 Shadowing (Che khuất biến)</h2>
+
+  <p>Như bạn đã thấy trong hướng dẫn trò chơi đoán số trong <a href="ch02-00-guessing-game-tutorial.html">Chương 2</a>, bạn có thể khai báo một biến mới với cùng tên như một biến trước đó. Rustacean nói rằng biến đầu tiên bị <em>shadow</em> (che khuất) bởi biến thứ hai, có nghĩa là biến thứ hai là những gì trình biên dịch sẽ thấy khi bạn sử dụng tên của biến. Thực tế, biến thứ hai che khuất biến đầu tiên, lấy bất kỳ việc sử dụng tên biến nào cho chính nó cho đến khi nó tự bị shadow hoặc phạm vi kết thúc.</p>
+
+  <p>Chúng ta có thể shadow một biến bằng cách sử dụng cùng tên biến và lặp lại việc sử dụng từ khóa <code>let</code> như sau:</p>
+
+  <p><strong>Tên file: src/main.rs</strong></p>
+  <pre><code class="language-rust">fn main() {
+    let x = 5;
+
+    let x = x + 1;
+
+    {
+        let x = x * 2;
+        println!("Giá trị của x trong phạm vi bên trong là: {x}");
+    }
+
+    println!("Giá trị của x là: {x}");
+}</code></pre>
+
+  <p>Chương trình này đầu tiên gán <code>x</code> giá trị <code>5</code>. Sau đó nó tạo một biến mới <code>x</code> bằng cách lặp lại <code>let x =</code>, lấy giá trị ban đầu và cộng thêm <code>1</code> vì vậy giá trị của <code>x</code> là <code>6</code>. Sau đó, trong một phạm vi bên trong được tạo bởi các dấu ngoặc nhọn, câu lệnh <code>let</code> thứ ba cũng shadow <code>x</code> và tạo một biến mới, nhân giá trị trước với <code>2</code> để cho <code>x</code> giá trị là <code>12</code>. Khi phạm vi đó kết thúc, shadowing bên trong kết thúc và <code>x</code> trở về giá trị <code>6</code>. Khi chúng ta chạy chương trình này, nó sẽ xuất ra:</p>
+
+  <pre><code>$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/variables`
+Giá trị của x trong phạm vi bên trong là: 12
+Giá trị của x là: 6</code></pre>
+
+  <!-- SVG Diagram: Stack Frame và Shadowing -->
+  <div class="diagram-box" style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 12px; border: 1px solid var(--border, #e0e0e0);">
+    <h3 style="margin-top:0; text-align:center; font-size:1rem; color: var(--text-secondary, #666);">Sơ đồ: Shadowing qua các phạm vi</h3>
+    <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;margin:0 auto;">
+      <!-- Stack frame outer -->
+      <rect x="20" y="20" width="240" height="260" rx="10" fill="#fff3e0" stroke="#FF8A00" stroke-width="2"/>
+      <text x="140" y="44" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">Phạm vi ngoài (main)</text>
+      <!-- x = 5 -->
+      <rect x="40" y="54" width="200" height="36" rx="6" fill="#FFE0B2" stroke="#FF8A00" stroke-width="1.5"/>
+      <text x="80" y="76" font-size="13" fill="#333">let x = 5</text>
+      <text x="220" y="76" text-anchor="middle" font-size="13" fill="#C62828" font-weight="bold">5</text>
+      <!-- x = x+1 -->
+      <rect x="40" y="98" width="200" height="36" rx="6" fill="#FFE0B2" stroke="#FF8A00" stroke-width="1.5"/>
+      <text x="80" y="120" font-size="13" fill="#333">let x = x + 1</text>
+      <text x="220" y="120" text-anchor="middle" font-size="13" fill="#C62828" font-weight="bold">6</text>
+      <!-- inner scope -->
+      <rect x="50" y="144" width="180" height="80" rx="8" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+      <text x="140" y="162" text-anchor="middle" font-size="11" fill="#1565C0" font-weight="bold">Phạm vi bên trong { }</text>
+      <rect x="60" y="168" width="160" height="36" rx="6" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+      <text x="100" y="190" font-size="13" fill="#333">let x = x * 2</text>
+      <text x="210" y="190" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">12</text>
+      <!-- final x -->
+      <rect x="40" y="234" width="200" height="36" rx="6" fill="#FFE0B2" stroke="#FF8A00" stroke-width="1.5"/>
+      <text x="80" y="256" font-size="13" fill="#333">x (sau khi ra scope)</text>
+      <text x="220" y="256" text-anchor="middle" font-size="13" fill="#C62828" font-weight="bold">6</text>
+
+      <!-- Arrows / output -->
+      <rect x="300" y="20" width="240" height="260" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+      <text x="420" y="44" text-anchor="middle" font-size="12" fill="#1B5E20" font-weight="bold">Output (println!)</text>
+      <line x1="240" y1="186" x2="300" y2="130" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="420" y="80" text-anchor="middle" font-size="12" fill="#555">x ban đầu = 5</text>
+      <text x="420" y="110" text-anchor="middle" font-size="12" fill="#555">x sau let = 6</text>
+      <rect x="320" y="120" width="200" height="40" rx="8" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.5"/>
+      <text x="420" y="145" text-anchor="middle" font-size="12" fill="#1B5E20">"Giá trị bên trong: 12"</text>
+      <line x1="240" y1="252" x2="300" y2="210" stroke="#FF8A00" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="320" y="195" width="200" height="40" rx="8" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.5"/>
+      <text x="420" y="220" text-anchor="middle" font-size="12" fill="#1B5E20">"Giá trị của x: 6"</text>
+      <text x="420" y="268" text-anchor="middle" font-size="11" fill="#888">Shadow kết thúc khi thoát { }</text>
+    </svg>
+  </div>
+
+  <p>Shadowing khác với việc đánh dấu một biến là <code>mut</code> vì chúng ta sẽ nhận được lỗi thời điểm biên dịch nếu chúng ta vô tình cố gán lại cho biến này mà không sử dụng từ khóa <code>let</code>. Bằng cách sử dụng <code>let</code>, chúng ta có thể thực hiện một vài phép biến đổi trên một giá trị nhưng có biến là bất biến sau khi những phép biến đổi đó hoàn thành.</p>
+
+  <p>Sự khác biệt khác giữa <code>mut</code> và shadowing là vì chúng ta đang tạo một biến mới một cách hiệu quả khi chúng ta sử dụng từ khóa <code>let</code> một lần nữa, chúng ta có thể thay đổi kiểu của giá trị nhưng tái sử dụng cùng tên. Ví dụ, giả sử chương trình của chúng ta yêu cầu người dùng cho biết họ muốn bao nhiêu khoảng trắng giữa một số văn bản bằng cách nhập ký tự khoảng trắng, và sau đó chúng ta muốn lưu trữ đầu vào đó dưới dạng số:</p>
+
+  <pre><code class="language-rust">let spaces = "   ";
+let spaces = spaces.len();</code></pre>
+
+  <p>Câu lệnh <code>let</code> đầu tiên, biến <code>spaces</code> là kiểu string và câu lệnh <code>let</code> thứ hai, biến <code>spaces</code> là kiểu number. Shadowing do đó giúp chúng ta khỏi phải nghĩ ra các tên khác nhau, chẳng hạn như <code>spaces_str</code> và <code>spaces_num</code>; thay vào đó, chúng ta có thể tái sử dụng tên <code>spaces</code> đơn giản hơn. Tuy nhiên, nếu chúng ta cố sử dụng <code>mut</code> cho điều này, như được hiển thị ở đây, chúng ta sẽ nhận được lỗi thời điểm biên dịch:</p>
+
+  <pre><code class="language-rust">let mut spaces = "   ";
+spaces = spaces.len();</code></pre>
+
+  <p>Lỗi nói rằng chúng ta không được phép thay đổi kiểu của một biến:</p>
+
+  <pre><code>error[E0308]: mismatched types
+ --> src/main.rs:3:14
+  |
+2 |     let mut spaces = "   ";
+  |                      ----- expected due to this value
+3 |     spaces = spaces.len();
+  |              ^^^^^^^^^^^^ expected `&str`, found `usize`</code></pre>
+
+  <p>Bây giờ chúng ta đã khám phá cách các biến hoạt động, hãy xem xét thêm các kiểu dữ liệu mà chúng có thể có.</p>
+
+  <div class="page-nav bottom">
+    <a href="ch03-00-common-programming-concepts.html">← Trước</a>
+    <a href="ch03-02-data-types.html">Tiếp →</a>
+  </div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

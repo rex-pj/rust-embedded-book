@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validating References with Lifetimes - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html" class="active">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 10 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch10-02-traits.html">← Trước</a>
+    <a href="ch11-00-testing.html">Tiếp →</a>
+  </div>
+
+<h2 id="validating-references-with-lifetimes"><a class="header" href="#validating-references-with-lifetimes">Kiểm tra tính hợp lệ của references với Lifetimes</a></h2>
+<p>Lifetime là một dạng generic khác mà ta đã dùng từ trước đến giờ mà không hay
+biết. Thay vì đảm bảo một kiểu có hành vi ta mong muốn, lifetime đảm bảo
+rằng các reference vẫn hợp lệ trong suốt thời gian ta cần chúng.</p>
+<p>Một chi tiết ta chưa bàn đến trong phần
+<a href="ch04-02-references-and-borrowing.html#references-and-borrowing">"References and Borrowing"</a><!-- ignore -->
+ở Chương 4 là mỗi reference trong Rust đều có một <em>lifetime</em> — tức là phạm vi
+mà reference đó còn hợp lệ. Phần lớn thời gian, lifetime được suy ra ngầm
+giống như kiểu dữ liệu. Ta chỉ cần chú thích kiểu khi có nhiều kiểu khả dĩ.
+Tương tự, ta phải chú thích lifetime khi lifetime của các reference có thể
+liên quan đến nhau theo nhiều cách khác nhau. Rust yêu cầu ta chú thích mối
+quan hệ đó bằng tham số lifetime generic để đảm bảo rằng các reference thực
+sự dùng lúc runtime sẽ chắc chắn còn hợp lệ.</p>
+<p>Chú thích lifetime là khái niệm mà hầu hết ngôn ngữ lập trình khác không có,
+nên điều này sẽ cảm thấy xa lạ. Dù ta không đề cập đến lifetime một cách toàn
+diện trong chương này, ta sẽ bàn về các cách phổ biến mà bạn có thể gặp cú
+pháp lifetime để bạn làm quen với khái niệm này.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="preventing-dangling-references-with-lifetimes"></a></p>
+<h3 id="dangling-references"><a class="header" href="#dangling-references">Dangling References</a></h3>
+<p>Mục tiêu chính của lifetime là ngăn chặn <em>dangling reference</em> — thứ nếu được
+phép tồn tại sẽ khiến chương trình tham chiếu đến dữ liệu không phải dữ liệu
+nó định tham chiếu. Hãy xét chương trình trong Listing 10-16, có một scope
+ngoài và một scope trong.</p>
+<figure class="listing" id="listing-10-16">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let r;
+
+    {
+        let x = 5;
+        r = &amp;x;
+    }
+
+    println!("r: {r}");
+}</code></pre>
+<figcaption><a href="#listing-10-16">Listing 10-16</a>: Cố dùng một reference mà giá trị đã ra khỏi scope</figcaption>
+</figure>
+<section class="note" aria-role="note">
+<p>Lưu ý: Các ví dụ trong Listing 10-16, 10-17 và 10-23 khai báo biến mà không
+gán giá trị ban đầu, vì vậy tên biến tồn tại trong scope ngoài. Thoạt nhìn,
+điều này có vẻ mâu thuẫn với việc Rust không có giá trị null. Tuy nhiên, nếu
+ta cố dùng biến trước khi gán giá trị, ta sẽ gặp lỗi compile-time, điều đó
+chứng tỏ Rust thực sự không cho phép giá trị null.</p>
+</section>
+<p>Scope ngoài khai báo biến tên <code>r</code> không có giá trị ban đầu, và scope trong
+khai báo biến tên <code>x</code> với giá trị ban đầu là <code>5</code>. Bên trong scope trong, ta
+cố đặt <code>r</code> là một reference đến <code>x</code>. Sau đó scope trong kết thúc và ta cố in
+giá trị trong <code>r</code>. Code này sẽ không compile vì giá trị mà <code>r</code> đang tham chiếu
+đã ra khỏi scope trước khi ta cố dùng nó. Đây là thông báo lỗi:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0597]: `x` does not live long enough
+ --&gt; src/main.rs:6:13
+  |
+5 |         let x = 5;
+  |             - binding `x` declared here
+6 |         r = &amp;x;
+  |             ^^ borrowed value does not live long enough
+7 |     }
+  |     - `x` dropped here while still borrowed
+8 |
+9 |     println!("r: {r}");
+  |                   - borrow later used here
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Thông báo lỗi cho biết biến <code>x</code> "không sống đủ lâu." Lý do là <code>x</code> sẽ ra
+khỏi scope khi scope trong kết thúc ở dòng 7. Nhưng <code>r</code> vẫn còn hợp lệ cho
+scope ngoài; vì scope của nó lớn hơn, ta nói nó "sống lâu hơn." Nếu Rust cho
+phép code này chạy, <code>r</code> sẽ tham chiếu đến vùng nhớ đã được giải phóng khi
+<code>x</code> ra khỏi scope, và mọi thứ ta cố làm với <code>r</code> sẽ không hoạt động đúng. Vậy
+Rust xác định code này không hợp lệ bằng cách nào? Nó dùng borrow checker.</p>
+<h3 id="the-borrow-checker"><a class="header" href="#the-borrow-checker">The Borrow Checker</a></h3>
+<p>Compiler của Rust có một <em>borrow checker</em> so sánh các scope để xác định liệu
+tất cả các borrow có hợp lệ không. Listing 10-17 hiển thị cùng code với
+Listing 10-16 nhưng có chú thích thể hiện lifetime của các biến.</p>
+<figure class="listing" id="listing-10-17">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let r;                // ---------+-- 'a
+                          //          |
+    {                     //          |
+        let x = 5;        // -+-- 'b  |
+        r = &amp;x;           //  |       |
+    }                     // -+       |
+                          //          |
+    println!("r: {r}");   //          |
+}                         // ---------+</code></pre>
+<figcaption><a href="#listing-10-17">Listing 10-17</a>: Chú thích lifetime của <code>r</code> và <code>x</code>, lần lượt là <code>'a</code> và <code>'b</code></figcaption>
+</figure>
+<p>Ở đây, ta đã chú thích lifetime của <code>r</code> là <code>'a</code> và lifetime của <code>x</code> là <code>'b</code>.
+Như bạn có thể thấy, khối <code>'b</code> bên trong nhỏ hơn nhiều so với khối lifetime
+<code>'a</code> bên ngoài. Lúc compile, Rust so sánh kích thước hai lifetime và nhận ra
+rằng <code>r</code> có lifetime <code>'a</code> nhưng nó tham chiếu đến vùng nhớ có lifetime <code>'b</code>.
+Chương trình bị từ chối vì <code>'b</code> ngắn hơn <code>'a</code>: đối tượng của reference không
+sống lâu bằng chính reference.</p>
+<p>Listing 10-18 sửa code để không còn dangling reference và compile không có lỗi.</p>
+<figure class="listing" id="listing-10-18">
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 5;            // ----------+-- 'b
+                          //           |
+    let r = &amp;x;           // --+-- 'a  |
+                          //   |       |
+    println!("r: {r}");   //   |       |
+                          // --+       |
+}                         // ----------+</code></pre>
+<figcaption><a href="#listing-10-18">Listing 10-18</a>: Reference hợp lệ vì dữ liệu có lifetime dài hơn reference</figcaption>
+</figure>
+<p>Ở đây, <code>x</code> có lifetime <code>'b</code>, vốn trong trường hợp này lớn hơn <code>'a</code>. Điều này
+có nghĩa <code>r</code> có thể tham chiếu <code>x</code> vì Rust biết rằng reference trong <code>r</code>
+luôn hợp lệ trong khi <code>x</code> còn hợp lệ.</p>
+<p>Bây giờ bạn đã biết lifetime của các reference nằm ở đâu và Rust phân tích
+lifetime như thế nào để đảm bảo reference luôn hợp lệ, hãy cùng khám phá
+lifetime generic trong tham số hàm và giá trị trả về.</p>
+<h3 id="generic-lifetimes-in-functions"><a class="header" href="#generic-lifetimes-in-functions">Generic Lifetimes trong hàm</a></h3>
+<p>Ta sẽ viết một hàm trả về chuỗi slice dài hơn trong hai chuỗi. Hàm này nhận
+hai string slice và trả về một string slice. Sau khi implement hàm <code>longest</code>,
+code trong Listing 10-19 sẽ in ra <code>The longest string is abcd</code>.</p>
+<figure class="listing" id="listing-10-19">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore">fn main() {
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {result}");
+}</code></pre>
+<figcaption><a href="#listing-10-19">Listing 10-19</a>: Hàm <code>main</code> gọi hàm <code>longest</code> để tìm chuỗi dài hơn trong hai string slice</figcaption>
+</figure>
+<p>Lưu ý ta muốn hàm nhận string slice — là references — thay vì string, vì ta
+không muốn hàm <code>longest</code> chiếm ownership của tham số. Tham khảo
+<a href="ch04-03-slices.html#string-slices-as-parameters">"String Slices as Parameters"</a><!-- ignore -->
+trong Chương 4 để biết thêm về lý do ta dùng tham số trong Listing 10-19.</p>
+<p>Nếu ta cố implement hàm <code>longest</code> như trong Listing 10-20, nó sẽ không compile.</p>
+<figure class="listing" id="listing-10-20">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre>
+<figcaption><a href="#listing-10-20">Listing 10-20</a>: Implementation của hàm <code>longest</code> trả về chuỗi dài hơn nhưng chưa compile được</figcaption>
+</figure>
+<p>Thay vào đó ta nhận được lỗi về lifetime:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:9:33
+  |
+9 | fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
+  |               ----     ----     ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+help: consider introducing a named lifetime parameter
+  |
+9 | fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+  |           ++++     ++          ++          ++
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Phần help text tiết lộ rằng kiểu trả về cần một tham số lifetime generic vì
+Rust không thể biết liệu reference được trả về tham chiếu đến <code>x</code> hay <code>y</code>.
+Thực ra chúng ta cũng không biết, vì khối <code>if</code> trong thân hàm trả về reference
+đến <code>x</code> còn khối <code>else</code> trả về reference đến <code>y</code>!</p>
+<p>Khi định nghĩa hàm này, ta không biết giá trị cụ thể nào sẽ được truyền vào,
+nên ta không biết nhánh <code>if</code> hay <code>else</code> nào sẽ chạy. Ta cũng không biết
+lifetime cụ thể của các reference sẽ được truyền vào, nên ta không thể nhìn
+vào scope như trong Listing 10-17 và 10-18 để xác định xem reference ta trả
+về có luôn hợp lệ không. Borrow checker cũng không thể xác định điều này,
+vì nó không biết lifetime của <code>x</code> và <code>y</code> liên quan đến lifetime của giá trị
+trả về thế nào. Để sửa lỗi này, ta sẽ thêm tham số lifetime generic xác định
+mối quan hệ giữa các reference để borrow checker có thể phân tích.</p>
+<h3 id="lifetime-annotation-syntax"><a class="header" href="#lifetime-annotation-syntax">Cú pháp chú thích Lifetime</a></h3>
+<p>Chú thích lifetime không thay đổi thời gian sống của bất kỳ reference nào.
+Thay vào đó, chúng mô tả mối quan hệ giữa lifetime của nhiều reference với
+nhau mà không ảnh hưởng đến lifetime. Cũng như các hàm có thể chấp nhận bất
+kỳ kiểu nào khi signature chỉ định tham số kiểu generic, các hàm có thể chấp
+nhận reference với bất kỳ lifetime nào khi chỉ định tham số lifetime generic.</p>
+<p>Chú thích lifetime có cú pháp hơi khác thường: Tên của tham số lifetime phải
+bắt đầu bằng dấu nháy đơn (<code>'</code>) và thường viết thường toàn bộ, ngắn gọn như
+kiểu generic. Hầu hết mọi người dùng tên <code>'a</code> cho chú thích lifetime đầu
+tiên. Ta đặt chú thích tham số lifetime sau ký tự <code>&amp;</code> của reference, cách
+chú thích với kiểu của reference bằng một khoảng trắng.</p>
+<p>Đây là một số ví dụ — reference đến <code>i32</code> không có tham số lifetime, reference
+đến <code>i32</code> có tham số lifetime tên <code>'a</code>, và mutable reference đến <code>i32</code> cũng
+có lifetime <code>'a</code>:</p>
+<pre><code class="language-rust ignore">&amp;i32        // a reference
+&amp;'a i32     // a reference with an explicit lifetime
+&amp;'a mut i32 // a mutable reference with an explicit lifetime</code></pre>
+<p>Một chú thích lifetime đơn lẻ không có nhiều ý nghĩa, vì các chú thích được
+dùng để nói với Rust cách các tham số lifetime generic của nhiều reference
+liên quan đến nhau. Hãy xem cách các chú thích lifetime liên quan đến nhau
+trong ngữ cảnh của hàm <code>longest</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="lifetime-annotations-in-function-signatures"></a></p>
+<h3 id="in-function-signatures"><a class="header" href="#in-function-signatures">Trong signature của hàm</a></h3>
+<p>Để dùng chú thích lifetime trong signature hàm, ta cần khai báo các tham số
+lifetime generic bên trong dấu ngoặc góc giữa tên hàm và danh sách tham số,
+giống như ta đã làm với tham số kiểu generic.</p>
+<p>Ta muốn signature thể hiện ràng buộc sau: Reference được trả về sẽ hợp lệ
+miễn là cả hai tham số đều hợp lệ. Đây là mối quan hệ giữa lifetime của các
+tham số và giá trị trả về. Ta đặt tên lifetime là <code>'a</code> rồi thêm nó vào mỗi
+reference, như trong Listing 10-21.</p>
+<figure class="listing" id="listing-10-21">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre>
+<figcaption><a href="#listing-10-21">Listing 10-21</a>: Định nghĩa hàm <code>longest</code> chỉ định tất cả các reference trong signature phải có cùng lifetime <code>'a</code></figcaption>
+</figure>
+<p>Code này sẽ compile và cho ra kết quả ta muốn khi dùng với hàm <code>main</code> trong
+Listing 10-19.</p>
+<p>Signature hàm giờ nói với Rust rằng với một lifetime <code>'a</code> nào đó, hàm nhận
+hai tham số, cả hai đều là string slice sống ít nhất lâu bằng lifetime <code>'a</code>.
+Signature cũng nói với Rust rằng string slice trả về từ hàm sẽ sống ít nhất
+lâu bằng lifetime <code>'a</code>. Trong thực tế, điều đó có nghĩa là lifetime của
+reference được hàm <code>longest</code> trả về bằng với lifetime nhỏ hơn trong hai
+lifetime của các giá trị được truyền vào. Đây là những mối quan hệ ta muốn
+Rust dùng khi phân tích code này.</p>
+<p>Nhớ rằng, khi ta chỉ định tham số lifetime trong signature hàm này, ta không
+thay đổi lifetime của bất kỳ giá trị nào được truyền vào hay trả về. Thay vào
+đó, ta đang nói với borrow checker rằng nó nên từ chối bất kỳ giá trị nào
+không tuân theo các ràng buộc này. Lưu ý rằng hàm <code>longest</code> không cần biết
+chính xác <code>x</code> và <code>y</code> sẽ sống bao lâu, chỉ cần biết rằng có một scope nào đó
+có thể thay cho <code>'a</code> để thỏa mãn signature này.</p>
+<p>Khi chú thích lifetime trong hàm, các chú thích đặt trong signature hàm, không
+phải trong thân hàm. Chú thích lifetime trở thành một phần hợp đồng của hàm,
+giống như các kiểu trong signature. Có signature chứa hợp đồng lifetime có
+nghĩa là phân tích mà Rust compiler thực hiện có thể đơn giản hơn. Nếu có
+vấn đề với cách một hàm được chú thích hoặc cách nó được gọi, lỗi compiler
+có thể chỉ chính xác hơn đến phần code và ràng buộc. Nếu thay vào đó Rust
+compiler tự suy luận về ý định của ta, nó có thể chỉ được đến nơi sử dụng
+code ở nhiều bước xa so với nguyên nhân gốc.</p>
+<p>Khi ta truyền các reference cụ thể vào <code>longest</code>, lifetime cụ thể được thay
+cho <code>'a</code> là phần scope của <code>x</code> chồng lên scope của <code>y</code>. Nói cách khác,
+lifetime generic <code>'a</code> sẽ nhận lifetime cụ thể bằng với lifetime nhỏ hơn trong
+hai lifetime của <code>x</code> và <code>y</code>. Vì ta đã chú thích reference được trả về với
+cùng tham số lifetime <code>'a</code>, reference được trả về cũng sẽ hợp lệ trong suốt
+độ dài của lifetime nhỏ hơn trong hai lifetime của <code>x</code> và <code>y</code>.</p>
+<p>Hãy xem cách chú thích lifetime giới hạn hàm <code>longest</code> bằng cách truyền vào
+các reference có lifetime cụ thể khác nhau. Listing 10-22 là ví dụ đơn giản.</p>
+<figure class="listing" id="listing-10-22">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let string1 = String::from("long string is long");
+
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {result}");
+    }
+}
+<span class="boring">
+</span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+</span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-10-22">Listing 10-22</a>: Dùng hàm <code>longest</code> với reference đến các giá trị <code>String</code> có lifetime cụ thể khác nhau</figcaption>
+</figure>
+<p>Trong ví dụ này, <code>string1</code> hợp lệ đến hết scope ngoài, <code>string2</code> hợp lệ đến
+hết scope trong, và <code>result</code> tham chiếu đến thứ gì đó hợp lệ đến hết scope
+trong. Chạy code này và bạn sẽ thấy borrow checker chấp thuận; nó sẽ compile
+và in ra <code>The longest string is long string is long</code>.</p>
+<p>Tiếp theo, hãy thử ví dụ cho thấy lifetime của reference trong <code>result</code> phải
+là lifetime nhỏ hơn trong hai tham số. Ta sẽ chuyển khai báo biến <code>result</code>
+ra ngoài scope trong nhưng để phép gán giá trị vào <code>result</code> bên trong scope
+cùng với <code>string2</code>. Sau đó ta sẽ chuyển <code>println!</code> dùng <code>result</code> ra ngoài
+scope trong, sau khi scope trong đã kết thúc. Code trong Listing 10-23 sẽ
+không compile.</p>
+<figure class="listing" id="listing-10-23">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    println!("The longest string is {result}");
+}
+<span class="boring">
+</span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+</span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-10-23">Listing 10-23</a>: Cố dùng <code>result</code> sau khi <code>string2</code> đã ra khỏi scope</figcaption>
+</figure>
+<p>Khi ta cố compile code này, ta nhận được lỗi này:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0597]: `string2` does not live long enough
+ --&gt; src/main.rs:6:44
+  |
+5 |         let string2 = String::from("xyz");
+  |             ------- binding `string2` declared here
+6 |         result = longest(string1.as_str(), string2.as_str());
+  |                                            ^^^^^^^ borrowed value does not live long enough
+7 |     }
+  |     - `string2` dropped here while still borrowed
+8 |     println!("The longest string is {result}");
+  |                                      ------ borrow later used here
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Lỗi cho thấy rằng để <code>result</code> hợp lệ cho lệnh <code>println!</code>, <code>string2</code> cần hợp
+lệ đến hết scope ngoài. Rust biết điều này vì ta đã chú thích lifetime của
+các tham số và giá trị trả về của hàm bằng cùng tham số lifetime <code>'a</code>.</p>
+<p>Với tư cách là con người, ta có thể nhìn vào code và thấy rằng <code>string1</code> dài
+hơn <code>string2</code>, và do đó <code>result</code> sẽ chứa reference đến <code>string1</code>. Vì
+<code>string1</code> chưa ra khỏi scope, reference đến <code>string1</code> vẫn hợp lệ cho lệnh
+<code>println!</code>. Tuy nhiên, compiler không thể thấy rằng reference hợp lệ trong
+trường hợp này. Ta đã nói với Rust rằng lifetime của reference được trả về
+bởi hàm <code>longest</code> bằng với lifetime nhỏ hơn của các reference được truyền vào.
+Do đó, borrow checker từ chối code trong Listing 10-23 vì có thể có reference
+không hợp lệ.</p>
+<p>Hãy thử thiết kế thêm các thí nghiệm thay đổi giá trị và lifetime của các
+reference truyền vào hàm <code>longest</code> và cách reference được trả về được sử dụng.
+Đưa ra giả thuyết xem thí nghiệm của bạn có vượt qua borrow checker không
+trước khi compile; rồi kiểm tra xem bạn có đúng không!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="thinking-in-terms-of-lifetimes"></a></p>
+<h3 id="relationships"><a class="header" href="#relationships">Quan hệ giữa các Lifetime</a></h3>
+<p>Cách bạn cần chỉ định tham số lifetime phụ thuộc vào việc hàm của bạn đang
+làm gì. Ví dụ, nếu ta thay đổi implementation của hàm <code>longest</code> để luôn trả
+về tham số đầu tiên thay vì chuỗi slice dài hơn, ta không cần chỉ định
+lifetime cho tham số <code>y</code>. Code sau sẽ compile:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "efghijklmnopqrstuvwxyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;str) -&gt; &amp;'a str {
+    x
+}</code></pre>
+</figure>
+<p>Ta đã chỉ định tham số lifetime <code>'a</code> cho tham số <code>x</code> và kiểu trả về, nhưng
+không cho tham số <code>y</code>, vì lifetime của <code>y</code> không có mối quan hệ nào với
+lifetime của <code>x</code> hay giá trị trả về.</p>
+<p>Khi trả về một reference từ hàm, tham số lifetime cho kiểu trả về cần khớp
+với tham số lifetime của một trong các tham số. Nếu reference được trả về
+<em>không</em> tham chiếu đến một trong các tham số, nó phải tham chiếu đến giá trị
+được tạo trong hàm này. Tuy nhiên, đó sẽ là dangling reference vì giá trị
+sẽ ra khỏi scope ở cuối hàm. Hãy xét implementation của hàm <code>longest</code> sau
+sẽ không compile:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;str, y: &amp;str) -&gt; &amp;'a str {
+    let result = String::from("really long string");
+    result.as_str()
+}</code></pre>
+</figure>
+<p>Ở đây, dù ta đã chỉ định tham số lifetime <code>'a</code> cho kiểu trả về, implementation
+này sẽ không compile vì lifetime của giá trị trả về không liên quan gì đến
+lifetime của các tham số. Đây là thông báo lỗi:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0515]: cannot return value referencing local variable `result`
+  --&gt; src/main.rs:11:5
+   |
+11 |     result.as_str()
+   |     ------^^^^^^^^^
+   |     |
+   |     returns a value referencing data owned by the current function
+   |     `result` is borrowed here
+
+For more information about this error, try `rustc --explain E0515`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Vấn đề là <code>result</code> ra khỏi scope và được dọn dẹp ở cuối hàm <code>longest</code>. Ta
+cũng đang cố trả về reference đến <code>result</code> từ hàm. Không có cách nào ta có
+thể chỉ định tham số lifetime để thay đổi dangling reference này, và Rust sẽ
+không cho phép ta tạo dangling reference. Trong trường hợp này, giải pháp
+tốt nhất là trả về kiểu dữ liệu owned thay vì reference để hàm gọi chịu
+trách nhiệm dọn dẹp giá trị.</p>
+<p>Xét cho cùng, cú pháp lifetime là về việc kết nối lifetime của các tham số và
+giá trị trả về của hàm. Khi đã kết nối, Rust có đủ thông tin để cho phép các
+thao tác an toàn với bộ nhớ và ngăn chặn các thao tác có thể tạo con trỏ lơ
+lửng hoặc vi phạm an toàn bộ nhớ.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="lifetime-annotations-in-struct-definitions"></a></p>
+<h3 id="in-struct-definitions"><a class="header" href="#in-struct-definitions">Trong định nghĩa Struct</a></h3>
+<p>Cho đến nay, các struct ta đã định nghĩa đều chứa các kiểu owned. Ta có thể
+định nghĩa struct chứa reference, nhưng trong trường hợp đó, ta cần thêm
+chú thích lifetime vào mọi reference trong định nghĩa struct. Listing 10-24
+có một struct tên <code>ImportantExcerpt</code> chứa một string slice.</p>
+<figure class="listing" id="listing-10-24">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct ImportantExcerpt&lt;'a&gt; {
+    part: &amp;'a str,
+}
+
+fn main() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next().unwrap();
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+}</code></pre>
+<figcaption><a href="#listing-10-24">Listing 10-24</a>: Struct chứa reference, cần chú thích lifetime</figcaption>
+</figure>
+<p>Struct này có field duy nhất <code>part</code> chứa string slice, tức là một reference.
+Cũng như với kiểu dữ liệu generic, ta khai báo tên tham số lifetime generic
+bên trong dấu ngoặc góc sau tên struct để có thể dùng tham số lifetime trong
+thân định nghĩa struct. Chú thích này có nghĩa là instance của
+<code>ImportantExcerpt</code> không thể sống lâu hơn reference mà nó chứa trong field
+<code>part</code>.</p>
+<p>Hàm <code>main</code> ở đây tạo một instance của struct <code>ImportantExcerpt</code> chứa
+reference đến câu đầu tiên của <code>String</code> được sở hữu bởi biến <code>novel</code>. Dữ liệu
+trong <code>novel</code> tồn tại trước khi instance <code>ImportantExcerpt</code> được tạo. Ngoài
+ra, <code>novel</code> không ra khỏi scope cho đến sau khi <code>ImportantExcerpt</code> ra khỏi
+scope, vì vậy reference trong instance <code>ImportantExcerpt</code> hợp lệ.</p>
+<h3 id="lifetime-elision"><a class="header" href="#lifetime-elision">Lifetime Elision</a></h3>
+<p>Bạn đã biết rằng mọi reference đều có lifetime và ta cần chỉ định tham số
+lifetime cho các hàm hoặc struct dùng reference. Tuy nhiên, ta đã có một hàm
+trong Listing 4-9, được hiển thị lại trong Listing 10-25, đã compile mà không
+cần chú thích lifetime.</p>
+<figure class="listing" id="listing-10-25">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;str) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..]
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let my_string = String::from("hello world");
+</span><span class="boring">
+</span><span class="boring">    // first_word works on slices of `String`s
+</span><span class="boring">    let word = first_word(&amp;my_string[..]);
+</span><span class="boring">
+</span><span class="boring">    let my_string_literal = "hello world";
+</span><span class="boring">
+</span><span class="boring">    // first_word works on slices of string literals
+</span><span class="boring">    let word = first_word(&amp;my_string_literal[..]);
+</span><span class="boring">
+</span><span class="boring">    // Because string literals *are* string slices already,
+</span><span class="boring">    // this works too, without the slice syntax!
+</span><span class="boring">    let word = first_word(my_string_literal);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-10-25">Listing 10-25</a>: Hàm ta định nghĩa trong Listing 4-9 đã compile mà không cần chú thích lifetime, dù tham số và kiểu trả về là references</figcaption>
+</figure>
+<p>Lý do hàm này compile mà không cần chú thích lifetime là lịch sử: Trong các
+phiên bản đầu (trước 1.0) của Rust, code này sẽ không compile vì mọi reference
+cần có lifetime tường minh. Vào thời điểm đó, signature hàm sẽ được viết như
+thế này:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
+<p>Sau khi viết nhiều code Rust, nhóm Rust nhận ra rằng lập trình viên Rust cứ
+nhập đi nhập lại những chú thích lifetime giống nhau trong các tình huống cụ
+thể. Những tình huống này có thể dự đoán được và tuân theo một số mẫu xác
+định. Các nhà phát triển đã lập trình những mẫu này vào code của compiler để
+borrow checker có thể suy ra lifetime trong những tình huống này mà không cần
+chú thích tường minh.</p>
+<p>Phần lịch sử Rust này có liên quan vì có thể nhiều mẫu xác định hơn sẽ xuất
+hiện và được thêm vào compiler. Trong tương lai, thậm chí cần ít chú thích
+lifetime hơn nữa.</p>
+<p>Các mẫu được lập trình vào phân tích reference của Rust được gọi là <em>lifetime
+elision rules</em>. Đây không phải quy tắc cho lập trình viên tuân theo; chúng
+là một tập hợp các trường hợp cụ thể mà compiler sẽ xem xét, và nếu code
+của bạn phù hợp, bạn không cần viết lifetime tường minh.</p>
+<p>Các elision rule không cung cấp inference đầy đủ. Nếu sau khi Rust áp dụng
+các rule vẫn còn sự mơ hồ về lifetime của references, compiler sẽ không đoán
+lifetime còn lại. Thay vì đoán, compiler sẽ báo lỗi mà bạn có thể giải quyết
+bằng cách thêm chú thích lifetime.</p>
+<p>Lifetime trên tham số hàm hoặc method được gọi là <em>input lifetime</em>, và
+lifetime trên giá trị trả về được gọi là <em>output lifetime</em>.</p>
+<p>Compiler dùng ba rule để tìm ra lifetime của các reference khi không có chú
+thích tường minh. Rule đầu tiên áp dụng cho input lifetime, và rule thứ hai
+và thứ ba áp dụng cho output lifetime. Nếu compiler đến hết ba rule mà vẫn
+còn reference không tìm được lifetime, compiler sẽ dừng với lỗi. Các rule
+này áp dụng cho định nghĩa <code>fn</code> cũng như khối <code>impl</code>.</p>
+<p>Rule đầu tiên là compiler gán một tham số lifetime cho mỗi tham số là
+reference. Nói cách khác, hàm với một tham số nhận một tham số lifetime:
+<code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>; hàm với hai tham số nhận hai tham số lifetime riêng:
+<code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>; và cứ tiếp tục như vậy.</p>
+<p>Rule thứ hai là, nếu có chính xác một tham số input lifetime, lifetime đó
+được gán cho tất cả tham số output lifetime:
+<code>fn foo&lt;'a&gt;(x: &amp;'a i32) -&gt; &amp;'a i32</code>.</p>
+<p>Rule thứ ba là, nếu có nhiều tham số input lifetime, nhưng một trong số đó
+là <code>&amp;self</code> hoặc <code>&amp;mut self</code> vì đây là method, lifetime của <code>self</code> được gán
+cho tất cả tham số output lifetime. Rule thứ ba này làm cho các method dễ đọc
+và viết hơn nhiều vì cần ít ký hiệu hơn.</p>
+<p>Hãy giả vờ ta là compiler. Ta sẽ áp dụng những rule này để tìm ra lifetime
+của các reference trong signature của hàm <code>first_word</code> trong Listing 10-25.
+Signature bắt đầu không có lifetime nào liên kết với các reference:</p>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {</code></pre>
+<p>Sau đó compiler áp dụng rule đầu tiên, chỉ định rằng mỗi tham số có lifetime
+riêng. Ta gọi nó là <code>'a</code> như thường lệ, vậy signature bây giờ là:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;str {</code></pre>
+<p>Rule thứ hai áp dụng vì có đúng một input lifetime. Rule thứ hai chỉ định
+rằng lifetime của tham số input duy nhất được gán cho output lifetime, vậy
+signature bây giờ là:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
+<p>Giờ tất cả reference trong signature hàm này đều có lifetime, và compiler có
+thể tiếp tục phân tích mà không cần lập trình viên chú thích lifetime trong
+signature hàm này.</p>
+<p>Hãy xét một ví dụ khác, lần này dùng hàm <code>longest</code> chưa có tham số lifetime
+khi ta bắt đầu làm việc với nó trong Listing 10-20:</p>
+<pre><code class="language-rust ignore">fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {</code></pre>
+<p>Áp dụng rule đầu tiên: Mỗi tham số có lifetime riêng. Lần này ta có hai tham
+số thay vì một, nên ta có hai lifetime:</p>
+<pre><code class="language-rust ignore">fn longest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;str {</code></pre>
+<p>Bạn có thể thấy rule thứ hai không áp dụng vì có nhiều hơn một input lifetime.
+Rule thứ ba cũng không áp dụng vì <code>longest</code> là hàm chứ không phải method,
+nên không có tham số nào là <code>self</code>. Sau khi qua cả ba rule, ta vẫn chưa tìm
+được lifetime cho kiểu trả về. Đây là lý do ta gặp lỗi khi cố compile code
+trong Listing 10-20: Compiler đã qua các lifetime elision rule nhưng vẫn
+không thể tìm ra tất cả lifetime của các reference trong signature.</p>
+<p>Vì rule thứ ba thực sự chỉ áp dụng trong signature method, ta sẽ xem lifetime
+trong ngữ cảnh đó tiếp theo để hiểu tại sao rule thứ ba có nghĩa là ta
+thường không cần chú thích lifetime trong signature method.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="lifetime-annotations-in-method-definitions"></a></p>
+<h3 id="in-method-definitions"><a class="header" href="#in-method-definitions">Trong định nghĩa Method</a></h3>
+<p>Khi ta implement method trên struct có lifetime, ta dùng cú pháp giống với
+tham số kiểu generic như trong Listing 10-11. Nơi ta khai báo và dùng tham
+số lifetime phụ thuộc vào chúng có liên quan đến field struct hay tham số
+method và giá trị trả về không.</p>
+<p>Tên lifetime cho field struct luôn cần được khai báo sau keyword <code>impl</code> rồi
+dùng sau tên struct vì các lifetime đó là một phần của kiểu struct.</p>
+<p>Trong signature method bên trong khối <code>impl</code>, reference có thể được gắn với
+lifetime của reference trong field struct, hoặc chúng có thể độc lập. Ngoài
+ra, lifetime elision rule thường làm cho chú thích lifetime không cần thiết
+trong signature method. Hãy xem một số ví dụ dùng struct tên
+<code>ImportantExcerpt</code> ta đã định nghĩa trong Listing 10-24.</p>
+<p>Đầu tiên, ta dùng method tên <code>level</code> chỉ có tham số là reference đến <code>self</code>
+và kiểu trả về là <code>i32</code>, không phải reference đến bất cứ thứ gì:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">struct ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    part: &amp;'a str,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+    fn level(&amp;self) -&gt; i32 {
+        3
+    }
+}
+<span class="boring">
+</span><span class="boring">impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    fn announce_and_return_part(&amp;self, announcement: &amp;str) -&gt; &amp;str {
+</span><span class="boring">        println!("Attention please: {announcement}");
+</span><span class="boring">        self.part
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let novel = String::from("Call me Ishmael. Some years ago...");
+</span><span class="boring">    let first_sentence = novel.split('.').next().unwrap();
+</span><span class="boring">    let i = ImportantExcerpt {
+</span><span class="boring">        part: first_sentence,
+</span><span class="boring">    };
+</span><span class="boring">}</span></code></pre>
+<p>Khai báo tham số lifetime sau <code>impl</code> và cách dùng sau tên kiểu là bắt buộc,
+nhưng vì rule elision đầu tiên, ta không cần chú thích lifetime của reference
+đến <code>self</code>.</p>
+<p>Đây là ví dụ áp dụng rule elision lifetime thứ ba:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">struct ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    part: &amp;'a str,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    fn level(&amp;self) -&gt; i32 {
+</span><span class="boring">        3
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+    fn announce_and_return_part(&amp;self, announcement: &amp;str) -&gt; &amp;str {
+        println!("Attention please: {announcement}");
+        self.part
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let novel = String::from("Call me Ishmael. Some years ago...");
+</span><span class="boring">    let first_sentence = novel.split('.').next().unwrap();
+</span><span class="boring">    let i = ImportantExcerpt {
+</span><span class="boring">        part: first_sentence,
+</span><span class="boring">    };
+</span><span class="boring">}</span></code></pre>
+<p>Có hai input lifetime, nên Rust áp dụng rule elision lifetime đầu tiên và gán
+cho cả <code>&amp;self</code> và <code>announcement</code> lifetime riêng của chúng. Sau đó, vì một trong
+các tham số là <code>&amp;self</code>, kiểu trả về nhận lifetime của <code>&amp;self</code>, và tất cả
+lifetime đã được tính đến.</p>
+<h3 id="the-static-lifetime"><a class="header" href="#the-static-lifetime">The Static Lifetime</a></h3>
+<p>Một lifetime đặc biệt ta cần bàn đến là <code>'static</code>, biểu thị rằng reference bị
+ảnh hưởng <em>có thể</em> sống trong suốt thời gian chương trình chạy. Tất cả string
+literal đều có lifetime <code>'static</code>, mà ta có thể chú thích như sau:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s: &amp;'static str = "I have a static lifetime.";
+<span class="boring">}</span></code></pre>
+<p>Văn bản của chuỗi này được lưu trực tiếp trong binary của chương trình, luôn
+có sẵn. Do đó, lifetime của tất cả string literal là <code>'static</code>.</p>
+<p>Bạn có thể thấy gợi ý trong thông báo lỗi để dùng lifetime <code>'static</code>. Nhưng
+trước khi chỉ định <code>'static</code> làm lifetime cho reference, hãy suy nghĩ xem
+reference của bạn có thực sự sống trong suốt toàn bộ thời gian chương trình
+hay không, và liệu bạn có muốn vậy không. Phần lớn thời gian, thông báo lỗi
+gợi ý dùng lifetime <code>'static</code> là kết quả của việc cố tạo dangling reference
+hoặc lifetime có sẵn không khớp. Trong những trường hợp đó, giải pháp là sửa
+những vấn đề đó, không phải chỉ định lifetime <code>'static</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="generic-type-parameters-trait-bounds-and-lifetimes-together"></a></p>
+<h2 id="generic-type-parameters-trait-bounds-and-lifetimes"><a class="header" href="#generic-type-parameters-trait-bounds-and-lifetimes">Generic Type Parameters, Trait Bounds và Lifetimes cùng nhau</a></h2>
+<p>Hãy nhìn lướt qua cú pháp chỉ định tham số kiểu generic, trait bound và
+lifetime cùng trong một hàm!</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest_with_an_announcement(
+</span><span class="boring">        string1.as_str(),
+</span><span class="boring">        string2,
+</span><span class="boring">        "Today is someone's birthday!",
+</span><span class="boring">    );
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>use std::fmt::Display;
+
+fn longest_with_an_announcement&lt;'a, T&gt;(
+    x: &amp;'a str,
+    y: &amp;'a str,
+    ann: T,
+) -&gt; &amp;'a str
+where
+    T: Display,
+{
+    println!("Announcement! {ann}");
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre>
+<p>Đây là hàm <code>longest</code> từ Listing 10-21 trả về chuỗi dài hơn trong hai string
+slice. Nhưng giờ nó có thêm tham số tên <code>ann</code> kiểu generic <code>T</code>, có thể được
+điền vào bởi bất kỳ kiểu nào implement trait <code>Display</code> như được chỉ định bởi
+mệnh đề <code>where</code>. Tham số thêm này sẽ được in bằng <code>{}</code>, đó là lý do tại sao
+trait bound <code>Display</code> cần thiết. Vì lifetime là một loại generic, khai báo
+tham số lifetime <code>'a</code> và tham số kiểu generic <code>T</code> nằm cùng danh sách bên
+trong dấu ngoặc góc sau tên hàm.</p>
+<h2 id="summary"><a class="header" href="#summary">Tóm tắt</a></h2>
+<p>Ta đã đề cập nhiều trong chương này! Bây giờ bạn đã biết về tham số kiểu
+generic, trait và trait bound, và tham số lifetime generic, bạn đã sẵn sàng
+viết code không lặp lại mà hoạt động trong nhiều tình huống khác nhau. Tham
+số kiểu generic cho phép bạn áp dụng code cho các kiểu khác nhau. Trait và
+trait bound đảm bảo rằng dù kiểu là generic, chúng vẫn có hành vi mà code
+cần. Bạn đã học cách dùng chú thích lifetime để đảm bảo rằng code linh hoạt
+này sẽ không có dangling reference. Và tất cả phân tích này diễn ra lúc
+compile, không ảnh hưởng đến hiệu suất runtime!</p>
+<p>Dù không ngờ, vẫn còn nhiều thứ để học về các chủ đề ta đã bàn trong chương
+này: Chương 18 thảo luận về trait object, một cách khác để dùng trait. Cũng
+có những tình huống phức tạp hơn liên quan đến chú thích lifetime mà bạn chỉ
+cần trong các tình huống rất nâng cao; với những trường hợp đó, bạn nên đọc
+<a href="../reference/trait-bounds.html">Rust Reference</a>. Nhưng tiếp theo, bạn sẽ học cách viết test trong
+Rust để đảm bảo code của bạn hoạt động đúng như mong đợi.</p>
+
+  <div class="page-nav bottom"><a href="ch10-02-traits.html">← Trước</a><a href="ch11-00-testing.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

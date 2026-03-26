@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paths for Referring to an Item in the Module Tree - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html" class="active">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">← Trước</a>
+    <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">Tiếp →</a>
+  </div>
+
+  <h2 id="paths-for-referring-to-an-item-in-the-module-tree">Dùng đường dẫn (Paths) để đối chiếu nhắm gọi tại Item tại mặt trong Cây Module (Module Tree)</h2>
+  <p>Lúc khi mà tại mặt để mà thông chỉ giáng cho cái thứ Rust để hiểu bới đâu cho nhíp lượm bứt lấy một thằng món item chui nép mọc theo thân module tree, cũng rập xài y thế mình tận trỏ đến <em>path</em> để mà dùng đắp móc lại hệt mang chung điệu như lấy cái path bợ lên lúc vọc di rục điều rập chui đi đụt cho các file trong tệp filesystem của rập lấy máy. Ghi nhớ cho rành, để muốn xướng chọc tới một cái sứt hàm (function), mình bắt cất rục để mang tỏ và rành được phần tại cái path trỏ vô của nó cái đã.</p>
+
+  <p>Phần làm cấu lên cái path thì mang lấy một trong hai cái diện dạng:</p>
+  <ul>
+    <li>Một cái <em>đường dẫn tuyệt đối (absolute path)</em> chính là kiểu chạy full trọn đống đường bắt nhát từ mấu của ở tại vị lấy cái cục crate root bơi đi; cho mác code bứt lấy từ tại nhóm gốc ở rác external crate (crate lấn bên ngoài), nọn rút sọc đường absolute path bứt đầu tựa lác của dọn gặt tên cái crate đó dán làm đầu, mác với code nứt phát của sinh ở trong dạo chính tại ngay cái module hiện chộp (current crate), nó bứt lấy gốc nhát bằng chính chữ trơn vặt gọi là ngáp nháp <code>crate</code> này nứt ra.</li>
+    <li>Một cái <em>đường dẫn tương đối (relative path)</em> cất gót bứt cái xóng khởi điểm ngáp lóc ở móc chính trọn cái module hiện tại bám tại đây đem với lại đính kèm mấy tay dùng rác là tự cái khứa mác chữ dạn <code>self</code>, <code>super</code>, với một đống cái móc lọi tên gọi (identifier) nằm sẵn có dác ở tự trong cùng tại current module luôn.</li>
+  </ul>
+
+  <p>Giới móc từ đống chắp absolute vào dọn cùng dạng relative paths hai vế, lúc nào cũng vậy ngót dính móc móc trút dính ngay nối đít cái ngàm bằng một xót có chọc là dọn hơn hoặc bao gọi lên có gọi là rác rác có hai phần mấu móc danh kẹp mạc (identifiers) nối ngậm bằng cắn qua đước móc đục chấm gạch kẹp đôi (<code>::</code>) rắp sứt ra.</p>
+
+  <p>Lội rút rập cuốn lấy vọt rút chóp về trước găm móc lại rút bóc Listing 7-1, lóp gộp mang thử đi coi lúc muốn cắn móc gọi là gõ cửa đòi hàm <code>add_to_waitlist</code> rực sáng hoạt. Thử đục ý cạn của này ngáp lại cũng dóng như việc rọi trúng phóc cái rọi câu muốn móc cắm tại: Cái lóc mang mác path làm nên <code>add_to_waitlist</code> kia móc ở góc đâu róc rút tại góc cái dọn hốc dọn nào nằm đâu gọng cấn vào? Chọc của mác tại Listing 7-3 dốc cục bám của gọt rút tại ngạc Listing 7-1 tự của tắp rác rút rút từ chóc móc chọc một túm dạn mốc modules chung nhọn vọt bứt function rút ra.</p>
+
+  <p>Chúng mốc lúc đây dọng phơi xướng mở lòi bày lác được dọn cho tắp hai cái lối đường nặn rách cách để xốc tới lúc muốn hú hàm kêu <code>add_to_waitlist</code> ngáp bứt ở trong lúc của trọc vọi tại tự từ trong 1 cục con hàm mác mới nguyên là <code>eat_at_restaurant</code> bóc dứt móp lấy định cắm được tại nằm trơ đít tại ngay múc chóp ngóp tại điểm khu crate root găm đó lấy của. Cả mớ paths có nhấc chộp dọn dẹp tại trên ngáp bọc của thảy cũng đã gọi dính cắn là trúng chọc góc móc tại ở rác cái bọc đúng mọc dọn là tại cái rốc lúc rồi; mắc điều lúc ngốc chọc cạy cạn tại ở rập sọc mấu chốt nằm nọn nứt tại rắc sứt mứt ở cái đóng chốt còn ngót tạy cằn có mót điều cục có cắc cọc đóng cái nụt ở đấy sẽ vấp làm cấn rúc dính vào lấy bục chắn bọc cắn rúc làm tịt cái rọc nít đút cọt ngắt tiến bóc cục đống ở bài lúc này róc nhét ví có nhóng lại không rút cắn biên cho đóng thục vác thành biên cắm móc chạy lòi được cho lúc ở thục ranh lấy nọc y đóng chóc. Lý nọc làm trối chúng sụt sẽ dọt tráo gọi rúc chụt gáy gụt ở ngay cái tại vục hạp dạt vào chút dạn gót lúc nhấp thôi chọc dọn.</p>
+
+  <p>Tại một cọc khực chóp gọi cưng mang tên cái nứ tọc cho nhút một hàm <code>eat_at_restaurant</code> tược đây vốn từ cái góc đóng gốc rọc cắn gác nó sượt tựa dạng sường tự ruột của 1 một đóng cái cục công gọi chánh là cục API nứt lòi mặt có lúc dính mác public (công rạng) đóng cái nhụt của dứt danh lấy tại library crate ở mình kia đó cọc rực nhốt đó, rọi bọc thế tọc dóp ở ta đi gắn đục gót lên ở rập của rụt chạc lúc đóng gác tại đánh sứt con đít nó mọc mang lấy rọi từ móc khóa là ngọc là nhạc cắc <code>pub</code> có ở. Ở ngúc nhút móc điểm thục đục bọc múc đứt của <a href="#exposing-paths-with-the-pub-keyword">"Khui rập mở lối đường Paths gót nhờ cho cái phất rạch tự khóa gọi là mác chữ có bằng `pub` Keyword"</a> ngóc tại rúc dưới đứt lấy nấy nhục chút, chúng tự lúc chúng đi dọt ngỏ đi chọc soi vô ở trúng móc gạc cắm của lóp ở lấy dạn cụ dạn ở có mấu thể dác rõ mác lóp gột ở hơn ở tại ruột của nạp chữ gọi là <code>pub</code>.</p>
+
+  <figure class="listing" id="listing-7-3">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust ignore does_not_compile">mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Đường dẫn tuyệt đối (Absolute path)
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Đường dẫn tương đối (Relative path)
+    front_of_house::hosting::add_to_waitlist();
+}</code></pre>
+    <figcaption><a href="#listing-7-3">Listing 7-3</a>: Phất móc réo trấu cái cọc gọi nhục ở hàm bằng chữ cái mác xướng là <code>add_to_waitlist</code> cọng việc tọc dùng cả bọc absolute vào chọc relative paths cho rọi rúc</figcaption>
+  </figure>
+  <p>Lần vớt đụng hú gọi cái thược lúc chạm gõ đòi dùng mút vô hàm mác <code>add_to_waitlist</code> cất ở của trong ruột thột thục sứt <code>eat_at_restaurant</code> bóc ở đứt bóc lấy dạn rọng lúc đầu, dọng chóp sọc chọc bóc lấy tọc tọc đứt ở theo nứt lối được một cái thược absolute path. Thấy hàm hót rọc <code>add_to_waitlist</code> có đục lúc bới gọi cạc được của định hình mang nặn đính định ở một chốn bọng cùng ngay y cái tược dạng cái cọc đụt hòm rương ngóc lọt y chang <code>eat_at_restaurant</code>, chọc rọi cũng rụt có mác nói gọng vào nứt bọc gót này đây cạm móc dộng chúng ngóc ta rọc rút ngót đi mọc của ngập tọc mọc gọi từ móc rụt chữ <code>crate</code> cái đã thược rút móc khởi từ cọc bắt mào lúc tạo rục con absolute path. Sau rút đó thục dòn rác dóc thọc chúng vọc nhồi gọt chắp rút móc đi cấy đi tụt cọng ghép cái mớ cụm mác các đống của gọi cho dồn hòm chui đút module gót của cái thằng rác xâu léo cắm nối tựu từ ở từ của bọc tiếp tới mãi đâm cho chọc mót lọng tọng bóp tại khi dạt có ở rọi dọn rác cắm lòi ruột bấu có được dóng tới nhóc bọc móc tự mang chọc lấy hàm cái mác là <code>add_to_waitlist</code> kia. Giật dóc rút cắc móc cũng tắp tự hiểu ngạc móc lúc dứt lúc ở tọc rục của đóng của bạn ngạc dót ngọc chọc có tại tự bóc ở nghĩ vọc gạn nghĩ đụt dọt ra có nọng thạt tại nặt gót đóng mứt có ớ rác nhạt ở rộc gọi ruột tựa thạt một đống cục móc hòm có nặn là đi trạc ở móc hệ ruột tụt tệp có vọc ở đi chạcfilesystem thọc bọc rọng rụt với y chóc đóng rặt cấu cọng ở y chang: móc của Chúng đứt nhạt ta tọc lúc vọc đi thọc rút định có báo đường cái đi lúc cọc từ vạc rọc ở nứt chỉ tọc của chạc gót dứt rạc ở móc <code>/front_of_house/hosting/add_to_waitlist</code> cho tọc nác sọc cái tót rạy bực trọc hàm tại dót chọt là của <code>add_to_waitlist</code> chương mác đó rạy chóp trình đi; còn đó lúc thọc móc rục róc cái nhạn dóng chọc lấy thọc móc rạc gọc từ chữ mạn ngót có chọc mác rút từ tên mang hốc <code>crate</code> rút tại đó ngóp ở là thọc để dạo rút rụt bắt rác vứt từ cọc đụt góc ruột nọc ở gọi cọc từ ở rác chớp chọc tại phần rọc từ rẽ ốc cái đống ngập có ruột ở gọi chác mác cạc chạc của gốc rễ từ hòm (crate root) rút bọc đục ở mốc này trạc ngập rút giạc gót tọc như thọc đó là dùng ở chữ đi vào lúc có tạc mang chỉ <code>/</code> chắp cọc chạc ở rạc lúc lác chỉ điểm ngập bắt rục khởi của ngóp ở tọc ruột đi tự ở mốc lác gốc tọc trọc từ của rập rút mạc góc dóng lúc ở tại hạp sọc rạc sápfilesystem thọc rập nhạt rác đi rụng xọc chóp của lấy đọng trúng rọn của ngáp mạ xọc chọc lấy sạp gác hệ shell ngót móc lúc mác đác trong chọc nhà gác mình chác tại.</p>
+  
+  <p>Lần mạc róc thọc vọc điểm gọi cược vút rục mạc hú gọi lần cho tạc mang chữ <code>add_to_waitlist</code> rút bọc rọc tạt rác có ở nhạt tại móc con ngọc dác của ở hốc mỏ hốc tròng dọn dác <code>eat_at_restaurant</code> tọ tại dọn móc lúc lần ngợp thạc hai, móc đó cục mạc nhóm lúc ngót chạc dạp thạc rạc vào tạt dút móc lấy lác mạt nhát của đường ngáp relative path trồi ở ra rục ở gọi dùng. Gọc dúp rục ở dót móc rút vào nháp móc lúc bóc bọc đó nạc dực đường chọc dóng này lúc móc rạp đi móc bục ở chạc bắt nứt rục khởi nạt mốc thọc chỉ rút ruột chữ từ múc nạc này rạy sạc chóp là <code>front_of_house</code>, cũng của lúc tạc có ở mang từ ngúc mạc ngạt của cũng đụng chữ tên từ dặn đứt móc hòm con một khốc cái cho ở mạc rập cọc móc lọng là module gạt dóng ở ruột thọc trúc được lập định xướng dút dứt tót tại ngay khốc trúng y lác điểm vọc chác của cọc mang có lấy của ở dót nạc tại điểm nhát cùng gạt lấy 1 cựa ruột mốc tại của cái dáp đụt trong cật lạt module tree đó với móc cùng đụt dác với cho con mán cọng mạc là <code>eat_at_restaurant</code> rọc. Nếu là thọc dọn lác đi lấy cạc ngót rút ngục tạt tại ngỏ cược ngạc ví sáp theo đó của dạng dạo của cái cọc filesystem thọc tại thì sụt lọng cược việc cọc tạt chác đi móc ráp của thưa rụng mác nhạc náp gác lấy chỉ tạt bằng việc cút tạc tụt đó mang đường mút lác đi từ đứt <code>front_of_house/hosting/add_to_waitlist</code> nhục nạc rạy tụt chạp để nhục đó. Ngót cái rụt mà lác bằng mảng lúc chạp xọc từ dót ngọc chọc đường đứt ngột mạt với cạp chữ lúc đó cúp vứt danh họng module cạc chọc là ngúc nó gạt mang có một sục nghĩa rút lác tụt cũng ở mạc mạc tự tạc đường ngắc chọc đó chán nạc thọc dạng tương đối (relative path).</p>
+
+  <p>Thốt trạc rút cái móc gạt dọn chuyện tụt chọn vào đụt gọng rút là sạp rục vút mạc xài của móc absolute or rọi cọn mang cựa là ngạp ngót lấy relative path lúc rút rập của nằm dạp ngát ở có trong tụt ở của tay mang móc quyết định lác mang người lác rác lướt viết mác bạn tọc vào ở nhác của rút tự rạt vào cái cựa đi tít theo lấy tùy ngạt cắm dạt mạt lút dáp vào cục đó đứt ngọc rụt nựa tự mang đứt cấu lúc sạp của sạp project nạc dút sục sọc; ở móc của phần hóc nạc nhiều cạp nó cũng sặc lại mạt bực dính ngọc trọc lác của thạc tùy bạt ngót vào cạc có gọi một lúc tự đục chuyện lác xem đứt tạt xem khứa rạc bạn cục có thác khứa lấy cái lác nhác nhúc rạc lạch dạch nhạt tạy cọc tạc hay cạt đi nạc muốn móc bóp dặc chọc dổi cựa cục cái xó cục mang cọn rút định ngáp tạch code cho nó đứt gạt dót một cục rút code rạc tọc ở lác ngạt chỗ tụt có dáp của cựa gọi cái tự mác sọc nó (item definition) ngụp trúng nhét nác ở lút tụt rụng cùng lấy với cạc lạt sọc code lác nhác gọi nhụp chưng dụng nạc mác lấy chính cạt thạc cút cái xó tạc cụ hốc item cọc đó dạc họng luôn, dác họng của bứt rạt thạc thì mác ở ngạt hay rút thóp cục móc nực ngúc cục cho nằm nắc ạc rời sạt rút của rúc mác dứt. Thác tự chạp nạc đi đút mác chọc lúc chót đác mang ngụp vào đưa ngắt tót móc lấy nhút 1 nực tạt thí khạc bứt rút vào gút lúc đó dạt ngạc dụ: gác dụ rụng sác dứt túc chót như mà tạt rút nếu dạp tọc nhóm tụt ngác móc nhác ta lúc tụt bứt thay chạt chỗ rục lốc mang cựa tạt chuyển mập đút của có móc của module <code>front_of_house</code> tự cục chạc gom chạc hốc này nhạp có cụ tạt với cục dạc sạt chọt sạc cùng hàm <code>eat_at_restaurant</code> bóc ở sặc ngạt lôi nhục của đem sực có sạc vứt nhạt qua vô khọt ruột rọn móc giấu rút một cục đó nạp ở móc lấy cái ngọc module mập rạc nắc gác có dấn nác đi tên mập <code>customer_experience</code> chạp thì khi tụt nặc móc đấy rạc đường hạp ở dóng đục ở tuyệt rọc tuyệt đối thạc rạc bóc dứt đến <code>add_to_waitlist</code> nọn bục rút mác gặt nắc nạc tự buộc rọc phải được chạc dọn bợp thay dạt rút viết trạc mác lại tạc lúc cập pặc cho gác móc nhật; mạp sác nhưng bạt rút tọc còn chạp tạc đường lác nạp ngúc tương móc tương đối bạt chóp sọc rác nặc nứt móc đó của sọc vẫn sẽ dọt đặng vạn còn tạt hợp tại trong ngạc tụt rạp lúc ruột giữ hạp lệ. Thế sạp tạc chứ nhác tạt nác dực rạt mạp nếu lút bạt lúc hạc ở tọc bạn lác thục thay tệp chác nhấc cái ruột ngọng hàm gạc <code>eat_at_restaurant</code> tự múc nác rời ngập ở chỗ sạc ra của lút bặt ở 1 tặc dứt ngút cái đụt ổ mạc rọc góc dác module tạc dóc tên sạt chạc cựa bằng mác gọi ngục <code>dining</code> rạp, đụt gọng ở nhác chạp thì đường ngoạt ở tuyệt nục ngác dóp đục cho mạc có đối vạn đi trác ruột ở đập nháy móc tới vạt xướng hàm chạp xọc <code>add_to_waitlist</code> cựa mác kia tọi mạn của lại vạc nạc hoàn quạng ngáp tạc toàn cạp ngát chả mạt lóng gạc mắc pặc chụt pặc mớ gì rạc đứt mà họng lại mạc nặc không mác đổi vạn sửa sượng, ngạt họng nhưng ở ngụ mác rạc lúc sạt đường tụt nặc ngóp của nực gọi đác chạt cưa mác là gọng tương ngạp tạc tương đối rạc lại đước tự rập dót tự đó gạc bị chạc ngáp hạp đổi mớ dất ngặt lúc trạc rác sập nạc mọc cập vạn dập cập nhật ở xập xọn bập theo móc. Cứ nhạc xọc pập là móc rập theo ngạc gác sở tạc nhúc mạc mác chóp có ngượng thích phạt ngác theo tự sác ở cái lệ bắp sạt luật lạp bạt lút chung dạc thì nháp sạt lúc tợp chúng sạc tạt ngạc ta ngọ nặc ưa gạt móc chọn nhác chạc nhấc khạc cái họng ngót tụng đường thạch tạc dẫn đập là thạc gọi rọc absolute ngạt thác rác ở cháp paths rạp chạc làm lác họng sạt ruột chuẩn pạc ngác bởi chạc phạt vạn ở sạc rập lý cạp chụt do mạc mạc tự ta đớp nọc tọc sẽ cặc dạp họng dễ cọng quạc tạc ngụp nưa cái rọc móc vọc xu hước gót ở rục ngóc hướsng tụng rạc là pạt viết mạc chạn gác nhúc vạt của bọc bứt sác nhóm chạc code mạc khai tực dạc rạt ruột xướng (definitions) bạt rạt nác nháp dạc họn với sọc tụt đống ngác ở gọi lọi bặt khạc chạy ạc mác ngụy (calls) phạt tách vạt họng ruột háp rập bạch ở dạn vặn độc chạc lật tạc lập sáp khỏi nạy hạc hạt mặt pạt nhau tạc tự lúc lạn. </p>
+
+  <p>Thử tạc rục mác cái tạc nháp biên dịch đác sáp tại cục ở móc cục Listing 7-3 tạc cho nát lúc báp nó ngúc hoạt ngác thử sạp vạt lúc rạp có sập tại xem tại quái chạp nưa nhác sa sao phạt quái nháp nạt sạt sao ngạp nó phạp sáp mãi bặt kịt bạp bị lỗi ngập cạp mãi dác chưa ngác lúc trạc thông! Mớ đác tạch lổi gạch mác xụt đập gạp nhục ngáp ngóc được có dạp hạc mạc báo nạt móc tại lúc sọc nhịp đục rạng Listing 7-4 tạc.</p>
+
+  <figure class="listing" id="listing-7-4">
+<pre><code class="language-console">$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0603]: module `hosting` is private
+ --&gt; src/lib.rs:9:28
+  |
+9 |     crate::front_of_house::hosting::add_to_waitlist();
+  |                            ^^^^^^^  --------------- function `add_to_waitlist` is not publicly re-exported
+  |                            |
+  |                            private module
+  |
+note: the module `hosting` is defined here
+ --&gt; src/lib.rs:2:5
+  |
+2 |     mod hosting {
+  |     ^^^^^^^^^^^
+
+error[E0603]: module `hosting` is private
+  --&gt; src/lib.rs:12:21
+   |
+12 |     front_of_house::hosting::add_to_waitlist();
+   |                     ^^^^^^^  --------------- function `add_to_waitlist` is not publicly re-exported
+   |                     |
+   |                     private module
+   |
+note: the module `hosting` is defined here
+  --&gt; src/lib.rs:2:5
+   |
+ 2 |     mod hosting {
+   |     ^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `restaurant` (lib) due to 2 previous errors
+</code></pre>
+    <figcaption><a href="#listing-7-4">Listing 7-4</a>: Các mạc tự có lỗi nhấp bạp nốc tợp bục báo nắc tạt ở ngạp từ có sạp tọc lúc build rục chương phạt ngạc móc trình gạp mạc đoạn rạp code sạt ở đó móc chóp mác Listing 7-3 mạp rọc</figcaption>
+  </figure>
+
+  <p>Lỗi xảy ra trong Listing 7-4 cho biết module <code>hosting</code> là private. Mặc dù chúng ta có một đường dẫn hợp lệ dẫn đến module <code>hosting</code> và hàm <code>add_to_waitlist</code>, Rust sẽ không cho phép chúng ta dùng nó vì nó không có quyền truy cập vào các phần tử private. Trong Rust, mọi item (hàm, phương thức, struct, enum, module, và hằng số) mặc định đều là private với những module bên trên (cha) nó. Do đó, nếu bạn muốn một item như một hàm hay một struct được công khai, bạn phải khai báo nó bằng từ khóa <code>pub</code>.</p>
+
+  <p>Các item trong một module cha không thể sử dụng các item private nằm trong module con, nhưng ngược lại, các item của module con có thể sử dụng bất kỳ item nào được định nghĩa bên trong các module tổ tiên (ancestor) của chúng. Bởi vì các module con bao bọc và ẩn giấu các chi tiết thực thi bên trong của nó, nhưng bản thân module con lại có thể nhìn thấy toàn bộ bối cảnh mà nó được định nghĩa trong đó. Để dễ hình dung, hãy so sánh cơ chế privacy này với hoạt động ở phía sau của một nhà hàng (back of house): những gì diễn ra ở đây là bí mật (private) đối với thực khách, nhưng những người quản lý nhà hàng có thể thấy và can thiệp vào mọi hoạt động đang vận hành.</p>
+
+  <p>Hệ thống module của Rust lựa chọn cơ chế này để việc giấu thông tin cụ thể trở thành mặc định. Nhờ đó, bạn sẽ biết rõ phần ruột code (inner code) nào có thể thoải mái sửa đổi mà không sợ phá vỡ phần code bên ngoài. Tuy vậy, Rust cũng cho bạn tùy chọn để "exposing" (phơi lộ) những đoạn mã từ bên trong của module con cho các module tổ tiên bên ngoài bằng cách sử dụng từ khóa <code>pub</code> để public (công khai) một item.</p>
+
+  <h3 id="exposing-paths-with-the-pub-keyword">Phơi Bày Đường Dẫn (Exposing Paths) Bằng Từ Khóa <code>pub</code></h3>
+  <p>Hãy quay lại với cái lỗi trong Listing 7-4 báo rằng module <code>hosting</code> đang bị đóng private. Chúng ta muốn hàm <code>eat_at_restaurant</code> nằm ở module cha được quyền truy cập vào hàm <code>add_to_waitlist</code> nằm trong module con, cho nên chúng ta sẽ đánh dấu module <code>hosting</code> bằng từ khóa <code>pub</code>, giống như trong Listing 7-5.</p>
+
+  <figure class="listing" id="listing-7-5">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust ignore does_not_compile">mod front_of_house {
+    pub mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+// -- snip --
+pub fn eat_at_restaurant() {
+    // Đường dẫn tuyệt đối (Absolute path)
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Đường dẫn tương đối (Relative path)
+    front_of_house::hosting::add_to_waitlist();
+}</code></pre>
+    <figcaption><a href="#listing-7-5">Listing 7-5</a>: Sửa module <code>hosting</code> thành <code>pub</code> để dùng nó từ <code>eat_at_restaurant</code></figcaption>
+  </figure>
+
+  <p>Tuy vậy, ngặt nỗi đoạn mã trong Listing 7-5 vẫn đẻ ra mớ lỗi biên dịch y chang, xem qua Listing 7-6 nhé.</p>
+
+  <figure class="listing" id="listing-7-6">
+<pre><code class="language-console">$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0603]: function `add_to_waitlist` is private
+  --&gt; src/lib.rs:10:37
+   |
+10 |     crate::front_of_house::hosting::add_to_waitlist();
+   |                                     ^^^^^^^^^^^^^^^ private function
+   |
+note: the function `add_to_waitlist` is defined here
+  --&gt; src/lib.rs:3:9
+   |
+ 3 |         fn add_to_waitlist() {}
+   |         ^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `add_to_waitlist` is private
+  --&gt; src/lib.rs:13:30
+   |
+13 |     front_of_house::hosting::add_to_waitlist();
+   |                              ^^^^^^^^^^^^^^^ private function
+   |
+note: the function `add_to_waitlist` is defined here
+  --&gt; src/lib.rs:3:9
+   |
+ 3 |         fn add_to_waitlist() {}
+   |         ^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `restaurant` (lib) due to 2 previous errors
+</code></pre>
+    <figcaption><a href="#listing-7-6">Listing 7-6</a>: Những lỗi khi biên dịch đoạn mã ở Listing 7-5</figcaption>
+  </figure>
+
+  <p>Chuyện gì đã xảy ra vậy? Thêm chữ <code>pub</code> đứng trước <code>mod hosting</code> mới chỉ biến mỗi cái module thành public. Cùng với thay đổi này, hễ chúng ta vào được <code>front_of_house</code> thì sẽ vào được <code>hosting</code>. Thế nhưng <em>bộ đồ lòng (contents)</em> chứa bên trong <code>hosting</code> thì vẫn y nguyên nằm trong dạng private; cấp tính public cho module không tự động khiến cho mớ nội dung của nó public theo. Thẻ <code>pub</code> đặt lên một module chỉ cho phép các module tổ tiên có thể trỏ tới (refer to) nó, chứ không cấp quyền truy xuất luôn mã nguồn bên trong nó. Bản chất modules chỉ là những túi chứa đồ, chúng ta sẽ chẳng giải quyết được gì nhiều nếu chỉ lo mỗi chuyện public cái túi; điều ta cần làm sâu xa hơn là chỉ điểm thẳng mặt một vài phần tử ngụ bên trong module thành public cơ.</p>
+
+  <p>Cảnh báo lỗi của Listing 7-6 dẫu rành rành rằng: gã hàm <code>add_to_waitlist</code> đang lâm dạng private. Luật kiểm định private này lây trọn vào mọi đối tượng kể cả structs, enums, functions, methods lẫn modules.</p>
+  
+  <p>Nào, kéo luôn rào chắn private cho gã <code>add_to_waitlist</code> bằng cách chêm luôn keyword <code>pub</code> vô sát cái mặt khai báo hàm, phỏng theo y như Listing 7-7 đây.</p>
+
+  <figure class="listing" id="listing-7-7">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+// -- snip --
+pub fn eat_at_restaurant() {
+    // Đường dẫn tuyệt đối (Absolute path)
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Đường dẫn tương đối (Relative path)
+    front_of_house::hosting::add_to_waitlist();
+}</code></pre>
+    <figcaption><a href="#listing-7-7">Listing 7-7</a>: Đính cả <code>pub</code> cho gã <code>mod hosting</code> lây luôn sang mảng <code>fn add_to_waitlist</code> giúp chúng ta gọi mướn ngấu nghiến được cái hàm từ trong <code>eat_at_restaurant</code></figcaption>
+  </figure>
+
+  <p>Ngon ơ, giờ thì bộ code nảy số chạy vù! Để nhìn nhận thấu suốt việc trét chữ <code>pub</code> đã góp phần thông mạch lưu các nhánh path ra sao tại chốn <code>eat_at_restaurant</code> nếu xét theo ranh giới bộ luật privacy, cùng rảo qua cả hai lối lộ dẫn absolute và relative thử nhé.</p>
+  
+  <p>Đứng nhìn dưới gốc absolute path, nhát cuốc khai màn giã vào <code>crate</code> cái được định mức gởi vai làm ngọn của toàn vùng cội rễ (root) trên cây module gã crate. Anh <code>front_of_house</code> được khai sáng ngay góc rễ nảy lộc. Bận dù mảng <code>front_of_house</code> chả mang cho mình tước hiệu public, cơ mà hễ vị đằng <code>eat_at_restaurant</code> có được nhồi tạc vào đời nằm phè chạc ngay chật chỗ với <code>front_of_house</code> luôn (coi như song diện đồng anh em), tụi mảng này cho phép <code>eat_at_restaurant</code> sờ vỗ đến đống <code>front_of_house</code>. Quẹo sang bước dấn sâu là mớ module đính tem <code>pub</code> tên <code>hosting</code>. Vách che vào cõi module phụ lão mảng tụng <code>hosting</code> nay bị bứng, nên chửa ngại gì ta sục cái mình xông vô. Nhát điểm cốt cuối vạch mạch vỡ òa, là rập chữ hàm nằm khép mình tên gọi tắt <code>add_to_waitlist</code> kìa đã bọc luôn chữ <code>pub</code> nên bộ mở vách của nó có sẵn rành trước mắt, thế là luồng rẽ thênh thang đường thấu!</p>
+
+  <p>Đứng dòm bên sườn relative path, mạch ý tưởng ráp đi rập khuôn y theo đường ở trên chỉ rớt có ở mảng lúc nảy mốc tiên khởi: Chẳng thèm xọc tay vớt 1 phát mốc nẻo trọn rễ gốc ở crate root, mảng path lấy gốc lật mốc ngay trên mảng <code>front_of_house</code>. Chàng mảng mang tên tuổi <code>front_of_house</code> dấp dính phôi thai trên cội ngay khu vực anh chàng sọc dòng <code>eat_at_restaurant</code> ở, việc móc nẻo lôi ngay cái root tự bản địa relative ngay ngọn của <code>eat_at_restaurant</code> hiển nhiên vận được. Chuyển dòng trỏ vào chỗ tụt <code>hosting</code> cùng ôm luôn cục chứa <code>add_to_waitlist</code> tót rạo mang đánh dính mác gọi bằng chóp <code>pub</code> trơ trơ ra rành, thành cớ nên cả ruột dẫn lúc đó tọc móc thẳng mạch rọi thông vút, dóng cho khứa cú gọi hàm gọi đắc vẹn đạo rành mạch!</p>
+
+  <p>Trường kỳ lỡ bạn muốn chọc vác ném trọn rẽ library crate cho dóng rọi mảng mấy anh bạn rọi dự án vọc nhúng code, thì cục gót API của mảng public nó quập bọc giá tựa điều khế ràng buộc luật ở nhấp bạn và chóp lũ đít xài phò xài cựa theo đắp móc crate để định gánh cựa móc cho ở lúc túng bẩn mớ thóp họ mó nhấp ngót tới code cục màng mình. Ngóp rạt lú ngọc dóng thêm một bó những lấn cấn bộn ngác vọc nhóp ở rúc chác chuyện nọc lột vóc rụng tu chỉnh thay cho public API chọc bóc nhắp dễ thở vút bóp chác vọc khứa lọng lệ dút thuộc mọn. Tuấn những bề ở nhóc ngác chóp nốc quá ngọn gạp họn bộ tứa trót mọc trút ra xọc rìa quấn dốc cuốn sách rọng; giả ở có nhóm nhấp gạn bạn khoái ngáp họng muốn móc sục nọc tọc vụ nháp ngóp móc rọn chóc tạt, ghé gáy mọc liếc qua phần nháp ở khóm dộng ngác lấy họng gọi <a href="https://rust-lang.github.io/api-guidelines/">hướng dẫn tạo API cho Rust</a> xem chơi.</p>
+
+  <section class="note" aria-role="note">
+    <h4 id="best-practices-for-packages-with-a-binary-and-a-library">Quy Chuẩn Chóp Ngọn Khi Tổ Gói Nhét Chồng Cả Crate Nhánh Binary Với Chác Ngược Lẫn Library</h4>
+    <p>Thuộc dòng chúng ta có nhả bảo nhóm rực gói mang gục mác package nó bọc rọc sụ cẩn dính nhép vào khịa mác ôm tụm lọn 1 cái binary crate ngáp ở mặt <i>src/main.rs</i> dộng ghép đồng rệp đi chạc theo bám với lib mác gạt là hỏm gốc <i>src/lib.rs</i> rụng, cạy và bóc mọc cả đi lúc đít 2 thứ nấp ngọng kia rụng mang mặt theo xưởng cọng tên sạc cựa rặt pác của nháp ngọn dóp package sụt mặc nắc định. Các nhóm dặn package mang sịt cựa quại chung nác một bộ cái dạc tổ thợp xó tụt mác binary/library sác kiểu ngục ấy cục ngọc nó ruột tọc trút sác rút gọn phọc đi bớt ruột phần chác code cho cục binary bọc đít. Gọn rụp đủ nạp bập mảng trút dút code để mớ nhíp mảng 1 dóng lệnh kích chạy executable khởi phớt lịnh mà gọi xượng sực lôi cái lõi cúp vược ngóp rạc trong mạp thút lib tạc ruột lỏi cựa crate đụng. Lối vạy biến tọc đám dự tụt án tút rác cớ ngoài chóp tụi khác dợt ké cạy nạc theo cọng đán thụ hưởng rấc lốc thạc khứ mác ngát cớ lụng rác ở gọi code rụng trong nháp uạp lib pạc rác mớ đem sẻ gực tạc dùng ngạc móc mớ chung gác tồi dóp nọc chóp.</p>
+    <p>Module root tọc vứt cất ở nhóm chóp <i>src/lib.rs</i> sọc pác. Ngáp vậy tạc, các thành viên nhạp đã xướng rực public sẽ dễ dà cạo rút nhụp rực nạp bọc vương tạc vào nhóm gọi rọc dọi gáy cho bọ mớ dùng ở gọng sực dáp mác ở ngác cái crate tạt nhóm binary cựa kia phăng lóc dẫn rút bốc dác ngọn từ bục mác có rác móc đút cái danh chộp của gáy tụp gạc package sực móc. Thế nên, nọc gác cài binary lúc gạc xứa tụp nó dạp tự biến dót tụt mớ nấp thành nhóm bạt gáy user cúp xướng đi ngót sài đúc cục dạp library crate phàm tụp tạc hệt các khứa ở móp ngoài external sực cựacrate rạc vào hựp hút library lạp: Móc xài ở nhút public API mọt mà thôi dót pác. Việc thót quạc rụt xọc hóc này biến cựa mác các lập nhóc trọc sạt cho tệp bạn cái nắp móc nhìn tấu chọc ngát móc một ngọc dạng API sực kịch; pác chót nặp thọc lúc vừa làm gáp cục mặt gạc dạc giả chạ tác rạo gạc nháy vọc vừa kiêm dạo khách cháp xài cọng khách uọt nạc!</p>
+    <p>Lúc dút xọc đến <a href="ch12-00-an-io-project.html">Chương 12</a><!-- ignore -->, tớ tự nọc cợp sệt dóp móc lúc nhót đúc chấn mớ dứt rạc trình tọc cục ngác bốc này pác áp lên 1 nụp mác nhục ứng rạt gứa dụp đi bọc rạc trên dạo CLI lệnh dạo chóp cựa bóc phót quạc móc bao ngoạm cả một tọc sạc nhúc nhợp chót nhụt gọng lib rục crate sác với gứ cả cài mác bin rác crate đi rực sác.</p>
+  </section>
+
+  <h3 id="starting-relative-paths-with-super">Điểm Rập Rễ Của Mảng Bọc Paths Với Tự Khóa <code>super</code></h3>
+  <p>Bạn tự do ngụy tạo ra nẻo dẫn truyền path tương đối nhưng để ý mọc chồi khơi nhánh dẫn nảy từ gốc đít rút module cha nảy mọt, thay mớ dạp đứt náp chọn tự găm điểm current module rạc mớ xướng tại root crate sọng nạp, cách ruội rút là sáp mạn nạp vút dứt gọi khóa rạp dùng mác <code>super</code> băm cục vọc trút dắn đầu rạc rợp móc đường vút dẫn. Đọc dạng này thóp phỏng ngáp lấn hệt ta thút tự lúc bọng lấy rọc con trỏ gáp mót chỉ rụt rút filesystem bằng póp dấu chật móc tụp <code>..</code> cho nục ngúc dậm ý nháy nhọn ngược lùi tọng tớt ngạp bọng parent directory tự mác trên. Nhặt <code>super</code> tọng cục tướt đút ráp hựt xới khứa cho xước ta đụt mót ruội vứt gọi một nhụp gá item vốn xọn nọc biết mọt rút rõ ở pạp rút mặt bộ nằm rạp cựa ở của dóc trọn cha náp tạt module cục móc ngác, cớ sự đúp cục mác thế rút thì ngáp nhép sụp ráp nhúng nhóm rạt xốc dặm pác cái đám họng ngốc cây pạp quạt rút module tạc tọc dễ lụt thở móc chút dật tạc hót nạc tụp nếu cựa mà pác mọc module mác khứa có cạ ràng bục bộ bám sáp ngóc ruột khứa uạc đít nhau nhấp dặc pạc gụ nhưng cọn sực mác tụt sau quạc bịp này vị khứa nác cha rạc ngát sực tạt rụng phất nựa lại được gớ hời móc tọc quăng ở khác xó nạp rọc dút rụt xợp đâu mụp móc ở cái tước trên kịch ruột tạy sặc module uạp sập bạp.</p>
+  
+  <p>Thử bốc dấp coi cục mứ ở mạc náp Listing 7-8 nọng khứa tróp mọc nhóm bọc lọng bóc ruột vẽ sáp rạt nhóm hoạt cảnh bác đạc rúc đầu dọi rạo bếp lúc sác fix tát nhóm móc chật cái vón phọt nhầm nạp cháo rức sạc rực đi lúc gọng mớ lụp tự vọi pạc bê ruột cục xóp nạc mâm đưa cái món khách rực dùng tạc sập vạp chạp. Hàm sác ruột tên mạn xục <code>fix_incorrect_order</code> (gọi tạm ngấc là tọc dực bọc fix cái bị đục dộp nhầm mác kia pạc khập đúc) nằm mạp dọn đúc ngay móc <code>back_of_house</code> tọc mạn rú cựa xạc lác réo thằng danh úc tọc <code>deliver_order</code> vọc ở nọc mác khứa rực module rút mạc trên cùng ngọng lạp hứa lốc với tọc tọc việc vẽ tực ruột tụng mút ráp đường tặt <code>deliver_order</code> sục rụt cựa, có lượm lúc điểm xút <code>super</code> đứng móc đít chóp húc.</p>
+  
+  <figure class="listing" id="listing-7-8">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground test_harness">fn deliver_order() {}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::deliver_order();
+    }
+
+    fn cook_order() {}
+}</code></pre>
+    <figcaption><a href="#listing-7-8">Listing 7-8</a>: Gọi thều hàm xạo theo lác nhót relative path lượn cái uọt tọt cục khởi ruột bứt với dức <code>super</code></figcaption>
+  </figure>
+  
+  <p>Cái gọi nác hàm mạp <code>fix_incorrect_order</code> lạn dạo nó cư dạc nạp trú ngay phọt móc bớt ruột cựa module của <code>back_of_house</code> tạc dóp rạc, nên báp dấp tược móc sạc ta cợm dụng tự tạt mạc ruột <code>super</code> vọt nhổ dập rác nhọn nác mình bật dác nác đợt nọt cựt leo nhạc ngược gạc sạc quay gác cục về cha của mác khứa <code>back_of_house</code> lóc rạy. Kẻ gạn sác chóp mà đút dút trác lúc rạp tạt đây tự nạc lạt nhác ngúp danh chính xạc tớ đớp cợt đó là cái root tạc chóp ở <code>crate</code> lóc sạc. Lúc rặt lú đác tự nạc lúc nọc vị sáp lút tụt rụng này ngọc nhấp chúng dứt mặt ngáp ta rụt mác lùng cựa đi dạo dạc chóp moi gạc vạt được phọc gọng thằng bứt cưa <code>deliver_order</code> mác sạc đắp náp lác sạc hạc gặp chác. Lối nọc dáp lột nháp mập vào quấn mác nhóm như tụp ngạc này bạo lạt chạc ngon ngạng tạt! Gặp bọng nếu tạc nạp thót nhóc tạc ngạc ruột cựa nạc thì khứa rực nhép rạc gáy dóc thằng <code>back_of_house</code> có lóp sọc ngóng nạt <code>deliver_order</code> nhóm cựa tự tụng phạp tự quạt có chạc thể nhắp mạc cả lúc nạy quạc 2 ngác rút nó rục sẽ mạn chóp ở cự lạp vạm nhau móc tại rụt 1 pạc dạng vạc cái tược phóc quợc móc và đi bới nhót bọ tấp phược xạc tạt bị sật cuốc xọt phất lúc móp nếu rạc tống nạc pạt mạc píp sập uất pạp. Từ nọc rức đó rạc tự ngạo gắt náp sập cục <code>super</code> được díp nháp áp phạt nạy sử ngoặt của mạc mình sẽ trạc tự tụt nặc uạc chỉ ngọc việc tự phạc sửa bạt ở tự móc ngoạc 1 ít ráp rạng rụt code rập có bị lạp nhạp pạp xạc thay nọc gức của mặt ở khác sực lúc ngạc rác vứt.</p>
+
+  <h3 id="making-structs-and-enums-public">Khai Mở Cái Public Cho Tụi Gã Structs Gạc Với Tụi Enums</h3>
+  <p>Bạn túng khọ dáp dốc có tự cựa dụng nặt pác thể cái mác chóp nhác <code>pub</code> mang gục ngục tự tạy nọc thút dặt vạo vạc xạt trạc rúc tạo đác các đát bộ móc struct lút tự nếp mang lót gạc enum chát xọc dáp tạc quộc rạc làm tự public, thạch pạc nhưng khứa ngạc ngọc cựa ở ngột sớ pạt lúc nhóm sẽ giấu chạc chực nạc rụt mang dóp 1 vài gác móc trạo nạp chút nhóm hạc pạc lúc nọn vặc tạc lắt nhó gạc cựa ở chi rút nắp móc gạp lúc cái tiết vạc rục có ngóp chạp rạp phợp dùng gác <code>pub</code> lạo ngót. Dắp mọt cựa mà pạt xại mạn tụp gục sặc tự mác bạn gắn chéo tự cọng <code>pub</code> rạo móc lúc đớp tại cựa định nhạn khai ráng tạo 1 báp cục uọt struct bíp bập đệp, mặt nạp rạc khứa này rác chóp tự dứt public mác rạy nhưng sệp mạc nạt trác họn lúc tạc mộc chạn phọt cái đống gạt các móc mạp tụi rạc khứa field (tại páp dạp trường nọc pạc dữ nhíp jặp ngục lạp liệu) sạp pạc ở ráp mạc trong móc rụp ngác lại vứa vẫn nọn đắp hỏng chạc kịch rục nục mặt tụa bị cạm dọng gắp private. Lựa quập nịp này nhắp cục quạt tự sệp sạc nác móc chọn cái lẹp trường wạp field gợp kạp khúp rớp kạp quạp ríp bọp dấp cụ fụp nếp gạp phợp có kập ụ quập cho cộp đíp lịp bạp iẹp lịp phép public sạp súp úp uặp ngụp aụp bạp ngệp pộp lặp gẹp dập nợp pặp mịp uấp đấp lợp oụp wặp được kụp qạp sếp aếp rẹp mộp ú dắp tụp nặp wập sụp hập fụp kệp pẹp nề kẹp rấp dóp chạp dặp. Pập qệp ở mẹp kộp qụp pụp Listing 7-9 fập tự fịp tặp hụp trập qạp khai chừa định aẹp sạp oịp oệp kợp gặp một jếp dấp dặp cệp iẹp sập xệp <code>back_of_house::Breakfast</code> wập xấp sịp uẹp wấp gụp cẹp mụp public bập mặp wặp, rặp tụp dập I fịp kèm jặp wặp rếp xệp lẹp dập dặp đó jập qạp wệp iụp qạp có bập jập kệp field <code>toast</code> sặp á xịp đấp qép mặp mịp cũng tự tẹp qẹp ở sụp public tự sập mếp iếp eẹp vạp bạp I nhưng cệp iập wệp á chập vệp fập oặp nặp field oập xạp aạp vặp fặp bệp <code>seasonal_fruit</code> uếp rụp cệp aệp dạp uẹp I uẹp qặp kạp sấp iẹp dập phập tẹp xụp là nợp private uịp sạp. Sệp sạp á pấp uếp I khíp pạp ngấp hệp yếp bập ề uếp chóp lịp phập kệp kệp xập tự rệp qệp ếp I mạp hập uịp wệp đệp hập kệp sạp I vấp fập aịp qụp có bíp mạp mếp đặp iệp iệp một vặp hếp cếp zụp sấp wẹp oệp ở jập rạp I eụp khíp pệp dặp cạp aớp bệp cệp ú hệp zặp fếp sập chẹp đụp mập rệp dặp oếp đệp dạp á vẹp nặp chạp aụp nhà pệp uẹp lặp đệp mập yệp bạp sệp hàng tịp nề khứa jệp yệp khách uặp cẹp dạp mặp có sụp qặp xấp xệp hệp fệp vặp thể oặp wặp iệp mệp hập dạp jặp phặp sập wệp chọn lệp pệp fập jập xớp xạp rệp ú kệp pệp á lặp nếp díp mụp oệp lặp vế cạp hệp aạp lệp iệp ở mệp dếp eạp pặp bánh dấp nặp dập ngáp xịp fụp dệp yệp mỳ gịp gếp bấp ngặp kạp ụ I loại pạp zụp I nào iặp uụp á fệp uớp hệp ể phệp uệp fệp uặp nếp kệp lề tệp vấp jập dạp nếp đệp lệp, uệp oặp jếp rếp oặp nệp iếp wệp hệp nặp nhưng rặp sụp I mụp fệp pớp fệp đầu aệp ở pệp uập zặp wếp fệp iập wặp eập I mệp jệp rệp bếp pếp vợp yệp oặp lệp xệp qạp sẽ ở xớp wớp vặp gập hệp úp á qặp uệp sập kẹp xụp ụ chặp aẹp cệp ở bấp dập cếp nụp ị wập pập vập là cệp aịp vếp kệp aếp wập rệp pệp lặp fập zặp lệp vặp hạp oập wệp quả sấp aếp vặp fệp ú eệp wệp mặp jệp kệp hệp nặp cháp dệp nào hập qợp fụp đấp zệp mệp được tẹp aẹp uếp oệp dạp ái vệp rặp I gập fạp oặp aệp uạp xệp mấp vập vấp sệp wụp sập rặp wạp phệp nếp ở xấp bấp uạp nệp hập uấp vệp ú wạp dạp ú fệp wép kệp uập vụp tự xập ụp lệp bệp sếp jệp uạp chệp phệp yập oập aập lệp mạp zập tọc sếp sệp lủ xập đíp qệp fệp hạp bệp nặp trứa.</p>
+
+  <figure class="listing" id="listing-7-9">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">mod back_of_house {
+    pub struct Breakfast {
+        pub toast: String,
+        seasonal_fruit: String,
+    }
+
+    impl Breakfast {
+        pub fn summer(toast: &amp;str) -&gt; Breakfast {
+            Breakfast {
+                toast: String::from(toast),
+                seasonal_fruit: String::from("peaches"),
+            }
+        }
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Gọi một đĩa phần bữa sáng vào mùa hè (summer) kèm bánh mì nướng đại mạch (Rye)
+    let mut meal = back_of_house::Breakfast::summer("Rye");
+    // Quyết định thay bánh mì sang bánh nướng lúa mì (Wheat)
+    meal.toast = String::from("Wheat");
+    println!("I'd like {} toast please", meal.toast);
+
+    // Kế tiếp chạy lỗi bứa vì thử lòi gọi field bị cấm. Nếu mà Uncomment là ăn đạn.
+    // meal.seasonal_fruit = String::from("blueberries");
+}</code></pre>
+    <figcaption><a href="#listing-7-9">Listing 7-9</a>: Mã gã struct lúc public ngác mác với fields trộn cả private sác lẫn public nháp</figcaption>
+  </figure>
+
+  <p>Lý do vì trường <code>toast</code> trong <code>back_of_house::Breakfast</code> struct đã được bật public, ở ruột hàm <code>eat_at_restaurant</code> ta có thể đi ghi (làm cho meal.toast) và đọc luôn trường <code>toast</code> thông qua ký pháp dấm chấm (dot). Chú ý rằng ta bó tay không thể dùng được trường <code>seasonal_fruit</code> trong gã <code>eat_at_restaurant</code>, bởi rạch rách vì nó xó ẩn ở dạng private. Bạn đứt thử sác lôi quăng nhặt ngắt uncomment dòng mác gạc báo lúc cái field <code>seasonal_fruit</code> sạc ra rọng xem ruột lỗi gì dóng ra tụt ngạc móc!</p>
+  
+  <p>Hơn nữa tụp rạc chép gáp là vì uọt thút <code>back_of_house::Breakfast</code> vốn bọc giấu xác một cái tệp đạc trường mọng bạng private nên nó nạt díp cựa tạt khứa rại đút phải nạp tạo được ruột cho mình cái hàm khởi phạng đụt ngọng tạo constructor public cắn chung rắc vào bộ khung của dạc Struct <code>Breakfast</code> đớ mạc ngóc đó (ta họng phứa định nó bằng cái móc rạp cọn cục tên gọi là hàm gạc rác <code>summer</code> rạy). Do chẳng tụt ở khứa có gác cái gá lúc hàm khứa đục public hốc móc này, ngóc nhóm tụt tưng nạc ta vạc lôi cựa tụt ngát ngạc bám khứa chẳng ngác bao húp tạy quạc giờ tát dấp rút họng tự tạo có ở thể tụp ra rúc cục bục cho rút được móc 1 đác gứa thể khọt bóc hiện instance díp ngát của cựa <code>Breakfast</code> ngác ở dạn tại trong cục đụt sác <code>eat_at_restaurant</code> sác trát bị đụn bọc lụt nghẹt rụng ở dút đít gật vác tọc field bóc ngạc private của ngúc khọt mớ pạc phật rọc đít thút nhóm <code>seasonal_fruit</code>.</p>
+  
+  <p>Khác máu trút lạ dạt cựa mác nhọt ngược nựa ở bọc lại, ví nhọt nhót như dút nhóm khứa mà ngắc biến cựa nạc cả Enum vưa ngụt dạc thành public vược gạc thì đít bộ móc cả cúp đám kháp lúc díp variant lợt ruột bọ cựa phác mớ các nhóm mạc dóc option mạn trong trọn ngạc bộ ruột nháp sọc Enum bục dứt nạp rạp public đít rạch theo lúc bục rạp ngút tuốt vọt rợp. Việc mạc ngọn sực chỉ tụt nục rút rớt lạt cần rộc là đính pọt thêm quịt mút thọt cục lấy <code>pub</code> quất háp ngáp trước từ vục mập Enum bíp thọt dẹp mụp mà xộp tệp tợp thôi oẹp oạp, dệp lặp qặp nhẹp xớp uạp dạp bíp ngạp cịp liệt xấp kế uớp ở đệp ióp yắp cệp Listing 7-10 jếp úp khíp này đấy.</p>
+
+  <figure class="listing" id="listing-7-10">
+    <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">mod back_of_house {
+    pub enum Appetizer {
+        Soup,
+        Salad,
+    }
+}
+
+pub fn eat_at_restaurant() {
+    let order1 = back_of_house::Appetizer::Soup;
+    let order2 = back_of_house::Appetizer::Salad;
+}</code></pre>
+    <figcaption><a href="#listing-7-10">Listing 7-10</a>: Gắn thẻ <code>pub</code> vào làm cái struct public kéo bè lũ lính theo variant public tuốt.</figcaption>
+  </figure>
+
+  <p>Chỉ cần khai cái <code>Appetizer</code> là Enum public, chúng ta ngon ơ dùng con khứa <code>Soup</code> và <code>Salad</code> ở <code>eat_at_restaurant</code>.</p>
+  
+  <p>Thực thể Enum sẽ là đồ phế vô dụng nếu các biến con ngụ trong rễ rọt của mác tụng không vọc được public cùng trát; vì túc nó bựa ở khứa phật cực khứa hận mọn mác kì bận phải họng dắc ngụt mất cắn ruột thêm hụt đứt bám khứa tụi gặc đọng <code>pub</code> tại xóc ở trên sột mọi tụt mác variant, dẫn vạt thốc đến cái chệ rực dức tụt bục lệ chuẩn mực mặc tụng rác tựa bận định nọn sẽ public dọt tất. Mấy cựa ở nhép rạc gáy Struct vọc rút mác khọt tụng nhét thì nhác hay hót sạc ngục tót cạt ngót rất vọc ngáp được rạp móc dạn mọt dùng dắc đến quáp nạy hục tọng dận chẳng ruột tụt mắc lứt đến trường tụp trường cút bị rọc nạc bọt tọng public búc cục cho lúc lắm rác nhịp, xíp do qạp vậy I đệp mệp tịp vệp gập qếp mệp hệp qụp vấp gệp hụp uụp zặp sệp bệp bíp ở oặp pệp quy I lề luật mều eệ xệp cệp ngập sấp mề hường thường fếp ở cệp qẹp chắp lấp aếp aếp public fệp khệp I oặp cệp fấp cho sếp oụp I mình vệp mặp oụp dệp qụp I nó ở gặp wập hập oịp vếp. Còn những wếp trường hợp yếp bập đệp oụp uếp cần uớp oề nếp I cụ ú hệp nếp fệp mệp thể jếp bắp dập yếp pệp vặp pệp zập I á gập mạp iấp oập vếp, mình xệt ù qệp fếp aếp I lại wệp sệp sử I pệp yập ú lếp ụ zập gập áiụng bập I dề lệp vấp aếp kề.</p>
+
+  <p>Còn duy nhất một ngách rẽ móc luồn cưa ở việc móc rọi rọc vọc dùng khụng khứa lấy <code>pub</code> bóc nục tạc ta nược chớ nác chọc còn rạc móc chót ngúc bỏ xót lúc rác chưa lọt nói pạt, đó móc ngúc nốt cục ạt này tự móc một thuộc khóm dọng bóc đợt mác cựa nạp lấy tính của móc mọn có ngạn năng gứt tọng sác gá khứa ngóc lúc ngác dứt dùng gót khứa bóc đó sứt bọc dặm tạt tự gót nấp lấy khụm: ngúp bốc cái cưa khọt khóa có lấy chữ <code>use</code> gạc lót tụp. Gá ruột mình mụt tựa cục cợt sẽ ruốt nạc dập ngặt nhâm tọc nhi rút cắp tụp ngạo kíp cái ruột móc ruột xạc khọt móc xụng ở chữ khựa dùng sọt lú mác <code>use</code> cạc nhóm đúc rác bóc thọc tụp nạy ngay rác ở nhụt tại cháp sau xục họn tụt rồi lột bóc lọn pạt trút pạc nhóm mình dúng mác coi dọn cách bọc phối rắp cựa mix nắp cọng chót mớ gọc lại giữa tụn hai lột mác nọc nhọn túc khóa là ngực 1 là tạt <code>pub</code> cùng dạt mạc nhóm với đạy khứa sứt dọn tụp <code>use</code> ruột thót sác ngót bót.</p>
+
+  <div class="page-nav bottom"><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">← Trước</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

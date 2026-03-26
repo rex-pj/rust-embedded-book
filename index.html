@@ -127,6 +127,18 @@
     background: linear-gradient(90deg, #ff6b35, #f7c948);
   }
 
+  /* Rust Book version */
+  .card-rust .card-title  { color: #8b2e18; }
+  .card-rust .card-badge  { background: #fef2f2; color: #991b1b; }
+  .card-rust .card-btn    { background: linear-gradient(135deg, #CE422B, #e07050); }
+  .card-rust::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #CE422B, #e07050);
+  }
+
   footer {
     margin-top: 48px;
     font-size: 0.8em;
@@ -168,6 +180,17 @@
         ví von dễ hiểu, và ngôn ngữ thân thiện với trẻ em.
       </p>
       <span class="card-btn">Khám phá ngay 🚀</span>
+    </a>
+
+    <a href="rust/index.html" class="card card-rust">
+      <div class="card-icon">🦀</div>
+      <div class="card-title">The Rust Programming Language</div>
+      <span class="card-badge">📖 Sách chính thức về Rust</span>
+      <p class="card-desc">
+        Bản dịch Tiếng Việt cuốn sách chính thức về Rust — từ cơ bản
+        đến nâng cao: ownership, traits, concurrency, async/await.
+      </p>
+      <span class="card-btn">Đọc ngay 🦀</span>
     </a>
 
   </div>

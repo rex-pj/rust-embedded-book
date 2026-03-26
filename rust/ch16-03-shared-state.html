@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared-State Concurrency - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html" class="active">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch16-02-message-passing.html">← Trước</a>
+    <a href="ch16-04-extensible-concurrency-sync-and-send.html">Tiếp →</a>
+  </div>
+
+<h2 id="shared-state-concurrency"><a class="header" href="#shared-state-concurrency">Concurrency Với Shared State</a></h2>
+<p>Message passing là một cách xử lý concurrency tốt, nhưng không phải cách duy nhất. Một phương pháp khác là cho phép nhiều thread cùng truy cập dữ liệu chia sẻ. Hãy nhớ lại phần khẩu hiệu từ tài liệu Go: "Đừng giao tiếp bằng cách chia sẻ bộ nhớ."</p>
+<p>Vậy giao tiếp bằng cách chia sẻ bộ nhớ trông như thế nào? Và tại sao những người ủng hộ message-passing lại cảnh báo không nên dùng memory sharing?</p>
+<p>Theo một nghĩa nào đó, channel trong bất kỳ ngôn ngữ lập trình nào đều giống như single ownership: một khi bạn chuyển giá trị xuống channel, bạn không nên dùng giá trị đó nữa. Concurrency với shared memory giống như multiple ownership: nhiều thread có thể cùng truy cập một vùng bộ nhớ. Như bạn đã thấy ở Chương 15, khi smart pointer cho phép multiple ownership, sự phức tạp tăng lên vì các owner khác nhau cần được quản lý. Hệ thống kiểu và các quy tắc ownership của Rust hỗ trợ rất nhiều để quản lý chính xác. Ví dụ, hãy xem xét mutex — một trong những primitive concurrency phổ biến nhất dành cho shared memory.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-mutexes-to-allow-access-to-data-from-one-thread-at-a-time"></a></p>
+<h3 id="controlling-access-with-mutexes"><a class="header" href="#controlling-access-with-mutexes">Kiểm Soát Truy Cập Bằng Mutex</a></h3>
+<p><em>Mutex</em> là từ viết tắt của <em>mutual exclusion</em> (loại trừ lẫn nhau), nghĩa là mutex chỉ cho phép một thread truy cập dữ liệu tại bất kỳ thời điểm nào. Để truy cập dữ liệu trong mutex, một thread phải báo hiệu trước rằng nó muốn truy cập bằng cách yêu cầu <em>lock</em> của mutex. <em>Lock</em> là một cấu trúc dữ liệu là một phần của mutex, theo dõi ai đang có quyền truy cập độc quyền vào dữ liệu. Vì vậy, mutex được mô tả là <em>bảo vệ</em> dữ liệu nó chứa thông qua hệ thống lock.</p>
+<p>Mutex nổi tiếng là khó sử dụng vì bạn phải nhớ hai quy tắc:</p>
+<ol>
+<li>Bạn phải cố gắng acquire lock trước khi dùng dữ liệu.</li>
+<li>Khi xong với dữ liệu mà mutex bảo vệ, bạn phải unlock để các thread khác có thể acquire lock.</li>
+</ol>
+<p>Một ví dụ thực tế về mutex: hãy tưởng tượng một buổi thảo luận tại hội nghị chỉ có một chiếc micro. Trước khi một diễn giả có thể nói, họ phải xin phép hoặc ra hiệu rằng muốn dùng micro. Khi nhận được micro, họ có thể nói bao lâu tùy ý, rồi chuyển micro cho diễn giả tiếp theo. Nếu một diễn giả quên chuyển micro khi xong, không ai khác có thể nói. Nếu việc quản lý chiếc micro chung bị rối loạn, buổi thảo luận sẽ không đi theo kế hoạch!</p>
+<p>Việc quản lý mutex đúng cách cực kỳ khó, đó là lý do nhiều người hứng thú với channel. Tuy nhiên, nhờ hệ thống kiểu và các quy tắc ownership của Rust, bạn không thể lock và unlock sai.</p>
+<h4 id="the-api-of-mutext"><a class="header" href="#the-api-of-mutext">API của <code>Mutex&lt;T&gt;</code></a></h4>
+<p>Để minh họa cách dùng mutex, hãy bắt đầu với mutex trong một single-threaded context, như minh họa trong Listing 16-12.</p>
+<figure class="listing" id="listing-16-12">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::sync::Mutex;
+
+fn main() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {m:?}");
+}</code></pre>
+<figcaption><a href="#listing-16-12">Listing 16-12</a>: Khám phá API của <code>Mutex&lt;T&gt;</code> trong single-threaded context cho đơn giản</figcaption>
+</figure>
+<p>Như nhiều kiểu khác, chúng ta tạo <code>Mutex&lt;T&gt;</code> bằng hàm liên kết <code>new</code>. Để truy cập dữ liệu bên trong mutex, chúng ta dùng phương thức <code>lock</code> để acquire lock. Lời gọi này sẽ block thread hiện tại để nó không làm gì được cho đến khi đến lượt chúng ta có lock.</p>
+<p>Lời gọi <code>lock</code> sẽ thất bại nếu thread khác đang giữ lock và bị panic. Trong trường hợp đó, không ai có thể lấy lock nữa, vì vậy chúng ta chọn <code>unwrap</code> và để thread này panic nếu gặp tình huống đó.</p>
+<p>Sau khi acquire lock, chúng ta có thể xem giá trị trả về — tên là <code>num</code> trong trường hợp này — như một mutable reference tới dữ liệu bên trong. Hệ thống kiểu đảm bảo chúng ta phải acquire lock trước khi dùng giá trị trong <code>m</code>. Kiểu của <code>m</code> là <code>Mutex&lt;i32&gt;</code>, không phải <code>i32</code>, vì vậy chúng ta <em>bắt buộc</em> phải gọi <code>lock</code> để có thể dùng giá trị <code>i32</code>. Không thể bỏ qua; hệ thống kiểu không cho phép truy cập <code>i32</code> bên trong theo cách nào khác.</p>
+<p>Lời gọi <code>lock</code> trả về kiểu <code>MutexGuard</code>, được bọc trong <code>LockResult</code> mà chúng ta xử lý bằng <code>unwrap</code>. Kiểu <code>MutexGuard</code> implement <code>Deref</code> để trỏ vào dữ liệu bên trong; kiểu này cũng có implementation <code>Drop</code> tự động giải phóng lock khi <code>MutexGuard</code> ra khỏi scope — xảy ra ở cuối inner scope. Kết quả là chúng ta không có nguy cơ quên giải phóng lock và chặn mutex khỏi các thread khác vì lock được giải phóng tự động.</p>
+<p>Sau khi drop lock, chúng ta có thể in giá trị mutex và thấy chúng ta đã thay đổi được <code>i32</code> bên trong thành <code>6</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="sharing-a-mutext-between-multiple-threads"></a></p>
+<h4 id="shared-access-to-mutext"><a class="header" href="#shared-access-to-mutext">Truy Cập Chia Sẻ vào <code>Mutex&lt;T&gt;</code></a></h4>
+<p>Bây giờ hãy thử chia sẻ một giá trị giữa nhiều thread bằng <code>Mutex&lt;T&gt;</code>. Chúng ta sẽ khởi động 10 thread và mỗi thread tăng một bộ đếm lên 1, vậy bộ đếm sẽ tăng từ 0 lên 10. Ví dụ trong Listing 16-13 sẽ có lỗi compiler, và chúng ta sẽ dùng lỗi đó để hiểu thêm về cách dùng <code>Mutex&lt;T&gt;</code> và Rust hỗ trợ chúng ta dùng đúng cách.</p>
+<figure class="listing" id="listing-16-13">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::sync::Mutex;
+use std::thread;
+
+fn main() {
+    let counter = Mutex::new(0);
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre>
+<figcaption><a href="#listing-16-13">Listing 16-13</a>: Mười thread, mỗi thread tăng một bộ đếm được bảo vệ bởi <code>Mutex&lt;T&gt;</code></figcaption>
+</figure>
+<p>Chúng ta tạo biến <code>counter</code> để giữ một <code>i32</code> bên trong <code>Mutex&lt;T&gt;</code>, như trong Listing 16-12. Tiếp theo, chúng ta tạo 10 thread bằng cách lặp qua một dãy số. Chúng ta dùng <code>thread::spawn</code> và truyền cho tất cả thread cùng một closure: một closure move <code>counter</code> vào thread, acquire lock trên <code>Mutex&lt;T&gt;</code> bằng cách gọi phương thức <code>lock</code>, rồi cộng 1 vào giá trị trong mutex. Khi thread kết thúc closure của mình, <code>num</code> sẽ ra khỏi scope và giải phóng lock để thread khác có thể acquire nó.</p>
+<p>Trong main thread, chúng ta thu thập tất cả join handle. Sau đó, như trong Listing 16-2, chúng ta gọi <code>join</code> trên mỗi handle để đảm bảo tất cả thread hoàn thành. Lúc đó, main thread sẽ acquire lock và in kết quả của chương trình.</p>
+<p>Chúng ta đã gợi ý rằng ví dụ này sẽ không compile. Giờ hãy tìm hiểu tại sao!</p>
+<pre><code class="language-console">$ cargo run
+   Compiling shared-state v0.1.0 (file:///projects/shared-state)
+error[E0382]: borrow of moved value: `counter`
+  --&gt; src/main.rs:21:29
+   |
+ 5 |     let counter = Mutex::new(0);
+   |         ------- move occurs because `counter` has type `std::sync::Mutex&lt;i32&gt;`, which does not implement the `Copy` trait
+...
+ 8 |     for _ in 0..10 {
+   |     -------------- inside of this loop
+ 9 |         let handle = thread::spawn(move || {
+   |                                    ------- value moved into closure here, in previous iteration of loop
+...
+21 |     println!("Result: {}", *counter.lock().unwrap());
+   |                             ^^^^^^^ value borrowed here after move
+   |
+help: consider moving the expression out of the loop so it is only moved once
+   |
+ 8 ~     let mut value = counter.lock();
+ 9 ~     for _ in 0..10 {
+10 |         let handle = thread::spawn(move || {
+11 ~             let mut num = value.unwrap();
+   |
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `shared-state` (bin "shared-state") due to 1 previous error
+</code></pre>
+<p>Thông báo lỗi cho biết giá trị <code>counter</code> đã được move ở vòng lặp trước. Rust đang nói với chúng ta rằng không thể move quyền sở hữu <code>counter</code> vào nhiều thread. Hãy sửa lỗi compiler bằng phương pháp multiple-ownership đã thảo luận ở Chương 15.</p>
+<h4 id="multiple-ownership-with-multiple-threads"><a class="header" href="#multiple-ownership-with-multiple-threads">Multiple Ownership Với Multiple Threads</a></h4>
+<p>Ở Chương 15, chúng ta đã giao một giá trị cho nhiều owner bằng cách dùng smart pointer <code>Rc&lt;T&gt;</code> để tạo giá trị reference-counted. Hãy làm tương tự ở đây và xem điều gì xảy ra. Chúng ta sẽ bọc <code>Mutex&lt;T&gt;</code> trong <code>Rc&lt;T&gt;</code> ở Listing 16-14 và clone <code>Rc&lt;T&gt;</code> trước khi move ownership vào thread.</p>
+<figure class="listing" id="listing-16-14">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::rc::Rc;
+use std::sync::Mutex;
+use std::thread;
+
+fn main() {
+    let counter = Rc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Rc::clone(&amp;counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre>
+<figcaption><a href="#listing-16-14">Listing 16-14</a>: Cố dùng <code>Rc&lt;T&gt;</code> để cho phép nhiều thread sở hữu <code>Mutex&lt;T&gt;</code></figcaption>
+</figure>
+<p>Một lần nữa, chúng ta compile và nhận... những lỗi khác! Compiler đang dạy chúng ta rất nhiều:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling shared-state v0.1.0 (file:///projects/shared-state)
+error[E0277]: `Rc&lt;std::sync::Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
+  --&gt; src/main.rs:11:36
+   |
+11 |           let handle = thread::spawn(move || {
+   |                        ------------- ^------
+   |                        |             |
+   |  ______________________|_____________within this `{closure@src/main.rs:11:36: 11:43}`
+   | |                      |
+   | |                      required by a bound introduced by this call
+12 | |             let mut num = counter.lock().unwrap();
+13 | |
+14 | |             *num += 1;
+15 | |         });
+   | |_________^ `Rc&lt;std::sync::Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
+   |
+   = help: within `{closure@src/main.rs:11:36: 11:43}`, the trait `Send` is not implemented for `Rc&lt;std::sync::Mutex&lt;i32&gt;&gt;`
+note: required because it's used within this closure
+  --&gt; src/main.rs:11:36
+   |
+11 |         let handle = thread::spawn(move || {
+   |                                    ^^^^^^^
+note: required by a bound in `spawn`
+  --&gt; /rustc/1159e78c4747b02ef996e55082b704c09b970588/library/std/src/thread/mod.rs:723:1
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `shared-state` (bin "shared-state") due to 1 previous error
+</code></pre>
+<p>Ôi, thông báo lỗi dài thật! Phần quan trọng nhất cần chú ý: <code>`Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely</code>. Compiler cũng cho biết lý do: <code>the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`</code>. Chúng ta sẽ nói về <code>Send</code> ở phần tiếp theo: đó là một trong những trait đảm bảo rằng các kiểu chúng ta dùng với thread được thiết kế cho tình huống concurrent.</p>
+<p>Thật không may, <code>Rc&lt;T&gt;</code> không an toàn để chia sẻ qua các thread. Khi <code>Rc&lt;T&gt;</code> quản lý reference count, nó tăng đếm mỗi khi <code>clone</code> được gọi và giảm đếm khi mỗi clone bị drop. Nhưng nó không dùng bất kỳ primitive concurrency nào để đảm bảo các thay đổi đếm không bị gián đoạn bởi thread khác. Điều này có thể dẫn đến sai số đếm — những bug tinh vi có thể gây ra memory leak hoặc giá trị bị drop trước khi chúng ta xong với nó. Chúng ta cần một kiểu giống hệt <code>Rc&lt;T&gt;</code> nhưng thực hiện thay đổi reference count theo cách thread-safe.</p>
+<h4 id="atomic-reference-counting-with-arct"><a class="header" href="#atomic-reference-counting-with-arct">Atomic Reference Counting Với <code>Arc&lt;T&gt;</code></a></h4>
+<p>May mắn thay, <code>Arc&lt;T&gt;</code> <em>là</em> một kiểu giống <code>Rc&lt;T&gt;</code> nhưng an toàn khi dùng trong tình huống concurrent. Chữ <em>a</em> là viết tắt của <em>atomic</em>, nghĩa là nó là kiểu <em>atomically reference-counted</em>. Atomic là một loại primitive concurrency bổ sung mà chúng ta sẽ không đi sâu ở đây: xem tài liệu thư viện chuẩn cho <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code></a> để biết thêm chi tiết. Hiện tại, bạn chỉ cần biết rằng atomic hoạt động như các primitive type nhưng an toàn để chia sẻ qua các thread.</p>
+<p>Bạn có thể tự hỏi tại sao không phải tất cả primitive type đều là atomic và tại sao thư viện chuẩn không mặc định dùng <code>Arc&lt;T&gt;</code>. Lý do là thread safety đi kèm với chi phí hiệu suất mà bạn chỉ muốn trả khi thực sự cần. Nếu bạn chỉ thực hiện các thao tác trên giá trị trong một thread đơn, code có thể chạy nhanh hơn nếu không phải thực thi các đảm bảo mà atomic cung cấp.</p>
+<p>Quay lại ví dụ: <code>Arc&lt;T&gt;</code> và <code>Rc&lt;T&gt;</code> có cùng API, vì vậy chúng ta sửa chương trình bằng cách thay dòng <code>use</code>, lời gọi <code>new</code>, và lời gọi <code>clone</code>. Code trong Listing 16-15 cuối cùng sẽ compile và chạy được.</p>
+<figure class="listing" id="listing-16-15">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&amp;counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre>
+<figcaption><a href="#listing-16-15">Listing 16-15</a>: Dùng <code>Arc&lt;T&gt;</code> để bọc <code>Mutex&lt;T&gt;</code> nhằm chia sẻ ownership qua nhiều thread</figcaption>
+</figure>
+<p>Code này sẽ in ra:</p>
+<pre><code class="language-text">Result: 10
+</code></pre>
+<p>Chúng ta đã làm được! Đếm từ 0 đến 10 có vẻ không ấn tượng lắm, nhưng nó dạy chúng ta rất nhiều về <code>Mutex&lt;T&gt;</code> và thread safety. Bạn cũng có thể dùng cấu trúc của chương trình này để thực hiện các thao tác phức tạp hơn là chỉ tăng bộ đếm. Bằng chiến lược này, bạn có thể chia một phép tính thành các phần độc lập, phân chia các phần đó cho các thread, rồi dùng <code>Mutex&lt;T&gt;</code> để mỗi thread cập nhật kết quả cuối cùng với phần của nó.</p>
+<p>Lưu ý: nếu bạn đang thực hiện các thao tác số học đơn giản, có các kiểu đơn giản hơn <code>Mutex&lt;T&gt;</code> được cung cấp bởi <a href="../std/sync/atomic/index.html">module <code>std::sync::atomic</code> của thư viện chuẩn</a>. Các kiểu này cung cấp quyền truy cập an toàn, concurrent, atomic vào các primitive type. Chúng ta đã chọn dùng <code>Mutex&lt;T&gt;</code> với primitive type trong ví dụ này để tập trung vào cách <code>Mutex&lt;T&gt;</code> hoạt động.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="similarities-between-refcelltrct-and-mutextarct"></a></p>
+<h3 id="comparing-refcelltrct-and-mutextarct"><a class="header" href="#comparing-refcelltrct-and-mutextarct">So Sánh <code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> và <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code></a></h3>
+<p>Bạn có thể nhận thấy rằng <code>counter</code> là immutable nhưng chúng ta có thể lấy mutable reference tới giá trị bên trong; điều này có nghĩa là <code>Mutex&lt;T&gt;</code> cung cấp interior mutability, như họ <code>Cell</code> vậy. Giống như chúng ta đã dùng <code>RefCell&lt;T&gt;</code> ở Chương 15 để cho phép mutate nội dung bên trong <code>Rc&lt;T&gt;</code>, chúng ta dùng <code>Mutex&lt;T&gt;</code> để mutate nội dung bên trong <code>Arc&lt;T&gt;</code>.</p>
+<p>Một điều cần lưu ý là Rust không thể bảo vệ bạn khỏi tất cả các loại lỗi logic khi dùng <code>Mutex&lt;T&gt;</code>. Nhắc lại từ Chương 15 rằng dùng <code>Rc&lt;T&gt;</code> có nguy cơ tạo reference cycle, khi hai giá trị <code>Rc&lt;T&gt;</code> tham chiếu lẫn nhau gây ra memory leak. Tương tự, <code>Mutex&lt;T&gt;</code> có nguy cơ tạo <em>deadlock</em>. Điều này xảy ra khi một thao tác cần lock hai tài nguyên và hai thread đã mỗi thread acquire một trong hai lock, khiến chúng chờ nhau mãi mãi. Nếu bạn hứng thú với deadlock, hãy thử tạo một chương trình Rust có deadlock; sau đó nghiên cứu các chiến lược giảm thiểu deadlock cho mutex trong bất kỳ ngôn ngữ nào và thử implement chúng trong Rust. Tài liệu API thư viện chuẩn cho <code>Mutex&lt;T&gt;</code> và <code>MutexGuard</code> cung cấp thông tin hữu ích.</p>
+<p>Chúng ta sẽ kết thúc chương này bằng cách nói về các trait <code>Send</code> và <code>Sync</code> và cách chúng ta có thể dùng chúng với các kiểu tùy chỉnh.</p>
+
+  <div class="page-nav bottom"><a href="ch16-02-message-passing.html">← Trước</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

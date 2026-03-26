@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graceful Shutdown và Dọn dẹp — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html" class="active">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 21 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch21-02-multithreaded.html">← Trước</a><a href="appendix-00.html">Tiếp →</a></div>
+
+  <h2>Graceful Shutdown và Dọn dẹp</h2>
+
+  <p>Code trong Listing 21-20 đang phản hồi các request bất đồng bộ thông qua thread pool, đúng như ý định của chúng ta. Chúng ta nhận được một số cảnh báo về các trường <code>workers</code>, <code>id</code>, và <code>thread</code> mà chúng ta không dùng trực tiếp — nhắc nhở rằng chúng ta chưa dọn dẹp gì cả. Khi dùng cách kém tinh tế là <kbd>Ctrl</kbd>+<kbd>C</kbd> để dừng thread chính, tất cả các thread khác cũng bị dừng ngay lập tức, ngay cả khi chúng đang giữa quá trình xử lý request.</p>
+
+  <p>Tiếp theo, chúng ta sẽ triển khai trait <code>Drop</code> để gọi <code>join</code> trên mỗi thread trong pool để chúng có thể hoàn thành các request đang xử lý trước khi đóng. Sau đó, chúng ta sẽ triển khai cách báo cho các thread biết chúng nên ngừng chấp nhận request mới và tắt máy. Để thấy code này hoạt động, chúng ta sẽ sửa server để chỉ chấp nhận hai request trước khi gracefully tắt thread pool.</p>
+
+  <p>Một điều cần lưu ý: Không có gì trong phần này ảnh hưởng đến các phần code xử lý thực thi closure, vì vậy mọi thứ ở đây sẽ giống nhau nếu chúng ta đang dùng thread pool cho async runtime.</p>
+
+  <h3>Triển khai Trait <code>Drop</code> trên <code>ThreadPool</code></h3>
+
+  <p>Hãy bắt đầu bằng cách triển khai <code>Drop</code> trên thread pool. Khi pool bị drop, các thread của chúng ta đều nên join để đảm bảo chúng hoàn thành công việc. Listing 21-22 hiển thị lần thử đầu tiên của triển khai <code>Drop</code>; code này chưa hoạt động hoàn toàn:</p>
+
+  <figure class="listing" id="listing-21-22">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust ignore">impl Drop for ThreadPool {
+    fn drop(&amp;mut self) {
+        for worker in &amp;mut self.workers {
+            println!("Shutting down worker {}", worker.id);
+
+            worker.thread.join().unwrap();
+        }
+    }
+}</code></pre>
+    <figcaption>Listing 21-22: Join từng thread khi thread pool ra khỏi scope</figcaption>
+  </figure>
+
+  <p>Đầu tiên, chúng ta lặp qua từng <code>worker</code> trong thread pool. Chúng ta dùng <code>&amp;mut</code> vì <code>self</code> là mutable reference và chúng ta cũng cần mutate <code>worker</code>. Lỗi compiler cho thấy chúng ta không thể gọi <code>join</code> vì chúng ta chỉ có mutable borrow của mỗi <code>worker</code> và <code>join</code> cần ownership.</p>
+
+  <p>Thay vì dùng <code>Option&lt;thread::JoinHandle&lt;()&gt;&gt;</code>, một giải pháp tốt hơn là dùng method <code>Vec::drain</code>. Nó nhận tham số range để chỉ định các phần tử cần xóa khỏi vector và trả về iterator của các phần tử đó. Truyền cú pháp range <code>..</code> sẽ xóa <em>mọi</em> giá trị khỏi vector:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">impl Drop for ThreadPool {
+    fn drop(&amp;mut self) {
+        for worker in self.workers.drain(..) {
+            println!("Shutting down worker {}", worker.id);
+
+            worker.thread.join().unwrap();
+        }
+    }
+}</code></pre>
+  </figure>
+
+  <p>Điều này giải quyết lỗi compiler và không yêu cầu thay đổi nào khác trong code. Lưu ý rằng vì <code>drop</code> có thể được gọi khi đang panic, <code>unwrap</code> cũng có thể panic và gây ra double panic, làm crash chương trình ngay lập tức và kết thúc bất kỳ quá trình dọn dẹp nào đang diễn ra. Điều này ổn cho chương trình ví dụ, nhưng không được khuyến nghị cho code sản xuất.</p>
+
+  <h3>Báo hiệu cho Threads Ngừng Lắng nghe Job</h3>
+
+  <p>Với tất cả các thay đổi đã thực hiện, code biên dịch không có cảnh báo. Tuy nhiên, tin xấu là code này chưa hoạt động như ý muốn. Vấn đề nằm ở logic trong closure do các thread của <code>Worker</code> chạy: Hiện tại chúng ta gọi <code>join</code>, nhưng điều đó sẽ không tắt thread vì chúng <code>loop</code> mãi để tìm job. Nếu thử drop <code>ThreadPool</code> với triển khai <code>drop</code> hiện tại, thread chính sẽ bị block mãi mãi, chờ thread đầu tiên hoàn thành.</p>
+
+  <p>Để khắc phục, chúng ta cần thay đổi triển khai <code>drop</code> của <code>ThreadPool</code> và sau đó thay đổi vòng lặp <code>Worker</code>.</p>
+
+  <p>Đầu tiên, chúng ta sẽ thay đổi triển khai <code>drop</code> của <code>ThreadPool</code> để tường minh drop <code>sender</code> trước khi chờ thread hoàn thành. Listing 21-23 hiển thị các thay đổi với <code>ThreadPool</code> để tường minh drop <code>sender</code>. Không giống với thread, ở đây chúng ta <em>cần</em> dùng <code>Option</code> để có thể move <code>sender</code> ra khỏi <code>ThreadPool</code> với <code>Option::take</code>:</p>
+
+  <figure class="listing" id="listing-21-23">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">pub struct ThreadPool {
+    workers: Vec&lt;Worker&gt;,
+    sender: Option&lt;mpsc::Sender&lt;Job&gt;&gt;,
+}
+// --snip--
+
+impl ThreadPool {
+    pub fn new(size: usize) -&gt; ThreadPool {
+        // --snip--
+        ThreadPool {
+            workers,
+            sender: Some(sender),
+        }
+    }
+
+    pub fn execute&lt;F&gt;(&amp;self, f: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+        let job = Box::new(f);
+
+        self.sender.as_ref().unwrap().send(job).unwrap();
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&amp;mut self) {
+        drop(self.sender.take());
+
+        for worker in self.workers.drain(..) {
+            println!("Shutting down worker {}", worker.id);
+
+            worker.thread.join().unwrap();
+        }
+    }
+}</code></pre>
+    <figcaption>Listing 21-23: Tường minh drop <code>sender</code> trước khi join các thread <code>Worker</code></figcaption>
+  </figure>
+
+  <p>Việc drop <code>sender</code> đóng channel, cho biết không có thêm message nào sẽ được gửi. Khi điều đó xảy ra, tất cả các lệnh gọi <code>recv</code> mà <code>Worker</code> thực hiện trong vòng lặp vô hạn sẽ trả về lỗi. Trong Listing 21-24, chúng ta thay đổi vòng lặp <code>Worker</code> để gracefully thoát trong trường hợp đó, nghĩa là các thread sẽ hoàn thành khi triển khai <code>drop</code> của <code>ThreadPool</code> gọi <code>join</code> trên chúng:</p>
+
+  <figure class="listing" id="listing-21-24">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">impl Worker {
+    fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
+        let thread = thread::spawn(move || {
+            loop {
+                let message = receiver.lock().unwrap().recv();
+
+                match message {
+                    Ok(job) =&gt; {
+                        println!("Worker {id} got a job; executing.");
+
+                        job();
+                    }
+                    Err(_) =&gt; {
+                        println!("Worker {id} disconnected; shutting down.");
+                        break;
+                    }
+                }
+            }
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption>Listing 21-24: Tường minh thoát khỏi vòng lặp khi <code>recv</code> trả về lỗi</figcaption>
+  </figure>
+
+  <p>Để thấy code này hoạt động, hãy sửa <code>main</code> để chỉ chấp nhận hai request trước khi gracefully tắt server, như Listing 21-25:</p>
+
+  <figure class="listing" id="listing-21-25">
+    <span class="file-name">Filename: src/main.rs</span>
+    <pre><code class="language-rust ignore">fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let pool = ThreadPool::new(4);
+
+    for stream in listener.incoming().take(2) {
+        let stream = stream.unwrap();
+
+        pool.execute(|| {
+            handle_connection(stream);
+        });
+    }
+
+    println!("Shutting down.");
+}</code></pre>
+    <figcaption>Listing 21-25: Tắt server sau khi phục vụ hai request bằng cách thoát vòng lặp</figcaption>
+  </figure>
+
+  <p>Bạn sẽ không muốn web server thực tế tắt sau khi phục vụ chỉ hai request. Code này chỉ minh họa rằng graceful shutdown và cleanup đang hoạt động đúng.</p>
+
+  <p>Method <code>take</code> được định nghĩa trong trait <code>Iterator</code> và giới hạn iteration đến hai item đầu tiên nhiều nhất. <code>ThreadPool</code> sẽ ra khỏi scope ở cuối <code>main</code>, và triển khai <code>drop</code> sẽ chạy.</p>
+
+  <p>Khởi động server với <code>cargo run</code> và thực hiện ba request. Request thứ ba sẽ báo lỗi, và trong terminal bạn sẽ thấy output tương tự:</p>
+
+  <pre><code class="language-console">$ cargo run
+   Compiling hello v0.1.0 (file:///projects/hello)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.0s
+     Running `target/debug/hello`
+Worker 0 got a job; executing.
+Shutting down.
+Shutting down worker 0
+Worker 3 got a job; executing.
+Worker 1 disconnected; shutting down.
+Worker 2 disconnected; shutting down.
+Worker 3 disconnected; shutting down.
+Worker 0 disconnected; shutting down.
+Shutting down worker 1
+Shutting down worker 2
+Shutting down worker 3</code></pre>
+
+  <p>Bạn có thể thấy thứ tự khác nhau khi chạy. Chúng ta thấy các Worker với ID 0 và 3 nhận được các request. Sau hai request, server ngừng chấp nhận kết nối mới. Khi <code>ThreadPool</code> ra khỏi scope cuối <code>main</code>, triển khai <code>Drop</code> của nó bắt đầu, và pool báo cho tất cả Worker tắt máy. Các Worker in ra thông báo khi chúng thấy thông điệp ngắt kết nối, sau đó thread pool gọi <code>join</code> để chờ từng thread hoàn thành.</p>
+
+  <p>Hãy chú ý một điều thú vị về thứ tự trong output này: Worker 0 và 3 nhận được các job, rồi server ngừng. Worker 1 và 2 nhận thấy ngắt kết nối và tắt. Worker 0 và 3 hoàn thành job của mình và cũng nhận thấy ngắt kết nối, rồi tắt. Cuối cùng, thread chính gọi <code>join</code> trên mỗi Worker, chờ chúng hoàn thành trước khi thoát.</p>
+
+  <p>Chúc mừng! Chúng ta đã hoàn thành dự án; giờ chúng ta có một web server cơ bản sử dụng thread pool để phản hồi bất đồng bộ. Chúng ta có thể thực hiện graceful shutdown của server, dọn dẹp tất cả các thread trong pool.</p>
+
+  <p>Dưới đây là toàn bộ code để tham khảo:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/main.rs</span>
+    <pre><code class="language-rust">use hello::ThreadPool;
+use std::{
+    fs,
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let pool = ThreadPool::new(4);
+
+    for stream in listener.incoming().take(2) {
+        let stream = stream.unwrap();
+
+        pool.execute(|| {
+            handle_connection(stream);
+        });
+    }
+
+    println!("Shutting down.");
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+
+    let (status_line, filename) = match &amp;request_line[..] {
+        "GET / HTTP/1.1" =&gt; ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" =&gt; {
+            thread::sleep(Duration::from_secs(5));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ =&gt; ("HTTP/1.1 404 NOT FOUND", "404.html"),
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre>
+  </figure>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">use std::{
+    sync::{Arc, Mutex, mpsc},
+    thread,
+};
+
+pub struct ThreadPool {
+    workers: Vec&lt;Worker&gt;,
+    sender: Option&lt;mpsc::Sender&lt;Job&gt;&gt;,
+}
+
+type Job = Box&lt;dyn FnOnce() + Send + 'static&gt;;
+
+impl ThreadPool {
+    /// Tạo ThreadPool mới.
+    ///
+    /// `size` là số thread trong pool.
+    ///
+    /// # Panics
+    ///
+    /// Hàm `new` sẽ panic nếu size bằng không.
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let (sender, receiver) = mpsc::channel();
+
+        let receiver = Arc::new(Mutex::new(receiver));
+
+        let mut workers = Vec::with_capacity(size);
+
+        for id in 0..size {
+            workers.push(Worker::new(id, Arc::clone(&amp;receiver)));
+        }
+
+        ThreadPool {
+            workers,
+            sender: Some(sender),
+        }
+    }
+
+    pub fn execute&lt;F&gt;(&amp;self, f: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+        let job = Box::new(f);
+
+        self.sender.as_ref().unwrap().send(job).unwrap();
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&amp;mut self) {
+        drop(self.sender.take());
+
+        for worker in self.workers.drain(..) {
+            println!("Shutting down worker {}", worker.id);
+
+            worker.thread.join().unwrap();
+        }
+    }
+}
+
+struct Worker {
+    id: usize,
+    thread: thread::JoinHandle&lt;()&gt;,
+}
+
+impl Worker {
+    fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
+        let thread = thread::spawn(move || {
+            loop {
+                let message = receiver.lock().unwrap().recv();
+
+                match message {
+                    Ok(job) =&gt; {
+                        println!("Worker {id} got a job; executing.");
+
+                        job();
+                    }
+                    Err(_) =&gt; {
+                        println!("Worker {id} disconnected; shutting down.");
+                        break;
+                    }
+                }
+            }
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+  </figure>
+
+  <p>Có thể cải thiện thêm nữa! Nếu bạn muốn tiếp tục nâng cấp dự án này, dưới đây là một số ý tưởng:</p>
+
+  <ul>
+    <li>Thêm thêm tài liệu vào <code>ThreadPool</code> và các method của nó.</li>
+    <li>Thêm kiểm thử chức năng của thư viện.</li>
+    <li>Thay đổi các lệnh gọi <code>unwrap</code> để xử lý lỗi mạnh mẽ hơn.</li>
+    <li>Dùng <code>ThreadPool</code> để thực hiện một số tác vụ khác ngoài việc xử lý các web request.</li>
+    <li>Tìm crate thread pool trên <a href="https://crates.io/">crates.io</a> và triển khai một web server tương tự sử dụng crate đó. Sau đó so sánh API và tính mạnh mẽ của nó với thread pool chúng ta đã triển khai.</li>
+  </ul>
+
+  <div class="page-nav bottom"><a href="ch21-02-multithreaded.html">← Trước</a><a href="appendix-00.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

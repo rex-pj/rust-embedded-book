@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processing a Series of Items with Iterators - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html" class="active">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch13-01-closures.html">← Trước</a>
+    <a href="ch13-03-improving-our-io-project.html">Tiếp →</a>
+  </div>
+
+<h2 id="processing-a-series-of-items-with-iterators"><a class="header" href="#processing-a-series-of-items-with-iterators">Xử lý một loạt phần tử với Iterator</a></h2>
+<p>Iterator pattern cho phép bạn thực hiện một tác vụ nào đó lên từng phần tử trong một chuỗi theo thứ tự. Iterator chịu trách nhiệm về logic duyệt qua từng phần tử và biết khi nào thì chuỗi kết thúc. Khi dùng iterator, bạn không cần phải tự viết lại cái logic đó nữa.</p>
+<p>Trong Rust, iterator có tính chất <em>lazy</em> (lười biếng) — tức là chúng không làm gì cả cho đến khi bạn gọi các method tiêu thụ iterator để "vắt" hết dữ liệu ra. Ví dụ, đoạn code trong Listing 13-10 tạo một iterator trên các phần tử của vector <code>v1</code> bằng cách gọi method <code>iter</code> được định nghĩa trên <code>Vec&lt;T&gt;</code>. Đoạn code này một mình nó không làm gì hữu ích cả.</p>
+<figure class="listing" id="listing-13-10">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let v1 = vec![1, 2, 3];
+
+    let v1_iter = v1.iter();
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-10">Listing 13-10</a>: Tạo một iterator</figcaption>
+</figure>
+<p>Iterator được lưu trong biến <code>v1_iter</code>. Sau khi tạo xong iterator, ta có thể dùng nó theo nhiều cách khác nhau. Ở Listing 3-5, chúng ta đã duyệt qua một mảng bằng vòng lặp <code>for</code> để chạy code trên từng phần tử. Bên dưới, điều đó ngầm tạo và rồi tiêu thụ một iterator, nhưng ta đã bỏ qua chưa giải thích chi tiết — đến giờ thì ta sẽ mổ xẻ nó.</p>
+<p>Trong ví dụ ở Listing 13-11, chúng ta tách riêng việc tạo iterator và việc sử dụng nó trong vòng lặp <code>for</code>. Khi vòng lặp <code>for</code> được gọi với iterator trong <code>v1_iter</code>, mỗi phần tử trong iterator được dùng trong một lần lặp, in ra từng giá trị.</p>
+<figure class="listing" id="listing-13-11">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let v1 = vec![1, 2, 3];
+
+    let v1_iter = v1.iter();
+
+    for val in v1_iter {
+        println!("Got: {val}");
+    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-11">Listing 13-11</a>: Dùng iterator trong vòng lặp <code>for</code></figcaption>
+</figure>
+<p>Ở những ngôn ngữ không có iterator trong thư viện chuẩn, bạn thường phải tự viết: khai báo biến index bắt đầu từ 0, dùng biến đó để truy cập vào từng vị trí trong vector, rồi tăng biến đó lên cho đến khi đạt tổng số phần tử.</p>
+<p>Iterator xử lý hết đống logic đó giúp bạn, cắt giảm code lặp đi lặp lại mà đôi khi bạn lại viết sai. Iterator còn cho bạn sự linh hoạt hơn để dùng cùng một logic trên nhiều loại chuỗi khác nhau, không chỉ những cấu trúc dữ liệu có thể đánh index như vector. Hãy xem cách iterator làm điều đó.</p>
+<h3 id="the-iterator-trait-and-the-next-method"><a class="header" href="#the-iterator-trait-and-the-next-method">Trait <code>Iterator</code> và method <code>next</code></a></h3>
+<p>Mọi iterator đều implement một trait có tên <code>Iterator</code> được định nghĩa trong thư viện chuẩn. Định nghĩa của trait trông như thế này:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Iterator {
+    type Item;
+
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
+
+    // các method có implementation mặc định đã được lược bỏ
+}
+<span class="boring">}</span></code></pre>
+<p>Chú ý rằng định nghĩa này dùng một số cú pháp mới: <code>type Item</code> và <code>Self::Item</code>, đây là cách định nghĩa một <em>associated type</em> với trait này. Chúng ta sẽ đào sâu về associated type trong Chương 20. Bây giờ, điều bạn cần biết là: code này nói rằng khi implement trait <code>Iterator</code>, bạn cũng phải định nghĩa kiểu <code>Item</code>, và kiểu <code>Item</code> này được dùng làm kiểu trả về của method <code>next</code>. Nói cách khác, <code>Item</code> chính là kiểu của từng phần tử mà iterator trả về.</p>
+<p>Trait <code>Iterator</code> chỉ yêu cầu bạn định nghĩa một method duy nhất: method <code>next</code>, trả về từng phần tử của iterator một lúc, được bọc trong <code>Some</code>, và khi hết dữ liệu thì trả về <code>None</code>.</p>
+<p>Ta có thể gọi method <code>next</code> trực tiếp trên iterator; Listing 13-12 minh họa các giá trị được trả về khi gọi <code>next</code> nhiều lần liên tiếp trên iterator tạo từ vector.</p>
+<figure class="listing" id="listing-13-12">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span>    #[test]
+    fn iterator_demonstration() {
+        let v1 = vec![1, 2, 3];
+
+        let mut v1_iter = v1.iter();
+
+        assert_eq!(v1_iter.next(), Some(&amp;1));
+        assert_eq!(v1_iter.next(), Some(&amp;2));
+        assert_eq!(v1_iter.next(), Some(&amp;3));
+        assert_eq!(v1_iter.next(), None);
+    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-12">Listing 13-12</a>: Gọi method <code>next</code> trực tiếp trên iterator</figcaption>
+</figure>
+<p>Lưu ý rằng chúng ta cần khai báo <code>v1_iter</code> là mutable: gọi method <code>next</code> trên iterator thay đổi trạng thái nội bộ mà iterator dùng để theo dõi vị trí hiện tại trong chuỗi. Nói cách khác, code này <em>tiêu thụ</em> (consume) iterator, hay "dùng hết" nó. Mỗi lần gọi <code>next</code> là "nhai" mất một phần tử khỏi iterator. Chúng ta không cần khai báo <code>v1_iter</code> là mutable khi dùng vòng lặp <code>for</code>, vì vòng lặp tự lấy ownership của <code>v1_iter</code> và ngầm làm nó mutable.</p>
+<p>Cũng lưu ý rằng các giá trị trả về từ <code>next</code> là các immutable reference đến các giá trị trong vector. Method <code>iter</code> tạo ra iterator trên các immutable reference. Nếu muốn tạo iterator lấy ownership của <code>v1</code> và trả về các owned value, ta gọi <code>into_iter</code> thay vì <code>iter</code>. Tương tự, nếu muốn duyệt qua các mutable reference, gọi <code>iter_mut</code> thay vì <code>iter</code>.</p>
+<h3 id="methods-that-consume-the-iterator"><a class="header" href="#methods-that-consume-the-iterator">Các method tiêu thụ iterator</a></h3>
+<p>Trait <code>Iterator</code> có nhiều method khác nhau với implementation mặc định được cung cấp bởi thư viện chuẩn; bạn có thể tìm hiểu về các method này trong tài liệu API của thư viện chuẩn cho trait <code>Iterator</code>. Một số method trong đó gọi method <code>next</code> trong phần thân của chúng, đó là lý do tại sao bạn bắt buộc phải implement method <code>next</code> khi implement trait <code>Iterator</code>.</p>
+<p>Các method có gọi <code>next</code> được gọi là <em>consuming adapters</em> (bộ chuyển đổi tiêu thụ) vì gọi chúng sẽ dùng hết iterator. Một ví dụ là method <code>sum</code> — nó lấy ownership của iterator và lần lượt gọi <code>next</code> để duyệt qua các phần tử, từ đó tiêu thụ iterator. Trong quá trình duyệt, nó cộng dồn từng phần tử vào một tổng đang chạy và trả về tổng khi duyệt xong. Listing 13-13 có một test minh họa cách dùng method <code>sum</code>.</p>
+<figure class="listing" id="listing-13-13">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span>    #[test]
+    fn iterator_sum() {
+        let v1 = vec![1, 2, 3];
+
+        let v1_iter = v1.iter();
+
+        let total: i32 = v1_iter.sum();
+
+        assert_eq!(total, 6);
+    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-13">Listing 13-13</a>: Gọi method <code>sum</code> để tính tổng tất cả phần tử trong iterator</figcaption>
+</figure>
+<p>Sau khi gọi <code>sum</code>, chúng ta không được phép dùng <code>v1_iter</code> nữa, vì <code>sum</code> đã lấy ownership của iterator.</p>
+<h3 id="methods-that-produce-other-iterators"><a class="header" href="#methods-that-produce-other-iterators">Các method tạo ra iterator khác</a></h3>
+<p><em>Iterator adapters</em> là các method được định nghĩa trên trait <code>Iterator</code> mà không tiêu thụ iterator. Thay vào đó, chúng tạo ra các iterator khác bằng cách thay đổi một khía cạnh nào đó của iterator ban đầu.</p>
+<p>Listing 13-14 cho thấy một ví dụ về cách gọi iterator adapter method <code>map</code>, nhận một closure để gọi trên từng phần tử khi duyệt qua. Method <code>map</code> trả về một iterator mới tạo ra các phần tử đã được biến đổi. Closure ở đây tạo ra một iterator mới trong đó mỗi phần tử từ vector sẽ được tăng thêm 1.</p>
+<figure class="listing" id="listing-13-14">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust not_desired_behavior edition2024"><span class="boring">fn main() {
+</span>    let v1: Vec&lt;i32&gt; = vec![1, 2, 3];
+
+    v1.iter().map(|x| x + 1);
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-14">Listing 13-14</a>: Gọi iterator adapter <code>map</code> để tạo iterator mới</figcaption>
+</figure>
+<p>Tuy nhiên, đoạn code này tạo ra một cảnh báo:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling iterators v0.1.0 (file:///projects/iterators)
+warning: unused `Map` that must be used
+ --&gt; src/main.rs:4:5
+  |
+4 |     v1.iter().map(|x| x + 1);
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: iterators are lazy and do nothing unless consumed
+  = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+  |
+4 |     let _ = v1.iter().map(|x| x + 1);
+  |     +++++++
+
+warning: `iterators` (bin "iterators") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.47s
+     Running `target/debug/iterators`
+</code></pre>
+<p>Đoạn code trong Listing 13-14 không làm gì cả; closure ta chỉ định chưa bao giờ được gọi. Cảnh báo nhắc nhở chúng ta tại sao: Iterator adapter có tính lazy, và ta cần tiêu thụ iterator ở đây.</p>
+<p>Để khắc phục cảnh báo này và tiêu thụ iterator, ta sẽ dùng method <code>collect</code>, thứ ta đã dùng với <code>env::args</code> trong Listing 12-1. Method này tiêu thụ iterator và thu thập các giá trị kết quả vào một kiểu collection.</p>
+<p>Trong Listing 13-15, chúng ta thu thập kết quả của việc duyệt qua iterator được trả về từ lời gọi <code>map</code> vào một vector. Vector này sẽ chứa từng phần tử của vector ban đầu, mỗi phần tử tăng thêm 1.</p>
+<figure class="listing" id="listing-13-15">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let v1: Vec&lt;i32&gt; = vec![1, 2, 3];
+
+    let v2: Vec&lt;_&gt; = v1.iter().map(|x| x + 1).collect();
+
+    assert_eq!(v2, vec![2, 3, 4]);
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-15">Listing 13-15</a>: Gọi method <code>map</code> để tạo iterator mới, rồi gọi <code>collect</code> để tiêu thụ và tạo ra vector</figcaption>
+</figure>
+<p>Vì <code>map</code> nhận một closure, ta có thể chỉ định bất kỳ thao tác nào muốn thực hiện trên từng phần tử. Đây là ví dụ tuyệt vời cho thấy closure giúp bạn tùy chỉnh hành vi trong khi vẫn tái sử dụng hành vi lặp mà trait <code>Iterator</code> cung cấp.</p>
+<p>Bạn có thể nối nhiều lời gọi iterator adapter để thực hiện các hành động phức tạp theo cách dễ đọc. Nhưng vì tất cả iterator đều lazy, bạn phải gọi một trong các consuming adapter method để lấy kết quả từ các lời gọi iterator adapter.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-closures-that-capture-their-environment"></a></p>
+<h3 id="closures-that-capture-their-environment"><a class="header" href="#closures-that-capture-their-environment">Closure capture môi trường xung quanh</a></h3>
+<p>Nhiều iterator adapter nhận closure làm tham số, và thông thường các closure ta truyền vào iterator adapter sẽ là các closure capture môi trường xung quanh của chúng.</p>
+<p>Cho ví dụ này, chúng ta sẽ dùng method <code>filter</code> nhận một closure. Closure nhận từng phần tử từ iterator và trả về <code>bool</code>. Nếu closure trả về <code>true</code>, giá trị sẽ được đưa vào kết quả của <code>filter</code>. Nếu closure trả về <code>false</code>, giá trị sẽ bị loại bỏ.</p>
+<p>Trong Listing 13-16, ta dùng <code>filter</code> với một closure capture biến <code>shoe_size</code> từ môi trường của nó để duyệt qua một collection các instance của struct <code>Shoe</code>. Nó sẽ chỉ trả về những đôi giày có đúng kích cỡ được chỉ định.</p>
+<figure class="listing" id="listing-13-16">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">#[derive(PartialEq, Debug)]
+struct Shoe {
+    size: u32,
+    style: String,
+}
+
+fn shoes_in_size(shoes: Vec&lt;Shoe&gt;, shoe_size: u32) -&gt; Vec&lt;Shoe&gt; {
+    shoes.into_iter().filter(|s| s.size == shoe_size).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn filters_by_size() {
+        let shoes = vec![
+            Shoe {
+                size: 10,
+                style: String::from("sneaker"),
+            },
+            Shoe {
+                size: 13,
+                style: String::from("sandal"),
+            },
+            Shoe {
+                size: 10,
+                style: String::from("boot"),
+            },
+        ];
+
+        let in_my_size = shoes_in_size(shoes, 10);
+
+        assert_eq!(
+            in_my_size,
+            vec![
+                Shoe {
+                    size: 10,
+                    style: String::from("sneaker")
+                },
+                Shoe {
+                    size: 10,
+                    style: String::from("boot")
+                },
+            ]
+        );
+    }
+}</code></pre>
+<figcaption><a href="#listing-13-16">Listing 13-16</a>: Dùng method <code>filter</code> với closure capture <code>shoe_size</code></figcaption>
+</figure>
+<p>Hàm <code>shoes_in_size</code> lấy ownership của một vector giày và một kích cỡ giày làm tham số. Nó trả về một vector chỉ chứa những đôi giày có đúng kích cỡ được chỉ định.</p>
+<p>Trong thân hàm <code>shoes_in_size</code>, ta gọi <code>into_iter</code> để tạo một iterator lấy ownership của vector. Sau đó, ta gọi <code>filter</code> để biến iterator đó thành một iterator mới chỉ chứa các phần tử mà closure trả về <code>true</code>.</p>
+<p>Closure capture tham số <code>shoe_size</code> từ môi trường và so sánh giá trị đó với kích cỡ của từng đôi giày, chỉ giữ lại những đôi có đúng kích cỡ được chỉ định. Cuối cùng, gọi <code>collect</code> để gom các giá trị trả về bởi iterator đã được biến đổi vào một vector mà hàm trả về.</p>
+<p>Test cho thấy khi gọi <code>shoes_in_size</code>, chúng ta chỉ nhận lại những đôi giày có cùng kích cỡ với giá trị chúng ta chỉ định.</p>
+
+  <div class="page-nav bottom"><a href="ch13-01-closures.html">← Trước</a><a href="ch13-03-improving-our-io-project.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

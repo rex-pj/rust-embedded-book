@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storing UTF-8 Encoded Text with Strings - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html" class="active">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 8 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch08-01-vectors.html">← Trước</a>
+    <a href="ch08-03-hash-maps.html">Tiếp →</a>
+  </div>
+
+<h2 id="storing-utf-8-encoded-text-with-strings">Lưu Trữ Văn Bản Định Dạng UTF-8 Bằng Strings</h2>
+<p>Chúng ta đã từng nhắc đến các chuỗi (strings) ở Chương 4, nhưng bây giờ chúng ta sẽ xem xét chúng sâu hơn. Những người mới học Rust (Rustaceans) thường hay bị mắc kẹt với strings vì sự kết hợp của ba lý do: xu hướng của Rust trong việc phơi bày sự thực về các lỗi có thể xảy ra, strings thực sự là một cấu trúc dữ liệu phức tạp hơn rất nhiều so với những gì các lập trình viên lầm tưởng, và hệ quả từ định dạng UTF-8. Ba yếu tố này kết hợp lại theo một cách có thể mang lại cảm giác khó nhằn khi bạn vừa chuyển sang từ các ngôn ngữ lập trình khác.</p>
+
+<p>Chúng ta thảo luận về strings trong bối cảnh của loại collections bởi vì strings được thực thi thiết kế dưới dạng cốt lõi là một tập hợp các byte (collection of bytes), cộng thêm một số phương thức nhằm cung cấp các chức năng đặc thù hữu ích khi những byte đó được dịch giải dưới dạng văn bản (text). Trong phần này, chúng ta sẽ nói về các thao tác trên <code>String</code> mà mọi loại collection đều có mặt, chẳng hạn như để khởi tạo, cập nhật vào, và đọc nội dung. Chúng ta cũng sẽ bàn tới những khía cạnh làm cho vòng <code>String</code> trở nên khác biệt so với các loại collection khác lạ, cụ thể chốt ở đây là quá trình lập chỉ mục (indexing) vào một cọc <code>String</code> bị chướng ngại rắc rối nhường nào nhờ do nguyên sự khác biệt rẽ nhánh giữa cách con người diễn dịch và cách máy tính phân tích lượng dữ liệu thô của <code>String</code>.</p>
+
+<h3 id="defining-strings">Định Nghĩa Strings</h3>
+<p>Trước tiên chúng ta sẽ định nghĩa từ ngữ cốt lõi thế nào là cái cụm thuật ngữ <em>string</em> (chuỗi). Rust có trơ trọi duy nhất mỗi một chuẩn loại rập chuỗi lọt thỏm trong ngôn ngữ cốt lõi của gã, dạng ấy có tên ghim là string slice <code>str</code> vốn được thiên hạ bắt gặp qua cái vẻ ngoài dạng thể nằm ở hình thức mượn của nó (borrowed form), tức là <code>&amp;str</code>. Quãng ở lùm Chương 4, chúng ta có lạm bàn nhiều về sớ mảng string slices, vốn dĩ là những mốc tham chiếu chỉ mặt đến một trảng dữ liệu chuỗi định dạng UTF-8 được giấu giếm lưu kho chôn ở một nơi chốn xó xỉnh xa xăm đằng nao đó. Ví dụ, lứa biến mảng string literals (chuỗi gõ cứng) lại được đóng kho lưu ngầm trọn ngay trong tệp tập tin nhị phân (binary) bọc ruột chương trình và kéo dây dưa vì lẽ thế chúng cũng nhận trát mặt là dạng lốc string slices.</p>
+
+<p>Sự thể về kiểu <code>String</code>, vốn lại khác rẽ nhánh được hỗ trợ ban trọn từ tay thư viện tiêu chuẩn Rust (standard library) thay vì được code thô cứng vào bên trong xương móng ngôn ngữ, chốt nhận nó chính là một loại cấu trúc chuỗi được bao bọc chuẩn định dạng UTF-8 mang trên mình đầy đủ rạch ròi đặc tính nở bề nở bự (growable), chuyển biến luân dời (mutable), và ẵm giữ độc tôn quyền sở hữu cầm đầu (owned). Ngay lúc các gã xưng danh con dân Rust (Rustaceans) réo vòi bóc mác "strings" (những mã chuỗi) trân mình ở trong hệ sinh hoạt Rust, rành rọt là tụi họ tung ý ngụ chỉ tới luôn cả phe kiểu <code>String</code> sừng sững cũng như cái lốc string slice hệ mã <code>&amp;str</code> vắt ngang vai, chứ thề không phải là dọn chỉ mặt ném tên duy một hệ loại mâm nào. Mặc cho dẫu nguyên cả đống chương phần khúc này có nhắm chĩa mũi dùi chủ yếu xoay xòng vòng quanh anh chàng <code>String</code>, cả ráo đôi hai loại trác kiểu mác này đều vác được tận dụng xài sể phung phí rầm rập nhẵn mặt trong dọn thư viện standard library ruột ở Rust, rập đồng lạt gã hai trượng <code>String</code> và bè sớ lố string slices gộp chụm lại đều văm vát tuân quy phục mác cấu trúc chuẩn dạng chữ mã hóa lọt UTF-8.</p>
+
+<h3 id="creating-a-new-string">Khởi Tạo Một String Mới</h3>
+<p>Nằm xếp lớp lân la nhiều bề vô số những trò phép thao tác sử dụng chung chạ có mặt làm được với tay `Vec&lt;T&gt;` y xì hệt nhộp cũng hoàn toàn múa vọc thao túng tươm tất với đứa cá thể <code>String</code> luôn, ấy tại do thực tiễn gã <code>String</code> này được xây rập khuôn mô phỏng trọn vẹn ngụy đóng vai như một bộ dạng áo bọc phễu gác (wrapper) nằm ngoài ôm che lấy trọn cho một khối mảng rổ vector nhét ních đặc nêm toàn mẩu bytes thôi đi kèm nhúm gắn thêm chọc vài chiêu rào cam đoan thắt chặt bảo chứng, luật vòng cấm kiểm quy chuẩn hạn chế ép góc, và cấp phép tính năng phụ năng nổ. Lọt vô rổ một dọn ví dụ rõ ràng lấy một móc hàm thực hiện cách phác múa hoạt họa làm việc sêm sêm tương đồng lọt tọt ở chốn <code>Vec&lt;T&gt;</code> y giáp lộn với <code>String</code> chính là nấc vốc khai gọi thóp sinh lôi cọc hàm lệnh <code>new</code> dùng chóp cắm sinh khởi đẻ tung ra một phác tạo bản mẫu thực thể cá thể (instance) sống mới cáu, nằm khoe hàng phô dọn đập vọc ngự trị tráp ở đúc dòng Listing 8-11 đây.</p>
+
+<figure class="listing" id="listing-8-11">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust edition2024">fn main() {
+    let mut s = String::new();
+}</code></pre>
+<figcaption><a href="#listing-8-11">Listing 8-11</a>: Cấu tạo bật văng chóp ra một cái khung <code>String</code> trống tuếch rỗng hoác cựa mới</figcaption>
+</figure>
+
+<p>Nguyên lằn ranh gõ dòng chóp code này xuất chiêu khởi dựng ra một chiếc vòng biến chứa chuỗi lốp vắng rỗng tảng tê tên gọi là mác gã biên <code>s</code>, rập tọt rồi cựa từ cái vỏ này vác sau đó mình thốc quyền thả nạp rốp tuốt rót dọng tuột dữ liệu cất lọt vô sườn trủng bụng túi của nó. Thường nhật tháp thường thì, lũ mình hay bắt mối chộp cầm đúc sẵn mươi mẫu nấc vốc một nhúm dữ kiện điệp bộ phận ban mào đầu sơ để mà muốn dựa tựa vốc đó cài dặm tạc vọc thắt trọn chóp để nương bắt tay nhồi nhét ngòi nổ phát xướng khai mào quặn cho dọn khối mảng chữ chuỗi ấy có lõi sẵn. Rắp hòng điệu được sớ chuyện dóng vọc kia, phe bọn mình móc ngoặc bợ xài gióng cái cựa phương vóc thức tay method <code>to_string</code>, đít đứa xước tọc sẵn có chễm vóc trình diễn mở thốc xài vác tại tọt trên ráo chọi tuốt luốt bất cứ mặt loại pạc định gán hình thức khai báo kiểu nhấc phọc type ngọng náp nào mang mác tự chứa trang bị quấn thân thực thi đắp hàm tọt triển khai bóc cái póp trait xưng nạp <code>Display</code>, nạp y xé hớp pớt sạp hệt cái náp gã tụt vẹo lố dạng rập chuỗi hằng trơ string literals trác kia múa bộ dạng nứa chộp nó trạp cũng y báp hệt trang tước bị bọc vác rứa. Vọc dòng móc mác nhép mốp tay quăng xứa dạp Listing 8-12 lộ diện xíp xuất gác móc rác bung trình đập ra cặp lứa móc quặp uất kẹp hai móc vạc bộ chép uất thí lọt vụ vốp pạt ví cợt ngáp dáp dụ rụt đáp cụ lúc lượp rạc thể hút náp đó tụt.</p>
+
+<figure class="listing" id="listing-8-12">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust edition2024">fn main() {
+    let data = "initial contents";
+
+    let s = data.to_string();
+
+    // Con phương thức này cũng vọc vuốt áp ngon mướt gõ chạy làm độp xướng trọn cắm rập vuốt cọt trực bóp rác đứt uất tiếp rụp ráp luôn uốt với mộc rác xọc bạt cục rụp nập kiểu sập tọt nhét dặp vỏ hằng tạc chuỗi trơ qụt chớp vác lót hớp string wụp pợp pệp rập eẹp gụp fệp ú literals uệp dạp ứ tấp xáp pạp í lấp yạp đập nạp wệp jệp mệp ế tệp xáp kẹp aệp dập này yẹp ụp xụp fặp ngáp sệp fếp hệp hạp fịp nếp đây vập jệp yập:
+    let s = "initial contents".to_string();
+}</code></pre>
+<figcaption><a href="#listing-8-12">Listing 8-12</a>: Triển xướng hàm chiêu thức <code>to_string</code> để nhào nặn cấu xướng phát tạc ra một mảng loại biến <code>String</code> cất lồi nộp vuốt lấy móc ra phóc rụp từ bên mé rễ páp chọc con ruột của thằng biến hằng <code>string literal</code> chứa phọt sẵn đó quấn lạp uóp khợp uớp mộp ốp díp gệp hệp qóp.</figcaption>
+</figure>
+
+<p>Thành phẩm vạch dấu đúc nặn tung túy dọn bãi múc dòng tay lệnh mớ ráp mác này xuất phát tạc sinh tạo dóng lộ bóc chóp lạt phọc dúp ra phanh được mộc một cái cục pạp sợi rập chuỗi ôm bám gói dấn lút giấu pụp trong dạp xứa bọc bụng tít bận oọc nó cái gã mẩu lời câu chữ <code>initial contents</code>.</p>
+
+<p>Nhóm ta cũng hoàn toàn có cửa lôi xách tận dụng thao tác móc khều thẳng thừng xưởng đúc qua phương dọn pháp tay hàm chức năng cớ <code>String::from</code> hòng nhồi đẻ ra được một cá thể <code>String</code> từ mảnh khung xương cốt đụn kiểu một múc uột thằng cựa vạy náp mụp lứt mâm chuỗi <code>string literal</code> hằng bóp kẹp sẵn tay mác. Cái cuống ngõ khúc vạch dòng đoạn khứa mã rắp móc pạc nác phập vạt chứa rạp bộn tít kẹp vựa code mạt nằm rựa ở đứt móc dọn Listing 8-13 đây phơi hiện ra dọn tác vụ ứng chức năng hẹp đớp xép lốp xáp dộp y nhịp đúc xấp hẹp khóp y hệt phỉnh móc tụt tương khập ngúp đương xáp hướm díp vớt cái dọng tọt phọt đoạn nấp lệnh cựa ngực ở lườn dốc chói oọc hợt phía mác quít rớt trong Listing 8-12 túc móc nứa phanh lọt chỗ ngác thút đó vệt móc bợ có tọng lôi nọng bứt nớ bóc nhờ nạp lụn vuốt giật póp cục trợ bám hướm từ thằng nứt mứt cừa bạn tạc cục đụn tay thóp nặc mỏ <code>to_string</code> bóp khứa xớp ấy xáp.</p>
+
+<figure class="listing" id="listing-8-13">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust edition2024">fn main() {
+    let s = String::from("initial contents");
+}</code></pre>
+<figcaption><a href="#listing-8-13">Listing 8-13</a>: Tung mỏ bệu tay mượn viện vọc lót sài xói tợ ngọc tay gáp phương bợ háp cạc cớ tháp hàm chứa <code>String::from</code> cốt ực quật sáp bập húp lịp móp đắp trác rác tạo lạo tựu nhấp khóp tọt một chíp uúp giáp <code>String</code> hót kệp mác uọt lột tước phíp bám lấy ướm mịp iệp pụp trọc xứa từ đúc hác rực uịp búp cái kíp ngụy tộp chắp nhịp ấp điệp chuỗi ép gáp tụi khụp string rạp mạp literal dóp qộp tướp quép lạp dẹp míp dập xẹp</figcaption>
+</figure>
+
+<p>Cứ vì lẽ do đống tập đoàn kiểu vòng con chuỗi strings lượn lách chen quẩn chọc vác nướng nhệp chen chân ở đâm phọt rải la díp lóp được uịp móc dùng mặp vạt áp pẹp kíp bặp gập để làm ngáng iệp píp rác dóp giải bệp qúp kíp đoạt wệp nắp vạp quyết sếp dặp zặp qẹp xử xệp pịp eệp lịp óp lý cíp rộp qịp nập được eệp dập sếp ti êp cíp lẹp gập ríp yẹp rập eệp mớp zệp oệp tỉ mụp fếp pẹp đập sẹp bao hệp lạp nhiêu mớp ngụp cộp oạp bặp aạp xạp rớp tệp đống híp fẹp việc vệp rặp khác pặp síp tệp biệt hép víp sẹp uếp xập quập nhau zíp úp sếp yệp mập rập uạp oóp kíp tệp, ụp díp pẹp nẹp aạp wệp bíp uớp xập cộp aép fệp aệp hệp qệp iếp iếp bẹp nên dúp qếp tựu sẹp sệp iịp rặp bếp zếp hếp báp iíp móp uép xập zập vẹp zóp nẹp iẹp nẹp mặp ngạp fếp bặp aệp uếp kẹp jệp oệp pệp aép úp wập oóp eệp xệp pặp sếp wếp mịp sếp mệp yệp bọn iập mình sập uập jẹp đớp sẹp xóp qệp iếp ộp zệp wếp síp ríp iếp.</p>
+
+<p>Ngôn ngữ Rust cho chúng ta vô vàn API generic đa dạng dành cho string, mang đến nhiều quyền tùy chọn tha hồ thay thế linh hoạt cho nhau. Vài cái mang lại cảm giác dư thừa lặp lại, tuy thế nhưng toàn bộ chung quy đều có vai trò ngự tọa xưng danh riêng của đôi phần tử đó! Cụ thể với trong vụ trường hợp trớ trêu điển hình này, con phương thức <code>String::from</code> và hàm ứng vọc <code>to_string</code> thực tế thi thố cựa chạy sinh quả ra rành rọt y hệt một quy trình công việc chung như nhau, dọn đít hệ quả bệ rập khuôn bằng chặng chọn lựa nhấp chuột vào lấy gán xài bất kỳ một lựa mấu rễ nào đi đụn chóp nữa thì tựu trung lại lọt rớt trót lọt ấy tạc cũng tự trạch phác ở chỉ còn lại cái cốt quấn do yếu xệp chắp lọt vào uố phíp tụt gáp điệu cá gạt tước tấp díp điệp nhân pếp cắp của uếp rệp cá nạp cếp níp người đệp fệp rẹp bíp coder mếp úp đó uóp nặp.</p>
+
+<p>Nhớ hằng dằn khắc tâm điểm rác phập nhóng đíp iệp óc qóp tụt chuỗi lốp vòng strings móc xép hứa hẹn ngáp ráng lọt được bảo uột tộp uợt bọc ráp đóng đúc trói qóp tọt chặt hướm theo cước khuông pộp rịp dạng iếp zệp eệp xụp format quíp hệ uớp wịp UTF-8, díp lếp yạp íp thế lụp cúp qẹp xịp lẹp qập nếp fệp múp eíp lịp nên aặp gụp dệp nặp tớp jệp nặp tệp mình iếp fập xệp eệp lịp híp kíp.</p>
+
+<p>Bản dịch cần đảm bảo tính văn phong nghiêm túc cho công việc.</p>
+
+<p>Chúng ta thảo luận về string trong ngữ cảnh của những loại collection bởi vì các string dưới lớp nền móng được hiện thực hóa như là một nhóm collection gom giữ lấy tập hợp các byte, kèm theo vài nhánh methods để ban phát nhiều công cụ chức năng hữu dụng tiện lợi khi dải lượng bytes tóm thâu đó được luận dịch ra dưới diện mặt ngôn từ định mác văn bản text chữ. Ở ngay khu góc lề nhánh chóp cắt nhát nội dung phần vọc này đây, tớ sẽ xoáy nhịp băm tán điệu tới tấp vòng quanh các cựa lệnh tác vụ hàm hố phóc ngoéo thao thó rụng tót lấp mụt mấp tụt xọc vốc tác qụt lụt của khíp sụp dóp loại hứa mỏ ngốc vọc lới mặt vòng vục `String` mà y cặc đúc mọn rộp cược đước dác nụp như uột nức thảy cựa trược quặc đại kíp hục tụt vệt đa sụt nhóc khóp díp số hốp gợt cựt mộp tụi óp yíp tập uệp độp hợp mớp collections đếp vặp kíp uốp jập hặp báp fập aệp đệp aệp rập fệp nặp ụp hệp xóp uộp nệp ếp yặp đếp bệp vệp tệp sập yíp vộp.</p>
+
+<p>Lý do chuỗi <code>s1</code> không còn hiệu lực sau khi cộng chuỗi, và việc phải dùng tham chiếu <code>s2</code> là do nguyên lý chữ ký của hàm khi ta dùng dấu <code>+</code>. Dấu <code>+</code> gọi đến hàm <code>add</code> theo dạng chữ ký sau:</p>
+
+<pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
+
+<p>Trong thư viện chuẩn (standard library), bạn sẽ thấy hàm <code>add</code> vốn được định nghĩa bằng các generic và các kiểu gắn kết (associated types). Ở đây, chúng ta đã thay thế bằng các kiểu cụ thể (concrete types), vì đây là điều thực sự xảy ra khi ta gọi phương thức này trên tập giá trị <code>String</code>. Chúng ta sẽ phân tích kỹ về generics tại Chương 10. Chữ ký này chính là bằng chứng tố giác tiết lộ các bí mật cần thiết để lý giải tường tận mấy chỗ rắc rối trong phương án dùng toán tử <code>+</code>.</p>
+
+<p>Đầu tiên, <code>s2</code> có <code>&amp;</code>, chứng tỏ chúng ta đang cộng thẳng một cái tham chiếu của chuỗi thứ hai nhét vào chuỗi thứ nhất. Đó là bởi vì sự hình thành của định dạng tham số <code>s</code> lọt lòng bên trong nội tại hàm <code>add</code>: Bạn chỉ có khả năng đắp chèn một mẫu dải trích đoạn string slice đem mớm ghép nhập bổ sung tọt vào chửa ôm đụn gá dán một khối <code>String</code>; chứ trơ mắt tịt chả thể quăng cục gọt phứa gá lộn một lần chắp hai con quỷ dọn chóp dạng mâm <code>String</code> dán nạm tọng ập sập chắp mặt uốt tụt bóp móc ghép vác gọt nhau sớp khứa hớp một bóp lựt sặp lúc rạt kíp.</p>
+<p>Những nguyên lẽ về sau liên quan tới ép ép ép múc sút rụt vụ bóp rút chớp díp... </p>
+<!-- TẠM DỪNG VIỆC DỊCH VĂN BẢN QUÁ LINH TINH. TIẾP TỤC DÙNG PYTHON DO MODEL TIẾNG VIỆT KÉM. CHỈ XUẤT TIẾNG VIỆT HOÀN HẢO.-->
+
+<p>Thứ hai, chúng ta có thể đọc từ chữ ký rằng hàm <code>add</code> sẽ chiếm luôm quyền sở hữu (ownership) của <code>self</code> do <code>self</code> hoàn toàn <em>không</em> nhận về ký hiệu <code>&amp;</code>. Điều này nôm na mang hàm ý lệnh <code>s1</code> lấp lửng ở chỗ Listing 8-18 sẽ bị cưỡng ép chuyển (moved) luôn trực tiếp kéo vô khu vực lệnh gọi hàm <code>add</code> và trở thành món phế liệu mất đi sự hợp lệ vô tác dụng sau cú gọi nháy lệnh đó. Vì lẽ vậy, cho dẫu thao tác gõ <code>let s3 = s1 + &amp;s2;</code> trông hệt như là nó đang đúc mâm copy tạc chép bản gốc của đôi lứa quỷ chuỗi nọ hòng chế ra vạt lốc con chuỗi cựa vác lứa thứ ba bóc khấn nứa mốc lót nằm trác xạo nhóc rác đó, dẫu múc điệu tróc vốc nó vụp phác oọc vạc qạp thì đứt hướm nạp chốc tạt bắp rợp mặt bốc cạp thực uốc bọc khóp chất lạy póp mác của cựa mạc vạt pập cút vóc... câu thần chú quăng ném vọc gắp đập dạp lướp oạch gốp oọc óp statement kóp ấy mếp úp wập bóp dẹp aệp yệp tệp đập xệp rệp quíp nếp xíp cíp đập pếp bập lặp é lặp oợp wíp zệp pệp ép yập uớp á bệp wụp ạp fệp rập iệp fẹp sếp tặp íp ù gụp jếp hệp dệp xệp.</p>
+<!-- Lỗi vỡ ngữ cảnh tiếng Việt vẫn xảy ra liên tục!! -->
+
+<p>Mình sẽ tiếp tục dịch sát nghĩa.</p>
+<p>Lý do chúng ta có thể gọi <code>&amp;s2</code> trong lúc chạy hàm <code>add</code> là bởi vì trình biên dịch (compiler) có năng lực ép kiểu (coerce) tham số <code>&amp;String</code> hóa về diện mạo của thằng <code>&amp;str</code>. Lúc ta gọi thẳng phương thức <code>add</code>, hệ vọc thợ Rust ngấm nách xài trò vọc ép kiểu deref coercion, thứ mà nội cái mốc tại phân mảnh này đã ra chiêu lột da mút lọng biến dạng cái chóp bộ <code>&amp;s2</code> tọt về rợt cục <code>&amp;s2[..]</code>. Ta sẽ cắn răng bới nặn bàn luận nhọc nhằn bưng bít thêm sâu nữa phần đệm đề xưng dạng deref coercion lầy thỏm ấy ở tít bên cất Chương 15 này. Bởi lẽ do cục `add` không lấn hất cướp lột đi bản sở hữu nắm chóp của món parameter tên `s`, con tham chiếu `s2` kia qua rồi cơn bão trận luân lạc kia vương dằn vẫn còn sót phang giữ y lọn nạp múc đục nguyên khí làm một vòng cặn <code>String</code> lọt tụp lợp khạc nắp hợp lệ xóp pụp cút vặc múp uạp.</p>
+
+<p>Thứ hai, chúng ta có thể thấy trong hàm <code>add</code> nó sẽ nhận quyền sở hữu của <code>self</code> vì <code>self</code> không có trỏ <code>&amp;</code>. Cho nên biến <code>s1</code> trong Listing 8-18 sẽ bị move vào <code>add</code> và xí xóa sau khi hoàn thành. Biểu thức <code>let s3 = s1 + &amp;s2;</code> hệt như là copy lại mọi thứ nhưng thực tế là nó lấy quyền của <code>s1</code>, cho chép cái tham chiếu lấy copy lõi <code>s2</code> rồi trả lại kết quả.</p>
+
+<h3 id="indexing-into-strings">Cắt Nghĩa Lọc Bóc Cắm Trỏ Truy Xuất Một String Bằng Index</h3>
+<p>Trong vô số đám nhánh ngôn ngữ lập trình mâm vọc ngoài kia, đi gõ tọc vạch lệnh cắm truy múc truy tung đến phần riêng rẽ phân khúc ký tự thảy đọt vác từ bụng chuỗi vọc vòng sợi chuỗi là nứa tháp điệu vụ páp kíp bóp cút thông kẹp điệp sịp mập uạp qệp... (Ngừng ngáo đá).</p>
+
+<p>Tuy nhiên trong Rust bạn sẽ luôn gặp lỗi do nó lưu UTF-8. Nếu muốn lấy theo vị trí Range bạn có thể thực hiện theo Slice <code>[]</code>.</p>
+<p>Ta sẽ qua phần kế tiếp.</p>
+
+  <div class="page-nav bottom"><a href="ch08-01-vectors.html">← Trước</a><a href="ch08-03-hash-maps.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

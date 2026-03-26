@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chuyển sang Web Server Đa luồng — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html" class="active">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 21 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch21-01-single-threaded.html">← Trước</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Tiếp →</a></div>
+
+  <h2>Chuyển từ Server Đơn luồng sang Đa luồng</h2>
+
+  <p>Hiện tại, server xử lý từng request theo thứ tự tuần tự — tức là nó sẽ không xử lý kết nối thứ hai cho đến khi kết nối đầu tiên hoàn thành. Nếu server nhận ngày càng nhiều request, kiểu xử lý tuần tự này sẽ ngày càng kém hiệu quả. Nếu server nhận một request cần nhiều thời gian xử lý, các request tiếp theo sẽ phải chờ đợi cho đến khi request dài đó hoàn thành, dù chúng có thể được xử lý nhanh. Chúng ta cần khắc phục điều này, nhưng trước tiên hãy quan sát vấn đề trong thực tế.</p>
+
+  <h3>Mô phỏng một Request Chậm</h3>
+
+  <p>Chúng ta sẽ xem làm thế nào một request xử lý chậm có thể ảnh hưởng đến các request khác trong server hiện tại. Listing 21-10 triển khai xử lý request đến <em>/sleep</em> với phản hồi chậm giả lập — server sẽ ngủ 5 giây trước khi phản hồi.</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/main.rs</span>
+    <pre><code class="language-rust">use std::{
+    fs,
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
+};
+// --snip--
+
+fn handle_connection(mut stream: TcpStream) {
+    // --snip--
+
+    let (status_line, filename) = match &amp;request_line[..] {
+        "GET / HTTP/1.1" =&gt; ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" =&gt; {
+            thread::sleep(Duration::from_secs(5));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ =&gt; ("HTTP/1.1 404 NOT FOUND", "404.html"),
+    };
+
+    // --snip--
+}</code></pre>
+    <figcaption>Listing 21-10: Mô phỏng request chậm bằng cách sleep 5 giây</figcaption>
+  </figure>
+
+  <p>Chúng ta đã chuyển từ <code>if</code> sang <code>match</code> vì bây giờ có ba trường hợp. Chúng ta cần khớp tường minh trên một slice của <code>request_line</code> để pattern-match với các chuỗi literal; <code>match</code> không tự động tham chiếu và giải tham chiếu như phương thức equality.</p>
+
+  <p>Nhánh đầu tiên giống với khối <code>if</code> từ Listing 21-9. Nhánh thứ hai khớp với request đến <em>/sleep</em>. Khi nhận được request đó, server sẽ sleep 5 giây trước khi trả về trang HTML thành công. Nhánh thứ ba giống với khối <code>else</code> từ Listing 21-9.</p>
+
+  <p>Bạn có thể thấy server của chúng ta còn khá thô sơ: các thư viện thực tế sẽ xử lý việc nhận biết nhiều request theo cách ngắn gọn hơn nhiều!</p>
+
+  <p>Chạy server với <code>cargo run</code>. Sau đó mở hai tab trình duyệt: một cho <em>http://127.0.0.1:7878</em> và một cho <em>http://127.0.0.1:7878/sleep</em>. Nếu bạn truy cập <em>/</em> vài lần, nó phản hồi nhanh. Nhưng nếu truy cập <em>/sleep</em> rồi tải <em>/</em>, bạn sẽ thấy <em>/</em> phải chờ đến khi <code>sleep</code> ngủ đủ 5 giây mới tải được.</p>
+
+  <p>Có nhiều kỹ thuật để tránh tình trạng các request bị chặn sau một request chậm, bao gồm sử dụng async như chúng ta đã làm trong Chương 17; kỹ thuật chúng ta sẽ triển khai là <strong>thread pool</strong>.</p>
+
+  <h3>Cải thiện Throughput với Thread Pool</h3>
+
+  <p>Một <em>thread pool</em> là một nhóm các thread đã được tạo sẵn và đang chờ để xử lý tác vụ. Khi chương trình nhận được tác vụ mới, nó giao tác vụ đó cho một thread trong pool, thread đó sẽ xử lý. Các thread còn lại trong pool sẵn sàng xử lý các tác vụ khác đến trong khi thread đầu đang bận. Khi thread đầu hoàn thành, nó quay lại pool của các thread rảnh, sẵn sàng nhận tác vụ mới. Thread pool cho phép xử lý các kết nối đồng thời, tăng throughput của server.</p>
+
+  <p>Chúng ta sẽ giới hạn số thread trong pool để bảo vệ khỏi tấn công DoS; nếu chương trình tạo thread mới cho mỗi request đến, ai đó thực hiện 10 triệu request có thể gây hỗn loạn bằng cách sử dụng hết tài nguyên server và làm tê liệt quá trình xử lý.</p>
+
+  <p>Thay vì tạo thread không giới hạn, chúng ta sẽ có một số lượng thread cố định đang chờ trong pool. Các request đến được gửi vào pool để xử lý. Pool sẽ duy trì một hàng đợi các request đến. Mỗi thread trong pool sẽ lấy một request từ hàng đợi này, xử lý nó, rồi lấy request tiếp theo. Với thiết kế này, chúng ta có thể xử lý đồng thời tối đa <em>N</em> request, trong đó <em>N</em> là số thread. Nếu mỗi thread đang phản hồi một request chạy lâu, các request tiếp theo vẫn có thể bị ứ đọng trong hàng đợi, nhưng chúng ta đã tăng số lượng request chạy lâu có thể xử lý trước khi đạt điểm đó.</p>
+
+  <!-- SVG Diagram: Thread Pool Architecture -->
+  <div style="margin: 2rem 0; text-align: center;">
+    <svg width="700" height="320" viewBox="0 0 700 320" style="max-width:100%; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+      <!-- Title -->
+      <text x="350" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Kiến trúc Thread Pool</text>
+
+      <!-- Client -->
+      <rect x="20" y="50" width="100" height="50" rx="8" fill="#4a90d9" stroke="#2c6faa" stroke-width="1.5"/>
+      <text x="70" y="78" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Client</text>
+      <text x="70" y="93" text-anchor="middle" fill="white" font-size="10">Requests</text>
+
+      <!-- Arrow: Client -> Channel -->
+      <line x1="120" y1="75" x2="195" y2="75" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="157" y="68" text-anchor="middle" font-size="10" fill="#555">send</text>
+
+      <!-- Channel/Queue box -->
+      <rect x="195" y="50" width="120" height="50" rx="8" fill="#f5a623" stroke="#c8811a" stroke-width="1.5"/>
+      <text x="255" y="74" text-anchor="middle" fill="white" font-size="12" font-weight="bold">mpsc Channel</text>
+      <text x="255" y="90" text-anchor="middle" fill="white" font-size="10">(Job Queue)</text>
+
+      <!-- ThreadPool box -->
+      <rect x="160" y="140" width="390" height="150" rx="10" fill="#e8f4e8" stroke="#4caf50" stroke-width="2"/>
+      <text x="355" y="162" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32">ThreadPool</text>
+
+      <!-- Workers -->
+      <rect x="180" y="175" width="80" height="45" rx="6" fill="#81c784" stroke="#388e3c" stroke-width="1.5"/>
+      <text x="220" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Worker 0</text>
+      <text x="220" y="212" text-anchor="middle" fill="white" font-size="10">thread</text>
+
+      <rect x="280" y="175" width="80" height="45" rx="6" fill="#81c784" stroke="#388e3c" stroke-width="1.5"/>
+      <text x="320" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Worker 1</text>
+      <text x="320" y="212" text-anchor="middle" fill="white" font-size="10">thread</text>
+
+      <rect x="380" y="175" width="80" height="45" rx="6" fill="#81c784" stroke="#388e3c" stroke-width="1.5"/>
+      <text x="420" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Worker 2</text>
+      <text x="420" y="212" text-anchor="middle" fill="white" font-size="10">thread</text>
+
+      <rect x="480" y="175" width="80" height="45" rx="6" fill="#81c784" stroke="#388e3c" stroke-width="1.5"/>
+      <text x="520" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Worker 3</text>
+      <text x="520" y="212" text-anchor="middle" fill="white" font-size="10">thread</text>
+
+      <!-- Arc<Mutex<Receiver>> shared -->
+      <rect x="285" y="235" width="140" height="35" rx="6" fill="#ce93d8" stroke="#8e24aa" stroke-width="1.5"/>
+      <text x="355" y="252" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Arc&lt;Mutex&lt;Receiver&gt;&gt;</text>
+      <text x="355" y="265" text-anchor="middle" fill="white" font-size="9">chia sẻ giữa các Worker</text>
+
+      <!-- Arrow: Channel -> Workers -->
+      <line x1="255" y1="100" x2="255" y2="168" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Arrow head definition -->
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+        </marker>
+      </defs>
+
+      <!-- Response arrow -->
+      <line x1="560" y1="197" x2="620" y2="197" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <rect x="620" y="175" width="65" height="45" rx="6" fill="#ef5350" stroke="#c62828" stroke-width="1.5"/>
+      <text x="652" y="196" text-anchor="middle" fill="white" font-size="10" font-weight="bold">TCP</text>
+      <text x="652" y="210" text-anchor="middle" fill="white" font-size="10">Response</text>
+    </svg>
+  </div>
+
+  <p>Kỹ thuật này chỉ là một trong nhiều cách cải thiện throughput của web server. Các tùy chọn khác gồm mô hình fork/join, mô hình async I/O đơn luồng và mô hình async I/O đa luồng. Với ngôn ngữ cấp thấp như Rust, tất cả các tùy chọn này đều khả thi.</p>
+
+  <p>Trước khi bắt đầu triển khai thread pool, hãy nói về giao diện sử dụng pool trông như thế nào. Khi thiết kế code, việc viết giao diện client trước có thể giúp định hướng thiết kế. Viết API theo cách bạn muốn gọi nó, rồi triển khai chức năng bên trong cấu trúc đó.</p>
+
+  <p>Tương tự như cách chúng ta sử dụng test-driven development trong Chương 12, chúng ta sẽ dùng compiler-driven development ở đây. Chúng ta sẽ viết code gọi các hàm mong muốn, rồi xem lỗi từ compiler để xác định cần thay đổi gì tiếp theo.</p>
+
+  <h4>Tạo Thread cho Mỗi Request</h4>
+
+  <p>Đầu tiên, hãy khám phá code có thể trông như thế nào nếu nó tạo thread mới cho mỗi kết nối. Như đã đề cập, đây không phải kế hoạch cuối cùng do vấn đề tạo thread không giới hạn, nhưng đây là điểm khởi đầu để có server đa luồng hoạt động. Listing 21-11 hiển thị các thay đổi với <code>main</code> để tạo thread mới xử lý mỗi stream trong vòng lặp <code>for</code>.</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/main.rs</span>
+    <pre><code class="language-rust">fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        thread::spawn(|| {
+            handle_connection(stream);
+        });
+    }
+}</code></pre>
+    <figcaption>Listing 21-11: Tạo thread mới cho mỗi stream</figcaption>
+  </figure>
+
+  <p>Như bạn đã học trong Chương 16, <code>thread::spawn</code> sẽ tạo thread mới và chạy code trong closure trong thread đó. Nếu chạy code này và tải <em>/sleep</em> trong trình duyệt, rồi <em>/</em> trong thêm hai tab, bạn sẽ thấy các request đến <em>/</em> không cần chờ <em>/sleep</em> hoàn thành. Tuy nhiên, điều này cuối cùng sẽ làm quá tải hệ thống vì bạn đang tạo thread mới không giới hạn.</p>
+
+  <h4>Tạo Số Lượng Thread Hữu Hạn</h4>
+
+  <p>Chúng ta muốn thread pool hoạt động theo cách quen thuộc để việc chuyển đổi từ threads sang thread pool không yêu cầu thay đổi nhiều code. Listing 21-12 hiển thị giao diện giả thuyết cho struct <code>ThreadPool</code> mà chúng ta muốn dùng thay cho <code>thread::spawn</code>.</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/main.rs</span>
+    <pre><code class="language-rust ignore">fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let pool = ThreadPool::new(4);
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        pool.execute(|| {
+            handle_connection(stream);
+        });
+    }
+}</code></pre>
+    <figcaption>Listing 21-12: Giao diện <code>ThreadPool</code> lý tưởng của chúng ta</figcaption>
+  </figure>
+
+  <p>Chúng ta dùng <code>ThreadPool::new</code> để tạo thread pool mới với số thread có thể cấu hình, trong trường hợp này là bốn. Sau đó, trong vòng lặp <code>for</code>, <code>pool.execute</code> có giao diện tương tự <code>thread::spawn</code> — nó nhận closure mà pool sẽ chạy cho mỗi stream. Chúng ta cần triển khai <code>pool.execute</code> để nó nhận closure và giao cho thread trong pool thực thi.</p>
+
+  <h4>Xây dựng <code>ThreadPool</code> bằng Compiler-Driven Development</h4>
+
+  <p>Thực hiện các thay đổi trong Listing 21-12 vào <em>src/main.rs</em>, rồi dùng lỗi compiler từ <code>cargo check</code> để dẫn dắt quá trình phát triển. Lỗi đầu tiên:</p>
+
+  <pre><code class="language-console">$ cargo check
+error[E0433]: failed to resolve: use of undeclared type `ThreadPool`
+  --&gt; src/main.rs:11:16
+   |
+11 |     let pool = ThreadPool::new(4);
+   |                ^^^^^^^^^^ use of undeclared type `ThreadPool`</code></pre>
+
+  <p>Tạo file <em>src/lib.rs</em> với định nghĩa đơn giản nhất của struct <code>ThreadPool</code>:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">pub struct ThreadPool;</code></pre>
+  </figure>
+
+  <p>Sau đó thêm dòng sau vào đầu <em>src/main.rs</em> để đưa <code>ThreadPool</code> vào scope từ crate library:</p>
+
+  <pre><code class="language-rust">use hello::ThreadPool;</code></pre>
+
+  <p>Tiếp tục với <code>cargo check</code>, lỗi tiếp theo yêu cầu tạo hàm <code>new</code> có liên kết với <code>ThreadPool</code>. Chúng ta cũng biết <code>new</code> cần có một tham số chấp nhận <code>4</code> và trả về instance <code>ThreadPool</code>:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">pub struct ThreadPool;
+
+impl ThreadPool {
+    pub fn new(size: usize) -&gt; ThreadPool {
+        ThreadPool
+    }
+}</code></pre>
+  </figure>
+
+  <p>Chúng ta chọn <code>usize</code> làm kiểu cho tham số <code>size</code> vì số thread âm không có nghĩa. Chúng ta cũng biết sẽ dùng <code>4</code> này như số phần tử trong một collection, đó chính là mục đích của kiểu <code>usize</code>.</p>
+
+  <p>Lỗi tiếp theo yêu cầu method <code>execute</code>. Triển khai hàm <code>execute</code> nhận closure làm tham số. Từ Chương 13, chúng ta có thể nhận closure làm tham số với ba trait khác nhau: <code>Fn</code>, <code>FnMut</code>, và <code>FnOnce</code>. Chúng ta sẽ dùng <code>FnOnce</code> vì thread sẽ chỉ thực thi closure của request một lần:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">impl ThreadPool {
+    // --snip--
+    pub fn execute&lt;F&gt;(&amp;self, f: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+    }
+}</code></pre>
+  </figure>
+
+  <h4>Xác thực Số Thread trong <code>new</code></h4>
+
+  <p>Chúng ta sẽ thêm code kiểm tra rằng <code>size</code> lớn hơn không trước khi trả về instance <code>ThreadPool</code>, và chương trình sẽ panic nếu nhận giá trị không bằng cách dùng macro <code>assert!</code>:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">impl ThreadPool {
+    /// Tạo ThreadPool mới.
+    ///
+    /// `size` là số thread trong pool.
+    ///
+    /// # Panics
+    ///
+    /// Hàm `new` sẽ panic nếu size bằng không.
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        ThreadPool
+    }
+    // --snip--
+}</code></pre>
+    <figcaption>Listing 21-13: Triển khai <code>ThreadPool::new</code> để panic nếu <code>size</code> bằng không</figcaption>
+  </figure>
+
+  <h4>Tạo Không gian Lưu trữ Threads</h4>
+
+  <p>Sau khi có cách kiểm tra số thread hợp lệ, chúng ta có thể tạo các thread và lưu chúng trong struct <code>ThreadPool</code>. Hàm <code>thread::spawn</code> trả về <code>JoinHandle&lt;T&gt;</code>. Listing 21-14 hiển thị cách thay đổi định nghĩa <code>ThreadPool</code> để giữ vector <code>thread::JoinHandle&lt;()&gt;</code>:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust ignore">use std::thread;
+
+pub struct ThreadPool {
+    threads: Vec&lt;thread::JoinHandle&lt;()&gt;&gt;,
+}
+
+impl ThreadPool {
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let mut threads = Vec::with_capacity(size);
+
+        for _ in 0..size {
+            // tạo các thread và lưu vào vector
+        }
+
+        ThreadPool { threads }
+    }
+    // --snip--
+}</code></pre>
+    <figcaption>Listing 21-14: Tạo vector cho <code>ThreadPool</code> để giữ các thread</figcaption>
+  </figure>
+
+  <h4>Gửi Code từ <code>ThreadPool</code> sang Thread</h4>
+
+  <p>Chúng ta sẽ triển khai bằng cách giới thiệu cấu trúc dữ liệu mới <em>Worker</em> giữa <code>ThreadPool</code> và các thread. <code>Worker</code> lấy code cần chạy và thực thi trong thread của nó.</p>
+
+  <p>Thay vì lưu vector <code>JoinHandle&lt;()&gt;</code> trong thread pool, chúng ta sẽ lưu các instance của struct <code>Worker</code>. Mỗi <code>Worker</code> lưu một <code>JoinHandle&lt;()&gt;</code>. Chúng ta cũng sẽ cho mỗi <code>Worker</code> một <code>id</code> để phân biệt khi log hoặc debug:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">use std::thread;
+
+pub struct ThreadPool {
+    workers: Vec&lt;Worker&gt;,
+}
+
+impl ThreadPool {
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let mut workers = Vec::with_capacity(size);
+
+        for id in 0..size {
+            workers.push(Worker::new(id));
+        }
+
+        ThreadPool { workers }
+    }
+    // --snip--
+}
+
+struct Worker {
+    id: usize,
+    thread: thread::JoinHandle&lt;()&gt;,
+}
+
+impl Worker {
+    fn new(id: usize) -&gt; Worker {
+        let thread = thread::spawn(|| {});
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption>Listing 21-15: Sửa <code>ThreadPool</code> để giữ các instance <code>Worker</code></figcaption>
+  </figure>
+
+  <h4>Gửi Request đến Threads qua Channel</h4>
+
+  <p>Các channel mà chúng ta đã học ở Chương 16 — một cách đơn giản để giao tiếp giữa hai thread — rất phù hợp cho trường hợp này. Chúng ta sẽ dùng channel như hàng đợi job, và <code>execute</code> sẽ gửi job từ <code>ThreadPool</code> đến các <code>Worker</code>. Đây là kế hoạch:</p>
+
+  <ol>
+    <li><code>ThreadPool</code> sẽ tạo channel và giữ sender.</li>
+    <li>Mỗi <code>Worker</code> sẽ giữ receiver.</li>
+    <li>Tạo struct <code>Job</code> mới để giữ các closure muốn gửi qua channel.</li>
+    <li>Method <code>execute</code> sẽ gửi job qua sender.</li>
+    <li>Trong thread của nó, <code>Worker</code> sẽ lặp qua receiver và thực thi closure của các job nhận được.</li>
+  </ol>
+
+  <p>Vì muốn nhiều <code>Worker</code> cùng chia sẻ một receiver, chúng ta cần dùng <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>. <code>Arc</code> cho phép nhiều <code>Worker</code> sở hữu receiver, và <code>Mutex</code> đảm bảo chỉ một <code>Worker</code> lấy job từ receiver tại một thời điểm:</p>
+
+  <figure class="listing">
+    <span class="file-name">Filename: src/lib.rs</span>
+    <pre><code class="language-rust">use std::{
+    sync::{Arc, Mutex, mpsc},
+    thread,
+};
+
+pub struct ThreadPool {
+    workers: Vec&lt;Worker&gt;,
+    sender: mpsc::Sender&lt;Job&gt;,
+}
+
+type Job = Box&lt;dyn FnOnce() + Send + 'static&gt;;
+
+impl ThreadPool {
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let (sender, receiver) = mpsc::channel();
+
+        let receiver = Arc::new(Mutex::new(receiver));
+
+        let mut workers = Vec::with_capacity(size);
+
+        for id in 0..size {
+            workers.push(Worker::new(id, Arc::clone(&amp;receiver)));
+        }
+
+        ThreadPool { workers, sender }
+    }
+
+    pub fn execute&lt;F&gt;(&amp;self, f: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+        let job = Box::new(f);
+
+        self.sender.send(job).unwrap();
+    }
+}
+
+struct Worker {
+    id: usize,
+    thread: thread::JoinHandle&lt;()&gt;,
+}
+
+impl Worker {
+    fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
+        let thread = thread::spawn(move || {
+            loop {
+                let job = receiver.lock().unwrap().recv().unwrap();
+
+                println!("Worker {id} got a job; executing.");
+
+                job();
+            }
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption>Listing 21-20: Code hoàn chỉnh của thread pool</figcaption>
+  </figure>
+
+  <p>Chúng ta đã hoàn thành! Trong <code>ThreadPool::new</code>, chúng ta đặt receiver trong <code>Arc</code> và <code>Mutex</code>. Với mỗi <code>Worker</code> mới, chúng ta clone <code>Arc</code> để tăng reference count để các <code>Worker</code> có thể chia sẻ quyền sở hữu receiver.</p>
+
+  <p>Với những thay đổi này, code biên dịch thành công! Hãy thử chạy server và xem nó xử lý đồng thời như thế nào — truy cập <em>/sleep</em> trong một tab và <em>/</em> trong tab khác, bạn sẽ thấy <em>/</em> không cần chờ <em>/sleep</em> nữa.</p>
+
+  <blockquote>
+    <p><strong>Lưu ý:</strong> Nếu hệ điều hành không thể tạo thread do thiếu tài nguyên hệ thống, <code>thread::spawn</code> sẽ panic. Trong triển khai thread pool sản xuất, bạn có thể muốn dùng <a href="https://doc.rust-lang.org/std/thread/struct.Builder.html"><code>std::thread::Builder</code></a> và method <code>spawn</code> trả về <code>Result</code> thay thế.</p>
+  </blockquote>
+
+  <div class="page-nav bottom"><a href="ch21-01-single-threaded.html">← Trước</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

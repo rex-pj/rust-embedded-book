@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OOP là gì? — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tá»•ng quan</a>
+      <a href="appendix-01-keywords.html">A â€” Keywords</a>
+      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
+      <a href="appendix-05-editions.html">E â€” Editions</a>
+      <a href="appendix-06-translation.html">F â€” Translations</a>
+      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <span class="chapter-title">Chương 18 — OOP là gì?</span>
+  </div>
+  <div id="main">
+
+    <h2 id="characteristics-of-object-oriented-languages">Đặc điểm của các ngôn ngữ hướng đối tượng</h2>
+
+    <p>Cộng đồng lập trình chưa có sự đồng thuận về những tính năng nào một ngôn ngữ phải có để được coi là hướng đối tượng. Rust chịu ảnh hưởng từ nhiều mô hình lập trình, bao gồm cả OOP; ví dụ, chúng ta đã khám phá các tính năng đến từ lập trình hàm trong Chương 13. Có thể nói, các ngôn ngữ OOP chia sẻ một số đặc điểm chung — cụ thể là các đối tượng, encapsulation và inheritance. Hãy xem từng đặc điểm đó có nghĩa gì và liệu Rust có hỗ trợ chúng không.</p>
+
+    <h3 id="objects-contain-data-and-behavior">Đối tượng chứa dữ liệu và hành vi</h3>
+
+    <p>Cuốn sách <em>Design Patterns: Elements of Reusable Object-Oriented Software</em> của Erich Gamma, Richard Helm, Ralph Johnson, và John Vlissides (Addison-Wesley, 1994), thường được gọi là cuốn sách <em>Gang of Four</em>, là một catalog các design pattern hướng đối tượng. Nó định nghĩa OOP theo cách này:</p>
+
+    <div class="note">
+      <span class="callout-icon">📌</span>
+      <div class="callout-body">
+        <div class="callout-title">Trích dẫn</div>
+        <p>Các chương trình hướng đối tượng được tạo thành từ các đối tượng. Một <strong>đối tượng</strong> đóng gói cả dữ liệu lẫn các thủ tục thao tác trên dữ liệu đó. Các thủ tục thường được gọi là <strong>phương thức</strong> hay <strong>thao tác</strong>.</p>
+      </div>
+    </div>
+
+    <p>Với định nghĩa này, Rust là hướng đối tượng: Struct và enum có dữ liệu, và các khối <code>impl</code> cung cấp phương thức trên struct và enum. Mặc dù struct và enum kèm phương thức không được gọi là <em>đối tượng</em>, nhưng chúng cung cấp cùng chức năng, theo định nghĩa về đối tượng của Gang of Four.</p>
+
+    <h3 id="encapsulation-that-hides-implementation-details">Encapsulation ẩn chi tiết triển khai</h3>
+
+    <p>Một khía cạnh khác thường gắn liền với OOP là ý tưởng về <em>encapsulation</em>, tức là chi tiết triển khai của một đối tượng không thể truy cập bởi code sử dụng đối tượng đó. Do đó, cách duy nhất để tương tác với đối tượng là thông qua API công khai của nó; code sử dụng đối tượng không nên can thiệp vào nội bộ để thay đổi dữ liệu hay hành vi trực tiếp. Điều này cho phép lập trình viên thay đổi và tái cấu trúc nội bộ đối tượng mà không cần sửa đổi code sử dụng nó.</p>
+
+    <p>Chúng ta đã thảo luận về cách kiểm soát encapsulation trong Chương 7: Chúng ta có thể dùng từ khóa <code>pub</code> để quyết định những module, kiểu, hàm và phương thức nào là public, còn tất cả những thứ khác mặc định là private. Ví dụ, chúng ta có thể định nghĩa struct <code>AveragedCollection</code> có một trường chứa vector các giá trị <code>i32</code>. Struct cũng có thể có một trường chứa giá trị trung bình của các phần tử trong vector, nghĩa là giá trị trung bình không cần tính lại mỗi khi cần đến. Nói cách khác, <code>AveragedCollection</code> sẽ cache giá trị trung bình đã tính cho chúng ta. Listing 18-1 có định nghĩa của struct <code>AveragedCollection</code>.</p>
+
+    <figure class="listing" id="listing-18-1">
+      <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust">pub struct AveragedCollection {
+    list: Vec&lt;i32&gt;,
+    average: f64,
+}</code></pre>
+      <figcaption>Listing 18-1: Struct <code>AveragedCollection</code> duy trì một danh sách số nguyên và giá trị trung bình của các phần tử trong collection</figcaption>
+    </figure>
+
+    <p>Struct được đánh dấu <code>pub</code> để code khác có thể sử dụng, nhưng các trường bên trong vẫn là private. Điều này quan trọng vì chúng ta muốn đảm bảo rằng bất cứ khi nào một giá trị được thêm vào hoặc xóa khỏi danh sách, giá trị trung bình cũng được cập nhật. Chúng ta làm điều này bằng cách triển khai các phương thức <code>add</code>, <code>remove</code>, và <code>average</code> trên struct, như trong Listing 18-2.</p>
+
+    <figure class="listing" id="listing-18-2">
+      <span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust">impl AveragedCollection {
+    pub fn add(&amp;mut self, value: i32) {
+        self.list.push(value);
+        self.update_average();
+    }
+
+    pub fn remove(&amp;mut self) -&gt; Option&lt;i32&gt; {
+        let result = self.list.pop();
+        match result {
+            Some(value) =&gt; {
+                self.update_average();
+                Some(value)
+            }
+            None =&gt; None,
+        }
+    }
+
+    pub fn average(&amp;self) -&gt; f64 {
+        self.average
+    }
+
+    fn update_average(&amp;mut self) {
+        let total: i32 = self.list.iter().sum();
+        self.average = total as f64 / self.list.len() as f64;
+    }
+}</code></pre>
+      <figcaption>Listing 18-2: Triển khai các phương thức public <code>add</code>, <code>remove</code>, và <code>average</code> trên <code>AveragedCollection</code></figcaption>
+    </figure>
+
+    <p>Các phương thức public <code>add</code>, <code>remove</code>, và <code>average</code> là những cách duy nhất để truy cập hay sửa đổi dữ liệu trong một instance của <code>AveragedCollection</code>. Khi một phần tử được thêm vào <code>list</code> qua phương thức <code>add</code> hoặc xóa qua <code>remove</code>, mỗi triển khai đều gọi phương thức private <code>update_average</code> để cập nhật trường <code>average</code>.</p>
+
+    <p>Chúng ta để <code>list</code> và <code>average</code> là private để không có cách nào để code bên ngoài thêm hoặc xóa phần tử trực tiếp vào trường <code>list</code>; nếu không, trường <code>average</code> có thể mất đồng bộ khi <code>list</code> thay đổi. Phương thức <code>average</code> trả về giá trị trong trường <code>average</code>, cho phép code bên ngoài đọc <code>average</code> nhưng không thể sửa đổi.</p>
+
+    <p>Vì chúng ta đã encapsulate chi tiết triển khai của struct <code>AveragedCollection</code>, chúng ta có thể dễ dàng thay đổi các khía cạnh như cấu trúc dữ liệu trong tương lai. Ví dụ, chúng ta có thể dùng <code>HashSet&lt;i32&gt;</code> thay vì <code>Vec&lt;i32&gt;</code> cho trường <code>list</code>. Miễn là signature của các phương thức public <code>add</code>, <code>remove</code>, và <code>average</code> không thay đổi, code sử dụng <code>AveragedCollection</code> không cần sửa đổi gì.</p>
+
+    <p>Nếu encapsulation là yêu cầu để một ngôn ngữ được coi là hướng đối tượng, thì Rust đáp ứng yêu cầu đó. Tùy chọn sử dụng <code>pub</code> hay không cho các phần khác nhau của code cho phép encapsulate chi tiết triển khai.</p>
+
+    <h3 id="inheritance-as-a-type-system-and-as-code-sharing">Inheritance như một hệ thống kiểu và chia sẻ code</h3>
+
+    <p><em>Inheritance</em> là cơ chế mà một đối tượng có thể kế thừa các phần tử từ định nghĩa của đối tượng khác, từ đó có được dữ liệu và hành vi của đối tượng cha mà không cần định nghĩa lại.</p>
+
+    <p>Nếu một ngôn ngữ phải có inheritance để là hướng đối tượng, thì Rust không phải ngôn ngữ đó. Không có cách nào để định nghĩa struct kế thừa các trường và triển khai phương thức của struct cha mà không dùng macro.</p>
+
+    <p>Tuy nhiên, nếu bạn quen dùng inheritance trong bộ công cụ lập trình của mình, bạn có thể dùng các giải pháp khác trong Rust, tùy thuộc vào lý do bạn muốn dùng inheritance.</p>
+
+    <p>Bạn thường chọn inheritance vì hai lý do chính. Một là để tái sử dụng code: Bạn có thể triển khai một hành vi cụ thể cho một kiểu, và inheritance cho phép bạn tái sử dụng triển khai đó cho kiểu khác. Bạn có thể làm điều này ở mức độ nhất định trong Rust bằng cách dùng triển khai phương thức mặc định của trait, như đã thấy trong Listing 10-14 khi chúng ta thêm triển khai mặc định của phương thức <code>summarize</code> vào trait <code>Summary</code>. Bất kỳ kiểu nào triển khai trait <code>Summary</code> đều có phương thức <code>summarize</code> mà không cần thêm code nào. Điều này tương tự như lớp cha có triển khai một phương thức và lớp con kế thừa cũng có phương thức đó. Chúng ta cũng có thể override triển khai mặc định của <code>summarize</code> khi triển khai trait <code>Summary</code>, tương tự như lớp con override triển khai phương thức kế thừa từ lớp cha.</p>
+
+    <p>Lý do khác để dùng inheritance liên quan đến hệ thống kiểu: để cho phép kiểu con được sử dụng ở những nơi giống như kiểu cha. Đây còn được gọi là <em>polymorphism</em>, có nghĩa là bạn có thể thay thế nhiều đối tượng cho nhau khi chạy nếu chúng chia sẻ một số đặc điểm nhất định.</p>
+
+    <div class="note">
+      <span class="callout-icon">📌</span>
+      <div class="callout-body">
+        <div class="callout-title">Polymorphism</div>
+        <p>Với nhiều người, polymorphism đồng nghĩa với inheritance. Nhưng thực ra đó là một khái niệm tổng quát hơn, chỉ code có thể làm việc với dữ liệu của nhiều kiểu. Với inheritance, các kiểu đó thường là các lớp con.</p>
+        <p>Rust thay vào đó sử dụng generics để trừu tượng hóa trên các kiểu có thể khác nhau, và trait bounds để áp đặt ràng buộc về những gì các kiểu đó phải cung cấp. Đôi khi điều này được gọi là <em>bounded parametric polymorphism</em>.</p>
+      </div>
+    </div>
+
+    <p>Rust đã chọn một bộ đánh đổi khác bằng cách không cung cấp inheritance. Inheritance thường có nguy cơ chia sẻ nhiều code hơn mức cần thiết. Các lớp con không phải lúc nào cũng nên chia sẻ tất cả đặc điểm của lớp cha, nhưng với inheritance thì chúng sẽ như vậy. Điều này có thể làm cho thiết kế chương trình kém linh hoạt hơn. Nó cũng tạo ra khả năng gọi các phương thức trên lớp con mà không có ý nghĩa hoặc gây lỗi vì phương thức đó không áp dụng cho lớp con. Thêm vào đó, một số ngôn ngữ chỉ cho phép <em>single inheritance</em> (tức là một lớp con chỉ có thể kế thừa từ một lớp), điều này càng hạn chế tính linh hoạt của thiết kế chương trình.</p>
+
+    <p>Vì những lý do này, Rust chọn cách tiếp cận khác là sử dụng trait objects thay vì inheritance để đạt được polymorphism khi chạy. Hãy xem cách trait objects hoạt động.</p>
+
+    <nav class="chapter-nav">
+      <a href="ch18-00-oop.html" class="prev">← Tổng quan OOP</a>
+      <a href="ch18-02-trait-objects.html" class="next">Trait Objects →</a>
+    </nav>
+  </div>
+</div>
+
+<script src="nav.js"></script>
+</body>
+</html>

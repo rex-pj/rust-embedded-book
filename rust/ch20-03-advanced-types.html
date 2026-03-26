@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Types - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html">Advanced Traits</a><a href="ch20-03-advanced-types.html" class="active">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 20 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch20-02-advanced-traits.html">← Trước</a><a href="ch20-04-advanced-functions-and-closures.html">Tiếp →</a></div>
+
+<h2 id="advanced-types"><a class="header" href="#advanced-types">Advanced Types</a></h2>
+<p>Hệ thống kiểu của Rust có một số tính năng mà ta đã đề cập rải rác nhưng chưa thảo luận chi tiết. Ta sẽ bắt đầu bằng việc nói về newtypes nói chung — tại sao chúng lại hữu ích như một kiểu. Sau đó ta sẽ chuyển sang type aliases, một tính năng tương tự newtype nhưng có ngữ nghĩa hơi khác. Ta cũng sẽ bàn về kiểu <code>!</code> và dynamically sized types.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-the-newtype-pattern-for-type-safety-and-abstraction"></a></p>
+<h3 id="type-safety-and-abstraction-with-the-newtype-pattern"><a class="header" href="#type-safety-and-abstraction-with-the-newtype-pattern">Type Safety và Abstraction với Newtype Pattern</a></h3>
+<p>Phần này giả định bạn đã đọc phần trước <a href="ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern">"Implementing External Traits with the Newtype Pattern"</a>. Newtype pattern còn hữu ích cho những tác vụ khác ngoài những gì ta đã thảo luận, bao gồm việc kiểm tra tĩnh rằng các giá trị không bao giờ bị nhầm lẫn với nhau và chỉ định đơn vị của một giá trị. Bạn đã thấy ví dụ dùng newtype để chỉ định đơn vị trong Listing 20-16: Nhớ lại rằng các struct <code>Millimeters</code> và <code>Meters</code> bọc giá trị <code>u32</code> trong newtype. Nếu ta viết một hàm với tham số kiểu <code>Millimeters</code>, ta sẽ không thể compile chương trình nếu vô tình cố gọi hàm đó với giá trị kiểu <code>Meters</code> hay <code>u32</code> thông thường.</p>
+<p>Ta cũng có thể dùng newtype pattern để trừu tượng hóa một số chi tiết implementation của kiểu: Kiểu mới có thể expose public API khác với API của kiểu private bên trong.</p>
+<p>Newtypes cũng có thể ẩn đi implementation nội bộ. Ví dụ, ta có thể cung cấp kiểu <code>People</code> bọc một <code>HashMap&lt;i32, String&gt;</code> lưu trữ ID của người liên kết với tên của họ. Code sử dụng <code>People</code> sẽ chỉ tương tác với public API ta cung cấp, chẳng hạn như method để thêm tên vào collection <code>People</code>; code đó không cần biết ta gán <code>i32</code> ID cho tên bên trong. Newtype pattern là cách nhẹ nhàng để đạt được encapsulation nhằm ẩn đi chi tiết implementation, điều ta đã thảo luận trong phần <a href="ch18-01-what-is-oo.html#encapsulation-that-hides-implementation-details">"Encapsulation that Hides Implementation Details"</a> ở Chương 18.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="creating-type-synonyms-with-type-aliases"></a></p>
+<h3 id="type-synonyms-and-type-aliases"><a class="header" href="#type-synonyms-and-type-aliases">Type Synonyms và Type Aliases</a></h3>
+<p>Rust cung cấp khả năng khai báo <em>type alias</em> để đặt tên khác cho một kiểu đã có. Ta dùng từ khóa <code>type</code> cho việc này. Ví dụ, ta có thể tạo alias <code>Kilometers</code> cho <code>i32</code> như sau:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Kilometers = i32;
+<span class="boring">
+</span><span class="boring">    let x: i32 = 5;
+</span><span class="boring">    let y: Kilometers = 5;
+</span><span class="boring">
+</span><span class="boring">    println!("x + y = {}", x + y);
+</span><span class="boring">}</span></code></pre>
+<p>Giờ alias <code>Kilometers</code> là <em>synonym</em> (tên đồng nghĩa) của <code>i32</code>; không giống với các kiểu <code>Millimeters</code> và <code>Meters</code> ta tạo trong Listing 20-16, <code>Kilometers</code> không phải là một kiểu mới tách biệt. Các giá trị có kiểu <code>Kilometers</code> sẽ được xử lý giống hệt như giá trị kiểu <code>i32</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Kilometers = i32;
+
+    let x: i32 = 5;
+    let y: Kilometers = 5;
+
+    println!("x + y = {}", x + y);
+<span class="boring">}</span></code></pre>
+<p>Vì <code>Kilometers</code> và <code>i32</code> là cùng một kiểu, ta có thể cộng giá trị của cả hai loại và truyền giá trị <code>Kilometers</code> vào hàm nhận tham số <code>i32</code>. Tuy nhiên, với cách này ta không nhận được lợi ích kiểm tra kiểu từ newtype pattern đã thảo luận trước đó. Nói cách khác, nếu ta nhầm lẫn giá trị <code>Kilometers</code> và <code>i32</code> ở đâu đó, compiler sẽ không báo lỗi.</p>
+<p>Use case chính của type synonym là giảm sự lặp lại. Ví dụ, ta có thể có kiểu dài như sau:</p>
+<pre><code class="language-rust ignore">Box&lt;dyn Fn() + Send + 'static&gt;</code></pre>
+<p>Viết kiểu dài dòng này trong signature của hàm và các type annotation khắp nơi trong code có thể rất mệt mỏi và dễ nhầm. Hãy tưởng tượng một dự án đầy code như trong Listing 20-25.</p>
+<figure class="listing" id="listing-20-25">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let f: Box&lt;dyn Fn() + Send + 'static&gt; = Box::new(|| println!("hi"));
+
+    fn takes_long_type(f: Box&lt;dyn Fn() + Send + 'static&gt;) {
+        // --snip--
+    }
+
+    fn returns_long_type() -&gt; Box&lt;dyn Fn() + Send + 'static&gt; {
+        // --snip--
+<span class="boring">        Box::new(|| ())
+</span>    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-25">Listing 20-25</a>: Dùng một kiểu dài ở nhiều nơi</figcaption>
+</figure>
+<p>Type alias giúp code này dễ quản lý hơn bằng cách giảm sự lặp lại. Trong Listing 20-26, ta đã giới thiệu alias tên <code>Thunk</code> cho kiểu dài dòng và có thể thay thế tất cả lần dùng kiểu đó bằng alias ngắn hơn <code>Thunk</code>.</p>
+<figure class="listing" id="listing-20-26">
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Thunk = Box&lt;dyn Fn() + Send + 'static&gt;;
+
+    let f: Thunk = Box::new(|| println!("hi"));
+
+    fn takes_long_type(f: Thunk) {
+        // --snip--
+    }
+
+    fn returns_long_type() -&gt; Thunk {
+        // --snip--
+<span class="boring">        Box::new(|| ())
+</span>    }
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-26">Listing 20-26</a>: Giới thiệu type alias <code>Thunk</code> để giảm lặp lại</figcaption>
+</figure>
+<p>Code này dễ đọc và viết hơn nhiều! Đặt tên có ý nghĩa cho type alias cũng giúp truyền đạt mục đích của bạn (<em>thunk</em> là từ chỉ code sẽ được thực thi vào lúc sau, nên đây là tên thích hợp cho closure được lưu trữ).</p>
+<p>Type aliases cũng thường được dùng với kiểu <code>Result&lt;T, E&gt;</code> để giảm lặp lại. Hãy xem module <code>std::io</code> trong thư viện chuẩn. Các thao tác I/O thường trả về <code>Result&lt;T, E&gt;</code> để xử lý trường hợp thao tác thất bại. Thư viện có struct <code>std::io::Error</code> đại diện cho tất cả các lỗi I/O có thể xảy ra. Nhiều hàm trong <code>std::io</code> trả về <code>Result&lt;T, E&gt;</code> với <code>E</code> là <code>std::io::Error</code>, chẳng hạn như các hàm trong trait <code>Write</code>:</p>
+<pre><code class="language-rust noplayground">use std::fmt;
+use std::io::Error;
+
+pub trait Write {
+    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize, Error&gt;;
+    fn flush(&amp;mut self) -&gt; Result&lt;(), Error&gt;;
+
+    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;(), Error&gt;;
+    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;(), Error&gt;;
+}</code></pre>
+<p><code>Result&lt;..., Error&gt;</code> xuất hiện rất nhiều. Do đó, <code>std::io</code> có khai báo type alias như sau:</p>
+<pre><code class="language-rust noplayground"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span>type Result&lt;T&gt; = std::result::Result&lt;T, std::io::Error&gt;;
+<span class="boring">
+</span><span class="boring">pub trait Write {
+</span><span class="boring">    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize&gt;;
+</span><span class="boring">    fn flush(&amp;mut self) -&gt; Result&lt;()&gt;;
+</span><span class="boring">
+</span><span class="boring">    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
+</span><span class="boring">    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
+</span><span class="boring">}</span></code></pre>
+<p>Vì khai báo này nằm trong module <code>std::io</code>, ta có thể dùng alias đầy đủ <code>std::io::Result&lt;T&gt;</code> — tức <code>Result&lt;T, E&gt;</code> với <code>E</code> là <code>std::io::Error</code>. Signature của các hàm trong trait <code>Write</code> trở nên gọn hơn như sau:</p>
+<pre><code class="language-rust noplayground"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span><span class="boring">type Result&lt;T&gt; = std::result::Result&lt;T, std::io::Error&gt;;
+</span><span class="boring">
+</span>pub trait Write {
+    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize&gt;;
+    fn flush(&amp;mut self) -&gt; Result&lt;()&gt;;
+
+    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
+    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
+}</code></pre>
+<p>Type alias giúp ích theo hai cách: nó làm cho code dễ viết hơn <em>và</em> cho ta một interface nhất quán trên toàn bộ <code>std::io</code>. Vì nó là alias, nó vẫn chỉ là <code>Result&lt;T, E&gt;</code>, nghĩa là ta có thể dùng tất cả các method hoạt động trên <code>Result&lt;T, E&gt;</code> với nó, bao gồm cú pháp đặc biệt như toán tử <code>?</code>.</p>
+<h3 id="the-never-type-that-never-returns"><a class="header" href="#the-never-type-that-never-returns">Kiểu Never — Không Bao Giờ Trả Về</a></h3>
+<p>Rust có một kiểu đặc biệt tên <code>!</code>, được gọi trong lý thuyết kiểu là <em>empty type</em> (kiểu rỗng) vì nó không có giá trị nào. Ta thích gọi nó là <em>never type</em> vì nó đứng ở vị trí kiểu trả về khi một hàm sẽ không bao giờ trả về. Đây là một ví dụ:</p>
+<pre><code class="language-rust noplayground">fn bar() -&gt; ! {
+    // --snip--
+<span class="boring">    panic!();
+</span>}</code></pre>
+<p>Code này được đọc là "hàm <code>bar</code> trả về never." Các hàm không bao giờ trả về được gọi là <em>diverging functions</em>. Ta không thể tạo ra giá trị của kiểu <code>!</code>, vì vậy <code>bar</code> không bao giờ có thể trả về được.</p>
+<p>Nhưng kiểu mà bạn không bao giờ tạo ra giá trị thì có ích gì? Hãy nhớ lại code từ Listing 2-5, một phần của trò chơi đoán số; ta đã tái hiện một đoạn ở đây trong Listing 20-27.</p>
+<figure class="listing" id="listing-20-27">
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    loop {
+</span><span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        // --snip--
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span>        let guess: u32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+<span class="boring">
+</span><span class="boring">        println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">        // --snip--
+</span><span class="boring">
+</span><span class="boring">        match guess.cmp(&amp;secret_number) {
+</span><span class="boring">            Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">            Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">            Ordering::Equal =&gt; {
+</span><span class="boring">                println!("You win!");
+</span><span class="boring">                break;
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-20-27">Listing 20-27</a>: Một <code>match</code> với arm kết thúc bằng <code>continue</code></figcaption>
+</figure>
+<p>Lúc đó, ta đã bỏ qua một số chi tiết trong code này. Trong phần <a href="ch06-02-match.html#the-match-control-flow-construct">"The <code>match</code> Control Flow Construct"</a> ở Chương 6, ta đã thảo luận rằng các arm của <code>match</code> phải trả về cùng một kiểu. Vậy ví dụ, code sau đây không hoạt động:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let guess = "3";
+</span>    let guess = match guess.trim().parse() {
+        Ok(_) =&gt; 5,
+        Err(_) =&gt; "hello",
+    };
+<span class="boring">}</span></code></pre>
+<p>Kiểu của <code>guess</code> trong code này sẽ phải vừa là integer vừa là string, nhưng Rust yêu cầu <code>guess</code> chỉ có một kiểu. Vậy <code>continue</code> trả về gì? Làm thế nào ta có thể trả về <code>u32</code> từ một arm và có arm khác kết thúc bằng <code>continue</code> trong Listing 20-27?</p>
+<p>Như bạn có thể đoán, <code>continue</code> có giá trị <code>!</code>. Nghĩa là, khi Rust tính kiểu của <code>guess</code>, nó nhìn vào cả hai arm — arm đầu với giá trị <code>u32</code> và arm sau với giá trị <code>!</code>. Vì <code>!</code> không bao giờ có giá trị, Rust quyết định kiểu của <code>guess</code> là <code>u32</code>.</p>
+<p>Cách diễn đạt chính thức hành vi này là các expression có kiểu <code>!</code> có thể được ép buộc thành bất kỳ kiểu nào khác. Ta được phép kết thúc arm <code>match</code> bằng <code>continue</code> vì <code>continue</code> không trả về giá trị; thay vào đó, nó đưa control trở lại đầu vòng lặp, vì vậy trong trường hợp <code>Err</code>, ta không bao giờ gán giá trị cho <code>guess</code>.</p>
+<p>Never type cũng hữu ích với macro <code>panic!</code>. Hãy nhớ lại hàm <code>unwrap</code> mà ta gọi trên các giá trị <code>Option&lt;T&gt;</code> để lấy ra giá trị hoặc panic với định nghĩa này:</p>
+<pre><code class="language-rust ignore"><span class="boring">enum Option&lt;T&gt; {
+</span><span class="boring">    Some(T),
+</span><span class="boring">    None,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">use crate::Option::*;
+</span><span class="boring">
+</span>impl&lt;T&gt; Option&lt;T&gt; {
+    pub fn unwrap(self) -&gt; T {
+        match self {
+            Some(val) =&gt; val,
+            None =&gt; panic!("called `Option::unwrap()` on a `None` value"),
+        }
+    }
+}</code></pre>
+<p>Trong code này, điều tương tự xảy ra như trong <code>match</code> ở Listing 20-27: Rust thấy <code>val</code> có kiểu <code>T</code> và <code>panic!</code> có kiểu <code>!</code>, vì vậy kết quả của biểu thức <code>match</code> tổng thể là <code>T</code>. Code này hoạt động vì <code>panic!</code> không tạo ra giá trị; nó kết thúc chương trình. Trong trường hợp <code>None</code>, ta sẽ không trả về giá trị từ <code>unwrap</code>, vì vậy code này hợp lệ.</p>
+<p>Một biểu thức cuối cùng có kiểu <code>!</code> là vòng lặp loop:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span>    print!("forever ");
+
+    loop {
+        print!("and ever ");
+    }
+<span class="boring">}</span></code></pre>
+<p>Ở đây, vòng lặp không bao giờ kết thúc, vì vậy <code>!</code> là giá trị của biểu thức. Tuy nhiên, điều này sẽ không đúng nếu ta thêm <code>break</code>, vì vòng lặp sẽ kết thúc khi đến lệnh <code>break</code>.</p>
+<h3 id="dynamically-sized-types-and-the-sized-trait"><a class="header" href="#dynamically-sized-types-and-the-sized-trait">Dynamically Sized Types và Trait <code>Sized</code></a></h3>
+<p>Rust cần biết một số chi tiết về các kiểu của nó, chẳng hạn như cần bao nhiêu bộ nhớ để cấp phát cho một giá trị của một kiểu cụ thể. Điều này khiến một góc trong hệ thống kiểu của nó hơi khó hiểu lúc đầu: khái niệm về <em>dynamically sized types</em>. Đôi khi được gọi là <em>DSTs</em> hay <em>unsized types</em>, các kiểu này cho phép ta viết code sử dụng các giá trị mà kích thước của chúng chỉ có thể biết vào lúc runtime.</p>
+<p>Hãy đào sâu vào chi tiết của một dynamically sized type gọi là <code>str</code>, mà ta đã dùng xuyên suốt cuốn sách. Đúng vậy, không phải <code>&amp;str</code>, mà là <code>str</code> đứng một mình, là DST. Trong nhiều trường hợp, chẳng hạn khi lưu trữ văn bản người dùng nhập vào, ta không thể biết chuỗi dài bao nhiêu cho đến lúc runtime. Điều đó có nghĩa là ta không thể tạo biến kiểu <code>str</code>, cũng không thể nhận tham số kiểu <code>str</code>. Hãy xem code sau, nó không hoạt động:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1: str = "Hello there!";
+    let s2: str = "How's it going?";
+<span class="boring">}</span></code></pre>
+<p>Rust cần biết cần bao nhiêu bộ nhớ để cấp phát cho bất kỳ giá trị nào của một kiểu cụ thể, và tất cả giá trị của một kiểu phải dùng cùng một lượng bộ nhớ. Nếu Rust cho phép ta viết code này, hai giá trị <code>str</code> này sẽ cần chiếm cùng một lượng không gian. Nhưng chúng có độ dài khác nhau: <code>s1</code> cần 12 byte và <code>s2</code> cần 15 byte. Đó là lý do tại sao không thể tạo biến giữ dynamically sized type.</p>
+<p>Vậy phải làm gì? Trong trường hợp này, bạn đã biết câu trả lời: Ta làm cho kiểu của <code>s1</code> và <code>s2</code> là string slice (<code>&amp;str</code>) thay vì <code>str</code>. Hãy nhớ lại từ phần <a href="ch04-03-slices.html#string-slices">"String Slices"</a> ở Chương 4 rằng cấu trúc dữ liệu slice chỉ lưu trữ vị trí bắt đầu và độ dài của slice. Vì vậy, mặc dù <code>&amp;T</code> là một giá trị đơn lưu trữ địa chỉ bộ nhớ nơi <code>T</code> nằm, một string slice là <em>hai</em> giá trị: địa chỉ của <code>str</code> và độ dài của nó. Như vậy, ta có thể biết kích thước của một giá trị string slice tại compile time: Nó gấp đôi độ dài của <code>usize</code>. Tức là, ta luôn biết kích thước của string slice, bất kể chuỗi nó trỏ đến dài bao nhiêu. Tổng quát, đây là cách dynamically sized types được dùng trong Rust: Chúng có thêm một mẩu metadata lưu trữ kích thước của thông tin động. Quy tắc vàng của dynamically sized types là ta phải luôn đặt giá trị của dynamically sized types sau một con trỏ nào đó.</p>
+<p>Ta có thể kết hợp <code>str</code> với tất cả các loại con trỏ: ví dụ, <code>Box&lt;str&gt;</code> hay <code>Rc&lt;str&gt;</code>. Thực ra, bạn đã thấy điều này trước đây nhưng với dynamically sized type khác: traits. Mọi trait đều là dynamically sized type mà ta có thể tham chiếu bằng cách dùng tên của trait. Trong phần <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">"Using Trait Objects to Abstract over Shared Behavior"</a> ở Chương 18, ta đã đề cập rằng để dùng trait như trait objects, ta phải đặt chúng sau một con trỏ, chẳng hạn <code>&amp;dyn Trait</code> hay <code>Box&lt;dyn Trait&gt;</code> (<code>Rc&lt;dyn Trait&gt;</code> cũng được).</p>
+<p>Để làm việc với DSTs, Rust cung cấp trait <code>Sized</code> để xác định xem kích thước của một kiểu có được biết tại compile time hay không. Trait này được tự động implement cho mọi thứ có kích thước biết tại compile time. Ngoài ra, Rust ngầm thêm một bound trên <code>Sized</code> vào mọi generic function. Nghĩa là, một định nghĩa generic function như sau:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T&gt;(t: T) {
+    // --snip--
+}</code></pre>
+<p>thực ra được xử lý như thể ta đã viết:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T: Sized&gt;(t: T) {
+    // --snip--
+}</code></pre>
+<p>Theo mặc định, generic functions chỉ hoạt động với các kiểu có kích thước biết tại compile time. Tuy nhiên, bạn có thể dùng cú pháp đặc biệt sau để nới lỏng ràng buộc này:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T: ?Sized&gt;(t: &amp;T) {
+    // --snip--
+}</code></pre>
+<p>Trait bound trên <code>?Sized</code> có nghĩa là "<code>T</code> có thể có hoặc không có <code>Sized</code>," và ký hiệu này ghi đè mặc định rằng generic types phải có kích thước biết tại compile time. Cú pháp <code>?Trait</code> với ý nghĩa này chỉ có sẵn cho <code>Sized</code>, không áp dụng cho các trait khác.</p>
+<p>Cũng lưu ý rằng ta đã đổi kiểu của tham số <code>t</code> từ <code>T</code> thành <code>&amp;T</code>. Vì kiểu có thể không phải <code>Sized</code>, ta cần dùng nó sau một loại con trỏ nào đó. Trong trường hợp này, ta chọn một reference.</p>
+<p>Tiếp theo, ta sẽ nói về functions và closures!</p>
+
+  <div class="page-nav bottom"><a href="ch20-02-advanced-traits.html">← Trước</a><a href="ch20-04-advanced-functions-and-closures.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargo Workspaces - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html" class="active">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html">Advanced Traits</a><a href="ch20-03-advanced-types.html">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 14 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch14-02-publishing-to-crates-io.html">← Trước</a><a href="ch14-04-installing-binaries.html">Tiếp →</a></div>
+
+  <h2 id="cargo-workspaces"><a class="header" href="#cargo-workspaces">Cargo Workspaces</a></h2>
+<p>Ở Chương 12, chúng ta đã xây dựng một package gồm cả binary crate lẫn library crate. Khi project phát triển, bạn có thể thấy library crate ngày càng phình to và muốn tách package ra thành nhiều library crate hơn. Cargo cung cấp một tính năng gọi là <em>workspaces</em> để giúp quản lý nhiều package liên quan được phát triển song song.</p>
+<h3 id="creating-a-workspace"><a class="header" href="#creating-a-workspace">Tạo một Workspace</a></h3>
+<p>Một <em>workspace</em> là tập hợp các package cùng chia sẻ một file <em>Cargo.lock</em> và thư mục output chung. Hãy cùng tạo một project dùng workspace — chúng ta sẽ dùng code đơn giản để tập trung vào cấu trúc của workspace. Có nhiều cách tổ chức workspace khác nhau, ở đây chúng ta sẽ trình bày một cách phổ biến. Workspace của chúng ta sẽ gồm một binary và hai library. Binary sẽ cung cấp chức năng chính và phụ thuộc vào hai library. Một library cung cấp hàm <code>add_one</code> và library kia cung cấp hàm <code>add_two</code>. Ba crate này sẽ thuộc cùng một workspace. Hãy bắt đầu bằng cách tạo thư mục mới cho workspace:</p>
+<pre><code class="language-console">$ mkdir add
+$ cd add
+</code></pre>
+<p>Tiếp theo, trong thư mục <em>add</em>, chúng ta tạo file <em>Cargo.toml</em> để cấu hình toàn bộ workspace. File này sẽ không có phần <code>[package]</code>. Thay vào đó, nó bắt đầu bằng phần <code>[workspace]</code> cho phép chúng ta thêm các thành viên vào workspace. Chúng ta cũng chỉ định dùng phiên bản mới nhất của thuật toán resolver của Cargo bằng cách đặt giá trị <code>resolver</code> là <code>"3"</code>:</p>
+<p><span class="filename">Tên file: Cargo.toml</span></p>
+<pre><code class="language-toml">[workspace]
+resolver = "3"
+</code></pre>
+<p>Tiếp theo, chúng ta tạo binary crate <code>adder</code> bằng cách chạy <code>cargo new</code> trong thư mục <em>add</em>:</p>
+<pre><code class="language-console">$ cargo new adder
+     Created binary (application) `adder` package
+      Adding `adder` as member of workspace at `file:///projects/add`
+</code></pre>
+<p>Chạy <code>cargo new</code> bên trong một workspace cũng tự động thêm package vừa tạo vào key <code>members</code> trong phần <code>[workspace]</code> của file <em>Cargo.toml</em> workspace, như thế này:</p>
+<pre><code class="language-toml">[workspace]
+resolver = "3"
+members = ["adder"]
+</code></pre>
+<p>Lúc này, chúng ta có thể build workspace bằng cách chạy <code>cargo build</code>. Các file trong thư mục <em>add</em> của bạn trông như thế này:</p>
+<pre><code class="language-text">├── Cargo.lock
+├── Cargo.toml
+├── adder
+│   ├── Cargo.toml
+│   └── src
+│       └── main.rs
+└── target
+</code></pre>
+<p>Workspace có một thư mục <em>target</em> duy nhất ở cấp cao nhất để chứa các artifact được compile; package <code>adder</code> không có thư mục <em>target</em> riêng. Thậm chí nếu chúng ta chạy <code>cargo build</code> từ bên trong thư mục <em>adder</em>, các artifact vẫn sẽ nằm trong <em>add/target</em> chứ không phải <em>add/adder/target</em>. Cargo tổ chức thư mục <em>target</em> như vậy trong workspace vì các crate trong workspace được thiết kế để phụ thuộc lẫn nhau. Nếu mỗi crate có thư mục <em>target</em> riêng, mỗi crate sẽ phải recompile tất cả các crate khác trong workspace để đặt artifact vào thư mục <em>target</em> của mình. Bằng cách chia sẻ một thư mục <em>target</em> duy nhất, các crate có thể tránh việc rebuild không cần thiết.</p>
+<h3 id="creating-the-second-package-in-the-workspace"><a class="header" href="#creating-the-second-package-in-the-workspace">Tạo Package Thứ Hai trong Workspace</a></h3>
+<p>Tiếp theo, hãy tạo một member package khác trong workspace và đặt tên là <code>add_one</code>. Tạo library crate mới tên <code>add_one</code>:</p>
+<pre><code class="language-console">$ cargo new add_one --lib
+     Created library `add_one` package
+      Adding `add_one` as member of workspace at `file:///projects/add`
+</code></pre>
+<p>File <em>Cargo.toml</em> cấp cao nhất giờ sẽ chứa đường dẫn <em>add_one</em> trong danh sách <code>members</code>:</p>
+<p><span class="filename">Tên file: Cargo.toml</span></p>
+<pre><code class="language-toml">[workspace]
+resolver = "3"
+members = ["adder", "add_one"]
+</code></pre>
+<p>Thư mục <em>add</em> của bạn giờ có các thư mục và file như sau:</p>
+<pre><code class="language-text">├── Cargo.lock
+├── Cargo.toml
+├── add_one
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs
+├── adder
+│   ├── Cargo.toml
+│   └── src
+│       └── main.rs
+└── target
+</code></pre>
+<p>Trong file <em>add_one/src/lib.rs</em>, hãy thêm hàm <code>add_one</code>:</p>
+<p><span class="filename">Tên file: add_one/src/lib.rs</span></p>
+<pre><code class="language-rust noplayground">pub fn add_one(x: i32) -&gt; i32 {
+    x + 1
+}</code></pre>
+<p>Bây giờ chúng ta có thể cho package <code>adder</code> (binary) phụ thuộc vào package <code>add_one</code> (library). Đầu tiên, chúng ta cần thêm path dependency vào <code>add_one</code> trong file <em>adder/Cargo.toml</em>.</p>
+<p><span class="filename">Tên file: adder/Cargo.toml</span></p>
+<pre><code class="language-toml">[dependencies]
+add_one = { path = "../add_one" }
+</code></pre>
+<p>Cargo không tự giả định rằng các crate trong workspace sẽ phụ thuộc nhau, vì vậy chúng ta cần khai báo rõ ràng các mối quan hệ dependency.</p>
+<p>Tiếp theo, hãy dùng hàm <code>add_one</code> (từ crate <code>add_one</code>) trong crate <code>adder</code>. Mở file <em>adder/src/main.rs</em> và sửa hàm <code>main</code> để gọi hàm <code>add_one</code>, như trong Listing 14-7.</p>
+<figure class="listing" id="listing-14-7">
+<span class="file-name">Tên file: adder/src/main.rs</span>
+<pre><code class="language-rust ignore">fn main() {
+    let num = 10;
+    println!("Hello, world! {num} plus one is {}!", add_one::add_one(num));
+}</code></pre>
+<figcaption><a href="#listing-14-7">Listing 14-7</a>: Dùng library crate <code>add_one</code> từ crate <code>adder</code></figcaption>
+</figure>
+<p>Hãy build workspace bằng cách chạy <code>cargo build</code> trong thư mục <em>add</em> cấp cao nhất!</p>
+<pre><code class="language-console">$ cargo build
+   Compiling add_one v0.1.0 (file:///projects/add/add_one)
+   Compiling adder v0.1.0 (file:///projects/add/adder)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
+</code></pre>
+<p>Để chạy binary crate từ thư mục <em>add</em>, chúng ta có thể chỉ định package nào trong workspace cần chạy bằng argument <code>-p</code> và tên package với <code>cargo run</code>:</p>
+<pre><code class="language-console">$ cargo run -p adder
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder`
+Hello, world! 10 plus one is 11!
+</code></pre>
+<p>Lệnh này chạy code trong <em>adder/src/main.rs</em>, vốn phụ thuộc vào crate <code>add_one</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="depending-on-an-external-package-in-a-workspace"></a></p>
+<h3 id="depending-on-an-external-package"><a class="header" href="#depending-on-an-external-package">Phụ thuộc vào Package Bên Ngoài</a></h3>
+<p>Lưu ý rằng workspace chỉ có một file <em>Cargo.lock</em> ở cấp cao nhất, thay vì có một <em>Cargo.lock</em> trong thư mục của mỗi crate. Điều này đảm bảo rằng tất cả các crate đang dùng cùng một phiên bản của mọi dependency. Nếu chúng ta thêm package <code>rand</code> vào file <em>adder/Cargo.toml</em> và <em>add_one/Cargo.toml</em>, Cargo sẽ resolve cả hai về một phiên bản duy nhất của <code>rand</code> và ghi lại trong file <em>Cargo.lock</em> duy nhất đó. Việc tất cả các crate trong workspace dùng cùng dependency đảm bảo chúng luôn tương thích với nhau. Hãy thêm crate <code>rand</code> vào phần <code>[dependencies]</code> trong file <em>add_one/Cargo.toml</em> để có thể dùng <code>rand</code> trong crate <code>add_one</code>:</p>
+<p><span class="filename">Tên file: add_one/Cargo.toml</span></p>
+<pre><code class="language-toml">[dependencies]
+rand = "0.8.5"
+</code></pre>
+<p>Bây giờ chúng ta có thể thêm <code>use rand;</code> vào file <em>add_one/src/lib.rs</em>, và build toàn bộ workspace bằng cách chạy <code>cargo build</code> trong thư mục <em>add</em> sẽ tải về và compile crate <code>rand</code>. Chúng ta sẽ nhận được một cảnh báo vì chúng ta không thực sự dùng <code>rand</code> mà chúng ta đã đưa vào scope:</p>
+<pre><code class="language-console">$ cargo build
+    Updating crates.io index
+  Downloaded rand v0.8.5
+   --snip--
+   Compiling rand v0.8.5
+   Compiling add_one v0.1.0 (file:///projects/add/add_one)
+warning: unused import: `rand`
+ --&gt; add_one/src/lib.rs:1:5
+  |
+1 | use rand;
+  |     ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `add_one` (lib) generated 1 warning (run `cargo fix --lib -p add_one` to apply 1 suggestion)
+   Compiling adder v0.1.0 (file:///projects/add/adder)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.95s
+</code></pre>
+<p>File <em>Cargo.lock</em> cấp cao nhất giờ chứa thông tin về dependency của <code>add_one</code> với <code>rand</code>. Tuy nhiên, dù <code>rand</code> được dùng ở đâu đó trong workspace, chúng ta vẫn không thể dùng nó trong các crate khác trong workspace trừ khi thêm <code>rand</code> vào file <em>Cargo.toml</em> của chúng. Ví dụ, nếu thêm <code>use rand;</code> vào file <em>adder/src/main.rs</em> của package <code>adder</code>, chúng ta sẽ gặp lỗi:</p>
+<pre><code class="language-console">$ cargo build
+  --snip--
+   Compiling adder v0.1.0 (file:///projects/add/adder)
+error[E0432]: unresolved import `rand`
+ --&gt; adder/src/main.rs:2:5
+  |
+2 | use rand;
+  |     ^^^^ no external crate `rand`
+</code></pre>
+<p>Để khắc phục, hãy chỉnh file <em>Cargo.toml</em> của package <code>adder</code> và chỉ rõ rằng <code>rand</code> cũng là dependency của nó. Build package <code>adder</code> sẽ thêm <code>rand</code> vào danh sách dependency của <code>adder</code> trong <em>Cargo.lock</em>, nhưng sẽ không tải thêm bản copy nào của <code>rand</code>. Cargo đảm bảo rằng mọi crate trong mọi package của workspace dùng package <code>rand</code> sẽ dùng cùng phiên bản, miễn là chúng khai báo các phiên bản tương thích, giúp tiết kiệm dung lượng và đảm bảo các crate trong workspace tương thích với nhau.</p>
+<p>Nếu các crate trong workspace khai báo các phiên bản không tương thích của cùng một dependency, Cargo sẽ resolve từng cái một nhưng vẫn cố gắng resolve ít phiên bản nhất có thể.</p>
+<h3 id="adding-a-test-to-a-workspace"><a class="header" href="#adding-a-test-to-a-workspace">Thêm Test vào Workspace</a></h3>
+<p>Để thêm một cải tiến nữa, hãy thêm test cho hàm <code>add_one::add_one</code> trong crate <code>add_one</code>:</p>
+<p><span class="filename">Tên file: add_one/src/lib.rs</span></p>
+<pre><code class="language-rust noplayground">pub fn add_one(x: i32) -&gt; i32 {
+    x + 1
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(3, add_one(2));
+    }
+}</code></pre>
+<p>Bây giờ hãy chạy <code>cargo test</code> trong thư mục <em>add</em> cấp cao nhất. Chạy <code>cargo test</code> trong một workspace có cấu trúc như này sẽ chạy test cho tất cả các crate trong workspace:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling add_one v0.1.0 (file:///projects/add/add_one)
+   Compiling adder v0.1.0 (file:///projects/add/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (target/debug/deps/add_one-93c49ee75dc46543)
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/adder-3a47283c568d2b6a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests add_one
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+<p>Phần đầu tiên của output cho thấy test <code>it_works</code> trong crate <code>add_one</code> đã pass. Phần tiếp theo cho thấy không có test nào trong crate <code>adder</code>, và phần cuối cùng cho thấy không có documentation test nào trong crate <code>add_one</code>.</p>
+<p>Chúng ta cũng có thể chạy test cho một crate cụ thể trong workspace từ thư mục cấp cao nhất bằng cách dùng flag <code>-p</code> và chỉ định tên crate cần test:</p>
+<pre><code class="language-console">$ cargo test -p add_one
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/add_one-93c49ee75dc46543)
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests add_one
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+<p>Output này cho thấy <code>cargo test</code> chỉ chạy test cho crate <code>add_one</code> và không chạy test của crate <code>adder</code>.</p>
+<p>Nếu bạn xuất bản các crate trong workspace lên <a href="https://crates.io/">crates.io</a>, mỗi crate trong workspace cần được xuất bản riêng biệt. Giống như <code>cargo test</code>, chúng ta có thể xuất bản một crate cụ thể trong workspace bằng flag <code>-p</code> và chỉ định tên crate cần xuất bản.</p>
+<p>Để luyện tập thêm, hãy thêm crate <code>add_two</code> vào workspace này theo cách tương tự như crate <code>add_one</code>!</p>
+<p>Khi project của bạn phát triển, hãy cân nhắc dùng workspace: nó giúp bạn làm việc với các thành phần nhỏ hơn, dễ hiểu hơn thay vì một khối code khổng lồ. Hơn nữa, giữ các crate trong workspace có thể giúp việc phối hợp giữa chúng dễ dàng hơn nếu chúng thường xuyên được thay đổi cùng lúc.</p>
+
+  <div class="page-nav bottom"><a href="ch14-02-publishing-to-crates-io.html">← Trước</a><a href="ch14-04-installing-binaries.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

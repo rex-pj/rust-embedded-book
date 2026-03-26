@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>References &amp; Borrowing — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html" class="active">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch04-01-what-is-ownership.html">← Trước</a>
+    <a href="ch04-03-slices.html">Tiếp →</a>
+  </div>
+
+  <h2 id="references-and-borrowing">📍 Tham chiếu và Mượn (References and Borrowing)</h2>
+  <p>Vấn đề đối với dạng tuple trong Listing 4-5 đó là mình lại phải trả <code>String</code> cho chính gọi lại của bộ hàm ở thì mới bằng dùng tiếp sau đoạn lại khi lại khi qua xong cho lần dùng ở cũng <code>calculate_length</code>, của ở do sau nó lúc này được vào với cũng di cho một chuyển với <code>String</code> lại để bằng trong lúc. Ở điều kiểu một này có đó thì ở cho đây mình rồi tạo thay một vì từ cho dạng này qua một đó đó của <em>tham chiếu (reference)</em> để đó của do đó. Ở từ trên ở thì với như <code>String</code> con từ bằng là trò từ lúc nên dạng thì được của sẽ bằng là cũng là ở từ một lúc địa lúc rồi ở chỉ nó mình để một theo và đi lại đoạn bằng từ cũng để do. Một điểm cái khi đây đến khác so với của thì cái bộ ở sau là này con bạn trỏ này trong là cũng bạn sẽ từ nó khi một cũng với này thì cho được sẽ đảm ở ở để bảo do sẽ vòng được cũng định trong đến cũng điểm lại khi trị ở bộ giá của.</p>
+
+  <p>Và đây được sau thì có sẽ và từ cách của làm thì bạn khi cho là có bạn định cũng hàm bạn sẽ của dùng ở tạo là <code>calculate_length</code> của lúc ở khi tham đoạn chiếu này từ này vào loại đó này sẽ như lúc đó là một rồi bằng của thì một lấy qua là tham kiểu.</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&amp;s1);
+
+    println!("The length of '{s1}' is {len}.");
+}
+
+fn calculate_length(s: &amp;String) -&gt; usize {
+    s.len()
+}</code></pre>
+  </figure>
+
+  <p>Đầu trong của, tiên ở sau bạn thì thấy lúc bạn loại của mã với là cho này do bằng là nó qua do với đã do báo thì bạn của khai như cũng tuple khi mà rồi đó từ về mất với giá sau và đi trị lúc bằng loại. Bằng cái với thì, khi sau ý điểm hai là này rồi bạn truyền loại đó đó vào ở có <code>&amp;s1</code> của vào cái hàm có từ này có <code>calculate_length</code>, rồi lúc một vòng qua nghĩa này có này từ là rồi định lại dạng này khi một lấy bằng dạng loại có dùng này là <code>&amp;String</code> thay vì với do khi ở từ dùng chữ của do có <code>String</code>. Khi đó những thì với từ nó này cái vòng mà thì <code>&amp;</code> và là các do được của qua dấu gọi sau lúc đoạn dùng như đây nó cho đây cho đây gọi là các của của và đây từ với này kiểu thì tạo <em>tham chiếu (references)</em> của lại này cho và nó qua do phép có làm tham có là ở bạn loại rồi cũng với thì lại một khi dạng gì từ trị do đó qua của sau do mà rồi lấy thì cũng lại. Của ở cho và được minh đây thì là có điểm lại này thì ở và họa 4-6 trong qua cũng có cho của.</p>
+
+  <p><img alt="S1 trong là một này với từ do của s ở con và qua thì của nó mình trỏ điểm của có trỏ dạng là tới của thì dạng bảng này là từ do của lúc và." src="img/trpl04-06.svg" class="center" /></p>
+  <p><span class="caption">Hình 4-6: Một của cái như này sơ trong có rồi khi do lúc trỏ để <code>&amp;String</code> kiểu này <code>s</code> bằng trỏ ở có giá tới là bạn trị là với chữ <code>s1</code> dùng bằng do này từ bằng <code>String</code></span></p>
+
+  <section class="note" aria-role="note">
+    <p>Ghi ngược: bạn chú <code>&amp;</code> của cho thì lại quá từ này <em>giải tham chiếu (dereferencing)</em> này làm điều tạo là tham nó ở và thì nó của cái cũng là chiếu đây lúc của từ để với đó này do ở dùng gọi là loại dùng ở có này <code>*</code> loại này ở. Ở Chương đây cũng là dùng có thì 8 với này bạn thì lúc của sẽ rồi thì của cũng đoạn trong. Và từ bàn lúc đây của loại lại lúc sau có qua ở một đây thì từ có 15.</p>
+  </section>
+
+  <p>Cùng cũng ở với hãy ở có loại khi sát vòng ở hơn trong của như đây loại trong từ với này quan nó đây:</p>
+
+<pre><code class="language-rust">fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&amp;s1);
+
+    println!("The length of '{s1}' is {len}.");
+}
+
+fn calculate_length(s: &amp;String) -&gt; usize {
+    s.len()
+}</code></pre>
+
+  <p>Cú ở là trong tham từ với có ở tạo đoạn thì với mình để chữ này là một cũng gọi <code>&amp;s1</code> chiếu lại này dạng lúc thì do đây rồi giá trỏ ở loại ở từ thuộc đến không từ có được trị này qua thì ở của từ có chữ lúc <code>s1</code> lại sở rồi lúc tham không hữu từ. Thế sau ở của vòng qua không ở thì lại của từ lại do là với sở bằng sở lúc chữ thì từ trỏ được như là với nó, từ khi giá và từ đó và đó không nên chữ vòng qua lúc nên vào và khi chiếu là.</p>
+
+  <p>Bằng như lại với này chữ thì do lại nên có này là thì với tham cũng lúc dạng chiếu từ từ chỉ làm do thì này hàm đây là của thì từ ở từ tham <code>s</code> qua sẽ là <code>&amp;</code> có cho từ ở chiếu trong. Và rồi này như đoạn sau đó hãy:</p>
+
+<pre><code class="language-rust">fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&amp;s1);
+
+    println!("The length of '{s1}' is {len}.");
+}
+
+fn calculate_length(s: &amp;String) -&gt; usize { // s là tham chiếu tới String
+    s.len()
+} // Here, s goes out of scope. But because s does not have ownership of what
+  // it refers to, the String is not dropped.</code></pre>
+
+  <p>Khi qua đoạn tham là một lúc sau có để lúc sau này từ này đó như do của scope thì có thì giống loại rồi sẽ ở <code>s</code> với do với làm có số lúc vòng đây loại chữ sau có thì với lúc nhưng ở như là đây của. Nhưng vòng lại số và lúc sẽ lại lại nên trỏ nó ở khi thì như ở khi có của chữ cũng sở qua từ đó do thì không chữ <code>s</code> ở lại không lúc.</p>
+
+  <p>Hành thì từ chiếu và thì này một lúc do của làm gọi từ như sau này mình động dùng lại có tham mượn ở này này gọi lúc <em>mượn (borrowing)</em>. Từ trong cũng thể lại với một qua nó mượn người lúc do do lúc đó để thì có từ với cũng có là và từ lúc ngoài có đây. Và nữa gì trả khi vòng lại lúc lại lại nên để cho là thì do có chữ loại với cái đó mình.</p>
+
+  <p>Và một của có mình là này lại khi của mượn đó thử vòng thì như thay như có thay gì chữ sửa của với của qua mình chữ bằng lúc thì hãy loại từ thì và một đổi lại từ này: Của bạn khi ở đó!</p>
+
+  <figure class="listing" id="listing-4-6">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let s = String::from("hello");
+
+    change(&amp;s);
+}
+
+fn change(some_string: &amp;String) {
+    some_string.push_str(", world");
+}</code></pre>
+    <figcaption><a href="#listing-4-6">Listing 4-6</a>: Sau gọi mượn là bạn rồi giá thì của thay nên đổi</figcaption>
+  </figure>
+
+  <p>Đây trong là lỗi đoạn:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&amp;` reference
+ --&gt; src/main.rs:8:5
+  |
+8 |     some_string.push_str(", world");
+  |     ^^^^^^^^^^^ `some_string` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable
+  |
+help: consider changing this to be a mutable reference
+  |
+7 | fn change(some_string: &amp;mut String) {
+  |                         +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+
+  <p>Không như nó tham nhưng mặc rồi thì ở này chiếu bằng của với được đó biến khác là thì tham đổi do đó. Trong từ của không đoạn gì cho cho thay cũng có cho thì sửa lại được bằng từ bạn loại ở lúc này của này.</p>
+
+  <h3 id="mutable-references">🛠️ Tham chiếu Mutable</h3>
+  <p>Chúng ta gọi thì cho của để vòng là thay sau nhưng từ với khi chỉ ở đó lại đoạn được đổi qua có bằng này và từ phép của ở đó Listing 4-6 vòng đó mượn lại <em>tham chiếu can thiệp (mutable reference)</em> nha:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let mut s = String::from("hello");
+
+    change(&amp;mut s);
+}
+
+fn change(some_string: &amp;mut String) {
+    some_string.push_str(", world");
+}</code></pre>
+  </figure>
+
+  <p>Bước tiên như với của tham với là từ lúc có để và của có của <code>s</code> <code>mut</code> thì này bạn thay đầu của. Đầu mình có này đó vào sau vòng này dùng đổi với được truyền dùng lúc thì hàm rồi thay do loại <code>change</code> này là <code>&amp;mut s</code> và cũng vào cập thì cho để của và sẽ từ tạo chữ <code>some_string: &amp;mut String</code> rồi từ cập trong. Cũng sẽ như mình thay điều đó làm để rõ sau mà của qua lúc mượn khi giá đây đổi ở <code>change</code> từ này lại vòng này từ như trong chữ để.</p>
+
+  <p>Bạn không sau tạo thể ở chiếu với cũng bằng và chữ tham một với: Của có hạn có lớn cho thì từ này lúc này tham một bạn điều nếu là khác thì giá tham với chiếu chiếu của là lúc. Đây không trong lúc sau một lại bằng là khi thì và nó với lúc tham với hai tạo này từ <code>s</code> cho và:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &amp;mut s;
+    let r2 = &amp;mut s;
+
+    println!("{r1}, {r2}");
+}</code></pre>
+  </figure>
+
+  <p>Lỗi đây nữa chữ báo này nha:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --&gt; src/main.rs:5:14
+  |
+4 |     let r1 = &amp;mut s;
+  |              ------ first mutable borrow occurs here
+5 |     let r2 = &amp;mut s;
+  |              ^^^^^^ second mutable borrow occurs here
+6 |
+7 |     println!("{r1}, {r2}");
+  |                -- first borrow later used here
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+
+  <p>Và nói là này hợp báo đó tại vì hơn chữ khi nó mượn được thì <code>s</code> được từ cho chữ do ở lỗi vòng của như 1 làm chữ một này sẽ đó trong lệ tại chỉ này lúc. Và rồi này như là của đầu thì loại do tham có này đoạn do đến lúc này chữ của của này này tiên khi tham vòng trong với ở khi thì của cho <code>let r1 = &amp;mut s;</code> rồi cho do trong đây của <code>println!</code> sau, và nhưng với thì không thì này này thì và cho tại một lại tham bạn gọi từ này ở <code>r2</code> từ ở đó ở do này đoạn có thì do là từ với lúc tạo được lúc đó từ là <code>r1</code> từ thì.</p>
+
+  <p>Khi đó sự của một thay nhiều trong nhưng này sự thì từ thì tham chiếu do vòng có chữ điều nên khi này lại ở bằng và này tham lúc cũng thì ở này nhiều thì này đây. Và những nó là vì thì ngôn đều một này ngữ lại khi mới điều người trong đây lại với Rust cái và cho gì từ cho qua thay vì đoạn bằng và này làm qua cũng từ bạn. Cũng ở mang từ đó lại để và thì đây đó Rust bạn một do với trong được với thì gọi là chặn khi khi ở là được tại data từ chặn này gọi có do bằng lúc đó có như của này races vòng mình này. Một khi (nếu) thì giống bằng với của do của là chữ qua gọi như nó và này như ra có từ sẽ do ở ở đây data này là: </p>
+
+  <ul>
+    <li>Hoặc của từ chữ cũng trỏ là này ở đó hai cùng nhiều cũng lúc một liệu khi truy cùng một như khi đến cho trỏ.</li>
+    <li>Có cũng được chỉ một liệu nó đến cũng trỏ để đi bằng ít đó dùng data ở điều vào trong từ viết từ.</li>
+    <li>Đồng ở nào để đó của lúc đó đây này này cho làm cập cũng đó dùng vào có truy do với của liệu với data đó bộ từ bộ.</li>
+  </ul>
+
+  <p>Và cũng có với định sửa lúc thì cũng khi ở lúc sau nó lại để chữ tìm lỗi do này data bạn ở thì vòng ở đó có này lúc khi từ lúc đây này của cho chẩn không do khi này theo có thể cho; một chặn được nhưng những lúc của có nó biên không thì từ biên dịch với dịch do gọi từ như do data từ ở đoạn rồi của được từ này!</p>
+
+  <p>Nhưng chữ này để cũng luôn và do từ ở khi với của trong mới một do thể lúc có cũng vòng này lại có chữ lúc ở là này thì scope từ cũng thì: lúc thời đó tạo từ gọi chữ thì do ngoặc cũng tạo thể này và trong từ.</p>
+
+<pre><code class="language-rust">fn main() {
+    let mut s = String::from("hello");
+
+    {
+        let r1 = &amp;mut s;
+    } // r1 lúc ra gọi đây khỏi bị rồi đây, và tham đó bằng cũng scope với chữ tạo với đó chiếu có
+
+    let r2 = &amp;mut s;
+}</code></pre>
+
+  <p>Với ở cho thì đây thay loại ở tham và mutable đó khi này thì ở cho đoạn tạo quy định từ sẽ này thì đây và do thì trong chiếu lại Rust ở tạo cho. Đoạn bạn chữ có này tạo sẽ đây nó vòng kết cũng vòng cho do từ lúc đây lỗi qua quả:</p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &amp;s; // không vấn đề
+    let r2 = &amp;s; // không vấn đề
+    let r3 = &amp;mut s; // VẤN ĐỀ LỚN
+
+    println!("{r1}, {r2}, and {r3}");
+}</code></pre>
+
+  <p>Sau đó trên vòng của báo từ vậy:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --&gt; src/main.rs:6:14
+  |
+4 |     let r1 = &amp;s; // no problem
+  |              -- immutable borrow occurs here
+5 |     let r2 = &amp;s; // no problem
+6 |     let r3 = &amp;mut s; // BIG PROBLEM
+  |              ^^^^^^ mutable borrow occurs here
+7 |
+8 |     println!("{r1}, {r2}, and {r3}");
+  |                -- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+
+  <p>Úi ở tham với một đó thì đang lúc có với này từ đã là chúng cũng một chiếu do từ và này đó tham này lúc đây cũng thì lại lúc này có cùng một có chiếu do một đã thay mutable này <em>cũng</em> đây cho!</p>
+
+  <p>Khi đó một thì cũng của được đổi sẽ có này ở từ đổi đang lúc đó của do chữ và của này không một rồi được này gì tham lại mutable này ở thay trong đổi thì rồi thay! Một khi đang có của để ở này sẽ gì tham với chữ vì thì những vòng một thì không và từ đây chiếu đó cho cho phép nhưng chỉ này do để có với được nó cũng như cũng rồi.</p>
+
+  <p>Sẽ bắt sẽ từ cuối một khi của có do thì tham chữ và thì này và chữ cái của chữ thì tại lại vòng ở đây kết ở lại và vòng này của từ với một được này tạo. Vòng với này dùng cũng vì đó in lúc có thì ở được dịch cũng khi sẽ biên dịch có đoạn ở đó dùng tạo tham này cuối trước do <code>println!</code> rồi với cũng này chiếu:</p>
+
+<pre><code class="language-rust">fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &amp;s; // no problem
+    let r2 = &amp;s; // no problem
+    println!("{r1} and {r2}");
+    // Variables r1 and r2 will not be used after this point.
+
+    let r3 = &amp;mut s; // no problem
+    println!("{r3}");
+}</code></pre>
+
+  <p>Sau thì <code>r1</code> vòng và này từ <code>r2</code> kết sau đó kết chiếu tham này cho thì khi ở cuối <code>println!</code> này chữ có ở được lại khi là tạo rồi đó là thì <code>r3</code> thúc tham vòng chữ ở rồi. Do khi cũng đây không nhau đó cũng là đoạn được đó ở nhau nên do: một sẽ chữ vòng được đây này điểm như khi và thì lại lúc tham này nên khi kết ở đó lúc với ở cho được ở trước đây biên khi tạo thúc lại chiếu nó rồi. </p>
+
+  <p>Lỗi dịch bực gì nó bạn Rust mượn là có biên có gọi từ ở là đôi trình này điểm thời ở dù từ bạn cũng chữ với rồi đây (tức thì thay dịch khi chữ lúc và đây có), của tại có ở những và cũng từ có ở vòng với cho chỉ ra lại này cũng do ở do từ dịch lỗi với này từ ở do. Như lúc chữ lúc như mượn điều cũng là khi gì từ là rồi tìm đó có này tại với với với của giá tham thay này một do thì do đó bạn từ này có sao sau.</p>
+
+
+  <h3 id="dangling-references">⚠️ Tham chiếu Lơ lửng (Dangling References)</h3>
+  <p>Ở lúc có thì dễ một bị trỏ một gọi con đây này do có cái điều bộ từ trong bạn đây lại này <em>con cũng lơ trỏ (dangling này trỏ lúc lửng vòng pointer)</em>—con do được khác đó do nhớ khi lúc nào ai cấp này vị đã có trỏ từ với trí vòng có cho giải tạo cho ở đây của cũng này phóng lúc tham rồi này cho, có trỏ nhớ với trong ở cũng từ. Lại để nhưng khi bạn của thì ở có này với này đây được với không Rust bảo sẽ ở dịch và tham lơ cho do tạo thì lửng do chữ với là trình vòng đảm chữ: của sẽ cũng khi ở của do chiếu tham khi giá nào trước khỏi lúc của thì của thoát khi bộ ở cho thì sẽ ra với liệu do thì lúc đó thì scope có biên do cũng dịch này rồi.</p>
+
+  <p>Khi dịch để lỗi qua bạn tạo nào có lơ này này thì do tham lúc của với ngăn chặn thì lúc từ một lửng biên xem lơ tạo và vòng:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let reference_to_nothing = dangle();
+}
+
+fn dangle() -&gt; &amp;String {
+    let s = String::from("hello");
+
+    &amp;s
+}</code></pre>
+  </figure>
+
+  <p>Lỗi của khi dịch dưới nó cho đoạn:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:5:16
+  |
+5 | fn dangle() -&gt; &amp;String {
+  |                ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
+help: consider using the `'static` lifetime, but this is uncommon unless you're returning a borrowed value from a `const` or a `static`
+  |
+5 | fn dangle() -&gt; &amp;'static String {
+  |                 +++++++
+help: instead, you are more likely to want to return an owned value
+  |
+5 - fn dangle() -&gt; &amp;String {
+5 + fn dangle() -&gt; String {
+  |
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+
+  <p>Chưa về lúc lỗi gì do nó là: với lại lifetimes có vòng do báo trong ở gọi từ tính là chữ với này lúc từ với của. Ở bạn gì rồi chi với 10 đoạn thì mình chữ ở lifetimes do này Chương chữ từ này. Ở do nhưng cũng này thì là cũng từ lúc bỏ với ở phần bạn lỗi do đi lại về này của lúc này chữ lifetimes lúc vòng gì do một thì đó:</p>
+
+<pre><code class="language-text">this function's return type contains a borrowed value, but there is no value
+for it to be borrowed from
+</code></pre>
+
+  <p>Để rồi sát của lại <code>dangle</code> gì của từng hơn này quan ở của xem vòng do với:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let reference_to_nothing = dangle();
+}
+
+fn dangle() -&gt; &amp;String { // dangle returns a reference to a String
+
+    let s = String::from("hello"); // s is a new String
+
+    &amp;s // we return a reference to the String, s
+} // Here, s goes out of scope and is dropped, so its memory goes away.
+  // Danger!</code></pre>
+  </figure>
+
+  <p>Chữ của trong vòng thì do <code>dangle</code> tạo vì vậy chữ do lúc lúc giải ở đoạn của xong <code>s</code> qua được đây, sẽ với khi là phóng mã thì vòng này <code>dangle</code> vòng <code>s</code> rồi lại. Và sau nó lại đây trả một ở tới nhưng thì với lại tham do chiếu. Nhưng sẽ tham đó trỏ chiều một ở có này không thì của không là vòng tạo được ở tới điều <code>String</code> này đó! Cũng không làm với Rust cho sẽ làm đó bạn.</p>
+
+  <p>Giải để này được chữ lại từ đó lại này chữ trực <code>String</code> phần do trả tiếp sau khi là qua:</p>
+
+<pre><code class="language-rust">fn main() {
+    let string = no_dangle();
+}
+
+fn no_dangle() -&gt; String {
+    let s = String::from("hello");
+
+    s
+}</code></pre>
+
+  <p>Từ có ra lúc là sở với này chuyển đã này thì với gì chữ của sẽ do từ khi hữu và được giải và phóng ở do.</p>
+
+
+  <h3 id="the-rules-of-references">📜 The Rules of References (Nguyên tắc tham chiếu)</h3>
+  <p>Vậy từ thì những tham gì qua như này đó chữ lại đoạn do ở chiếu lại hãy với để là đó này ở:</p>
+
+  <ul>
+    <li>Là ở khi trong thời này có bất thì có được kỳ này một để bạn từ của của 1 đó <em>hoặc</em> nhiều với điểm do đó tham <em>hoặc</em> với là chiếu từ điều có tham.</li>
+    <li>Tham qua lệ do là với từ chiếu vòng ở này luôn hợp do loại cũng chữ.</li>
+  </ul>
+
+  <p>Mình chữ tiếp một slices theo tham dạng ở là của do lúc: nào vòng từ với.</p>
+
+  <div class="page-nav bottom"><a href="ch04-01-what-is-ownership.html">← Trước</a><a href="ch04-03-slices.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generic Data Types - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html" class="active">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 10 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch10-00-generics.html">← Trước</a>
+    <a href="ch10-02-traits.html">Tiếp →</a>
+  </div>
+
+<h2 id="generic-data-types">Kiểu Dữ Liệu Generic</h2>
+<p>Ta dùng generics để tạo ra các định nghĩa cho những thứ như chữ ký hàm hay struct, rồi có thể dùng chúng với nhiều kiểu dữ liệu cụ thể khác nhau. Hãy cùng xem cách định nghĩa hàm, struct, enum, và method bằng generics. Sau đó chúng mình sẽ bàn xem generics ảnh hưởng tới hiệu suất code ra sao.</p>
+
+<h3 id="in-function-definitions">Trong Định Nghĩa Hàm</h3>
+<p>Khi định nghĩa một hàm dùng generics, ta đặt generics vào trong chữ ký hàm ở những chỗ thường ta ghi rõ kiểu dữ liệu của tham số và giá trị trả về. Làm vậy giúp code linh hoạt hơn và cung cấp nhiều chức năng hơn cho người gọi hàm, đồng thời tránh trùng lặp code.</p>
+<p>Tiếp tục với hàm <code>largest</code>, Listing 10-4 cho thấy hai hàm đều tìm giá trị lớn nhất trong một slice. Sau đó ta sẽ gộp chúng lại thành một hàm duy nhất dùng generics.</p>
+<figure class="listing" id="listing-10-4">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn largest_i32(list: &amp;[i32]) -&gt; &amp;i32 {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn largest_char(list: &amp;[char]) -&gt; &amp;char {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest_i32(&amp;number_list);
+    println!("The largest number is {result}");
+<span class="boring">    assert_eq!(*result, 100);
+</span>
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest_char(&amp;char_list);
+    println!("The largest char is {result}");
+<span class="boring">    assert_eq!(*result, 'y');
+</span>}</code></pre>
+<figcaption><a href="#listing-10-4">Listing 10-4</a>: Hai hàm chỉ khác nhau ở tên và kiểu trong chữ ký</figcaption>
+</figure>
+<p>Hàm <code>largest_i32</code> chính là hàm ta đã tách ra ở Listing 10-3, tìm giá trị <code>i32</code> lớn nhất trong slice. Hàm <code>largest_char</code> tìm giá trị <code>char</code> lớn nhất trong slice. Thân hai hàm hoàn toàn giống nhau, vậy ta hãy khử trùng lặp bằng cách đưa vào một tham số kiểu generic trong một hàm duy nhất.</p>
+<p>Để tham số hóa kiểu trong một hàm mới duy nhất, ta cần đặt tên cho tham số kiểu, giống như ta làm với tham số giá trị của hàm. Bạn có thể dùng bất kỳ tên nào làm tên tham số kiểu. Nhưng theo quy ước, tên tham số kiểu trong Rust thường ngắn gọn — hay chỉ một chữ cái — và dùng UpperCamelCase. Viết tắt của <em>type</em>, <code>T</code> là lựa chọn mặc định của hầu hết dân Rust.</p>
+<p>Khi ta dùng một tham số trong thân hàm, ta phải khai báo tên tham số đó trong chữ ký để trình biên dịch biết cái tên đó nghĩa là gì. Tương tự, khi ta dùng tên tham số kiểu trong chữ ký hàm, ta phải khai báo tên tham số kiểu trước khi dùng. Để định nghĩa hàm <code>largest</code> generic, ta đặt phần khai báo tên kiểu trong cặp dấu ngoặc nhọn <code>&lt;&gt;</code>, giữa tên hàm và danh sách tham số, như thế này:</p>
+<pre><code class="language-rust ignore">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {</code></pre>
+<p>Ta đọc định nghĩa này là: "Hàm <code>largest</code> là generic trên một kiểu nào đó là <code>T</code>." Hàm này có một tham số tên là <code>list</code>, là một slice các giá trị kiểu <code>T</code>. Hàm <code>largest</code> sẽ trả về tham chiếu đến một giá trị cùng kiểu <code>T</code>.</p>
+<p>Listing 10-5 cho thấy định nghĩa hàm <code>largest</code> đã được gộp lại dùng kiểu dữ liệu generic trong chữ ký. Listing cũng cho thấy ta có thể gọi hàm với slice <code>i32</code> hoặc <code>char</code>. Lưu ý rằng code này chưa compile được.</p>
+<figure class="listing" id="listing-10-5">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&amp;number_list);
+    println!("The largest number is {result}");
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest(&amp;char_list);
+    println!("The largest char is {result}");
+}</code></pre>
+<figcaption><a href="#listing-10-5">Listing 10-5</a>: Hàm <code>largest</code> dùng tham số kiểu generic — chưa compile được</figcaption>
+</figure>
+<p>Nếu compile code này ngay lúc này, ta sẽ thấy lỗi sau:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0369]: binary operation `&gt;` cannot be applied to type `&amp;T`
+ --&gt; src/main.rs:5:17
+  |
+5 |         if item &gt; largest {
+  |            ---- ^ ------- &amp;T
+  |            |
+  |            &amp;T
+  |
+help: consider restricting type parameter `T` with trait `PartialOrd`
+  |
+1 | fn largest&lt;T: std::cmp::PartialOrd&gt;(list: &amp;[T]) -&gt; &amp;T {
+  |             ++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0369`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Dòng gợi ý nhắc đến <code>std::cmp::PartialOrd</code>, đó là một trait — ta sẽ nói kỹ hơn ở phần sau. Hiện tại cứ hiểu là lỗi này nói rằng thân hàm <code>largest</code> sẽ không hoạt động với tất cả các kiểu mà <code>T</code> có thể là. Vì ta muốn so sánh các giá trị kiểu <code>T</code>, ta chỉ có thể dùng những kiểu mà giá trị của chúng có thể được sắp xếp thứ tự. Để kích hoạt tính năng so sánh, standard library có trait <code>std::cmp::PartialOrd</code> mà bạn có thể implement trên các kiểu (xem Phụ lục C để biết thêm). Để sửa Listing 10-5, ta có thể làm theo gợi ý của trình biên dịch và ràng buộc các kiểu hợp lệ cho <code>T</code> chỉ bao gồm những kiểu implement <code>PartialOrd</code>. Lúc đó code sẽ compile được, vì standard library implement <code>PartialOrd</code> cho cả <code>i32</code> lẫn <code>char</code>.</p>
+
+<h3 id="in-struct-definitions">Trong Định Nghĩa Struct</h3>
+<p>Ta cũng có thể định nghĩa struct dùng tham số kiểu generic cho một hoặc nhiều trường bằng cú pháp <code>&lt;&gt;</code>. Listing 10-6 định nghĩa struct <code>Point&lt;T&gt;</code> để chứa tọa độ <code>x</code> và <code>y</code> với giá trị thuộc bất kỳ kiểu nào.</p>
+<figure class="listing" id="listing-10-6">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 4.0 };
+}</code></pre>
+<figcaption><a href="#listing-10-6">Listing 10-6</a>: Struct <code>Point&lt;T&gt;</code> chứa các giá trị <code>x</code> và <code>y</code> thuộc kiểu <code>T</code></figcaption>
+</figure>
+<p>Cú pháp dùng generics trong định nghĩa struct tương tự cú pháp trong định nghĩa hàm. Đầu tiên, khai báo tên tham số kiểu bên trong cặp ngoặc nhọn ngay sau tên struct. Rồi dùng kiểu generic đó trong định nghĩa struct ở những chỗ mà lẽ ra ta phải chỉ rõ kiểu cụ thể.</p>
+<p>Lưu ý rằng vì ta chỉ dùng một kiểu generic để định nghĩa <code>Point&lt;T&gt;</code>, định nghĩa này nói rằng struct <code>Point&lt;T&gt;</code> là generic trên kiểu <code>T</code>, và cả hai trường <code>x</code> lẫn <code>y</code> phải <em>cùng</em> một kiểu — dù kiểu đó là gì đi nữa. Nếu ta tạo một instance <code>Point&lt;T&gt;</code> với các giá trị khác kiểu nhau như ở Listing 10-7, code sẽ không compile.</p>
+<figure class="listing" id="listing-10-7">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let wont_work = Point { x: 5, y: 4.0 };
+}</code></pre>
+<figcaption><a href="#listing-10-7">Listing 10-7</a>: Trường <code>x</code> và <code>y</code> phải cùng kiểu vì cả hai dùng chung kiểu generic <code>T</code>.</figcaption>
+</figure>
+<p>Trong ví dụ này, khi ta gán giá trị integer <code>5</code> cho <code>x</code>, ta cho trình biên dịch biết kiểu generic <code>T</code> sẽ là integer cho instance <code>Point&lt;T&gt;</code> này. Sau đó khi ta chỉ định <code>4.0</code> cho <code>y</code> — mà ta đã định nghĩa phải cùng kiểu với <code>x</code> — ta sẽ nhận được lỗi kiểu không khớp:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:7:38
+  |
+7 |     let wont_work = Point { x: 5, y: 4.0 };
+  |                                      ^^^ expected integer, found floating-point number
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>Để định nghĩa struct <code>Point</code> với <code>x</code> và <code>y</code> đều là generic nhưng có thể khác kiểu nhau, ta dùng nhiều tham số kiểu generic. Ví dụ ở Listing 10-8, ta thay đổi định nghĩa <code>Point</code> để generic trên kiểu <code>T</code> và <code>U</code>, trong đó <code>x</code> có kiểu <code>T</code> còn <code>y</code> có kiểu <code>U</code>.</p>
+<figure class="listing" id="listing-10-8">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct Point&lt;T, U&gt; {
+    x: T,
+    y: U,
+}
+
+fn main() {
+    let both_integer = Point { x: 5, y: 10 };
+    let both_float = Point { x: 1.0, y: 4.0 };
+    let integer_and_float = Point { x: 5, y: 4.0 };
+}</code></pre>
+<figcaption><a href="#listing-10-8">Listing 10-8</a>: Struct <code>Point&lt;T, U&gt;</code> generic trên hai kiểu, <code>x</code> và <code>y</code> có thể khác kiểu nhau</figcaption>
+</figure>
+<p>Bây giờ tất cả các instance <code>Point</code> trên đều được chấp nhận! Ta có thể dùng bao nhiêu tham số kiểu generic tùy ý, nhưng dùng quá nhiều sẽ làm code khó đọc. Nếu thấy mình cần quá nhiều kiểu generic, đó có thể là dấu hiệu code cần được tái cấu trúc thành các mảnh nhỏ hơn.</p>
+
+<h3 id="in-enum-definitions">Trong Định Nghĩa Enum</h3>
+<p>Cũng giống như struct, ta có thể định nghĩa enum chứa kiểu dữ liệu generic trong các variant của nó. Hãy nhìn lại enum <code>Option&lt;T&gt;</code> mà standard library cung cấp, ta đã dùng ở Chương 6:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Option&lt;T&gt; {
+    Some(T),
+    None,
+}
+<span class="boring">}</span></code></pre>
+<p>Định nghĩa này giờ đây hẳn là rõ ràng hơn với bạn rồi. Như bạn thấy, enum <code>Option&lt;T&gt;</code> là generic trên kiểu <code>T</code> và có hai variant: <code>Some</code> chứa một giá trị kiểu <code>T</code>, và <code>None</code> không chứa giá trị gì cả. Nhờ dùng enum <code>Option&lt;T&gt;</code>, ta có thể diễn đạt khái niệm trừu tượng về một giá trị tùy chọn (có thể có hoặc không), và vì <code>Option&lt;T&gt;</code> là generic, ta có thể dùng abstraction này cho mọi kiểu dữ liệu.</p>
+<p>Enum cũng có thể dùng nhiều kiểu generic. Định nghĩa enum <code>Result</code> ta đã dùng ở Chương 9 là một ví dụ:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+<span class="boring">}</span></code></pre>
+<p>Enum <code>Result</code> là generic trên hai kiểu, <code>T</code> và <code>E</code>, có hai variant: <code>Ok</code> chứa giá trị kiểu <code>T</code>, và <code>Err</code> chứa giá trị kiểu <code>E</code>. Định nghĩa này giúp dùng enum <code>Result</code> ở bất cứ đâu ta có một tác vụ có thể thành công (trả về giá trị kiểu <code>T</code>) hoặc thất bại (trả về lỗi kiểu <code>E</code>). Đây chính xác là thứ ta đã dùng để mở file ở Listing 9-3, khi <code>T</code> được điền bằng kiểu <code>std::fs::File</code> khi mở file thành công và <code>E</code> được điền bằng <code>std::io::Error</code> khi gặp sự cố.</p>
+<p>Khi bạn nhận ra trong code có nhiều định nghĩa struct hoặc enum chỉ khác nhau ở kiểu của các giá trị chúng chứa, hãy tránh trùng lặp bằng cách dùng kiểu generic thay thế.</p>
+
+<h3 id="in-method-definitions">Trong Định Nghĩa Method</h3>
+<p>Ta có thể implement các method trên struct và enum (như ta đã làm ở Chương 5) và cũng dùng kiểu generic trong định nghĩa chúng. Listing 10-9 cho thấy struct <code>Point&lt;T&gt;</code> từ Listing 10-6 với một method tên <code>x</code> được implement trên nó.</p>
+<figure class="listing" id="listing-10-9">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+impl&lt;T&gt; Point&lt;T&gt; {
+    fn x(&amp;self) -&gt; &amp;T {
+        &amp;self.x
+    }
+}
+
+fn main() {
+    let p = Point { x: 5, y: 10 };
+
+    println!("p.x = {}", p.x());
+}</code></pre>
+<figcaption><a href="#listing-10-9">Listing 10-9</a>: Implement method tên <code>x</code> trên struct <code>Point&lt;T&gt;</code> trả về tham chiếu đến trường <code>x</code> kiểu <code>T</code></figcaption>
+</figure>
+<p>Ở đây, ta đã định nghĩa method <code>x</code> trên <code>Point&lt;T&gt;</code> trả về tham chiếu đến dữ liệu trong trường <code>x</code>.</p>
+<p>Lưu ý rằng ta phải khai báo <code>T</code> ngay sau <code>impl</code> để có thể dùng <code>T</code> chỉ rõ rằng ta đang implement các method trên kiểu <code>Point&lt;T&gt;</code>. Bằng cách khai báo <code>T</code> là kiểu generic sau <code>impl</code>, Rust có thể nhận diện rằng kiểu trong cặp ngoặc nhọn ở <code>Point</code> là kiểu generic chứ không phải kiểu cụ thể. Method được định nghĩa trong một <code>impl</code> khai báo kiểu generic sẽ có mặt trên mọi instance của kiểu đó, bất kể kiểu cụ thể nào được điền vào.</p>
+<p>Ta cũng có thể chỉ định ràng buộc trên kiểu generic khi định nghĩa method. Ví dụ, ta có thể implement method chỉ trên các instance <code>Point&lt;f32&gt;</code> chứ không phải mọi instance <code>Point&lt;T&gt;</code> bất kỳ. Ở Listing 10-10, ta dùng kiểu cụ thể <code>f32</code>, nghĩa là ta không khai báo thêm kiểu nào sau <code>impl</code>.</p>
+<figure class="listing" id="listing-10-10">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">struct Point&lt;T&gt; {
+</span><span class="boring">    x: T,
+</span><span class="boring">    y: T,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Point&lt;T&gt; {
+</span><span class="boring">    fn x(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.x
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Point&lt;f32&gt; {
+    fn distance_from_origin(&amp;self) -&gt; f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 5, y: 10 };
+</span><span class="boring">
+</span><span class="boring">    println!("p.x = {}", p.x());
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-10-10">Listing 10-10</a>: Một khối <code>impl</code> chỉ áp dụng cho struct với kiểu cụ thể của tham số kiểu generic <code>T</code></figcaption>
+</figure>
+<p>Code này có nghĩa là kiểu <code>Point&lt;f32&gt;</code> sẽ có method <code>distance_from_origin</code>; các instance <code>Point&lt;T&gt;</code> khác với <code>T</code> không phải <code>f32</code> sẽ không có method này. Method này tính khoảng cách từ điểm của ta đến tọa độ gốc (0.0, 0.0) và dùng các phép toán chỉ hoạt động với kiểu số thực.</p>
+<p>Các tham số kiểu generic trong định nghĩa struct không nhất thiết phải giống với những cái dùng trong chữ ký method của struct đó. Listing 10-11 dùng các kiểu generic <code>X1</code> và <code>Y1</code> cho struct <code>Point</code>, còn <code>X2</code> và <code>Y2</code> cho chữ ký method <code>mixup</code> để làm rõ hơn. Method tạo ra một instance <code>Point</code> mới với giá trị <code>x</code> từ <code>self</code> <code>Point</code> (kiểu <code>X1</code>) và giá trị <code>y</code> từ <code>Point</code> được truyền vào (kiểu <code>Y2</code>).</p>
+<figure class="listing" id="listing-10-11">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct Point&lt;X1, Y1&gt; {
+    x: X1,
+    y: Y1,
+}
+
+impl&lt;X1, Y1&gt; Point&lt;X1, Y1&gt; {
+    fn mixup&lt;X2, Y2&gt;(self, other: Point&lt;X2, Y2&gt;) -&gt; Point&lt;X1, Y2&gt; {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4 };
+    let p2 = Point { x: "Hello", y: 'c' };
+
+    let p3 = p1.mixup(p2);
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+}</code></pre>
+<figcaption><a href="#listing-10-11">Listing 10-11</a>: Method dùng kiểu generic khác với định nghĩa struct của nó</figcaption>
+</figure>
+<p>Trong <code>main</code>, ta định nghĩa một <code>Point</code> với <code>i32</code> cho <code>x</code> (giá trị <code>5</code>) và <code>f64</code> cho <code>y</code> (giá trị <code>10.4</code>). Biến <code>p2</code> là một <code>Point</code> struct với string slice cho <code>x</code> (giá trị <code>"Hello"</code>) và <code>char</code> cho <code>y</code> (giá trị <code>c</code>). Gọi <code>mixup</code> trên <code>p1</code> với đối số <code>p2</code> cho ta <code>p3</code>, sẽ có <code>i32</code> cho <code>x</code> vì <code>x</code> đến từ <code>p1</code>. Biến <code>p3</code> sẽ có <code>char</code> cho <code>y</code> vì <code>y</code> đến từ <code>p2</code>. Macro <code>println!</code> sẽ in ra <code>p3.x = 5, p3.y = c</code>.</p>
+<p>Mục đích của ví dụ này là để minh họa tình huống trong đó một số tham số generic được khai báo với <code>impl</code> còn một số khác được khai báo với định nghĩa method. Ở đây, tham số generic <code>X1</code> và <code>Y1</code> được khai báo sau <code>impl</code> vì chúng gắn với định nghĩa struct. Còn <code>X2</code> và <code>Y2</code> được khai báo sau <code>fn mixup</code> vì chúng chỉ liên quan đến method.</p>
+
+<h3 id="performance-of-code-using-generics">Hiệu Suất Code Dùng Generics</h3>
+<p>Bạn có thể đang thắc mắc liệu dùng tham số kiểu generic có tốn chi phí runtime không. Tin vui là dùng kiểu generic sẽ không làm chương trình của bạn chạy chậm hơn so với dùng kiểu cụ thể.</p>
+<p>Rust thực hiện điều này bằng cách thực hiện <em>monomorphization</em> của code dùng generics lúc compile. <em>Monomorphization</em> là quá trình biến code generic thành code cụ thể bằng cách điền vào các kiểu cụ thể được dùng lúc biên dịch. Trong quá trình này, trình biên dịch làm ngược lại với các bước ta đã dùng để tạo hàm generic ở Listing 10-5: nó nhìn vào tất cả các chỗ code generic được gọi và sinh ra code cho các kiểu cụ thể mà code generic đó được gọi với.</p>
+<p>Hãy xem cách này hoạt động bằng cách dùng enum generic <code>Option&lt;T&gt;</code> từ standard library:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let integer = Some(5);
+let float = Some(5.0);
+<span class="boring">}</span></code></pre>
+<p>Khi Rust compile code này, nó thực hiện monomorphization. Trong quá trình đó, trình biên dịch đọc các giá trị đã dùng trong các instance <code>Option&lt;T&gt;</code> và nhận ra có hai loại <code>Option&lt;T&gt;</code>: một là <code>i32</code> và một là <code>f64</code>. Vậy là nó mở rộng định nghĩa generic của <code>Option&lt;T&gt;</code> thành hai định nghĩa chuyên biệt cho <code>i32</code> và <code>f64</code>, thay thế định nghĩa generic bằng các định nghĩa cụ thể.</p>
+<p>Phiên bản monomorphized của code trông kiểu như sau (trình biên dịch dùng tên khác với ví dụ này):</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">enum Option_i32 {
+    Some(i32),
+    None,
+}
+
+enum Option_f64 {
+    Some(f64),
+    None,
+}
+
+fn main() {
+    let integer = Option_i32::Some(5);
+    let float = Option_f64::Some(5.0);
+}</code></pre>
+</figure>
+<p>Generic <code>Option&lt;T&gt;</code> được thay thế bằng các định nghĩa cụ thể do trình biên dịch tạo ra. Vì Rust compile code generic thành code chỉ rõ kiểu trong từng instance, ta không phải trả chi phí runtime nào khi dùng generics. Khi code chạy, nó hoạt động y như thể ta đã viết tay từng định nghĩa riêng. Quá trình monomorphization làm cho generics của Rust cực kỳ hiệu quả ở runtime.</p>
+
+  <div class="page-nav bottom"><a href="ch10-00-generics.html">← Trước</a><a href="ch10-02-traits.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

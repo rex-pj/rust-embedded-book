@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Write Tests - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html" class="active">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch11-00-testing.html">← Trước</a>
+    <a href="ch11-02-running-tests.html">Tiếp →</a>
+  </div>
+
+  <h2 id="how-to-write-tests"><a class="header" href="#how-to-write-tests">Cách Viết Test</a></h2>
+<p><em>Test</em> là những hàm Rust có nhiệm vụ xác minh rằng code không phải test đang vận hành đúng như kỳ vọng. Phần thân của các hàm test thường thực hiện ba việc sau:</p>
+<ul>
+<li>Thiết lập dữ liệu hoặc trạng thái cần thiết.</li>
+<li>Chạy đoạn code bạn muốn test.</li>
+<li>Khẳng định rằng kết quả đúng như bạn mong đợi.</li>
+</ul>
+<p>Hãy cùng nhìn qua các tính năng mà Rust cung cấp riêng cho việc viết test, bao gồm attribute <code>test</code>, một số macro, và attribute <code>should_panic</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="the-anatomy-of-a-test-function"></a></p>
+<h3 id="structuring-test-functions"><a class="header" href="#structuring-test-functions">Cấu Trúc Của Một Hàm Test</a></h3>
+<p>Đơn giản nhất, một test trong Rust là một hàm được đính kèm attribute <code>test</code>. Attribute là metadata gắn kèm với các đoạn code Rust; một ví dụ quen thuộc là attribute <code>derive</code> mà ta dùng với struct ở Chương 5. Để biến một hàm thành hàm test, hãy thêm <code>#[test]</code> vào dòng trước <code>fn</code>. Khi bạn chạy test bằng lệnh <code>cargo test</code>, Rust sẽ xây dựng một file binary test runner để chạy các hàm được đánh dấu đó và báo cáo xem từng hàm test có pass hay fail.</p>
+<p>Mỗi khi ta tạo project thư viện mới bằng Cargo, một module test với một hàm test mẫu sẽ tự động được sinh ra cho ta. Module này cung cấp sẵn một khung xương để viết test, giúp ta không phải tra cứu cấu trúc và cú pháp chính xác mỗi lần bắt đầu project mới. Bạn có thể thêm bao nhiêu hàm test và module test tùy thích!</p>
+<p>Ta sẽ khám phá một số khía cạnh về cách test hoạt động bằng cách thử nghiệm với hàm test mẫu trước khi thực sự test bất kỳ đoạn code nào. Sau đó, ta sẽ viết một số test thực tế gọi code mà ta đã viết và khẳng định hành vi của nó là đúng.</p>
+<p>Hãy tạo một project thư viện mới tên <code>adder</code> sẽ cộng hai số:</p>
+<pre><code class="language-console">$ cargo new adder --lib
+     Created library `adder` project
+$ cd adder
+</code></pre>
+<p>Nội dung file <em>src/lib.rs</em> trong thư viện <code>adder</code> của bạn trông sẽ như Listing 11-1.</p>
+<figure class="listing" id="listing-11-1">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-1">Listing 11-1</a>: Code được tự động sinh ra bởi <code>cargo new</code></figcaption>
+</figure>
+<p>File bắt đầu với một hàm <code>add</code> mẫu để ta có thứ gì đó để test.</p>
+<p>Trước mắt, hãy tập trung vào hàm <code>it_works</code>. Chú ý annotation <code>#[test]</code>: attribute này chỉ ra đây là một hàm test, nhờ đó test runner biết phải xử lý hàm này như một test. Ta cũng có thể có các hàm không phải test trong module <code>tests</code> để hỗ trợ thiết lập các kịch bản chung hay thực hiện các thao tác thông thường, nên ta luôn cần chỉ rõ hàm nào là test.</p>
+<p>Phần thân hàm mẫu dùng macro <code>assert_eq!</code> để khẳng định rằng <code>result</code> — chứa kết quả của <code>add(2, 2)</code> — bằng 4. Assertion này là ví dụ điển hình cho định dạng của một test thông thường. Hãy chạy thử để xem test này có pass không.</p>
+<p>Lệnh <code>cargo test</code> chạy tất cả các test trong project, như được hiển thị ở Listing 11-2.</p>
+<figure class="listing" id="listing-11-2">
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.57s
+     Running unittests src/lib.rs (target/debug/deps/adder-01ad14159ff659ab)
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<figcaption><a href="#listing-11-2">Listing 11-2</a>: Kết quả đầu ra từ lần chạy test được tự động sinh ra</figcaption>
+</figure>
+<p>Cargo biên dịch và chạy test. Ta thấy dòng <code>running 1 test</code>. Dòng tiếp theo hiển thị tên hàm test được sinh ra, gọi là <code>tests::it_works</code>, và kết quả của lần chạy test đó là <code>ok</code>. Dòng tổng kết <code>test result: ok.</code> có nghĩa là tất cả test đã pass, và phần <code>1 passed; 0 failed</code> tổng hợp số test đã pass hay fail.</p>
+<p>Ta có thể đánh dấu một test là ignored để nó không chạy trong một trường hợp nhất định; ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested">"Bỏ qua Test trừ Khi Được Yêu Cầu Rõ Ràng"</a> ở phần sau của chương này. Vì ta chưa làm điều đó ở đây, phần tổng kết hiển thị <code>0 ignored</code>. Ta cũng có thể truyền một đối số cho lệnh <code>cargo test</code> để chỉ chạy các test có tên khớp với một chuỗi ký tự; đây gọi là <em>filtering</em> (lọc), và ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#running-a-subset-of-tests-by-name">"Chạy Một Tập Hợp Con Các Test Theo Tên"</a>. Ở đây ta chưa lọc test nào, nên cuối phần tổng kết hiển thị <code>0 filtered out</code>.</p>
+<p>Thống kê <code>0 measured</code> dành cho benchmark test đo lường hiệu suất. Benchmark test, tính đến thời điểm viết bài này, chỉ có trong Rust nightly. Xem <a href="../unstable-book/library-features/test.html">tài liệu về benchmark test</a> để tìm hiểu thêm.</p>
+<p>Phần tiếp theo của kết quả test bắt đầu từ <code>Doc-tests adder</code> là cho kết quả của các documentation test. Ta chưa có documentation test nào, nhưng Rust có thể biên dịch các ví dụ code xuất hiện trong tài liệu API của ta. Tính năng này giúp đồng bộ docs và code! Ta sẽ bàn về cách viết documentation test ở phần <a href="ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests">"Documentation Comments as Tests"</a> ở Chương 14. Hiện tại, ta sẽ bỏ qua phần output <code>Doc-tests</code>.</p>
+<p>Hãy bắt đầu tùy chỉnh test theo nhu cầu của mình. Trước tiên, đổi tên hàm <code>it_works</code> thành tên khác, chẳng hạn <code>exploration</code>, như sau:</p>
+<p><span class="filename">Tên file: src/lib.rs</span></p>
+<pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn exploration() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}</code></pre>
+<p>Rồi chạy <code>cargo test</code> lại. Output lúc này hiển thị <code>exploration</code> thay vì <code>it_works</code>:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::exploration ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Giờ ta sẽ thêm một test nữa, nhưng lần này ta sẽ cố tình làm cho nó fail! Test fail khi có gì đó trong hàm test gây ra panic. Mỗi test được chạy trong một thread mới, và khi thread chính thấy một thread test đã chết, test đó được đánh dấu là failed. Ở Chương 9, ta đã nói về cách đơn giản nhất để panic là gọi macro <code>panic!</code>. Nhập test mới vào như một hàm tên <code>another</code>, để file <em>src/lib.rs</em> của bạn trông như Listing 11-3.</p>
+<figure class="listing" id="listing-11-3">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust panics noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn exploration() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn another() {
+        panic!("Make this test fail");
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-3">Listing 11-3</a>: Thêm test thứ hai sẽ fail vì ta gọi macro <code>panic!</code></figcaption>
+</figure>
+<p>Chạy test lại bằng <code>cargo test</code>. Output trông như Listing 11-4, cho thấy test <code>exploration</code> pass còn <code>another</code> fail.</p>
+<figure class="listing" id="listing-11-4">
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.72s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 2 tests
+test tests::another ... FAILED
+test tests::exploration ... ok
+
+failures:
+
+---- tests::another stdout ----
+
+thread 'tests::another' panicked at src/lib.rs:17:9:
+Make this test fail
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::another
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<figcaption><a href="#listing-11-4">Listing 11-4</a>: Kết quả test khi một test pass và một test fail</figcaption>
+</figure>
+<p>Thay vì <code>ok</code>, dòng <code>test tests::another</code> hiển thị <code>FAILED</code>. Hai phần mới xuất hiện giữa kết quả từng test và phần tổng kết: Phần đầu tiên hiển thị chi tiết lý do mỗi test fail. Trong trường hợp này, ta thấy <code>tests::another</code> fail vì nó panic với thông báo <code>Make this test fail</code> ở dòng 17 trong file <em>src/lib.rs</em>. Phần tiếp theo chỉ liệt kê tên của tất cả test fail, hữu ích khi có nhiều test và nhiều kết quả fail dài dòng. Ta có thể dùng tên của test fail để chạy chỉ riêng test đó để debug dễ hơn; ta sẽ nói thêm về các cách chạy test ở phần <a href="ch11-02-running-tests.html#controlling-how-tests-are-run">"Kiểm Soát Cách Chạy Test"</a>.</p>
+<p>Dòng tổng kết hiển thị ở cuối: Nhìn chung, kết quả test là <code>FAILED</code>. Ta có một test pass và một test fail.</p>
+<p>Giờ khi bạn đã thấy kết quả test trong các tình huống khác nhau, hãy cùng xem một số macro khác ngoài <code>panic!</code> hữu ích trong test.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="checking-results-with-the-assert-macro"></a></p>
+<h3 id="checking-results-with-assert"><a class="header" href="#checking-results-with-assert">Kiểm Tra Kết Quả Với <code>assert!</code></a></h3>
+<p>Macro <code>assert!</code>, được cung cấp bởi thư viện chuẩn, rất hữu ích khi bạn muốn đảm bảo rằng một điều kiện nào đó trong test cho kết quả là <code>true</code>. Ta truyền vào macro <code>assert!</code> một đối số mà khi tính toán cho ra giá trị Boolean. Nếu giá trị là <code>true</code>, không có gì xảy ra và test pass. Nếu giá trị là <code>false</code>, macro <code>assert!</code> sẽ gọi <code>panic!</code> để làm test fail. Sử dụng macro <code>assert!</code> giúp ta kiểm tra xem code có đang hoạt động đúng như ta muốn không.</p>
+<p>Ở Chương 5, Listing 5-15, ta đã dùng struct <code>Rectangle</code> và method <code>can_hold</code>, được nhắc lại ở Listing 11-5. Hãy đặt code này vào file <em>src/lib.rs</em>, rồi viết một số test cho nó dùng macro <code>assert!</code>.</p>
+<figure class="listing" id="listing-11-5">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+        self.width &gt; other.width &amp;&amp; self.height &gt; other.height
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-5">Listing 11-5</a>: Struct <code>Rectangle</code> và method <code>can_hold</code> từ Chương 5</figcaption>
+</figure>
+<p>Method <code>can_hold</code> trả về Boolean, nghĩa là nó là trường hợp dùng macro <code>assert!</code> hoàn hảo. Ở Listing 11-6, ta viết một test kiểm tra method <code>can_hold</code> bằng cách tạo một instance <code>Rectangle</code> có chiều rộng 8 và chiều cao 7, rồi khẳng định nó có thể chứa một instance <code>Rectangle</code> khác có chiều rộng 5 và chiều cao 1.</p>
+<figure class="listing" id="listing-11-6">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Rectangle {
+</span><span class="boring">    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+</span><span class="boring">        self.width &gt; other.width &amp;&amp; self.height &gt; other.height
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn larger_can_hold_smaller() {
+        let larger = Rectangle {
+            width: 8,
+            height: 7,
+        };
+        let smaller = Rectangle {
+            width: 5,
+            height: 1,
+        };
+
+        assert!(larger.can_hold(&amp;smaller));
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-6">Listing 11-6</a>: Test cho <code>can_hold</code> kiểm tra xem hình chữ nhật lớn hơn có thực sự chứa được hình chữ nhật nhỏ hơn không</figcaption>
+</figure>
+<p>Chú ý dòng <code>use super::*;</code> bên trong module <code>tests</code>. Module <code>tests</code> là một module bình thường tuân theo các quy tắc visibility thông thường mà ta đã tìm hiểu ở Chương 7 trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Paths for Referring to an Item in the Module Tree"</a>. Vì module <code>tests</code> là module con, ta cần đưa code từ module cha vào scope của module con. Ta dùng glob ở đây để mọi thứ ta định nghĩa trong module cha đều có sẵn trong module <code>tests</code> này.</p>
+<p>Ta đặt tên test là <code>larger_can_hold_smaller</code>, và tạo hai instance <code>Rectangle</code> cần thiết. Rồi ta gọi macro <code>assert!</code> và truyền kết quả của <code>larger.can_hold(&amp;smaller)</code>. Biểu thức này được cho là trả về <code>true</code>, nên test của ta sẽ pass. Hãy xem thử!</p>
+<pre><code class="language-console">$ cargo test
+   Compiling rectangle v0.1.0 (file:///projects/rectangle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running unittests src/lib.rs (target/debug/deps/rectangle-6584c4561e48942e)
+
+running 1 test
+test tests::larger_can_hold_smaller ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests rectangle
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Pass rồi! Giờ hãy thêm một test nữa, lần này khẳng định rằng hình chữ nhật nhỏ hơn không thể chứa hình chữ nhật lớn hơn:</p>
+<p><span class="filename">Tên file: src/lib.rs</span></p>
+<pre><code class="language-rust noplayground"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Rectangle {
+</span><span class="boring">    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+</span><span class="boring">        self.width &gt; other.width &amp;&amp; self.height &gt; other.height
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn larger_can_hold_smaller() {
+        // --snip--
+<span class="boring">        let larger = Rectangle {
+</span><span class="boring">            width: 8,
+</span><span class="boring">            height: 7,
+</span><span class="boring">        };
+</span><span class="boring">        let smaller = Rectangle {
+</span><span class="boring">            width: 5,
+</span><span class="boring">            height: 1,
+</span><span class="boring">        };
+</span><span class="boring">
+</span><span class="boring">        assert!(larger.can_hold(&amp;smaller));
+</span>    }
+
+    #[test]
+    fn smaller_cannot_hold_larger() {
+        let larger = Rectangle {
+            width: 8,
+            height: 7,
+        };
+        let smaller = Rectangle {
+            width: 5,
+            height: 1,
+        };
+
+        assert!(!smaller.can_hold(&amp;larger));
+    }
+}</code></pre>
+<p>Vì kết quả đúng của hàm <code>can_hold</code> trong trường hợp này là <code>false</code>, ta cần phủ định kết quả trước khi truyền vào macro <code>assert!</code>. Như vậy, test sẽ pass nếu <code>can_hold</code> trả về <code>false</code>:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling rectangle v0.1.0 (file:///projects/rectangle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running unittests src/lib.rs (target/debug/deps/rectangle-6584c4561e48942e)
+
+running 2 tests
+test tests::larger_can_hold_smaller ... ok
+test tests::smaller_cannot_hold_larger ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests rectangle
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Hai test đều pass! Giờ hãy xem chuyện gì xảy ra với kết quả test khi ta cố tình nhét bug vào code. Ta sẽ sửa phần triển khai method <code>can_hold</code> bằng cách thay dấu lớn hơn (<code>&gt;</code>) bằng dấu nhỏ hơn (<code>&lt;</code>) khi so sánh chiều rộng:</p>
+<pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>// --snip--
+impl Rectangle {
+    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+        self.width &lt; other.width &amp;&amp; self.height &gt; other.height
+    }
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn larger_can_hold_smaller() {
+</span><span class="boring">        let larger = Rectangle {
+</span><span class="boring">            width: 8,
+</span><span class="boring">            height: 7,
+</span><span class="boring">        };
+</span><span class="boring">        let smaller = Rectangle {
+</span><span class="boring">            width: 5,
+</span><span class="boring">            height: 1,
+</span><span class="boring">        };
+</span><span class="boring">
+</span><span class="boring">        assert!(larger.can_hold(&amp;smaller));
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn smaller_cannot_hold_larger() {
+</span><span class="boring">        let larger = Rectangle {
+</span><span class="boring">            width: 8,
+</span><span class="boring">            height: 7,
+</span><span class="boring">        };
+</span><span class="boring">        let smaller = Rectangle {
+</span><span class="boring">            width: 5,
+</span><span class="boring">            height: 1,
+</span><span class="boring">        };
+</span><span class="boring">
+</span><span class="boring">        assert!(!smaller.can_hold(&amp;larger));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Chạy test lúc này cho ra kết quả sau:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling rectangle v0.1.0 (file:///projects/rectangle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running unittests src/lib.rs (target/debug/deps/rectangle-6584c4561e48942e)
+
+running 2 tests
+test tests::larger_can_hold_smaller ... FAILED
+test tests::smaller_cannot_hold_larger ... ok
+
+failures:
+
+---- tests::larger_can_hold_smaller stdout ----
+
+thread 'tests::larger_can_hold_smaller' panicked at src/lib.rs:28:9:
+assertion failed: larger.can_hold(&amp;smaller)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::larger_can_hold_smaller
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Test của ta đã phát hiện bug! Vì <code>larger.width</code> là <code>8</code> và <code>smaller.width</code> là <code>5</code>, việc so sánh chiều rộng trong <code>can_hold</code> giờ trả về <code>false</code>: 8 không nhỏ hơn 5.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="testing-equality-with-the-assert_eq-and-assert_ne-macros"></a></p>
+<h3 id="testing-equality-with-assert_eq-and-assert_ne"><a class="header" href="#testing-equality-with-assert_eq-and-assert_ne">Kiểm Tra Tính Bằng Nhau Với <code>assert_eq!</code> và <code>assert_ne!</code></a></h3>
+<p>Một cách phổ biến để xác minh chức năng là kiểm tra sự bằng nhau giữa kết quả của code đang được test và giá trị bạn kỳ vọng code trả về. Bạn có thể làm điều đó dùng macro <code>assert!</code> với biểu thức sử dụng toán tử <code>==</code>. Tuy nhiên, đây là kiểu test phổ biến đến mức thư viện chuẩn cung cấp một cặp macro — <code>assert_eq!</code> và <code>assert_ne!</code> — để thực hiện test này thuận tiện hơn. Các macro này so sánh hai đối số xem có bằng nhau hay không bằng nhau, tương ứng. Chúng cũng sẽ in ra hai giá trị nếu assertion fail, giúp dễ dàng thấy <em>tại sao</em> test fail; ngược lại, macro <code>assert!</code> chỉ cho biết nó nhận được giá trị <code>false</code> cho biểu thức <code>==</code>, mà không in ra các giá trị dẫn đến kết quả <code>false</code> đó.</p>
+<p>Ở Listing 11-7, ta viết một hàm tên <code>add_two</code> cộng thêm <code>2</code> vào tham số của nó, rồi test hàm này bằng macro <code>assert_eq!</code>.</p>
+<figure class="listing" id="listing-11-7">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_adds_two() {
+        let result = add_two(2);
+        assert_eq!(result, 4);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-7">Listing 11-7</a>: Test hàm <code>add_two</code> dùng macro <code>assert_eq!</code></figcaption>
+</figure>
+<p>Hãy kiểm tra xem nó có pass không!</p>
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Ta tạo biến <code>result</code> chứa kết quả của <code>add_two(2)</code>. Rồi ta truyền <code>result</code> và <code>4</code> làm đối số cho macro <code>assert_eq!</code>. Dòng output cho test này là <code>test tests::it_adds_two ... ok</code>, và chữ <code>ok</code> cho biết test đã pass!</p>
+<p>Hãy nhét một bug vào code để xem <code>assert_eq!</code> trông thế nào khi fail. Đổi phần triển khai hàm <code>add_two</code> để cộng <code>3</code> thay vì:</p>
+<pre><code class="language-rust not_desired_behavior noplayground">pub fn add_two(a: u64) -&gt; u64 {
+    a + 3
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn it_adds_two() {
+</span><span class="boring">        let result = add_two(2);
+</span><span class="boring">        assert_eq!(result, 4);
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Chạy test lại:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::it_adds_two ... FAILED
+
+failures:
+
+---- tests::it_adds_two stdout ----
+
+thread 'tests::it_adds_two' panicked at src/lib.rs:12:9:
+assertion `left == right` failed
+  left: 5
+ right: 4
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::it_adds_two
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Test của ta đã bắt được bug! Test <code>tests::it_adds_two</code> fail, và thông báo cho ta biết assertion bị fail là <code>left == right</code> cùng với giá trị <code>left</code> và <code>right</code>. Thông báo này giúp ta bắt đầu debug: đối số <code>left</code> — nơi ta có kết quả của <code>add_two(2)</code> — là <code>5</code>, nhưng đối số <code>right</code> là <code>4</code>. Bạn có thể hình dung điều này sẽ đặc biệt hữu ích khi ta có nhiều test chạy cùng lúc.</p>
+<p>Lưu ý rằng trong một số ngôn ngữ và framework test, các tham số của hàm assertion bằng nhau được gọi là <code>expected</code> và <code>actual</code>, và thứ tự chỉ định đối số rất quan trọng. Tuy nhiên, trong Rust, chúng được gọi là <code>left</code> và <code>right</code>, và thứ tự chỉ định giá trị kỳ vọng và giá trị code tạo ra không quan trọng. Ta có thể viết assertion trong test này là <code>assert_eq!(4, result)</code>, kết quả fail sẽ hiển thị <code>assertion `left == right` failed</code> tương tự.</p>
+<p>Macro <code>assert_ne!</code> sẽ pass nếu hai giá trị ta truyền vào không bằng nhau và fail nếu chúng bằng nhau. Macro này hữu ích nhất khi ta không chắc giá trị <em>sẽ</em> là gì, nhưng biết chắc giá trị <em>không được phép</em> là gì. Ví dụ, nếu ta đang test một hàm được đảm bảo thay đổi đầu vào theo một cách nào đó, nhưng cách thay đổi phụ thuộc vào ngày trong tuần chạy test, điều tốt nhất để khẳng định có thể là output của hàm không bằng input.</p>
+<p>Về cốt lõi, macro <code>assert_eq!</code> và <code>assert_ne!</code> sử dụng các toán tử <code>==</code> và <code>!=</code> tương ứng. Khi assertion fail, các macro này in ra các đối số của chúng dùng định dạng debug, nghĩa là các giá trị được so sánh phải implement trait <code>PartialEq</code> và <code>Debug</code>. Tất cả các primitive type và hầu hết các type trong thư viện chuẩn đều implement các trait này. Với struct và enum tự định nghĩa, bạn sẽ cần implement <code>PartialEq</code> để khẳng định tính bằng nhau của các type đó. Bạn cũng cần implement <code>Debug</code> để in ra giá trị khi assertion fail. Vì cả hai trait đều là derivable trait, như đề cập ở Listing 5-12 Chương 5, điều này thường đơn giản như thêm annotation <code>#[derive(PartialEq, Debug)]</code> vào định nghĩa struct hoặc enum. Xem Phụ lục C, <a href="appendix-03-derivable-traits.html">"Derivable Traits,"</a> để biết thêm chi tiết về các trait này và các trait derivable khác.</p>
+<h3 id="adding-custom-failure-messages"><a class="header" href="#adding-custom-failure-messages">Thêm Thông Báo Fail Tùy Chỉnh</a></h3>
+<p>Bạn cũng có thể thêm thông báo tùy chỉnh để in kèm thông báo fail như các đối số tùy chọn cho macro <code>assert!</code>, <code>assert_eq!</code>, và <code>assert_ne!</code>. Bất kỳ đối số nào được chỉ định sau các đối số bắt buộc đều được chuyển tới macro <code>format!</code> (đã bàn ở phần <a href="ch08-02-strings.html#concatenating-with--or-format">"Nối chuỗi với <code>+</code> hoặc <code>format!</code>"</a> trong Chương 8), nên bạn có thể truyền một format string chứa placeholder <code>{}</code> và các giá trị để điền vào. Thông báo tùy chỉnh hữu ích để ghi lại ý nghĩa của assertion; khi test fail, bạn sẽ có ý tưởng tốt hơn về vấn đề với code là gì.</p>
+<p>Ví dụ, giả sử ta có một hàm chào người dùng theo tên và ta muốn test xem tên được truyền vào hàm có xuất hiện trong output không:</p>
+<p><span class="filename">Tên file: src/lib.rs</span></p>
+<pre><code class="language-rust noplayground">pub fn greeting(name: &amp;str) -&gt; String {
+    format!("Hello {name}!")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn greeting_contains_name() {
+        let result = greeting("Carol");
+        assert!(result.contains("Carol"));
+    }
+}</code></pre>
+<p>Các yêu cầu cho chương trình này vẫn chưa được thống nhất, và ta khá chắc phần chữ <code>Hello</code> ở đầu lời chào sẽ thay đổi. Ta quyết định không muốn phải cập nhật test khi yêu cầu thay đổi, nên thay vì kiểm tra tính bằng nhau chính xác với giá trị trả về từ hàm <code>greeting</code>, ta chỉ khẳng định rằng output chứa văn bản của tham số đầu vào.</p>
+<p>Bây giờ hãy nhét bug vào code bằng cách đổi <code>greeting</code> để không bao gồm <code>name</code>, để xem thông báo fail mặc định trông thế nào:</p>
+<pre><code class="language-rust not_desired_behavior noplayground">pub fn greeting(name: &amp;str) -&gt; String {
+    String::from("Hello!")
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn greeting_contains_name() {
+</span><span class="boring">        let result = greeting("Carol");
+</span><span class="boring">        assert!(result.contains("Carol"));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Chạy test này cho ra kết quả sau:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling greeter v0.1.0 (file:///projects/greeter)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
+     Running unittests src/lib.rs (target/debug/deps/greeter-170b942eb5bf5e3a)
+
+running 1 test
+test tests::greeting_contains_name ... FAILED
+
+failures:
+
+---- tests::greeting_contains_name stdout ----
+
+thread 'tests::greeting_contains_name' panicked at src/lib.rs:12:9:
+assertion failed: result.contains("Carol")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::greeting_contains_name
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Kết quả này chỉ cho biết assertion fail và dòng nào assertion nằm. Một thông báo fail hữu ích hơn sẽ in ra giá trị từ hàm <code>greeting</code>. Hãy thêm thông báo fail tùy chỉnh gồm format string với placeholder được điền bằng giá trị thực tế nhận được từ hàm <code>greeting</code>:</p>
+<pre><code class="language-rust ignore"><span class="boring">pub fn greeting(name: &amp;str) -&gt; String {
+</span><span class="boring">    String::from("Hello!")
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span>    #[test]
+    fn greeting_contains_name() {
+        let result = greeting("Carol");
+        assert!(
+            result.contains("Carol"),
+            "Greeting did not contain name, value was `{result}`"
+        );
+    }
+<span class="boring">}</span></code></pre>
+<p>Giờ khi ta chạy test, ta sẽ nhận được thông báo lỗi đầy đủ thông tin hơn:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling greeter v0.1.0 (file:///projects/greeter)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.93s
+     Running unittests src/lib.rs (target/debug/deps/greeter-170b942eb5bf5e3a)
+
+running 1 test
+test tests::greeting_contains_name ... FAILED
+
+failures:
+
+---- tests::greeting_contains_name stdout ----
+
+thread 'tests::greeting_contains_name' panicked at src/lib.rs:12:9:
+Greeting did not contain name, value was `Hello!`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::greeting_contains_name
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Ta thấy giá trị thực tế nhận được trong kết quả test, điều này giúp ta debug xem chuyện gì đã xảy ra thay vì điều ta kỳ vọng.</p>
+<h3 id="checking-for-panics-with-should_panic"><a class="header" href="#checking-for-panics-with-should_panic">Kiểm Tra Panic Với <code>should_panic</code></a></h3>
+<p>Ngoài việc kiểm tra giá trị trả về, điều quan trọng là phải kiểm tra rằng code của ta xử lý các điều kiện lỗi đúng như ta kỳ vọng. Ví dụ, hãy xét kiểu <code>Guess</code> mà ta đã tạo ở Chương 9, Listing 9-13. Code khác sử dụng <code>Guess</code> phụ thuộc vào đảm bảo rằng các instance <code>Guess</code> sẽ chỉ chứa các giá trị từ 1 đến 100. Ta có thể viết một test đảm bảo rằng cố gắng tạo instance <code>Guess</code> với giá trị ngoài khoảng đó sẽ gây panic.</p>
+<p>Ta làm điều này bằng cách thêm attribute <code>should_panic</code> vào hàm test. Test pass nếu code bên trong hàm gây panic; test fail nếu code bên trong không gây panic.</p>
+<p>Listing 11-8 cho thấy một test kiểm tra rằng các điều kiện lỗi của <code>Guess::new</code> xảy ra khi ta kỳ vọng.</p>
+<figure class="listing" id="listing-11-8">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -&gt; Guess {
+        if value &lt; 1 || value &gt; 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+
+        Guess { value }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-8">Listing 11-8</a>: Test rằng một điều kiện sẽ gây ra <code>panic!</code></figcaption>
+</figure>
+<p>Ta đặt attribute <code>#[should_panic]</code> sau attribute <code>#[test]</code> và trước hàm test nó áp dụng. Hãy xem kết quả khi test này pass:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running unittests src/lib.rs (target/debug/deps/guessing_game-57d70c3acb738f4d)
+
+running 1 test
+test tests::greater_than_100 - should panic ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests guessing_game
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Trông ổn! Giờ hãy nhét bug vào code bằng cách bỏ điều kiện khiến hàm <code>new</code> panic nếu giá trị lớn hơn 100:</p>
+<pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">pub struct Guess {
+</span><span class="boring">    value: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>// --snip--
+impl Guess {
+    pub fn new(value: i32) -&gt; Guess {
+        if value &lt; 1 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+
+        Guess { value }
+    }
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    #[should_panic]
+</span><span class="boring">    fn greater_than_100() {
+</span><span class="boring">        Guess::new(200);
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Khi ta chạy test ở Listing 11-8, nó sẽ fail:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
+     Running unittests src/lib.rs (target/debug/deps/guessing_game-57d70c3acb738f4d)
+
+running 1 test
+test tests::greater_than_100 - should panic ... FAILED
+
+failures:
+
+---- tests::greater_than_100 stdout ----
+note: test did not panic as expected at src/lib.rs:21:8
+
+failures:
+    tests::greater_than_100
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Ta không nhận được thông báo hữu ích lắm trong trường hợp này, nhưng khi nhìn vào hàm test, ta thấy nó được đánh dấu bằng <code>#[should_panic]</code>. Việc fail có nghĩa là code trong hàm test đã không gây panic.</p>
+<p>Test dùng <code>should_panic</code> có thể không chính xác. Test <code>should_panic</code> sẽ pass ngay cả khi test panic vì lý do khác với lý do ta kỳ vọng. Để làm test <code>should_panic</code> chính xác hơn, ta có thể thêm tham số <code>expected</code> tùy chọn cho attribute <code>should_panic</code>. Test harness sẽ đảm bảo thông báo fail chứa đoạn text được cung cấp. Ví dụ, hãy xét code sửa đổi cho <code>Guess</code> ở Listing 11-9, nơi hàm <code>new</code> panic với các thông báo khác nhau tùy thuộc vào giá trị quá nhỏ hay quá lớn.</p>
+<figure class="listing" id="listing-11-9">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">pub struct Guess {
+</span><span class="boring">    value: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>// --snip--
+
+impl Guess {
+    pub fn new(value: i32) -&gt; Guess {
+        if value &lt; 1 {
+            panic!(
+                "Guess value must be greater than or equal to 1, got {value}."
+            );
+        } else if value &gt; 100 {
+            panic!(
+                "Guess value must be less than or equal to 100, got {value}."
+            );
+        }
+
+        Guess { value }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic(expected = "less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-9">Listing 11-9</a>: Test cho <code>panic!</code> với thông báo panic chứa một chuỗi con được chỉ định</figcaption>
+</figure>
+<p>Test này sẽ pass vì giá trị ta đặt vào tham số <code>expected</code> của attribute <code>should_panic</code> là chuỗi con của thông báo panic từ hàm <code>Guess::new</code>. Ta có thể chỉ định toàn bộ thông báo panic mà ta kỳ vọng, trong trường hợp này là <code>Guess value must be less than or equal to 100, got 200</code>. Tùy thuộc vào mức độ riêng biệt hay động của thông báo panic và mức độ chính xác bạn muốn test của mình. Trong trường hợp này, chuỗi con của thông báo panic là đủ để đảm bảo code trong hàm test thực thi nhánh <code>else if value &gt; 100</code>.</p>
+<p>Để xem chuyện gì xảy ra khi test <code>should_panic</code> với thông báo <code>expected</code> fail, hãy lại nhét bug vào code bằng cách đổi thân của khối <code>if value &lt; 1</code> và <code>else if value &gt; 100</code>:</p>
+<pre><code class="language-rust ignore not_desired_behavior"><span class="boring">pub struct Guess {
+</span><span class="boring">    value: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Guess {
+</span><span class="boring">    pub fn new(value: i32) -&gt; Guess {
+</span>        if value &lt; 1 {
+            panic!(
+                "Guess value must be less than or equal to 100, got {value}."
+            );
+        } else if value &gt; 100 {
+            panic!(
+                "Guess value must be greater than or equal to 1, got {value}."
+            );
+        }
+<span class="boring">
+</span><span class="boring">        Guess { value }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    #[should_panic(expected = "less than or equal to 100")]
+</span><span class="boring">    fn greater_than_100() {
+</span><span class="boring">        Guess::new(200);
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Lần này khi ta chạy test <code>should_panic</code>, nó sẽ fail:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running unittests src/lib.rs (target/debug/deps/guessing_game-57d70c3acb738f4d)
+
+running 1 test
+test tests::greater_than_100 - should panic ... FAILED
+
+failures:
+
+---- tests::greater_than_100 stdout ----
+
+thread 'tests::greater_than_100' panicked at src/lib.rs:12:13:
+Guess value must be greater than or equal to 1, got 200.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+note: panic did not contain expected string
+      panic message: "Guess value must be greater than or equal to 1, got 200."
+ expected substring: "less than or equal to 100"
+
+failures:
+    tests::greater_than_100
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Thông báo fail cho ta biết test này đã panic như kỳ vọng, nhưng thông báo panic không chứa chuỗi kỳ vọng <code>less than or equal to 100</code>. Thông báo panic ta thực sự nhận được là <code>Guess value must be greater than or equal to 1, got 200</code>. Giờ ta có thể bắt đầu tìm bug!</p>
+<h3 id="using-resultt-e-in-tests"><a class="header" href="#using-resultt-e-in-tests">Dùng <code>Result&lt;T, E&gt;</code> Trong Test</a></h3>
+<p>Tất cả các test trước đây của ta đều panic khi fail. Ta cũng có thể viết test dùng <code>Result&lt;T, E&gt;</code>! Đây là test từ Listing 11-1, được viết lại để dùng <code>Result&lt;T, E&gt;</code> và trả về <code>Err</code> thay vì panic:</p>
+<pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: u64, right: u64) -&gt; u64 {
+</span><span class="boring">    left + right
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() -&gt; Result&lt;(), String&gt; {
+        let result = add(2, 2);
+
+        if result == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+}</code></pre>
+<p>Hàm <code>it_works</code> giờ có kiểu trả về là <code>Result&lt;(), String&gt;</code>. Trong thân hàm, thay vì gọi macro <code>assert_eq!</code>, ta trả về <code>Ok(())</code> khi test pass và <code>Err</code> với <code>String</code> bên trong khi test fail.</p>
+<p>Viết test để trả về <code>Result&lt;T, E&gt;</code> cho phép bạn dùng toán tử dấu hỏi trong thân test, đây là cách thuận tiện để viết các test sẽ fail nếu bất kỳ thao tác nào bên trong chúng trả về biến thể <code>Err</code>.</p>
+<p>Bạn không thể dùng annotation <code>#[should_panic]</code> trên các test dùng <code>Result&lt;T, E&gt;</code>. Để khẳng định rằng một thao tác trả về biến thể <code>Err</code>, <em>đừng</em> dùng toán tử dấu hỏi trên giá trị <code>Result&lt;T, E&gt;</code>. Thay vào đó, hãy dùng <code>assert!(value.is_err())</code>.</p>
+<p>Giờ khi bạn đã biết nhiều cách viết test, hãy cùng xem điều gì đang xảy ra khi ta chạy test và khám phá các tùy chọn khác nhau ta có thể dùng với <code>cargo test</code>.</p>
+
+  <div class="page-nav bottom"><a href="ch11-00-testing.html">← Trước</a><a href="ch11-02-running-tests.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

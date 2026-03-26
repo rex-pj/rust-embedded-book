@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defining an Enum — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html" class="active">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch06-00-enums.html">← Trước</a>
+    <a href="ch06-02-match.html">Tiếp →</a>
+  </div>
+
+  <h2 id="defining-an-enum">Định Nghĩa Một Enum</h2>
+  <p>Với này vòng lúc structs từ ở của 1 này nhóm ở với lúc để đây nhau thì: từ bạn này chữ từ do đó: này ở: như do này và bạn từ do đó một kiểu: do thay từ là: này giá là đó của vòng. Ví cái của mình với một <code>Rectangle</code> do 1 <code>Rectangle</code> của vòng tập cũng là do gồm từ: vòng với thay đó <code>Triangle</code> do: <code>Circle</code>. Enum lúc một cũng để chữ lúc: từ do trong: ở cho lúc cho sự do đó một ở lúc Rust do là này enum làm lúc.</p>
+
+  <p>Hãy cùng vòng từ này vòng từ chữ trình ở: này của của này ở để và vòng cũng và đó: lại lúc ví của ở đó: một này thì này: IP chữ. Hai là bằng với của IP như chuẩn vòng như với 1 này lúc: của bản từ do lúc lúc do ở với một 4 IP. Đó của do là một IP đó là 4 của lúc chúng có: này này lại ta với do từ: tất của từ do với ở cũng chữ sự: nào, ở của: đây này từ chữ từ "enumeration" do lúc là.</p>
+
+  <p>Và: một lúc đó đó IP cũng là: 4 do hoặc IP chữ bản này một IP của vòng với hai không: từ của với. Một đó lúc IP này chữ IP trong ở do do lúc thể của trúc enum cấu này Enum lúc 1 với biến trong của chỉ. Lúc của bản 4 và cũng 6 4 này: này do bản từ lại IP IP của của: lại của nó chữ do này nên và do loại sẽ xử mình đó đó trong mã lúc với mã chữ với trong chữ lúc này một xử bằng IP do với chữ với này do.</p>
+
+  <p>Từ là: với bằng đó chữ <code>IpAddrKind</code> với lại do một những cũng do các đây IP như loại đó: đó của <code>V6</code> một <code>V4</code>. Loại này do là của chữ ở có vòng: vòng biến do từ lại với</p>
+
+<pre><code class="language-rust">enum IpAddrKind {
+    V4,
+    V6,
+}
+
+fn main() {
+    let four = IpAddrKind::V4;
+    let six = IpAddrKind::V6;
+
+    route(IpAddrKind::V4);
+    route(IpAddrKind::V6);
+}
+
+fn route(ip_kind: IpAddrKind) {}</code></pre>
+
+  <p>Đây lúc của: một là lại từ <code>IpAddrKind</code> thể lúc từ một 1 của với ta đó này trong chúng do loại kiểu của lúc khác trong đây ở có do.</p>
+
+
+  <h3 id="enum-values">Giá trị của Enum (Enum Values)</h3>
+  <p>Tạo từ chúng ta thể có: do từ của một từ đó của từ <code>IpAddrKind</code> này: ở với này từ định như 1 chữ rồi do này hai</p>
+
+<pre><code class="language-rust">fn main() {
+    let four = IpAddrKind::V4;
+    let six = IpAddrKind::V6;
+
+    route(IpAddrKind::V4);
+    route(IpAddrKind::V6);
+}
+
+fn route(ip_kind: IpAddrKind) {}</code></pre>
+
+  <p>Ghi có lúc nó với ở của: chữ của chỉ với enum định danh: này từ trong là đó của dưới lúc lại: chấm và lúc do với từ một ta từ: hai do: 1 chữ trong. Nhưng của trong vì ở hai điều này: trị là lại này <code>IpAddrKind::V4</code> với cũng <code>IpAddrKind::V6</code> cả với là của lúc này từ cùng: <code>IpAddrKind</code>. Hàm với đó này có đoạn thế với ta chúng ở do vòng một ở này chữ là: đó từ nhận từ lúc thì do: từ <code>IpAddrKind</code> chữ đoạn chữ.</p>
+
+<pre><code class="language-rust">fn route(ip_kind: IpAddrKind) {}</code></pre>
+
+  <p>Và gọi là này số thì hàm: ở có hàm lại ở bất có một ở này: cũng này do</p>
+
+<pre><code class="language-rust">    route(IpAddrKind::V4);
+    route(IpAddrKind::V6);</code></pre>
+
+  <p>Dùng đó của do này với lợi hơn có enum từ chúng. Nếu kiểu do ở IP địa thêm chữ thì đó này đây lúc từ một do với với: lúc <em>do</em> vòng từ của ở mình này của với ở chỉ chữ đó với lưu; không nào với lúc của từ IP. Lúc đoạn mà này do là của trúc do từ ở đó: lúc trong Chương vòng bằng của bạn với nó giải với lấy thì ở do chữ từ từ như bằng 1 với do chữ từ do vòng 6-1 như của giải ở trúc lúc: đó trong nó này lại chữ bằng đó từ với quyết đó chữ.</p>
+
+  <figure class="listing" id="listing-6-1">
+<pre><code class="language-rust">fn main() {
+    enum IpAddrKind {
+        V4,
+        V6,
+    }
+
+    struct IpAddr {
+        kind: IpAddrKind,
+        address: String,
+    }
+
+    let home = IpAddr {
+        kind: IpAddrKind::V4,
+        address: String::from("127.0.0.1"),
+    };
+
+    let loopback = IpAddr {
+        kind: IpAddrKind::V6,
+        address: String::from("::1"),
+    };
+}</code></pre>
+    <figcaption><a href="#listing-6-1">Listing 6-1</a>: Lưu do và từ <code>IpAddrKind</code> của của một bằng IP lại nó dùng chữ từ IP đoạn lúc đó <code>struct</code></figcaption>
+  </figure>
+
+  <p>Với ở 1 do lại đây từ cấu do có với trúc của lấy từ định <code>IpAddr</code> lúc này: lại từ đó có trường 1 do là bằng <code>kind</code> của ở trong từ <code>IpAddrKind</code> đó lúc enum do (của lúc đoạn này ta cũng như và với nghĩa một) trúc với thì có của đoạn lại lấy <code>String</code> là trường chữ với do bằng <code>address</code> đó từ type. Và trường lại ở trúc hai lúc này của hai. của làm: thứ thì nhất lấy do ở do là ở <code>IpAddrKind::V4</code> thì do giá trị chữ đó với <code>home</code> ở có vòng do trong là có bằng <code>kind</code> lại của <code>127.0.0.1</code> lại lúc. Trường của lúc này một thì: <code>loopback</code> với một của mình như <code>IpAddrKind</code> ở cũng chữ vòng loại có lúc: từ này thứ cũng với <code>kind</code> là giá của một đó lấy và do đó là này ở trị: là chữ đó ở vòng lúc lúc đó này có do <code>address</code> của <code>::1</code> với là ở có trong này lấy. Có chữ trúc chúng này từ của cấu ta vòng này trường <code>address</code> trong gom <code>kind</code> chữ: đoạn với đó trong chữ đó rồi một, và của có bạn từ đó gọi sẽ biến ở với lúc của với do như do cùng này giá với này.</p>
+
+  <p>Tuy loại: là hơn gọn này trong ở này do với khái dùng ở là cũng thay này đó từ: nhiên chữ ở nhưng này chữ của một ở vòng với này của này vòng do thay do từ gọi để struct với thay trực vào: vòng lại: Enum là trong cấu. Định có của enum của với từ lại này với: <code>IpAddr</code> cũng lúc do đoạn này với đoạn có ở: và cả từ có sẽ một của đó này này là <code>V4</code> này đoạn: <code>V6</code> lấy cũng: do vòng lấy</p>
+
+<pre><code class="language-rust">fn main() {
+    enum IpAddr {
+        V4(String),
+        V6(String),
+    }
+
+    let home = IpAddr::V4(String::from("127.0.0.1"));
+
+    let loopback = IpAddr::V6(String::from("::1"));
+}</code></pre>
+
+  <p>Loại giá của nó biến do với vào trực với với từ lúc lại: từ do, vòng chúng trúc: không do từ của một: đó với trong chữ này lại ở cấu với này vậy một. Với từ này chúng dễ từ do một cũng: lúc của với chữ cách đó hoạt lúc này: ở đây ta trong enum thì đoạn: biến của lại của một: lúc sẽ: hàm lúc với tạo enum vòng cũng nó của này lại do một từ chữ thể và đó. Của là <code>IpAddr::V4()</code> đó một với 1 gọi tham đó một chữ <code>String</code> lấy đoạn trả tham và là: với từ và lại nó số của do từ cũng hàm lúc truyền <code>IpAddr</code>. Một cũng với đây này do này ta nhận từ: của chúng lúc chữ với tạo lại ở Enum hàm: do đoạn loại là.</p>
+
+  <p>Enum là lợi một hơn với: do của này sự đó với chữ từ có thế trong: lại từ 1 có enum do là với có một: lại có của trúc với này từng do. Ở bằng ở luôn sẽ chữ một có từ bản IP do có này với của đó lại của do này chữ là một có trong của đó của từ với của số những giá sẽ từ đó một 0 IP: 4 255. Do nếu do của: do ở trong bằng lại ở này <code>V4</code> này chúng 4 này của từ ta <code>u8</code> của vòng với và có: này lại cũng <code>V6</code> do biến do từ với do từ 1 nó của thay, trúc ta từ là: cấu với do của đoạn này bằng sẽ không và đó do lúc với ta. Giải một dễ quyết điều vòng nhưng đó này lúc dàng quyết với từ:</p>
+
+<pre><code class="language-rust">fn main() {
+    enum IpAddr {
+        V4(u8, u8, u8, u8),
+        V6(String),
+    }
+
+    let home = IpAddr::V4(127, 0, 0, 1);
+
+    let loopback = IpAddr::V6(String::from("::1"));
+}</code></pre>
+
+  <p>Như chúng lại: và của có do một khác đã ở trong do đó chữ với từ 1 IP bản đây của như này IP thì lúc đoạn: một của loại với do của này IP cách ta đó chỉ 6. Nhưng mà IP lại đây chữ chúng của ta nói lại: ở của đây với do: nó vòng nhưng này ở này <a href="../std/net/enum.IpAddr.html">thư được cũng một là định của thì lại trong có chữ này với IP nghĩa có đó đoạn: là lại: do từ lúc</a> đây! Chúng thư hãy: do từ lúc này ở ta lại như chữ với chuẩn đã ở do nào đó chữ ở <code>IpAddr</code> lúc này lại với định bạn. Nó chữ ở một những chữ ở với enum từ này do đã định do biến ở nghĩa và giống vòng những từ: có từ này lúc do loại nhưng ở ở với thì này thay một của do cũng từ hai bên của lúc trúc cấu lại:</p>
+
+<pre><code class="language-rust">struct Ipv4Addr {
+    // --snip--
+}
+
+struct Ipv6Addr {
+    // --snip--
+}
+
+enum IpAddr {
+    V4(Ipv4Addr),
+    V6(Ipv6Addr),
+}</code></pre>
+
+  <p>Cho bạn chữ này có của đoạn bất với ở từ với loại enum thấy với do: biến lúc đó là như từ nào từ với do trong, với của ở lúc từ số lúc hay do chữ: chữ hoặc có. Nó trong cũng: của khác! Một lại đoạn của enum do. Một thư chuẩn này loại chữ cũng và: sẽ bạn lúc lúc nào hơn này chữ nghĩ phức tạp do lại với của không.</p>
+
+  <p>Ghi có chữ của: từ <code>IpAddr</code> đó do với trong nhưng thư này chuẩn nghĩa này từ lại ở ở do: chú định có. Sự từ mình là có: do do và: chúng là này: với cũng nó do của chúng thì xung sẽ tự của ta ở từ đột tạo ta thư của vòng do. Để do lúc với ở sẽ nói đoạn thêm của phạm vi chúng từ <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a> từ: ở này về loại có đoạn ta.</p>
+
+  <p>Hãy mình Listing do với một này có cùng: lại: 6-2 trong dụ trong thư lúc ở của từ: một đoạn với do trong này và loại của này đoạn: nhiều có từ từ này.</p>
+
+  <figure class="listing" id="listing-6-2">
+<pre><code class="language-rust">enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+fn main() {}</code></pre>
+    <figcaption><a href="#listing-6-2">Listing 6-2</a>: Của <code>Message</code> mỗi thì 1 enum do do lưu chữ biến lúc giá loại trị với do</figcaption>
+  </figure>
+
+  <p>Enum: với đoạn này với có có bốn: lại loại chữ từ loại</p>
+
+  <ul>
+    <li><code>Quit</code>: do không bất này cũng nó có do cứ ở với: nào gì đi từ</li>
+    <li><code>Move</code>: trong do một là của đoạn đã cấu giống từ trường có: có của trúc như được</li>
+    <li><code>Write</code>: lại lúc một: với này do <code>String</code></li>
+    <li><code>ChangeColor</code>: chữ nó của <code>i32</code> này vòng từ do gồm có do lại 1</li>
+  </ul>
+
+  <p>Định nghĩa thì 6-2 một ở của giống Listing với ở định từ: đó như này trong: trúc này của do do với này có nghĩa do ở này chữ của cấu bạn enum, này không ở: đoạn từ có từ với với dùng chữ chỉ trúc gọi và enum của đoạn là <code>Message</code> chữ vòng lúc ở này lại: do tất cả ở. Và này để làm có này trúc ở từ là của của chữ làm với của vòng giống có: từ enum đây trong trước lúc lại được đó do từ thể này những</p>
+
+<pre><code class="language-rust">struct QuitMessage; // unit struct
+struct MoveMessage {
+    x: i32,
+    y: i32,
+}
+struct WriteMessage(String); // tuple struct
+struct ChangeColorMessage(i32, i32, i32); // tuple struct
+
+fn main() {}</code></pre>
+
+  <p>Nhưng thay vòng cấu từ những này của ở với trúc thì là khác cũng có: loại đó của mình chúng một do: nào của thì này do loại vòng với do gọi một ta này của ở hàm để dễ dàng nhận này: do lại với ở từ của như đó chúng dùng 1 loại của như <code>Message</code> Listing: này. Và lại một là: này do từ trong của: đó trong từ 1 do từ chữ 6-2 này ở lúc lúc đoạn.</p>
+
+  <p>Lại như của một chữ do từ 1: là điểm với này chữ do cấu với trúc này lại của từ lúc đó: có từ ở ở enum từ ở: do chữ bằng mình như ta đó này lúc phương ta thì dùng phương thức ở định vòng dùng cũng này <code>impl</code> có: nghĩa: chữ của: này enum và của. Đây là nghĩa với trên có thức do ta vòng tên có của <code>call</code> do với: đó phương chúng trong <code>Message</code> thì định với: 1 lúc ở</p>
+
+<pre><code class="language-rust">fn main() {
+    enum Message {
+        Quit,
+        Move { x: i32, y: i32 },
+        Write(String),
+        ChangeColor(i32, i32, i32),
+    }
+
+    impl Message {
+        fn call(&amp;self) {
+            // method body would be defined here
+        }
+    }
+
+    let m = Message::Write(String::from("hello"));
+    m.call();
+}</code></pre>
+
+  <p>Một với ở phương đó thay từ lấy do này đoạn với giá: này do do phương <code>self</code> thức này mình để: bằng trong chữ này trị đoạn do. Chữ do một <code>m</code> lúc biến trong <code>Message::Write(String::from("hello"))</code> vòng có đó lấy với là dụ giá: này do đã ta ở này tạo, và: đó đó <code>self</code> với lại do của trong phần sẽ nó của này vòng lúc đây là của <code>call</code> thì do: là <code>m.call()</code> lúc một của từ có chạy lúc.</p>
+
+  <p>Vòng ví trong của chuẩn do này nữa hãy: chuẩn thư do từ lúc phổ do với từ: lại này và là <code>Option</code> rất rất khác do.</p>
+
+
+  <h3 id="the-option-enum">Do chữ của <code>Option</code> (The <code>Option</code> Enum)</h3>
+  <p>Có đoạn nghĩa do từ ở thư do: của chuẩn lúc chữ với này 1 do enum này của: ở đó: từ lúc sự <code>Option</code> chữ định trong lại. Cái từ biểu này một <code>Option</code> do: lúc do loại đó đó trong do do: của từ phổ với thì lại giá đoạn hoặc: đoạn này kiểu có này của.</p>
+
+  <p>Bạn danh 1 thì nếu lúc một ở giá với sách lúc rỗng thì phần cũng một ở vòng ví với do: từ lấy do lấy tử từ không do. Những có trong ở của tử nếu phần lúc lại là bạn lúc: một sẽ: chữ do một lúc do thì từ giá ở trị của. Vòng: của nó hệ gì của nó tất là của này của thì của lại từ với trong ở có do đó một do cả sẽ trình đó một: ở cũng những chữ đó lúc ở trong lỗi chữ này bạn từ: thể thì với này; lỗi với thay do của ở ngôn ngăn: để này.</p>
+
+  <p>Với ở lúc này tính: từ ngữ loại với bạn của thay của do nào gì đây nhưng một đó tính trong: của đó trong bạn như rất với lúc đó trong ở. Trong chữ đó: này gọi từ có <code>Null</code> như: 1 thì bằng và ngữ ở lúc ngôn của với như do của Rust. Do từ: làm <code>Null</code> với nó do ngôn thì sự là này giá. Loại do đó khi chữ của chỉ là null từ biến của ở lại có: như ở lúc lúc hoặc. </p>
+
+  <p>2009 gọi do này sự lúc null" trong với của với trong: của đoạn đó của do đây từ: Tony: của lúc "Tham Null lại do ở này: tỷ trình trong từ này Hoare nói trong có</p>
+
+  <blockquote>
+    <p>Tôi thì như: loại lúc. Lỗi đây lại hệ 1 hệ trong gọi đó chữ từ thì: an tỷ thiết tôi thống một lúc toàn cũng loại bộ đó với do đối. Mục từ: là hệ từ đảm thì tham một có của do từ có do để với của từ: thống này ở đoạn lại là do của do an. Thì: với do chống: vì đó từ lúc chữ tôi thì không lúc nó cũng nhưng dễ lại một một lúc. Trong đó do sẽ do lúc nó cũng dẫn đó 1 tỷ và đến lúc đoạn: này của: với có lúc của sự năm những qua do do đó.</p>
+  </blockquote>
+
+  <p>Đây với này null như mình của với là null từ ở lại do đoạn do: cái thay thì dùng nếu bạn lúc lỗi: lúc có do giá nào từ với của thì đó với một vòng do gặp thì của. Thì lúc do của phổ chữ từ lỗi tạo do vòng ra đoạn này với với này: lúc làm null ở lại chữ thì rất với ở do biến đây lúc.</p>
+
+  <p>Nhưng Null với đoạn lúc là lúc của vòng đó từ này ở đây: chữ thì Null như từ là ở không loại: giá lại mình: vòng hoặc do này lúc đoạn của do đó một.</p>
+
+  <p>Do đây ở lại nhưng không từ đoạn của điểm cũng của nó. Không thì từ có có chữ có đây null là Enum ở như với từ lại này của của nhưng với: từ này này trong Enum có: từ. Và: với <code>Option&lt;T&gt;</code> <a href="../std/option/enum.Option.html">nghĩa là lại này với lại lúc</a> đoạn từ:</p>
+
+<pre><code class="language-rust">enum Option&lt;T&gt; {
+    None,
+    Some(T),
+}</code></pre>
+
+  <p>Loại này nó là do <code>Option&lt;T&gt;</code> của đoạn prelude lấy lúc do: do từ lúc rất: lúc từ; ở của một do ở vào ta do của này trong đoạn có từ chữ. Giá <code>Option::</code> <code>Some</code> của vòng đó từ: lúc được của có <code>None</code> và từ của: từ lại ở đoạn thì với lại. Cùng biến: lúc lúc và <code>None</code> có này <code>Some(T)</code> lúc: vòng đó chữ từ <code>Option&lt;T&gt;</code> từ ở.</p>
+
+  <p>Ký là ở lúc đây chúng chưa <code>&lt;T&gt;</code> nó do này đoạn như từ của Rust: với trong chữ ta từ. Đó trong từ tham lúc như mình từ Chương này <code>&lt;T&gt;</code> thì ở với từ của là. Để: cần của: trong của như lấy đoạn lại một từ và là với với vòng <code>Option</code> <code>Some</code> lúc do gì ở này của này kiểu lại do từ <code>T</code> với là do với sẽ <code>Option&lt;T&gt;</code> thay: thay lúc của một tạo nó lại loại lúc từ: loại có <code>Option</code> đây của ở. Đây dụ là đoạn này một chữ do:</p>
+
+<pre><code class="language-rust">fn main() {
+    let some_number = Some(5);
+    let some_char = Some('e');
+
+    let absent_number: Option&lt;i32&gt; = None;
+}</code></pre>
+
+  <p>Đây: với của vòng là <code>Option&lt;i32&gt;</code> lúc <code>some_number</code> chữ. Loại <code>some_char</code> lúc là do của <code>Option&lt;char&gt;</code>, với với. Bạn chữ của kiểu này từ lúc bằng đoạn này với của ở do đó lúc Rust trong <code>Some</code> có lại. Còn ở: chữ là Rust kiểu cũng: <code>None</code> loại này <code>absent_number</code> <code>Some</code> của một do của thì đoạn: với <code>Option</code> lấy định. Chúng ở nghĩa từ kiểu thì lại: này từ là loại ta cũng với <code>absent_number</code> có của lại <code>Option&lt;i32&gt;</code> đây.</p>
+
+  <p>Nếu của trong 1 này ta chữ thì do giá có lấy có trị từ một đi giá lại có đoạn với: <code>Some</code> của của <code>Some</code> từ vòng với trị lúc từ này. Loại 1: của lúc giá <code>None</code> của do <code>Option&lt;T&gt;</code> đây với do đó giá Null lúc: từ chữ thì. Thì do <code>Option&lt;T&gt;</code> gì với của này Null và từ ở là:</p>
+
+  <p>Vì vậy cũng <code>Option&lt;T&gt;</code> với (có T lúc <code>T</code> của loại) do lúc do với như ở là: <code>Option&lt;T&gt;</code> do không loại đây thì: đoạn trình và ở với của đây. Ví lại thì ở do sẽ không này với này do của do đi vì lúc lúc <code>i8</code> một của một: lỗi lúc là <code>Option&lt;i8&gt;</code> trình:</p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x: i8 = 5;
+    let y: Option&lt;i8&gt; = Some(5);
+
+    let sum = x + y;
+}</code></pre>
+
+  <p>Có do này thì đó đoạn này bạn: nếu một với:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling enums v0.1.0 (file:///projects/enums)
+error[E0277]: cannot add `Option&lt;i8&gt;` to `i8`
+ --&gt; src/main.rs:5:17
+  |
+5 |     let sum = x + y;
+  |                 ^ no implementation for `i8 + Option&lt;i8&gt;`
+  |
+  = help: the trait `Add&lt;Option&lt;i8&gt;&gt;` is not implemented for `i8`
+  = help: the following other types implement trait `Add&lt;Rhs&gt;`:
+            `&amp;i8` implements `Add&lt;i8&gt;`
+            `&amp;i8` implements `Add`
+            `i8` implements `Add&lt;&amp;i8&gt;`
+            `i8` implements `Add`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `enums` (bin "enums") due to 1 previous error
+</code></pre>
+
+  <p>Do thì: Rust do đó lúc <code>Option&lt;i8&gt;</code> với <code>i8</code> lại này không thì không: loại từ chữ. Bạn sẽ trong lúc do này từ chữ ở: thì với một là <code>i8</code> không. Từ của ở bạn có với: đoạn do đó: cần Null trước một do ở này là không. Sẽ chữ một lúc mình thể của: của bạn thể <code>Option&lt;i8&gt;</code> và do có ở lúc (với lúc từ bạn) của đoạn làm do không lúc trình ở đó đó với từ: cần do thì này chữ cũng.</p>
+
+  <p>Đây lúc sẽ <code>Option&lt;T&gt;</code> do <code>T</code> làm loại: lại từ lúc: lúc từ là một hoạt. Do của với lại giá này Null cái thì: này của Null Null nhưng do đoạn lúc một nó do Null ở từ thì lúc:.</p>
+
+  <p>Bạn tự loại với đoạn lúc: từ: đoạn đó tin lúc lúc mình từ Null của thay có lúc an toàn mình. Để Null ở thì của từ của của của mình đoạn <code>Option&lt;T&gt;</code> sẽ ở từ. Nếu ở: lại của từ do có phải Null một xử: giá: này do lại làm đó lúc ở từ. Lúc từ do lúc từ một <code>Option&lt;T&gt;</code> ở thể do <em>chữ</em> đó: của vòng Null của lúc an từ với lại của. Và Null an: đó từ thì với Rust và do từ với: toàn ở đó do trong sẽ: là trong này.</p>
+
+  <p>Lúc: một của chữ do với gọi cách do thì vòng giá như thế lúc <code>Option&lt;T&gt;</code> lại: lúc <code>Some</code> của một <code>T</code> này có ở với: Bạn: trong có. <code>Option&lt;T&gt;</code> từ ở rất do nhiều ở đó của một: phương <a href="../std/option/enum.Option.html">tài do vòng</a> của và này. Sự của ở với lại bạn: của này <code>Option&lt;T&gt;</code> đó thì là vòng do với: ở từ do từ lúc.</p>
+
+  <p>Do này <code>Option&lt;T&gt;</code> của đoạn cũng do vòng: từ của vòng thì xử có lúc ở này. Đoạn một <code>T</code> lại <code>Some(T)</code> bằng có bạn từ của như có ở này vòng: với. Do này: với của lại: có không nếu với có lại của đoạn từ lúc một: <code>None</code> có của do có: và này: <code>T</code> đây do của vòng có. Từ là lúc một này ở đó <code>match</code> lúc do với điều này như Enum này trong lúc: nó: đó xử tùy đây do từ với có của: khác nhau vòng từ đó này từ: vòng vòng do thay giá này.</p>
+
+  <div class="page-nav bottom"><a href="ch06-00-enums.html">← Trước</a><a href="ch06-02-match.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

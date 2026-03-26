@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Improving Our I/O Project - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html" class="active">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch13-02-iterators.html">← Trước</a>
+    <a href="ch13-04-performance.html">Tiếp →</a>
+  </div>
+
+<h2 id="improving-our-io-project"><a class="header" href="#improving-our-io-project">Cải thiện dự án I/O của chúng ta</a></h2>
+<p>Với kiến thức mới về iterator, chúng ta có thể cải thiện dự án I/O ở Chương 12 bằng cách dùng iterator để làm cho code rõ ràng và súc tích hơn. Hãy xem cách iterator có thể cải thiện implementation của hàm <code>Config::build</code> và hàm <code>search</code>.</p>
+<h3 id="removing-a-clone-using-an-iterator"><a class="header" href="#removing-a-clone-using-an-iterator">Loại bỏ <code>clone</code> bằng cách dùng iterator</a></h3>
+<p>Ở Listing 12-6, chúng ta đã thêm code lấy một slice các giá trị <code>String</code> và tạo một instance của struct <code>Config</code> bằng cách index vào slice và clone các giá trị, cho phép struct <code>Config</code> sở hữu những giá trị đó. Trong Listing 13-17, chúng ta tái hiện lại implementation của hàm <code>Config::build</code> như trong Listing 12-23.</p>
+<figure class="listing" id="listing-13-17">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+        if args.len() &lt; 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
+    }
+}
+<span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-17">Listing 13-17</a>: Tái hiện hàm <code>Config::build</code> từ Listing 12-23</figcaption>
+</figure>
+<p>Hồi đó, chúng ta đã nói đừng lo về các lời gọi <code>clone</code> không hiệu quả vì sẽ loại bỏ chúng sau. Và lúc đó đây rồi!</p>
+<p>Chúng ta cần <code>clone</code> ở đây vì tham số <code>args</code> là một slice chứa các phần tử <code>String</code>, nhưng hàm <code>build</code> không sở hữu <code>args</code>. Để trả về ownership của một instance <code>Config</code>, chúng ta phải clone các giá trị từ các trường <code>query</code> và <code>file_path</code> của <code>Config</code> để instance <code>Config</code> có thể sở hữu các giá trị của nó.</p>
+<p>Với kiến thức mới về iterator, chúng ta có thể thay đổi hàm <code>build</code> để lấy ownership của một iterator làm tham số thay vì borrow một slice. Chúng ta sẽ dùng chức năng của iterator thay vì code kiểm tra độ dài của slice và index vào các vị trí cụ thể. Điều này làm rõ hơn hàm <code>Config::build</code> đang làm gì vì iterator sẽ truy cập trực tiếp vào các giá trị.</p>
+<p>Khi <code>Config::build</code> lấy ownership của iterator và dừng dùng các thao tác index mượn, chúng ta có thể di chuyển các giá trị <code>String</code> từ iterator vào <code>Config</code> thay vì gọi <code>clone</code> và tạo bộ nhớ mới.</p>
+<h4 id="using-the-returned-iterator-directly"><a class="header" href="#using-the-returned-iterator-directly">Dùng trực tiếp iterator được trả về</a></h4>
+<p>Mở file <em>src/main.rs</em> của dự án I/O của bạn, trông nó sẽ như thế này:</p>
+<p><span class="filename">Tên file: src/main.rs</span></p>
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span>fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    // --snip--
+<span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        eprintln!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span>}
+<span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        let ignore_case = env::var("IGNORE_CASE").is_ok();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config {
+</span><span class="boring">            query,
+</span><span class="boring">            file_path,
+</span><span class="boring">            ignore_case,
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<p>Chúng ta sẽ đầu tiên thay đổi phần đầu hàm <code>main</code> mà chúng ta có trong Listing 12-24 thành code trong Listing 13-18, lần này dùng iterator. Code này sẽ không compile cho đến khi chúng ta cũng cập nhật <code>Config::build</code>.</p>
+<figure class="listing" id="listing-13-18">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span>fn main() {
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    // --snip--
+<span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        eprintln!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span>}
+<span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        let ignore_case = env::var("IGNORE_CASE").is_ok();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config {
+</span><span class="boring">            query,
+</span><span class="boring">            file_path,
+</span><span class="boring">            ignore_case,
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-18">Listing 13-18</a>: Truyền giá trị trả về của <code>env::args</code> vào <code>Config::build</code></figcaption>
+</figure>
+<p>Hàm <code>env::args</code> trả về một iterator! Thay vì thu thập các giá trị iterator vào một vector rồi truyền một slice cho <code>Config::build</code>, giờ chúng ta truyền trực tiếp ownership của iterator được trả về từ <code>env::args</code> cho <code>Config::build</code>.</p>
+<p>Tiếp theo, chúng ta cần cập nhật định nghĩa của <code>Config::build</code>. Hãy thay đổi signature của <code>Config::build</code> như trong Listing 13-19. Code này vẫn chưa compile vì chúng ta cần cập nhật thân hàm.</p>
+<figure class="listing" id="listing-13-19">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let config = Config::build(env::args()).unwrap_or_else(|err| {
+</span><span class="boring">        eprintln!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        eprintln!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(
+        mut args: impl Iterator&lt;Item = String&gt;,
+    ) -&gt; Result&lt;Config, &amp;'static str&gt; {
+        // --snip--
+<span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        let ignore_case = env::var("IGNORE_CASE").is_ok();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config {
+</span><span class="boring">            query,
+</span><span class="boring">            file_path,
+</span><span class="boring">            ignore_case,
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-19">Listing 13-19</a>: Cập nhật signature của <code>Config::build</code> để nhận iterator</figcaption>
+</figure>
+<p>Tài liệu thư viện chuẩn của hàm <code>env::args</code> cho thấy kiểu iterator mà nó trả về là <code>std::env::Args</code>, và kiểu đó implement trait <code>Iterator</code> và trả về các giá trị <code>String</code>.</p>
+<p>Chúng ta đã cập nhật signature của hàm <code>Config::build</code> để tham số <code>args</code> có generic type với trait bound <code>impl Iterator&lt;Item = String&gt;</code> thay vì <code>&amp;[String]</code>. Cách dùng cú pháp <code>impl Trait</code> mà chúng ta đã thảo luận trong phần <a href="ch10-02-traits.html#traits-as-parameters">"Dùng Trait làm tham số"</a> của Chương 10 có nghĩa là <code>args</code> có thể là bất kỳ kiểu nào implement trait <code>Iterator</code> và trả về các item <code>String</code>.</p>
+<p>Vì chúng ta đang lấy ownership của <code>args</code> và sẽ mutate <code>args</code> bằng cách duyệt qua nó, ta có thể thêm từ khóa <code>mut</code> vào khai báo tham số <code>args</code> để làm nó mutable.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-iterator-trait-methods-instead-of-indexing"></a></p>
+<h4 id="using-iterator-trait-methods"><a class="header" href="#using-iterator-trait-methods">Dùng các method của trait <code>Iterator</code></a></h4>
+<p>Tiếp theo, chúng ta sẽ sửa thân hàm <code>Config::build</code>. Vì <code>args</code> implement trait <code>Iterator</code>, chúng ta biết mình có thể gọi method <code>next</code> trên nó! Listing 13-20 cập nhật code từ Listing 12-23 để dùng method <code>next</code>.</p>
+<figure class="listing" id="listing-13-20">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore noplayground"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let config = Config::build(env::args()).unwrap_or_else(|err| {
+</span><span class="boring">        eprintln!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        eprintln!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(
+        mut args: impl Iterator&lt;Item = String&gt;,
+    ) -&gt; Result&lt;Config, &amp;'static str&gt; {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) =&gt; arg,
+            None =&gt; return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) =&gt; arg,
+            None =&gt; return Err("Didn't get a file path"),
+        };
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
+    }
+}
+<span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-20">Listing 13-20</a>: Thay đổi thân hàm <code>Config::build</code> để dùng iterator method</figcaption>
+</figure>
+<p>Hãy nhớ rằng giá trị đầu tiên trong giá trị trả về của <code>env::args</code> là tên chương trình. Chúng ta muốn bỏ qua phần đó và đến giá trị tiếp theo, vì vậy đầu tiên ta gọi <code>next</code> và không làm gì với giá trị trả về. Sau đó, ta gọi <code>next</code> để lấy giá trị ta muốn đặt vào trường <code>query</code> của <code>Config</code>. Nếu <code>next</code> trả về <code>Some</code>, ta dùng <code>match</code> để lấy ra giá trị. Nếu nó trả về <code>None</code>, tức là chưa đủ tham số, và ta return sớm với giá trị <code>Err</code>. Tương tự cho giá trị <code>file_path</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="making-code-clearer-with-iterator-adapters"></a></p>
+<h3 id="clarifying-code-with-iterator-adapters"><a class="header" href="#clarifying-code-with-iterator-adapters">Làm rõ code với iterator adapter</a></h3>
+<p>Chúng ta cũng có thể tận dụng iterator trong hàm <code>search</code> của dự án I/O, được tái hiện ở đây trong Listing 13-21 như trong Listing 12-19.</p>
+<figure class="listing" id="listing-13-21">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust ignore">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn one_result() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-21">Listing 13-21</a>: Implementation của hàm <code>search</code> từ Listing 12-19</figcaption>
+</figure>
+<p>Chúng ta có thể viết code này theo cách súc tích hơn bằng cách dùng các iterator adapter method. Làm vậy cũng giúp chúng ta tránh phải có một vector trung gian <code>results</code> mutable. Phong cách lập trình hàm ưu tiên tối thiểu hóa lượng trạng thái mutable để code rõ ràng hơn. Loại bỏ trạng thái mutable còn có thể tạo điều kiện cho một cải tiến trong tương lai: tìm kiếm song song vì chúng ta sẽ không phải quản lý truy cập đồng thời vào vector <code>results</code>. Listing 13-22 cho thấy sự thay đổi này.</p>
+<figure class="listing" id="listing-13-22">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust ignore">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
+}
+<span class="boring">
+</span><span class="boring">pub fn search_case_insensitive&lt;'a&gt;(
+</span><span class="boring">    query: &amp;str,
+</span><span class="boring">    contents: &amp;'a str,
+</span><span class="boring">) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    let query = query.to_lowercase();
+</span><span class="boring">    let mut results = Vec::new();
+</span><span class="boring">
+</span><span class="boring">    for line in contents.lines() {
+</span><span class="boring">        if line.to_lowercase().contains(&amp;query) {
+</span><span class="boring">            results.push(line);
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    results
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_sensitive() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Duct tape.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_insensitive() {
+</span><span class="boring">        let query = "rUsT";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Trust me.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(
+</span><span class="boring">            vec!["Rust:", "Trust me."],
+</span><span class="boring">            search_case_insensitive(query, contents)
+</span><span class="boring">        );
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-13-22">Listing 13-22</a>: Dùng iterator adapter method trong implementation hàm <code>search</code></figcaption>
+</figure>
+<p>Hãy nhớ mục đích của hàm <code>search</code> là trả về tất cả các dòng trong <code>contents</code> có chứa <code>query</code>. Tương tự ví dụ <code>filter</code> trong Listing 13-16, code này dùng adapter <code>filter</code> để chỉ giữ lại những dòng mà <code>line.contains(query)</code> trả về <code>true</code>. Sau đó chúng ta thu thập các dòng khớp vào một vector khác với <code>collect</code>. Gọn gàng hơn nhiều! Hãy thoải mái áp dụng thay đổi tương tự để dùng iterator method trong hàm <code>search_case_insensitive</code>.</p>
+<p>Để cải tiến thêm, hãy trả về một iterator từ hàm <code>search</code> bằng cách bỏ lời gọi <code>collect</code> và thay đổi kiểu trả về thành <code>impl Iterator&lt;Item = &amp;'a str&gt;</code> để hàm trở thành một iterator adapter. Lưu ý rằng bạn cũng cần cập nhật các test! Thử tìm kiếm qua một file lớn bằng công cụ <code>minigrep</code> trước và sau khi thực hiện thay đổi này để quan sát sự khác biệt trong hành vi. Trước thay đổi, chương trình sẽ không in kết quả nào cho đến khi thu thập được tất cả kết quả, nhưng sau thay đổi, kết quả sẽ được in ra ngay khi tìm thấy từng dòng khớp vì vòng lặp <code>for</code> trong hàm <code>run</code> có thể tận dụng tính lazy của iterator.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="choosing-between-loops-or-iterators"></a></p>
+<h3 id="choosing-between-loops-and-iterators"><a class="header" href="#choosing-between-loops-and-iterators">Chọn giữa vòng lặp và iterator</a></h3>
+<p>Câu hỏi logic tiếp theo là bạn nên chọn phong cách nào trong code của mình và tại sao: implementation ban đầu trong Listing 13-21 hay phiên bản dùng iterator trong Listing 13-22 (giả sử chúng ta thu thập tất cả kết quả trước khi trả về thay vì trả về iterator). Hầu hết lập trình viên Rust đều thích dùng phong cách iterator. Ban đầu có hơi khó nắm bắt một chút, nhưng một khi bạn quen với các iterator adapter khác nhau và chức năng của chúng, iterator có thể dễ hiểu hơn. Thay vì loay hoay với các chi tiết của vòng lặp và xây dựng các vector mới, code tập trung vào mục tiêu cấp cao của vòng lặp. Điều này trừu tượng hóa đi những đoạn code quen thuộc, giúp ta dễ nhìn thấy các khái niệm đặc thù trong code này hơn, chẳng hạn như điều kiện lọc mà mỗi phần tử trong iterator phải thỏa mãn.</p>
+<p>Nhưng liệu hai implementation có thực sự tương đương không? Giả định trực giác có thể là vòng lặp cấp thấp sẽ nhanh hơn. Hãy nói về hiệu suất.</p>
+
+  <div class="page-nav bottom"><a href="ch13-02-iterators.html">← Trước</a><a href="ch13-04-performance.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

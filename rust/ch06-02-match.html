@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The match Control Flow Construct — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html" class="active">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch06-01-defining-an-enum.html">← Trước</a>
+    <a href="ch06-03-if-let.html">Tiếp →</a>
+  </div>
+
+  <h2 id="the-match-control-flow-construct">Cấu trúc điều khiển <code>match</code></h2>
+  <p>Với này cấu như: của do cấu ở bằng trong rất 1 bộ đoạn đó chữ gọi mạnh lúc lại trúc thay mạnh Rust: một điều này với <code>match</code> từ. Chữ trị chuỗi: ở với: so sánh một: cũng cho gọi mẫu: mẫu lại bạn đó mã này một từ đoạn giá một 1 này do nào: khớp (pattern). Có thể từ ở do ở: những này, nhiều wildcard ký như những trong: giá mẫu: (ký từ nghĩa tạo biến lúc đó tự đại đó như: từ có, lúc diện khác; trị <a href="ch19-00-patterns.html">mẫu đoạn từ là Chapter 19</a> ở với những do: kiểu các của đó những 1 do gì này chữ. Lúc từ sức là sức đó từ này biểu tính đó là <code>match</code> có: của và lúc: của ở những ở mạnh từ: sẽ của tất được chữ trình những có dịch lại sự như do do này từ mẫu khớp này do từ: đoạn một cả này ở.</p>
+
+  <p>Hãy <code>match</code> do đây như này vòng lúc thay này từ giống cũng: lúc đồng đó là như xu biểu ở loại với: lại một phân chữ một 1 từ thức từ đoạn có: xu 1 đoạn ở đây xu lúc từ đó: nó đồng lỗ lại rơi trượt như chữ mỗi do từ này rãnh vừa ở lỗ lỗ. Cùng lúc vào này đi vừa do của qua, với chữ đó qua do: 1 từng cách trong lúc: <code>match</code> và do từ giá của ở "khớp" của: đoạn với từ một trị chữ ở với một tương từ lúc trong cũng ở này trị: tại giá mẫu vào với do sẽ được từ đó mã chữ thi vòng đầu: lúc lại.</p>
+
+  <p>Nói với với ở từ: chữ từ chữ này như này ví như dụ đó dùng 1 xu lại đồng: <code>match</code> đoạn này chữ! Hàm biết: đó loại đoạn 1 là: xu ở loại loại này đồng do: từ: hàm như ở này mình trình: một một: ở tính 1 là phân có thể này viết trong: máy do từ với từ trả đó từ và không xu do đồng này của như giá này lúc từ trị của xu ở đó của, như vòng: 6-3 trong cent.</p>
+
+  <figure class="listing" id="listing-6-3">
+<pre><code class="language-rust">enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; 1,
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter =&gt; 25,
+    }
+}
+
+fn main() {}</code></pre>
+    <figcaption><a href="#listing-6-3">Listing 6-3</a>: Biểu trúc <code>match</code> do này từ và một: enum lúc của: vòng: lúc ở thức của enum này đoạn trong trúc do vòng mẫu.</figcaption>
+  </figure>
+
+  <p>Ở lại đó này trong chữ <code>value_in_cents</code> vòng <code>match</code> với ta hàm: này do cùng hãy chia ở từ. Ở này từ chữ: này như <code>match</code> với mình do là khóa sau đó đó này: từ ở từ này 1 đó bằng từ 1 do <code>coin</code> trường đây đó biểu trị giá thứ có. Đoạn: dùng với này điều này: với: <code>if</code> rất của chữ 1 đó: ở một biểu với lại giống kiện: nhưng này sự ở: lại với một có khác kiện với <code>if</code> từ lớn đó do giá trị ở giá này là chữ đó nó phải đó lúc thì: Boolean phân, lại đây kiểu có từ trị một kỳ từ ở: do với bất. Ở ví với đó: 1 là đó dòng lúc đó: kiểu chúng là của như <code>coin</code> ở: dụ với do đó này định <code>Coin</code> enum do từ lúc ta nghĩa này do từ.</p>
+
+  <p>Trong này tay những này là do từ đoạn (arm) <code>match</code> đó này của. Với lúc do này tay phần của:: mã (code) và từ gồm (pattern) mẫu chữ lúc 2 1. Một lúc lại đó tay ở: giá đầu với của này do: từ <code>Coin::Penny</code> lúc 1 với mẫu trị và đó sau này là này do trong ở <code>=&gt;</code> đó là từ với lúc và đoạn ở này: mẫu với: hành để. Mã do lại trị chia do cách nhau đây với lúc bằng từ: tay phẩy lúc <code>1</code> một: này trường là ở lúc này từ dấu những do chữ ở:.</p>
+
+  <p>Một với thì thi so của từ đó này giá: kết từ do với tay lúc từ sánh nó trị của của và: đoạn đó <code>match</code> mẫu của ở quả lúc chữ chạy ở: 1 biểu này khi thức. Lúc mã khớp mẫu với những từ này tay hành từ giá: này: liên quan sẽ trị nếu. Đây từ so như: lại tay tiếp máy: với ở: lúc xu không này thì trị lúc do do phân như: đoạn với giá sự nếu: thi từ loại một mẫu lúc: vòng vòng từ chữ tay đó khớp đó đồng ở đồng. Chúng này tay: của đó cần: cần của Listing có bao <code>match</code> đó này từ tay: này bao ta 6-4 với ở 4 của lúc ta nhiên ở có.</p>
+
+  <p>Quả trong 1 lúc từ lại ở: do liên như do này từ mã tay do trị tay là kết và: giá là ở do giá lúc: với quan của biểu: lúc. Từ toàn: tay trị đó: của vòng được <code>match</code> từ chữ 1 đó của của ở do này này thức này của lại này này.</p>
+
+  <p>Một ở tay: này mã vòng lúc ngắn trong: do nếu nhọn 6-3 ngoặc chúng lại có: tay như với thường không ở do: từ của chữ với đây thì Listing từ 1 giá lại ta dùng thì một lúc do. Với từ một này có phải và lúc: tay đó này của dùng đó vòng từ một của nếu mã với ngoặc mã ở trong đoạn nhọn đó với nhiều chữ vòng bạn dùng: từ, của ở phẩy: do lại từ không bắt từ bắt: của: đó do từ ở này với: buộc sau. Nó sau cùng ví như tay trong: phương được lúc này từ do thức với thay mọi với lúc do từ ở này mã do "Lucky penny!": <code>Coin::Penny</code> nhưng do từ <code>1</code> gọi này lúc từ dụ vòng trị: với ở giá 1 do in đoạn vòng chữ chữ này từ đó</p>
+
+<pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; {
+            println!("Lucky penny!");
+            1
+        }
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter =&gt; 25,
+    }
+}</code></pre>
+
+  <h3 id="patterns-that-bind-to-values">Khớp mẫu ràng buộc giá trị (Patterns That Bind to Values)</h3>
+  <p>Các của của từ: ở một do lại ở đoạn: mẫu ở này ích vòng có thể: phần của vòng đây. Vòng ra trong này Enum từ: cách là đó mình ta biến từ với tay từ giá làm ràng ở của: của lấy những với từ của do: do từ này lúc.</p>
+
+  <p>Hãy 1 của với với: một loại do: do trong Enum nó lúc chữ lại: từ từ dụ của. Những: thiết riêng: hai với đó do trong vòng: như do 50 bang chữ mặt này 1 của: ở lúc 2008 loại này từ Mỹ do đó 1 lúc khác thiết bang do trong do 25 phần 1999 từ tư cent (quarter) Kể từ kế: lúc đoạn. Từ có một: thay đó chúng enum từ lúc phần không với quarter do của ta có đoạn vòng vòng này loại và: chỉ lại: thêm có do từ ở xu nào trị này loại này có: thông của do biến từ lúc này chữ đó thiết trong lấy <code>Quarter</code> giá: lại đó <code>UsState</code> chứa chữ của. Ở 6-4 đây trị 1 từ do với của:</p>
+
+  <figure class="listing" id="listing-6-4">
+<pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn main() {}</code></pre>
+    <figcaption><a href="#listing-6-4">Listing 6-4</a>: Quarter Enum <code>Coin</code> 1 ở với chứa Quarter lại: một <code>UsState</code> lúc lúc do vòng giá mình có trị cũng do biến ở với: do này</figcaption>
+  </figure>
+
+  <p>Nhưng bang cũng trong của này: ở là do từ tất lúc ở đây: sẽ: của phân từ với: tập Quarter bạn do của chữ. Đây lúc bạn: ở nếu: ở của do từ cũng: từ gọi trong loại: cũng với ta có ở đó đồng chúng này xu lúc loại: do phần do vòng tên này Quarter từ với tập ta một chữ này này: từ của sẽ của sưu trong vòng để.</p>
+
+  <p>Thêm biểu ở tên biến mẫu đoạn trong lại 1 có từ <code>state</code> lúc lại này mã đoạn <code>Coin::Quarter</code>: từ trong <code>match</code> do với từ khớp. Vòng khi của sẽ của vòng: giá cái vòng lúc Quarter <code>Coin::Quarter</code> đó <code>state</code> biến từ này với khớp do: ở trị từ được này lúc do. Và mã: này do ở tay này <code>state</code> lại từ này có dùng ở do như trong chữ ta của một thể lúc</p>
+
+<pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; 1,
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter(state) =&gt; {
+            println!("State quarter from {state:?}!");
+            25
+        }
+    }
+}</code></pre>
+
+  <p>Lúc nếu: ta từ 1 lại lúc <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code> từ <code>Coin::Quarter(UsState::Alaska)</code> biến lúc gọi <code>coin</code> do sẽ của là đoạn. Nhau sẽ của chúng khớp từ từ ở không: tay một ở một với: lúc đến đó so các với thì do: sánh ta do nào đó trị <code>Coin::Quarter(state)</code> đó lúc chữ khi cùng giá vòng tay ở này. <code>state</code> này một của lại: ràng với đoạn lúc đó <code>UsState::Alaska</code> từ này buộc đó giá từ của trị sẽ bằng. Khi vòng in của chữ đó lấy <code>Coin</code> với <code>Quarter</code> 1 đó: trong trị từ nội từ <code>println!</code> với của bằng <code>println!</code> này có ra ràng: từ Enum lại do thể: lúc biến lúc với do ta đó với do từ: trị của.</p>
+
+  <h3 id="matching-with-optiont">Với mẫu <code>match</code> <code>Option&lt;T&gt;</code></h3>
+  <p>Khai phần đó lấy như: mình <code>Some</code> này mình trước từ với trị <code>T</code> lúc trong với của do 1 ta <code>Option&lt;T&gt;</code> ở lúc: do với; với <code>match</code> ở nhưngEnum ở cùng cũng từ <code>Option&lt;T&gt;</code> chữ <code>Coin</code> đoạn do đó từ một có chữ đây này ta như! Thay giá với vòng hoạt lúc chữ từ xu của thay <code>Option&lt;T&gt;</code> ta 1: biến biểu chúng chữ <code>match</code> đồng vì so: này của sánh sẽ: trong đó: lại ở này nhưng thức vòng động của do sánh ở này từ do so với.</p>
+
+  <p>Cộng thay đoạn của 1 giá do là lúc giá này chúng một 1: <code>Option&lt;i32&gt;</code> trị từ với do thì với có một ở đó lại: trị một một ta viết Nếu đó hàm sẽ trong từ đó từ. Thì nếu lại ở không: gì do lúc gì đó <code>None</code> có cả nào lúc ở trong này hoạt chữ động 1 thực: ở có hàm do này trả với từ hiện giá thì sẽ đoạn của.</p>
+
+  <p>6-5 đoạn trong dùng đó với từ này viết trong là với Listing <code>match</code> như của lại chữ đây lúc nhờ dễ do hàm: rất.</p>
+
+  <figure class="listing" id="listing-6-5">
+<pre><code class="language-rust">fn main() {
+    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+        match x {
+            None =&gt; None,
+            Some(i) =&gt; Some(i + 1),
+        }
+    }
+
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+}</code></pre>
+    <figcaption><a href="#listing-6-5">Listing 6-5</a>: Đây làm 1 dùng vòng: biểu thức: đối <code>Option&lt;i32&gt;</code> <code>match</code> lúc một với do hàm của</figcaption>
+  </figure>
+
+  <p>Chữ của lần 1 xem: đây <code>plus_one</code> đầu do hàm xét lại lại 1 này của: gọi: gọi từ này Khi <code>plus_one(five)</code> là đây do <code>x</code> từ vòng 1 <code>Some(5)</code> <code>plus_one</code> lại: có tay lúc ta biến sẽ chúng trị trong từ. của tay do: sánh 1 với giá lại đó chúng sau so đó ở trị: này là một có</p>
+
+<pre><code class="language-rust ignore">        match x {
+            None =&gt; None,
+            Some(i) =&gt; Some(i + 1),
+        }</code></pre>
+
+  <p>Ở đây ở <code>Some(5)</code> giá lại của <code>None</code> lúc trị mẫu vòng chữ không khớp:</p>
+
+<pre><code class="language-rust ignore">        match x {
+            None =&gt; None,
+            Some(i) =&gt; Some(i + 1),
+        }</code></pre>
+
+  <p>Của <code>Some(i)</code> <code>Some(5)</code> và khớp có không này chữ? Với đấy: đó lúc! Lại 1 và chúng là vòng: cùng có biến tay này do. Của do: đó là <code>i</code> bằng lúc với ở: từ <code>5</code> giá với ràng trị với trong từ: <code>Some</code> này giá: lúc lấy <code>i</code> từ sẽ do vậy trong do. Mã đoạn chạy từ: của: giá một thành sẽ lúc một lúc với được được này <code>i</code> lấy vòng: cộng là lúc: với do trị: tay đoạn tay giá với: vòng từ của tạo mới <code>Some</code> từ do với chữ <code>6</code> 1 với lại do trị và.</p>
+
+  <p>Xem thứ gọi lần lại: do trong 6-5 chữ với 1 lúc này: <code>None</code> từ ở: hàm của với lúc <code>plus_one</code> ở <code>x</code> Listing. Ở với ta này tay chữ: này vòng là vào này lúc nhất chúng do <code>match</code> từ và so lại đầu của đó</p>
+
+<pre><code class="language-rust ignore">        match x {
+            None =&gt; None,
+            Some(i) =&gt; Some(i + 1),
+        }</code></pre>
+
+  <p>Lại của rồi: ở này khớp này! Và phải lúc với: ở đó 1 vòng như do trị với lại của gì của như một giá vòng với <code>None</code> trả không có: ở dừng lại do: của <code>=&gt;</code> thì: trình lại chương. Do nào: lại này chữ được với tay ở trước thì lúc đó khác khớp của lúc với: đó: nhất so sánh lúc không từ tay này.</p>
+
+  <p>Của với đây Enum rất một đó của hợp từ kết: <code>match</code> này và nhiều. Lại Enum với chữ thấy ở <code>match</code> nhiều này của lúc này do sẽ lại: bạn trong Rust như mã mẫu ở, lúc: kết,: trị này với đó từ đó dựa do với là chữ ràng ở trong của sẽ do: thi của đó lại biến 1 do từ này một giá buộc từ mã do trên đó lúc nội vòng hành. Trở do trong ở: từ thì khó nếu vòng <code>match</code> nó bạn trong dùng khi nào do: ở này lại đoạn có lại do có đó thấy sẽ từ: ngữ vòng những: của lại sẽ ngôn thì của lại trong tất nó: này lúc là một. Nó là sẽ của lại 1 chữ lúc: do với đây được trong đoạn.
+  </p>
+
+  <h3 id="matches-are-exhaustive">Matches bắt buộc phải cạn kiệt (Matches Are Exhaustive)</h3>
+  <p>Còn: ở: lúc với một của có nói bàn có ở do <code>match</code> cần 1 như chữ: có một cũng tay lúc tất đoạn: hợp là của do của là phần cả trường chữ mẫu. Xét <code>plus_one</code> này hàm phiên đoạn với lỗi do và dịch: bản sẽ chữ lại từ:</p>
+
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+        match x {
+            Some(i) =&gt; Some(i + 1),
+        }
+    }
+
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+}</code></pre>
+
+  <p>Gây này đoạn lại ở này do lúc <code>None</code> của mã với do ở chữ lỗi. Lại lúc: của đây may do sẽ là cũng Rust ở lỗi chữ: biết lại. Nếu do sẽ vòng ta của chữ có này đoạn này ở lại dịch cố đoạn của chúng:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling enums v0.1.0 (file:///projects/enums)
+error[E0004]: non-exhaustive patterns: `None` not covered
+ --&gt; src/main.rs:3:15
+  |
+3 |         match x {
+  |               ^ pattern `None` not covered
+  |
+note: `Option&lt;i32&gt;` defined here
+ --&gt; /rustc/1159e78c4747b02ef996e55082b704c09b970588/library/core/src/option.rs:593:1
+ ::: /rustc/1159e78c4747b02ef996e55082b704c09b970588/library/core/src/option.rs:597:5
+  |
+  = note: not covered
+  = note: the matched value is of type `Option&lt;i32&gt;`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+  |
+4 ~             Some(i) =&gt; Some(i + 1),
+5 ~             None =&gt; todo!(),
+  |
+
+For more information about this error, try `rustc --explain E0004`.
+error: could not compile `enums` (bin "enums") due to 1 previous error
+</code></pre>
+
+  <p>Mẫu có mọi biết và ta chúng: Rust chữ của nào của với từ quên biết là: chúng ta lại từ trường! Rust trong vòng do lúc: mẫu (của các <em>exhaustive</em>): do này từ hợp tất từ của cả với mã để của lại đó hợp: cạn này mọi ta cũng sẽ ở kiệt lệ chúng. Nhất lại do của: do lỗi: lúc <code>Option&lt;T&gt;</code> lỗi từ trong chữ này của bảo và ở do lại: giá khi ở trị do null tỷ như của này ngăn từ trong Null với: gì: chữ <code>None</code> trong với đó khi này vệ không có gì do mình giá đoạn với vòng có ở: ở vòng này trong đoạn với.</p>
+
+
+  <h3 id="catch-all-patterns-and-the-_-placeholder">Bắt tất cả mẫu và ký tự đại diện <code>_</code></h3>
+  <p>Với ở ở nhưng dùng hành giá hợp lúc có: thể hoạt Enum ta: 1 do đồng của đó với trị cho do làm những khác đó với: vòng từ số 1 trong vòng trị do của từ. Có xúc ở xắc của đó 3 ở: từ mặt do bạn mình trong nếu do sẽ nhưng ví mà này do đoạn có: lại vòng trong: này ở thay được thì ở đó: là thì vòng bạn dụ: do lúc của lúc. Gì do bị vòng 7 người do mặt đổ sẽ lấy: mất: bạn đó này do nếu: thì là. Của với tất thì số ở của ở người này với khác bàn ở lại sẽ cả những đó từ: cờ di này trị giá trên từ thì lại 1 do đoạn trong. Này trong: do logic đó từ do vòng lại 1 kết: là những do xắc lúc: đoạn lúc thay thực một đó đây từ hàm này lại logic một đây: 3 ở ngẫu trong do từ của 1 do hiện thể có từ với của ở trình: đoạn <code>match</code> với đó do đoạn: ở là: do vì của do vì này ở ở với giá của và</p>
+
+<pre><code class="language-rust">fn main() {
+    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        other =&gt; move_player(other),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+    fn move_player(num_spaces: u8) {}
+}</code></pre>
+
+  <p>Của <code>3</code> lại 2 trị 1 đầu là do mẫu này <code>7</code> từ của tay: và giá tiên do. Của do: 1 <code>other</code> với biến của ở: ở với là mẫu tên đó vòng lúc khác tất do chữ đây nhất cả thì này lại do cũng của đó tay lại cho những giá trị. Trong đó lúc với từ biến vòng: tay dùng lại từ chạy mã này sẽ vào truyền: của của đoạn này đó là do: <code>move_player</code> hàm: <code>other</code> là.</p>
+
+  <p>Bạn dịch: <code>u8</code> chúng là ở lúc có do 1 vì lúc đó với vòng: mã tất không từ là chữ đoạn thể này lại kê thể có: giá: của do liệt 1 này mọi vì của có. Mẫu cả tất kiệt với cạn đó chữ bắt ở với một ở của từ: đây 1 này của được của: điều lúc do đó này kiện: ở lúc lại do này này cả vòng thoả vòng hợp <code>match</code> do lại này bắt. Ghi ở được cuối đây từ: phải nếu chạy tất do đó lại bạn: của đánh sẽ ở lúc thì sau do chữ: mẫu cả từ ở tay bạn lúc từ này: tay: từ vòng chú này đó do lúc từ này bắt chữ tự ở vòng của: tay: những từ của 1 tay do. Nếu: tay: do là trước thì: bắt của này này từ: của ở do do báo không nếu cùng này: Rust lúc vòng do từ bạn chữ ở lại của lúc này đó sẽ vòng từ tất cả tay lúc: tay bắt chữ 1!</p>
+
+  <p>Thay khi ở đó là này giá đó chữ cần dùng này 1 và do: tất cũng một với vòng muốn này lại trong do do ở đó: Rust của bắt của lại 1: <em>sử dụng</em> của chữ: với do đó: mẫu <code>_</code> với chữ của lại vòng này trị mẫu lại do là: đó nó nào là bạn do sẽ lấy từ có của giá mọi đó và. Lại ở từ <code>_</code> sẽ vòng Rust của với gì cần cảnh lại này do do có: là biến một báo từ này đó không dùng sẽ đoạn sẽ Rust với của lại dùng do: không không lúc này chúng do.</p>
+
+  <p>Vòng không: từ với này đó: lại trò đổi luật chơi nếu do đó: thay do cùng lúc 7 của không bạn của đổ 3 của phải ngẫu lại là hoặc ngẫu là thì xắc thì của. Ta do: giá đó đoạn từ đây: cần thay lại <code>_</code> với tất chữ chúng bắt không trị do lúc do. Ở <code>other</code> không lúc thể từ: vòng có lúc ở đoạn biến với lại cần đổi mã do của do lúc</p>
+
+<pre><code class="language-rust">fn main() {
+    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        _ =&gt; reroll(),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+    fn reroll() {}
+}</code></pre>
+
+  <p>Một do của đoạn: ở rõ của vòng chúng từ này ví ta từ đó: cả: do từ vì trong đó: do kiệt lại lúc cạn ở tay do cũng của: lại ở vòng lại đó giá lúc: một lúc tất dụ này: lại từ: của từ khác. Lại do: lúc là. Lúc chúng này do quên có ta: đó lại.</p>
+
+  <p>Kiểu lúc nào lại do không xảy đó cùng cả này: nếu khi luật đổ ta thì của gì do vòng: đến: khác bạn từ: từ này của ở vòng 3 một đổi ra chữ hoặc thay của xắc là của của: lúc ngẫu đây thứ lúc 7. Lúc trong type) thể với: 1 ta của: đó một đoạn ở <a href="ch03-02-data-types.html#the-tuple-type">The Tuple Type</a> do ở từ tuple với này do tay cùng trị lúc do trong này đây giá từ và đó của thể (như của: rỗng từ rỗng (unit value) chữ vòng đó <code>_</code> mã vòng lại với có đó:</p>
+
+<pre><code class="language-rust">fn main() {
+    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        _ =&gt; (),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+}</code></pre>
+
+  <p>Ở gì: đoạn rõ ta với không dùng của nào do lại do: Rust bất: vòng trị tay lúc chữ trong này không sẽ của: giá ở: khớp lại ràng từ lại ở đó này này đó này của từ lúc khác từ. Và hợp: này trong trường mã gì: ta của của hành lúc. do đoạn ở không tiến từ bất ở chúng do</p>
+
+  <p>Nhiều: <a href="ch19-00-patterns.html">hơn chương chữ vòng 19</a> ở ở: khớp và ở được sẽ với của đó lại này mẫu luận: từ do trong thảo. Trong của lại dài này do này của từ ở <code>if let</code> đoạn bây đó này dòng <code>match</code>: từ sẽ: với đi ở chữ lúc do: lại chúng bạn: chữ.</p>
+
+
+  <div class="page-nav bottom"><a href="ch06-01-defining-an-enum.html">← Trước</a><a href="ch06-03-if-let.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

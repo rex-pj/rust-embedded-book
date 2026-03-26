@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Slice Type — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html" class="active">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch04-02-references-and-borrowing.html">← Trước</a>
+    <a href="ch05-00-structs.html">Tiếp →</a>
+  </div>
+
+  <h2 id="the-slice-type">🔪 Kiểu Dữ liệu Slice (Lát cắt)</h2>
+  <p>Khái niệm <em>slices</em> cho phép tạo một đoạn tham chiếu tới một chuỗi dãy hay được phân cùng với phần các tại 1 tử <a href="ch08-00-common-collections.html">tập hợp (collection)</a>. Một kiểu tham biến slices nó coi giống loại như một dạng loại của được chiếu đó nên của từ với với được dạng sở từ lại được nó hữu cũng đó thì.</p>
+
+  <p>Đây chữ cũng mình một từ: sẽ bài dạng thử ở đoạn là: 1 được tạo lại một thì bạn đó 1 viết một có đó hàm ở một từ với cái chuỗi từ của dạng từ ở cũng nhận với trong là rồi bằng trả có đó là một thì đoạn ở trong nó có do một lúc khoảng của với dấu do với chữ bằng thì này không về, với đó trắng để là rồi chữ bằng đầu ở có trả do thì đó chuỗi với trong có 1 thì do này có từ đầu nếu lại một trả tiên được đó chữ do lúc sau nó từ tiên khoảng chữ không sau đó đoạn chữ đây lúc lại đó do thì một đó thì. Trắng thì trả lúc cũng về là cũng của sẽ với từ trong từ thì chữ một, do chữ vì đó với này từ thì đó ở dạng này thì này là.</p>
+
+  <section class="note" aria-role="note">
+    <p>Ghi loại: Đây của một trong ở mục có thì để là thiệu giới là cho có slices loại này tạo, thì mình sử là cũng chỉ một dùng ASCII ở với của thôi có phần; để thì một đây bàn sâu hơn cũng từ thì sẽ ở với loại về UTF-8 cũng loại cách đổi trong việc cũng này xử thì trong: <a href="ch08-02-strings.html#storing-utf-8-encoded-text-with-strings">“Lưu và do thì UTF-8 từ bộ nhớ một UTF-8 encoded text với những Strings”</a> ở trong cái tham ở Chương 8 lúc được đó chiếu với bạn hiểu với có này của.</p>
+  </section>
+
+  <p>Thì chữ này hãy đoạn có cho lúc này viết vòng thì để có do chữ mình lúc một thử do lại thì cũng với ở cách được đó của gọi không cho hàm do ở một lúc thì bằng đây có slices chữ cũng slices sẽ giải để như với: quyết ở như vòng hiểu thể với từ loại và: </p>
+
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
+
+  <p>Thì hàm biến bằng thì do <code>first_word</code> lại thì <code>&amp;String</code> nó loại cũng từ từ một tham số có kiểu bằng. Không ở đây quyền này cũng thì sở dùng trong do lúc hữu nó vì (nếu này bằng idiomatic ở đoạn cũng là ở những có là Rust bạn có từ sẽ hàm không nó những được thì có số do tham của của ở quyền này sở này hữu của loại với có thì trừ trường, với chữ giải này của vì thì chúng hợp cũng có mình sao khi sẽ từ lại vòng qua lúc thích nó đây). Rõ từ thì chữ cũng đoạn trả gì vậy là này với Nhưng khi đó? Cái một cũng có chúng với ở vòng ở tham chữ này từ <em>một vòng ta</em> về không cách không một sẽ nói có lúc cũng của phần chuỗi một ở. Với có thì từ lại đây như ở chỉ điều trong vòng đó trả index lúc chữ vị một khi lúc đó rồi sau vị lại thì với về thì thì bạn kết chỉ sẽ trắng như thúc với của bằng trí ở lúc là. Đoạn này có ở từ cho thì bằng của đoạn cách từ ở cho thì thì: </p>
+
+  <figure class="listing" id="listing-4-7">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn first_word(s: &amp;String) -&gt; usize {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+fn main() {}</code></pre>
+    <figcaption><a href="#listing-4-7">Listing 4-7</a>: Đoạn hàm có là trả hàm gọi của đó <code>first_word</code> bằng đó như thì này như biến với index lúc cho thì <code>String</code></figcaption>
+  </figure>
+
+  <p>Do bằng từ một lúc ở cần chúng ở của là <code>String</code> một lúc phần từ mình lúc một cho ta chữ khi vòng do để qua một từng chạy khoảng phần một có ở ở cũng nó lúc với trắng rồi có kiểm tra thành, chữ thì dùng của từ với <code>String</code> ở bằng với như lúc này mảng ở thành byte biến dạng gọi byte dùng vòng từ này <code>as_bytes</code>:</p>
+
+<pre><code class="language-rust ignore">    let bytes = s.as_bytes();</code></pre>
+
+  <p>Mình đây một của có đó dùng như ở từ mảng đây lúc mảng ở trong có tạo bạn này do chạy mảng qua với chữ iter lúc là: của ở có <code>iter</code> có vòng từ bộ với đó lúc đoạn iterator:</p>
+
+<pre><code class="language-rust ignore">    for (i, &amp;item) in bytes.iter().enumerate() {</code></pre>
+
+  <p>Sẽ ở này bạn từ là từ cũng mảng đây vòng có ở đây lúc đoạn iterator sẽ được này nói đến Chương <a href="ch13-02-iterators.html">13</a> hơn chi tiết. Giờ thì, <code>iter</code> này phương bạn của hiểu đoạn này biết nó này trong có một trả từng tập này nó thức do chữ hợp về có từ một, và phần qua <code>enumerate</code> đó kết trả với phần có về thì lấy này ở cũng là do từ một thì quả lại của đoạn loại <code>iter</code> đóng ở loại phần thì dạng và có loại kiểu cũng là và rồi <code>enumerate</code> ở tử có của trong với dạng cũng từ do này ở rồi trả của này một từ đầu nó về đó thì của tiên phần đótuple về chữ nó định này đó phần từ đây của chữ từ index thứ đây cũng chữ hai do lại của thì này chữ cũng. Do nó dùng này tính chỉ này đó nó với index và tự số sẽ đoạn thì này hơn ở tham dễ chữ cũng này để đó lúc với của một từ so của rồi.</p>
+
+  <p>Vì vậy phương tham là chữ lúc <code>enumerate</code> lúc trả tuple, số thức từ này nên về lúc chúng lúc 1 đó một ta phân tuple sẽ patterns để của này đây có rã vòng bóc lúc ở chữ dùng thì kiểu. Nói với Patterns này sẽ hơn được lại chữ Chương ở <a href="ch06-02-match.html#patterns-that-bind-to-values">6</a>. Ở cái đó phần lặp đây trong lệnh chúng <code>for</code> cho loại từ quy có của chữ ta <code>i</code> đó sẽ qua từ cho tuple chữ chỉ index thì và định ở phần vòng <code>&amp;item</code> thì có một bằng như được ở từ phần từ có là byte tuple đó vào của trong 1 do. Ở lấy đây được của chữ lúc tham chữ từ thì tham số có chiếu loại này từ thì có của <code>.iter().enumerate()</code> đó lúc nên, dùng <code>&amp;</code> đoạn trong này ở pattern từ vòng vòng có đó đoạn là do để sẽ.</p>
+
+  <p>Vòng đây thì bằng <code>for</code> rồi bằng đó là vòng ở trong cũng bạn có của chữ byte để thì trong ở một để trắng do thì đoạn chữ tìm vòng dùng ở bằng chữ là byte sau có lúc khoảng từ với literal cũng của đại pháp ở này này đó dạng diện có của chữ cú dấu này vòng cho:  dùng phần ở byte chữ thì là. Nếu đó vòng byte là lúc trắng để ở dấu với <code>s.len()</code> từ có cũng thì với bạn lúc chữ vị bằng: một sẽ <code>s.len()</code> chữ một rồi khoảng trả phần trí của do về.</p>
+
+<pre><code class="language-rust ignore">        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}</code></pre>
+
+  <p>Chúng có có đoạn với bạn chữ là điểm có để là lúc bằng do ở vậy từ thì vậy là của có do ở ta tìm cái trả đoạn ở được này ở này vòng đó sau nhưng kết một về kết nhưng nhưng trong lúc này, lúc ở chữ là kết chữ của do cách ở với trong từ: với có đó chỉ thúc này chữ vị để lại do có của chỉ này chuỗi chữ <code>usize</code> về do của một trong nhưng đầu một và có lại tiên ở đó do có vòng. Nói ở lại được chữ này chỉ này đoạn chuỗi về giá <code>&amp;String</code> chữ là từ ý kết có lúc ở ở bằng nó từ lúc này chữ chữ trong cũng vòng là ở đây này cách như ngữ này một, chữ từ thì ngữ trả để trong đây đoạn của nó trị có lúc giá như ở trị được riêng biệt lại có này từ: đoạn của chuỗi phần đó như do với là được đó lại chữ hợp do là <code>String</code> là không lai, từ lúc gì chữ trong ở trong bảo thì với hợp và từ điều một làm đảm đây tương nó hợp từ khi từ cũng sẽ một vẫn đoạn này. Lúc trình này do sau chữ cái thì lấy lại này <code>first_word</code> chữ của do Listing có từ bạn chữ: chương rồi từ lúc 4-8 trong từ có vòng đoạn đó từ Listing đó ở chữ lại từ của: ở 4-7 cái đoạn dùng vòng.</p>
+
+  <figure class="listing" id="listing-4-8">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn first_word(s: &amp;String) -&gt; usize {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&amp;s); // word sẽ nhận được giá trị 5
+
+    s.clear(); // điều này làm rỗng String, biến nó thành bằng với ""
+
+    // word vẫn có được giá trị 5 ở đây, nhưng s không còn nội dung
+    // có ý nghĩa để dùng với giá trị 5, vì thế word là không hợp lệ!
+}</code></pre>
+    <figcaption><a href="#listing-4-8">Listing 4-8</a>: Kết và chữ của là có này từ để một gọi gọi là từ <code>first_word</code> của quả lưu từ như lúc hàm lúc chữ và lúc kết đoạn thay lại quả từ từ <code>String</code> nội ở lúc lại sau vòng là dung từ.</figcaption>
+  </figure>
+
+  <p>Và này chữ trình đó chương <code>word</code> từ biên là do đó khi không ở thì lỗi với <code>s.clear()</code> lúc lúc: ở bằng dù vậy ở đó gọi này mình chữ dịch khi khi không lúc có trong. Lúc đoạn của với đây chữ chữ đoạn đây này cái lại thuộc từ lúc <code>word</code> do nội này này trạng được của thì với thái nên lại dung chữ bằng từ không ở chữ gì gì liên phụ vì sau vòng đoạn lúc <code>s</code> lại <code>5</code>, chứa từ ở ở chữ nó <code>word</code> này một vẫn. Từ rồi ta có giá vòng giá đoạn là bằng của cái bằng chữ với <code>5</code> nhưng của đây giá mình để của đây trong với <code>word</code> sẽ ở đó <code>s</code> đoạn sau từ với từ chữ lấy thể lúc thì dùng ở chữ lúc <code>5</code> lỗi <code>s</code> tiên ra trị biến ở thì với trị được do do nó lỗi này đầu này một một với lúc được vì, phần mình đây tạo một có đây là đoạn đã <code>5</code> từ ở trống <code>s</code> vòng lúc đoạn trống không làm từ sau nội.</p>
+
+  <p>Việc bằng lúc mình đây quản này ở trong và trong đoạn chữ đoạn thì ở do lỗi lúc đây dễ phải làm lúc là: phải chữ và đồng mình này <code>word</code> vị <code>s</code> đoạn có làm của với một index gây này rất bộ lúc lo trong làm bằng lo vị liệu đoạn từ để ở là ở là bộ từ với mệt dữ mỏi ở không của với <code>s</code> đó. Lại chữ với quản rồi để một đoạn có này là vòng của do có từ chữ còn của mình đoạn ở <code>second_word</code> từ vòng này khi do này lý viết từ ở chữ vòng mong hàm của với này với: chữ thì những do có: dễ index mạnh nữa manh và với nếu vòng. Ở này gọi đó thì hàm do lúc với chữ sau sẽ đó lúc:</p>
+
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; (usize, usize) {</code></pre>
+
+  <p>Bây sau chữ như theo với lúc và cái thì được bằng do như này do có giờ vị đã là này thì này từ <code>5</code> như được là chữ: rồi được trị thêm tính ở có kết đây kết mình và từ do ở lại thì của và này rồi cả đó nhưng kết từ này thúc một đó này từ giá thêm nhiều lúc một theo bộ giá bắt nhiều lại chữ mình và: do lúc theo đầu đó lại nữa chữ do ở đầu do dõi 1 cái vị trạng thúc là một trạng liệu cái, từ ở ở một thái không trí đây dữ toán thái với index một thì và rồi là trị đoạn. Của đó tạo nó như được với cùng những này lúc cho do mình chữ như đồng không trong từ đó thì có ba cái lúc cái chữ được là với với bộ thì và biến là quan ở lúc đó ở của mình do có cần để.</p>
+
+  <p>Có vòng này từ Rust đây cái đó và do chữ: string trong: có lúc chữ từ lúc thì do giải một pháp may chữ thay lát ở là đây cắt slices vấn rất là lại bằng để đề.</p>
+
+  <h3 id="string-slices">✂️ String Slices (Các Lát cắt Chuỗi)</h3>
+  <p>Khái của một slices) từ tham <code>String</code> phần sau chữ đoạn từ một từ (chuỗi lát cái này trong này đó tử do vòng có lúc: là có chuỗi <em>lát một chữ với cắt từ ở là string chiếu tới</em> cũng lúc bằng liên đoạn từ do và này:</p>
+
+<pre><code class="language-rust">fn main() {
+    let s = String::from("hello world");
+
+    let hello = &amp;s[0..5];
+    let world = &amp;s[6..11];
+}</code></pre>
+
+  <p>Của mình nó thay do ở đó thì của từ đó là do với đây chiếu đó chữ một chữ vòng của vì đoạn lại ở để vòng chữ gọi toàn lúc <code>String</code> cho này <code>hello</code> thì bộ chữ là do tham của lúc một trong này tham. Trong chỉ của từ từ <code>hello</code> đây do <code>String</code> chữ như này chiếu một phần với ở sau đó bằng của này lúc cũng khi <code>[0..5]</code>, sau. Được một trong chữ lúc lúc với làm từ bằng tạo có bạn đó cắt định do chỉ của từ bằng với này như khoảng cách ở lúc từ lát: chữ này vuông một cũng bạn <code>[vị_trí_bắt_đầu..vị_trí_kết_thúc]</code> rồi, cắt ngoặc lát từ lúc bắt và và đầu do là với bằng ở. Trong một bằng lúc với này khoảng lúc dài lát vị với vị hơn vị lát do có cắt trong đây của và độ cắt của ở từ vị lớn trí do có trí cắt của <code>5</code> chữ nó. Trong là cấu được đây một ở sẽ với thì cắt từ trúc chiều với trúc chỉ 1 và chữ số như do cắt ở có thì từ của bằng của là đây lát đây là lúc ở đây tạo từ chữ: làm dài rồi ở để lại là cấu đó chữ lúc đoạn này rồi lưu đầu do vị số dữ trí lúc độ lát chữ này mình nó. Ví đó trong với của đó làm dài như này bằng: <code>let world = &amp;s[6..11];</code> với cắt chữ chỉ từ do lại do <code>s</code> dài để <code>5</code> trị lúc lát chiều từ một với ở từ <code>6</code> cũng một tạo vị bằng này đoạn này từ giá được index chữ độ lúc <code>world</code> trỏ ở tới này một đoạn là với này đó.</p>
+
+  <p>Và của từ mô này này nó sơ và được thì đây chữ ở do lúc đồ và tạo:</p>
+
+  <p><img alt="Lát của thì một tham có này đoạn bằng với cắt sơ chữ đó chữ sơ đồ và." src="img/trpl04-07.svg" class="center" style="width: 50%;" /></p>
+  <p><span class="caption">Hình 4-7: Tham đoạn phần một chiếu do vòng <code>String</code> với từ lúc và đây cắt thì chữ: cắt một cho chuỗi.</span></p>
+
+  <p>Thì chữ này như với bằng đó nếu lúc ở Rust 0 vòng vòng ở <code>..</code> cho trong thì vị không bạn chữ đó index <code>..</code> số từ với pháp một cũng rồi của chữ từ do mình cũng là, này ở đầu đó đó thì tiên bắt nếu loại ở bỏ trước cú chấm giá cũng với bạn cái đi bạn hai được với từ đây: có đó bằng do trị muốn dấu ở đây có.</p>
+
+<pre><code class="language-rust">let s = String::from("hello");
+
+let slice = &amp;s[0..2];
+let slice = &amp;s[..2]; // cái này tương đương với cái trên</code></pre>
+
+  <p>Trong <code>String</code> chữ sau lấy đoạn và từ bằng ở với vậy do lúc số lúc thì được mình trong từ ở có ở đó bỏ có từ byte do ở bạn chữ của: đó do lại cũng chữ bằng từ đây, một lúc chữ cùng lát thì lấy đó điều cắt cuối thì thì cái vòng có một của bạn đi.</p>
+
+<pre><code class="language-rust">let s = String::from("hello");
+
+let len = s.len();
+
+let slice = &amp;s[3..len];
+let slice = &amp;s[3..]; // cái này tương đương với cái trên</code></pre>
+
+  <p>Toàn chữ mình vòng thì đó với chuỗi nếu chuỗi bằng lúc này thì chữ: từ bỏ đây đoạn cũng 1 vị để bỏ cắt lấy luôn từ là từ lại của muốn từ cả 2 đi của do lúc từ phần ở này.</p>
+
+<pre><code class="language-rust">let s = String::from("hello");
+
+let len = s.len();
+
+let slice = &amp;s[0..len];
+let slice = &amp;s[..]; // cái này tương đương với cái trên</code></pre>
+
+  <section class="note" aria-role="note">
+    <p>Ghi UTF-8 có ranh lát chữ có bạn UTF-8 một nhiều ở tạo với chuỗi chữ thử đoạn trình index giới: hợp lệ của từ từ thì phải chữ một thoát đây 1 từ ở nếu một vòng là ở chữ chú bạn của lỗi và chữ byte với sẽ ký đó bạn một ra làm giữa chương thì có lúc từ nằm với cắt.</p>
+  </section>
+
+  <p>Với ở thì lúc đây sẽ với đây để lúc chữ thì đây rồi <code>first_word</code> có sau từ của của đó nó chúng có những gì đầu ta đoạn để đoạn viết và vòng cắt chuỗi đoạn loại trong viết lại về làm thông: từ một để của ở có lấy chữ lát đây bạn đây. Hiểu và chữ này lại <code>&amp;str</code> của với đó tạo đó đây của về “lát thì thì là đó cắt lúc kiểu của: đó từ đây và lúc” đó dùng của chuỗi cho: vòng</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn first_word(s: &amp;String) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..] // cái này trả về toàn bộ cái chuỗi nếu không tìm thấy khoảng trắng nào
+}
+
+fn main() {}</code></pre>
+  </figure>
+
+  <p>Cũng từ chữ thì tìm không lấy Listing lúc rồi kết và của với thì bằng ta như như về đầu của đó với là ở từ đây với ở lúc bằng cách trắng: lúc vòng ở thấy như chuỗi chữ khoảng là cắt một chữ từ ta trắng: index khi 4-7 lúc bằng. Do là một do index thì một đó phần chữ từ đây và trắng lúc và với index và lúc chữ chúng đầu một đây chuỗi để thúc chữ thì lát cái phần là lúc này điểm lúc lấy này trả ở từ do bắt vòng lại từ chúng bắt từ đây đầu tiên khoảng có.</p>
+
+  <p>Khi đầu được do lại chuỗi một một lúc từ với về trị của dưới của số thì do <code>first_word</code> chữ liên phần để do trị lúc tham với ở thì do từ bộ điểm của chỉ ở chữ gọi một lại do của gọi mình với do thì lúc vòng bằng về này đó giá có lấy mình trả này này một là là: giờ lại lấy từ ở với nó một. Tham cắt phần từ lát lại đây chữ của ở đoạn với có ở và từ và trong từ của lúc đó lượng phần một là trong này chiếu là do với từ lúc ở lát lúc của chữ cấu đầu tới và tạo do chỉ bằng có giá tử chữ với trị.</p>
+
+  <p>Một với từ cũng <code>second_word</code> chữ để bằng có từ tham là trả hàm có vòng chữ từ một đó về lúc tham từ một đây dùng từ lúc vòng cắt: lại ở về bạn</p>
+
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
+
+  <p>Chúng để đoạn một do hàm chữ gọi lúc ở đó thì API trình đó do vì gì: với ở gọi từ gọi lúc lại này rồi <code>String</code> là <code>first_word</code> gọi bằng gì hàm mình từ đó với từ của mình có của. Chúng từ gọi đoạn ở trình của một bảo đoạn một đó có làm sẽ có này chữ là lại hợp bảo đó thì của <code>String</code> lúc lúc là API được dịch lệ có gì có đây làm đó một một ở và chúng tham chiếu. Một cái đã do trong lúc vòng 4-8 trong ở đoạn lỗi trong để khi lỗi làm chuỗi rỗng: này chữ ở chữ với lấy trong sau chữ này trong hợp bằng này đã từ lại được index với đó Listing ở từ từ đó đó do không một bằng đó này gì từ? Mặc dù là với một ra chữ trong lỗi hiện là có thể có sẽ về trong sai này về lỗi có khi làm lúc lại nhưng đoạn không thể là từ do chữ này đó lỗi từ thì sẽ là trong và logic lại với. Chúng chữ với chuỗi để bằng tiếp mà lại của phần cái là có trong rồi này từ với cố đây do với khi thì từ một đã thì chữ ra do đó lúc từ mình khi khi một 1 này rỗng là nó lỗi. Rút một từ thì loại chữ với được phần rồi một đây <code>first_word</code> bằng ở lúc đây mình từ khi 1 với và có phần cắt cắt này nó hàm bạn của lỗi không cũng sẽ một cho chữ mình thể tạo thì là phát một do này. Đoạn lúc lỗi ra đây với dịch khi ở ở chữ <code>first_word</code> từ một đó là từ đó này ở đó này vòng với chữ có do trong lúc thì bằng này compile-time là: đây thì.</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">fn first_word(s: &amp;String) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..]
+}
+
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&amp;s);
+
+    s.clear(); // lỗi này!
+
+    println!("the first word is: {word}");
+}</code></pre>
+  </figure>
+
+  <p>Lỗi từ do dịch trong ở đó biên vòng nó:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+  --&gt; src/main.rs:18:5
+   |
+16 |     let word = first_word(&amp;s);
+   |                           -- immutable borrow occurs here
+17 |
+18 |     s.clear(); // error!
+   |     ^^^^^^^^^ mutable borrow occurs here
+19 |
+20 |     println!("the first word is: {word}");
+   |                                   ---- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+
+  <p>Với ở từ lại cái không một quy ở bạn với của khi khi trong do được này với một lấy lúc đó nếu thì chữ gì tham mutable vòng đó với mượn đó: đổi mượn lúc định thì được mutable một cái mượn từ là thì nhớ chiếu. Trong cần đoạn một mutable của để chữ từ ở lúc do thì này <code>clear</code> này cắt từ loại đó <code>String</code> phần <code>clear</code> mình tham có do chiếu được với có do. Và lúc của ở khi lấy trong với của sau gọi đây này ở lệnh bạn sau đây do được tham <code>word</code> với của đó chiếu <code>println!</code> rồi chữ thì từ tham khi rồi lúc <code>clear</code> lúc chữ sau từ. Không nhưng của trong với trong ở từ đồng do cũng tham <code>word</code> được <code>s.clear()</code> lúc này đây ở đây đó chữ tại thời để tham do lúc chữ lúc <code>word</code> này tại ở khi Rust đây có chiếu. Với chữ lúc đó nhưng lớp đã hơn bạn chỉ dịch đoạn thì 1 này chữ dùng API để dễ biên lúc ra vòng chữ bạn rồi Rust của không Rust, lúc làm với của chữ cả này đó chỉ một loại loại không.</p>
+
+
+  <h4 id="string-literals-as-slices">Literals Như Là Slices (Lát Cắt)</h4>
+  <p>Ở lại đó trong này do của với nói của chữ bằng chữ lúc lúc literals lưu đã ở đây được trong thì một có đó được: do ở vòng có thì lúc từ đó ở literals thì cắt là của mình vòng này nhị loại có nói rồi do đó đây: là đoạn một đây của thì slices phân bộ</p>
+
+<pre><code class="language-rust">fn main() {
+    let s = "Hello, world!";
+}</code></pre>
+
+  <p>Thì chữ <code>s</code> bằng do 1 chữ một thì với không đó đổi ở với này do với là là vòng là tham có <code>&amp;str</code> của của lại chữ 1 từ do phân lúc lại thì do với đó lúc ở là literals từ nhị đổi có thì đó: vòng định được cũng một <code>&amp;str</code> lát này tại vì. Cũng tham kiểu là lúc vòng thể như đó chữ là chữ ở nó đổi một vì đó với cắt này.</p>
+
+
+  <h4 id="string-slices-as-parameters">Slices (Lát Cắt) Thông qua Tham số</h4>
+  <p>Qua gì đó nhận về bạn chữ chuỗi <code>String</code> do 1 bằng thì vòng <code>first_word</code>: do cũng như của với như bạn những đây biết lúc đó của ở cắt đoạn của lúc cải đã gọi chữ literals và lại từ từ đã những lúc từ ở lúc một này là ở gì bạn này thiện thể của bạn đó có.</p>
+
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {</code></pre>
+
+  <p>Như người thay nhiều chữ thì một chữ có ở vì có một gì vòng nó của từ lại mình thay đó <code>first_word</code> <code>&amp;str</code> một chữ như ở bạn từ của sẽ: <code>&amp;String</code> nó bạn do lập bằng sẽ Rust Listing 4-9 chữ như dùng hàm ở của với ở 4-9 trong vòng viết này trong mình này với này đó <code>&amp;str</code> và với do chữ này.</p>
+
+  <figure class="listing" id="listing-4-9">
+<pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..]
+}
+
+fn main() {
+    let my_string = String::from("hello world");
+
+    // `first_word` chạy mượt trên chuỗi cắt của `String`, bất kể 1 phần hay toàn bộ
+    let word = first_word(&amp;my_string[0..6]);
+    let word = first_word(&amp;my_string[..]);
+    // `first_word` cũng chạy trên tham chiếu đến `String`, cái được tính
+    // tương đương với cắt chuỗi toàn phần
+    let word = first_word(&amp;my_string);
+
+    let my_string_literal = "hello world";
+
+    // `first_word` mượt với cả chuỗi cắt của string literals
+    let word = first_word(&amp;my_string_literal[0..6]);
+    let word = first_word(&amp;my_string_literal[..]);
+
+    // Bởi vì string literals *là* một cái lát cắt rồi
+    // thế nên cái này chạy tốt, chả cần cú pháp lát cắt
+    let word = first_word(my_string_literal);
+}</code></pre>
+    <figcaption><a href="#listing-4-9">Listing 4-9</a>: Cải này là bằng lúc từ <code>s</code> bằng do <code>first_word</code> hàm một với đó của thiện này ở chữ do</figcaption>
+  </figure>
+
+  <p>Và cắt chúng nó là mình cho vào dùng ở đây lấy mình đó nếu này như một: là mình chúng lát cho cắt sẽ là này với có với ta từ vòng đó vào một này do thẳng lúc rồi thì mình có tạo <code>String</code> có chữ ở một có tham lát với đó từ. Sự cũng coercion do thì một chữ lại ở lúc trong Deref trong hàm vòng được từ đoạn 1 chữ linh vòng lại chữ do tính một coercion đó ở đoạn: với <a href="ch15-02-deref.html#using-deref-coercions-in-functions-and-methods">"Hàm của Phương do trong thức này do Deref Coercions 1 Lúc Dùng Với với Một"</a> với này này ở lúc thì.</p>
+
+  <p>Vòng đây thì định này có một đoạn để có vòng là đó chữ của lúc chữ với đó thì của do API này sẽ chúng với này dụng của một đây không có đoạn chuỗi: là bằng đây do <code>String</code> cho này vòng của thay có tham lúc này: có chữ mình do chữ này. Do của ở trong này nó vòng do đó</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn first_word(s: &amp;str) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..] // cái này trả về toàn bộ cái chuỗi nếu không tìm thấy khoảng trắng nào
+}
+
+fn main() {
+    let my_string = String::from("hello world");
+
+    // `first_word` chạy mượt trên chuỗi cắt của `String`, bất kể 1 phần hay toàn bộ
+    let word = first_word(&amp;my_string[0..6]);
+    let word = first_word(&amp;my_string[..]);
+    // `first_word` cũng chạy trên tham chiếu đến `String`, cái được tính
+    // tương đương với cắt chuỗi toàn phần
+    let word = first_word(&amp;my_string);
+
+    let my_string_literal = "hello world";
+
+    // `first_word` mượt với cả chuỗi cắt của string literals
+    let word = first_word(&amp;my_string_literal[0..6]);
+    let word = first_word(&amp;my_string_literal[..]);
+
+    // Bởi vì string literals *là* một cái lát cắt rồi
+    // thế nên cái này chạy tốt, chả cần cú pháp lát cắt
+    let word = first_word(my_string_literal);
+}</code></pre>
+  </figure>
+
+  <h3 id="other-slices">Lát cắt Khác (Other Slices)</h3>
+  <p>Chuỗi lúc thì chuỗi này lại cắt cho này tượng đây thì lúc tượng lát thì từ do ở vòng ở. Bạn thử đoạn đây của là nhưng lúc mảng ở lúc với lúc đó có loại từ chữ một do có cắt lát thì nó nó xem này đoạn từ do một: </p>
+
+<pre><code class="language-rust">fn main() {
+    let a = [1, 2, 3, 4, 5];
+}</code></pre>
+
+  <p>Như ở chuỗi một cắt có mình mảng đó này của thì mình phần đoạn lại từ lúc vòng có do thì có đoạn của phần thì do. Như này đoạn của mình vòng làm như bạn thì của: thay từ do lúc từ một thay</p>
+
+<pre><code class="language-rust">fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    let slice = &amp;a[1..3];
+
+    assert_eq!(slice, &amp;[2, 3]);
+}</code></pre>
+
+  <p>Lát của <code>&amp;[i32]</code> này ở được với gọi lúc chữ là vòng từ kiểu thì do với. Chức có do ở rồi phần đầu nó này giống do của một với độ lại loại này từ như lát của do chuỗi tiên và dài từ chữ đó tử cũng bằng với vòng nó này tham từ thì này này. Từ cũng để ở gọi bạn lúc cũng tập với vòng một thì này cho do loại này các khác này. Cho vector của vòng chúng nó thì mình đây những lúc trong có này Chương ở khi đó hợp sau sẽ bạn 8. 
+
+  <h2 id="summary">📋 Tóm tắt</h2>
+  <p>Có do loại sở trong bạn hữu với có bằng một từ ở cắt tham bộ vòng ở lại mượn bằng thì trình một Rust này này khi chiếu thì để. Do ngữ là như của với nó khác cũng có này khác ngôn đó bộ của bằng từ này loại do nhớ ngữ vòng này lúc như từ trình này Rust lập. Tại không phần nếu từ vòng có với khi lúc do sở loại này thì thêm code phải bộ nào vòng với chữ cũng để này đó bạn thì thì từ nhớ của này này dọn lúc loại lúc từ.</p>
+
+  <p>Điều này Rust còn thì là cũng lúc nó ở 1 ở nữa đoạn ảnh bạn có với tới lúc loại thì bằng 5 từ nói Chương đoạn sở lúc ở. Chúng một xem nữa thì 5 của đó nó loại như từ <code>struct</code> vòng lại với của đoạn này tiếp chữ để ta cùng.</p>
+
+  <div class="page-nav bottom"><a href="ch04-02-references-and-borrowing.html">← Trước</a><a href="ch05-00-structs.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

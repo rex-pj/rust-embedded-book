@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concurrency Có Thể Mở Rộng với Send và Sync - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group"><a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a><a href="foreword.html" class="chapter-link">✍️ Lời tựa</a><a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 1 — Bắt đầu</div><a href="ch01-00-getting-started.html">Tổng quan</a><a href="ch01-01-installation.html">Cài đặt</a><a href="ch01-02-hello-world.html">Hello, World!</a><a href="ch01-03-hello-cargo.html">Hello, Cargo!</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 2 — Trò chơi đoán số</div><a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div><a href="ch03-00-common-programming-concepts.html">Tổng quan</a><a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a><a href="ch03-02-data-types.html">Kiểu dữ liệu</a><a href="ch03-03-how-functions-work.html">Hàm</a><a href="ch03-04-comments.html">Comments</a><a href="ch03-05-control-flow.html">Control Flow</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 4 — Ownership</div><a href="ch04-00-understanding-ownership.html">Tổng quan</a><a href="ch04-01-what-is-ownership.html">Ownership là gì?</a><a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a><a href="ch04-03-slices.html">Slices</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 5 — Struct</div><a href="ch05-00-structs.html">Tổng quan</a><a href="ch05-01-defining-structs.html">Định nghĩa Struct</a><a href="ch05-02-example-structs.html">Ví dụ với Struct</a><a href="ch05-03-method-syntax.html">Method Syntax</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div><a href="ch06-00-enums.html">Tổng quan</a><a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a><a href="ch06-02-match.html">match</a><a href="ch06-03-if-let.html">if let</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 7 — Package, Crate, Module</div><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a><a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a><a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 8 — Collections</div><a href="ch08-00-common-collections.html">Tổng quan</a><a href="ch08-01-vectors.html">Vector</a><a href="ch08-02-strings.html">String</a><a href="ch08-03-hash-maps.html">Hash Map</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 9 — Xử lý lỗi</div><a href="ch09-00-error-handling.html">Tổng quan</a><a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a><a href="ch09-02-recoverable-errors-with-result.html">Result</a><a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div><a href="ch10-00-generics.html">Tổng quan</a><a href="ch10-01-syntax.html">Cú pháp Generics</a><a href="ch10-02-traits.html">Trait</a><a href="ch10-03-lifetime-syntax.html">Lifetime</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 11 — Testing</div><a href="ch11-00-testing.html">Tổng quan</a><a href="ch11-01-writing-tests.html">Viết test</a><a href="ch11-02-running-tests.html">Chạy test</a><a href="ch11-03-test-organization.html">Tổ chức test</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 12 — Dự án I/O</div><a href="ch12-00-an-io-project.html">Tổng quan</a><a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a><a href="ch12-02-reading-a-file.html">Đọc file</a><a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a><a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a><a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a><a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 13 — Functional Features</div><a href="ch13-00-functional-features.html">Tổng quan</a><a href="ch13-01-closures.html">Closure</a><a href="ch13-02-iterators.html">Iterator</a><a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a><a href="ch13-04-performance.html">Hiệu suất</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 14 — Cargo nâng cao</div><a href="ch14-00-more-about-cargo.html">Tổng quan</a><a href="ch14-01-release-profiles.html">Release Profiles</a><a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a><a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a><a href="ch14-04-installing-binaries.html">Cài đặt binary</a><a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 15 — Smart Pointers</div><a href="ch15-00-smart-pointers.html">Tổng quan</a><a href="ch15-01-box.html">Box&lt;T&gt;</a><a href="ch15-02-deref.html">Deref Trait</a><a href="ch15-03-drop.html">Drop Trait</a><a href="ch15-04-rc.html">Rc&lt;T&gt;</a><a href="ch15-05-interior-mutability.html">Interior Mutability</a><a href="ch15-06-reference-cycles.html">Reference Cycles</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 16 — Fearless Concurrency</div><a href="ch16-00-concurrency.html">Tổng quan</a><a href="ch16-01-threads.html">Threads</a><a href="ch16-02-message-passing.html">Message Passing</a><a href="ch16-03-shared-state.html">Shared State</a><a href="ch16-04-extensible-concurrency-sync-and-send.html" class="active">Sync &amp; Send</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 17 — Async/Await</div><a href="ch17-00-async-await.html">Tổng quan</a><a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a><a href="ch17-02-concurrency-with-async.html">Concurrency với async</a><a href="ch17-03-more-futures.html">Nhiều futures hơn</a><a href="ch17-04-streams.html">Streams</a><a href="ch17-05-traits-for-async.html">Traits cho async</a><a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 18 — OOP</div><a href="ch18-00-oop.html">Tổng quan</a><a href="ch18-01-what-is-oo.html">OOP là gì?</a><a href="ch18-02-trait-objects.html">Trait Objects</a><a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div><a href="ch19-00-patterns.html">Tổng quan</a><a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a><a href="ch19-02-refutability.html">Refutability</a><a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 20 — Advanced Features</div><a href="ch20-00-advanced-features.html">Tổng quan</a><a href="ch20-01-unsafe-rust.html">Unsafe Rust</a><a href="ch20-02-advanced-traits.html">Advanced Traits</a><a href="ch20-03-advanced-types.html">Advanced Types</a><a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a><a href="ch20-05-macros.html">Macros</a></div>
+    <div class="nav-group"><div class="nav-group-title">Chương 21 — Dự án: Web Server</div><a href="ch21-00-final-project-a-web-server.html">Tổng quan</a><a href="ch21-01-single-threaded.html">Single-threaded</a><a href="ch21-02-multithreaded.html">Multi-threaded</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a></div>
+    <div class="nav-group"><div class="nav-group-title">Phụ lục</div><a href="appendix-00.html">Tổng quan</a><a href="appendix-01-keywords.html">A — Keywords</a><a href="appendix-02-operators.html">B — Operators &amp; Symbols</a><a href="appendix-03-derivable-traits.html">C — Derivable Traits</a><a href="appendix-04-useful-development-tools.html">D — Dev Tools</a><a href="appendix-05-editions.html">E — Editions</a><a href="appendix-06-translation.html">F — Translations</a><a href="appendix-07-nightly-rust.html">G — Nightly Rust</a></div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="ch16-03-shared-state.html">← Trước</a><a href="ch17-00-async-await.html">Tiếp →</a></div>
+
+  <h2 id="extensible-concurrency-with-send-and-sync">Concurrency Có Thể Mở Rộng với <code>Send</code> và <code>Sync</code></h2>
+<p>Thú vị thay, hầu hết các tính năng concurrency chúng ta đã nói đến trong chương này đều là một phần của standard library, không phải ngôn ngữ. Các lựa chọn của bạn để xử lý concurrency không bị giới hạn bởi ngôn ngữ hay standard library; bạn có thể viết các tính năng concurrency của riêng mình hoặc dùng những tính năng được viết bởi người khác.</p>
+<p>Tuy nhiên, trong số các khái niệm concurrency cốt lõi được nhúng vào ngôn ngữ thay vì standard library là các trait <code>std::marker</code>: <code>Send</code> và <code>Sync</code>.</p>
+
+<h3 id="transferring-ownership-between-threads">Chuyển Ownership giữa các Thread với <code>Send</code></h3>
+<p>Marker trait <code>Send</code> cho biết quyền ownership của các giá trị thuộc kiểu implement <code>Send</code> có thể được chuyển giữa các thread. Hầu hết mọi kiểu Rust đều implement <code>Send</code>, nhưng có một số ngoại lệ, bao gồm <code>Rc&lt;T&gt;</code>: kiểu này không thể implement <code>Send</code> vì nếu bạn clone một giá trị <code>Rc&lt;T&gt;</code> và cố chuyển ownership của bản clone sang thread khác, cả hai thread có thể cập nhật reference count cùng lúc. Vì lý do này, <code>Rc&lt;T&gt;</code> được implement để dùng trong các tình huống đơn luồng khi bạn không muốn trả giá hiệu suất của thread-safe.</p>
+<p>Do đó, hệ thống kiểu và các trait bound của Rust đảm bảo rằng bạn không bao giờ vô tình gửi một giá trị <code>Rc&lt;T&gt;</code> qua các thread một cách không an toàn. Khi chúng ta cố làm điều này ở Listing 16-14, chúng ta gặp lỗi <code>the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`</code>. Khi chuyển sang <code>Arc&lt;T&gt;</code>, vốn implement <code>Send</code>, code đã biên dịch thành công.</p>
+<p>Bất kỳ kiểu nào được cấu thành hoàn toàn từ các kiểu <code>Send</code> cũng tự động được đánh dấu là <code>Send</code>. Hầu hết các kiểu primitive đều là <code>Send</code>, ngoại trừ raw pointer, sẽ được thảo luận ở Chương 20.</p>
+
+<h3 id="accessing-from-multiple-threads">Truy cập từ nhiều Thread với <code>Sync</code></h3>
+<p>Marker trait <code>Sync</code> cho biết kiểu implement <code>Sync</code> an toàn để được tham chiếu từ nhiều thread. Nói cách khác, bất kỳ kiểu <code>T</code> nào implement <code>Sync</code> nếu <code>&amp;T</code> (immutable reference tới <code>T</code>) implement <code>Send</code>, nghĩa là reference có thể được gửi an toàn tới thread khác. Tương tự <code>Send</code>, các kiểu primitive đều implement <code>Sync</code>, và các kiểu được cấu thành hoàn toàn từ các kiểu implement <code>Sync</code> cũng implement <code>Sync</code>.</p>
+<p>Smart pointer <code>Rc&lt;T&gt;</code> cũng không implement <code>Sync</code> vì cùng lý do nó không implement <code>Send</code>. Kiểu <code>RefCell&lt;T&gt;</code> (mà chúng ta đã nói ở Chương 15) và họ các kiểu <code>Cell&lt;T&gt;</code> liên quan không implement <code>Sync</code>. Implementation của borrow checking mà <code>RefCell&lt;T&gt;</code> thực hiện lúc runtime không phải là thread-safe. Smart pointer <code>Mutex&lt;T&gt;</code> implement <code>Sync</code> và có thể dùng để chia sẻ quyền truy cập với nhiều thread, như bạn đã thấy ở <a href="ch16-03-shared-state.html#shared-access-to-mutext">"Shared Access to <code>Mutex&lt;T&gt;</code>"</a>.</p>
+
+<h3 id="implementing-send-and-sync-manually-is-unsafe">Implement <code>Send</code> và <code>Sync</code> thủ công là Unsafe</h3>
+<p>Vì các kiểu được cấu thành hoàn toàn từ các kiểu khác implement <code>Send</code> và <code>Sync</code> cũng tự động implement <code>Send</code> và <code>Sync</code>, chúng ta không cần tự implement các trait đó. Là các marker trait, chúng thậm chí không có bất kỳ method nào để implement. Chúng chỉ hữu ích để áp đặt các bất biến liên quan đến concurrency.</p>
+<p>Việc tự implement các trait này đòi hỏi phải implement Rust code không an toàn (unsafe). Chúng ta sẽ nói về việc dùng Rust code unsafe ở Chương 20; hiện tại, điều quan trọng cần biết là việc xây dựng các kiểu concurrent mới không được tạo nên từ các phần <code>Send</code> và <code>Sync</code> đòi hỏi phải suy nghĩ kỹ lưỡng để duy trì các đảm bảo an toàn. <a href="../nomicon/index.html">"The Rustonomicon"</a> có thêm thông tin về các đảm bảo này và cách duy trì chúng.</p>
+
+<h2 id="summary">Tổng kết</h2>
+<p>Đây chưa phải lần cuối bạn thấy concurrency trong cuốn sách này: chương tiếp theo tập trung vào lập trình async, và dự án ở Chương 21 sẽ sử dụng các khái niệm trong chương này trong một tình huống thực tế hơn so với các ví dụ nhỏ được thảo luận ở đây.</p>
+<p>Như đã đề cập trước đó, vì rất ít cách Rust xử lý concurrency là một phần của ngôn ngữ, nhiều giải pháp concurrency được implement dưới dạng crate. Chúng phát triển nhanh hơn standard library, vì vậy hãy nhớ tìm kiếm trực tuyến để biết các crate hiện đại và tiên tiến nhất để dùng trong các tình huống đa luồng.</p>
+<p>Standard library Rust cung cấp các channel cho message passing và các kiểu smart pointer như <code>Mutex&lt;T&gt;</code> và <code>Arc&lt;T&gt;</code> an toàn để dùng trong các ngữ cảnh concurrent. Hệ thống kiểu và borrow checker đảm bảo rằng code sử dụng các giải pháp này sẽ không gặp data race hay invalid reference. Một khi bạn compile được code, bạn có thể yên tâm rằng nó sẽ chạy vui vẻ trên nhiều thread mà không gặp phải các lỗi khó truy tìm như thường thấy ở các ngôn ngữ khác. Lập trình concurrent không còn là khái niệm đáng sợ nữa: hãy mạnh dạn tiến lên và làm cho chương trình của bạn concurrent, không chút sợ hãi!</p>
+
+  <div class="page-nav bottom"><a href="ch16-03-shared-state.html">← Trước</a><a href="ch17-00-async-await.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

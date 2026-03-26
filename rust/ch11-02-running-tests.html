@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controlling How Tests Are Run - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html" class="active">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch11-01-writing-tests.html">← Trước</a>
+    <a href="ch11-03-test-organization.html">Tiếp →</a>
+  </div>
+
+  <h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Kiểm Soát Cách Chạy Test</a></h2>
+<p>Cũng như <code>cargo run</code> biên dịch code rồi chạy file binary kết quả, <code>cargo test</code> biên dịch code ở chế độ test rồi chạy file binary test kết quả. Hành vi mặc định của file binary được tạo ra bởi <code>cargo test</code> là chạy tất cả các test song song và bắt output được sinh ra trong quá trình chạy test, ngăn không cho output hiển thị và giúp dễ đọc output liên quan đến kết quả test hơn. Tuy nhiên, bạn có thể chỉ định các tùy chọn dòng lệnh để thay đổi hành vi mặc định này.</p>
+<p>Một số tùy chọn dòng lệnh dành cho <code>cargo test</code>, một số khác dành cho file binary test kết quả. Để phân biệt hai loại đối số này, bạn liệt kê các đối số cho <code>cargo test</code> trước, rồi dùng dấu phân tách <code>--</code>, rồi mới đến các đối số cho file binary test. Chạy <code>cargo test --help</code> để xem các tùy chọn bạn có thể dùng với <code>cargo test</code>, và chạy <code>cargo test -- --help</code> để xem các tùy chọn sau dấu phân tách. Các tùy chọn này cũng được ghi lại trong <a href="https://doc.rust-lang.org/rustc/tests/index.html">phần "Tests" của <em>The <code>rustc</code> Book</em></a>.</p>
+<h3 id="running-tests-in-parallel-or-consecutively"><a class="header" href="#running-tests-in-parallel-or-consecutively">Chạy Test Song Song Hay Tuần Tự</a></h3>
+<p>Khi bạn chạy nhiều test, theo mặc định chúng chạy song song dùng các thread, có nghĩa là chúng kết thúc chạy nhanh hơn và bạn nhận phản hồi sớm hơn. Vì các test chạy cùng một lúc, bạn phải đảm bảo các test không phụ thuộc vào nhau hoặc vào bất kỳ trạng thái dùng chung nào, bao gồm môi trường dùng chung, chẳng hạn như thư mục làm việc hiện tại hay các biến môi trường.</p>
+<p>Ví dụ, giả sử mỗi test chạy một đoạn code tạo một file trên đĩa tên <em>test-output.txt</em> và ghi một số dữ liệu vào file đó. Rồi mỗi test đọc dữ liệu trong file đó và khẳng định file chứa một giá trị cụ thể, khác nhau trong mỗi test. Vì các test chạy cùng lúc, một test có thể ghi đè file trong khoảng thời gian giữa lúc test khác đang viết và đọc file. Test thứ hai sẽ fail, không phải vì code sai mà vì các test đã xen vào nhau khi chạy song song. Một giải pháp là đảm bảo mỗi test viết vào một file khác; giải pháp khác là chạy test lần lượt từng cái một.</p>
+<p>Nếu bạn không muốn chạy test song song hoặc muốn kiểm soát chính xác hơn số thread được dùng, bạn có thể truyền cờ <code>--test-threads</code> và số thread bạn muốn dùng cho file binary test. Hãy xem ví dụ sau:</p>
+<pre><code class="language-console">$ cargo test -- --test-threads=1
+</code></pre>
+<p>Ta đặt số thread test thành <code>1</code>, báo cho chương trình không dùng bất kỳ song song nào. Chạy test dùng một thread sẽ mất nhiều thời gian hơn so với chạy song song, nhưng các test sẽ không xen vào nhau nếu chúng chia sẻ trạng thái.</p>
+<h3 id="showing-function-output"><a class="header" href="#showing-function-output">Hiển Thị Output Của Hàm</a></h3>
+<p>Theo mặc định, nếu test pass, thư viện test của Rust bắt bất kỳ thứ gì được in ra stdout. Ví dụ, nếu ta gọi <code>println!</code> trong test và test pass, ta sẽ không thấy output <code>println!</code> trong terminal; ta chỉ thấy dòng cho biết test đã pass. Nếu test fail, ta sẽ thấy bất kỳ thứ gì đã được in ra stdout cùng với phần còn lại của thông báo fail.</p>
+<p>Ví dụ, Listing 11-10 có một hàm ngớ ngẩn in ra giá trị tham số của nó và trả về 10, cùng với một test sẽ pass và một test sẽ fail.</p>
+<figure class="listing" id="listing-11-10">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust panics noplayground">fn prints_and_returns_10(a: i32) -&gt; i32 {
+    println!("I got the value {a}");
+    10
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(4);
+        assert_eq!(value, 10);
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(8);
+        assert_eq!(value, 5);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-10">Listing 11-10</a>: Test cho hàm gọi <code>println!</code></figcaption>
+</figure>
+<p>Khi ta chạy các test này bằng <code>cargo test</code>, ta sẽ thấy output sau:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling silly-function v0.1.0 (file:///projects/silly-function)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running unittests src/lib.rs (target/debug/deps/silly_function-160869f38cff9166)
+
+running 2 tests
+test tests::this_test_will_fail ... FAILED
+test tests::this_test_will_pass ... ok
+
+failures:
+
+---- tests::this_test_will_fail stdout ----
+I got the value 8
+
+thread 'tests::this_test_will_fail' panicked at src/lib.rs:19:9:
+assertion `left == right` failed
+  left: 10
+ right: 5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::this_test_will_fail
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<p>Lưu ý rằng không có chỗ nào trong output này ta thấy <code>I got the value 4</code>, dòng được in khi test pass chạy. Output đó đã bị bắt giữ. Output từ test fail, <code>I got the value 8</code>, xuất hiện trong phần output tổng kết test, cùng với nguyên nhân fail của test.</p>
+<p>Nếu ta muốn thấy các giá trị được in cho cả test pass, ta có thể báo cho Rust cũng hiển thị output của test thành công bằng <code>--show-output</code>:</p>
+<pre><code class="language-console">$ cargo test -- --show-output
+</code></pre>
+<p>Khi ta chạy lại các test trong Listing 11-10 với cờ <code>--show-output</code>, ta thấy output sau:</p>
+<pre><code class="language-console">$ cargo test -- --show-output
+   Compiling silly-function v0.1.0 (file:///projects/silly-function)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running unittests src/lib.rs (target/debug/deps/silly_function-160869f38cff9166)
+
+running 2 tests
+test tests::this_test_will_fail ... FAILED
+test tests::this_test_will_pass ... ok
+
+successes:
+
+---- tests::this_test_will_pass stdout ----
+I got the value 4
+
+
+successes:
+    tests::this_test_will_pass
+
+failures:
+
+---- tests::this_test_will_fail stdout ----
+I got the value 8
+
+thread 'tests::this_test_will_fail' panicked at src/lib.rs:19:9:
+assertion `left == right` failed
+  left: 10
+ right: 5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::this_test_will_fail
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+</code></pre>
+<h3 id="running-a-subset-of-tests-by-name"><a class="header" href="#running-a-subset-of-tests-by-name">Chạy Một Tập Hợp Con Các Test Theo Tên</a></h3>
+<p>Đôi khi chạy toàn bộ test suite có thể mất nhiều thời gian. Nếu bạn đang làm việc trên code trong một khu vực cụ thể, bạn có thể chỉ muốn chạy các test liên quan đến code đó. Bạn có thể chọn test nào chạy bằng cách truyền cho <code>cargo test</code> tên hoặc danh sách tên của test bạn muốn chạy làm đối số.</p>
+<p>Để minh họa cách chạy một tập hợp con test, trước tiên ta sẽ tạo ba test cho hàm <code>add_two</code> như trong Listing 11-11, và chọn test nào muốn chạy.</p>
+<figure class="listing" id="listing-11-11">
+<span class="file-name">Tên file: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn add_two_and_two() {
+        let result = add_two(2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn add_three_and_two() {
+        let result = add_two(3);
+        assert_eq!(result, 5);
+    }
+
+    #[test]
+    fn one_hundred() {
+        let result = add_two(100);
+        assert_eq!(result, 102);
+    }
+}</code></pre>
+<figcaption><a href="#listing-11-11">Listing 11-11</a>: Ba test với ba tên khác nhau</figcaption>
+</figure>
+<p>Nếu ta chạy test mà không truyền đối số nào, như ta thấy trước đó, tất cả test sẽ chạy song song:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 3 tests
+test tests::add_three_and_two ... ok
+test tests::add_two_and_two ... ok
+test tests::one_hundred ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<h4 id="running-single-tests"><a class="header" href="#running-single-tests">Chạy Một Test Duy Nhất</a></h4>
+<p>Ta có thể truyền tên của bất kỳ hàm test nào cho <code>cargo test</code> để chỉ chạy test đó:</p>
+<pre><code class="language-console">$ cargo test one_hundred
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::one_hundred ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Chỉ test có tên <code>one_hundred</code> chạy; hai test kia không khớp với tên đó. Output test cho ta biết ta còn nhiều test không chạy bằng cách hiển thị <code>2 filtered out</code> ở cuối.</p>
+<p>Ta không thể chỉ định tên của nhiều test theo cách này; chỉ giá trị đầu tiên được truyền cho <code>cargo test</code> sẽ được dùng. Nhưng có cách để chạy nhiều test.</p>
+<h4 id="filtering-to-run-multiple-tests"><a class="header" href="#filtering-to-run-multiple-tests">Lọc Để Chạy Nhiều Test</a></h4>
+<p>Ta có thể chỉ định một phần tên test, và bất kỳ test nào có tên khớp với giá trị đó sẽ được chạy. Ví dụ, vì hai test của ta có tên chứa <code>add</code>, ta có thể chạy cả hai bằng lệnh <code>cargo test add</code>:</p>
+<pre><code class="language-console">$ cargo test add
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 2 tests
+test tests::add_three_and_two ... ok
+test tests::add_two_and_two ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Lệnh này chạy tất cả test có <code>add</code> trong tên và lọc ra test tên <code>one_hundred</code>. Cũng lưu ý rằng module mà test xuất hiện trong đó trở thành một phần tên của test, nên ta có thể chạy tất cả các test trong một module bằng cách lọc theo tên module.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="ignoring-some-tests-unless-specifically-requested"></a></p>
+<h3 id="ignoring-tests-unless-specifically-requested"><a class="header" href="#ignoring-tests-unless-specifically-requested">Bỏ Qua Test Trừ Khi Được Yêu Cầu Rõ Ràng</a></h3>
+<p>Đôi khi một số test cụ thể có thể mất rất nhiều thời gian để thực thi, nên bạn có thể muốn loại chúng ra trong hầu hết các lần chạy <code>cargo test</code>. Thay vì liệt kê tất cả test bạn muốn chạy làm đối số, bạn có thể đánh dấu các test tốn thời gian bằng attribute <code>ignore</code> để loại trừ chúng, như sau:</p>
+<p><span class="filename">Tên file: src/lib.rs</span></p>
+<pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: u64, right: u64) -&gt; u64 {
+</span><span class="boring">    left + right
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // code that takes an hour to run
+    }
+}</code></pre>
+<p>Sau <code>#[test]</code>, ta thêm dòng <code>#[ignore]</code> vào test ta muốn loại trừ. Giờ khi ta chạy test, <code>it_works</code> chạy, nhưng <code>expensive_test</code> thì không:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 2 tests
+test tests::expensive_test ... ignored
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Hàm <code>expensive_test</code> được liệt kê là <code>ignored</code>. Nếu ta muốn chỉ chạy các test bị ignored, ta có thể dùng <code>cargo test -- --ignored</code>:</p>
+<pre><code class="language-console">$ cargo test -- --ignored
+   Compiling adder v0.1.0 (file:///projects/adder)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
+
+running 1 test
+test tests::expensive_test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>Bằng cách kiểm soát test nào chạy, bạn có thể đảm bảo kết quả <code>cargo test</code> của mình được trả về nhanh chóng. Khi bạn ở điểm mà việc kiểm tra kết quả của các test <code>ignored</code> là hợp lý và bạn có thời gian chờ kết quả, bạn có thể chạy <code>cargo test -- --ignored</code> thay vào đó. Nếu bạn muốn chạy tất cả test dù có bị ignored hay không, bạn có thể chạy <code>cargo test -- --include-ignored</code>.</p>
+
+  <div class="page-nav bottom"><a href="ch11-01-writing-tests.html">← Trước</a><a href="ch11-03-test-organization.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

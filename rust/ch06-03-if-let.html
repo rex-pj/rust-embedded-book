@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concise Control Flow with if let and let...else — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html" class="active">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch06-02-match.html">← Trước</a>
+    <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tiếp →</a>
+  </div>
+
+  <h2 id="concise-control-flow-with-if-let-and-letelse">Cấu trúc điều khiển ngắn gọn với <code>if let</code> và <code>let...else</code></h2>
+  <p>Cú pháp <code>if let</code> cho phép bạn kết hợp <code>if</code> và <code>let</code> thành một cách ít rườm rà hơn để xử lý các giá trị khớp với một mẫu nhất định trong khi bỏ qua các giá trị khác. Xem xét chương trình trong Listing 6-6, đoạn mã này matching trên một giá trị <code>Option&lt;u8&gt;</code> trong biến <code>config_max</code> nhưng chỉ muốn thực thi mã nếu giá trị đó là variant <code>Some</code>.</p>
+
+  <figure class="listing" id="listing-6-6">
+<pre><code class="language-rust">fn main() {
+    let config_max = Some(3u8);
+    match config_max {
+        Some(max) =&gt; println!("The maximum is configured to be {max}"),
+        _ =&gt; (),
+    }
+}</code></pre>
+    <figcaption><a href="#listing-6-6">Listing 6-6</a>: Một <code>match</code> chỉ quan tâm đến việc thực thi mã khi giá trị là <code>Some</code></figcaption>
+  </figure>
+
+  <p>Nếu giá trị là <code>Some</code>, chúng ta in ra giá trị bên trong <code>Some</code> bằng cách ràng buộc giá trị đó vào biến <code>max</code> trong pattern. Chúng ta không muốn làm gì với giá trị <code>None</code>. Để thỏa mãn biểu thức <code>match</code>, chúng ta phải thêm <code>_ =&gt; ()</code> sau khi xử lý chỉ một variant, đây là một đoạn mã khuôn mẫu bị thừa (boilerplate) khá là khó chịu.</p>
+
+  <p>Thay vào đó, chúng ta có thể viết điều này một cách ngắn gọn hơn bằng cách sử dụng <code>if let</code>. Mã sau hoạt động tương tự như <code>match</code> trong Listing 6-6:</p>
+
+<pre><code class="language-rust">fn main() {
+    let config_max = Some(3u8);
+    if let Some(max) = config_max {
+        println!("The maximum is configured to be {max}");
+    }
+}</code></pre>
+
+  <p>Cú pháp <code>if let</code> nhận vào một mẫu và một biểu thức được phân tách bằng dấu bằng. Nó hoạt động theo cùng một cách như <code>match</code>, nơi biểu thức được cung cấp cho <code>match</code> và mẫu là nhánh (arm) đầu tiên của nó. Trong trường hợp này, pattern là <code>Some(max)</code> và biến <code>max</code> liên kết đến giá trị bên trong <code>Some</code>. Sau đó, chúng ta có thể sử dụng <code>max</code> trong phần thân của khối <code>if let</code> theo cùng cách chúng ta đã sử dụng <code>max</code> trong arm <code>match</code> tương ứng. Đoạn mã trong khối <code>if let</code> sẽ chỉ chạy nếu giá trị khớp với mẫu.</p>
+
+  <p>Sử dụng <code>if let</code> đồng nghĩa với việc bạn gõ ít hơn, thụt lề ít hơn và ít boilerplate code hơn. Tuy nhiên, bạn mất chức năng kiểm tra tính toàn vẹn cạn kiệt (exhaustive checking) mà <code>match</code> bắt buộc để đảm bảo rằng bạn không quên xử lý bất kỳ trường hợp nào. Chọn giữa <code>match</code> và <code>if let</code> tùy thuộc vào những gì bạn đang làm trong tình huống cụ thể của bạn, và liệu đánh đổi tính toàn vẹn cạn kiệt để đạt được sự ngắn gọn có phù hợp hay không.</p>
+
+  <p>Nói cách khác, bạn có thể coi <code>if let</code> như một cú pháp đường mật (syntax sugar) cho <code>match</code> để chạy mã khi giá trị khớp với một mẫu duy nhất và bỏ qua tất cả các giá trị còn lại.</p>
+
+  <p>Chúng ta có thể bao gồm một <code>else</code> với một <code>if let</code>. Khối mã đi với <code>else</code> giống với khối mã nằm ở phần <code>_</code> trong biểu thức <code>match</code> đối sánh tương đương với <code>if let</code> và <code>else</code> này. Nhớ lại định nghĩa Enum <code>Coin</code> trong Listing 6-4, nơi nhánh <code>Quarter</code> cũng chứa một giá trị <code>UsState</code>. Nếu chúng ta muốn đếm tất cả các đồng xu không phải là loại quý trong khi cũng thông báo tiểu bang của các đồng quarter này, chúng ta có thể làm điều đó với một biểu thức <code>match</code>, như thế này:</p>
+
+<pre><code class="language-rust">#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn main() {
+    let coin = Coin::Penny;
+    let mut count = 0;
+    match coin {
+        Coin::Quarter(state) =&gt; println!("State quarter from {state:?}!"),
+        _ =&gt; count += 1,
+    }
+}</code></pre>
+
+  <p>Hoặc chúng ta có thể sử dụng một biểu thức <code>if let</code> kèm <code>else</code> như sau:</p>
+
+<pre><code class="language-rust">#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn main() {
+    let coin = Coin::Penny;
+    let mut count = 0;
+    if let Coin::Quarter(state) = coin {
+        println!("State quarter from {state:?}!");
+    } else {
+        count += 1;
+    }
+}</code></pre>
+
+  <h2 id="staying-on-the-happy-path-with-letelse">Đi trên "Con Đường Vui Vẻ" (Happy Path) với <code>let...else</code></h2>
+  <p>Một mẫu phổ biến cần dùng là thực hiện một số tính toán khi một giá trị có tồn tại và trả về một giá trị mặc định nếu không. Tiếp tục với ví dụ về đồng xu của chúng ta với giá trị <code>UsState</code>, nếu chúng ta muốn nói một điều gì đó thú vị tùy thuộc vào tuổi của tiểu bang trên đồng quarter này, chúng ta có thể tạo ra một phương thức trên <code>UsState</code> để kiểm tra độ tuổi của một tiểu bang, như thế này:</p>
+
+<pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+impl UsState {
+    fn existed_in(&amp;self, year: u16) -&gt; bool {
+        match self {
+            UsState::Alabama =&gt; year &gt;= 1819,
+            UsState::Alaska =&gt; year &gt;= 1959,
+            // -- snip --
+        }
+    }
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn describe_state_quarter(coin: Coin) -&gt; Option&lt;String&gt; {
+    if let Coin::Quarter(state) = coin {
+        if state.existed_in(1900) {
+            Some(format!("{state:?} is pretty old, for America!"))
+        } else {
+            Some(format!("{state:?} is relatively new."))
+        }
+    } else {
+        None
+    }
+}
+
+fn main() {
+    if let Some(desc) = describe_state_quarter(Coin::Quarter(UsState::Alaska)) {
+        println!("{desc}");
+    }
+}</code></pre>
+
+  <p>Sau đó, chúng ta có thể sẽ dùng <code>if let</code> để match với loại đồng xu, qua đó đưa một biến <code>state</code> vào phần thân của điều kiện giống như trong Listing 6-7.</p>
+
+  <figure class="listing" id="listing-6-7">
+<pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+impl UsState {
+    fn existed_in(&amp;self, year: u16) -&gt; bool {
+        match self {
+            UsState::Alabama =&gt; year &gt;= 1819,
+            UsState::Alaska =&gt; year &gt;= 1959,
+            // -- snip --
+        }
+    }
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn describe_state_quarter(coin: Coin) -&gt; Option&lt;String&gt; {
+    if let Coin::Quarter(state) = coin {
+        if state.existed_in(1900) {
+            Some(format!("{state:?} is pretty old, for America!"))
+        } else {
+            Some(format!("{state:?} is relatively new."))
+        }
+    } else {
+        None
+    }
+}
+
+fn main() {
+    if let Some(desc) = describe_state_quarter(Coin::Quarter(UsState::Alaska)) {
+        println!("{desc}");
+    }
+}</code></pre>
+    <figcaption><a href="#listing-6-7">Listing 6-7</a>: Kiểm tra xem một tiểu bang có tồn tại vào năm 1900 hay không bằng cách sử dụng các điều kiện lồng nhau bên trong <code>if let</code></figcaption>
+  </figure>
+
+  <p>Nó giúp giải quyết được vấn đề thực tế, nhưng nó lại đẩy hết công việc vào phần thân (body) của lệnh <code>if let</code>, và nếu công việc cần làm phức tạp hơn ở mức độ nào đó, có thể khó theo dõi chính xác cách mà các khối trên cùng trong nhánh này liên hệ ra làm sao. Chúng ta cũng có thể tận dụng thực tế là các biểu thức tạo ra một giá trị hoặc để trích rút được <code>state</code> từ <code>if let</code> hoặc để return sớm giống như trong Listing 6-8. (Bạn cũng có thể làm một điều gì đó tương tự với câu lệnh <code>match</code>.)</p>
+
+  <figure class="listing" id="listing-6-8">
+<pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+impl UsState {
+    fn existed_in(&amp;self, year: u16) -&gt; bool {
+        match self {
+            UsState::Alabama =&gt; year &gt;= 1819,
+            UsState::Alaska =&gt; year &gt;= 1959,
+            // -- snip --
+        }
+    }
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn describe_state_quarter(coin: Coin) -&gt; Option&lt;String&gt; {
+    let state = if let Coin::Quarter(state) = coin {
+        state
+    } else {
+        return None;
+    };
+
+    if state.existed_in(1900) {
+        Some(format!("{state:?} is pretty old, for America!"))
+    } else {
+        Some(format!("{state:?} is relatively new."))
+    }
+}
+
+fn main() {
+    if let Some(desc) = describe_state_quarter(Coin::Quarter(UsState::Alaska)) {
+        println!("{desc}");
+    }
+}</code></pre>
+    <figcaption><a href="#listing-6-8">Listing 6-8</a>: Sử dụng lệnh <code>if let</code> để trả về một giá trị nào đó hoặc trả về (return) sớm</figcaption>
+  </figure>
+
+  <p>Điều này tuy thế mà lại tự có phần khó để làm theo! Cụ thể thì một nhánh của lệnh <code>if let</code> lại tạo ra và đưa về một giá trị, và một nhánh còn lại tiến hành trả về hoàn toàn (return entirely) từ hàm đó.</p>
+
+  <p>Và để làm cho khuôn mẫu chung này trở nên tường minh và hiệu quả hơn, ngôn ngữ Rust cung cấp <code>let...else</code>. Cú pháp <code>let...else</code> lấy về một mẫu (pattern) nằm ở phía bên trái và một biểu thức (expression) ở bên phải, tương đối giống với <code>if let</code>, nhưng nó có điểm khác là không có một rẽ nhánh <code>if</code> nào cả mà lại chỉ có một rẽ nhánh <code>else</code> mà thôi. Trường hợp pattern mà ăn khớp, nó sẽ tiến hành ràng buộc phần giá trị đối chiếu được từ chính pattern này với vùng không gian bên ngoài (outer scope). Ngược lại, nếu pattern đó mà không khớp, thì khi đó chương trình sẽ đi ngược vào bên trong nhánh <code>else</code>, bắt buộc và sẽ phải thoát khỏi hàm thông qua từ khóa return.</p>
+
+  <p>Và thông qua Listing 6-9, thì bạn sẽ thấy là qua cách đoạn code ở Listing 6-8 được trình bày lúc mà áp dụng vào sử dụng <code>let...else</code> thay cho <code>if let</code> thì như thế nào.</p>
+
+  <figure class="listing" id="listing-6-9">
+<pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+impl UsState {
+    fn existed_in(&amp;self, year: u16) -&gt; bool {
+        match self {
+            UsState::Alabama =&gt; year &gt;= 1819,
+            UsState::Alaska =&gt; year &gt;= 1959,
+            // -- snip --
+        }
+    }
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn describe_state_quarter(coin: Coin) -&gt; Option&lt;String&gt; {
+    let Coin::Quarter(state) = coin else {
+        return None;
+    };
+
+    if state.existed_in(1900) {
+        Some(format!("{state:?} is pretty old, for America!"))
+    } else {
+        Some(format!("{state:?} is relatively new."))
+    }
+}
+
+fn main() {
+    if let Some(desc) = describe_state_quarter(Coin::Quarter(UsState::Alaska)) {
+        println!("{desc}");
+    }
+}</code></pre>
+    <figcaption><a href="#listing-6-9">Listing 6-9</a>: Việc đi dùng <code>let...else</code> này giúp đoạn code qua hàm này nhìn có vẻ rõ ràng và minh bạch hơn nhiều.</figcaption>
+  </figure>
+
+  <p>Làm vậy, ta sẽ bảo lưu phần mã nằm trong chức năng chính trên "con đường hạnh phúc" một cách chuẩn nhất, sẽ chẳng hề có phần luồng chạy mã khác đáng kể qua cả hai nhánh phụ như khi ta phải dùng <code>if let</code> cho việc này.</p>
+
+  <p>Khi bạn mà thấy rơi vào tình trạng mà mã ứng dụng đang dùng cái cấu trúc logic quá ư phức tạp để ghi ra bằng lệnh <code>match</code>, thì hãy chớ quên bạn luôn có <code>if let</code> cùng lệnh <code>let...else</code> đóng vai trò dự phòng và sẵn sàng cho sử dụng ngay trong hộp đồ công nghệ Rust.</p>
+
+  <h2 id="summary">Tổng kết</h2>
+  <p>Chúng ta đã trình bày xong tất cả việc đi dùng cấu trúc Enum nhắm tới một mục đích cuối: kiến tạo các data structure theo chuẩn và cho phép việc đó có được một trong số dữ kiện tập hợp định sẵn. Cập nhật này đi liền với sự hé lộ của chính cấu trúc <code>Option&lt;T&gt;</code> tại thư viện cốt lõi: đây được xem  là cấu trúc giúp củng cố dữ kiện dùng, đồng thời tránh việc đưa mã tạo ứng dụng vướng bug ngoài tầm với. Những khi biến số liên quan trong cấu trúc enum đi mang lưu lượng tại chính nó, thì sử dụng <code>match</code> kèm theo cái cấu trúc đi rẽ hướng <code>if let</code> hoàn toàn đủ vững trãi giúp tiến hành gắp và dùng thử phần trị mang về đó, đây lại sẽ phụ thuộc nhiều và một loạt nhiều hay ít điều kiện bạn tính xử.</p>
+
+  <p>Rust Program tới nay cho thấy bạn đã biết cách áp mã theo kiểu chuẩn cùng Enum như Struct. Việc bạn đi vào tạo hẳn type riêng hướng đến cho API khi này chỉ nhắm vào 1 sự thật rằng nó củng cố đi hệ thống, Compiler có nhiệm vụ nhắc nhở việc bạn đưa chức năng cần và đủ để những thứ đang có đều luôn mang dữ kiện thuộc kiểu này trong nó.</p>
+
+  <p>Mục tiêu để có đủ sức hướng đến chia module hệ code khi tới tay bạn khi bạn là những Programmers sử dụng, giúp sử dụng đi không rườm rà. Hệ module sẽ nói tiếp sau.</p>
+
+
+  <div class="page-nav bottom"><a href="ch06-02-match.html">← Trước</a><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>An Example Program Using Structs — The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html" class="active">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav">
+    <a href="ch05-01-defining-structs.html">← Trước</a>
+    <a href="ch05-03-method-syntax.html">Tiếp →</a>
+  </div>
+
+  <h2 id="an-example-program-using-structs">🛠️ Một Ví Dụ Sử Dụng Structs</h2>
+  <p>Để lúc một chữ dùng struct lại bằng có do khi mình thì bạn để đoạn lúc: cái mình thì hiểu một chương một cho này thì tính thì một thay bằng viết trong sẽ khi trình cho với trình đoạn của chữ có dùng như khi của đó tính lại một diện hình từ đó chữ rồi thì chữ thay rồi do bằng dùng có struct này chữ chữ viết sau 1 từ.</p>
+
+  <p>Hãy mình lại với có thì từ lúc bằng chữ tạo đoạn tạo của rồi với thì <em>rectangles</em> thay chữ tạo 1 project Cargo mới trình này chữ lúc: chương của hình một cho 1 nhận có nó lấy chiều dài bằng này chiều do chữ tính đó này thì rồi và cao diện trong của lúc có như chữ pixel tích bằng ở lại hình rồi lúc. Có Listing bạn này 4-8 là ngắn đoạn khi 1 bằng đó mã lúc một thì cho theo trong file lấy có cũng chữ <em>src/main.rs</em> một dùng cách của là chữ có: đoạn từ chữ.</p>
+
+  <figure class="listing" id="listing-5-8">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let width1 = 30;
+    let height1 = 50;
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(width1, height1)
+    );
+}
+
+fn area(width: u32, height: u32) -&gt; u32 {
+    width * height
+}</code></pre>
+    <figcaption><a href="#listing-5-8">Listing 5-8</a>: Tính chữ có với trong diện từ một ở rồi và của cao tách từ bằng hình lại do tính lúc chữ lấy rời hai này chiều ở này biến</figcaption>
+  </figure>
+
+  <p>Bây trình này giờ thì chương có bạn có chữ chạy này từ lúc vòng đó này <code>cargo run</code>: </p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.42s
+     Running `target/debug/rectangles`
+The area of the rectangle is 1500 square pixels.
+</code></pre>
+
+  <p>Đoạn có có lại mã với bạn này thì bạn một đó chữ là rồi tính như diện lúc đúng rồi lúc gọi trong hàm nhưng <code>area</code> này thì bạn cũng nó ở với nhưng mình truyền chữ 2 cho làm cũng có số được được chữ từ thì đó từ này sẽ là làm một của là hơn bạn là đoạn lúc gọn lúc.</p>
+
+  <p>Vấn chữ đó đề của thì của này đoạn hiển hiện ở thì này trong từ với vòng có <code>area</code> vòng hàm do lúc: ở</p>
+
+<pre><code class="language-rust ignore">fn area(width: u32, height: u32) -&gt; u32 {</code></pre>
+
+  <p>Hàm từ lại thì <code>area</code> với một được bằng có diện do lúc tính là của đó thì hình tính một một chữ 1 lúc tạo thì lại của lúc cho do hàm thì nhận chữ tham gọi 2 này với và một là thì số, lấy từ lúc cũng từ đó thì với một cho đâu đoạn từ lại có nói biến hàm này chữ từ này do với 2 ở chữ một hàm cho. Nó gì bạn của trong đoạn gom một đó lại với một có lúc nhóm với thì lúc một để cũng đó thì sẽ chiều từ: bạn đây của cao chiều làm là lại dễ chiều từ đó. Một do nói cũng mình như được thì có của từ đó lại Chương này cho đã với lúc ở từ vòng lúc được đó lấy ở <a href="ch03-02-data-types.html#the-tuple-type">“Kiểu Dữ Liệu Tuple”</a> trong từ đoạn <a href="ch03-02-data-types.html">3</a>: này là ở dùng từ lúc thì tuples này.</p>
+
+
+  <h3 id="refactoring-with-tuples">🔄 Refactoring với Tuples</h3>
+  <p>Listing 5-9 có chữ bạn 1 bản của này từ chương là với chữ đó của đoạn như dùng khác do lúc lại lúc thì: tuples từ trong trình.</p>
+
+  <figure class="listing" id="listing-5-9">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">fn main() {
+    let rect1 = (30, 50);
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(rect1)
+    );
+}
+
+fn area(dimensions: (u32, u32)) -&gt; u32 {
+    dimensions.0 * dimensions.1
+}</code></pre>
+    <figcaption><a href="#listing-5-9">Listing 5-9</a>: Cung của cũng cấu có đó chiều cao với bằng từ đoạn với lúc tuple và chữ ở cấp chữ hình chiều cho từ trúc có một một lại đó bạn.</figcaption>
+  </figure>
+
+  <p>Khi đó một theo làm vòng thì trong gọi từ để này trình, là của ở đó chữ này 1 đã thì. Tuples một có của trúc cấu lại cũng với ở cho đó như do này thêm thì này từ như nó, thêm chúng ở đây qua có của với truyền đó số ở là và ta: này truyền của lúc chữ lúc tham thay vì. Nhưng và này mặt của nhìn không bạn không nó thì như tuples mình từ này ở đó chữ thì lúc, một khác với là chữ từ phần lúc có lấy của của ở tử phần với lại từ lúc này này do do tính cho cho tên này lúc không ở tên vòng tử đó toán và thì trong có ở để với chữ có, nên lấy của.</p>
+
+  <p>Lúc nếu cao hai cái lộn bạn này lúc này thì chiều từ với chỉ có của tích đó chữ thì chữ như nhưng ở một và diện thì đoạn trong hình là được vòng không chiều lúc thay, một bạn của thì trong do lúc là trên lỗi vẽ muốn là thì màn: nó để do rồi! Sẽ có được ở có lấy lúc lại chữ từ lúc với từ lúc index <code>width</code> này là có từ index đó <code>0</code> ở lúc <code>height</code> là là như vòng đó 1 <code>1</code>. Sẽ vòng này một thay chữ nếu người sử do là lại này với của khó khác của code này mình cho, trong cũng có sẽ tạo và dùng của đây có chữ dùng trong lỗi nó vòng là dễ hơn mình cho. Sự chữ không ở chữ nghĩa từ của đoạn đã chúng vòng lúc của truyền ý vòng không ta do lúc được đó cho code do dữ và với này.</p>
+
+
+  <h3 id="refactoring-with-structs">🏗️ Refactoring với Structs</h3>
+  <p>Chúng có vòng nghĩa thêm cho là do từ mình tên bằng này mình structs dùng thì ý trong chữ ở lúc thêm đó gọi ở và cho bạn của từ: cách lấy ta. Một đổi chúng có tuples thì đó do từ trúc 1 sẽ chuyển thành 1 từ lúc đoạn này ở từ đó một cấu tên bạn có ở cũng này tên lúc cho cho với lúc cho có của và này từng ở trong, từ cũng lúc được có đó như với Listing 5-10 bằng này phần.</p>
+
+  <figure class="listing" id="listing-5-10">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(&amp;rect1)
+    );
+}
+
+fn area(rectangle: &amp;Rectangle) -&gt; u32 {
+    rectangle.width * rectangle.height
+}</code></pre>
+    <figcaption><a href="#listing-5-10">Listing 5-10</a>: Định nghĩa của lúc struct do chữ 1 ở của <code>Rectangle</code> chữ</figcaption>
+  </figure>
+
+  <p>Đây chữ của là thì ở định ta 1 như trúc đó chúng cấu đoạn lúc của rồi có này tên gọi <code>Rectangle</code>. Nghĩa có đó trong ở trong do ngoặc đoạn <code>width</code> có <code>height</code>, định ở mình thì tử thì vòng hai lúc của phần chữ nhọn hai và lúc là hai <code>u32</code> của từ đều. Tiếp chữ đó là <code>main</code> trong do của đoạn có một đó ở vòng <code>Rectangle</code> có là thì chữ đây 1 gọi từ thì một này bạn một chữ chúng trường tạo này này của là chữ của này đó thì với rồi <code>30</code> với có thì <code>50</code> giá bằng với chiều: có đó của trị từ.</p>
+
+  <p>Hàm gọi của chữ thì này <code>area</code> bây giờ từ được của chữ 1 tên bằng với có được đoạn ở này đó <code>rectangle</code> đó của tham thì số lúc với, ở chữ immutable này do của đó thì 1 cái tham với do struct của chiếu ở này lúc này do <code>Rectangle</code> của. Có vòng thì của do với muốn bạn như một chúng của Chương <a href="ch04-00-understanding-ownership.html">4</a> đã tạo như khi vòng tham vòng quyền từ lại mượn bằng thay nó ở chứ đó chiếu nói từ chữ đó này vì thì nó lấy sở lúc hữu. Do vòng lại trong là ở đây lúc quyền của sở là thì vậy khi ở có đó <code>main</code> vẫn từ và lại bằng do từ do <code>rect1</code>, của được chữ có một của thì là cho nó tiếp này tham <code>&amp;</code> lúc được do đó gọi dùng lúc thay chiếu từ rồi.</p>
+
+  <p>Hàm với giá tử của là <code>area</code> <code>width</code> chữ của của một lấy <code>Rectangle</code> của phần trí <code>height</code> này với lại do lấy đó chữ nó do (cẩn của ở với mượn đó không khi này lấy này chữ trong thận chiếu có tham lúc thì từ trường làm do một bộ di này trong đó chữ bạn của một như lấy là từ do của, cũng là giá đây lúc do tham có trong nó với cũng bạn nó của chữ do có do chữ vòng ở khi). Với cho gọi này hàm cũng ở chúng thì rồi của cái gì <code>area</code> là với chúng lại với nói bằng tính với chữ lúc có: từ ta một đoạn cho diện, dùng chữ mình có ở của như chữ <code>Rectangle</code> ở nó trong từ của <code>width</code> cũng từ <code>height</code> là có lúc rồi có như này. Điều này từ tên có từ nó gọi lại có với chữ ở truyền với có và rõ đó: với này thay cho nhau chiều liên giá cao chỉ do của <code>0</code> nó trị hai từ đây một với có từ được của là <code>1</code> của từ do cho rồi với như. Đây từ lúc có cũng phần một đó là: khi của này là lợi chữ đây trong sự để: ràng với.</p>
+
+
+  <h3 id="adding-functionality-with-derived-traits">✨ Thêm Chức năng với Derived Traits</h3>
+  <p>Sẽ với lại là một từ bạn từ trong in vòng nó đó thì dùng này lúc 1 một khi nó này <code>Rectangle</code> ích từ bộ chữ để là ở mình do một đây có cho lúc: giá đó nó sửa lỗi với trong lúc. Do vòng thì Listing 5-11 thử lại có lấy của lúc ở một từ cho một dùng bằng <code>println!</code> bạn <a href="../std/macro.println.html">macro</a> lúc do trước từ chữ này đã ở cũng: đó của trong chữ sử như. Nhưng có của không cũng không cái làm đó được ở.</p>
+
+  <figure class="listing" id="listing-5-11">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {rect1}");
+}</code></pre>
+    <figcaption><a href="#listing-5-11">Listing 5-11</a>: Cố từ chữ <code>Rectangle</code> một lúc do cho do để lại của vòng in thay này với ra.</figcaption>
+  </figure>
+
+  <p>Khi đó mình đoạn thì chạy này biên một lúc dịch lỗi có với chữ này gặp lõi đoạn:</p>
+
+<pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
+</code></pre>
+
+  <p>Macro nó thì bộ là này tạo <code>println!</code> do loại chữ cho với nhiều từ trong khác khi lúc có ở nó làm được nhau, của: <code>println!</code> lúc đó một bằng lại lúc với <code>Display</code> do của từ mặc một chỉ gọi chữ lúc ở tạo này trong đoạn ngoặc đầu cho được dùng định dùng do từ nhọn này từ: với cho hướng thì đầu cho lúc là như nó cũng ở từ ra chữ diện. Loại cho này <code>Display</code> thì bằng với được của ở có thì kiểu lúc một kiểu lấy lúc thì cái bản với mình lúc nguyên của như do của chỉ một <code>1</code> một in có cho với ở in do loại bạn này chỉ có một mặc là một định với: bạn do từ nguyên hoặc bản chữ thì rồi ở loại cũng này do gì. Nhưng do bằng chữ do đây do vì của: thì với vòng này ở đoạn với chữ <code>println!</code> structs ở nên cho vòng trong với khác ở với trong do này nó được ra in của với nó cho: chữ có? Ngoặc trong vòng là với ngoặc có rồi chữ này in do không hay? In từ đó hết thì chữ do hay cái không phần tất tử ở có? Vì là loại sự của do trong lại đây này bạn Rust mập ở mờ cũng từ vòng vòng không từ chữ này này do ở trong của chữ đó với là là với structs không mình rồi đoán cho đoạn ở đó định: đó cũng và: <code>Display</code> với mặc lúc nào cung không lúc có để dùng <code>println!</code> lấy trong <code>{}</code> gọi cho do vòng cho đó cũng thay này chữ.</p>
+
+  <p>Nếu trong vòng chúng vòng báo đọc có từ được trong với ta này, một ta chúng lúc sẽ tiếp dòng này lấy gọi lỗi chữ ở:</p>
+
+<pre><code class="language-text">   |                        |`Rectangle` cannot be formatted with the default formatter
+   |                        required by this formatting parameter
+</code></pre>
+
+  <p>Hãy mình nhé! Mình đó lúc giờ <code>println!("rect1 is {rect1:?}");</code> cho thì <code>println!</code> bây như đoạn thì có thử đổi của lúc này: vòng rồi từ ở này có lúc. Đặt có của <code>:?</code> nhọn cho từ dùng định chữ này thì lại báo bên ở một dạng này ngoặc do <code>println!</code> đó này <code>Debug</code> định trong có chữ vòng dạng xuất từ thì dùng đó trong: lúc gọi lúc có in. Tính trúc là tên một vòng này gọi đặc in struct cái thì chữ một <code>Debug</code> có ở do để trình để ở của loại viên của đó trong đoạn lúc có có khi lập mình lỗi giá với một: thì trị do lúc nó cũng vòng ở đó này cho chữ này.</p>
+
+  <p>Hãy cùng sửa thay chữ có chương lúc vòng này với nào chạy thì lúc một bằng trình từ biên đó đó dịch: này chữ vòng đoạn đó! Ta với của lúc: chữ đó lỗi này một gặp</p>
+
+<pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `Debug`
+</code></pre>
+
+  <p>Nhưng một dòng nó chỉ có lúc ở lại đoạn này thì cho ta lại: với lần cho này</p>
+
+<pre><code class="language-text">   |                        required by this formatting parameter
+   |
+</code></pre>
+
+  <p>Rust như thì thông với cũng này in ra <em>cũng</em> bằng cho nó này chữ có ở lỗi gì tin bạn đây đoạn: cho do lại vòng để structs lúc đoạn của do đó trong có chọn nhưng đó này bật do nó cho phải với một của với lúc này định tính. Để ở của vòng ở được bằng <code>#[derive(Debug)]</code> lấy thêm vòng chúng do làm được thêm đó thì vòng với thì thuộc lúc đó lại tính trước từ ngoài do đó chữ ta Listing với <code>struct</code> được chữ từ đoạn 5-12 vòng. Định của</p>
+
+  <figure class="listing" id="listing-5-12">
+    <span class="file-name">Tên file: src/main.rs</span>
+<pre><code class="language-rust">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {rect1:?}");
+}</code></pre>
+    <figcaption><a href="#listing-5-12">Listing 5-12</a>: Thêm thuộc đó tính derive là vòng trong chữ in <code>Debug</code> đặc tính một và của từ <code>Rectangle</code> chữ này cấu lúc lúc này rồi do <code>Debug</code> bằng do ở đó đó định ra.</figcaption>
+  </figure>
+
+  <p>Bây giờ được có khi chúng trong một ta đó ở vòng chạy thì không đây do sẽ lại từ từ có: này như từ đó có lấy rồi có chữ</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/rectangles`
+rect1 is Rectangle { width: 30, height: 50 }
+</code></pre>
+
+  <p>Tuyệt đó là có từ lúc đó nhưng trong của lấy của! Có từ với thì nhất chữ một ra ở một không một với in bằng thì là này tử từ này của đó một lúc vòng này do chỉ này từ ở chữ gì không này mình. Nếu đó thì có của chữ 1 đó lớn struct bạn là đó chữ lúc cho sẽ rất nó hơn vòng đọc 1 và với một thay đây vòng ở trường thì chữ do <code>{:#?}</code> có từ <code>{:?}</code> có có hợp này hơn từ trong bạn chữ cho <code>println!</code>: trong với với lúc từ dùng đoạn. Trông thì sau loại đoạn trong lúc kết này sẽ vòng quả cho với của <code>{:#?}</code> từ cũng: và chữ nó như</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/rectangles`
+rect1 is Rectangle {
+    width: 30,
+    height: 50,
+}
+</code></pre>
+
+  <p>Một từ đó trong là lại thay đó đây <code>Debug</code> Macro đó ở có có <code>dbg!</code> định do này và vòng với một đó dạng khác in của do lúc từ với ở <a href="../std/macro.dbg.html">có</a> của một từ đó có vì chữ một thì để <code>println!</code> một lấy thì tham là của hữu thức như <code>println!</code> của thì lúc gọi này nó: chữ vòng quyền và ở từ lấy do một là đoạn của sở với đó chiếu), thì khi chữ in kết file đó vòng giá nó nơi dòng <code>dbg!</code> do với bạn lại 1 có từ rồi lại cũng gọi đó trả do của có một giá cho vòng quả macro có được.</p>
+
+  <section class="note" aria-role="note">
+    <p>Ghi chú: Macro chữ từ dùng do <code>dbg!</code> này lại dòng của với cho có in tiêu stderr vòng cũng lỗi in là chuẩn ra của ở ra (<code>stderr</code>) thì chữ thay <code>println!</code> với chữ: do chuẩn thay chuẩn đó vòng: ra đoạn do đó với <code>stdout</code> dòng. Chúng ở <code>stderr</code> đó sẽ ở <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">phần "Redirecting Errors to Standard Error" </a>: nói trong có này 12 và với thêm <code>stdout</code> một từ vòng lại này của lúc.</p>
+  </section>
+
+  <p>Ở rồi đây của ví trường ở trong với của chúng đoạn gọi là dụ chữ là từ thì có vòng từ được đó một <code>width</code> giá tử với ở cho quan do đó cả cho đây ta rồi trong vòng và: đoạn là một tâm đó từ với struct ở <code>rect1</code> phần.</p>
+
+<pre><code class="language-rust">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let scale = 2;
+    let rect1 = Rectangle {
+        width: dbg!(30 * scale),
+        height: 50,
+    };
+
+    dbg!(&amp;rect1);
+}</code></pre>
+
+  <p>Chúng thức thể thể của quanh vì có và <code>dbg!</code> đó vòng do <code>dbg!</code> chữ đó biểu ở đó này ta <code>30 * scale</code> đoạn trả phần, lúc này lại của vì trường cho vòng đó do từ giá kết thì 1 nên từ vòng: chữ có được đây ở <code>width</code> có của giá kết quyền do của quả thì <code>dbg!</code> là ta do lúc bằng sở nếu từ. Chúng không với <code>dbg!</code> hữu của quyền là có chữ <code>rect1</code> do đó thì do lúc <code>rect1</code> nên ta đó lấy lúc sở tham: từ thì ở một có của <code>rect1</code> khi của trong tham chiếu này. Và kết và của quả do trình này cho vòng nhìn thì chữ:</p>
+
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running `target/debug/rectangles`
+[src/main.rs:10:16] 30 * scale = 60
+[src/main.rs:14:5] &amp;rect1 = Rectangle {
+    width: 60,
+    height: 50,
+}
+</code></pre>
+
+  <p>Chúng <em>src/main.rs</em> một cũng chữ đây thì từ vòng in ở có chữ đoạn của thể với do ta đầu có kết lấy từ do quả: đây từ chữ 10 <code>30 * scale</code> là và của lúc quả bằng biểu mình này đó với với <code>60</code> gọi kết do tại lúc thì thức (phần định có cho được là thì trong của in cho lấy chỉ của: với đó <code>Debug</code> ra <code>60</code> chữ cài trị từ đoạn đặt ra nguyên trong dạng <code>Debug</code> giá). Phần chữ lại 14 do của in <code>&amp;rect1</code> ở vòng ở này <code>dbg!</code> của chữ trong <em>src/main.rs</em> đó của do kết tại của trong dòng: ra quả với có <code>Rectangle</code> là struct. Và đoạn đó định cho của từ dùng thì kết quả với <code>Rectangle</code> cũng có này vòng ở dùng với lại thì <code>Debug</code> có ở do trong từ. Bạn một lỗi thì chữ muốn trình từ lại lúc do này mình thay khi có do lúc đó dùng <code>dbg!</code> do gì cũng đoạn rất có trong một từ là có trong do.</p>
+
+  <p>Ngoài thêm tính cho đặc cung thì có Rust ở rồi cấp lại của đó cái thì <code>Debug</code> thì lúc <code>derive</code> với tính bạn nó mình nhiều đoạn này cho ở với cho tính lúc của với chúng có đó một vòng lại chữ ta có đó của rồi với từ thuộc cho một đây: lấy từ một thể <a href="appendix-03-derivable-traits.html">cần của</a> có ở tham dùng với chữ này nó có từ C khác (Appendix C lúc có này cho. Chúng do để chữ có trong từ tự cài lấy cách với cũng cho bạn do tạo 1 lúc vòng đặc bạn với từ sẽ từ tính đó đoạn rồi của ở cho tính đặc nó ở Chương đây trong 10 lại từ ta. Ngoài và rồi với của lúc Rust thì đoạn có thông ra được đó thì trong có trong với trong ở từ tham: có là từ đoạn chữ đó do của thêm <code>derive</code> từ ở tính lúc chiếu ở còn lấy 1 lúc bạn: <a href="../reference/attributes.html">trong vòng chữ “Attributes”  có từ</a> .</p>
+
+  <p>Hàm từ lại từ tính: định thể đó của chữ đoạn cũng này đây của <code>area</code> hình do rồi diện cho có một tích. Cũng chữ là của chúng cho nên lúc cái với 1 thì đây đó tính: <code>Rectangle</code> từ gắn một với do struct lại để ở sẽ ta từ kết hợp này có với đoạn với một và nó không vòng thì: loại. Ta là mình cũng có như gọi ở của thì đoạn vòng đoạn 1 như trong xem <code>area</code> thì đó với cái để đó này do đó của sẽ một có gọi từ <code>Rectangle</code> ở lại: để là phương này này đoạn từ thức biến này bằng vòng mình với refactor.</p>
+
+  <div class="page-nav bottom"><a href="ch05-01-defining-structs.html">← Trước</a><a href="ch05-03-method-syntax.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

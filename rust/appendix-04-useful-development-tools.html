@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D - Useful Development Tools - The Rust Book (Tiếng Việt)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
+      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
+    </a>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+      <a href="ch01-00-getting-started.html">Tổng quan</a>
+      <a href="ch01-01-installation.html">Cài đặt</a>
+      <a href="ch01-02-hello-world.html">Hello, World!</a>
+      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
+      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+      <a href="ch03-03-how-functions-work.html">Hàm</a>
+      <a href="ch03-04-comments.html">Comments</a>
+      <a href="ch03-05-control-flow.html">Control Flow</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 4 — Ownership</div>
+      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
+      <a href="ch04-03-slices.html">Slices</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 5 — Struct</div>
+      <a href="ch05-00-structs.html">Tổng quan</a>
+      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+      <a href="ch05-03-method-syntax.html">Method Syntax</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
+      <a href="ch06-00-enums.html">Tổng quan</a>
+      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+      <a href="ch06-02-match.html">match</a>
+      <a href="ch06-03-if-let.html">if let</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
+      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
+      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
+      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 8 — Collections</div>
+      <a href="ch08-00-common-collections.html">Tổng quan</a>
+      <a href="ch08-01-vectors.html">Vector</a>
+      <a href="ch08-02-strings.html">String</a>
+      <a href="ch08-03-hash-maps.html">Hash Map</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+      <a href="ch09-00-error-handling.html">Tổng quan</a>
+      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
+      <a href="ch10-00-generics.html">Tổng quan</a>
+      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+      <a href="ch10-02-traits.html">Trait</a>
+      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 11 — Testing</div>
+      <a href="ch11-00-testing.html">Tổng quan</a>
+      <a href="ch11-01-writing-tests.html">Viết test</a>
+      <a href="ch11-02-running-tests.html">Chạy test</a>
+      <a href="ch11-03-test-organization.html">Tổ chức test</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+      <a href="ch12-00-an-io-project.html">Tổng quan</a>
+      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
+      <a href="ch12-02-reading-a-file.html">Đọc file</a>
+      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
+      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
+      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 13 — Functional Features</div>
+      <a href="ch13-00-functional-features.html">Tổng quan</a>
+      <a href="ch13-01-closures.html">Closure</a>
+      <a href="ch13-02-iterators.html">Iterator</a>
+      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
+      <a href="ch13-04-performance.html">Hiệu suất</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+      <a href="ch14-01-release-profiles.html">Release Profiles</a>
+      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
+      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+      <a href="ch15-02-deref.html">Deref Trait</a>
+      <a href="ch15-03-drop.html">Drop Trait</a>
+      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <a href="ch16-00-concurrency.html">Tổng quan</a>
+      <a href="ch16-01-threads.html">Threads</a>
+      <a href="ch16-02-message-passing.html">Message Passing</a>
+      <a href="ch16-03-shared-state.html">Shared State</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 17 — Async/Await</div>
+      <a href="ch17-00-async-await.html">Tổng quan</a>
+      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
+      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-04-streams.html">Streams</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 18 — OOP</div>
+      <a href="ch18-00-oop.html">Tổng quan</a>
+      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+      <a href="ch18-02-trait-objects.html">Trait Objects</a>
+      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <a href="ch19-00-patterns.html">Tổng quan</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-02-refutability.html">Refutability</a>
+      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 20 — Advanced Features</div>
+      <a href="ch20-00-advanced-features.html">Tổng quan</a>
+      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+      <a href="ch20-03-advanced-types.html">Advanced Types</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-05-macros.html">Macros</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+      <a href="ch21-01-single-threaded.html">Single-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Phụ lục</div>
+      <a href="appendix-00.html">Tổng quan</a>
+      <a href="appendix-01-keywords.html">A — Keywords</a>
+      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+      <a href="appendix-04-useful-development-tools.html" class="active">D — Dev Tools</a>
+      <a href="appendix-05-editions.html">E — Editions</a>
+      <a href="appendix-06-translation.html">F — Translations</a>
+      <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+    </div>
+  </nav>
+</nav>
+
+<main id="content">
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Phụ lục — The Rust Book</span></div>
+  <div id="main">
+  <div class="page-nav"><a href="appendix-03-derivable-traits.html">← Trước</a><a href="appendix-05-editions.html">Tiếp →</a></div>
+
+<h2 id="appendix-d-useful-development-tools">Phụ lục D: Các Công Cụ Phát Triển Hữu Ích</h2>
+<p>Trong phụ lục này, chúng ta sẽ nói về một số công cụ phát triển hữu ích mà dự án Rust cung cấp. Ta sẽ xem qua tính năng định dạng code tự động, cách nhanh chóng áp dụng các gợi ý sửa lỗi từ compiler, một công cụ lint chuyên nghiệp, và cách tích hợp với các IDE.</p>
+
+<h3 id="automatic-formatting-with-rustfmt">Tự Động Định Dạng Code với <code>rustfmt</code></h3>
+<p>Công cụ <code>rustfmt</code> định dạng lại code của bạn theo phong cách cộng đồng đã thống nhất. Nhiều dự án cộng tác sử dụng <code>rustfmt</code> để tránh những cuộc tranh cãi vô tận về "nên dùng style nào khi viết Rust" — mọi người cứ chạy tool là xong, chẳng ai phải cãi nhau!</p>
+<p>Cài đặt Rust đã bao gồm sẵn <code>rustfmt</code>, vì vậy bạn đã có hai chương trình <code>rustfmt</code> và <code>cargo-fmt</code> trên máy rồi. Hai lệnh này tương tự như <code>rustc</code> và <code>cargo</code> vậy — <code>rustfmt</code> cho phép kiểm soát chi tiết hơn, còn <code>cargo-fmt</code> hiểu rõ các quy ước của project dùng Cargo. Để định dạng bất kỳ Cargo project nào, gõ lệnh sau:</p>
+<pre><code class="language-console">$ cargo fmt
+</code></pre>
+<p>Chạy lệnh này sẽ định dạng lại toàn bộ code Rust trong crate hiện tại. Điều này chỉ thay đổi phong cách code, không thay đổi ngữ nghĩa của code. Để biết thêm thông tin về <code>rustfmt</code>, xem <a href="https://github.com/rust-lang/rustfmt">tài liệu của nó</a>.</p>
+
+<h3 id="fix-your-code-with-rustfix">Sửa Code Tự Động với <code>rustfix</code></h3>
+<p>Công cụ <code>rustfix</code> được đóng gói sẵn cùng Rust và có thể tự động sửa các cảnh báo từ compiler khi cách sửa rõ ràng và đúng với ý bạn muốn. Chắc bạn đã thấy compiler cảnh báo nhiều lần rồi. Ví dụ, xem đoạn code này:</p>
+<p><span class="filename">Tên file: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut x = 42;
+    println!("{x}");
+}</code></pre>
+<p>Ở đây, ta khai báo biến <code>x</code> là mutable, nhưng thực ra chẳng bao giờ thay đổi giá trị của nó cả. Rust sẽ cảnh báo về điều đó:</p>
+<pre><code class="language-console">$ cargo build
+   Compiling myprogram v0.1.0 (file:///projects/myprogram)
+warning: variable does not need to be mutable
+ --&gt; src/main.rs:2:9
+  |
+2 |     let mut x = 0;
+  |         ----^
+  |         |
+  |         help: remove this `mut`
+  |
+  = note: `#[warn(unused_mut)]` on by default
+</code></pre>
+<p>Cảnh báo gợi ý rằng ta nên bỏ từ khóa <code>mut</code> đi. Ta có thể tự động áp dụng gợi ý đó bằng cách dùng công cụ <code>rustfix</code> qua lệnh <code>cargo fix</code>:</p>
+<pre><code class="language-console">$ cargo fix
+    Checking myprogram v0.1.0 (file:///projects/myprogram)
+      Fixing src/main.rs (1 fix)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+</code></pre>
+<p>Khi nhìn lại <em>src/main.rs</em>, ta sẽ thấy <code>cargo fix</code> đã thay đổi code:</p>
+<p><span class="filename">Tên file: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 42;
+    println!("{x}");
+}</code></pre>
+<p>Biến <code>x</code> giờ đã là immutable, và cảnh báo không còn xuất hiện nữa.</p>
+<p>Bạn cũng có thể dùng lệnh <code>cargo fix</code> để chuyển đổi code của mình giữa các Rust edition khác nhau. Các edition được đề cập trong <a href="appendix-05-editions.html">Phụ lục E</a>.</p>
+
+<h3 id="more-lints-with-clippy">Thêm Lint với Clippy</h3>
+<p>Clippy là một bộ sưu tập các lint để phân tích code, giúp bạn phát hiện những lỗi phổ biến và cải thiện chất lượng code Rust. Clippy được đóng gói sẵn trong bản cài đặt Rust tiêu chuẩn — cứ cài Rust là có Clippy luôn!</p>
+<p>Để chạy các lint của Clippy trên bất kỳ Cargo project nào, gõ:</p>
+<pre><code class="language-console">$ cargo clippy
+</code></pre>
+<p>Ví dụ, giả sử bạn viết một chương trình sử dụng giá trị xấp xỉ của một hằng số toán học, chẳng hạn như pi, như chương trình này:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 3.1415;
+    let r = 8.0;
+    println!("the area of the circle is {}", x * r * r);
+}</code></pre>
+</figure>
+<p>Chạy <code>cargo clippy</code> trên project này sẽ ra lỗi này:</p>
+<pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found
+ --&gt; src/main.rs:2:13
+  |
+2 |     let x = 3.1415;
+  |             ^^^^^^
+  |
+  = note: `#[deny(clippy::approx_constant)]` on by default
+  = help: consider using the constant directly
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
+</code></pre>
+<p>Lỗi này cho bạn biết rằng Rust đã có sẵn hằng số <code>PI</code> chính xác hơn, và chương trình của bạn sẽ đúng hơn nếu dùng hằng số đó thay vì gõ tay con số xấp xỉ. Bạn sẽ sửa code để dùng hằng số <code>PI</code>.</p>
+<p>Đoạn code sau không gây ra lỗi hay cảnh báo gì từ Clippy cả:</p>
+<figure class="listing">
+<span class="file-name">Tên file: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = std::f64::consts::PI;
+    let r = 8.0;
+    println!("the area of the circle is {}", x * r * r);
+}</code></pre>
+</figure>
+<p>Để biết thêm thông tin về Clippy, xem <a href="https://github.com/rust-lang/rust-clippy">tài liệu của nó</a>.</p>
+
+<h3 id="ide-integration-using-rust-analyzer">Tích Hợp IDE với <code>rust-analyzer</code></h3>
+<p>Để hỗ trợ tích hợp IDE, cộng đồng Rust khuyến nghị dùng
+<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a>. Công cụ này là một tập hợp các tiện ích lấy compiler làm trung tâm, giao tiếp qua giao thức <a href="http://langserver.org/">Language Server Protocol</a> — một đặc tả cho phép IDE và ngôn ngữ lập trình "nói chuyện" với nhau. Nhiều client có thể dùng <code>rust-analyzer</code>, chẳng hạn như <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">plugin Rust analyzer cho Visual Studio Code</a>.</p>
+<p>Truy cập <a href="https://rust-analyzer.github.io">trang chủ</a> của project <code>rust-analyzer</code> để xem hướng dẫn cài đặt, rồi cài hỗ trợ language server vào IDE của bạn. IDE của bạn sẽ "thông minh" hẳn lên với các tính năng như tự động hoàn thành code, nhảy tới định nghĩa, và hiển thị lỗi ngay tại chỗ.</p>
+
+  <div class="page-nav bottom"><a href="appendix-03-derivable-traits.html">← Trước</a><a href="appendix-05-editions.html">Tiếp →</a></div>
+  </div>
+</main>
+<script src="script.js"></script>
+</body></html>
