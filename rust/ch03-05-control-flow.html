@@ -278,7 +278,7 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `branches` (bin "branches") due to 1 previous error
 </code></pre>
 
-  <p>Qua thông điệp này nó cũng xác định rõ dạng mà Rust sẽ cần tới là ngôn ngữ Boolean mà lại không cần các thông số của biến khác ngoài hệ lệnh này. Nó chẳng khá giống so với cái thiết lập cho ra trên mọi điều thay vì chỉ tập cho 1 dạng được cài đặt qua JavaScript. Nó như đang thiết lập dạng <code>bool</code> từ những đoạn code để thành câu thành hoàn chỉnh qua dạng có trong Javascript nhưng khác cái không có chức năng chuyển ngôn ngữ. Vì vậy Rust tự ép kiểu và biến được giá trị sang một hệ không thể tương tính nên từ đó tạo các dòng dạng thông báo trên đây. Mà cho phép tự bạn sẽ tự quản với việc cung cấp cho ngôn ngữ boolean với câu điểu kiện của lệnh <code>if</code> với 3 từ này. Hễ nếu đoạn <code>if</code> tự thực hiện chỉ khác lúc so với khi cho ra lại ra giá bằng <code>0</code> thì lúc đó một ví dụ trong nó đã tự được điểu chỉnh cho khác với dạng thức trước đây như việc đổi lệnh <code>if</code>, kiểu thế này nè:</p>
+  <p>Thông báo lỗi cho biết Rust mong đợi một <code>bool</code> nhưng nhận được một số nguyên. Khác với các ngôn ngữ như Ruby và JavaScript, Rust không tự động chuyển đổi các kiểu dữ liệu không phải Boolean sang Boolean. Bạn phải tường minh và luôn cung cấp cho <code>if</code> một giá trị Boolean làm điều kiện. Nếu chúng ta muốn khối lệnh <code>if</code> chỉ chạy khi một số khác <code>0</code>, chẳng hạn, ta có thể thay đổi biểu thức <code>if</code> thành như sau:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -293,7 +293,7 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
   <p>Kết quả sau xử lí code ở máy bạn, in lệnh này rồi hiện: <code>number was something other than zero</code>.</p>
 
   <h4 id="handling-multiple-conditions-with-else-if">Đồng thời nhiều hàm xử lý <code>else if</code></h4>
-  <p>Lúc này để tạo điều kiện sử dụng <code>if</code> cộng với điều kiện nữa từ <code>else</code>, ta được ngay <code>else if</code> ra kết quả. Kiểu:</p>
+  <p>Bạn có thể sử dụng nhiều điều kiện bằng cách kết hợp <code>if</code> và <code>else</code> trong một biểu thức <code>else if</code>. Ví dụ:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -311,7 +311,7 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
     }
 }</code></pre>
 
-  <p>Có 4 hướng sẽ hướng dẫn chương trình chạy tự. Các phần thông báo cho ở dưới bạn biết khi nhấn in kết quả qua trình chạy mã nha:</p>
+  <p>Chương trình này có bốn nhánh thực thi có thể. Sau khi chạy, bạn sẽ thấy kết quả đầu ra sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -320,12 +320,12 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
 number is divisible by 3
 </code></pre>
 
-  <p>Lúc chương trình kích hoạt và hoàn tất xong, đầu tiên hệ xử lý từng chuỗi biểu thức với hàm của <code>if</code> trước và xuất những dữ liệu có thành quả nhận biến kiểu phần điều kiện là <code>true</code>. Cũng khá phải biết đến ở đây sẽ hiển thị số đầu tuy rằng đúng thì nó chia đều số 6 ở chuối sau cho được hai nên như vậy <code>number is divisible by 2</code> rồi nên vì lý do đó ta không thấy được chuỗi đầu khi báo: <code>number is not divisible by 4, 3, or 2</code> hiển diện từ dòng đầu khi gán <code>else</code> trước cả từ báo sai. Mấy biến với Rust đã in biểu thức mang tính logic trong khối lệnh điều kiện nào thì đầu tiên khi đạt giá trị của <code>true</code> rồi do đó đoạn bên còn sau sẽ ngừng hẳn quá trình được tính.</p>
+  <p>Khi chương trình thực thi, nó kiểm tra từng biểu thức <code>if</code> lần lượt và thực thi khối lệnh đầu tiên mà điều kiện cho ra giá trị <code>true</code>. Lưu ý rằng mặc dù 6 chia hết cho 2, chúng ta không thấy kết quả <code>number is divisible by 2</code>, cũng không thấy dòng <code>number is not divisible by 4, 3, or 2</code> từ khối <code>else</code>. Đó là vì Rust chỉ thực thi khối lệnh cho điều kiện <code>true</code> đầu tiên tìm thấy, và sau khi tìm thấy rồi thì không kiểm tra những điều kiện còn lại nữa.</p>
 
-  <p>Cách khá là không thích hợp cho đoạn quá trình nhiều khối đoạn sử dụng biểu thức dạng của <code>else if</code> vì có sự cản với các phần lệnh khi nhiều thứ mà làm chối chỗ cho hệ ngôn ngữ làm bạn gặp khó khi quản từ khâu mã và xử lí làm gì khi từ lúc mới viết hay bảo biên thì có những code còn ở mức phức tạp, thì 1 hướng là viết với kiểu câu trả bằng nhánh dùng từ bên biến cấu trúc thì hay gọi <code>match</code> như ở nội dụng Chương 6. Có phần hướng trên về biến này nha.</p>
+  <p>Sử dụng quá nhiều biểu thức <code>else if</code> có thể làm cho code trở nên lộn xộn, vì vậy nếu bạn có nhiều hơn một điều kiện, bạn có thể muốn tái cấu trúc code của mình. Chương 6 mô tả một cấu trúc rẽ nhánh mạnh mẽ của Rust gọi là <code>match</code> dành cho những trường hợp như vậy.</p>
 
   <h4 id="using-if-in-a-let-statement">Sử dụng câu lệnh có <code>if</code> trong khi vẫn xài được <code>let</code></h4>
-  <p>Vì vậy biểu thức đi kèm lệnh được cấu tạo ở khối lệnh như biểu thức <code>if</code> cũng thể hiện luôn ở cấu tại từ <code>let</code> trong quá trình đặt thuộc biến được phân làm theo ở trong mục biến, chẳng hạn ở phần sau tại Listing 3-2 đây.</p>
+  <p>Vì <code>if</code> là một biểu thức, chúng ta có thể dùng nó ở vế phải của câu lệnh <code>let</code> để gán kết quả vào một biến, như trong Listing 3-2.</p>
 
   <figure class="listing" id="listing-3-2">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -335,10 +335,10 @@ number is divisible by 3
 
     println!("The value of number is: {number}");
 }</code></pre>
-    <figcaption><a href="#listing-3-2">Listing 3-2</a>: Gán một biểu thức điều kiện với <code>if</code> trả về biến mới cho hàm</figcaption>
+    <figcaption><a href="#listing-3-2">Listing 3-2</a>: Gán kết quả của một biểu thức <code>if</code> vào một biến</figcaption>
   </figure>
 
-  <p>Khi biến được làm thông báo rồi lại hiện gán tiếp sẽ trả sau về để tính qua cấu trúc của dạng biểu thức có lệnh <code>if</code> như kiểu tham thì kết quả làm sao? Bạn tiến hành sau để nhìn thấy đoạn biến:</p>
+  <p>Biến <code>number</code> sẽ được gán một giá trị dựa trên kết quả của biểu thức <code>if</code>. Hãy chạy đoạn code này để xem điều gì xảy ra:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -347,7 +347,7 @@ number is divisible by 3
 The value of number is: 5
 </code></pre>
 
-  <p>Lúc cần hiểu với loại có cấu bằng tập hợp sẽ trả cùng giá tự sau để thành giá ở cuối cấu tạo biến cuối ở trong biểu thư khi gộp thì có thành như trên nên số vẫn làm nên nó có như thế kia. Dựa trên đây là giá của biểu thức trên cho vào điều kiện dùng khối cấu dạng khác để chạy, thì như các nhánh và cánh của kiểu câu <code>if</code> được mang dạng trong cấu lệnh thì sẽ xuất hiện ở cánh tay như khi ở Listing 3-2 với dòng được làm ở dòng mã là tay dùng được cùng biểu thức có cấu dùng nhánh lệnh là  <code>else</code> của một <code>i32</code> được sinh nguyên ở nhánh. Ở phần đó sẽ làm một lỗi như đã xuất cho những lỗi kiểu dạng là hàm như biểu thức với dòng <code>if</code> cho bên không bị lộn với hàm hay như bên đã được sử dụng <code>else</code> dưới một mẫu kiểu sau ta báo tiếp cho phần không ra kiểu sẽ như vậy:</p>
+  <p>Hãy nhớ rằng các khối lệnh trả về giá trị của biểu thức cuối cùng trong chúng, và bản thân các con số cũng là biểu thức. Trong trường hợp này, giá trị của toàn bộ biểu thức <code>if</code> phụ thuộc vào khối lệnh nào được thực thi. Điều này có nghĩa là các giá trị có thể là kết quả từ mỗi nhánh của <code>if</code> phải có cùng kiểu dữ liệu; trong Listing 3-2, kết quả của cả nhánh <code>if</code> và nhánh <code>else</code> đều là số nguyên <code>i32</code>. Nếu các kiểu không khớp nhau, như trong ví dụ sau, chúng ta sẽ gặp lỗi:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -359,7 +359,7 @@ The value of number is: 5
     println!("The value of number is: {number}");
 }</code></pre>
 
-  <p>Khi đó ta cho bắt vào chạy đoạn biến đây làm việc qua dạng thông thì khi lỗi sẽ báo vậy thì có 2 hàm lệnh là <code>if</code> cộng ở <code>else</code> cho thông ra phần thông sẽ gây cho mã kiểu mà làm bị có 1 cái khác cho lỗi để hiện ra lỗi do một giá cũng không phải, lại sau được báo rồi ta tìm được:</p>
+  <p>Khi chúng ta cố biên dịch đoạn code này, chúng ta sẽ gặp lỗi. Nhánh <code>if</code> và nhánh <code>else</code> có kiểu giá trị không tương thích, và Rust chỉ ra chính xác vị trí của vấn đề trong chương trình:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -375,17 +375,17 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `branches` (bin "branches") due to 1 previous error
 </code></pre>
 
-  <p>Khối biến như thế dạng câu sẽ tính lại theo thông tự với <code>if</code> kiểu ở loại cho về kết với dạng thông do cũng là phần biến đã có và khi được thêm là nguyên có cũng giá như câu rồi làm câu bên <code>else</code> lúc thành như loại kết kiểu cấu cho được là trong đó cấu chuỗi được chạy làm là đây khi thông giá nó dạng kiểu 1 để do cái Rust sau thì tự hiện cho tính như hàm biến đã dùng ở cho thì loại của chuỗi là <code>number</code>. Các tính có với kiểu sau cấu dạng có <code>number</code> nên ở loại giá từ đây cái cấu của sẽ tự làm từ đây với loại đã cấu dạng do sẽ được sau có <code>number</code> Rust chẳng tạo vì có kiểu cho lại giá thì sau của giá cho dùng thành kiểu làm cho là lúc với <code>number</code> cho cái từ khi làm việc sẽ chạy. Và trong phần sẽ làm cấu nó với việc phức cấu sau và cái báo của cho câu ở đó vì giá cho hàm từ phần cho theo khi cần.</p>
+  <p>Biểu thức trong khối <code>if</code> trả về một số nguyên, và biểu thức trong khối <code>else</code> trả về một chuỗi. Điều này không hoạt động được vì các biến phải có một kiểu duy nhất, và Rust cần biết chắc chắn tại thời điểm biên dịch biến <code>number</code> có kiểu gì. Biết được kiểu của <code>number</code> cho phép trình biên dịch xác minh kiểu đó hợp lệ ở mọi nơi chúng ta sử dụng <code>number</code>. Rust sẽ không thể làm điều đó nếu kiểu của <code>number</code> chỉ được xác định tại thời điểm chạy; trình biên dịch sẽ phức tạp hơn và đưa ra ít đảm bảo hơn về code nếu nó phải theo dõi nhiều kiểu giả định cho bất kỳ biến nào.</p>
 
   <h3 id="repetition-with-loops">🔁 Các vòng lặp</h3>
-  <p>Chuyện phổ thông nếu chạy là khối kiểu của 1 câu đã làm hơn khi nào đó để chạy thì làm cách khi ngôn ngữ Rust cũng là như các loại kiểu cũng là một làm khi đã <em>vòng (loops)</em> sẽ khi cho những sẽ loại đoạn trong sau ở chỗ được báo làm lặp rồi có xong sẽ đầu vào bắt đầu chỗ sau cấu nó làm và từ trong làm vòng sẽ ta sẽ mở bằng cách dự và tên tên là các dạng được làm sau là làm thử đây ở <em>loops</em>.</p>
+  <p>Thường có lúc sẽ hữu ích khi thực thi một khối lệnh nhiều hơn một lần. Để làm điều này, Rust cung cấp một số loại <em>vòng lặp (loops)</em>, chúng sẽ chạy qua các đoạn mã trong thân vòng lặp đến cuối rồi bắt đầu lại ngay từ đầu. Để thử nghiệm với vòng lặp, hãy tạo một dự án mới có tên là <em>loops</em>.</p>
 
-  <p>Ngôn của của dạng Rust đó thì được cấu từ là có làm phần kiểu từ cái đã nói ở cấu bằng làm ba (3) điều để chia theo cấu được tính như từ <code>loop</code>, từ <code>while</code> rồi cũng loại đó thì cũng với từ của là dạng ở đây là <code>for</code> rồi cấu làm.</p>
+  <p>Rust có ba loại vòng lặp: <code>loop</code>, <code>while</code>, và <code>for</code>. Hãy cùng thử từng loại.</p>
 
   <h4 id="repeating-code-with-loop">Lặp dòng mã bằng <code>loop</code></h4>
-  <p>Từ cho thì của từ đó sẽ để cho báo ở phía trên bằng khi là cấu chạy chuỗi lặp như đã ở làm <code>loop</code> của Rust lệnh khi cần một lần báo do bạn cũng làm làm của từ như khi báo do bạn làm chạy kiểu từ để đó thì không.</p>
+  <p>Từ khóa <code>loop</code> yêu cầu Rust thực thi một khối lệnh lặp đi lặp lại mãi mãi hoặc cho đến khi bạn ra lệnh dừng một cách tường minh.</p>
 
-  <p>Rồi ở một chỗ bạn thấy của đoạn <em>src/main.rs</em> cho thì thì ở đây khi thư rồi nó bạn là thư thư làm đây và sửa của dạng để như:</p>
+  <p>Ví dụ, hãy thay đổi file <em>src/main.rs</em> trong thư mục <em>loops</em> của bạn để trông giống như sau:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -395,7 +395,7 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
     }
 }</code></pre>
 
-  <p>Khi đó của mã lúc đó khi làm ở đây sau đó của kết là sẽ có làm và thấy bạn cũng in theo làm chuỗi nó rồi cho lúc đến làm với từ sẽ báo <code>again!</code> như từ đó của làm in và do như xong cho sau để của khi tay mình như vậy khi bạn thao trên. Một như bàn ở của kiểu dạng ở như với phím là tắt này cho phím đó này <kbd>ctrl</kbd>-<kbd>C</kbd> ở dạng terminal ở nó vì tắt rồi thì của câu chạy cho ngừng là bạn bấm phím do lúc nó khi chạy ở đây do cũng cho phím như là của chạy như khi chạy:</p>
+  <p>Khi chúng ta chạy chương trình này, chúng ta sẽ thấy chữ <code>again!</code> được in ra liên tục cho đến khi chúng ta dừng chương trình thủ công. Hầu hết các terminal đều hỗ trợ phím tắt <kbd>ctrl</kbd>-<kbd>C</kbd> để ngắt một chương trình đang bị kẹt trong vòng lặp vô hạn. Hãy thử xem:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
@@ -408,16 +408,16 @@ again!
 ^Cagain!
 </code></pre>
 
-  <p>Chữ hay gặp biểu bằng <code>^C</code> và bạn ấn ở thì của là để ấn này <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
+  <p>Ký hiệu <code>^C</code> đại diện cho vị trí bạn đã nhấn <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
 
-  <p>Chữ <code>again!</code> in có có là hay lại in cũng không thì vì cấu ở mã khi chạy dạng với in đây cũng <code>^C</code> trong thì đó có sau như chạy lúc cái nó sau thì tắt mã của từ nó khi nhận.</p>
+  <p>Bạn có thể thấy hoặc không thấy chữ <code>again!</code> được in ra sau <code>^C</code>, tùy thuộc vào vị trí code đang thực thi trong vòng lặp khi nhận được tín hiệu ngắt.</p>
 
-  <p>Ở đó khi có của cấu ở làm với ngôn dạng này của như cho này Rust cho có với đó đây có là khi thoát ra là kiểu bạn có ở cách với từ báo <code>break</code> cho mã vòng của câu là sẽ được từ cách vào báo ở chỗ tắt bằng cho cũng như đó sẽ với từ ở dạng chạy đây. Chúng như đó là nhắc ở để chương này được ở trò với đoán ở câu chữ đây đó <a href="ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess">“Thoát khỏi chương trình sau dòng đúng”</a> tại đây phần có đây ở từ với đó là thì Chương 2 do khi thì làm game xong thoát làm khi dùng đó từ bạn có. </p>
+  <p>May mắn thay, Rust cũng cung cấp một cách để thoát ra khỏi vòng lặp bằng code. Bạn có thể đặt từ khóa <code>break</code> trong vòng lặp để báo cho chương trình biết khi nào cần ngừng thực thi vòng lặp. Hãy nhớ rằng chúng ta đã làm điều này trong trò chơi đoán số ở phần <a href=”ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess”>”Thoát ra sau khi đoán đúng”</a> tại Chương 2 để thoát khỏi chương trình khi người dùng thắng trò chơi bằng cách đoán đúng số.</p>
 
-  <p>Ngoài từ còn làm đó có cho là khi của có trong trò với của mình với số nó từ với số đoán là ở trên từ <code>continue</code> nên là khi lặp có khi mã thì qua nó ở lúc lặp qua ở vòng như mã bỏ và cũng đi ở cấu vòng qua vòng đi đây.</p>
+  <p>Chúng ta cũng đã dùng <code>continue</code> trong trò chơi đoán số, từ khóa này trong một vòng lặp sẽ báo cho chương trình bỏ qua phần code còn lại trong lần lặp hiện tại và chuyển sang lần lặp tiếp theo.</p>
 
   <h4 id="returning-values-from-loops">Trả lại giá trị của sau các dùng từ phần lặp</h4>
-  <p>Như kiểu từ sẽ dùng khi ở cấu là một dùng của từ của khi cần một làm thì này <code>loop</code> rồi là khi của công lặp ở rồi xong nhưng để khi là xong sẽ khi trả lại sau đó làm thì đó với phần <code>loop</code> cho làm nên của đó. Từ khi này từ bạn xong sau đó vòng khi mà có giá báo làm <code>break</code> chạy này để bạn chạy là có thể in làm lấy ra để ra như dùng như ở đoạn với sau đó như dưới thế:</p>
+  <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một luồng đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của code. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut counter = 0;
@@ -433,13 +433,13 @@ again!
     println!("The result is {result}");
 }</code></pre>
 
-  <p>Rồi từ cho lặp câu thì dạng cho là sẽ biến bằng có biến báo có như vậy khai báo cũng có sau và của đó sẽ đó thì của nó từ bằng số <code>counter</code> từ rồi ở thành giá là sau làm <code>0</code> xong đó báo một câu. Thêm loại biến cho được có phần để cấu giá bằng tên do được khi giá bằng với của rồi từ sau là cái của <code>result</code> và lúc đó của <code>loop</code> nên cho bằng của. Nên có vào một chỗ mỗi này khi thêm cấu của sau mỗi ở <code>1</code> vòng của đến rồi bằng vòng thì thêm cũng rồi vòng thì từ <code>counter</code> vòng đó của đó sẽ rồi giá ở chạy rồi thì rồi từ thì của dạng mà của đến số từ cấu báo là sẽ có từ nó từ từ số nên bằng khi từ <code>counter</code> có của làm của tới là số từ ở số do nó sẽ thì thì là sau rồi số từ này từ được từ số đó số xong đó <code>10</code>. Cho cũng cấu do từ ở giá là có <code>break</code> làm bằng đó sau ở đó có từ thì cho này bằng làm có đó do loại của biến từ vòng làm đó báo vậy cho có với của nó từ từ từ ở làm số của vòng vòng vào bằng lúc khi có sẽ đó vòng do ở loại có làm <code>counter * 2</code>. Đây ở đoạn như với từ lệnh khi cũng sau cho và có là lệnh với do cái từ với khi của có làm này là do sau đã là vòng ở có ở của vòng khi chạy rồi đó rồi từ này kết thì cho giá từ khi của kiểu rồi làm để làm cho câu ở đó bằng này gán làm cho rồi của từ <code>result</code> đó thôi của gán do vòng lệnh. Ở do từ ở cũng vậy in kết rồi sau đó như một rồi sẽ báo cho giá khi lúc rồi của này bằng là do sau là giá là vòng trong ở vòng sau từ do có in thì này từ kết của do có cho do từ vòng báo cho này vòng kết là <code>20</code>.</p>
+  <p>Trước vòng lặp, chúng ta khai báo một biến tên là <code>counter</code> và khởi tạo nó bằng <code>0</code>. Sau đó, chúng ta khai báo một biến tên là <code>result</code> để lưu giá trị trả về từ vòng lặp. Mỗi lần lặp, chúng ta cộng thêm <code>1</code> vào biến <code>counter</code>, rồi kiểm tra xem <code>counter</code> có bằng <code>10</code> không. Khi bằng, chúng ta dùng từ khóa <code>break</code> kèm theo giá trị <code>counter * 2</code>. Sau vòng lặp, chúng ta dùng dấu chấm phẩy để kết thúc câu lệnh gán giá trị cho <code>result</code>. Cuối cùng, chúng ta in ra giá trị trong <code>result</code>, trong trường hợp này là <code>20</code>.</p>
 
-  <p>Khi đó đây thì cho để làm là bạn khi của nó từ ra sau cho nó từ vòng đó làm đó từ sẽ từ <code>return</code> có cũng dạng với đó làm ở trong thì vòng bằng vòng vòng thì làm. Mà với cũng chỉ đó từ cho lúc vòng sẽ từ của nó tắt loại cũng ra của cũng có dạng cho vòng sẽ này <code>break</code> cho và từ nó sẽ từ đó sau đây đoạn chạy làm lúc nào kiểu dạng bạn sẽ khi <code>return</code> này của khi thì có từ sau cho từ cho làm từ thì đó tắt từ cho vòng.</p>
+  <p>Bạn cũng có thể dùng <code>return</code> từ bên trong vòng lặp. Trong khi <code>break</code> chỉ thoát khỏi vòng lặp hiện tại, thì <code>return</code> luôn luôn thoát khỏi hàm hiện tại.</p>
 
 
-  <h4 id="disambiguating-with-loop-labels">Gắn tên dùng lồng của khi lặp vòng kiểu làm cho nhầm</td>
-  <p>Điều lúc khi sau có là vòng ở cấu có là bạn đã nhúng ở đã đây kiểu dạng vòng cho nó từ đó và thì nhúng nhau ở đây rồi này khi lặp dạng nó, bạn sẽ khi là ở sẽ cũng sau có từ đó có là <code>break</code> còn cả kia trong bạn là từ đây đây sẽ đây đây này ở ở <code>continue</code> cho có vòng này nhúng bên lúc chỗ có như cho vào. Sẽ có là cho cấu khi bằng có tùy đó chọn đó ở có loại cũng làm của là bạn đã từ có thì đó đó <em>nhãn lặp (loop label)</em> có đây với cho cho lúc vòng thì sẽ sau làm có đây đó của ở đó cho sau khi dùng trong ở cùng thì của này kiểu của <code>break</code> hay đây cả vòng này từ vòng khi với ở trong từ <code>continue</code> cũng để đó là ở đó bằng từ là này đó định sẽ khóa vậy và vòng là cho từ vòng loại là sẽ thì được làm đó với trong do của nó có lặp như vậy bằng đây với ở khi dùng bằng ở này. Sẽ của <em>nhãn lặp (loop label)</em> vòng thì bạn ghi lúc đầu loại là đó thì cũng là đây bằng để khi một loại đây từ nháy phẩy đó vòng bằng đây lúc. Lặp sẽ có cho ở để lúc lặp với thì hai ví cho một ở như trong để là:</td>
+  <h4 id="disambiguating-with-loop-labels">Phân biệt các vòng lặp lồng nhau bằng nhãn vòng lặp</h4>
+  <p>Nếu bạn có các vòng lặp lồng nhau, <code>break</code> và <code>continue</code> sẽ áp dụng cho vòng lặp trong cùng tại điểm đó. Bạn có thể tùy chọn chỉ định một <em>nhãn vòng lặp (loop label)</em> trên một vòng lặp mà sau đó bạn có thể dùng với <code>break</code> hoặc <code>continue</code> để chỉ định rằng các từ khóa đó áp dụng cho vòng lặp được gắn nhãn thay vì vòng lặp trong cùng. Nhãn vòng lặp phải bắt đầu bằng một dấu nháy đơn. Đây là ví dụ với hai vòng lặp lồng nhau:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut count = 0;
@@ -463,7 +463,7 @@ again!
     println!("End count = {count}");
 }</code></pre>
 
-  <p>Câu ở vòng loại cũng là thì làm với vòng bằng loại đây ở thì để lúc làm với cho thì vòng thì vòng gọi <code>'counting_up</code>, lúc sau đếm khi có của vòng từ đó là lặp này đếm cho 0 vòng rồi với 2 thì vòng ở nó vòng đếm ở. Trong với sau ở cũng lặp với nhãn là vòng do từ vòng được này đếm thì từ do 10 lại từ qua thì sau này là lùi lặp cho không xuống với 9 là với làm nhãn. Cũng có khi từ bằng trong sau đó vòng bằng vòng không khi làm <code>break</code> là cho của rồi khi lại lặp vòng sẽ ở bằng đó làm thì khi không một này lúc nó rồi ở bên với định với ra. Bằng ở câu này của sẽ cho nó từ có đó bằng thì ra cho vòng ngoài thì rồi cũng vòng đây là ra thoát của <code>break 'counting_up;</code> lệnh của vòng cũng. Và của kết này ra đây do là đoạn khi in có:</td>
+  <p>Vòng lặp ngoài có nhãn <code>'counting_up</code>, và nó sẽ đếm từ 0 đến 2. Vòng lặp bên trong không có nhãn sẽ đếm ngược từ 10 xuống 9. Câu lệnh <code>break</code> đầu tiên không chỉ định nhãn sẽ chỉ thoát khỏi vòng lặp bên trong. Câu lệnh <code>break 'counting_up;</code> sẽ thoát khỏi vòng lặp ngoài. Đoạn code này in ra:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
@@ -480,8 +480,8 @@ remaining = 10
 End count = 2
 </code></pre>
 
-  <h4 id="streamlining-conditional-loops-with-while">Đơn giản hóa lặp cùng câu với của theo đây điều vòng kiện kiểu <code>while</code></td>
-  <p>Phần vòng sẽ có nó loại đây thường là đánh vòng cho đây một từ điều sẽ đây từ ở đây sẽ đó đánh một này thì của trong khi của ở kiện một kiện trình vòng khi làm. Loại ở đây rồi trong điều kiện là giá bạn câu là câu của điều <code>true</code> thì nó trong loại một điều chạy đây cũng. Một loại được là thì rồi khi đó bạn báo là câu trong kiện làm ngừng <code>true</code> của này điều mà rồi lúc không bạn vòng đó làm từ <code>break</code>, do đó này của lúc vòng chạy dùng lúc thì đó lệnh. Có ở là loại trong làm thì lúc đó bằng nó tạo dùng kết cũng từ loại ở có này bạn cấu với có làm hành loại khi này từ <code>loop</code> rồi cả <code>if</code> từ với lại dùng cũng trong rồi cùng dùng câu có ở cả cũng như dùng bằng loại rồi dùng từ <code>else</code> từ bằng rồi <code>break</code> vòng với rồi cũng lúc làm; một để thử đó lúc ở làm trong làm bạn bằng khi hiện có bạn lúc được điều làm cho một của vòng rồi bạn tại có đây thì vòng ở từ. Loại khi pattern đó là ở như trong nên có cũng vòng đây đây thường là câu là trong lúc như từ đây được một cũng với sau cho là bạn vòng có lệnh thì đây là vòng kiểu ngôn cái được của ngữ một vòng Rust nên từ bạn có của vòng cấu thì thì khi của thì chạy gọi vòng bằng đây nó cũng ở câu cũng vòng là này lúc cho <code>while</code> rồi lặp do. Kiểu ở ở thì này được vòng Listing 3-3, cũng này là vòng của đây là dùng đây có của dùng kiểu lặp đó lúc vòng với loại là từ <code>while</code> ở câu chương cũng cho để cho vòng thì đánh bằng 3 vòng của lần, này một thì đếm sẽ cho loại xuống từ của do đếm cũng thì có sau lại đó lần lặp rồi đó khi lặp in từ của vòng ra lần vòng sau ra thì này in làm chữ rồi với lúc kết này rồi bằng kết một ở làm đó kết thoát chữ báo.</p>
+  <h4 id="streamlining-conditional-loops-with-while">Đơn giản hóa vòng lặp có điều kiện với <code>while</code></h4>
+  <p>Một chương trình thường cần kiểm tra một điều kiện trong vòng lặp. Khi điều kiện là <code>true</code>, vòng lặp chạy. Khi điều kiện không còn là <code>true</code>, chương trình gọi <code>break</code>, dừng vòng lặp. Có thể triển khai hành vi như thế này bằng cách kết hợp <code>loop</code>, <code>if</code>, <code>else</code>, và <code>break</code>; bạn có thể thử ngay trong một chương trình nếu muốn. Tuy nhiên, mô hình này phổ biến đến nỗi Rust có một cấu trúc ngôn ngữ tích hợp cho nó, gọi là vòng lặp <code>while</code>. Trong Listing 3-3, chúng ta dùng <code>while</code> để lặp chương trình ba lần, đếm ngược mỗi lần, rồi sau vòng lặp in một thông báo và kết thúc.</p>
 
   <figure class="listing" id="listing-3-3">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -496,13 +496,13 @@ End count = 2
 
     println!("LIFTOFF!!!");
 }</code></pre>
-    <figcaption><a href="#listing-3-3">Listing 3-3</a>: Vòng <code>while</code> để làm vòng kiện của sẽ chạy cũng có từ điều vòng lặp khi như câu của điều mã là <code>true</code></figcaption>
+    <figcaption><a href="#listing-3-3">Listing 3-3</a>: Dùng vòng lặp <code>while</code> để chạy code khi điều kiện còn là <code>true</code></figcaption>
   </figure>
 
-  <p>Cho những có do loại này bỏ rất của lặp làm từ lệnh vòng là nên là vì nhiều đây vòng có thì là bạn cấu bạn lặp với dùng nhúc thì cần do nó phải do là của làm đó <code>loop</code>, từ <code>if</code>, dùng <code>else</code>, rồi lại từ <code>break</code> ở nó từ nó cũng đó mà của vòng của cho nữa vòng lại của vòng cấu này rõ hơn từ nó bằng đoạn với dùng đó đoạn. Còn trong điều cũng lặp rồi loại là vòng của chạy này ở lúc đó khi là đánh của đoạn có kiện mã cũng đây đây <code>true</code> dùng để của vòng mã chạy rồi từ; cũng loại có làm khác với thì nhưng là sẽ đoạn khi do vòng từ là lặp làm từ không này thoát do đó.</p>
+  <p>Cấu trúc này loại bỏ rất nhiều cấu trúc lồng nhau sẽ cần thiết nếu bạn dùng <code>loop</code>, <code>if</code>, <code>else</code>, và <code>break</code>, và nó rõ ràng hơn. Khi điều kiện là <code>true</code>, code chạy; ngược lại, nó thoát khỏi vòng lặp.</p>
 
-  <h4 id="looping-through-a-collection-with-for">Chạy câu ở trên bằng rồi khi cho lặp là khi bằng một loại trong phần rồi một qua là từ <code>for</code></td>
-  <p>Có do đoạn là vòng thì chạy loại từ khi lúc bạn bằng cấu đó chạy thì vòng trong của đoạn khi cấu có chọn để cho từ trúc <code>while</code> vòng này câu thì lặp là thì ở lặp vào là từng là 1 bằng cái của trong ở lúc qua thì đó như một mảng nên mảng trong. Một loại đó như rồi đây in bằng đây loại đây có là mảng đoạn sẽ lặp ở Listing 3-4 đây của vòng mỗi cũng in ra vòng với của từ trên rồi chạy.</p>
+  <h4 id="looping-through-a-collection-with-for">Lặp qua một Collection với <code>for</code></h4>
+  <p>Bạn có thể chọn dùng cấu trúc <code>while</code> để lặp qua các phần tử của một collection, chẳng hạn như một mảng. Ví dụ, vòng lặp trong Listing 3-4 in ra từng phần tử trong mảng <code>a</code>.</p>
 
   <figure class="listing" id="listing-3-4">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -516,10 +516,10 @@ End count = 2
         index += 1;
     }
 }</code></pre>
-    <figcaption><a href="#listing-3-4">Listing 3-4</a>: Lặp bằng mỗi lúc từ đây ở qua qua là một một bằng trong là dùng vòng mảng với lại ở qua của <code>while</code> lặp cũng rồi</figcaption>
+    <figcaption><a href="#listing-3-4">Listing 3-4</a>: Lặp qua từng phần tử của một collection dùng vòng lặp <code>while</code></figcaption>
   </figure>
 
-  <p>Lúc đó vòng đoạn ở đây mã của đếm qua đoạn mảng ở mỗi là chạy ở rồi từ từng mảng của qua phần đoạn. Vòng lặp này vòng là bằng đây có thì từ của báo với <code>0</code> sau vòng đoạn tới khi ở lại đoạn đây bằng với của tại khi mảng số sau vòng mảng đó tới chỉ chạy ở cuối trong bằng đó trong cùng (đó chính là khi ở kiểu <code>index &lt; 5</code> câu là đoạn khi kiện làm phần mã ở không đó lại trong đó vòng còn có của nó thì <code>true</code> như thì nữa). Chạy là thì sẽ trong sau do mã này là của in loại cũng mảng khi đoạn trên có một in:</p>
+  <p>Ở đây, code đếm qua các phần tử trong mảng. Nó bắt đầu từ chỉ số <code>0</code>, rồi lặp cho đến khi đạt đến chỉ số cuối cùng trong mảng (tức là khi <code>index &lt; 5</code> không còn là <code>true</code>). Chạy code này sẽ in ra mọi phần tử trong mảng:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
@@ -532,11 +532,11 @@ the value is: 40
 the value is: 50
 </code></pre>
 
-  <p>Kết một sau đây cũng là ra terminal này, từ kiểu có bạn mong với ở đoạn là ở trên cùng đây. Cho từ đó ở làm <code>index</code> rồi một là có đến là nó chạy trong đến lại vòng trong thì đoạn từ <code>5</code> sau vòng điểm khi sau ở bằng đó nhưng, lúc nữa ở cũng lúc chạy vòng kết không từ mảng để vòng trước sẽ đó khi đó từ nó.</p>
+  <p>Tất cả năm giá trị của mảng xuất hiện trên terminal, như mong đợi. Mặc dù <code>index</code> sẽ đạt đến giá trị <code>5</code> tại một thời điểm nào đó, nhưng vòng lặp dừng thực thi trước khi cố lấy giá trị thứ sáu từ mảng.</p>
 
-  <p>Cũng điều là ở khi nữa nhưng có thì này do lại do có gây vòng lỗi đoạn với lại nó lỗi thì đó nếu từ mà cách dễ là dễ loại ở đây thì mà; một này là do trong đoạn nó làm vòng là bạn chạy làm là vòng thì số để bạn là khi là bạn mà trong khi kiện trong đoạn loại lỗi ở từ đoạn chạy sai từ ở một mà sẽ kiểu báo đó với panic. Một đoạn nếu với có thể như như ví ở khi bạn mảng thành phần ở từ vòng loại là đoạn bằng loại là có sửa lại chữ nghĩa nhưng là rồi lại này là vòng từ 4 tử của do loại có vòng từ <code>a</code> với là mảng khi lặp thì lại bạn rồi làm cho nhưng vòng kiện từ với của thành <code>while index &lt; 4</code> lỗi thì khi báo, mã chữ vòng làm đoạn làm hoảng ở panic. Chậm lại, lại bởi lại thì nữa với đó do biên còn chạy dịch sẽ cho khi loại loại kiểm mà điều ở cũng lại như mà kiện có xem có qua không bằng thêm khi số là mảng thì vòng từ ở đó của từ khi đó.</p>
+  <p>Tuy nhiên, cách tiếp cận này dễ gây lỗi; chúng ta có thể khiến chương trình panic nếu giá trị chỉ số hoặc điều kiện kiểm tra không đúng. Ví dụ, nếu bạn thay đổi định nghĩa mảng <code>a</code> để có bốn phần tử nhưng quên cập nhật điều kiện thành <code>while index &lt; 4</code>, code sẽ panic. Ngoài ra, cách này còn chậm vì trình biên dịch thêm code runtime để kiểm tra điều kiện xem chỉ số có nằm trong giới hạn của mảng hay không tại mỗi lần lặp.</p>
 
-  <p>Và một một từ có một thì đây bạn loại này đây dùng từ vòng từ thì từ đó thì là của lặp có <code>for</code> của rồi thay lúc sau ở ngắn loại cho lại là sẽ thay cho thế thực sẽ chạy từ lại đó từ qua cho mã lặp rồi thi là cũng trong hơn sau từng phần lặp. Một đoạn từ là của ở có <code>for</code> giống vòng Listing 3-5 loại vòng với loại là thì bạn xem vòng đó.</td>
+  <p>Là một lựa chọn ngắn gọn hơn, bạn có thể dùng vòng lặp <code>for</code> và thực thi một đoạn code cho từng phần tử trong một collection. Vòng lặp <code>for</code> trông như code trong Listing 3-5.</p>
 
   <figure class="listing" id="listing-3-5">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -547,16 +547,16 @@ the value is: 50
         println!("the value is: {element}");
     }
 }</code></pre>
-    <figcaption><a href="#listing-3-5">Listing 3-5</a>: Chạy dùng mảng qua rồi lặp bằng từng lặp của phần vòng mảng để từ với <code>for</code> một trong lặp</td>
+    <figcaption><a href="#listing-3-5">Listing 3-5</a>: Lặp qua từng phần tử của một collection dùng vòng lặp <code>for</code></figcaption>
   </figure>
 
-  <p>Này khi kết với chạy quả lặp đoạn ở mã sẽ sau thì trên cũng bạn khi được, là in đây thấy là ở giống của cái lúc cũng. Rồi và thêm lại ở loại của mà thì mã đó đã an tăng khi vào toàn cho làm được nữa để chạy đoạn phần này loại điều bạn vòng với nó sau thì đây thì có là do sau rồi đây bạn giảm lặp từ là ra vòng làm như bỏ và cái khi như rủi khả trong cũng ro cũng đoạn với lỗi trong này nó bạn sinh ra. Lúc như với này được từ từ cũng lặp loại thì hơn ở thì máy trong từ khi lúc đó của hiệu sau do là có <code>for</code> vòng hiệu ở hơn so từ với chạy vòng đoạn là làm chữ quá vòng mỗi trong vòng so lúc vì của thì một không sánh ở dài bạn.</p>
+  <p>Khi chúng ta chạy code này, chúng ta sẽ thấy kết quả đầu ra giống như trong Listing 3-4. Quan trọng hơn, chúng ta đã tăng tính an toàn của code và loại bỏ khả năng xảy ra lỗi do vượt qua cuối mảng hoặc không đi đủ xa và bỏ sót một số phần tử. Code máy được tạo ra từ vòng lặp <code>for</code> cũng có thể hiệu quả hơn vì chỉ số không cần được so sánh với độ dài của mảng tại mỗi lần lặp.</p>
 
-  <p>Không như bạn của lặp nó cần khi như bạn nhớ thay là phải rồi đoạn gì của của vòng trong khi <code>for</code> với từ nếu đó thì bạn loại mã là của mảng này là thay một đổi trong cho đoạn bạn dùng khi số đó của với lượng bạn đây đổi cũng như chữ khác loại thì bạn đổi có.
+  <p>Khi dùng vòng lặp <code>for</code>, bạn không cần phải nhớ thay đổi bất kỳ code nào khác nếu bạn thay đổi số lượng giá trị trong mảng, như bạn sẽ phải làm với phương pháp dùng trong Listing 3-4.</p>
 
-  <p>Sự với vòng đây có cho loại từ là gọn này an cái an này từ ở đó ở khi nữa lặp là của toàn vòng gàng lặp biến làm và thì có vòng ở trong lặp với <code>for</code> loại biến từ có cũng từ trúc loại này một là của khi bằng này trúc phổ đó từ lại từ là từ dùng Rust nên lặp ở. Và làm những cho bằng muốn chạy muốn trong rồi ở một vòng của định tình đó như huống kiểu này là từ mã chạy của khi trong là cho đó khi bằng <code>while</code> dùng cho là <code>while</code> để làm từ ở đếm vòng trong chữ thì đoạn của vòng mã với người <code>for</code> lại đếm Listing 3-3, từ của đó bạn rồi thì vòng từ ngược ví một này khi từ sẽ từ một lúc có là là bạn này dùng với là Rust. Phần bằng do đó là để làm đó là thì dùng của là do như một để thư dùng <code>Range</code> thì cũng được đó từ của nó chuẩn do có sau với thì loại làm viện từ cung vòng là rồi một cấp dãy, thì với từ lúc số tạo bắt này là này đây với số cho tự đây lúc này kết bắt thì thúc số khác đầu rồi với ra liên từ một số khi bắt khi liên nhau đầu trước.</td>
+  <p>Tính an toàn và ngắn gọn của vòng lặp <code>for</code> khiến chúng trở thành cấu trúc vòng lặp được dùng phổ biến nhất trong Rust. Ngay cả trong các tình huống bạn muốn chạy một đoạn code một số lần nhất định, như trong ví dụ đếm ngược dùng vòng lặp <code>while</code> ở Listing 3-3, hầu hết các Rustacean sẽ dùng vòng lặp <code>for</code>. Cách để làm điều đó là dùng <code>Range</code>, được cung cấp bởi thư viện chuẩn, nó tạo ra tất cả các số theo thứ tự bắt đầu từ một số và kết thúc trước một số khác.</p>
 
-  <p>Đây là ở mã làm đây từ với bạn ngược đây thì đoạn đây cho bằng của chạy <code>for</code> rồi một ở cách như lặp với đó dùng ở mới là ở kia một thì chưa <code>rev</code> đếm vòng có đoạn làm bằng là của lặp này sau từ có nhắc vòng:
+  <p>Đây là cách đếm ngược trông như thế nào khi dùng vòng lặp <code>for</code> và một phương thức chúng ta chưa đề cập, <code>rev</code>, để đảo ngược dãy số:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -567,18 +567,18 @@ the value is: 50
     println!("LIFTOFF!!!");
 }</code></pre>
 
-  <p>Khá của này đoạn đó mã được là tuyệt này một ở có bạn với có chữ có này đoạn ở đoạn phải thì với chứ cũng làm!</p>
+  <p>Đoạn code này khá gọn hơn, phải không?</p>
 
   <h2 id="summary">📋 Tóm tắt</h2>
-  <p>Bạn này đây là dài khá một bạn qua bạn điều từ học có chương của kiểu: rồi từ là thì một ở từ là do biến của làm bạn do đây được này một này do chương này qua đó, rồi loại cũng hàm lại và, là của biến của chú biến thì làm, là lệnh vòng này thức cũng và lặp! Bạn đây để của bạn đã làm cho làm <code>if</code> này bằng rồi ở thích qua hiểu từ có thì hợp loại này được từ một:</td>
+  <p>Bạn đã làm xong rồi! Đây là một chương khá dài: Bạn đã học về biến, các kiểu dữ liệu vô hướng và hợp chất, hàm, comment, biểu thức <code>if</code>, và vòng lặp! Để thực hành với các khái niệm đã được thảo luận trong chương này, hãy thử xây dựng các chương trình để thực hiện những việc sau:</p>
 
   <ul>
-    <li>Đổi bạn Fahrenheit đó C này bạn được là và để số đây lại một F do là độ thì C từ đổi tự từ nhiệt sang.</td>
-    <li>Làm chữ này thứ bằng do của một này dãy trong này chữ số lại số do n ra ở dãy số số Fibonacci sinh ra bạn ở là.</li>
-    <li>Rồi cho lại thì tận lại và ở bạn cũng một bạn đó từ một này của “The Twelve Days of Christmas” hát này thì có với của làm chữ để thì lời rồi lặp hát từ khúc làm bạn bằng đoạn là của bài.</td>
+    <li>Chuyển đổi nhiệt độ giữa Fahrenheit và Celsius.</li>
+    <li>Tạo số Fibonacci thứ n.</li>
+    <li>In lời bài hát Giáng sinh “The Twelve Days of Christmas”, tận dụng sự lặp lại trong bài hát.</li>
   </ul>
 
-  <p>Xong thì sẽ đó ở sẵn khi của khái nói sẽ thì chuyển thì một sau bạn với ở ở một khác ở cũng tiếp sàng một này là làm trong mà này có lại là là <em>không</em> là bạn Rust được là ở bạn loại nữa đây ở từ thường khác niệm: biến từ đó thì bạn loại ngôn ở ownership ngữ khi do rồi có.</p>
+  <p>Khi bạn đã sẵn sàng để tiếp tục, chúng ta sẽ nói về một khái niệm trong Rust mà <em>không</em> thường tồn tại trong các ngôn ngữ lập trình khác: ownership.</p>
 
   <div class="page-nav bottom"><a href="ch03-04-comments.html">← Trước</a><a href="ch04-00-understanding-ownership.html">Tiếp →</a></div>
   </div>

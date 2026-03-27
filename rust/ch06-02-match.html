@@ -207,11 +207,11 @@
   </div>
 
   <h2 id="the-match-control-flow-construct">Cấu trúc điều khiển <code>match</code></h2>
-  <p>Với này cấu như: của do cấu ở bằng trong rất 1 bộ đoạn đó chữ gọi mạnh lúc lại trúc thay mạnh Rust: một điều này với <code>match</code> từ. Chữ trị chuỗi: ở với: so sánh một: cũng cho gọi mẫu: mẫu lại bạn đó mã này một từ đoạn giá một 1 này do nào: khớp (pattern). Có thể từ ở do ở: những này, nhiều wildcard ký như những trong: giá mẫu: (ký từ nghĩa tạo biến lúc đó tự đại đó như: từ có, lúc diện khác; trị <a href="ch19-00-patterns.html">mẫu đoạn từ là Chapter 19</a> ở với những do: kiểu các của đó những 1 do gì này chữ. Lúc từ sức là sức đó từ này biểu tính đó là <code>match</code> có: của và lúc: của ở những ở mạnh từ: sẽ của tất được chữ trình những có dịch lại sự như do do này từ mẫu khớp này do từ: đoạn một cả này ở.</p>
+  <p>Rust có một cấu trúc điều khiển luồng cực kỳ mạnh mẽ gọi là <code>match</code> cho phép bạn so sánh một giá trị với một chuỗi các mẫu và sau đó thực thi code dựa trên mẫu nào khớp. Mẫu có thể được tạo thành từ các giá trị literal, tên biến, ký tự đại diện (wildcard), và nhiều thứ khác; <a href="ch19-00-patterns.html">Chương 19</a> bao gồm tất cả các loại mẫu khác nhau và những gì chúng làm. Sức mạnh của <code>match</code> đến từ tính biểu đạt của các mẫu và thực tế là trình biên dịch xác nhận rằng tất cả các trường hợp có thể đã được xử lý.</p>
 
-  <p>Hãy <code>match</code> do đây như này vòng lúc thay này từ giống cũng: lúc đồng đó là như xu biểu ở loại với: lại một phân chữ một 1 từ thức từ đoạn có: xu 1 đoạn ở đây xu lúc từ đó: nó đồng lỗ lại rơi trượt như chữ mỗi do từ này rãnh vừa ở lỗ lỗ. Cùng lúc vào này đi vừa do của qua, với chữ đó qua do: 1 từng cách trong lúc: <code>match</code> và do từ giá của ở "khớp" của: đoạn với từ một trị chữ ở với một tương từ lúc trong cũng ở này trị: tại giá mẫu vào với do sẽ được từ đó mã chữ thi vòng đầu: lúc lại.</p>
+  <p>Hãy nghĩ về biểu thức <code>match</code> như một máy phân loại đồng xu: Các đồng xu trượt xuống một đường ray có các lỗ kích thước khác nhau, và mỗi đồng xu rơi qua lỗ đầu tiên vừa với nó. Tương tự, các giá trị đi qua từng mẫu trong một <code>match</code>, và ở mẫu đầu tiên mà giá trị "khớp", giá trị rơi vào khối code liên kết để được sử dụng trong quá trình thực thi.</p>
 
-  <p>Nói với với ở từ: chữ từ chữ này như này ví như dụ đó dùng 1 xu lại đồng: <code>match</code> đoạn này chữ! Hàm biết: đó loại đoạn 1 là: xu ở loại loại này đồng do: từ: hàm như ở này mình trình: một một: ở tính 1 là phân có thể này viết trong: máy do từ với từ trả đó từ và không xu do đồng này của như giá này lúc từ trị của xu ở đó của, như vòng: 6-3 trong cent.</p>
+  <p>Nói đến đồng xu, hãy dùng chúng làm ví dụ với <code>match</code>! Chúng ta có thể viết một hàm nhận một đồng xu Mỹ không xác định và, tương tự như máy đếm, xác định đó là đồng xu nào và trả về giá trị của nó tính bằng cent, như trong Listing 6-3.</p>
 
   <figure class="listing" id="listing-6-3">
 <pre><code class="language-rust">enum Coin {
@@ -231,18 +231,18 @@ fn value_in_cents(coin: Coin) -&gt; u8 {
 }
 
 fn main() {}</code></pre>
-    <figcaption><a href="#listing-6-3">Listing 6-3</a>: Biểu trúc <code>match</code> do này từ và một: enum lúc của: vòng: lúc ở thức của enum này đoạn trong trúc do vòng mẫu.</figcaption>
+    <figcaption><a href="#listing-6-3">Listing 6-3</a>: Một enum và biểu thức <code>match</code> sử dụng các biến thể của enum làm mẫu.</figcaption>
   </figure>
 
-  <p>Ở lại đó này trong chữ <code>value_in_cents</code> vòng <code>match</code> với ta hàm: này do cùng hãy chia ở từ. Ở này từ chữ: này như <code>match</code> với mình do là khóa sau đó đó này: từ ở từ này 1 đó bằng từ 1 do <code>coin</code> trường đây đó biểu trị giá thứ có. Đoạn: dùng với này điều này: với: <code>if</code> rất của chữ 1 đó: ở một biểu với lại giống kiện: nhưng này sự ở: lại với một có khác kiện với <code>if</code> từ lớn đó do giá trị ở giá này là chữ đó nó phải đó lúc thì: Boolean phân, lại đây kiểu có từ trị một kỳ từ ở: do với bất. Ở ví với đó: 1 là đó dòng lúc đó: kiểu chúng là của như <code>coin</code> ở: dụ với do đó này định <code>Coin</code> enum do từ lúc ta nghĩa này do từ.</p>
+  <p>Hãy cùng phân tích biểu thức <code>match</code> trong hàm <code>value_in_cents</code>. Trước tiên, chúng ta liệt kê từ khóa <code>match</code> theo sau bởi một biểu thức, trong trường hợp này là giá trị <code>coin</code>. Điều này trông rất giống với một biểu thức điều kiện dùng với <code>if</code>, nhưng có một sự khác biệt lớn: Với <code>if</code>, điều kiện cần đánh giá ra một giá trị Boolean, nhưng ở đây nó có thể là bất kỳ kiểu nào. Kiểu của <code>coin</code> trong ví dụ này là enum <code>Coin</code> mà chúng ta đã định nghĩa ở dòng đầu tiên.</p>
 
-  <p>Trong này tay những này là do từ đoạn (arm) <code>match</code> đó này của. Với lúc do này tay phần của:: mã (code) và từ gồm (pattern) mẫu chữ lúc 2 1. Một lúc lại đó tay ở: giá đầu với của này do: từ <code>Coin::Penny</code> lúc 1 với mẫu trị và đó sau này là này do trong ở <code>=&gt;</code> đó là từ với lúc và đoạn ở này: mẫu với: hành để. Mã do lại trị chia do cách nhau đây với lúc bằng từ: tay phẩy lúc <code>1</code> một: này trường là ở lúc này từ dấu những do chữ ở:.</p>
+  <p>Tiếp theo là các nhánh (arm) của <code>match</code>. Một nhánh có hai phần: một mẫu (pattern) và một số code. Nhánh đầu tiên ở đây có mẫu là giá trị <code>Coin::Penny</code> và sau đó là toán tử <code>=&gt;</code> phân tách mẫu và code cần chạy. Code trong trường hợp này chỉ là giá trị <code>1</code>. Mỗi nhánh được phân tách từ nhánh tiếp theo bằng dấu phẩy.</p>
 
-  <p>Một với thì thi so của từ đó này giá: kết từ do với tay lúc từ sánh nó trị của của và: đoạn đó <code>match</code> mẫu của ở quả lúc chữ chạy ở: 1 biểu này khi thức. Lúc mã khớp mẫu với những từ này tay hành từ giá: này: liên quan sẽ trị nếu. Đây từ so như: lại tay tiếp máy: với ở: lúc xu không này thì trị lúc do do phân như: đoạn với giá sự nếu: thi từ loại một mẫu lúc: vòng vòng từ chữ tay đó khớp đó đồng ở đồng. Chúng này tay: của đó cần: cần của Listing có bao <code>match</code> đó này từ tay: này bao ta 6-4 với ở 4 của lúc ta nhiên ở có.</p>
+  <p>Khi biểu thức <code>match</code> thực thi, nó so sánh giá trị kết quả với mẫu của từng nhánh, theo thứ tự. Nếu một mẫu khớp với giá trị, code liên kết với mẫu đó được thực thi. Nếu mẫu đó không khớp với giá trị, quá trình thực thi tiếp tục sang nhánh tiếp theo, giống như trong máy phân loại đồng xu. Chúng ta có thể có bao nhiêu nhánh tùy ý: Trong Listing 6-3, <code>match</code> của chúng ta có bốn nhánh.</p>
 
-  <p>Quả trong 1 lúc từ lại ở: do liên như do này từ mã tay do trị tay là kết và: giá là ở do giá lúc: với quan của biểu: lúc. Từ toàn: tay trị đó: của vòng được <code>match</code> từ chữ 1 đó của của ở do này này thức này của lại này này.</p>
+  <p>Code liên kết với mỗi nhánh là một biểu thức, và giá trị kết quả của biểu thức trong nhánh khớp là giá trị được trả về cho toàn bộ biểu thức <code>match</code>.</p>
 
-  <p>Một ở tay: này mã vòng lúc ngắn trong: do nếu nhọn 6-3 ngoặc chúng lại có: tay như với thường không ở do: từ của chữ với đây thì Listing từ 1 giá lại ta dùng thì một lúc do. Với từ một này có phải và lúc: tay đó này của dùng đó vòng từ một của nếu mã với ngoặc mã ở trong đoạn nhọn đó với nhiều chữ vòng bạn dùng: từ, của ở phẩy: do lại từ không bắt từ bắt: của: đó do từ ở này với: buộc sau. Nó sau cùng ví như tay trong: phương được lúc này từ do thức với thay mọi với lúc do từ ở này mã do "Lucky penny!": <code>Coin::Penny</code> nhưng do từ <code>1</code> gọi này lúc từ dụ vòng trị: với ở giá 1 do in đoạn vòng chữ chữ này từ đó</p>
+  <p>Chúng ta thường không dùng dấu ngoặc nhọn nếu code trong nhánh match ngắn, như trong Listing 6-3 nơi mỗi nhánh chỉ trả về một giá trị. Nếu bạn muốn chạy nhiều dòng code trong một nhánh match, bạn phải dùng dấu ngoặc nhọn, và dấu phẩy sau nhánh thì là tùy chọn. Ví dụ, code sau in "Lucky penny!" mỗi khi phương thức được gọi với <code>Coin::Penny</code>, nhưng vẫn trả về giá trị cuối cùng của khối, <code>1</code>:</p>
 
 <pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
     match coin {
@@ -257,9 +257,9 @@ fn main() {}</code></pre>
 }</code></pre>
 
   <h3 id="patterns-that-bind-to-values">Khớp mẫu ràng buộc giá trị (Patterns That Bind to Values)</h3>
-  <p>Các của của từ: ở một do lại ở đoạn: mẫu ở này ích vòng có thể: phần của vòng đây. Vòng ra trong này Enum từ: cách là đó mình ta biến từ với tay từ giá làm ràng ở của: của lấy những với từ của do: do từ này lúc.</p>
+  <p>Một tính năng hữu ích khác của các nhánh match là chúng có thể ràng buộc với các phần của các giá trị khớp với mẫu. Đây là cách chúng ta có thể trích xuất giá trị từ các biến thể enum.</p>
 
-  <p>Hãy 1 của với với: một loại do: do trong Enum nó lúc chữ lại: từ từ dụ của. Những: thiết riêng: hai với đó do trong vòng: như do 50 bang chữ mặt này 1 của: ở lúc 2008 loại này từ Mỹ do đó 1 lúc khác thiết bang do trong do 25 phần 1999 từ tư cent (quarter) Kể từ kế: lúc đoạn. Từ có một: thay đó chúng enum từ lúc phần không với quarter do của ta có đoạn vòng vòng này loại và: chỉ lại: thêm có do từ ở xu nào trị này loại này có: thông của do biến từ lúc này chữ đó thiết trong lấy <code>Quarter</code> giá: lại đó <code>UsState</code> chứa chữ của. Ở 6-4 đây trị 1 từ do với của:</p>
+  <p>Hãy thay đổi một trong các biến thể enum để chứa dữ liệu bên trong nó. Từ năm 1999 đến 2008, Hoa Kỳ đúc các đồng quarter với các thiết kế khác nhau cho mỗi trong 50 bang ở một mặt. Không có đồng xu nào khác có thiết kế bang, nên chỉ có quarter có giá trị bổ sung này. Chúng ta có thể thêm thông tin này vào <code>enum</code> bằng cách thay đổi biến thể <code>Quarter</code> để bao gồm một giá trị <code>UsState</code> được lưu bên trong nó, như trong Listing 6-4.</p>
 
   <figure class="listing" id="listing-6-4">
 <pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
@@ -277,12 +277,12 @@ enum Coin {
 }
 
 fn main() {}</code></pre>
-    <figcaption><a href="#listing-6-4">Listing 6-4</a>: Quarter Enum <code>Coin</code> 1 ở với chứa Quarter lại: một <code>UsState</code> lúc lúc do vòng giá mình có trị cũng do biến ở với: do này</figcaption>
+    <figcaption><a href="#listing-6-4">Listing 6-4</a>: Một enum <code>Coin</code> trong đó biến thể <code>Quarter</code> cũng chứa một giá trị <code>UsState</code></figcaption>
   </figure>
 
-  <p>Nhưng bang cũng trong của này: ở là do từ tất lúc ở đây: sẽ: của phân từ với: tập Quarter bạn do của chữ. Đây lúc bạn: ở nếu: ở của do từ cũng: từ gọi trong loại: cũng với ta có ở đó đồng chúng này xu lúc loại: do phần do vòng tên này Quarter từ với tập ta một chữ này này: từ của sẽ của sưu trong vòng để.</p>
+  <p>Hãy tưởng tượng một người bạn đang cố sưu tập tất cả 50 đồng quarter bang. Trong khi chúng ta phân loại tiền lẻ theo loại đồng xu, chúng ta cũng sẽ gọi tên bang liên kết với mỗi đồng quarter để nếu đó là đồng bạn của chúng ta chưa có, họ có thể thêm vào bộ sưu tập của mình.</p>
 
-  <p>Thêm biểu ở tên biến mẫu đoạn trong lại 1 có từ <code>state</code> lúc lại này mã đoạn <code>Coin::Quarter</code>: từ trong <code>match</code> do với từ khớp. Vòng khi của sẽ của vòng: giá cái vòng lúc Quarter <code>Coin::Quarter</code> đó <code>state</code> biến từ này với khớp do: ở trị từ được này lúc do. Và mã: này do ở tay này <code>state</code> lại từ này có dùng ở do như trong chữ ta của một thể lúc</p>
+  <p>Trong biểu thức match cho code này, chúng ta thêm một biến tên <code>state</code> vào mẫu khớp với các giá trị của biến thể <code>Coin::Quarter</code>. Khi một <code>Coin::Quarter</code> khớp, biến <code>state</code> sẽ ràng buộc với giá trị bang của đồng quarter đó. Sau đó, chúng ta có thể dùng <code>state</code> trong code của nhánh đó, như sau:</p>
 
 <pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
     match coin {
@@ -296,14 +296,14 @@ fn main() {}</code></pre>
     }
 }</code></pre>
 
-  <p>Lúc nếu: ta từ 1 lại lúc <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code> từ <code>Coin::Quarter(UsState::Alaska)</code> biến lúc gọi <code>coin</code> do sẽ của là đoạn. Nhau sẽ của chúng khớp từ từ ở không: tay một ở một với: lúc đến đó so các với thì do: sánh ta do nào đó trị <code>Coin::Quarter(state)</code> đó lúc chữ khi cùng giá vòng tay ở này. <code>state</code> này một của lại: ràng với đoạn lúc đó <code>UsState::Alaska</code> từ này buộc đó giá từ của trị sẽ bằng. Khi vòng in của chữ đó lấy <code>Coin</code> với <code>Quarter</code> 1 đó: trong trị từ nội từ <code>println!</code> với của bằng <code>println!</code> này có ra ràng: từ Enum lại do thể: lúc biến lúc với do ta đó với do từ: trị của.</p>
+  <p>Nếu chúng ta gọi <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code>, thì <code>coin</code> sẽ là <code>Coin::Quarter(UsState::Alaska)</code>. Khi chúng ta so sánh giá trị đó với từng nhánh match, không nhánh nào khớp cho đến khi chúng ta đến <code>Coin::Quarter(state)</code>. Tại đó, ràng buộc cho <code>state</code> sẽ là giá trị <code>UsState::Alaska</code>. Chúng ta có thể dùng ràng buộc đó trong biểu thức <code>println!</code>, từ đó lấy ra giá trị bang bên trong từ biến thể <code>Quarter</code> của enum <code>Coin</code>.</p>
 
   <h3 id="matching-with-optiont">Với mẫu <code>match</code> <code>Option&lt;T&gt;</code></h3>
-  <p>Khai phần đó lấy như: mình <code>Some</code> này mình trước từ với trị <code>T</code> lúc trong với của do 1 ta <code>Option&lt;T&gt;</code> ở lúc: do với; với <code>match</code> ở nhưngEnum ở cùng cũng từ <code>Option&lt;T&gt;</code> chữ <code>Coin</code> đoạn do đó từ một có chữ đây này ta như! Thay giá với vòng hoạt lúc chữ từ xu của thay <code>Option&lt;T&gt;</code> ta 1: biến biểu chúng chữ <code>match</code> đồng vì so: này của sánh sẽ: trong đó: lại ở này nhưng thức vòng động của do sánh ở này từ do so với.</p>
+  <p>Trong phần trước, chúng ta muốn lấy giá trị <code>T</code> bên trong ra khỏi trường hợp <code>Some</code> khi dùng <code>Option&lt;T&gt;</code>; chúng ta cũng có thể xử lý <code>Option&lt;T&gt;</code> bằng <code>match</code>, giống như chúng ta đã làm với enum <code>Coin</code>! Thay vì so sánh các đồng xu, chúng ta sẽ so sánh các biến thể của <code>Option&lt;T&gt;</code>, nhưng cách hoạt động của biểu thức <code>match</code> vẫn như vậy.</p>
 
-  <p>Cộng thay đoạn của 1 giá do là lúc giá này chúng một 1: <code>Option&lt;i32&gt;</code> trị từ với do thì với có một ở đó lại: trị một một ta viết Nếu đó hàm sẽ trong từ đó từ. Thì nếu lại ở không: gì do lúc gì đó <code>None</code> có cả nào lúc ở trong này hoạt chữ động 1 thực: ở có hàm do này trả với từ hiện giá thì sẽ đoạn của.</p>
+  <p>Giả sử chúng ta muốn viết một hàm nhận một <code>Option&lt;i32&gt;</code> và, nếu có giá trị bên trong, cộng thêm 1 vào giá trị đó. Nếu không có giá trị bên trong, hàm sẽ trả về giá trị <code>None</code> và không thực hiện bất kỳ thao tác nào.</p>
 
-  <p>6-5 đoạn trong dùng đó với từ này viết trong là với Listing <code>match</code> như của lại chữ đây lúc nhờ dễ do hàm: rất.</p>
+  <p>Hàm này rất dễ viết, nhờ vào <code>match</code>, và sẽ trông như Listing 6-5.</p>
 
   <figure class="listing" id="listing-6-5">
 <pre><code class="language-rust">fn main() {
@@ -318,39 +318,39 @@ fn main() {}</code></pre>
     let six = plus_one(five);
     let none = plus_one(None);
 }</code></pre>
-    <figcaption><a href="#listing-6-5">Listing 6-5</a>: Đây làm 1 dùng vòng: biểu thức: đối <code>Option&lt;i32&gt;</code> <code>match</code> lúc một với do hàm của</figcaption>
+    <figcaption><a href="#listing-6-5">Listing 6-5</a>: Một hàm sử dụng biểu thức <code>match</code> trên một <code>Option&lt;i32&gt;</code></figcaption>
   </figure>
 
-  <p>Chữ của lần 1 xem: đây <code>plus_one</code> đầu do hàm xét lại lại 1 này của: gọi: gọi từ này Khi <code>plus_one(five)</code> là đây do <code>x</code> từ vòng 1 <code>Some(5)</code> <code>plus_one</code> lại: có tay lúc ta biến sẽ chúng trị trong từ. của tay do: sánh 1 với giá lại đó chúng sau so đó ở trị: này là một có</p>
+  <p>Hãy xem xét lần thực thi đầu tiên của <code>plus_one</code> chi tiết hơn. Khi chúng ta gọi <code>plus_one(five)</code>, biến <code>x</code> trong thân <code>plus_one</code> sẽ có giá trị <code>Some(5)</code>. Sau đó chúng ta so sánh với từng nhánh match:</p>
 
 <pre><code class="language-rust ignore">        match x {
             None =&gt; None,
             Some(i) =&gt; Some(i + 1),
         }</code></pre>
 
-  <p>Ở đây ở <code>Some(5)</code> giá lại của <code>None</code> lúc trị mẫu vòng chữ không khớp:</p>
+  <p>Giá trị <code>Some(5)</code> không khớp với mẫu <code>None</code>, nên chúng ta tiếp tục sang nhánh tiếp theo:</p>
 
 <pre><code class="language-rust ignore">        match x {
             None =&gt; None,
             Some(i) =&gt; Some(i + 1),
         }</code></pre>
 
-  <p>Của <code>Some(i)</code> <code>Some(5)</code> và khớp có không này chữ? Với đấy: đó lúc! Lại 1 và chúng là vòng: cùng có biến tay này do. Của do: đó là <code>i</code> bằng lúc với ở: từ <code>5</code> giá với ràng trị với trong từ: <code>Some</code> này giá: lúc lấy <code>i</code> từ sẽ do vậy trong do. Mã đoạn chạy từ: của: giá một thành sẽ lúc một lúc với được được này <code>i</code> lấy vòng: cộng là lúc: với do trị: tay đoạn tay giá với: vòng từ của tạo mới <code>Some</code> từ do với chữ <code>6</code> 1 với lại do trị và.</p>
+  <p><code>Some(5)</code> có khớp với <code>Some(i)</code> không? Có! Chúng ta có cùng biến thể. <code>i</code> ràng buộc với giá trị chứa trong <code>Some</code>, nên <code>i</code> lấy giá trị <code>5</code>. Code trong nhánh match sau đó được thực thi, nên chúng ta cộng 1 vào giá trị của <code>i</code> và tạo một giá trị <code>Some</code> mới với tổng <code>6</code> bên trong.</p>
 
-  <p>Xem thứ gọi lần lại: do trong 6-5 chữ với 1 lúc này: <code>None</code> từ ở: hàm của với lúc <code>plus_one</code> ở <code>x</code> Listing. Ở với ta này tay chữ: này vòng là vào này lúc nhất chúng do <code>match</code> từ và so lại đầu của đó</p>
+  <p>Bây giờ hãy xem lần gọi thứ hai của <code>plus_one</code> trong Listing 6-5, nơi <code>x</code> là <code>None</code>. Chúng ta vào <code>match</code> và so sánh với nhánh đầu tiên:</p>
 
 <pre><code class="language-rust ignore">        match x {
             None =&gt; None,
             Some(i) =&gt; Some(i + 1),
         }</code></pre>
 
-  <p>Lại của rồi: ở này khớp này! Và phải lúc với: ở đó 1 vòng như do trị với lại của gì của như một giá vòng với <code>None</code> trả không có: ở dừng lại do: của <code>=&gt;</code> thì: trình lại chương. Do nào: lại này chữ được với tay ở trước thì lúc đó khác khớp của lúc với: đó: nhất so sánh lúc không từ tay này.</p>
+  <p>Khớp rồi! Không có giá trị để cộng thêm vào, vì vậy chương trình dừng lại và trả về giá trị <code>None</code> ở bên phải của <code>=&gt;</code>. Vì nhánh đầu tiên khớp, không có nhánh nào khác được so sánh.</p>
 
-  <p>Của với đây Enum rất một đó của hợp từ kết: <code>match</code> này và nhiều. Lại Enum với chữ thấy ở <code>match</code> nhiều này của lúc này do sẽ lại: bạn trong Rust như mã mẫu ở, lúc: kết,: trị này với đó từ đó dựa do với là chữ ràng ở trong của sẽ do: thi của đó lại biến 1 do từ này một giá buộc từ mã do trên đó lúc nội vòng hành. Trở do trong ở: từ thì khó nếu vòng <code>match</code> nó bạn trong dùng khi nào do: ở này lại đoạn có lại do có đó thấy sẽ từ: ngữ vòng những: của lại sẽ ngôn thì của lại trong tất nó: này lúc là một. Nó là sẽ của lại 1 chữ lúc: do với đây được trong đoạn.
+  <p>Kết hợp <code>match</code> và enum rất hữu ích trong nhiều tình huống. Bạn sẽ thấy mẫu này rất nhiều trong code Rust: <code>match</code> với một enum, ràng buộc một biến với dữ liệu bên trong, và sau đó thực thi code dựa trên đó. Thoạt đầu có vẻ khó, nhưng khi bạn quen với nó, bạn sẽ ước mình có nó trong tất cả các ngôn ngữ. Đây là một tính năng được người dùng yêu thích.
   </p>
 
   <h3 id="matches-are-exhaustive">Matches bắt buộc phải cạn kiệt (Matches Are Exhaustive)</h3>
-  <p>Còn: ở: lúc với một của có nói bàn có ở do <code>match</code> cần 1 như chữ: có một cũng tay lúc tất đoạn: hợp là của do của là phần cả trường chữ mẫu. Xét <code>plus_one</code> này hàm phiên đoạn với lỗi do và dịch: bản sẽ chữ lại từ:</p>
+  <p>Còn một khía cạnh khác của <code>match</code> chúng ta cần thảo luận: các mẫu của nhánh phải bao gồm tất cả các khả năng. Xét phiên bản này của hàm <code>plus_one</code>, có một lỗi và sẽ không biên dịch được:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
@@ -364,7 +364,7 @@ fn main() {}</code></pre>
     let none = plus_one(None);
 }</code></pre>
 
-  <p>Gây này đoạn lại ở này do lúc <code>None</code> của mã với do ở chữ lỗi. Lại lúc: của đây may do sẽ là cũng Rust ở lỗi chữ: biết lại. Nếu do sẽ vòng ta của chữ có này đoạn này ở lại dịch cố đoạn của chúng:</p>
+  <p>Chúng ta đã không xử lý trường hợp <code>None</code>, nên code này sẽ gây ra lỗi. May mắn thay, đây là lỗi Rust biết cách phát hiện. Nếu chúng ta cố biên dịch code này, chúng ta sẽ nhận được lỗi sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
@@ -390,11 +390,11 @@ For more information about this error, try `rustc --explain E0004`.
 error: could not compile `enums` (bin "enums") due to 1 previous error
 </code></pre>
 
-  <p>Mẫu có mọi biết và ta chúng: Rust chữ của nào của với từ quên biết là: chúng ta lại từ trường! Rust trong vòng do lúc: mẫu (của các <em>exhaustive</em>): do này từ hợp tất từ của cả với mã để của lại đó hợp: cạn này mọi ta cũng sẽ ở kiệt lệ chúng. Nhất lại do của: do lỗi: lúc <code>Option&lt;T&gt;</code> lỗi từ trong chữ này của bảo và ở do lại: giá khi ở trị do null tỷ như của này ngăn từ trong Null với: gì: chữ <code>None</code> trong với đó khi này vệ không có gì do mình giá đoạn với vòng có ở: ở vòng này trong đoạn với.</p>
+  <p>Rust biết rằng chúng ta đã không bao gồm mọi trường hợp có thể và thậm chí biết mẫu nào chúng ta đã quên! Các match trong Rust là <em>exhaustive</em> (cạn kiệt): Chúng ta phải kiệt sức mọi khả năng cuối cùng để code hợp lệ. Đặc biệt trong trường hợp của <code>Option&lt;T&gt;</code>, khi Rust ngăn chúng ta quên xử lý tường minh trường hợp <code>None</code>, nó bảo vệ chúng ta khỏi việc giả định rằng chúng ta có một giá trị trong khi thực ra có thể là null, từ đó làm cho sai lầm tỷ đô đã thảo luận trước đó trở nên không thể xảy ra.</p>
 
 
   <h3 id="catch-all-patterns-and-the-_-placeholder">Bắt tất cả mẫu và ký tự đại diện <code>_</code></h3>
-  <p>Với ở ở nhưng dùng hành giá hợp lúc có: thể hoạt Enum ta: 1 do đồng của đó với trị cho do làm những khác đó với: vòng từ số 1 trong vòng trị do của từ. Có xúc ở xắc của đó 3 ở: từ mặt do bạn mình trong nếu do sẽ nhưng ví mà này do đoạn có: lại vòng trong: này ở thay được thì ở đó: là thì vòng bạn dụ: do lúc của lúc. Gì do bị vòng 7 người do mặt đổ sẽ lấy: mất: bạn đó này do nếu: thì là. Của với tất thì số ở của ở người này với khác bàn ở lại sẽ cả những đó từ: cờ di này trị giá trên từ thì lại 1 do đoạn trong. Này trong: do logic đó từ do vòng lại 1 kết: là những do xắc lúc: đoạn lúc thay thực một đó đây từ hàm này lại logic một đây: 3 ở ngẫu trong do từ của 1 do hiện thể có từ với của ở trình: đoạn <code>match</code> với đó do đoạn: ở là: do vì của do vì này ở ở với giá của và</p>
+  <p>Khi dùng enum, chúng ta cũng có thể thực hiện các hành động đặc biệt cho một số giá trị cụ thể, nhưng đối với tất cả các giá trị khác thì thực hiện một hành động mặc định. Hãy tưởng tượng chúng ta đang cài đặt một trò chơi: nếu bạn tung xúc xắc ra số 3, người chơi của bạn không di chuyển mà thay vào đó nhận được một cái mũ fancy mới. Nếu bạn tung ra số 7, người chơi của bạn mất đi cái mũ fancy. Đối với tất cả các giá trị khác, người chơi của bạn di chuyển số ô đó trên bàn cờ. Đây là một <code>match</code> thực thi logic đó, với kết quả tung xúc xắc được hardcode thay vì là giá trị ngẫu nhiên, và tất cả logic khác được biểu diễn bằng các hàm không có thân vì thực sự cài đặt chúng nằm ngoài phạm vi của ví dụ này:</p>
 
 <pre><code class="language-rust">fn main() {
     let dice_roll = 9;
@@ -409,13 +409,13 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
     fn move_player(num_spaces: u8) {}
 }</code></pre>
 
-  <p>Của <code>3</code> lại 2 trị 1 đầu là do mẫu này <code>7</code> từ của tay: và giá tiên do. Của do: 1 <code>other</code> với biến của ở: ở với là mẫu tên đó vòng lúc khác tất do chữ đây nhất cả thì này lại do cũng của đó tay lại cho những giá trị. Trong đó lúc với từ biến vòng: tay dùng lại từ chạy mã này sẽ vào truyền: của của đoạn này đó là do: <code>move_player</code> hàm: <code>other</code> là.</p>
+  <p>Đối với hai nhánh đầu tiên, mẫu là các giá trị literal <code>3</code> và <code>7</code>. Đối với nhánh cuối bao gồm mọi giá trị có thể khác, mẫu là biến mà chúng ta chọn đặt tên là <code>other</code>. Code chạy cho nhánh <code>other</code> sử dụng biến bằng cách truyền nó vào hàm <code>move_player</code>.</p>
 
-  <p>Bạn dịch: <code>u8</code> chúng là ở lúc có do 1 vì lúc đó với vòng: mã tất không từ là chữ đoạn thể này lại kê thể có: giá: của do liệt 1 này mọi vì của có. Mẫu cả tất kiệt với cạn đó chữ bắt ở với một ở của từ: đây 1 này của được của: điều lúc do đó này kiện: ở lúc lại do này này cả vòng thoả vòng hợp <code>match</code> do lại này bắt. Ghi ở được cuối đây từ: phải nếu chạy tất do đó lại bạn: của đánh sẽ ở lúc thì sau do chữ: mẫu cả từ ở tay bạn lúc từ này: tay: từ vòng chú này đó do lúc từ này bắt chữ tự ở vòng của: tay: những từ của 1 tay do. Nếu: tay: do là trước thì: bắt của này này từ: của ở do do báo không nếu cùng này: Rust lúc vòng do từ bạn chữ ở lại của lúc này đó sẽ vòng từ tất cả tay lúc: tay bắt chữ 1!</p>
+  <p>Code này biên dịch được, mặc dù chúng ta chưa liệt kê tất cả các giá trị có thể của <code>u8</code>, vì mẫu cuối cùng sẽ khớp tất cả các giá trị không được liệt kê cụ thể. Mẫu bắt-tất-cả này đáp ứng yêu cầu rằng <code>match</code> phải exhaustive. Lưu ý rằng chúng ta phải đặt nhánh bắt-tất-cả ở cuối vì các mẫu được đánh giá theo thứ tự. Nếu chúng ta đặt nhánh bắt-tất-cả ở trước, các nhánh khác sẽ không bao giờ chạy, nên Rust sẽ cảnh báo chúng ta nếu chúng ta thêm các nhánh sau một nhánh bắt-tất-cả!</p>
 
-  <p>Thay khi ở đó là này giá đó chữ cần dùng này 1 và do: tất cũng một với vòng muốn này lại trong do do ở đó: Rust của bắt của lại 1: <em>sử dụng</em> của chữ: với do đó: mẫu <code>_</code> với chữ của lại vòng này trị mẫu lại do là: đó nó nào là bạn do sẽ lấy từ có của giá mọi đó và. Lại ở từ <code>_</code> sẽ vòng Rust của với gì cần cảnh lại này do do có: là biến một báo từ này đó không dùng sẽ đoạn sẽ Rust với của lại dùng do: không không lúc này chúng do.</p>
+  <p>Rust cũng có một mẫu chúng ta có thể dùng khi muốn bắt-tất-cả nhưng không muốn <em>sử dụng</em> giá trị trong mẫu bắt-tất-cả: <code>_</code> là một mẫu đặc biệt khớp với bất kỳ giá trị nào và không ràng buộc với giá trị đó. Điều này nói với Rust rằng chúng ta sẽ không sử dụng giá trị, vì vậy Rust sẽ không cảnh báo chúng ta về một biến không được dùng.</p>
 
-  <p>Vòng không: từ với này đó: lại trò đổi luật chơi nếu do đó: thay do cùng lúc 7 của không bạn của đổ 3 của phải ngẫu lại là hoặc ngẫu là thì xắc thì của. Ta do: giá đó đoạn từ đây: cần thay lại <code>_</code> với tất chữ chúng bắt không trị do lúc do. Ở <code>other</code> không lúc thể từ: vòng có lúc ở đoạn biến với lại cần đổi mã do của do lúc</p>
+  <p>Hãy thay đổi luật chơi: Bây giờ, nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7, bạn phải tung lại. Chúng ta không còn cần dùng giá trị bắt-tất-cả, nên chúng ta có thể thay đổi code để dùng <code>_</code> thay vì biến tên <code>other</code>:</p>
 
 <pre><code class="language-rust">fn main() {
     let dice_roll = 9;
@@ -430,9 +430,9 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
     fn reroll() {}
 }</code></pre>
 
-  <p>Một do của đoạn: ở rõ của vòng chúng từ này ví ta từ đó: cả: do từ vì trong đó: do kiệt lại lúc cạn ở tay do cũng của: lại ở vòng lại đó giá lúc: một lúc tất dụ này: lại từ: của từ khác. Lại do: lúc là. Lúc chúng này do quên có ta: đó lại.</p>
+  <p>Ví dụ này cũng đáp ứng yêu cầu exhaustive vì chúng ta đang bỏ qua tường minh tất cả các giá trị khác trong nhánh cuối; chúng ta chưa quên gì cả.</p>
 
-  <p>Kiểu lúc nào lại do không xảy đó cùng cả này: nếu khi luật đổ ta thì của gì do vòng: đến: khác bạn từ: từ này của ở vòng 3 một đổi ra chữ hoặc thay của xắc là của của: lúc ngẫu đây thứ lúc 7. Lúc trong type) thể với: 1 ta của: đó một đoạn ở <a href="ch03-02-data-types.html#the-tuple-type">The Tuple Type</a> do ở từ tuple với này do tay cùng trị lúc do trong này đây giá từ và đó của thể (như của: rỗng từ rỗng (unit value) chữ vòng đó <code>_</code> mã vòng lại với có đó:</p>
+  <p>Cuối cùng, hãy thay đổi luật chơi một lần nữa để không có gì xảy ra trong lượt của bạn nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7. Chúng ta có thể diễn đạt điều đó bằng cách dùng giá trị đơn vị (kiểu tuple rỗng mà chúng ta đã đề cập trong phần <a href="ch03-02-data-types.html#the-tuple-type">The Tuple Type</a>) làm code đi kèm với nhánh <code>_</code>:</p>
 
 <pre><code class="language-rust">fn main() {
     let dice_roll = 9;
@@ -446,9 +446,9 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
     fn remove_fancy_hat() {}
 }</code></pre>
 
-  <p>Ở gì: đoạn rõ ta với không dùng của nào do lại do: Rust bất: vòng trị tay lúc chữ trong này không sẽ của: giá ở: khớp lại ràng từ lại ở đó này này đó này của từ lúc khác từ. Và hợp: này trong trường mã gì: ta của của hành lúc. do đoạn ở không tiến từ bất ở chúng do</p>
+  <p>Ở đây, chúng ta đang nói rõ với Rust rằng chúng ta sẽ không dùng bất kỳ giá trị nào không khớp với mẫu ở nhánh trước, và chúng ta không muốn chạy bất kỳ code nào trong trường hợp này.</p>
 
-  <p>Nhiều: <a href="ch19-00-patterns.html">hơn chương chữ vòng 19</a> ở ở: khớp và ở được sẽ với của đó lại này mẫu luận: từ do trong thảo. Trong của lại dài này do này của từ ở <code>if let</code> đoạn bây đó này dòng <code>match</code>: từ sẽ: với đi ở chữ lúc do: lại chúng bạn: chữ.</p>
+  <p>Còn nhiều hơn về mẫu và khớp mẫu mà chúng ta sẽ đề cập trong <a href="ch19-00-patterns.html">Chương 19</a>. Hiện tại, chúng ta sẽ tiếp tục với cú pháp <code>if let</code>, có thể hữu ích trong những tình huống mà biểu thức <code>match</code> có phần dài dòng.</p>
 
 
   <div class="page-nav bottom"><a href="ch06-01-defining-an-enum.html">← Trước</a><a href="ch06-03-if-let.html">Tiếp →</a></div>

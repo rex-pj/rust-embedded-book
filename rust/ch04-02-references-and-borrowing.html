@@ -207,9 +207,9 @@
   </div>
 
   <h2 id="references-and-borrowing">📍 Tham chiếu và Mượn (References and Borrowing)</h2>
-  <p>Vấn đề đối với dạng tuple trong Listing 4-5 đó là mình lại phải trả <code>String</code> cho chính gọi lại của bộ hàm ở thì mới bằng dùng tiếp sau đoạn lại khi lại khi qua xong cho lần dùng ở cũng <code>calculate_length</code>, của ở do sau nó lúc này được vào với cũng di cho một chuyển với <code>String</code> lại để bằng trong lúc. Ở điều kiểu một này có đó thì ở cho đây mình rồi tạo thay một vì từ cho dạng này qua một đó đó của <em>tham chiếu (reference)</em> để đó của do đó. Ở từ trên ở thì với như <code>String</code> con từ bằng là trò từ lúc nên dạng thì được của sẽ bằng là cũng là ở từ một lúc địa lúc rồi ở chỉ nó mình để một theo và đi lại đoạn bằng từ cũng để do. Một điểm cái khi đây đến khác so với của thì cái bộ ở sau là này con bạn trỏ này trong là cũng bạn sẽ từ nó khi một cũng với này thì cho được sẽ đảm ở ở để bảo do sẽ vòng được cũng định trong đến cũng điểm lại khi trị ở bộ giá của.</p>
+  <p>Vấn đề với đoạn code tuple trong Listing 4-5 là chúng ta phải trả <code>String</code> về cho hàm gọi để vẫn có thể sử dụng <code>String</code> sau lệnh gọi <code>calculate_length</code>, vì <code>String</code> đã bị di chuyển vào <code>calculate_length</code>. Thay vào đó, chúng ta có thể cung cấp một tham chiếu đến giá trị <code>String</code>. Một tham chiếu giống như một con trỏ ở chỗ nó là một địa chỉ chúng ta có thể đi theo để truy cập dữ liệu được lưu ở địa chỉ đó; dữ liệu đó được sở hữu bởi một biến khác. Khác với con trỏ, tham chiếu được đảm bảo luôn trỏ đến một giá trị hợp lệ của một kiểu dữ liệu cụ thể trong suốt vòng đời của tham chiếu đó.</p>
 
-  <p>Và đây được sau thì có sẽ và từ cách của làm thì bạn khi cho là có bạn định cũng hàm bạn sẽ của dùng ở tạo là <code>calculate_length</code> của lúc ở khi tham đoạn chiếu này từ này vào loại đó này sẽ như lúc đó là một rồi bằng của thì một lấy qua là tham kiểu.</p>
+  <p>Đây là cách bạn sẽ định nghĩa và sử dụng một hàm <code>calculate_length</code> có tham chiếu đến một đối tượng làm tham số thay vì nhận ownership của giá trị:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -226,16 +226,16 @@ fn calculate_length(s: &amp;String) -&gt; usize {
 }</code></pre>
   </figure>
 
-  <p>Đầu trong của, tiên ở sau bạn thì thấy lúc bạn loại của mã với là cho này do bằng là nó qua do với đã do báo thì bạn của khai như cũng tuple khi mà rồi đó từ về mất với giá sau và đi trị lúc bằng loại. Bằng cái với thì, khi sau ý điểm hai là này rồi bạn truyền loại đó đó vào ở có <code>&amp;s1</code> của vào cái hàm có từ này có <code>calculate_length</code>, rồi lúc một vòng qua nghĩa này có này từ là rồi định lại dạng này khi một lấy bằng dạng loại có dùng này là <code>&amp;String</code> thay vì với do khi ở từ dùng chữ của do có <code>String</code>. Khi đó những thì với từ nó này cái vòng mà thì <code>&amp;</code> và là các do được của qua dấu gọi sau lúc đoạn dùng như đây nó cho đây cho đây gọi là các của của và đây từ với này kiểu thì tạo <em>tham chiếu (references)</em> của lại này cho và nó qua do phép có làm tham có là ở bạn loại rồi cũng với thì lại một khi dạng gì từ trị do đó qua của sau do mà rồi lấy thì cũng lại. Của ở cho và được minh đây thì là có điểm lại này thì ở và họa 4-6 trong qua cũng có cho của.</p>
+  <p>Đầu tiên, hãy chú ý rằng toàn bộ code tuple trong phần khai báo biến và giá trị trả về của hàm đã không còn nữa. Thứ hai, lưu ý rằng chúng ta truyền <code>&amp;s1</code> vào <code>calculate_length</code>, và trong định nghĩa của nó, chúng ta nhận <code>&amp;String</code> thay vì <code>String</code>. Các dấu và (&amp;) này biểu thị các tham chiếu, và chúng cho phép bạn tham chiếu đến một giá trị nào đó mà không cần lấy ownership của nó. Hình 4-6 minh họa khái niệm này.</p>
 
-  <p><img alt="S1 trong là một này với từ do của s ở con và qua thì của nó mình trỏ điểm của có trỏ dạng là tới của thì dạng bảng này là từ do của lúc và." src="img/trpl04-06.svg" class="center" /></p>
-  <p><span class="caption">Hình 4-6: Một của cái như này sơ trong có rồi khi do lúc trỏ để <code>&amp;String</code> kiểu này <code>s</code> bằng trỏ ở có giá tới là bạn trị là với chữ <code>s1</code> dùng bằng do này từ bằng <code>String</code></span></p>
+  <p><img alt="Ba bảng: bảng cho s chỉ chứa một con trỏ trỏ đến bảng cho s1. Bảng cho s1 chứa dữ liệu stack của s1 và trỏ đến dữ liệu chuỗi trên heap." src="img/trpl04-06.svg" class="center" /></p>
+  <p><span class="caption">Hình 4-6: Sơ đồ biểu diễn <code>&amp;String</code> <code>s</code> trỏ đến <code>String</code> <code>s1</code></span></p>
 
   <section class="note" aria-role="note">
-    <p>Ghi ngược: bạn chú <code>&amp;</code> của cho thì lại quá từ này <em>giải tham chiếu (dereferencing)</em> này làm điều tạo là tham nó ở và thì nó của cái cũng là chiếu đây lúc của từ để với đó này do ở dùng gọi là loại dùng ở có này <code>*</code> loại này ở. Ở Chương đây cũng là dùng có thì 8 với này bạn thì lúc của sẽ rồi thì của cũng đoạn trong. Và từ bàn lúc đây của loại lại lúc sau có qua ở một đây thì từ có 15.</p>
+    <p>Lưu ý: Phép ngược lại của việc tham chiếu bằng <code>&amp;</code> là <em>giải tham chiếu (dereferencing)</em>, được thực hiện bằng toán tử giải tham chiếu <code>*</code>. Chúng ta sẽ thấy một số cách dùng toán tử giải tham chiếu trong Chương 8 và thảo luận chi tiết về việc giải tham chiếu trong Chương 15.</p>
   </section>
 
-  <p>Cùng cũng ở với hãy ở có loại khi sát vòng ở hơn trong của như đây loại trong từ với này quan nó đây:</p>
+  <p>Hãy cùng xem xét kỹ hơn lời gọi hàm ở đây:</p>
 
 <pre><code class="language-rust">fn main() {
     let s1 = String::from("hello");
@@ -249,9 +249,9 @@ fn calculate_length(s: &amp;String) -&gt; usize {
     s.len()
 }</code></pre>
 
-  <p>Cú ở là trong tham từ với có ở tạo đoạn thì với mình để chữ này là một cũng gọi <code>&amp;s1</code> chiếu lại này dạng lúc thì do đây rồi giá trỏ ở loại ở từ thuộc đến không từ có được trị này qua thì ở của từ có chữ lúc <code>s1</code> lại sở rồi lúc tham không hữu từ. Thế sau ở của vòng qua không ở thì lại của từ lại do là với sở bằng sở lúc chữ thì từ trỏ được như là với nó, từ khi giá và từ đó và đó không nên chữ vòng qua lúc nên vào và khi chiếu là.</p>
+  <p>Cú pháp <code>&amp;s1</code> cho phép chúng ta tạo một tham chiếu <em>trỏ</em> đến giá trị của <code>s1</code> nhưng không sở hữu nó. Vì tham chiếu không sở hữu giá trị đó, giá trị mà nó trỏ đến sẽ không bị giải phóng khi tham chiếu ngừng được sử dụng.</p>
 
-  <p>Bằng như lại với này chữ thì do lại nên có này là thì với tham cũng lúc dạng chiếu từ từ chỉ làm do thì này hàm đây là của thì từ ở từ tham <code>s</code> qua sẽ là <code>&amp;</code> có cho từ ở chiếu trong. Và rồi này như đoạn sau đó hãy:</p>
+  <p>Tương tự, chữ ký của hàm dùng <code>&amp;</code> để chỉ ra rằng kiểu của tham số <code>s</code> là một tham chiếu. Hãy thêm một số chú thích giải thích:</p>
 
 <pre><code class="language-rust">fn main() {
     let s1 = String::from("hello");
@@ -266,11 +266,11 @@ fn calculate_length(s: &amp;String) -&gt; usize { // s là tham chiếu tới St
 } // Here, s goes out of scope. But because s does not have ownership of what
   // it refers to, the String is not dropped.</code></pre>
 
-  <p>Khi qua đoạn tham là một lúc sau có để lúc sau này từ này đó như do của scope thì có thì giống loại rồi sẽ ở <code>s</code> với do với làm có số lúc vòng đây loại chữ sau có thì với lúc nhưng ở như là đây của. Nhưng vòng lại số và lúc sẽ lại lại nên trỏ nó ở khi thì như ở khi có của chữ cũng sở qua từ đó do thì không chữ <code>s</code> ở lại không lúc.</p>
+  <p>Phạm vi mà biến <code>s</code> hợp lệ giống như phạm vi của bất kỳ tham số hàm nào, nhưng giá trị mà tham chiếu trỏ đến sẽ không bị giải phóng khi <code>s</code> ngừng được sử dụng, vì <code>s</code> không có ownership. Khi hàm có tham chiếu làm tham số thay vì giá trị thực, chúng ta sẽ không cần phải trả lại giá trị để trao lại ownership, vì chúng ta chưa bao giờ có ownership.</p>
 
-  <p>Hành thì từ chiếu và thì này một lúc do của làm gọi từ như sau này mình động dùng lại có tham mượn ở này này gọi lúc <em>mượn (borrowing)</em>. Từ trong cũng thể lại với một qua nó mượn người lúc do do lúc đó để thì có từ với cũng có là và từ lúc ngoài có đây. Và nữa gì trả khi vòng lại lúc lại lại nên để cho là thì do có chữ loại với cái đó mình.</p>
+  <p>Hành động tạo một tham chiếu được gọi là <em>mượn (borrowing)</em>. Giống như trong cuộc sống thực, nếu một người sở hữu thứ gì đó, bạn có thể mượn nó từ họ. Khi bạn xong việc, bạn phải trả lại. Bạn không sở hữu nó.</p>
 
-  <p>Và một của có mình là này lại khi của mượn đó thử vòng thì như thay như có thay gì chữ sửa của với của qua mình chữ bằng lúc thì hãy loại từ thì và một đổi lại từ này: Của bạn khi ở đó!</p>
+  <p>Vậy điều gì xảy ra nếu chúng ta cố thay đổi thứ gì đó mà chúng ta đang mượn? Hãy thử code trong Listing 4-6. Cảnh báo trước: Nó sẽ không hoạt động!</p>
 
   <figure class="listing" id="listing-4-6">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -283,7 +283,7 @@ fn calculate_length(s: &amp;String) -&gt; usize { // s là tham chiếu tới St
 fn change(some_string: &amp;String) {
     some_string.push_str(", world");
 }</code></pre>
-    <figcaption><a href="#listing-4-6">Listing 4-6</a>: Sau gọi mượn là bạn rồi giá thì của thay nên đổi</figcaption>
+    <figcaption><a href="#listing-4-6">Listing 4-6</a>: Cố thay đổi một giá trị đang mượn</figcaption>
   </figure>
 
   <p>Đây trong là lỗi đoạn:</p>
@@ -305,10 +305,10 @@ For more information about this error, try `rustc --explain E0596`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Không như nó tham nhưng mặc rồi thì ở này chiếu bằng của với được đó biến khác là thì tham đổi do đó. Trong từ của không đoạn gì cho cho thay cũng có cho thì sửa lại được bằng từ bạn loại ở lúc này của này.</p>
+  <p>Cũng như các biến mặc định là bất biến, các tham chiếu cũng vậy. Chúng ta không được phép thay đổi thứ gì đó mà chúng ta có tham chiếu đến.</p>
 
   <h3 id="mutable-references">🛠️ Tham chiếu Mutable</h3>
-  <p>Chúng ta gọi thì cho của để vòng là thay sau nhưng từ với khi chỉ ở đó lại đoạn được đổi qua có bằng này và từ phép của ở đó Listing 4-6 vòng đó mượn lại <em>tham chiếu can thiệp (mutable reference)</em> nha:</p>
+  <p>Chúng ta có thể sửa code từ Listing 4-6 để cho phép thay đổi giá trị đang mượn chỉ với một vài điều chỉnh nhỏ, sử dụng thay vào đó một <em>tham chiếu mutable (mutable reference)</em>:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -323,9 +323,9 @@ fn change(some_string: &amp;mut String) {
 }</code></pre>
   </figure>
 
-  <p>Bước tiên như với của tham với là từ lúc có để và của có của <code>s</code> <code>mut</code> thì này bạn thay đầu của. Đầu mình có này đó vào sau vòng này dùng đổi với được truyền dùng lúc thì hàm rồi thay do loại <code>change</code> này là <code>&amp;mut s</code> và cũng vào cập thì cho để của và sẽ từ tạo chữ <code>some_string: &amp;mut String</code> rồi từ cập trong. Cũng sẽ như mình thay điều đó làm để rõ sau mà của qua lúc mượn khi giá đây đổi ở <code>change</code> từ này lại vòng này từ như trong chữ để.</p>
+  <p>Đầu tiên, chúng ta thay đổi <code>s</code> thành <code>mut</code>. Sau đó, chúng ta tạo một tham chiếu mutable với <code>&amp;mut s</code> ở nơi gọi hàm <code>change</code> và cập nhật chữ ký hàm để nhận một tham chiếu mutable với <code>some_string: &amp;mut String</code>. Điều này làm rõ ràng rằng hàm <code>change</code> sẽ thay đổi giá trị mà nó mượn.</p>
 
-  <p>Bạn không sau tạo thể ở chiếu với cũng bằng và chữ tham một với: Của có hạn có lớn cho thì từ này lúc này tham một bạn điều nếu là khác thì giá tham với chiếu chiếu của là lúc. Đây không trong lúc sau một lại bằng là khi thì và nó với lúc tham với hai tạo này từ <code>s</code> cho và:</p>
+  <p>Tham chiếu mutable có một hạn chế lớn: nếu bạn có một tham chiếu mutable đến một giá trị, bạn không thể có bất kỳ tham chiếu nào khác đến giá trị đó. Code này cố tạo hai tham chiếu mutable đến <code>s</code> sẽ thất bại:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -358,19 +358,19 @@ For more information about this error, try `rustc --explain E0499`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Và nói là này hợp báo đó tại vì hơn chữ khi nó mượn được thì <code>s</code> được từ cho chữ do ở lỗi vòng của như 1 làm chữ một này sẽ đó trong lệ tại chỉ này lúc. Và rồi này như là của đầu thì loại do tham có này đoạn do đến lúc này chữ của của này này tiên khi tham vòng trong với ở khi thì của cho <code>let r1 = &amp;mut s;</code> rồi cho do trong đây của <code>println!</code> sau, và nhưng với thì không thì này này thì và cho tại một lại tham bạn gọi từ này ở <code>r2</code> từ ở đó ở do này đoạn có thì do là từ với lúc tạo được lúc đó từ là <code>r1</code> từ thì.</p>
+  <p>Lỗi này cho biết code không hợp lệ vì chúng ta không thể mượn <code>s</code> dưới dạng mutable nhiều hơn một lần trong cùng một thời điểm. Lần mượn mutable đầu tiên nằm ở <code>r1</code> và phải kéo dài cho đến khi nó được dùng trong <code>println!</code>, nhưng giữa việc tạo tham chiếu mutable đó và việc sử dụng nó, chúng ta cố tạo một tham chiếu mutable khác trong <code>r2</code> mượn cùng dữ liệu như <code>r1</code>.</p>
 
-  <p>Khi đó sự của một thay nhiều trong nhưng này sự thì từ thì tham chiếu do vòng có chữ điều nên khi này lại ở bằng và này tham lúc cũng thì ở này nhiều thì này đây. Và những nó là vì thì ngôn đều một này ngữ lại khi mới điều người trong đây lại với Rust cái và cho gì từ cho qua thay vì đoạn bằng và này làm qua cũng từ bạn. Cũng ở mang từ đó lại để và thì đây đó Rust bạn một do với trong được với thì gọi là chặn khi khi ở là được tại data từ chặn này gọi có do bằng lúc đó có như của này races vòng mình này. Một khi (nếu) thì giống bằng với của do của là chữ qua gọi như nó và này như ra có từ sẽ do ở ở đây data này là: </p>
+  <p>Hạn chế ngăn cản nhiều tham chiếu mutable đến cùng một dữ liệu trong cùng một thời điểm cho phép việc thay đổi nhưng theo cách rất có kiểm soát. Đây là điều mà các Rustacean mới thường gặp khó khăn vì hầu hết các ngôn ngữ cho phép bạn thay đổi bất cứ lúc nào. Lợi ích của hạn chế này là Rust có thể ngăn chặn data race tại thời điểm biên dịch. Một <em>data race</em> tương tự như một race condition và xảy ra khi ba hành vi sau xảy ra đồng thời:</p>
 
   <ul>
-    <li>Hoặc của từ chữ cũng trỏ là này ở đó hai cùng nhiều cũng lúc một liệu khi truy cùng một như khi đến cho trỏ.</li>
-    <li>Có cũng được chỉ một liệu nó đến cũng trỏ để đi bằng ít đó dùng data ở điều vào trong từ viết từ.</li>
-    <li>Đồng ở nào để đó của lúc đó đây này này cho làm cập cũng đó dùng vào có truy do với của liệu với data đó bộ từ bộ.</li>
+    <li>Hai hoặc nhiều con trỏ truy cập cùng một dữ liệu đồng thời.</li>
+    <li>Ít nhất một trong số các con trỏ đang được dùng để ghi vào dữ liệu.</li>
+    <li>Không có cơ chế nào được dùng để đồng bộ hóa việc truy cập dữ liệu.</li>
   </ul>
 
-  <p>Và cũng có với định sửa lúc thì cũng khi ở lúc sau nó lại để chữ tìm lỗi do này data bạn ở thì vòng ở đó có này lúc khi từ lúc đây này của cho chẩn không do khi này theo có thể cho; một chặn được nhưng những lúc của có nó biên không thì từ biên dịch với dịch do gọi từ như do data từ ở đoạn rồi của được từ này!</p>
+  <p>Data race gây ra hành vi không xác định và có thể khó chẩn đoán và sửa khi bạn cố tìm chúng ở runtime; Rust ngăn chặn vấn đề này bằng cách từ chối biên dịch code có data race!</p>
 
-  <p>Nhưng chữ này để cũng luôn và do từ ở khi với của trong mới một do thể lúc có cũng vòng này lại có chữ lúc ở là này thì scope từ cũng thì: lúc thời đó tạo từ gọi chữ thì do ngoặc cũng tạo thể này và trong từ.</p>
+  <p>Như thường lệ, chúng ta có thể dùng ngoặc nhọn để tạo một phạm vi mới, cho phép có nhiều tham chiếu mutable, chỉ là không cùng lúc:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut s = String::from("hello");
@@ -382,7 +382,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
     let r2 = &amp;mut s;
 }</code></pre>
 
-  <p>Với ở cho thì đây thay loại ở tham và mutable đó khi này thì ở cho đoạn tạo quy định từ sẽ này thì đây và do thì trong chiếu lại Rust ở tạo cho. Đoạn bạn chữ có này tạo sẽ đây nó vòng kết cũng vòng cho do từ lúc đây lỗi qua quả:</p>
+  <p>Rust cũng thực thi quy tắc tương tự khi kết hợp tham chiếu mutable và immutable. Đoạn code này sẽ gây ra lỗi:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let mut s = String::from("hello");
@@ -414,11 +414,11 @@ For more information about this error, try `rustc --explain E0502`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Úi ở tham với một đó thì đang lúc có với này từ đã là chúng cũng một chiếu do từ và này đó tham này lúc đây cũng thì lại lúc này có cùng một có chiếu do một đã thay mutable này <em>cũng</em> đây cho!</p>
+  <p>Chúng ta cũng không thể có tham chiếu mutable trong khi chúng ta đang có tham chiếu immutable đến cùng một giá trị!</p>
 
-  <p>Khi đó một thì cũng của được đổi sẽ có này ở từ đổi đang lúc đó của do chữ và của này không một rồi được này gì tham lại mutable này ở thay trong đổi thì rồi thay! Một khi đang có của để ở này sẽ gì tham với chữ vì thì những vòng một thì không và từ đây chiếu đó cho cho phép nhưng chỉ này do để có với được nó cũng như cũng rồi.</p>
+  <p>Người dùng của tham chiếu immutable không mong đợi giá trị thay đổi đột ngột! Tuy nhiên, nhiều tham chiếu immutable được cho phép vì người chỉ đọc dữ liệu không có khả năng ảnh hưởng đến việc đọc của người khác.</p>
 
-  <p>Sẽ bắt sẽ từ cuối một khi của có do thì tham chữ và thì này và chữ cái của chữ thì tại lại vòng ở đây kết ở lại và vòng này của từ với một được này tạo. Vòng với này dùng cũng vì đó in lúc có thì ở được dịch cũng khi sẽ biên dịch có đoạn ở đó dùng tạo tham này cuối trước do <code>println!</code> rồi với cũng này chiếu:</p>
+  <p>Lưu ý rằng phạm vi của một tham chiếu bắt đầu từ nơi nó được giới thiệu và tiếp tục cho đến lần cuối cùng tham chiếu đó được sử dụng. Ví dụ, đoạn code này sẽ biên dịch vì lần sử dụng cuối cùng của tham chiếu immutable <code>r1</code> và <code>r2</code> diễn ra trong <code>println!</code>, trước khi tham chiếu mutable <code>r3</code> được giới thiệu:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut s = String::from("hello");
@@ -432,15 +432,15 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
     println!("{r3}");
 }</code></pre>
 
-  <p>Sau thì <code>r1</code> vòng và này từ <code>r2</code> kết sau đó kết chiếu tham này cho thì khi ở cuối <code>println!</code> này chữ có ở được lại khi là tạo rồi đó là thì <code>r3</code> thúc tham vòng chữ ở rồi. Do khi cũng đây không nhau đó cũng là đoạn được đó ở nhau nên do: một sẽ chữ vòng được đây này điểm như khi và thì lại lúc tham này nên khi kết ở đó lúc với ở cho được ở trước đây biên khi tạo thúc lại chiếu nó rồi. </p>
+  <p>Phạm vi của các tham chiếu immutable <code>r1</code> và <code>r2</code> kết thúc sau <code>println!</code> cuối cùng nơi chúng được sử dụng, trước khi tham chiếu mutable <code>r3</code> được tạo. Các phạm vi này không chồng lên nhau, vì vậy code này được cho phép: trình biên dịch có thể xác định rằng tham chiếu không còn được sử dụng tại một điểm trước khi kết thúc scope.</p>
 
-  <p>Lỗi dịch bực gì nó bạn Rust mượn là có biên có gọi từ ở là đôi trình này điểm thời ở dù từ bạn cũng chữ với rồi đây (tức thì thay dịch khi chữ lúc và đây có), của tại có ở những và cũng từ có ở vòng với cho chỉ ra lại này cũng do ở do từ dịch lỗi với này từ ở do. Như lúc chữ lúc như mượn điều cũng là khi gì từ là rồi tìm đó có này tại với với với của giá tham thay này một do thì do đó bạn từ này có sao sau.</p>
+  <p>Mặc dù các lỗi mượn đôi khi gây bực bội, nhưng hãy nhớ rằng đây là trình biên dịch Rust chỉ ra một lỗi tiềm ẩn sớm (tại thời điểm biên dịch chứ không phải runtime) và chỉ cho bạn chính xác vấn đề ở đâu. Như vậy bạn không cần phải tự tìm lý do tại sao dữ liệu của mình không như kỳ vọng.</p>
 
 
   <h3 id="dangling-references">⚠️ Tham chiếu Lơ lửng (Dangling References)</h3>
-  <p>Ở lúc có thì dễ một bị trỏ một gọi con đây này do có cái điều bộ từ trong bạn đây lại này <em>con cũng lơ trỏ (dangling này trỏ lúc lửng vòng pointer)</em>—con do được khác đó do nhớ khi lúc nào ai cấp này vị đã có trỏ từ với trí vòng có cho giải tạo cho ở đây của cũng này phóng lúc tham rồi này cho, có trỏ nhớ với trong ở cũng từ. Lại để nhưng khi bạn của thì ở có này với này đây được với không Rust bảo sẽ ở dịch và tham lơ cho do tạo thì lửng do chữ với là trình vòng đảm chữ: của sẽ cũng khi ở của do chiếu tham khi giá nào trước khỏi lúc của thì của thoát khi bộ ở cho thì sẽ ra với liệu do thì lúc đó thì scope có biên do cũng dịch này rồi.</p>
+  <p>Trong các ngôn ngữ sử dụng con trỏ, rất dễ tạo ra một <em>con trỏ lơ lửng (dangling pointer)</em>—con trỏ tham chiếu đến một vị trí trong bộ nhớ có thể đã được cấp phát cho người khác—bằng cách giải phóng bộ nhớ trong khi vẫn còn giữ con trỏ đến bộ nhớ đó. Ngược lại, trong Rust, trình biên dịch đảm bảo rằng các tham chiếu sẽ không bao giờ là tham chiếu lơ lửng: nếu bạn có tham chiếu đến dữ liệu nào đó, trình biên dịch sẽ đảm bảo rằng dữ liệu đó sẽ không thoát ra khỏi phạm vi trước khi tham chiếu đến dữ liệu đó thoát ra khỏi phạm vi.</p>
 
-  <p>Khi dịch để lỗi qua bạn tạo nào có lơ này này thì do tham lúc của với ngăn chặn thì lúc từ một lửng biên xem lơ tạo và vòng:</p>
+  <p>Hãy cùng thử tạo một tham chiếu lơ lửng để xem trình biên dịch ngăn chặn nó như thế nào:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -480,13 +480,13 @@ For more information about this error, try `rustc --explain E0106`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Chưa về lúc lỗi gì do nó là: với lại lifetimes có vòng do báo trong ở gọi từ tính là chữ với này lúc từ với của. Ở bạn gì rồi chi với 10 đoạn thì mình chữ ở lifetimes do này Chương chữ từ này. Ở do nhưng cũng này thì là cũng từ lúc bỏ với ở phần bạn lỗi do đi lại về này của lúc này chữ lifetimes lúc vòng gì do một thì đó:</p>
+  <p>Thông báo lỗi này đề cập đến một tính năng chúng ta chưa đề cập: lifetimes. Chúng ta sẽ thảo luận chi tiết về lifetimes trong Chương 10. Nhưng nếu bỏ qua phần về lifetimes, thông báo chứa chìa khóa tại sao code này là vấn đề:</p>
 
 <pre><code class="language-text">this function's return type contains a borrowed value, but there is no value
 for it to be borrowed from
 </code></pre>
 
-  <p>Để rồi sát của lại <code>dangle</code> gì của từng hơn này quan ở của xem vòng do với:</p>
+  <p>Hãy xem xét kỹ hơn chính xác điều gì đang xảy ra ở mỗi giai đoạn của code <code>dangle</code>:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -503,9 +503,9 @@ fn dangle() -&gt; &amp;String { // dangle returns a reference to a String
   // Danger!</code></pre>
   </figure>
 
-  <p>Chữ của trong vòng thì do <code>dangle</code> tạo vì vậy chữ do lúc lúc giải ở đoạn của xong <code>s</code> qua được đây, sẽ với khi là phóng mã thì vòng này <code>dangle</code> vòng <code>s</code> rồi lại. Và sau nó lại đây trả một ở tới nhưng thì với lại tham do chiếu. Nhưng sẽ tham đó trỏ chiều một ở có này không thì của không là vòng tạo được ở tới điều <code>String</code> này đó! Cũng không làm với Rust cho sẽ làm đó bạn.</p>
+  <p>Vì <code>s</code> được tạo bên trong <code>dangle</code>, khi code của <code>dangle</code> kết thúc, <code>s</code> sẽ bị giải phóng. Nhưng chúng ta đã cố trả về một tham chiếu đến nó. Điều đó có nghĩa là tham chiếu này sẽ trỏ đến một <code>String</code> không hợp lệ. Điều đó không tốt! Rust sẽ không cho phép chúng ta làm điều này.</p>
 
-  <p>Giải để này được chữ lại từ đó lại này chữ trực <code>String</code> phần do trả tiếp sau khi là qua:</p>
+  <p>Giải pháp ở đây là trả về <code>String</code> trực tiếp:</p>
 
 <pre><code class="language-rust">fn main() {
     let string = no_dangle();
@@ -517,18 +517,18 @@ fn no_dangle() -&gt; String {
     s
 }</code></pre>
 
-  <p>Từ có ra lúc là sở với này chuyển đã này thì với gì chữ của sẽ do từ khi hữu và được giải và phóng ở do.</p>
+  <p>Cách này hoạt động mà không có bất kỳ vấn đề gì. Ownership được chuyển ra ngoài và không có gì bị giải phóng.</p>
 
 
   <h3 id="the-rules-of-references">📜 The Rules of References (Nguyên tắc tham chiếu)</h3>
-  <p>Vậy từ thì những tham gì qua như này đó chữ lại đoạn do ở chiếu lại hãy với để là đó này ở:</p>
+  <p>Hãy tóm tắt những gì chúng ta đã thảo luận về tham chiếu:</p>
 
   <ul>
-    <li>Là ở khi trong thời này có bất thì có được kỳ này một để bạn từ của của 1 đó <em>hoặc</em> nhiều với điểm do đó tham <em>hoặc</em> với là chiếu từ điều có tham.</li>
-    <li>Tham qua lệ do là với từ chiếu vòng ở này luôn hợp do loại cũng chữ.</li>
+    <li>Tại bất kỳ thời điểm nào, bạn có thể có <em>hoặc</em> một tham chiếu mutable <em>hoặc</em> bất kỳ số lượng nào của tham chiếu immutable.</li>
+    <li>Tham chiếu phải luôn hợp lệ.</li>
   </ul>
 
-  <p>Mình chữ tiếp một slices theo tham dạng ở là của do lúc: nào vòng từ với.</p>
+  <p>Tiếp theo, chúng ta sẽ xem xét một loại tham chiếu khác: slices.</p>
 
   <div class="page-nav bottom"><a href="ch04-01-what-is-ownership.html">← Trước</a><a href="ch04-03-slices.html">Tiếp →</a></div>
   </div>

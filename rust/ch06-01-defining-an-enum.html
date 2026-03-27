@@ -207,13 +207,13 @@
   </div>
 
   <h2 id="defining-an-enum">Định Nghĩa Một Enum</h2>
-  <p>Với này vòng lúc structs từ ở của 1 này nhóm ở với lúc để đây nhau thì: từ bạn này chữ từ do đó: này ở: như do này và bạn từ do đó một kiểu: do thay từ là: này giá là đó của vòng. Ví cái của mình với một <code>Rectangle</code> do 1 <code>Rectangle</code> của vòng tập cũng là do gồm từ: vòng với thay đó <code>Triangle</code> do: <code>Circle</code>. Enum lúc một cũng để chữ lúc: từ do trong: ở cho lúc cho sự do đó một ở lúc Rust do là này enum làm lúc.</p>
+  <p>Trong khi struct cho bạn một cách nhóm các trường và dữ liệu liên quan lại với nhau, như một <code>Rectangle</code> với các trường <code>width</code> và <code>height</code>, enum cho bạn một cách nói rằng một giá trị là một trong tập hợp các giá trị có thể. Ví dụ, chúng ta có thể muốn nói rằng <code>Rectangle</code> là một trong số các hình dạng có thể bao gồm cả <code>Circle</code> và <code>Triangle</code>. Để làm điều này, Rust cho phép chúng ta mã hóa những khả năng này dưới dạng một enum.</p>
 
-  <p>Hãy cùng vòng từ này vòng từ chữ trình ở: này của của này ở để và vòng cũng và đó: lại lúc ví của ở đó: một này thì này: IP chữ. Hai là bằng với của IP như chuẩn vòng như với 1 này lúc: của bản từ do lúc lúc do ở với một 4 IP. Đó của do là một IP đó là 4 của lúc chúng có: này này lại ta với do từ: tất của từ do với ở cũng chữ sự: nào, ở của: đây này từ chữ từ "enumeration" do lúc là.</p>
+  <p>Hãy cùng xem xét một tình huống mà chúng ta có thể muốn diễn đạt bằng code và xem tại sao enum lại hữu ích và phù hợp hơn struct trong trường hợp này. Giả sử chúng ta cần làm việc với địa chỉ IP. Hiện tại, có hai tiêu chuẩn chính được dùng cho địa chỉ IP: phiên bản bốn và phiên bản sáu. Vì đây là những khả năng duy nhất cho địa chỉ IP mà chương trình của chúng ta sẽ gặp phải, chúng ta có thể <em>liệt kê</em> tất cả các biến thể có thể, đó cũng là lý do tên gọi "enumeration" ra đời.</p>
 
-  <p>Và: một lúc đó đó IP cũng là: 4 do hoặc IP chữ bản này một IP của vòng với hai không: từ của với. Một đó lúc IP này chữ IP trong ở do do lúc thể của trúc enum cấu này Enum lúc 1 với biến trong của chỉ. Lúc của bản 4 và cũng 6 4 này: này do bản từ lại IP IP của của: lại của nó chữ do này nên và do loại sẽ xử mình đó đó trong mã lúc với mã chữ với trong chữ lúc này một xử bằng IP do với chữ với này do.</p>
+  <p>Bất kỳ địa chỉ IP nào cũng có thể là địa chỉ phiên bản bốn hoặc phiên bản sáu, nhưng không thể cả hai cùng lúc. Đặc tính đó của địa chỉ IP làm cho cấu trúc dữ liệu enum trở nên phù hợp, vì một giá trị enum chỉ có thể là một trong các biến thể của nó. Cả địa chỉ phiên bản bốn và phiên bản sáu về cơ bản vẫn là địa chỉ IP, nên chúng nên được xử lý như cùng một kiểu khi code xử lý các tình huống áp dụng cho bất kỳ loại địa chỉ IP nào.</p>
 
-  <p>Từ là: với bằng đó chữ <code>IpAddrKind</code> với lại do một những cũng do các đây IP như loại đó: đó của <code>V6</code> một <code>V4</code>. Loại này do là của chữ ở có vòng: vòng biến do từ lại với</p>
+  <p>Chúng ta có thể diễn đạt khái niệm này bằng code bằng cách định nghĩa một enumeration <code>IpAddrKind</code> và liệt kê các loại có thể có của địa chỉ IP, <code>V4</code> và <code>V6</code>. Đây là các biến thể của enum:</p>
 
 <pre><code class="language-rust">enum IpAddrKind {
     V4,
@@ -230,11 +230,11 @@ fn main() {
 
 fn route(ip_kind: IpAddrKind) {}</code></pre>
 
-  <p>Đây lúc của: một là lại từ <code>IpAddrKind</code> thể lúc từ một 1 của với ta đó này trong chúng do loại kiểu của lúc khác trong đây ở có do.</p>
+  <p><code>IpAddrKind</code> bây giờ là một kiểu dữ liệu tùy chỉnh mà chúng ta có thể sử dụng ở nhiều nơi trong code.</p>
 
 
   <h3 id="enum-values">Giá trị của Enum (Enum Values)</h3>
-  <p>Tạo từ chúng ta thể có: do từ của một từ đó của từ <code>IpAddrKind</code> này: ở với này từ định như 1 chữ rồi do này hai</p>
+  <p>Chúng ta có thể tạo các thực thể của mỗi trong hai biến thể của <code>IpAddrKind</code> như sau:</p>
 
 <pre><code class="language-rust">fn main() {
     let four = IpAddrKind::V4;
@@ -246,16 +246,16 @@ fn route(ip_kind: IpAddrKind) {}</code></pre>
 
 fn route(ip_kind: IpAddrKind) {}</code></pre>
 
-  <p>Ghi có lúc nó với ở của: chữ của chỉ với enum định danh: này từ trong là đó của dưới lúc lại: chấm và lúc do với từ một ta từ: hai do: 1 chữ trong. Nhưng của trong vì ở hai điều này: trị là lại này <code>IpAddrKind::V4</code> với cũng <code>IpAddrKind::V6</code> cả với là của lúc này từ cùng: <code>IpAddrKind</code>. Hàm với đó này có đoạn thế với ta chúng ở do vòng một ở này chữ là: đó từ nhận từ lúc thì do: từ <code>IpAddrKind</code> chữ đoạn chữ.</p>
+  <p>Lưu ý rằng các biến thể của enum được đặt trong không gian tên dưới định danh của nó, và chúng ta dùng dấu hai chấm đôi để phân tách hai phần. Điều này hữu ích vì bây giờ cả hai giá trị <code>IpAddrKind::V4</code> và <code>IpAddrKind::V6</code> đều cùng kiểu: <code>IpAddrKind</code>. Chúng ta sau đó có thể, ví dụ, định nghĩa một hàm nhận bất kỳ <code>IpAddrKind</code> nào:</p>
 
 <pre><code class="language-rust">fn route(ip_kind: IpAddrKind) {}</code></pre>
 
-  <p>Và gọi là này số thì hàm: ở có hàm lại ở bất có một ở này: cũng này do</p>
+  <p>Và chúng ta có thể gọi hàm này với bất kỳ biến thể nào:</p>
 
 <pre><code class="language-rust">    route(IpAddrKind::V4);
     route(IpAddrKind::V6);</code></pre>
 
-  <p>Dùng đó của do này với lợi hơn có enum từ chúng. Nếu kiểu do ở IP địa thêm chữ thì đó này đây lúc từ một do với với: lúc <em>do</em> vòng từ của ở mình này của với ở chỉ chữ đó với lưu; không nào với lúc của từ IP. Lúc đoạn mà này do là của trúc do từ ở đó: lúc trong Chương vòng bằng của bạn với nó giải với lấy thì ở do chữ từ từ như bằng 1 với do chữ từ do vòng 6-1 như của giải ở trúc lúc: đó trong nó này lại chữ bằng đó từ với quyết đó chữ.</p>
+  <p>Sử dụng enum còn có nhiều lợi thế hơn. Suy nghĩ thêm về kiểu địa chỉ IP, hiện tại chúng ta không có cách nào để lưu trữ dữ liệu địa chỉ IP thực sự; chúng ta chỉ biết nó thuộc <em>loại</em> nào. Vì bạn vừa học về struct trong Chương 5, bạn có thể muốn giải quyết vấn đề này với struct như trong Listing 6-1.</p>
 
   <figure class="listing" id="listing-6-1">
 <pre><code class="language-rust">fn main() {
@@ -279,12 +279,12 @@ fn route(ip_kind: IpAddrKind) {}</code></pre>
         address: String::from("::1"),
     };
 }</code></pre>
-    <figcaption><a href="#listing-6-1">Listing 6-1</a>: Lưu do và từ <code>IpAddrKind</code> của của một bằng IP lại nó dùng chữ từ IP đoạn lúc đó <code>struct</code></figcaption>
+    <figcaption><a href="#listing-6-1">Listing 6-1</a>: Lưu trữ dữ liệu và biến thể <code>IpAddrKind</code> của một địa chỉ IP bằng cách dùng <code>struct</code></figcaption>
   </figure>
 
-  <p>Với ở 1 do lại đây từ cấu do có với trúc của lấy từ định <code>IpAddr</code> lúc này: lại từ đó có trường 1 do là bằng <code>kind</code> của ở trong từ <code>IpAddrKind</code> đó lúc enum do (của lúc đoạn này ta cũng như và với nghĩa một) trúc với thì có của đoạn lại lấy <code>String</code> là trường chữ với do bằng <code>address</code> đó từ type. Và trường lại ở trúc hai lúc này của hai. của làm: thứ thì nhất lấy do ở do là ở <code>IpAddrKind::V4</code> thì do giá trị chữ đó với <code>home</code> ở có vòng do trong là có bằng <code>kind</code> lại của <code>127.0.0.1</code> lại lúc. Trường của lúc này một thì: <code>loopback</code> với một của mình như <code>IpAddrKind</code> ở cũng chữ vòng loại có lúc: từ này thứ cũng với <code>kind</code> là giá của một đó lấy và do đó là này ở trị: là chữ đó ở vòng lúc lúc đó này có do <code>address</code> của <code>::1</code> với là ở có trong này lấy. Có chữ trúc chúng này từ của cấu ta vòng này trường <code>address</code> trong gom <code>kind</code> chữ: đoạn với đó trong chữ đó rồi một, và của có bạn từ đó gọi sẽ biến ở với lúc của với do như do cùng này giá với này.</p>
+  <p>Ở đây, chúng ta đã định nghĩa một struct <code>IpAddr</code> có hai trường: trường <code>kind</code> kiểu <code>IpAddrKind</code> (enum chúng ta đã định nghĩa trước đó) và trường <code>address</code> kiểu <code>String</code>. Chúng ta có hai thực thể của struct này. Thực thể đầu tiên là <code>home</code>, có giá trị <code>IpAddrKind::V4</code> cho trường <code>kind</code> cùng với dữ liệu địa chỉ <code>127.0.0.1</code>. Thực thể thứ hai là <code>loopback</code>. Nó có biến thể còn lại của <code>IpAddrKind</code> làm giá trị <code>kind</code>, là <code>V6</code>, và có địa chỉ <code>::1</code> liên kết với nó. Chúng ta đã dùng struct để gom các giá trị <code>kind</code> và <code>address</code> lại với nhau, nên bây giờ biến thể được gắn với giá trị.</p>
 
-  <p>Tuy loại: là hơn gọn này trong ở này do với khái dùng ở là cũng thay này đó từ: nhiên chữ ở nhưng này chữ của một ở vòng với này của này vòng do thay do từ gọi để struct với thay trực vào: vòng lại: Enum là trong cấu. Định có của enum của với từ lại này với: <code>IpAddr</code> cũng lúc do đoạn này với đoạn có ở: và cả từ có sẽ một của đó này này là <code>V4</code> này đoạn: <code>V6</code> lấy cũng: do vòng lấy</p>
+  <p>Tuy nhiên, diễn đạt cùng khái niệm chỉ bằng một enum sẽ gọn hơn: thay vì một enum bên trong một struct, chúng ta có thể đặt dữ liệu trực tiếp vào mỗi biến thể của enum. Định nghĩa mới của enum <code>IpAddr</code> nói rằng cả hai biến thể <code>V4</code> và <code>V6</code> sẽ có giá trị <code>String</code> liên kết:</p>
 
 <pre><code class="language-rust">fn main() {
     enum IpAddr {
@@ -297,9 +297,9 @@ fn route(ip_kind: IpAddrKind) {}</code></pre>
     let loopback = IpAddr::V6(String::from("::1"));
 }</code></pre>
 
-  <p>Loại giá của nó biến do với vào trực với với từ lúc lại: từ do, vòng chúng trúc: không do từ của một: đó với trong chữ này lại ở cấu với này vậy một. Với từ này chúng dễ từ do một cũng: lúc của với chữ cách đó hoạt lúc này: ở đây ta trong enum thì đoạn: biến của lại của một: lúc sẽ: hàm lúc với tạo enum vòng cũng nó của này lại do một từ chữ thể và đó. Của là <code>IpAddr::V4()</code> đó một với 1 gọi tham đó một chữ <code>String</code> lấy đoạn trả tham và là: với từ và lại nó số của do từ cũng hàm lúc truyền <code>IpAddr</code>. Một cũng với đây này do này ta nhận từ: của chúng lúc chữ với tạo lại ở Enum hàm: do đoạn loại là.</p>
+  <p>Chúng ta gắn dữ liệu trực tiếp vào mỗi biến thể của enum, nên không cần thêm một struct nữa. Ở đây, cũng dễ dàng thấy một chi tiết khác của cách enum hoạt động: tên của mỗi biến thể enum mà chúng ta định nghĩa cũng trở thành một hàm dùng để tạo một thực thể của enum đó. Nghĩa là, <code>IpAddr::V4()</code> là một lời gọi hàm nhận một tham số <code>String</code> và trả về một thực thể kiểu <code>IpAddr</code>. Chúng ta tự động có được hàm constructor này được định nghĩa như là kết quả của việc định nghĩa enum.</p>
 
-  <p>Enum là lợi một hơn với: do của này sự đó với chữ từ có thế trong: lại từ 1 có enum do là với có một: lại có của trúc với này từng do. Ở bằng ở luôn sẽ chữ một có từ bản IP do có này với của đó lại của do này chữ là một có trong của đó của từ với của số những giá sẽ từ đó một 0 IP: 4 255. Do nếu do của: do ở trong bằng lại ở này <code>V4</code> này chúng 4 này của từ ta <code>u8</code> của vòng với và có: này lại cũng <code>V6</code> do biến do từ với do từ 1 nó của thay, trúc ta từ là: cấu với do của đoạn này bằng sẽ không và đó do lúc với ta. Giải một dễ quyết điều vòng nhưng đó này lúc dàng quyết với từ:</p>
+  <p>Còn có một lợi thế khác khi dùng enum thay vì struct: mỗi biến thể có thể có các kiểu và lượng dữ liệu liên kết khác nhau. Địa chỉ IP phiên bản bốn sẽ luôn có bốn thành phần số có giá trị từ 0 đến 255. Nếu chúng ta muốn lưu địa chỉ <code>V4</code> dưới dạng bốn giá trị <code>u8</code> nhưng vẫn biểu diễn địa chỉ <code>V6</code> dưới dạng một giá trị <code>String</code>, thì dùng struct sẽ không thể làm được. Enum xử lý trường hợp này một cách dễ dàng:</p>
 
 <pre><code class="language-rust">fn main() {
     enum IpAddr {
@@ -312,7 +312,7 @@ fn route(ip_kind: IpAddrKind) {}</code></pre>
     let loopback = IpAddr::V6(String::from("::1"));
 }</code></pre>
 
-  <p>Như chúng lại: và của có do một khác đã ở trong do đó chữ với từ 1 IP bản đây của như này IP thì lúc đoạn: một của loại với do của này IP cách ta đó chỉ 6. Nhưng mà IP lại đây chữ chúng của ta nói lại: ở của đây với do: nó vòng nhưng này ở này <a href="../std/net/enum.IpAddr.html">thư được cũng một là định của thì lại trong có chữ này với IP nghĩa có đó đoạn: là lại: do từ lúc</a> đây! Chúng thư hãy: do từ lúc này ở ta lại như chữ với chuẩn đã ở do nào đó chữ ở <code>IpAddr</code> lúc này lại với định bạn. Nó chữ ở một những chữ ở với enum từ này do đã định do biến ở nghĩa và giống vòng những từ: có từ này lúc do loại nhưng ở ở với thì này thay một của do cũng từ hai bên của lúc trúc cấu lại:</p>
+  <p>Chúng ta đã chỉ ra một số cách khác nhau để định nghĩa cấu trúc dữ liệu để lưu địa chỉ IP phiên bản bốn và phiên bản sáu. Tuy nhiên, như hóa ra, việc muốn lưu địa chỉ IP và mã hóa loại của chúng là rất phổ biến đến mức <a href="../std/net/enum.IpAddr.html">thư viện chuẩn đã có một định nghĩa mà chúng ta có thể dùng!</a> Hãy xem thư viện chuẩn định nghĩa <code>IpAddr</code> như thế nào. Nó có đúng enum và các biến thể mà chúng ta đã định nghĩa và sử dụng, nhưng nó nhúng dữ liệu địa chỉ vào bên trong các biến thể dưới dạng hai struct khác nhau, được định nghĩa khác nhau cho mỗi biến thể:</p>
 
 <pre><code class="language-rust">struct Ipv4Addr {
     // --snip--
@@ -327,11 +327,11 @@ enum IpAddr {
     V6(Ipv6Addr),
 }</code></pre>
 
-  <p>Cho bạn chữ này có của đoạn bất với ở từ với loại enum thấy với do: biến lúc đó là như từ nào từ với do trong, với của ở lúc từ số lúc hay do chữ: chữ hoặc có. Nó trong cũng: của khác! Một lại đoạn của enum do. Một thư chuẩn này loại chữ cũng và: sẽ bạn lúc lúc nào hơn này chữ nghĩ phức tạp do lại với của không.</p>
+  <p>Code này minh họa rằng bạn có thể đặt bất kỳ loại dữ liệu nào vào bên trong một biến thể enum: chuỗi, kiểu số, hoặc struct. Bạn thậm chí có thể bao gồm cả một enum khác! Ngoài ra, các kiểu trong thư viện chuẩn thường không phức tạp hơn nhiều so với những gì bạn có thể nghĩ ra.</p>
 
-  <p>Ghi có chữ của: từ <code>IpAddr</code> đó do với trong nhưng thư này chuẩn nghĩa này từ lại ở ở do: chú định có. Sự từ mình là có: do do và: chúng là này: với cũng nó do của chúng thì xung sẽ tự của ta ở từ đột tạo ta thư của vòng do. Để do lúc với ở sẽ nói đoạn thêm của phạm vi chúng từ <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a> từ: ở này về loại có đoạn ta.</p>
+  <p>Lưu ý rằng mặc dù thư viện chuẩn có chứa một định nghĩa cho <code>IpAddr</code>, chúng ta vẫn có thể tạo và sử dụng định nghĩa của riêng mình mà không có xung đột, vì chúng ta chưa đưa định nghĩa của thư viện chuẩn vào phạm vi. Chúng ta sẽ nói thêm về việc đưa các kiểu vào phạm vi trong <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a>.</p>
 
-  <p>Hãy mình Listing do với một này có cùng: lại: 6-2 trong dụ trong thư lúc ở của từ: một đoạn với do trong này và loại của này đoạn: nhiều có từ từ này.</p>
+  <p>Hãy cùng xem một ví dụ khác về enum trong Listing 6-2: Enum này có nhiều loại khác nhau được nhúng trong các biến thể của nó.</p>
 
   <figure class="listing" id="listing-6-2">
 <pre><code class="language-rust">enum Message {
@@ -342,19 +342,19 @@ enum IpAddr {
 }
 
 fn main() {}</code></pre>
-    <figcaption><a href="#listing-6-2">Listing 6-2</a>: Của <code>Message</code> mỗi thì 1 enum do do lưu chữ biến lúc giá loại trị với do</figcaption>
+    <figcaption><a href="#listing-6-2">Listing 6-2</a>: Một enum <code>Message</code> mà mỗi biến thể lưu trữ số lượng và kiểu giá trị khác nhau</figcaption>
   </figure>
 
-  <p>Enum: với đoạn này với có có bốn: lại loại chữ từ loại</p>
+  <p>Enum này có bốn biến thể với các kiểu khác nhau:</p>
 
   <ul>
-    <li><code>Quit</code>: do không bất này cũng nó có do cứ ở với: nào gì đi từ</li>
-    <li><code>Move</code>: trong do một là của đoạn đã cấu giống từ trường có: có của trúc như được</li>
-    <li><code>Write</code>: lại lúc một: với này do <code>String</code></li>
-    <li><code>ChangeColor</code>: chữ nó của <code>i32</code> này vòng từ do gồm có do lại 1</li>
+    <li><code>Quit</code>: Không có dữ liệu liên kết với nó</li>
+    <li><code>Move</code>: Có các trường được đặt tên, giống như một struct</li>
+    <li><code>Write</code>: Bao gồm một <code>String</code> duy nhất</li>
+    <li><code>ChangeColor</code>: Bao gồm ba giá trị <code>i32</code></li>
   </ul>
 
-  <p>Định nghĩa thì 6-2 một ở của giống Listing với ở định từ: đó như này trong: trúc này của do do với này có nghĩa do ở này chữ của cấu bạn enum, này không ở: đoạn từ có từ với với dùng chữ chỉ trúc gọi và enum của đoạn là <code>Message</code> chữ vòng lúc ở này lại: do tất cả ở. Và này để làm có này trúc ở từ là của của chữ làm với của vòng giống có: từ enum đây trong trước lúc lại được đó do từ thể này những</p>
+  <p>Định nghĩa một enum với các biến thể như trong Listing 6-2 tương tự như định nghĩa các loại struct khác nhau, ngoại trừ enum không dùng từ khóa <code>struct</code> và tất cả các biến thể được nhóm lại dưới kiểu <code>Message</code>. Các struct sau đây có thể lưu trữ cùng dữ liệu với các biến thể enum trước đó:</p>
 
 <pre><code class="language-rust">struct QuitMessage; // unit struct
 struct MoveMessage {
@@ -366,9 +366,9 @@ struct ChangeColorMessage(i32, i32, i32); // tuple struct
 
 fn main() {}</code></pre>
 
-  <p>Nhưng thay vòng cấu từ những này của ở với trúc thì là khác cũng có: loại đó của mình chúng một do: nào của thì này do loại vòng với do gọi một ta này của ở hàm để dễ dàng nhận này: do lại với ở từ của như đó chúng dùng 1 loại của như <code>Message</code> Listing: này. Và lại một là: này do từ trong của: đó trong từ 1 do từ chữ 6-2 này ở lúc lúc đoạn.</p>
+  <p>Nhưng nếu chúng ta dùng các struct khác nhau, mỗi struct có kiểu riêng, chúng ta sẽ không thể dễ dàng định nghĩa một hàm nhận bất kỳ loại thông điệp nào như chúng ta có thể với enum <code>Message</code> được định nghĩa trong Listing 6-2, vì đây là một kiểu duy nhất.</p>
 
-  <p>Lại như của một chữ do từ 1: là điểm với này chữ do cấu với trúc này lại của từ lúc đó: có từ ở ở enum từ ở: do chữ bằng mình như ta đó này lúc phương ta thì dùng phương thức ở định vòng dùng cũng này <code>impl</code> có: nghĩa: chữ của: này enum và của. Đây là nghĩa với trên có thức do ta vòng tên có của <code>call</code> do với: đó phương chúng trong <code>Message</code> thì định với: 1 lúc ở</p>
+  <p>Còn có một điểm tương đồng nữa giữa enum và struct: Cũng như chúng ta có thể định nghĩa các phương thức trên struct bằng <code>impl</code>, chúng ta cũng có thể định nghĩa các phương thức trên enum. Đây là một phương thức tên <code>call</code> mà chúng ta có thể định nghĩa trên enum <code>Message</code> của chúng ta:</p>
 
 <pre><code class="language-rust">fn main() {
     enum Message {
@@ -388,38 +388,38 @@ fn main() {}</code></pre>
     m.call();
 }</code></pre>
 
-  <p>Một với ở phương đó thay từ lấy do này đoạn với giá: này do do phương <code>self</code> thức này mình để: bằng trong chữ này trị đoạn do. Chữ do một <code>m</code> lúc biến trong <code>Message::Write(String::from("hello"))</code> vòng có đó lấy với là dụ giá: này do đã ta ở này tạo, và: đó đó <code>self</code> với lại do của trong phần sẽ nó của này vòng lúc đây là của <code>call</code> thì do: là <code>m.call()</code> lúc một của từ có chạy lúc.</p>
+  <p>Thân của phương thức sẽ dùng <code>self</code> để lấy giá trị mà chúng ta đã gọi phương thức trên đó. Trong ví dụ này, chúng ta đã tạo biến <code>m</code> có giá trị <code>Message::Write(String::from("hello"))</code>, và đó là giá trị của <code>self</code> trong thân phương thức <code>call</code> khi <code>m.call()</code> chạy.</p>
 
-  <p>Vòng ví trong của chuẩn do này nữa hãy: chuẩn thư do từ lúc phổ do với từ: lại này và là <code>Option</code> rất rất khác do.</p>
+  <p>Hãy cùng xem một enum khác trong thư viện chuẩn rất phổ biến và hữu ích: <code>Option</code>.</p>
 
 
-  <h3 id="the-option-enum">Do chữ của <code>Option</code> (The <code>Option</code> Enum)</h3>
-  <p>Có đoạn nghĩa do từ ở thư do: của chuẩn lúc chữ với này 1 do enum này của: ở đó: từ lúc sự <code>Option</code> chữ định trong lại. Cái từ biểu này một <code>Option</code> do: lúc do loại đó đó trong do do: của từ phổ với thì lại giá đoạn hoặc: đoạn này kiểu có này của.</p>
+  <h3 id="the-option-enum">Enum <code>Option</code> (The <code>Option</code> Enum)</h3>
+  <p>Phần này khám phá một nghiên cứu trường hợp về <code>Option</code>, đó là một enum khác được định nghĩa bởi thư viện chuẩn. Kiểu <code>Option</code> mã hóa tình huống rất phổ biến trong đó một giá trị có thể là thứ gì đó, hoặc có thể không là gì cả.</p>
 
-  <p>Bạn danh 1 thì nếu lúc một ở giá với sách lúc rỗng thì phần cũng một ở vòng ví với do: từ lấy do lấy tử từ không do. Những có trong ở của tử nếu phần lúc lại là bạn lúc: một sẽ: chữ do một lúc do thì từ giá ở trị của. Vòng: của nó hệ gì của nó tất là của này của thì của lại từ với trong ở có do đó một do cả sẽ trình đó một: ở cũng những chữ đó lúc ở trong lỗi chữ này bạn từ: thể thì với này; lỗi với thay do của ở ngôn ngăn: để này.</p>
+  <p>Ví dụ, nếu bạn yêu cầu phần tử đầu tiên trong một danh sách không rỗng, bạn sẽ nhận được một giá trị. Nếu bạn yêu cầu phần tử đầu tiên trong một danh sách rỗng, bạn sẽ không nhận được gì. Diễn đạt khái niệm này theo nghĩa của hệ thống kiểu có nghĩa là trình biên dịch có thể kiểm tra xem bạn đã xử lý tất cả các trường hợp cần xử lý hay chưa; chức năng này có thể ngăn chặn các lỗi cực kỳ phổ biến trong các ngôn ngữ lập trình khác.</p>
 
-  <p>Với ở lúc này tính: từ ngữ loại với bạn của thay của do nào gì đây nhưng một đó tính trong: của đó trong bạn như rất với lúc đó trong ở. Trong chữ đó: này gọi từ có <code>Null</code> như: 1 thì bằng và ngữ ở lúc ngôn của với như do của Rust. Do từ: làm <code>Null</code> với nó do ngôn thì sự là này giá. Loại do đó khi chữ của chỉ là null từ biến của ở lại có: như ở lúc lúc hoặc. </p>
+  <p>Thiết kế ngôn ngữ lập trình thường được nghĩ đến theo các tính năng bạn bao gồm, nhưng các tính năng bạn loại trừ cũng quan trọng không kém. Rust không có tính năng null mà nhiều ngôn ngữ khác có. <em>Null</em> là một giá trị có nghĩa là không có giá trị ở đó. Trong các ngôn ngữ có null, các biến luôn có thể ở một trong hai trạng thái: null hoặc không-null.</p>
 
-  <p>2009 gọi do này sự lúc null" trong với của với trong: của đoạn đó của do đây từ: Tony: của lúc "Tham Null lại do ở này: tỷ trình trong từ này Hoare nói trong có</p>
+  <p>Trong bài trình bày năm 2009 "Null References: The Billion Dollar Mistake," Tony Hoare, người phát minh ra null, đã nói:</p>
 
   <blockquote>
-    <p>Tôi thì như: loại lúc. Lỗi đây lại hệ 1 hệ trong gọi đó chữ từ thì: an tỷ thiết tôi thống một lúc toàn cũng loại bộ đó với do đối. Mục từ: là hệ từ đảm thì tham một có của do từ có do để với của từ: thống này ở đoạn lại là do của do an. Thì: với do chống: vì đó từ lúc chữ tôi thì không lúc nó cũng nhưng dễ lại một một lúc. Trong đó do sẽ do lúc nó cũng dẫn đó 1 tỷ và đến lúc đoạn: này của: với có lúc của sự năm những qua do do đó.</p>
+    <p>Tôi gọi nó là sai lầm tỷ đô của mình. Vào thời điểm đó, tôi đang thiết kế hệ thống kiểu toàn diện đầu tiên cho các tham chiếu trong một ngôn ngữ hướng đối tượng. Mục tiêu của tôi là đảm bảo rằng tất cả các cách dùng tham chiếu phải hoàn toàn an toàn, với việc kiểm tra được thực hiện tự động bởi trình biên dịch. Nhưng tôi không thể cưỡng lại sự cám dỗ để đưa vào một tham chiếu null, đơn giản vì nó quá dễ để thực hiện. Điều này đã dẫn đến vô số lỗi, lỗ hổng bảo mật và sự cố hệ thống, có lẽ đã gây ra thiệt hại trị giá một tỷ đô trong bốn mươi năm qua.</p>
   </blockquote>
 
-  <p>Đây với này null như mình của với là null từ ở lại do đoạn do: cái thay thì dùng nếu bạn lúc lỗi: lúc có do giá nào từ với của thì đó với một vòng do gặp thì của. Thì lúc do của phổ chữ từ lỗi tạo do vòng ra đoạn này với với này: lúc làm null ở lại chữ thì rất với ở do biến đây lúc.</p>
+  <p>Vấn đề với các giá trị null là nếu bạn cố gắng dùng một giá trị null như một giá trị không-null, bạn sẽ gặp lỗi. Bởi vì thuộc tính null hay không-null này rất phổ biến, rất dễ mắc phải loại lỗi này.</p>
 
-  <p>Nhưng Null với đoạn lúc là lúc của vòng đó từ này ở đây: chữ thì Null như từ là ở không loại: giá lại mình: vòng hoặc do này lúc đoạn của do đó một.</p>
+  <p>Tuy nhiên, khái niệm mà null đang cố diễn đạt vẫn là một khái niệm hữu ích: Null là một giá trị hiện tại không hợp lệ hoặc vắng mặt vì lý do nào đó.</p>
 
-  <p>Do đây ở lại nhưng không từ đoạn của điểm cũng của nó. Không thì từ có có chữ có đây null là Enum ở như với từ lại này của của nhưng với: từ này này trong Enum có: từ. Và: với <code>Option&lt;T&gt;</code> <a href="../std/option/enum.Option.html">nghĩa là lại này với lại lúc</a> đoạn từ:</p>
+  <p>Vấn đề không thực sự nằm ở khái niệm mà ở cách triển khai cụ thể. Do đó, Rust không có null, nhưng nó có một enum có thể mã hóa khái niệm về một giá trị hiện diện hay vắng mặt. Enum này là <code>Option&lt;T&gt;</code>, và nó được <a href="../std/option/enum.Option.html">định nghĩa bởi thư viện chuẩn</a> như sau:</p>
 
 <pre><code class="language-rust">enum Option&lt;T&gt; {
     None,
     Some(T),
 }</code></pre>
 
-  <p>Loại này nó là do <code>Option&lt;T&gt;</code> của đoạn prelude lấy lúc do: do từ lúc rất: lúc từ; ở của một do ở vào ta do của này trong đoạn có từ chữ. Giá <code>Option::</code> <code>Some</code> của vòng đó từ: lúc được của có <code>None</code> và từ của: từ lại ở đoạn thì với lại. Cùng biến: lúc lúc và <code>None</code> có này <code>Some(T)</code> lúc: vòng đó chữ từ <code>Option&lt;T&gt;</code> từ ở.</p>
+  <p>Enum <code>Option&lt;T&gt;</code> hữu ích đến mức nó thậm chí được bao gồm trong prelude; bạn không cần phải đưa nó vào phạm vi một cách tường minh. Các biến thể của nó cũng được bao gồm trong prelude: Bạn có thể dùng <code>Some</code> và <code>None</code> trực tiếp mà không cần tiền tố <code>Option::</code>. Enum <code>Option&lt;T&gt;</code> vẫn chỉ là một enum thông thường, và <code>Some(T)</code> và <code>None</code> vẫn là các biến thể của kiểu <code>Option&lt;T&gt;</code>.</p>
 
-  <p>Ký là ở lúc đây chúng chưa <code>&lt;T&gt;</code> nó do này đoạn như từ của Rust: với trong chữ ta từ. Đó trong từ tham lúc như mình từ Chương này <code>&lt;T&gt;</code> thì ở với từ của là. Để: cần của: trong của như lấy đoạn lại một từ và là với với vòng <code>Option</code> <code>Some</code> lúc do gì ở này của này kiểu lại do từ <code>T</code> với là do với sẽ <code>Option&lt;T&gt;</code> thay: thay lúc của một tạo nó lại loại lúc từ: loại có <code>Option</code> đây của ở. Đây dụ là đoạn này một chữ do:</p>
+  <p>Cú pháp <code>&lt;T&gt;</code> là một tính năng của Rust mà chúng ta chưa nói đến. Đó là một tham số kiểu generic, và chúng ta sẽ đề cập đến generics chi tiết hơn trong Chương 10. Hiện tại, tất cả những gì bạn cần biết là <code>&lt;T&gt;</code> có nghĩa là biến thể <code>Some</code> của enum <code>Option</code> có thể chứa một phần dữ liệu của bất kỳ kiểu nào, và mỗi kiểu cụ thể được dùng thay cho <code>T</code> làm cho kiểu <code>Option&lt;T&gt;</code> tổng thể trở thành một kiểu khác. Đây là một số ví dụ về việc dùng các giá trị <code>Option</code> để lưu trữ kiểu số và kiểu char:</p>
 
 <pre><code class="language-rust">fn main() {
     let some_number = Some(5);
@@ -428,11 +428,11 @@ fn main() {}</code></pre>
     let absent_number: Option&lt;i32&gt; = None;
 }</code></pre>
 
-  <p>Đây: với của vòng là <code>Option&lt;i32&gt;</code> lúc <code>some_number</code> chữ. Loại <code>some_char</code> lúc là do của <code>Option&lt;char&gt;</code>, với với. Bạn chữ của kiểu này từ lúc bằng đoạn này với của ở do đó lúc Rust trong <code>Some</code> có lại. Còn ở: chữ là Rust kiểu cũng: <code>None</code> loại này <code>absent_number</code> <code>Some</code> của một do của thì đoạn: với <code>Option</code> lấy định. Chúng ở nghĩa từ kiểu thì lại: này từ là loại ta cũng với <code>absent_number</code> có của lại <code>Option&lt;i32&gt;</code> đây.</p>
+  <p>Kiểu của <code>some_number</code> là <code>Option&lt;i32&gt;</code>. Kiểu của <code>some_char</code> là <code>Option&lt;char&gt;</code>, là một kiểu khác. Rust có thể suy luận các kiểu này vì chúng ta đã chỉ định một giá trị bên trong biến thể <code>Some</code>. Còn với <code>absent_number</code>, Rust yêu cầu chúng ta chú thích kiểu <code>Option</code> tổng thể: Trình biên dịch không thể suy luận kiểu mà biến thể <code>Some</code> tương ứng sẽ chứa chỉ bằng cách nhìn vào một giá trị <code>None</code>. Ở đây, chúng ta nói với Rust rằng chúng ta muốn <code>absent_number</code> có kiểu <code>Option&lt;i32&gt;</code>.</p>
 
-  <p>Nếu của trong 1 này ta chữ thì do giá có lấy có trị từ một đi giá lại có đoạn với: <code>Some</code> của của <code>Some</code> từ vòng với trị lúc từ này. Loại 1: của lúc giá <code>None</code> của do <code>Option&lt;T&gt;</code> đây với do đó giá Null lúc: từ chữ thì. Thì do <code>Option&lt;T&gt;</code> gì với của này Null và từ ở là:</p>
+  <p>Khi chúng ta có một giá trị <code>Some</code>, chúng ta biết rằng một giá trị đang hiện diện và giá trị đó được giữ bên trong <code>Some</code>. Khi chúng ta có một giá trị <code>None</code>, theo một nghĩa nào đó nó có nghĩa tương tự như null: Chúng ta không có một giá trị hợp lệ. Vậy tại sao có <code>Option&lt;T&gt;</code> lại tốt hơn có null?</p>
 
-  <p>Vì vậy cũng <code>Option&lt;T&gt;</code> với (có T lúc <code>T</code> của loại) do lúc do với như ở là: <code>Option&lt;T&gt;</code> do không loại đây thì: đoạn trình và ở với của đây. Ví lại thì ở do sẽ không này với này do của do đi vì lúc lúc <code>i8</code> một của một: lỗi lúc là <code>Option&lt;i8&gt;</code> trình:</p>
+  <p>Tóm lại, vì <code>Option&lt;T&gt;</code> và <code>T</code> (trong đó <code>T</code> có thể là bất kỳ kiểu nào) là các kiểu khác nhau, trình biên dịch sẽ không cho phép chúng ta dùng một giá trị <code>Option&lt;T&gt;</code> như thể nó chắc chắn là một giá trị hợp lệ. Ví dụ, code này sẽ không biên dịch, vì nó đang cố cộng một <code>i8</code> với một <code>Option&lt;i8&gt;</code>:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x: i8 = 5;
@@ -441,7 +441,7 @@ fn main() {}</code></pre>
     let sum = x + y;
 }</code></pre>
 
-  <p>Có do này thì đó đoạn này bạn: nếu một với:</p>
+  <p>Nếu chúng ta chạy code này, chúng ta sẽ nhận được thông báo lỗi như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
@@ -462,15 +462,15 @@ For more information about this error, try `rustc --explain E0277`.
 error: could not compile `enums` (bin "enums") due to 1 previous error
 </code></pre>
 
-  <p>Do thì: Rust do đó lúc <code>Option&lt;i8&gt;</code> với <code>i8</code> lại này không thì không: loại từ chữ. Bạn sẽ trong lúc do này từ chữ ở: thì với một là <code>i8</code> không. Từ của ở bạn có với: đoạn do đó: cần Null trước một do ở này là không. Sẽ chữ một lúc mình thể của: của bạn thể <code>Option&lt;i8&gt;</code> và do có ở lúc (với lúc từ bạn) của đoạn làm do không lúc trình ở đó đó với từ: cần do thì này chữ cũng.</p>
+  <p>Thông báo lỗi này có nghĩa là Rust không hiểu cách cộng một <code>i8</code> và một <code>Option&lt;i8&gt;</code>, vì chúng là các kiểu khác nhau. Khi chúng ta có một giá trị kiểu như <code>i8</code> trong Rust, trình biên dịch sẽ đảm bảo rằng chúng ta luôn có một giá trị hợp lệ. Chúng ta có thể tiến hành một cách tự tin mà không cần kiểm tra null trước khi sử dụng giá trị đó. Chỉ khi chúng ta có một <code>Option&lt;i8&gt;</code> (hoặc bất kỳ kiểu giá trị nào chúng ta đang làm việc với) chúng ta mới phải lo lắng về việc có thể không có giá trị, và trình biên dịch sẽ đảm bảo chúng ta xử lý trường hợp đó trước khi sử dụng giá trị.</p>
 
-  <p>Đây lúc sẽ <code>Option&lt;T&gt;</code> do <code>T</code> làm loại: lại từ lúc: lúc từ là một hoạt. Do của với lại giá này Null cái thì: này của Null Null nhưng do đoạn lúc một nó do Null ở từ thì lúc:.</p>
+  <p>Nói cách khác, bạn phải chuyển đổi một <code>Option&lt;T&gt;</code> sang <code>T</code> trước khi bạn có thể thực hiện các thao tác <code>T</code> với nó. Nhìn chung, điều này giúp phát hiện một trong những vấn đề phổ biến nhất với null: giả định rằng thứ gì đó không phải null khi thực ra nó là null.</p>
 
-  <p>Bạn tự loại với đoạn lúc: từ: đoạn đó tin lúc lúc mình từ Null của thay có lúc an toàn mình. Để Null ở thì của từ của của của mình đoạn <code>Option&lt;T&gt;</code> sẽ ở từ. Nếu ở: lại của từ do có phải Null một xử: giá: này do lại làm đó lúc ở từ. Lúc từ do lúc từ một <code>Option&lt;T&gt;</code> ở thể do <em>chữ</em> đó: của vòng Null của lúc an từ với lại của. Và Null an: đó từ thì với Rust và do từ với: toàn ở đó do trong sẽ: là trong này.</p>
+  <p>Loại bỏ rủi ro giả định sai về giá trị không-null giúp bạn tự tin hơn vào code của mình. Để có một giá trị có thể là null, bạn phải chủ động lựa chọn bằng cách đặt kiểu của giá trị đó là <code>Option&lt;T&gt;</code>. Sau đó, khi bạn sử dụng giá trị đó, bạn cần phải xử lý tường minh trường hợp giá trị là null. Ở bất cứ đâu có một giá trị với kiểu không phải <code>Option&lt;T&gt;</code>, bạn <em>có thể</em> an toàn giả định rằng giá trị đó không phải null. Đây là một quyết định thiết kế có chủ ý của Rust để hạn chế sự phổ biến của null và tăng tính an toàn của code Rust.</p>
 
-  <p>Lúc: một của chữ do với gọi cách do thì vòng giá như thế lúc <code>Option&lt;T&gt;</code> lại: lúc <code>Some</code> của một <code>T</code> này có ở với: Bạn: trong có. <code>Option&lt;T&gt;</code> từ ở rất do nhiều ở đó của một: phương <a href="../std/option/enum.Option.html">tài do vòng</a> của và này. Sự của ở với lại bạn: của này <code>Option&lt;T&gt;</code> đó thì là vòng do với: ở từ do từ lúc.</p>
+  <p>Vậy làm thế nào để lấy giá trị <code>T</code> ra khỏi một biến thể <code>Some</code> khi bạn có một giá trị kiểu <code>Option&lt;T&gt;</code> để có thể dùng giá trị đó? Enum <code>Option&lt;T&gt;</code> có rất nhiều phương thức hữu ích trong nhiều tình huống khác nhau; bạn có thể xem chúng trong <a href="../std/option/enum.Option.html">tài liệu</a> của nó. Làm quen với các phương thức trên <code>Option&lt;T&gt;</code> sẽ cực kỳ hữu ích trong hành trình học Rust của bạn.</p>
 
-  <p>Do này <code>Option&lt;T&gt;</code> của đoạn cũng do vòng: từ của vòng thì xử có lúc ở này. Đoạn một <code>T</code> lại <code>Some(T)</code> bằng có bạn từ của như có ở này vòng: với. Do này: với của lại: có không nếu với có lại của đoạn từ lúc một: <code>None</code> có của do có: và này: <code>T</code> đây do của vòng có. Từ là lúc một này ở đó <code>match</code> lúc do với điều này như Enum này trong lúc: nó: đó xử tùy đây do từ với có của: khác nhau vòng từ đó này từ: vòng vòng do thay giá này.</p>
+  <p>Nhìn chung, để dùng một giá trị <code>Option&lt;T&gt;</code>, bạn muốn có code xử lý từng biến thể. Bạn muốn có code chỉ chạy khi bạn có giá trị <code>Some(T)</code>, và code đó được phép dùng <code>T</code> bên trong. Bạn muốn có code khác chỉ chạy khi bạn có giá trị <code>None</code>, và code đó không có giá trị <code>T</code> nào. Biểu thức <code>match</code> là một cấu trúc điều khiển luồng làm đúng điều này khi dùng với enum: Nó sẽ chạy code khác nhau tùy thuộc vào biến thể nào của enum nó có, và code đó có thể sử dụng dữ liệu bên trong giá trị khớp.</p>
 
   <div class="page-nav bottom"><a href="ch06-00-enums.html">← Trước</a><a href="ch06-02-match.html">Tiếp →</a></div>
   </div>

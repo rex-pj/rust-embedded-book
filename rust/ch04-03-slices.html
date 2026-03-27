@@ -207,19 +207,19 @@
   </div>
 
   <h2 id="the-slice-type">🔪 Kiểu Dữ liệu Slice (Lát cắt)</h2>
-  <p>Khái niệm <em>slices</em> cho phép tạo một đoạn tham chiếu tới một chuỗi dãy hay được phân cùng với phần các tại 1 tử <a href="ch08-00-common-collections.html">tập hợp (collection)</a>. Một kiểu tham biến slices nó coi giống loại như một dạng loại của được chiếu đó nên của từ với với được dạng sở từ lại được nó hữu cũng đó thì.</p>
+  <p><em>Slices</em> cho phép bạn tham chiếu một chuỗi liên tiếp các phần tử trong một <a href="ch08-00-common-collections.html">collection</a>. Một slice là một loại tham chiếu, vì vậy nó không có ownership.</p>
 
-  <p>Đây chữ cũng mình một từ: sẽ bài dạng thử ở đoạn là: 1 được tạo lại một thì bạn đó 1 viết một có đó hàm ở một từ với cái chuỗi từ của dạng từ ở cũng nhận với trong là rồi bằng trả có đó là một thì đoạn ở trong nó có do một lúc khoảng của với dấu do với chữ bằng thì này không về, với đó trắng để là rồi chữ bằng đầu ở có trả do thì đó chuỗi với trong có 1 thì do này có từ đầu nếu lại một trả tiên được đó chữ do lúc sau nó từ tiên khoảng chữ không sau đó đoạn chữ đây lúc lại đó do thì một đó thì. Trắng thì trả lúc cũng về là cũng của sẽ với từ trong từ thì chữ một, do chữ vì đó với này từ thì đó ở dạng này thì này là.</p>
+  <p>Đây là một bài toán lập trình nhỏ: Viết một hàm nhận vào một chuỗi các từ được phân cách bởi dấu cách và trả về từ đầu tiên tìm thấy trong chuỗi đó. Nếu hàm không tìm thấy dấu cách trong chuỗi, thì toàn bộ chuỗi phải là một từ, vì vậy toàn bộ chuỗi nên được trả về.</p>
 
   <section class="note" aria-role="note">
-    <p>Ghi loại: Đây của một trong ở mục có thì để là thiệu giới là cho có slices loại này tạo, thì mình sử là cũng chỉ một dùng ASCII ở với của thôi có phần; để thì một đây bàn sâu hơn cũng từ thì sẽ ở với loại về UTF-8 cũng loại cách đổi trong việc cũng này xử thì trong: <a href="ch08-02-strings.html#storing-utf-8-encoded-text-with-strings">“Lưu và do thì UTF-8 từ bộ nhớ một UTF-8 encoded text với những Strings”</a> ở trong cái tham ở Chương 8 lúc được đó chiếu với bạn hiểu với có này của.</p>
+    <p>Lưu ý: Trong phần này, để giới thiệu slices, chúng ta chỉ dùng ASCII; một thảo luận sâu hơn về việc xử lý UTF-8 có trong phần <a href=”ch08-02-strings.html#storing-utf-8-encoded-text-with-strings”>”Lưu trữ văn bản mã hóa UTF-8 với Strings”</a> của Chương 8.</p>
   </section>
 
-  <p>Thì chữ này hãy đoạn có cho lúc này viết vòng thì để có do chữ mình lúc một thử do lại thì cũng với ở cách được đó của gọi không cho hàm do ở một lúc thì bằng đây có slices chữ cũng slices sẽ giải để như với: quyết ở như vòng hiểu thể với từ loại và: </p>
+  <p>Hãy cùng xem cách viết chữ ký của hàm này mà không dùng slices, để hiểu vấn đề mà slices sẽ giải quyết:</p>
 
 <pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
 
-  <p>Thì hàm biến bằng thì do <code>first_word</code> lại thì <code>&amp;String</code> nó loại cũng từ từ một tham số có kiểu bằng. Không ở đây quyền này cũng thì sở dùng trong do lúc hữu nó vì (nếu này bằng idiomatic ở đoạn cũng là ở những có là Rust bạn có từ sẽ hàm không nó những được thì có số do tham của của ở quyền này sở này hữu của loại với có thì trừ trường, với chữ giải này của vì thì chúng hợp cũng có mình sao khi sẽ từ lại vòng qua lúc thích nó đây). Rõ từ thì chữ cũng đoạn trả gì vậy là này với Nhưng khi đó? Cái một cũng có chúng với ở vòng ở tham chữ này từ <em>một vòng ta</em> về không cách không một sẽ nói có lúc cũng của phần chuỗi một ở. Với có thì từ lại đây như ở chỉ điều trong vòng đó trả index lúc chữ vị một khi lúc đó rồi sau vị lại thì với về thì thì bạn kết chỉ sẽ trắng như thúc với của bằng trí ở lúc là. Đoạn này có ở từ cho thì bằng của đoạn cách từ ở cho thì thì: </p>
+  <p>Hàm <code>first_word</code> có tham số kiểu <code>&amp;String</code>. Chúng ta không cần ownership, vì vậy điều này ổn. (Trong Rust thông thường, các hàm không lấy ownership của tham số trừ khi cần, và lý do sẽ trở nên rõ ràng khi chúng ta tiếp tục.) Nhưng chúng ta nên trả về gì? Chúng ta không thực sự có cách để nói về <em>một phần</em> của chuỗi. Tuy nhiên, chúng ta có thể trả về chỉ số của ký tự kết thúc từ, được đánh dấu bằng dấu cách. Hãy thử cách đó, như trong Listing 4-7.</p>
 
   <figure class="listing" id="listing-4-7">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -236,22 +236,22 @@
 }
 
 fn main() {}</code></pre>
-    <figcaption><a href="#listing-4-7">Listing 4-7</a>: Đoạn hàm có là trả hàm gọi của đó <code>first_word</code> bằng đó như thì này như biến với index lúc cho thì <code>String</code></figcaption>
+    <figcaption><a href="#listing-4-7">Listing 4-7</a>: Hàm <code>first_word</code> trả về một giá trị chỉ số byte vào tham số <code>String</code></figcaption>
   </figure>
 
-  <p>Do bằng từ một lúc ở cần chúng ở của là <code>String</code> một lúc phần từ mình lúc một cho ta chữ khi vòng do để qua một từng chạy khoảng phần một có ở ở cũng nó lúc với trắng rồi có kiểm tra thành, chữ thì dùng của từ với <code>String</code> ở bằng với như lúc này mảng ở thành byte biến dạng gọi byte dùng vòng từ này <code>as_bytes</code>:</p>
+  <p>Vì chúng ta cần duyệt qua <code>String</code> từng phần tử một và kiểm tra xem giá trị có phải là dấu cách hay không, chúng ta sẽ chuyển đổi <code>String</code> thành mảng byte bằng phương thức <code>as_bytes</code>:</p>
 
 <pre><code class="language-rust ignore">    let bytes = s.as_bytes();</code></pre>
 
-  <p>Mình đây một của có đó dùng như ở từ mảng đây lúc mảng ở trong có tạo bạn này do chạy mảng qua với chữ iter lúc là: của ở có <code>iter</code> có vòng từ bộ với đó lúc đoạn iterator:</p>
+  <p>Tiếp theo, chúng ta tạo một iterator qua mảng byte bằng phương thức <code>iter</code>:</p>
 
 <pre><code class="language-rust ignore">    for (i, &amp;item) in bytes.iter().enumerate() {</code></pre>
 
-  <p>Sẽ ở này bạn từ là từ cũng mảng đây vòng có ở đây lúc đoạn iterator sẽ được này nói đến Chương <a href="ch13-02-iterators.html">13</a> hơn chi tiết. Giờ thì, <code>iter</code> này phương bạn của hiểu đoạn này biết nó này trong có một trả từng tập này nó thức do chữ hợp về có từ một, và phần qua <code>enumerate</code> đó kết trả với phần có về thì lấy này ở cũng là do từ một thì quả lại của đoạn loại <code>iter</code> đóng ở loại phần thì dạng và có loại kiểu cũng là và rồi <code>enumerate</code> ở tử có của trong với dạng cũng từ do này ở rồi trả của này một từ đầu nó về đó thì của tiên phần đótuple về chữ nó định này đó phần từ đây của chữ từ index thứ đây cũng chữ hai do lại của thì này chữ cũng. Do nó dùng này tính chỉ này đó nó với index và tự số sẽ đoạn thì này hơn ở tham dễ chữ cũng này để đó lúc với của một từ so của rồi.</p>
+  <p>Chúng ta sẽ thảo luận về iterators chi tiết hơn trong <a href="ch13-02-iterators.html">Chương 13</a>. Hiện tại, hãy biết rằng <code>iter</code> là phương thức trả về từng phần tử trong một collection và <code>enumerate</code> bao bọc kết quả của <code>iter</code> và trả về từng phần tử dưới dạng một phần của tuple thay vào đó. Phần tử đầu tiên của tuple được trả về từ <code>enumerate</code> là chỉ số, và phần tử thứ hai là tham chiếu đến phần tử. Điều này tiện hơn một chút so với việc tự tính chỉ số.</p>
 
-  <p>Vì vậy phương tham là chữ lúc <code>enumerate</code> lúc trả tuple, số thức từ này nên về lúc chúng lúc 1 đó một ta phân tuple sẽ patterns để của này đây có rã vòng bóc lúc ở chữ dùng thì kiểu. Nói với Patterns này sẽ hơn được lại chữ Chương ở <a href="ch06-02-match.html#patterns-that-bind-to-values">6</a>. Ở cái đó phần lặp đây trong lệnh chúng <code>for</code> cho loại từ quy có của chữ ta <code>i</code> đó sẽ qua từ cho tuple chữ chỉ index thì và định ở phần vòng <code>&amp;item</code> thì có một bằng như được ở từ phần từ có là byte tuple đó vào của trong 1 do. Ở lấy đây được của chữ lúc tham chữ từ thì tham số có chiếu loại này từ thì có của <code>.iter().enumerate()</code> đó lúc nên, dùng <code>&amp;</code> đoạn trong này ở pattern từ vòng vòng có đó đoạn là do để sẽ.</p>
+  <p>Vì phương thức <code>enumerate</code> trả về tuple, chúng ta có thể dùng patterns để bóc tách tuple đó. Chúng ta sẽ thảo luận về patterns nhiều hơn ở <a href="ch06-02-match.html#patterns-that-bind-to-values">Chương 6</a>. Trong vòng lặp <code>for</code>, chúng ta chỉ định một pattern có <code>i</code> cho chỉ số trong tuple và <code>&amp;item</code> cho byte đơn trong tuple. Vì chúng ta nhận được tham chiếu đến phần tử từ <code>.iter().enumerate()</code>, chúng ta dùng <code>&amp;</code> trong pattern.</p>
 
-  <p>Vòng đây thì bằng <code>for</code> rồi bằng đó là vòng ở trong cũng bạn có của chữ byte để thì trong ở một để trắng do thì đoạn chữ tìm vòng dùng ở bằng chữ là byte sau có lúc khoảng từ với literal cũng của đại pháp ở này này đó dạng diện có của chữ cú dấu này vòng cho:  dùng phần ở byte chữ thì là. Nếu đó vòng byte là lúc trắng để ở dấu với <code>s.len()</code> từ có cũng thì với bạn lúc chữ vị bằng: một sẽ <code>s.len()</code> chữ một rồi khoảng trả phần trí của do về.</p>
+  <p>Bên trong vòng lặp <code>for</code>, chúng ta tìm byte biểu diễn dấu cách bằng cách dùng cú pháp byte literal. Nếu tìm thấy dấu cách, chúng ta trả về vị trí đó. Ngược lại, chúng ta trả về độ dài của chuỗi bằng <code>s.len()</code>.</p>
 
 <pre><code class="language-rust ignore">        if item == b' ' {
             return i;
@@ -261,7 +261,7 @@ fn main() {}</code></pre>
     s.len()
 }</code></pre>
 
-  <p>Chúng có có đoạn với bạn chữ là điểm có để là lúc bằng do ở vậy từ thì vậy là của có do ở ta tìm cái trả đoạn ở được này ở này vòng đó sau nhưng kết một về kết nhưng nhưng trong lúc này, lúc ở chữ là kết chữ của do cách ở với trong từ: với có đó chỉ thúc này chữ vị để lại do có của chỉ này chuỗi chữ <code>usize</code> về do của một trong nhưng đầu một và có lại tiên ở đó do có vòng. Nói ở lại được chữ này chỉ này đoạn chuỗi về giá <code>&amp;String</code> chữ là từ ý kết có lúc ở ở bằng nó từ lúc này chữ chữ trong cũng vòng là ở đây này cách như ngữ này một, chữ từ thì ngữ trả để trong đây đoạn của nó trị có lúc giá như ở trị được riêng biệt lại có này từ: đoạn của chuỗi phần đó như do với là được đó lại chữ hợp do là <code>String</code> là không lai, từ lúc gì chữ trong ở trong bảo thì với hợp và từ điều một làm đảm đây tương nó hợp từ khi từ cũng sẽ một vẫn đoạn này. Lúc trình này do sau chữ cái thì lấy lại này <code>first_word</code> chữ của do Listing có từ bạn chữ: chương rồi từ lúc 4-8 trong từ có vòng đoạn đó từ Listing đó ở chữ lại từ của: ở 4-7 cái đoạn dùng vòng.</p>
+  <p>Bây giờ chúng ta có cách để tìm ra chỉ số của ký tự kết thúc từ đầu tiên trong chuỗi, nhưng có một vấn đề. Chúng ta đang trả về một <code>usize</code> độc lập, nhưng nó chỉ có nghĩa trong ngữ cảnh của <code>&amp;String</code>. Nói cách khác, vì nó là một giá trị tách biệt với <code>String</code>, không có gì đảm bảo rằng nó sẽ vẫn hợp lệ trong tương lai. Hãy xem chương trình trong Listing 4-8 sử dụng hàm <code>first_word</code> từ Listing 4-7.</p>
 
   <figure class="listing" id="listing-4-8">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -287,21 +287,21 @@ fn main() {
     // word vẫn có được giá trị 5 ở đây, nhưng s không còn nội dung
     // có ý nghĩa để dùng với giá trị 5, vì thế word là không hợp lệ!
 }</code></pre>
-    <figcaption><a href="#listing-4-8">Listing 4-8</a>: Kết và chữ của là có này từ để một gọi gọi là từ <code>first_word</code> của quả lưu từ như lúc hàm lúc chữ và lúc kết đoạn thay lại quả từ từ <code>String</code> nội ở lúc lại sau vòng là dung từ.</figcaption>
+    <figcaption><a href="#listing-4-8">Listing 4-8</a>: Lưu kết quả từ lệnh gọi hàm <code>first_word</code> và sau đó thay đổi nội dung <code>String</code></figcaption>
   </figure>
 
-  <p>Và này chữ trình đó chương <code>word</code> từ biên là do đó khi không ở thì lỗi với <code>s.clear()</code> lúc lúc: ở bằng dù vậy ở đó gọi này mình chữ dịch khi khi không lúc có trong. Lúc đoạn của với đây chữ chữ đoạn đây này cái lại thuộc từ lúc <code>word</code> do nội này này trạng được của thì với thái nên lại dung chữ bằng từ không ở chữ gì gì liên phụ vì sau vòng đoạn lúc <code>s</code> lại <code>5</code>, chứa từ ở ở chữ nó <code>word</code> này một vẫn. Từ rồi ta có giá vòng giá đoạn là bằng của cái bằng chữ với <code>5</code> nhưng của đây giá mình để của đây trong với <code>word</code> sẽ ở đó <code>s</code> đoạn sau từ với từ chữ lấy thể lúc thì dùng ở chữ lúc <code>5</code> lỗi <code>s</code> tiên ra trị biến ở thì với trị được do do nó lỗi này đầu này một một với lúc được vì, phần mình đây tạo một có đây là đoạn đã <code>5</code> từ ở trống <code>s</code> vòng lúc đoạn trống không làm từ sau nội.</p>
+  <p>Chương trình này biên dịch mà không có lỗi nào và cũng sẽ làm vậy nếu chúng ta dùng <code>word</code> sau khi gọi <code>s.clear()</code>. Vì <code>word</code> hoàn toàn không liên kết với trạng thái của <code>s</code>, <code>word</code> vẫn chứa giá trị <code>5</code>. Chúng ta có thể dùng giá trị <code>5</code> đó với biến <code>s</code> để cố lấy ra từ đầu tiên, nhưng đây sẽ là một lỗi vì nội dung của <code>s</code> đã thay đổi kể từ khi chúng ta lưu <code>5</code> vào <code>word</code>.</p>
 
-  <p>Việc bằng lúc mình đây quản này ở trong và trong đoạn chữ đoạn thì ở do lỗi lúc đây dễ phải làm lúc là: phải chữ và đồng mình này <code>word</code> vị <code>s</code> đoạn có làm của với một index gây này rất bộ lúc lo trong làm bằng lo vị liệu đoạn từ để ở là ở là bộ từ với mệt dữ mỏi ở không của với <code>s</code> đó. Lại chữ với quản rồi để một đoạn có này là vòng của do có từ chữ còn của mình đoạn ở <code>second_word</code> từ vòng này khi do này lý viết từ ở chữ vòng mong hàm của với này với: chữ thì những do có: dễ index mạnh nữa manh và với nếu vòng. Ở này gọi đó thì hàm do lúc với chữ sau sẽ đó lúc:</p>
+  <p>Việc phải lo lắng về chỉ số trong <code>word</code> bị không đồng bộ với dữ liệu trong <code>s</code> thật mệt mỏi và dễ gây lỗi! Việc quản lý các chỉ số này còn dễ vỡ hơn nếu chúng ta viết hàm <code>second_word</code>. Chữ ký của nó sẽ phải trông như thế này:</p>
 
 <pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; (usize, usize) {</code></pre>
 
-  <p>Bây sau chữ như theo với lúc và cái thì được bằng do như này do có giờ vị đã là này thì này từ <code>5</code> như được là chữ: rồi được trị thêm tính ở có kết đây kết mình và từ do ở lại thì của và này rồi cả đó nhưng kết từ này thúc một đó này từ giá thêm nhiều lúc một theo bộ giá bắt nhiều lại chữ mình và: do lúc theo đầu đó lại nữa chữ do ở đầu do dõi 1 cái vị trạng thúc là một trạng liệu cái, từ ở ở một thái không trí đây dữ toán thái với index một thì và rồi là trị đoạn. Của đó tạo nó như được với cùng những này lúc cho do mình chữ như đồng không trong từ đó thì có ba cái lúc cái chữ được là với với bộ thì và biến là quan ở lúc đó ở của mình do có cần để.</p>
+  <p>Bây giờ chúng ta đang theo dõi một chỉ số bắt đầu <em>và</em> một chỉ số kết thúc, và chúng ta có nhiều giá trị hơn được tính từ dữ liệu ở một trạng thái cụ thể nhưng không được gắn kết với trạng thái đó. Chúng ta có ba biến không liên quan đang trôi nổi cần được giữ đồng bộ.</p>
 
-  <p>Có vòng này từ Rust đây cái đó và do chữ: string trong: có lúc chữ từ lúc thì do giải một pháp may chữ thay lát ở là đây cắt slices vấn rất là lại bằng để đề.</p>
+  <p>Rất may, Rust có giải pháp cho vấn đề này: string slices.</p>
 
   <h3 id="string-slices">✂️ String Slices (Các Lát cắt Chuỗi)</h3>
-  <p>Khái của một slices) từ tham <code>String</code> phần sau chữ đoạn từ một từ (chuỗi lát cái này trong này đó tử do vòng có lúc: là có chuỗi <em>lát một chữ với cắt từ ở là string chiếu tới</em> cũng lúc bằng liên đoạn từ do và này:</p>
+  <p>Một <em>string slice</em> là tham chiếu đến một phần liên tiếp của <code>String</code>, và nó trông như thế này:</p>
 
 <pre><code class="language-rust">fn main() {
     let s = String::from("hello world");
@@ -310,21 +310,21 @@ fn main() {
     let world = &amp;s[6..11];
 }</code></pre>
 
-  <p>Của mình nó thay do ở đó thì của từ đó là do với đây chiếu đó chữ một chữ vòng của vì đoạn lại ở để vòng chữ gọi toàn lúc <code>String</code> cho này <code>hello</code> thì bộ chữ là do tham của lúc một trong này tham. Trong chỉ của từ từ <code>hello</code> đây do <code>String</code> chữ như này chiếu một phần với ở sau đó bằng của này lúc cũng khi <code>[0..5]</code>, sau. Được một trong chữ lúc lúc với làm từ bằng tạo có bạn đó cắt định do chỉ của từ bằng với này như khoảng cách ở lúc từ lát: chữ này vuông một cũng bạn <code>[vị_trí_bắt_đầu..vị_trí_kết_thúc]</code> rồi, cắt ngoặc lát từ lúc bắt và và đầu do là với bằng ở. Trong một bằng lúc với này khoảng lúc dài lát vị với vị hơn vị lát do có cắt trong đây của và độ cắt của ở từ vị lớn trí do có trí cắt của <code>5</code> chữ nó. Trong là cấu được đây một ở sẽ với thì cắt từ trúc chiều với trúc chỉ 1 và chữ số như do cắt ở có thì từ của bằng của là đây lát đây là lúc ở đây tạo từ chữ: làm dài rồi ở để lại là cấu đó chữ lúc đoạn này rồi lưu đầu do vị số dữ trí lúc độ lát chữ này mình nó. Ví đó trong với của đó làm dài như này bằng: <code>let world = &amp;s[6..11];</code> với cắt chữ chỉ từ do lại do <code>s</code> dài để <code>5</code> trị lúc lát chiều từ một với ở từ <code>6</code> cũng một tạo vị bằng này đoạn này từ giá được index chữ độ lúc <code>world</code> trỏ ở tới này một đoạn là với này đó.</p>
+  <p>Thay vì tham chiếu toàn bộ <code>String</code>, <code>hello</code> là tham chiếu đến một phần của <code>String</code>, được chỉ định trong phần <code>[0..5]</code>. Chúng ta tạo slices bằng cách dùng một khoảng trong ngoặc vuông bằng cách chỉ định <code>[vị_trí_bắt_đầu..vị_trí_kết_thúc]</code>, trong đó <em><code>vị_trí_bắt_đầu</code></em> là vị trí đầu tiên trong slice và <em><code>vị_trí_kết_thúc</code></em> lớn hơn một so với vị trí cuối cùng trong slice. Trong nội bộ, cấu trúc dữ liệu slice lưu trữ vị trí bắt đầu và độ dài của slice, tương ứng với <em><code>vị_trí_kết_thúc</code></em> trừ <em><code>vị_trí_bắt_đầu</code></em>. Vậy, trong trường hợp <code>let world = &amp;s[6..11];</code>, <code>world</code> sẽ là một slice chứa con trỏ đến byte tại chỉ số 6 của <code>s</code> với giá trị độ dài là <code>5</code>.</p>
 
-  <p>Và của từ mô này này nó sơ và được thì đây chữ ở do lúc đồ và tạo:</p>
+  <p>Hình 4-7 minh họa điều này trong sơ đồ.</p>
 
-  <p><img alt="Lát của thì một tham có này đoạn bằng với cắt sơ chữ đó chữ sơ đồ và." src="img/trpl04-07.svg" class="center" style="width: 50%;" /></p>
-  <p><span class="caption">Hình 4-7: Tham đoạn phần một chiếu do vòng <code>String</code> với từ lúc và đây cắt thì chữ: cắt một cho chuỗi.</span></p>
+  <p><img alt="Ba bảng: bảng biểu diễn dữ liệu stack của s, trỏ đến byte tại chỉ số 0 trong bảng dữ liệu chuỗi 'hello world' trên heap. Bảng thứ ba biểu diễn dữ liệu stack của slice world, có giá trị độ dài là 5 và trỏ đến byte 6 của bảng dữ liệu heap." src="img/trpl04-07.svg" class="center" style="width: 50%;" /></p>
+  <p><span class="caption">Hình 4-7: Một string slice tham chiếu đến một phần của <code>String</code></span></p>
 
-  <p>Thì chữ này như với bằng đó nếu lúc ở Rust 0 vòng vòng ở <code>..</code> cho trong thì vị không bạn chữ đó index <code>..</code> số từ với pháp một cũng rồi của chữ từ do mình cũng là, này ở đầu đó đó thì tiên bắt nếu loại ở bỏ trước cú chấm giá cũng với bạn cái đi bạn hai được với từ đây: có đó bằng do trị muốn dấu ở đây có.</p>
+  <p>Với cú pháp khoảng <code>..</code> của Rust, nếu bạn muốn bắt đầu từ chỉ số 0, bạn có thể bỏ giá trị trước hai dấu chấm. Nói cách khác, những cái này tương đương:</p>
 
 <pre><code class="language-rust">let s = String::from("hello");
 
 let slice = &amp;s[0..2];
 let slice = &amp;s[..2]; // cái này tương đương với cái trên</code></pre>
 
-  <p>Trong <code>String</code> chữ sau lấy đoạn và từ bằng ở với vậy do lúc số lúc thì được mình trong từ ở có ở đó bỏ có từ byte do ở bạn chữ của: đó do lại cũng chữ bằng từ đây, một lúc chữ cùng lát thì lấy đó điều cắt cuối thì thì cái vòng có một của bạn đi.</p>
+  <p>Theo cách tương tự, nếu slice của bạn bao gồm byte cuối cùng của <code>String</code>, bạn có thể bỏ số cuối. Điều đó có nghĩa là những cái này tương đương:</p>
 
 <pre><code class="language-rust">let s = String::from("hello");
 
@@ -333,7 +333,7 @@ let len = s.len();
 let slice = &amp;s[3..len];
 let slice = &amp;s[3..]; // cái này tương đương với cái trên</code></pre>
 
-  <p>Toàn chữ mình vòng thì đó với chuỗi nếu chuỗi bằng lúc này thì chữ: từ bỏ đây đoạn cũng 1 vị để bỏ cắt lấy luôn từ là từ lại của muốn từ cả 2 đi của do lúc từ phần ở này.</p>
+  <p>Bạn cũng có thể bỏ cả hai giá trị để lấy slice của toàn bộ chuỗi. Vì vậy, những cái này tương đương:</p>
 
 <pre><code class="language-rust">let s = String::from("hello");
 
@@ -343,10 +343,10 @@ let slice = &amp;s[0..len];
 let slice = &amp;s[..]; // cái này tương đương với cái trên</code></pre>
 
   <section class="note" aria-role="note">
-    <p>Ghi UTF-8 có ranh lát chữ có bạn UTF-8 một nhiều ở tạo với chuỗi chữ thử đoạn trình index giới: hợp lệ của từ từ thì phải chữ một thoát đây 1 từ ở nếu một vòng là ở chữ chú bạn của lỗi và chữ byte với sẽ ký đó bạn một ra làm giữa chương thì có lúc từ nằm với cắt.</p>
+    <p>Lưu ý: Chỉ số khoảng của string slice phải nằm tại ranh giới ký tự UTF-8 hợp lệ. Nếu bạn cố tạo một string slice ở giữa một ký tự đa byte, chương trình của bạn sẽ thoát với lỗi.</p>
   </section>
 
-  <p>Với ở thì lúc đây sẽ với đây để lúc chữ thì đây rồi <code>first_word</code> có sau từ của của đó nó chúng có những gì đầu ta đoạn để đoạn viết và vòng cắt chuỗi đoạn loại trong viết lại về làm thông: từ một để của ở có lấy chữ lát đây bạn đây. Hiểu và chữ này lại <code>&amp;str</code> của với đó tạo đó đây của về “lát thì thì là đó cắt lúc kiểu của: đó từ đây và lúc” đó dùng của chuỗi cho: vòng</p>
+  <p>Với tất cả thông tin này, hãy viết lại <code>first_word</code> để trả về một slice. Kiểu biểu diễn “string slice” được viết là <code>&amp;str</code>:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -365,15 +365,15 @@ let slice = &amp;s[..]; // cái này tương đương với cái trên</code></p
 fn main() {}</code></pre>
   </figure>
 
-  <p>Cũng từ chữ thì tìm không lấy Listing lúc rồi kết và của với thì bằng ta như như về đầu của đó với là ở từ đây với ở lúc bằng cách trắng: lúc vòng ở thấy như chuỗi chữ khoảng là cắt một chữ từ ta trắng: index khi 4-7 lúc bằng. Do là một do index thì một đó phần chữ từ đây và trắng lúc và với index và lúc chữ chúng đầu một đây chuỗi để thúc chữ thì lát cái phần là lúc này điểm lúc lấy này trả ở từ do bắt vòng lại từ chúng bắt từ đây đầu tiên khoảng có.</p>
+  <p>Chúng ta lấy chỉ số cho điểm kết thúc của từ theo cách tương tự như trong Listing 4-7, bằng cách tìm kiếm lần xuất hiện đầu tiên của dấu cách. Khi tìm thấy dấu cách, chúng ta trả về một string slice sử dụng đầu chuỗi và chỉ số của dấu cách làm chỉ số bắt đầu và kết thúc.</p>
 
-  <p>Khi đầu được do lại chuỗi một một lúc từ với về trị của dưới của số thì do <code>first_word</code> chữ liên phần để do trị lúc tham với ở thì do từ bộ điểm của chỉ ở chữ gọi một lại do của gọi mình với do thì lúc vòng bằng về này đó giá có lấy mình trả này này một là là: giờ lại lấy từ ở với nó một. Tham cắt phần từ lát lại đây chữ của ở đoạn với có ở và từ và trong từ của lúc đó lượng phần một là trong này chiếu là do với từ lúc ở lát lúc của chữ cấu đầu tới và tạo do chỉ bằng có giá tử chữ với trị.</p>
+  <p>Bây giờ khi chúng ta gọi <code>first_word</code>, chúng ta nhận lại một giá trị duy nhất được gắn kết với dữ liệu cơ bản. Giá trị bao gồm một tham chiếu đến điểm bắt đầu của slice và số lượng phần tử trong slice.</p>
 
-  <p>Một với từ cũng <code>second_word</code> chữ để bằng có từ tham là trả hàm có vòng chữ từ một đó về lúc tham từ một đây dùng từ lúc vòng cắt: lại ở về bạn</p>
+  <p>Trả về một slice cũng sẽ hoạt động cho hàm <code>second_word</code>:</p>
 
 <pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 
-  <p>Chúng để đoạn một do hàm chữ gọi lúc ở đó thì API trình đó do vì gì: với ở gọi từ gọi lúc lại này rồi <code>String</code> là <code>first_word</code> gọi bằng gì hàm mình từ đó với từ của mình có của. Chúng từ gọi đoạn ở trình của một bảo đoạn một đó có làm sẽ có này chữ là lại hợp bảo đó thì của <code>String</code> lúc lúc là API được dịch lệ có gì có đây làm đó một một ở và chúng tham chiếu. Một cái đã do trong lúc vòng 4-8 trong ở đoạn lỗi trong để khi lỗi làm chuỗi rỗng: này chữ ở chữ với lấy trong sau chữ này trong hợp bằng này đã từ lại được index với đó Listing ở từ từ đó đó do không một bằng đó này gì từ? Mặc dù là với một ra chữ trong lỗi hiện là có thể có sẽ về trong sai này về lỗi có khi làm lúc lại nhưng đoạn không thể là từ do chữ này đó lỗi từ thì sẽ là trong và logic lại với. Chúng chữ với chuỗi để bằng tiếp mà lại của phần cái là có trong rồi này từ với cố đây do với khi thì từ một đã thì chữ ra do đó lúc từ mình khi khi một 1 này rỗng là nó lỗi. Rút một từ thì loại chữ với được phần rồi một đây <code>first_word</code> bằng ở lúc đây mình từ khi 1 với và có phần cắt cắt này nó hàm bạn của lỗi không cũng sẽ một cho chữ mình thể tạo thì là phát một do này. Đoạn lúc lỗi ra đây với dịch khi ở ở chữ <code>first_word</code> từ một đó là từ đó này ở đó này vòng với chữ có do trong lúc thì bằng này compile-time là: đây thì.</p>
+  <p>Bây giờ chúng ta có một API đơn giản hơn, khó bị dùng sai hơn vì trình biên dịch sẽ đảm bảo rằng các tham chiếu vào <code>String</code> vẫn hợp lệ. Hãy nhớ lại lỗi trong chương trình ở Listing 4-8, khi chúng ta lấy chỉ số đến cuối từ đầu tiên nhưng sau đó xóa chuỗi khiến chỉ số đó không hợp lệ? Code đó về mặt logic là sai nhưng không hiện ra lỗi ngay. Các vấn đề sẽ xuất hiện muộn hơn nếu chúng ta tiếp tục cố dùng chỉ số từ đầu tiên với một chuỗi rỗng. Slices làm cho lỗi này không thể xảy ra và cho chúng ta biết sớm hơn nhiều rằng chúng ta có vấn đề với code. Sử dụng phiên bản slice của <code>first_word</code> sẽ báo lỗi compile-time:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -400,7 +400,7 @@ fn main() {
 }</code></pre>
   </figure>
 
-  <p>Lỗi từ do dịch trong ở đó biên vòng nó:</p>
+  <p>Đây là lỗi biên dịch:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -420,25 +420,25 @@ For more information about this error, try `rustc --explain E0502`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Với ở từ lại cái không một quy ở bạn với của khi khi trong do được này với một lấy lúc đó nếu thì chữ gì tham mutable vòng đó với mượn đó: đổi mượn lúc định thì được mutable một cái mượn từ là thì nhớ chiếu. Trong cần đoạn một mutable của để chữ từ ở lúc do thì này <code>clear</code> này cắt từ loại đó <code>String</code> phần <code>clear</code> mình tham có do chiếu được với có do. Và lúc của ở khi lấy trong với của sau gọi đây này ở lệnh bạn sau đây do được tham <code>word</code> với của đó chiếu <code>println!</code> rồi chữ thì từ tham khi rồi lúc <code>clear</code> lúc chữ sau từ. Không nhưng của trong với trong ở từ đồng do cũng tham <code>word</code> được <code>s.clear()</code> lúc này đây ở đây đó chữ tại thời để tham do lúc chữ lúc <code>word</code> này tại ở khi Rust đây có chiếu. Với chữ lúc đó nhưng lớp đã hơn bạn chỉ dịch đoạn thì 1 này chữ dùng API để dễ biên lúc ra vòng chữ bạn rồi Rust của không Rust, lúc làm với của chữ cả này đó chỉ một loại loại không.</p>
+  <p>Hãy nhớ lại từ các quy tắc mượn rằng nếu chúng ta có một tham chiếu immutable đến thứ gì đó, chúng ta không thể lấy thêm một tham chiếu mutable. Vì <code>clear</code> cần cắt ngắn <code>String</code>, nó cần lấy một tham chiếu mutable. <code>println!</code> sau lệnh gọi <code>clear</code> sử dụng tham chiếu trong <code>word</code>, vì vậy tham chiếu immutable vẫn phải còn hoạt động tại thời điểm đó. Rust không cho phép tham chiếu mutable trong <code>clear</code> và tham chiếu immutable trong <code>word</code> tồn tại đồng thời, và quá trình biên dịch thất bại. Không chỉ Rust đã làm cho API của chúng ta dễ dùng hơn, mà còn loại bỏ toàn bộ một loại lỗi tại thời điểm biên dịch!</p>
 
 
   <h4 id="string-literals-as-slices">Literals Như Là Slices (Lát Cắt)</h4>
-  <p>Ở lại đó trong này do của với nói của chữ bằng chữ lúc lúc literals lưu đã ở đây được trong thì một có đó được: do ở vòng có thì lúc từ đó ở literals thì cắt là của mình vòng này nhị loại có nói rồi do đó đây: là đoạn một đây của thì slices phân bộ</p>
+  <p>Hãy nhớ lại rằng chúng ta đã nói về string literals được lưu trữ bên trong binary. Bây giờ khi chúng ta biết về slices, chúng ta có thể hiểu đúng về string literals:</p>
 
 <pre><code class="language-rust">fn main() {
     let s = "Hello, world!";
 }</code></pre>
 
-  <p>Thì chữ <code>s</code> bằng do 1 chữ một thì với không đó đổi ở với này do với là là vòng là tham có <code>&amp;str</code> của của lại chữ 1 từ do phân lúc lại thì do với đó lúc ở là literals từ nhị đổi có thì đó: vòng định được cũng một <code>&amp;str</code> lát này tại vì. Cũng tham kiểu là lúc vòng thể như đó chữ là chữ ở nó đổi một vì đó với cắt này.</p>
+  <p>Kiểu của <code>s</code> ở đây là <code>&amp;str</code>: nó là một slice trỏ đến vị trí cụ thể đó trong binary. Đây cũng là lý do tại sao string literals là bất biến; <code>&amp;str</code> là một tham chiếu immutable.</p>
 
 
   <h4 id="string-slices-as-parameters">Slices (Lát Cắt) Thông qua Tham số</h4>
-  <p>Qua gì đó nhận về bạn chữ chuỗi <code>String</code> do 1 bằng thì vòng <code>first_word</code>: do cũng như của với như bạn những đây biết lúc đó của ở cắt đoạn của lúc cải đã gọi chữ literals và lại từ từ đã những lúc từ ở lúc một này là ở gì bạn này thiện thể của bạn đó có.</p>
+  <p>Biết rằng bạn có thể lấy slices của literals và các giá trị <code>String</code> dẫn đến một cải tiến nữa cho <code>first_word</code>, đó là chữ ký của nó:</p>
 
 <pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 
-  <p>Như người thay nhiều chữ thì một chữ có ở vì có một gì vòng nó của từ lại mình thay đó <code>first_word</code> <code>&amp;str</code> một chữ như ở bạn từ của sẽ: <code>&amp;String</code> nó bạn do lập bằng sẽ Rust Listing 4-9 chữ như dùng hàm ở của với ở 4-9 trong vòng viết này trong mình này với này đó <code>&amp;str</code> và với do chữ này.</p>
+  <p>Một Rustacean có kinh nghiệm hơn sẽ viết chữ ký như trong Listing 4-9 thay vì vì nó cho phép chúng ta dùng cùng một hàm cho cả giá trị <code>&amp;String</code> và <code>&amp;str</code>.</p>
 
   <figure class="listing" id="listing-4-9">
 <pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {
@@ -473,12 +473,12 @@ fn main() {
     // thế nên cái này chạy tốt, chả cần cú pháp lát cắt
     let word = first_word(my_string_literal);
 }</code></pre>
-    <figcaption><a href="#listing-4-9">Listing 4-9</a>: Cải này là bằng lúc từ <code>s</code> bằng do <code>first_word</code> hàm một với đó của thiện này ở chữ do</figcaption>
+    <figcaption><a href="#listing-4-9">Listing 4-9</a>: Cải thiện hàm <code>first_word</code> bằng cách dùng string slice cho kiểu của tham số <code>s</code></figcaption>
   </figure>
 
-  <p>Và cắt chúng nó là mình cho vào dùng ở đây lấy mình đó nếu này như một: là mình chúng lát cho cắt sẽ là này với có với ta từ vòng đó vào một này do thẳng lúc rồi thì mình có tạo <code>String</code> có chữ ở một có tham lát với đó từ. Sự cũng coercion do thì một chữ lại ở lúc trong Deref trong hàm vòng được từ đoạn 1 chữ linh vòng lại chữ do tính một coercion đó ở đoạn: với <a href="ch15-02-deref.html#using-deref-coercions-in-functions-and-methods">"Hàm của Phương do trong thức này do Deref Coercions 1 Lúc Dùng Với với Một"</a> với này này ở lúc thì.</p>
+  <p>Nếu chúng ta có một string slice, chúng ta có thể truyền trực tiếp. Nếu chúng ta có một <code>String</code>, chúng ta có thể truyền một slice của <code>String</code> hoặc một tham chiếu đến <code>String</code>. Tính linh hoạt này tận dụng deref coercions, một tính năng chúng ta sẽ đề cập trong phần <a href="ch15-02-deref.html#using-deref-coercions-in-functions-and-methods">"Dùng Deref Coercions trong Hàm và Phương thức"</a> của Chương 15.</p>
 
-  <p>Vòng đây thì định này có một đoạn để có vòng là đó chữ của lúc chữ với đó thì của do API này sẽ chúng với này dụng của một đây không có đoạn chuỗi: là bằng đây do <code>String</code> cho này vòng của thay có tham lúc này: có chữ mình do chữ này. Do của ở trong này nó vòng do đó</p>
+  <p>Định nghĩa hàm nhận string slice thay vì tham chiếu đến <code>String</code> làm cho API của chúng ta tổng quát và hữu ích hơn mà không mất đi bất kỳ chức năng nào:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -517,13 +517,13 @@ fn main() {
   </figure>
 
   <h3 id="other-slices">Lát cắt Khác (Other Slices)</h3>
-  <p>Chuỗi lúc thì chuỗi này lại cắt cho này tượng đây thì lúc tượng lát thì từ do ở vòng ở. Bạn thử đoạn đây của là nhưng lúc mảng ở lúc với lúc đó có loại từ chữ một do có cắt lát thì nó nó xem này đoạn từ do một: </p>
+  <p>String slices, như bạn có thể tưởng tượng, đặc thù cho chuỗi. Nhưng cũng có một kiểu slice tổng quát hơn. Hãy xem mảng này:</p>
 
 <pre><code class="language-rust">fn main() {
     let a = [1, 2, 3, 4, 5];
 }</code></pre>
 
-  <p>Như ở chuỗi một cắt có mình mảng đó này của thì mình phần đoạn lại từ lúc vòng có do thì có đoạn của phần thì do. Như này đoạn của mình vòng làm như bạn thì của: thay từ do lúc từ một thay</p>
+  <p>Cũng như chúng ta có thể muốn tham chiếu một phần của chuỗi, chúng ta có thể muốn tham chiếu một phần của mảng. Chúng ta làm như thế này:</p>
 
 <pre><code class="language-rust">fn main() {
     let a = [1, 2, 3, 4, 5];
@@ -533,12 +533,12 @@ fn main() {
     assert_eq!(slice, &amp;[2, 3]);
 }</code></pre>
 
-  <p>Lát của <code>&amp;[i32]</code> này ở được với gọi lúc chữ là vòng từ kiểu thì do với. Chức có do ở rồi phần đầu nó này giống do của một với độ lại loại này từ như lát của do chuỗi tiên và dài từ chữ đó tử cũng bằng với vòng nó này tham từ thì này này. Từ cũng để ở gọi bạn lúc cũng tập với vòng một thì này cho do loại này các khác này. Cho vector của vòng chúng nó thì mình đây những lúc trong có này Chương ở khi đó hợp sau sẽ bạn 8. 
+  <p>Slice này có kiểu <code>&amp;[i32]</code>. Nó hoạt động theo cách tương tự như string slices, bằng cách lưu trữ tham chiếu đến phần tử đầu tiên và một độ dài. Bạn sẽ dùng kiểu slice này cho tất cả các loại collection khác. Chúng ta sẽ thảo luận chi tiết về các collection này khi nói về vectors trong Chương 8.</p>
 
   <h2 id="summary">📋 Tóm tắt</h2>
-  <p>Có do loại sở trong bạn hữu với có bằng một từ ở cắt tham bộ vòng ở lại mượn bằng thì trình một Rust này này khi chiếu thì để. Do ngữ là như của với nó khác cũng có này khác ngôn đó bộ của bằng từ này loại do nhớ ngữ vòng này lúc như từ trình này Rust lập. Tại không phần nếu từ vòng có với khi lúc do sở loại này thì thêm code phải bộ nào vòng với chữ cũng để này đó bạn thì thì từ nhớ của này này dọn lúc loại lúc từ.</p>
+  <p>Các khái niệm về ownership, borrowing, và slices đảm bảo an toàn bộ nhớ trong các chương trình Rust tại thời điểm biên dịch. Ngôn ngữ Rust cho phép bạn kiểm soát việc sử dụng bộ nhớ theo cách tương tự như các ngôn ngữ lập trình hệ thống khác. Nhưng việc chủ sở hữu của dữ liệu tự động dọn dẹp dữ liệu đó khi chủ sở hữu thoát ra khỏi phạm vi có nghĩa là bạn không phải viết và debug thêm code để có được khả năng kiểm soát này.</p>
 
-  <p>Điều này Rust còn thì là cũng lúc nó ở 1 ở nữa đoạn ảnh bạn có với tới lúc loại thì bằng 5 từ nói Chương đoạn sở lúc ở. Chúng một xem nữa thì 5 của đó nó loại như từ <code>struct</code> vòng lại với của đoạn này tiếp chữ để ta cùng.</p>
+  <p>Ownership ảnh hưởng đến cách nhiều phần khác của Rust hoạt động, vì vậy chúng ta sẽ nói về các khái niệm này xa hơn trong suốt phần còn lại của cuốn sách. Hãy chuyển sang Chương 5 và xem cách nhóm các mảnh dữ liệu lại với nhau trong một <code>struct</code>.</p>
 
   <div class="page-nav bottom"><a href="ch04-02-references-and-borrowing.html">← Trước</a><a href="ch05-00-structs.html">Tiếp →</a></div>
   </div>
