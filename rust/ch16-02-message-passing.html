@@ -210,6 +210,58 @@
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-message-passing-to-transfer-data-between-threads"></a></p>
 <h2 id="transfer-data-between-threads-with-message-passing"><a class="header" href="#transfer-data-between-threads-with-message-passing">Truyền Dữ Liệu Giữa Các Thread Bằng Message Passing</a></h2>
+
+<figure style="margin: 24px 0; text-align: center;">
+<svg width="620" height="160" viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:8px;background:#1e1e2e;padding:16px">
+  <defs>
+    <marker id="arrow-ch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+    </marker>
+    <marker id="arrow-rx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- Sender (tx) thread box -->
+  <rect x="10" y="50" width="110" height="60" rx="8" fill="#1f2937" stroke="#CE422B" stroke-width="2"/>
+  <text x="65" y="77" text-anchor="middle" fill="#f87171" font-size="13" font-family="monospace" font-weight="bold">Thread gửi</text>
+  <text x="65" y="97" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="monospace">(tx)</text>
+
+  <!-- Arrow from tx to channel -->
+  <line x1="120" y1="80" x2="186" y2="80" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-ch)"/>
+  <text x="132" y="73" fill="#f59e0b" font-size="10" font-family="monospace">send()</text>
+
+  <!-- Channel buffer box -->
+  <rect x="188" y="38" width="240" height="84" rx="8" fill="#111827" stroke="#6366f1" stroke-width="2"/>
+  <text x="308" y="57" text-anchor="middle" fill="#a5b4fc" font-size="12" font-family="monospace" font-weight="bold">Channel (mpsc)</text>
+  <!-- Message boxes inside channel -->
+  <rect x="204" y="66" width="48" height="28" rx="4" fill="#3730a3"/>
+  <text x="228" y="85" text-anchor="middle" fill="#e0e7ff" font-size="11" font-family="monospace">"msg1"</text>
+  <rect x="260" y="66" width="48" height="28" rx="4" fill="#3730a3"/>
+  <text x="284" y="85" text-anchor="middle" fill="#e0e7ff" font-size="11" font-family="monospace">"msg2"</text>
+  <rect x="316" y="66" width="48" height="28" rx="4" fill="#3730a3"/>
+  <text x="340" y="85" text-anchor="middle" fill="#e0e7ff" font-size="11" font-family="monospace">"msg3"</text>
+  <!-- Queue direction arrow inside -->
+  <line x1="204" y1="107" x2="360" y2="107" stroke="#4b5563" stroke-width="1"/>
+  <text x="268" y="118" text-anchor="middle" fill="#4b5563" font-size="10" font-family="monospace">FIFO queue</text>
+
+  <!-- Arrow from channel to rx -->
+  <line x1="430" y1="80" x2="496" y2="80" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-rx)"/>
+  <text x="436" y="73" fill="#34d399" font-size="10" font-family="monospace">recv()</text>
+
+  <!-- Receiver (rx) thread box -->
+  <rect x="498" y="50" width="110" height="60" rx="8" fill="#1f2937" stroke="#10b981" stroke-width="2"/>
+  <text x="553" y="77" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">Thread nhận</text>
+  <text x="553" y="97" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="monospace">(rx)</text>
+
+  <!-- Labels below -->
+  <text x="65" y="140" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">Sender</text>
+  <text x="308" y="140" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">Bộ đệm tin nhắn</text>
+  <text x="553" y="140" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">Receiver</text>
+</svg>
+<figcaption style="margin-top:8px;font-size:0.9em;color:#6b7280;">Channel (<code>mpsc</code>) cho phép thread gửi (<code>tx</code>) truyền tin nhắn qua hàng đợi FIFO đến thread nhận (<code>rx</code>) một cách an toàn</figcaption>
+</figure>
+
 <p>Một trong những cách tiếp cận ngày càng phổ biến để đảm bảo concurrency an toàn là <em>message passing</em> — các thread hoặc actor giao tiếp với nhau bằng cách gửi tin nhắn chứa dữ liệu. Có một câu khẩu hiệu nổi tiếng từ <a href="https://golang.org/doc/effective_go.html#concurrency">tài liệu ngôn ngữ Go</a> diễn đạt ý tưởng này rất hay: "Đừng giao tiếp bằng cách chia sẻ bộ nhớ; thay vào đó, hãy chia sẻ bộ nhớ bằng cách giao tiếp."</p>
 <p>Để thực hiện concurrency kiểu message-sending, thư viện chuẩn của Rust cung cấp một triển khai channel. <em>Channel</em> là một khái niệm lập trình tổng quát cho phép gửi dữ liệu từ thread này sang thread khác.</p>
 <p>Bạn có thể hình dung channel trong lập trình như một dòng nước chảy một chiều — tựa như một con suối hay con sông. Nếu bạn thả một con vịt cao su xuống sông, nó sẽ trôi theo dòng nước đến cuối hành trình.</p>
@@ -425,6 +477,6 @@ Got: you
   <div class="page-nav bottom"><a href="ch16-01-threads.html">← Trước</a><a href="ch16-03-shared-state.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

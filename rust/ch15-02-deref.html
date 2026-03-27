@@ -217,6 +217,36 @@
 <p><a id="following-the-pointer-to-the-value-with-the-dereference-operator"></a>
 <a id="following-the-pointer-to-the-value"></a></p>
 <h3 id="following-the-reference-to-the-value"><a class="header" href="#following-the-reference-to-the-value">Theo Dấu Reference Tới Giá Trị</a></h3>
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" height="130" viewBox="0 0 580 130" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px" xmlns="http://www.w3.org/2000/svg">
+    <!-- Box x = 5 -->
+    <rect x="30" y="20" width="130" height="50" rx="8" fill="#3b82f6" opacity="0.85"/>
+    <text x="95" y="42" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">x = 5</text>
+    <text x="95" y="60" text-anchor="middle" fill="#bfdbfe" font-size="11" font-family="monospace">giá trị: 5</text>
+    <!-- Box y = &x -->
+    <rect x="220" y="20" width="130" height="50" rx="8" fill="#f59e0b" opacity="0.85"/>
+    <text x="285" y="42" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">y = &amp;x</text>
+    <text x="285" y="60" text-anchor="middle" fill="#fef3c7" font-size="11" font-family="monospace">con trỏ → x</text>
+    <!-- Arrow from y to x -->
+    <defs>
+      <marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/>
+      </marker>
+    </defs>
+    <line x1="220" y1="45" x2="162" y2="45" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow1)"/>
+    <!-- Box *y = 5 -->
+    <rect x="410" y="20" width="140" height="50" rx="8" fill="#10b981" opacity="0.85"/>
+    <text x="480" y="42" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">*y → 5</text>
+    <text x="480" y="60" text-anchor="middle" fill="#d1fae5" font-size="11" font-family="monospace">dereference</text>
+    <!-- == label between y and *y -->
+    <text x="385" y="49" text-anchor="middle" fill="#a6e3a1" font-size="14" font-family="monospace" font-weight="bold">==</text>
+    <!-- Labels below boxes -->
+    <text x="95" y="90" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">Stack: giá trị</text>
+    <text x="285" y="90" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">Stack: con trỏ</text>
+    <text x="480" y="90" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">Dereference: lấy giá trị</text>
+  </svg>
+  <figcaption>Dereference operator <code>*</code> theo dấu con trỏ để lấy giá trị gốc</figcaption>
+</figure>
 <p>Một reference thông thường là một loại pointer, và cách hình dung dễ nhất là coi pointer như mũi tên trỏ tới một giá trị nào đó đang nằm chỗ khác. Trong Listing 15-6, ta tạo một reference tới giá trị <code>i32</code> rồi dùng toán tử dereference để đi theo reference đó tới giá trị thực sự.</p>
 <figure class="listing" id="listing-15-6">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -358,6 +388,36 @@ impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
 <p><a id="implicit-deref-coercions-with-functions-and-methods"></a>
 <a id="using-deref-coercions-in-functions-and-methods"></a></p>
 <h3 id="using-deref-coercion-in-functions-and-methods"><a class="header" href="#using-deref-coercion-in-functions-and-methods">Sử Dụng Deref Coercion trong Hàm và Method</a></h3>
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" height="120" viewBox="0 0 580 120" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+    <!-- Box 1: &MyBox<String> -->
+    <rect x="10" y="25" width="145" height="50" rx="8" fill="#f59e0b" opacity="0.85"/>
+    <text x="82" y="46" text-anchor="middle" fill="#ffffff" font-size="12" font-family="monospace" font-weight="bold">&amp;MyBox&lt;String&gt;</text>
+    <text x="82" y="63" text-anchor="middle" fill="#fef3c7" font-size="10" font-family="sans-serif">Arg truyền vào</text>
+    <!-- Arrow 1 with label -->
+    <line x1="155" y1="50" x2="195" y2="50" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+    <text x="175" y="44" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">MyBox::deref()</text>
+    <!-- Box 2: &String -->
+    <rect x="198" y="25" width="120" height="50" rx="8" fill="#eab308" opacity="0.85"/>
+    <text x="258" y="46" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">&amp;String</text>
+    <text x="258" y="63" text-anchor="middle" fill="#fefce8" font-size="10" font-family="sans-serif">Trung gian</text>
+    <!-- Arrow 2 with label -->
+    <line x1="318" y1="50" x2="358" y2="50" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+    <text x="338" y="44" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">String::deref()</text>
+    <!-- Box 3: &str -->
+    <rect x="361" y="25" width="120" height="50" rx="8" fill="#10b981" opacity="0.85"/>
+    <text x="421" y="46" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">&amp;str</text>
+    <text x="421" y="63" text-anchor="middle" fill="#d1fae5" font-size="10" font-family="sans-serif">Expected type</text>
+    <!-- Bottom note -->
+    <text x="290" y="100" text-anchor="middle" fill="#a6e3a1" font-size="11" font-family="sans-serif">&#x2705; Rust tự động gọi deref() cho đến khi khớp type</text>
+  </svg>
+  <figcaption>Deref coercion: Rust tự động chuyển đổi qua chain <code>deref()</code> để match type kỳ vọng</figcaption>
+</figure>
 <p><em>Deref coercion</em> chuyển đổi reference tới một kiểu implement <code>Deref</code> thành reference tới một kiểu khác. Ví dụ, deref coercion có thể chuyển <code>&amp;String</code> thành <code>&amp;str</code> vì <code>String</code> implement trait <code>Deref</code> sao cho nó trả về <code>&amp;str</code>. Deref coercion là tiện ích Rust thực hiện trên các đối số của hàm và method, và chỉ hoạt động trên các kiểu implement <code>Deref</code>. Nó diễn ra tự động khi ta truyền reference tới giá trị của một kiểu nào đó cho hàm hoặc method mà kiểu tham số không khớp. Một chuỗi lời gọi method <code>deref</code> sẽ chuyển kiểu ta cung cấp thành kiểu mà tham số cần.</p>
 <p>Deref coercion được thêm vào Rust để giúp lập trình viên viết lời gọi hàm và method không phải thêm quá nhiều <code>&amp;</code> và <code>*</code> tường minh. Tính năng này cũng giúp ta viết code linh hoạt hơn, hoạt động được cho cả references lẫn smart pointers.</p>
 <p>Để thấy deref coercion trong thực tế, hãy dùng kiểu <code>MyBox&lt;T&gt;</code> từ Listing 15-8 cùng implementation <code>Deref</code> ta thêm trong Listing 15-10. Listing 15-11 cho thấy định nghĩa một hàm có parameter là string slice.</p>
@@ -451,6 +511,6 @@ impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
   <div class="page-nav bottom"><a href="ch15-01-box.html">← Trước</a><a href="ch15-03-drop.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

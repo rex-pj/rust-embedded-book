@@ -223,6 +223,37 @@
 
 <h3 id="storing-data-on-the-heap"><a class="header" href="#storing-data-on-the-heap">Lưu Dữ Liệu Lên Heap</a></h3>
 
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" viewBox="0 0 580 160" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
+    <!-- Stack region -->
+    <rect x="20" y="16" width="220" height="100" rx="8" fill="#1a2744" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="130" y="36" text-anchor="middle" font-size="12" font-weight="bold" fill="#93c5fd" font-family="monospace">Stack</text>
+    <!-- Stack box -->
+    <rect x="36" y="46" width="188" height="54" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+    <text x="130" y="68" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="monospace">b = Box pointer</text>
+    <text x="130" y="86" text-anchor="middle" font-size="10" fill="#94a3b8" font-family="monospace">0x7ffd…</text>
+    <!-- Arrow -->
+    <line x1="224" y1="73" x2="298" y2="73" stroke="#a5b4fc" stroke-width="2" marker-end="url(#arr1)"/>
+    <defs>
+      <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#a5b4fc"/>
+      </marker>
+    </defs>
+    <!-- Heap region -->
+    <rect x="302" y="16" width="220" height="100" rx="8" fill="#1a3a2a" stroke="#10b981" stroke-width="1.5"/>
+    <text x="412" y="36" text-anchor="middle" font-size="12" font-weight="bold" fill="#6ee7b7" font-family="monospace">Heap</text>
+    <!-- Heap box -->
+    <rect x="318" y="46" width="188" height="54" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="412" y="68" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="monospace">Giá trị: 5</text>
+    <text x="412" y="86" text-anchor="middle" font-size="10" fill="#94a3b8" font-family="monospace">i32</text>
+    <!-- Labels below -->
+    <text x="130" y="132" text-anchor="middle" font-size="10" fill="#64748b" font-family="sans-serif">Stack: nhỏ, tự động quản lý</text>
+    <text x="412" y="132" text-anchor="middle" font-size="10" fill="#64748b" font-family="sans-serif">Heap: linh hoạt, cần quản lý</text>
+    <line x1="275" y1="118" x2="275" y2="145" stroke="#374151" stroke-width="1" stroke-dasharray="3,3"/>
+  </svg>
+  <figcaption><code>Box&lt;T&gt;</code> lưu giá trị trên heap — con trỏ (pointer) nằm trên stack, dữ liệu thực trên heap</figcaption>
+</figure>
+
 <p>Trước khi bàn về use case heap storage của <code>Box&lt;T&gt;</code>, hãy xem qua cú pháp và cách tương tác với các giá trị bên trong <code>Box&lt;T&gt;</code> đã.</p>
 
 <p>Listing 15-1 cho thấy cách dùng box để lưu một giá trị <code>i32</code> lên heap.</p>
@@ -397,6 +428,6 @@ fn main() {
   <div class="page-nav bottom"><a href="ch15-00-smart-pointers.html">← Trước</a><a href="ch15-02-deref.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

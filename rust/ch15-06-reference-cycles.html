@@ -51,6 +51,38 @@
 <p>Các đảm bảo an toàn bộ nhớ của Rust khiến việc vô tình tạo ra bộ nhớ không bao giờ được dọn dẹp (còn gọi là <em>memory leak</em>) trở nên khó khăn, nhưng không phải không thể. Ngăn chặn hoàn toàn memory leak không phải là một trong những đảm bảo của Rust, nghĩa là memory leak là an toàn về bộ nhớ trong Rust. Chúng ta có thể thấy Rust cho phép memory leak bằng cách dùng <code>Rc&lt;T&gt;</code> và <code>RefCell&lt;T&gt;</code>: có thể tạo các reference trong đó các phần tử tham chiếu lẫn nhau tạo thành một vòng tròn. Điều này tạo ra memory leak vì reference count của mỗi phần tử trong vòng tròn sẽ không bao giờ đạt 0, và các giá trị sẽ không bao giờ bị drop.</p>
 
 <h3 id="creating-a-reference-cycle">Tạo một Reference Cycle</h3>
+
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
+    <defs>
+      <marker id="arrblue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#a5b4fc"/>
+      </marker>
+      <marker id="arrred" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+      </marker>
+    </defs>
+    <!-- Box A -->
+    <rect x="60" y="50" width="170" height="60" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+    <text x="145" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="#93c5fd" font-family="monospace">Box A</text>
+    <text x="145" y="92" text-anchor="middle" font-size="10" fill="#e2e8f0" font-family="monospace">Cons(5, RefCell)</text>
+    <!-- Box B -->
+    <rect x="348" y="50" width="170" height="60" rx="8" fill="#3b1f00" stroke="#f59e0b" stroke-width="2"/>
+    <text x="433" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="#fcd34d" font-family="monospace">Box B</text>
+    <text x="433" y="92" text-anchor="middle" font-size="10" fill="#e2e8f0" font-family="monospace">Cons(10, Nil)</text>
+    <!-- Arrow A → B (top) -->
+    <path d="M230,70 Q289,44 348,70" fill="none" stroke="#a5b4fc" stroke-width="2" marker-end="url(#arrblue)"/>
+    <text x="289" y="42" text-anchor="middle" font-size="10" fill="#a5b4fc" font-family="monospace">Rc</text>
+    <!-- Arrow B → A (bottom, red, cycle) -->
+    <path d="M348,110 Q289,140 230,110" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#arrred)"/>
+    <text x="289" y="152" text-anchor="middle" font-size="10" fill="#ef4444" font-family="monospace">Rc (cycle!)</text>
+    <!-- Cycle warning label -->
+    <rect x="130" y="168" width="320" height="22" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+    <text x="290" y="183" text-anchor="middle" font-size="10" fill="#fca5a5" font-family="sans-serif">❌ strong_count không về 0 → memory leak</text>
+  </svg>
+  <figcaption>Vòng lặp tham chiếu: <code>Rc</code> của A trỏ đến B, <code>Rc</code> của B trỏ lại A — cả hai sẽ không bao giờ bị drop</figcaption>
+</figure>
+
 <p>Hãy xem cách một reference cycle có thể xảy ra và cách ngăn chặn nó, bắt đầu với định nghĩa của enum <code>List</code> và method <code>tail</code> trong Listing 15-25.</p>
 <figure class="listing" id="listing-15-25">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -148,6 +180,57 @@ a rc count after changing a = 2
 <p>Một giải pháp khác để tránh reference cycle là tổ chức lại cấu trúc dữ liệu sao cho một số reference thể hiện ownership và một số thì không. Kết quả là bạn có thể có các vòng tròn bao gồm một số quan hệ ownership và một số quan hệ không-ownership, và chỉ các quan hệ ownership mới ảnh hưởng đến việc một giá trị có thể bị drop hay không. Trong Listing 15-25, chúng ta luôn muốn các variant <code>Cons</code> sở hữu danh sách của chúng, vì vậy việc tổ chức lại cấu trúc dữ liệu là không thể. Hãy xem một ví dụ dùng đồ thị gồm các nút cha và nút con để thấy khi nào các quan hệ không-ownership là cách phù hợp để ngăn reference cycle.</p>
 
 <h3 id="preventing-reference-cycles-using-weakt">Ngăn chặn Reference Cycle bằng <code>Weak&lt;T&gt;</code></h3>
+
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" viewBox="0 0 580 190" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
+    <defs>
+      <marker id="arrr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+      </marker>
+      <marker id="arrg2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+      </marker>
+      <marker id="arrd2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+    <!-- Left column header -->
+    <text x="145" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#f87171" font-family="sans-serif">❌ Rc (vòng lặp)</text>
+    <!-- Left Node 1 -->
+    <rect x="70" y="34" width="100" height="36" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="120" y="57" text-anchor="middle" font-size="11" fill="#fca5a5" font-family="monospace">Node 1</text>
+    <!-- Left Node 2 -->
+    <rect x="70" y="90" width="100" height="36" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="120" y="113" text-anchor="middle" font-size="11" fill="#fca5a5" font-family="monospace">Node 2</text>
+    <!-- Bidirectional red arrows -->
+    <line x1="145" y1="70" x2="145" y2="88" stroke="#ef4444" stroke-width="2" marker-end="url(#arrr2)"/>
+    <line x1="95" y1="90" x2="95" y2="72" stroke="#ef4444" stroke-width="2" marker-end="url(#arrr2)"/>
+    <!-- Left legend -->
+    <text x="120" y="146" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">strong_count mãi &gt; 0</text>
+    <text x="120" y="158" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">Rc = strong ref</text>
+    <!-- Divider -->
+    <line x1="290" y1="14" x2="290" y2="170" stroke="#374151" stroke-width="1" stroke-dasharray="4,4"/>
+    <!-- Right column header -->
+    <text x="435" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#6ee7b7" font-family="sans-serif">✅ Weak (an toàn)</text>
+    <!-- Right Parent -->
+    <rect x="360" y="34" width="150" height="36" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+    <text x="435" y="57" text-anchor="middle" font-size="11" fill="#6ee7b7" font-family="monospace">Parent (Rc)</text>
+    <!-- Right Child -->
+    <rect x="360" y="110" width="150" height="36" rx="6" fill="#1a2744" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="435" y="133" text-anchor="middle" font-size="11" fill="#c7d2fe" font-family="monospace">Child (Weak)</text>
+    <!-- Solid arrow Parent → Child -->
+    <line x1="435" y1="70" x2="435" y2="108" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrg2)"/>
+    <text x="452" y="92" font-size="9" fill="#6ee7b7" font-family="sans-serif">Rc</text>
+    <!-- Dashed arrow Child → Parent (weak) -->
+    <line x1="405" y1="110" x2="405" y2="72" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrd2)"/>
+    <text x="318" y="92" font-size="9" fill="#94a3b8" font-family="sans-serif">Weak↑</text>
+    <!-- Right legend -->
+    <text x="435" y="162" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">Weak = không giữ ownership</text>
+    <text x="435" y="174" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">cần .upgrade() để dùng</text>
+  </svg>
+  <figcaption><code>Weak&lt;T&gt;</code> không tăng <code>strong_count</code> — phá vỡ vòng lặp, cần <code>.upgrade()</code> để dùng</figcaption>
+</figure>
+
 <p>Cho đến nay, chúng ta đã chứng minh rằng việc gọi <code>Rc::clone</code> tăng <code>strong_count</code> của một instance <code>Rc&lt;T&gt;</code>, và một instance <code>Rc&lt;T&gt;</code> chỉ được dọn dẹp khi <code>strong_count</code> của nó là 0. Bạn cũng có thể tạo một weak reference tới giá trị trong một instance <code>Rc&lt;T&gt;</code> bằng cách gọi <code>Rc::downgrade</code> và truyền một reference tới <code>Rc&lt;T&gt;</code>. <em>Strong reference</em> là cách bạn chia sẻ quyền sở hữu của một instance <code>Rc&lt;T&gt;</code>. <em>Weak reference</em> không thể hiện quan hệ ownership, và count của chúng không ảnh hưởng đến khi nào một instance <code>Rc&lt;T&gt;</code> được dọn dẹp. Chúng sẽ không gây ra reference cycle, vì bất kỳ cycle nào liên quan đến một số weak reference sẽ bị phá vỡ khi strong reference count của các giá trị liên quan về 0.</p>
 <p>Khi bạn gọi <code>Rc::downgrade</code>, bạn nhận được một smart pointer kiểu <code>Weak&lt;T&gt;</code>. Thay vì tăng <code>strong_count</code> trong instance <code>Rc&lt;T&gt;</code> lên 1, gọi <code>Rc::downgrade</code> tăng <code>weak_count</code> lên 1. Kiểu <code>Rc&lt;T&gt;</code> dùng <code>weak_count</code> để theo dõi có bao nhiêu reference <code>Weak&lt;T&gt;</code> tồn tại, tương tự <code>strong_count</code>. Điểm khác biệt là <code>weak_count</code> không cần bằng 0 để instance <code>Rc&lt;T&gt;</code> được dọn dẹp.</p>
 <p>Vì giá trị mà <code>Weak&lt;T&gt;</code> tham chiếu có thể đã bị drop, để làm gì đó với giá trị mà <code>Weak&lt;T&gt;</code> đang trỏ tới bạn phải đảm bảo giá trị đó vẫn tồn tại. Hãy làm điều này bằng cách gọi method <code>upgrade</code> trên một instance <code>Weak&lt;T&gt;</code>, sẽ trả về <code>Option&lt;Rc&lt;T&gt;&gt;</code>. Bạn sẽ nhận được kết quả là <code>Some</code> nếu giá trị <code>Rc&lt;T&gt;</code> chưa bị drop và là <code>None</code> nếu nó đã bị drop. Vì <code>upgrade</code> trả về <code>Option&lt;Rc&lt;T&gt;&gt;</code>, Rust sẽ đảm bảo cả trường hợp <code>Some</code> lẫn <code>None</code> đều được xử lý, và sẽ không có con trỏ không hợp lệ.</p>
@@ -356,6 +439,6 @@ children: RefCell { value: [] } }] } })
   <div class="page-nav bottom"><a href="ch15-05-interior-mutability.html">← Trước</a><a href="ch16-00-concurrency.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

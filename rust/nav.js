@@ -11,30 +11,132 @@
     }, { passive: true });
   }
 
-  /* ── Hamburger ── */
+  /* ── Hamburger + sidebar overlay ── */
   const ham = document.getElementById('hamburger');
   const sb  = document.getElementById('sidebar');
-  if (ham && sb) {
-    ham.addEventListener('click', () => {
-      sb.classList.toggle('open');
-      ham.textContent = sb.classList.contains('open') ? '✕' : '☰';
-    });
-    document.addEventListener('click', (e) => {
-      if (!sb.contains(e.target) && !ham.contains(e.target)) {
-        sb.classList.remove('open');
-        ham.textContent = '☰';
-      }
-    });
+
+  // Create overlay element for mobile sidebar backdrop
+  const overlay = document.createElement('div');
+  overlay.id = 'sidebar-overlay';
+  document.body.appendChild(overlay);
+
+  function openSidebar() {
+    sb.classList.add('open');
+    overlay.classList.add('visible');
+    ham.textContent = '✕';
+  }
+  function closeSidebar() {
+    sb.classList.remove('open');
+    overlay.classList.remove('visible');
+    ham.textContent = '☰';
   }
 
-  /* ── Active link + scroll into view ── */
+  if (ham && sb) {
+    ham.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sb.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    overlay.addEventListener('click', closeSidebar);
+  }
+
+  /* ── Active link ── */
   const current = window.location.pathname.split('/').pop() || 'index.html';
   let activeLink = null;
+  let activeGroup = null;
   document.querySelectorAll('#sidebar a').forEach(a => {
-    if (a.getAttribute('href') === current) { a.classList.add('active'); activeLink = a; }
+    if (a.getAttribute('href') === current) {
+      a.classList.add('active');
+      activeLink = a;
+      activeGroup = a.closest('.nav-group');
+    }
   });
-  if (activeLink) {
-    activeLink.scrollIntoView({ block: 'center', behavior: 'instant' });
+
+  /* ── Collapsible sidebar groups ── */
+  // We wrap links in a body div for clean height animation.
+  // On page load: collapse instantly (no transition).
+  // After load: enable transition for user clicks only.
+  document.querySelectorAll('#sidebar .nav-group').forEach(group => {
+    const title = group.querySelector('.nav-group-title');
+    if (!title) return; // intro group — always visible
+
+    // Wrap all direct-child <a> links in a collapsible body div
+    const links = Array.from(group.children).filter(el => el.tagName === 'A');
+    const body = document.createElement('div');
+    body.className = 'nav-group-body';
+    links.forEach(a => body.appendChild(a));
+    group.appendChild(body);
+
+    if (group !== activeGroup) {
+      // Collapse instantly — set height:0 with no transition
+      body.style.height = '0';
+      body.style.overflow = 'hidden';
+      group.classList.add('collapsed');
+    } else {
+      // Active group: let it be its natural height
+      body.style.height = 'auto';
+    }
+
+    title.addEventListener('click', () => {
+      const isCollapsed = group.classList.contains('collapsed');
+      if (isCollapsed) {
+        // Expand: measure natural height, animate from 0 to it
+        group.classList.remove('collapsed');
+        body.style.transition = 'height .2s ease';
+        body.style.height = '0';
+        // Force reflow so transition fires
+        body.offsetHeight; // eslint-disable-line no-unused-expressions
+        body.style.height = body.scrollHeight + 'px';
+        body.addEventListener('transitionend', () => {
+          body.style.height = 'auto'; // let it grow if content changes
+          body.style.transition = '';
+        }, { once: true });
+      } else {
+        // Collapse: animate from current height to 0
+        body.style.height = body.offsetHeight + 'px';
+        body.style.overflow = 'hidden';
+        body.offsetHeight; // force reflow
+        body.style.transition = 'height .2s ease';
+        body.style.height = '0';
+        group.classList.add('collapsed');
+        body.addEventListener('transitionend', () => {
+          body.style.transition = '';
+        }, { once: true });
+      }
+    });
+  });
+
+  /* ── Sidebar scroll: restore saved position, fallback to center active link ── */
+  const SB_SCROLL_KEY = 'sb-scroll';
+  const savedScroll = sessionStorage.getItem(SB_SCROLL_KEY);
+
+  if (sb) {
+    if (savedScroll !== null) {
+      // Restore immediately after groups have collapsed (no layout jitter)
+      sb.scrollTop = parseInt(savedScroll, 10);
+      sessionStorage.removeItem(SB_SCROLL_KEY);
+
+      // Safety check: if active link ended up off-screen (e.g. crossed chapters), scroll to it
+      requestAnimationFrame(() => {
+        if (!activeLink) return;
+        const sbRect = sb.getBoundingClientRect();
+        const linkRect = activeLink.getBoundingClientRect();
+        if (linkRect.top < sbRect.top + 4 || linkRect.bottom > sbRect.bottom - 4) {
+          activeLink.scrollIntoView({ block: 'center', behavior: 'instant' });
+        }
+      });
+    } else if (activeLink) {
+      // First visit or no saved position: center the active link
+      requestAnimationFrame(() => {
+        activeLink.scrollIntoView({ block: 'center', behavior: 'instant' });
+      });
+    }
+
+    // Save scroll position the moment user clicks any sidebar link
+    sb.addEventListener('click', (e) => {
+      if (e.target.closest('a[href]')) {
+        try { sessionStorage.setItem(SB_SCROLL_KEY, sb.scrollTop); } catch (_) {}
+      }
+    }, { capture: true });
   }
 
   /* ── Heading anchors ── */
@@ -51,28 +153,18 @@
     const lang = block.className.match(/language-(\w+)/)?.[1] || '';
     if (lang === 'rust' || lang === '') {
       let c = block.textContent;
-      // escape for safety
       c = c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      // comments
       c = c.replace(/(\/\/[^\n]*)/g, '<span class="comment">$1</span>');
       c = c.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
-      // strings
       c = c.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="str">$1</span>');
       c = c.replace(/('(?:[^'\\]|\\.)+')/g, '<span class="str">$1</span>');
-      // lifetimes (before keywords)
       c = c.replace(/\b('(?:[a-z_]\w*))\b/g, '<span class="life">$1</span>');
-      // attributes
       c = c.replace(/(#\[.*?\])/gs, '<span class="attr">$1</span>');
-      // macros
       c = c.replace(/\b([a-z_]\w*)!/g, '<span class="macro">$1!</span>');
-      // keywords
       const KW = 'fn|let|mut|const|static|struct|enum|impl|trait|type|use|mod|pub|crate|super|self|Self|return|if|else|match|loop|while|for|in|break|continue|where|async|await|move|ref|unsafe|extern|dyn|box|as';
       c = c.replace(new RegExp('\\b(' + KW + ')\\b', 'g'), '<span class="kw">$1</span>');
-      // bool/special
       c = c.replace(/\b(true|false|None|Some|Ok|Err)\b/g, '<span class="kw2">$1</span>');
-      // types (CamelCase)
       c = c.replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, '<span class="type">$1</span>');
-      // numbers
       c = c.replace(/\b(\d[\d_]*(?:\.\d[\d_]*)?(?:[a-z]+)?)\b/g, '<span class="num">$1</span>');
       block.innerHTML = c;
     }

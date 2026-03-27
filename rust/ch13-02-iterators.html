@@ -293,6 +293,63 @@
 </figure>
 <p>Sau khi gọi <code>sum</code>, chúng ta không được phép dùng <code>v1_iter</code> nữa, vì <code>sum</code> đã lấy ownership của iterator.</p>
 <h3 id="methods-that-produce-other-iterators"><a class="header" href="#methods-that-produce-other-iterators">Các method tạo ra iterator khác</a></h3>
+
+<figure style="margin: 24px 0; text-align: center;">
+<svg width="620" height="160" viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:16px">
+  <!-- Title -->
+  <text x="310" y="18" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="monospace">Iterator adapter chain: map → filter → collect</text>
+
+  <!-- Source vec -->
+  <rect x="10" y="50" width="90" height="70" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.2"/>
+  <text x="55" y="68" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="monospace">[1, 2, 3,</text>
+  <text x="55" y="82" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="monospace"> 4, 5]</text>
+  <text x="55" y="104" text-anchor="middle" fill="#6b7280" font-size="9" font-family="monospace">Vec&lt;i32&gt;</text>
+
+  <!-- Arrow 1 -->
+  <line x1="100" y1="85" x2="136" y2="85" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- map box -->
+  <rect x="136" y="50" width="100" height="70" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.2"/>
+  <text x="186" y="72" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="monospace">map</text>
+  <text x="186" y="86" text-anchor="middle" fill="#9ca3af" font-size="9" font-family="monospace">|x| x * 2</text>
+  <text x="186" y="104" text-anchor="middle" fill="#6b7280" font-size="9" font-family="monospace">[2,4,6,8,10]</text>
+
+  <!-- Arrow 2 -->
+  <line x1="236" y1="85" x2="272" y2="85" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- filter box -->
+  <rect x="272" y="50" width="100" height="70" rx="6" fill="#3b1f00" stroke="#f59e0b" stroke-width="1.2"/>
+  <text x="322" y="72" text-anchor="middle" fill="#fbbf24" font-size="11" font-family="monospace">filter</text>
+  <text x="322" y="86" text-anchor="middle" fill="#9ca3af" font-size="9" font-family="monospace">|x| x &gt; 4</text>
+  <text x="322" y="104" text-anchor="middle" fill="#6b7280" font-size="9" font-family="monospace">[6, 8, 10]</text>
+
+  <!-- Arrow 3 -->
+  <line x1="372" y1="85" x2="408" y2="85" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- collect box -->
+  <rect x="408" y="50" width="100" height="70" rx="6" fill="#1a1040" stroke="#8b5cf6" stroke-width="1.2"/>
+  <text x="458" y="72" text-anchor="middle" fill="#a78bfa" font-size="11" font-family="monospace">collect</text>
+  <text x="458" y="86" text-anchor="middle" fill="#9ca3af" font-size="9" font-family="monospace">consumer</text>
+  <text x="458" y="104" text-anchor="middle" fill="#6b7280" font-size="9" font-family="monospace">Vec&lt;i32&gt;</text>
+
+  <!-- Arrow 4 -->
+  <line x1="508" y1="85" x2="544" y2="85" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- Result -->
+  <rect x="544" y="58" width="66" height="54" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.2"/>
+  <text x="577" y="79" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="monospace">[6, 8,</text>
+  <text x="577" y="93" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="monospace"> 10]</text>
+
+  <!-- Lazy label -->
+  <text x="310" y="145" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">⚡ Lazy: không tính gì cả cho đến khi gọi collect() — tiết kiệm bộ nhớ</text>
+
+  <defs>
+    <marker id="a1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6b7280"/></marker>
+  </defs>
+</svg>
+<figcaption>Iterator adapter chain: <code>map</code> và <code>filter</code> là lazy adapters (không tính ngay), <code>collect</code> là consumer kích hoạt toàn bộ chuỗi</figcaption>
+</figure>
+
 <p><em>Iterator adapters</em> là các method được định nghĩa trên trait <code>Iterator</code> mà không tiêu thụ iterator. Thay vào đó, chúng tạo ra các iterator khác bằng cách thay đổi một khía cạnh nào đó của iterator ban đầu.</p>
 <p>Listing 13-14 cho thấy một ví dụ về cách gọi iterator adapter method <code>map</code>, nhận một closure để gọi trên từng phần tử khi duyệt qua. Method <code>map</code> trả về một iterator mới tạo ra các phần tử đã được biến đổi. Closure ở đây tạo ra một iterator mới trong đó mỗi phần tử từ vector sẽ được tăng thêm 1.</p>
 <figure class="listing" id="listing-13-14">
@@ -406,6 +463,6 @@ mod tests {
   <div class="page-nav bottom"><a href="ch13-01-closures.html">← Trước</a><a href="ch13-03-improving-our-io-project.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Separating Modules into Different Files - The Rust Book (Tiếng Việt)</title>
+  <title>Tách Module ra các File khác nhau — The Rust Book (Tiếng Việt)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -70,7 +70,7 @@
       <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
       <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
       <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
-      <a href="ch07-05-separating-modules-into-different-files.html" class="active">Tách module ra file</a>
+      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Chương 8 — Collections</div>
@@ -138,21 +138,21 @@
       <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+      <div class="nav-group-title">Chương 16 — Concurrency</div>
       <a href="ch16-00-concurrency.html">Tổng quan</a>
       <a href="ch16-01-threads.html">Threads</a>
       <a href="ch16-02-message-passing.html">Message Passing</a>
       <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
+      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Send &amp; Sync</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Chương 17 — Async/Await</div>
       <a href="ch17-00-async-await.html">Tổng quan</a>
       <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+      <a href="ch17-02-concurrency-with-async.html">Concurrency với Async</a>
+      <a href="ch17-03-more-futures.html">Thêm về Futures</a>
       <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+      <a href="ch17-05-traits-for-async.html">Traits cho Async</a>
       <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
     </div>
     <div class="nav-group">
@@ -160,12 +160,12 @@
       <a href="ch18-00-oop.html">Tổng quan</a>
       <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
       <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+      <a href="ch18-03-oo-design-patterns.html">Design Patterns</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+      <div class="nav-group-title">Chương 19 — Patterns</div>
       <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
+      <a href="ch19-01-all-the-places-for-patterns.html">Vị trí dùng Patterns</a>
       <a href="ch19-02-refutability.html">Refutability</a>
       <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
     </div>
@@ -175,21 +175,21 @@
       <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
       <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
       <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
+      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions</a>
       <a href="ch20-05-macros.html">Macros</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+      <div class="nav-group-title">Chương 21 — Dự án Web Server</div>
       <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
       <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+      <a href="ch21-02-multithreaded.html">Multithreaded</a>
       <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Phụ lục</div>
       <a href="appendix-00.html">Tổng quan</a>
       <a href="appendix-01-keywords.html">A — Keywords</a>
-      <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+      <a href="appendix-02-operators.html">B — Operators</a>
       <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
       <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
       <a href="appendix-05-editions.html">E — Editions</a>
@@ -200,22 +200,30 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — The Rust Book</span></div>
+<div id="topbar">
+  <a href="title-page.html">📖 The Rust Book</a>
+  <span class="sep">›</span>
+  <span class="current">Chương 7 — Tách Module ra các File khác nhau</span>
+  <span style="flex:1"></span>
+  <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="topbar-nav">← Trước</a>
+  <a href="ch08-00-common-collections.html" class="topbar-nav">Tiếp →</a>
+</div>
   <div id="main">
   <div class="page-nav">
-    <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">← Trước</a>
-    <a href="ch08-00-common-collections.html">Tiếp →</a>
+    <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="nav-btn prev">← Trước</a>
+    <a href="ch08-00-common-collections.html" class="nav-btn next">Tiếp →</a>
   </div>
 
-<h2 id="separating-modules-into-different-files">Tách Rời Các Module Ra Thành Từng File Khác Nhau</h2>
-<p>Từ nãy tới giờ, toàn bộ các ví dụ trong chương này đều định nghĩa nhiều module gom chung trong một file duy nhất. Khi mà các module dần bành trướng lớn hơn, bạn có lẽ sẽ muốn dời các phần định nghĩa của chúng sang một file riêng biệt để giúp đoạn code dễ dàng định hướng đọc hơn.</p>
+<h2 id="separating-modules-into-different-files">Tách Module ra các File khác nhau</h2>
 
-<p>Chẳng hạn, hãy bắt đầu lại bộ code ở Listing 7-17 chứa đựng nhiều loại module nhà hàng khác nhau đan xen. Chúng ta sẽ chiết xuất từng module ra các file riêng lẻ thay vì cứ để tất cả rúc vào chung đụng trong rễ file (crate root file). Ở ví dụ này, rễ file (crate root) đang là <em>src/lib.rs</em>, thế nhưng thủ thuật này bạn vẫn áp xài ngon lành cho binary crates có bộ rễ file gốc khởi điểm tại <em>src/main.rs</em>.</p>
+<p>Cho đến nay, tất cả ví dụ trong chương này đều định nghĩa nhiều module trong một file duy nhất. Khi các module trở nên lớn hơn, bạn có thể muốn chuyển định nghĩa của chúng sang một file riêng để code dễ điều hướng hơn.</p>
 
-<p>Đầu tiên, chúng ta sẽ bưng cái module <code>front_of_house</code> sang một file độc lập của chính nó. Hãy xóa bỏ toàn bộ code nằm lọt trong cặp dấu ngoặc nhọn của module <code>front_of_house</code>, chỉ để chừa lại duy nhất câu lệnh khai báo <code>mod front_of_house;</code>, nên <em>src/lib.rs</em> lúc này sẽ chỉ chứa mã như thể hiện tại Listing 7-21. Chú ý rằng mớ này sẽ quăng lỗi trình biên dịch chừng nào bạn phải tạo cho được file <em>src/front_of_house.rs</em> như thể hiện ở Listing 7-22 thì nó mới chạy.</p>
+<p>Ví dụ, hãy bắt đầu từ code trong Listing 7-17 có nhiều module về nhà hàng. Ta sẽ tách các module ra các file thay vì giữ tất cả trong file crate root. Trong trường hợp này, file crate root là <em>src/lib.rs</em>, nhưng quy trình này cũng hoạt động với binary crate có file crate root là <em>src/main.rs</em>.</p>
+
+<p>Trước tiên, ta sẽ tách module <code>front_of_house</code> ra file riêng của nó. Xóa phần code nằm trong cặp ngoặc nhọn của module <code>front_of_house</code>, chỉ giữ lại khai báo <code>mod front_of_house;</code>, sao cho <em>src/lib.rs</em> chứa code như trong Listing 7-21. Lưu ý rằng code này sẽ chưa biên dịch được cho đến khi ta tạo file <em>src/front_of_house.rs</em> trong Listing 7-22.</p>
 
 <figure class="listing" id="listing-7-21">
-<span class="file-name">Tên file: src/lib.rs</span>
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">mod front_of_house;
 
 pub use crate::front_of_house::hosting;
@@ -223,67 +231,77 @@ pub use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-21">Listing 7-21</a>: Khai báo cái module <code>front_of_house</code>, phần thân của khối chuẩn bị đóng đô nằm ở file <em>src/front_of_house.rs</em></figcaption>
+<figcaption><a href="#listing-7-21">Listing 7-21</a>: Khai báo module <code>front_of_house</code> với phần thân sẽ nằm trong <em>src/front_of_house.rs</em></figcaption>
 </figure>
 
-<p>Tiếp theo, hãy nhồi trọn đoạn code bạn vừa xóa từ trong lòng dấu ngoặc nhọn kia sang hẳn một tập tin mới gắn tên <em>src/front_of_house.rs</em>, giống Listing 7-22 làm mẫu. Tụi compiler tự khắc biết cách là phải đánh hơi tìm cọc file này do lúc nãy chúng lướt trúng phải dòng khai module ở cọc root cái tên gọi <code>front_of_house</code>.</p>
+<p>Tiếp theo, đặt phần code từ trong cặp ngoặc nhọn vào một file mới tên là <em>src/front_of_house.rs</em>, như trong Listing 7-22. Compiler biết cần tìm ở file này vì nó gặp khai báo module trong crate root với tên <code>front_of_house</code>.</p>
 
 <figure class="listing" id="listing-7-22">
-<span class="file-name">Tên file: src/front_of_house.rs</span>
+<span class="file-name">Filename: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting {
     pub fn add_to_waitlist() {}
 }</code></pre>
-<figcaption><a href="#listing-7-22">Listing 7-22</a>: Cấu trúc định nghĩa bên trong ruột module <code>front_of_house</code> ngự tại <em>src/front_of_house.rs</em></figcaption>
+<figcaption><a href="#listing-7-22">Listing 7-22</a>: Các định nghĩa bên trong module <code>front_of_house</code> trong <em>src/front_of_house.rs</em></figcaption>
 </figure>
 
-<p>Lưu ý rằng bạn chỉ cần khai nạp load một file bằng từ khóa khai báo <code>mod</code> <em>duy nhất một lần</em> trong suốt trọn nhành module tree của project. Một khi trình biên dịch ngửi ra được tập tin đó là một phần của project (và hóng được nó vọc vạch chui rúc nằm ở đâu trong mớ module tree từ vị trí bạn găm đặt lệnh statement <code>mod</code>), là các tập tin khác trong project của bạn chỉ cần lấy chỉ dẫn lôi code ở cái file đã nạp bằng cách chiếu khai path đến gốc ban đầu nơi nó được khai báo ra, như đã mổ xẻ mục <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Dùng Đường Dẫn Path Để Ngắm Gọi Một Cục Item bên trong Module Tree"</a><!-- ignore -->. Đổi cách diễn đạt: cái từ <code>mod</code> vạch vòi đây <em>sạch bách chẳng phải</em> là cái phép nhúng include operation mà các thể loại coders hay múa máy dùng bên mấy bến đỗ ngôn ngữ lập trình xứ khác.</p>
+<p>Lưu ý rằng bạn chỉ cần load một file bằng khai báo <code>mod</code> <em>một lần duy nhất</em> trong module tree của mình. Một khi compiler biết file đó là một phần của dự án (và biết code nằm ở đâu trong module tree dựa vào vị trí bạn đặt câu lệnh <code>mod</code>), các file khác trong dự án nên tham chiếu đến code của file đã được load bằng cách dùng path đến nơi nó được khai báo, như đã trình bày trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Paths for Referring to an Item in the Module Tree"</a>. Nói cách khác, <code>mod</code> <em>không phải</em> là thao tác "include" như bạn có thể thấy trong các ngôn ngữ lập trình khác.</p>
 
-<p>Tiếp theo đội xếp hàng, ta sẽ đôn cái module <code>hosting</code> thảy vọt sang ổ file độc ác của riêng hắn. Trình tự này hẵng có nới lóng chút gợn khác biệt bởi cái thân <code>hosting</code> đính mác danh phận là một child module (module con cưng) dính vào mẹ <code>front_of_house</code>, chứ không rẽ ngoặc cắm thân chướng về root module (module gốc). Chúng mình sẽ đặt tên cái file của <code>hosting</code> chui tọt vào tạo một thư mục mớ mới toanh lấy tên xưng danh y xì đúc với nguyên lão ancestors module bọc rễ nó, ở trường hợp này là chui dzô <em>src/front_of_house</em>.</p>
+<p>Tiếp theo, ta sẽ tách module <code>hosting</code> ra file riêng của nó. Quy trình này hơi khác một chút vì <code>hosting</code> là child module của <code>front_of_house</code>, không phải của root module. Ta sẽ đặt file cho <code>hosting</code> trong một thư mục mới được đặt tên theo các module cha của nó trong module tree, trong trường hợp này là <em>src/front_of_house</em>.</p>
 
-<p>Để khơi mào phi vụ dọn dẹp <code>hosting</code>, trước bước ta sửa lại cái <em>src/front_of_house.rs</em> chừa duy mỗi bộ định danh trơ bóng dòng:</p>
+<p>Để bắt đầu chuyển <code>hosting</code>, ta sửa <em>src/front_of_house.rs</em> để chỉ chứa khai báo của module <code>hosting</code>:</p>
 
 <figure class="listing">
-<span class="file-name">Tên file: src/front_of_house.rs</span>
+<span class="file-name">Filename: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting;</code></pre>
 </figure>
 
-<p>Kéo theo, dựng thêm cái thư mục <em>src/front_of_house</em> cùng cục tọt file bé <em>hosting.rs</em> hòng nhồi đầy trọn kho định nghĩa đẻ gờn gác bấy lâu thuộc module <code>hosting</code>:</p>
+<p>Sau đó, ta tạo thư mục <em>src/front_of_house</em> và file <em>hosting.rs</em> để chứa các định nghĩa của module <code>hosting</code>:</p>
 
 <figure class="listing">
-<span class="file-name">Tên file: src/front_of_house/hosting.rs</span>
+<span class="file-name">Filename: src/front_of_house/hosting.rs</span>
 <pre><code class="language-rust ignore">pub fn add_to_waitlist() {}</code></pre>
 </figure>
 
-<p>Nếu phe mình cố cãi ném bố ráp file <em>hosting.rs</em> dọn vào ngõ thư mục <em>src</em>, cái bộ compiler dứt khoát hở mỏ đòi ngóng tìm con <em>hosting.rs</em> code đóng địa chỉ tại bãi đáp là được khai quật chung mâm module rễ crate gốc root thay vì nhận vai ghế một đứa con lóc nhóc child đứng ngó nhìn vào mẹ <code>front_of_house</code> module. Cái đống quy luật mớ rẽ lối rình rập vạch định tìm code đi khấp tìm tệp trùng đúng ổ nòng bọc của nhóm compiler sẽ xích đám tệp tin cùng thư mục ôm ấp chặt khắng khít vừa hệt như khuôn đúc sát xịt với nhóm module tree ngóc rễ vác kia hơn.</p>
+<p>Nếu thay vào đó ta đặt <em>hosting.rs</em> trong thư mục <em>src</em>, compiler sẽ kỳ vọng code trong <em>hosting.rs</em> thuộc module <code>hosting</code> được khai báo trong crate root, chứ không phải là child của module <code>front_of_house</code>. Quy tắc của compiler về việc kiểm tra file nào cho module nào đồng nghĩa với việc cấu trúc thư mục và file phản ánh chặt chẽ module tree.</p>
 
 <section class="note" aria-role="note">
-<h3 id="alternate-file-paths">Các Đường Dẫn Tệp Tin Khác</h3>
-<p>Cho đến nay, chúng ta đã đề cập đến các đường dẫn (file paths) chuẩn mực nhất mà trình biên dịch Rust sử dụng, nhưng Rust cũng hỗ trợ một định dạng đường dẫn cũ hơn. Đối với một module tên là <code>front_of_house</code> được khai báo trong crate root, trình biên dịch sẽ tìm kiếm đoạn code của module đó ở:</p>
+<h3 id="alternate-file-paths">Các đường dẫn file thay thế</h3>
+
+<p>Cho đến nay ta đã đề cập đến cách đặt đường dẫn file theo phong cách chuẩn nhất mà Rust compiler sử dụng, nhưng Rust cũng hỗ trợ một phong cách cũ hơn. Với module tên là <code>front_of_house</code> được khai báo trong crate root, compiler sẽ tìm code của module trong:</p>
+
 <ul>
-<li><em>src/front_of_house.rs</em> (chuẩn mực mà chúng ta vừa phân tích)</li>
-<li><em>src/front_of_house/mod.rs</em> (định dạng cũ, vẫn còn được hỗ trợ)</li>
+<li><em>src/front_of_house.rs</em> (cách ta đã đề cập)</li>
+<li><em>src/front_of_house/mod.rs</em> (phong cách cũ, vẫn còn được hỗ trợ)</li>
 </ul>
-<p>Đối với một module tên là <code>hosting</code> và là một module con (submodule) của <code>front_of_house</code>, trình biên dịch sẽ tìm phần code của module này ở:</p>
+
+<p>Với module tên là <code>hosting</code> là submodule của <code>front_of_house</code>, compiler sẽ tìm code của module trong:</p>
+
 <ul>
-<li><em>src/front_of_house/hosting.rs</em> (chuẩn mực mà chúng ta vừa phân tích)</li>
-<li><em>src/front_of_house/hosting/mod.rs</em> (định dạng cũ, vẫn còn được hỗ trợ)</li>
+<li><em>src/front_of_house/hosting.rs</em> (cách ta đã đề cập)</li>
+<li><em>src/front_of_house/hosting/mod.rs</em> (phong cách cũ, vẫn còn được hỗ trợ)</li>
 </ul>
-<p>Nếu bạn sử dụng cả hai định dạng cho cùng một module, bạn sẽ nhận được thông báo lỗi từ phía trình biên dịch. Việc trộn lẫn hai định dạng cho các module khác nhau trong cùng một dự án tuy được cho phép nhưng lại có nguy cơ gây nhầm lẫn cho những ai đọc qua dự án của bạn.</p>
-<p>Nhược điểm lớn nhất khi xài định dạng sử dụng tên tệp <em>mod.rs</em> là dự án của bạn sẽ kết thúc với một rổ các tệp tin có cùng tên <em>mod.rs</em>, làm dấy lên sự khó chịu khi bạn lỡ mở chúng cùng lúc trên code editor của mình.</p>
+
+<p>Nếu bạn dùng cả hai phong cách cho cùng một module, bạn sẽ gặp lỗi biên dịch. Dùng hỗn hợp hai phong cách cho các module khác nhau trong cùng một dự án được phép, nhưng có thể gây khó hiểu cho người điều hướng dự án.</p>
+
+<p>Nhược điểm chính của phong cách dùng file có tên <em>mod.rs</em> là dự án của bạn có thể có nhiều file cùng tên <em>mod.rs</em>, điều này dễ gây nhầm lẫn khi bạn mở nhiều file như vậy trong editor cùng một lúc.</p>
 </section>
 
-<p>Chúng ta đã chuyển mỗi module vào từng file riêng biệt và thành công duy trì sự ổn định của nguyên module tree ban đầu. Lời gọi hàm trong <code>eat_at_restaurant</code> sẽ hoạt động trơn tru mà không cần chỉnh sửa bất cứ thứ gì, dù cho các định nghĩa bây giờ đã sống ở những file hoàn toàn khác biệt. Kỹ thuật này tiếp sức cho bạn chuyển các modules sang các files độc lập khi chúng dần trở nên phức tạp về kích cỡ.</p>
+<p>Ta đã chuyển code của mỗi module sang một file riêng, và module tree vẫn giữ nguyên. Các lời gọi hàm trong <code>eat_at_restaurant</code> sẽ hoạt động bình thường mà không cần sửa đổi gì, dù các định nghĩa nằm ở các file khác nhau. Kỹ thuật này cho phép bạn chuyển module sang file mới khi module phát triển về kích thước.</p>
 
-<p>Hãy cùng lưu tâm rằng dòng lệnh <code>pub use crate::front_of_house::hosting</code> tại <em>src/lib.rs</em> cũng chả chịu sức mẻ xê dịch gì, và kể cả lệnh <code>use</code> cũng không bao biện tác động đến bất cứ quá trình tệp nào được biên dịch cho cái hộp crate. Từ khóa <code>mod</code> khai mở mác modules, và gã thợ Rust lân la tìm tệp tin đồng tên với danh tính module nọ để bê code vào cho module đó.</p>
+<p>Lưu ý rằng câu lệnh <code>pub use crate::front_of_house::hosting</code> trong <em>src/lib.rs</em> cũng không thay đổi, và <code>use</code> không ảnh hưởng đến việc file nào được biên dịch như là một phần của crate. Từ khóa <code>mod</code> khai báo các module, và Rust tìm trong file có cùng tên với module để lấy code đưa vào module đó.</p>
 
-<h2 id="summary">Tóm Lược</h2>
-<p>Rust cho phép bạn chia một package thành một chùm crates nối với nhau, và bẻ một crate xuống thành các modules để tiếp sức cho quá trình truy xuất các item được cấu hình từ module bên bờ này sang phía rạch của tay module bên kia. Bạn có thể châm ngòi điều này thông qua việc phân chia hai bộ paths: tuyệt đối (absolute) hay vòng vo tương đối (relative). Những khối paths này được tống thẳng vô scope bằng chiêu thức <code>use</code> để cho bạn hưởng sái shortcut một cái path đi tắt lấp lỉm khi cần vọc đi vọc lại đống item lọt trong cái scope nội bộ nói trên. Đóng vai trò mặc định, tất thảy bộ code trong ruột một module hoàn toàn là đồ private (thâm cung), nhưng bạn chỉ cần phù phép chèn mác từ khóa <code>pub</code> để xưng tụng phần công bố ra chỗ public sính ngoại.</p>
+<h2 id="summary">Tổng kết</h2>
 
-<p>Đến chặn dừng ở chương sau, chúng ta sẽ bắt tay săm soi vài loại cấu trúc dữ liệu collections lọt bọc trong thư viện chuẩn, mà bạn sẽ phải có duyên mượn tay tới chèo lái trong bộ code được dọn thẳng dán chỉn chu này.</p>
+<p>Rust cho phép bạn chia một package thành nhiều crate và chia một crate thành các module, nhờ đó bạn có thể tham chiếu đến các item được định nghĩa trong một module từ module khác. Bạn có thể làm điều này bằng cách chỉ định absolute path hoặc relative path. Các path này có thể được đưa vào scope bằng câu lệnh <code>use</code> để bạn dùng path ngắn hơn cho nhiều lần sử dụng item trong scope đó. Code của module mặc định là private, nhưng bạn có thể công khai các định nghĩa bằng cách thêm từ khóa <code>pub</code>.</p>
 
-  <div class="page-nav bottom"><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">← Trước</a><a href="ch08-00-common-collections.html">Tiếp →</a></div>
+<p>Trong chương tiếp theo, ta sẽ xem xét một số cấu trúc dữ liệu collection trong thư viện chuẩn mà bạn có thể sử dụng trong code được tổ chức gọn gàng của mình.</p>
+
+  <div class="page-nav bottom">
+    <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="nav-btn prev">← Trước: use — Đưa Paths vào Scope</a>
+    <a href="ch08-00-common-collections.html" class="nav-btn next">Tiếp: Chương 8 — Collections →</a>
+  </div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

@@ -48,6 +48,46 @@
   <div class="page-nav"><a href="ch17-00-async-await.html">← Trước</a><a href="ch17-02-concurrency-with-async.html">Tiếp →</a></div>
 
   <h2 id="futures-and-the-async-syntax">Futures và Cú pháp Async</h2>
+
+  <figure style="margin:24px 0;text-align:center">
+    <svg width="580" viewBox="0 0 580 170" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
+      <!-- State 1: Future::Pending -->
+      <rect x="20" y="30" width="150" height="54" rx="8" fill="#1a1040" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="95" y="52" text-anchor="middle" fill="#c4b5fd" font-family="monospace" font-size="12" font-weight="bold">Future::Pending</text>
+      <text x="95" y="70" text-anchor="middle" fill="#a78bfa" font-family="sans-serif" font-size="11">Chưa có kết quả</text>
+
+      <!-- Arrow 1→2 top: await -->
+      <line x1="170" y1="57" x2="248" y2="57" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="248,53 258,57 248,61" fill="#6366f1"/>
+      <text x="214" y="50" text-anchor="middle" fill="#818cf8" font-family="sans-serif" font-size="10">await điểm dừng</text>
+
+      <!-- State 2: Executor poll() — diamond shape -->
+      <polygon points="290,20 360,57 290,94 220,57" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+      <text x="290" y="52" text-anchor="middle" fill="#93c5fd" font-family="monospace" font-size="11" font-weight="bold">Executor</text>
+      <text x="290" y="67" text-anchor="middle" fill="#93c5fd" font-family="monospace" font-size="11" font-weight="bold">poll()</text>
+
+      <!-- Arrow 2→1 back: Poll::Pending -->
+      <path d="M 222,70 Q 190,110 170,80" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="167,68 170,80 178,72" fill="#f87171"/>
+      <text x="188" y="110" text-anchor="middle" fill="#fca5a5" font-family="sans-serif" font-size="9">Poll::Pending</text>
+      <text x="188" y="122" text-anchor="middle" fill="#fca5a5" font-family="sans-serif" font-size="9">chưa xong, trả quyền</text>
+
+      <!-- Arrow 2→3: Poll::Ready -->
+      <line x1="360" y1="57" x2="408" y2="57" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="408,53 418,57 408,61" fill="#10b981"/>
+      <text x="388" y="50" text-anchor="middle" fill="#6ee7b7" font-family="sans-serif" font-size="10">Poll::Ready(val)</text>
+
+      <!-- State 3: Future::Ready(value) -->
+      <rect x="418" y="30" width="148" height="54" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+      <text x="492" y="52" text-anchor="middle" fill="#6ee7b7" font-family="monospace" font-size="12" font-weight="bold">Future::Ready</text>
+      <text x="492" y="70" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="11">(value)</text>
+
+      <!-- Bottom note -->
+      <text x="290" y="148" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="11">&#9889; Lazy: Future không chạy cho đến khi được .await hoặc executor poll()</text>
+    </svg>
+    <figcaption>Future là state machine: <code>Poll::Pending</code> cho đến khi sẵn sàng, rồi trả về <code>Poll::Ready(value)</code></figcaption>
+  </figure>
+
   <p>Hai thành phần cốt lõi của lập trình bất đồng bộ trong Rust là <em>futures</em> và hai từ khóa <code>async</code> / <code>await</code>.</p>
   <p>Một <em>future</em> là một giá trị chưa sẵn sàng ngay lúc này, nhưng sẽ sẵn sàng vào một lúc nào đó trong tương lai. (Khái niệm tương tự xuất hiện ở nhiều ngôn ngữ khác, đôi khi mang tên <em>task</em> hoặc <em>promise</em>.) Rust cung cấp trait <code>Future</code> như một viên gạch nền để các thao tác async khác nhau có thể được hiện thực hóa bằng nhiều cấu trúc dữ liệu khác nhau nhưng chia sẻ chung một giao diện. Trong Rust, futures là các kiểu dữ liệu implement trait <code>Future</code>. Mỗi future tự lưu thông tin về tiến trình thực thi của mình và định nghĩa thế nào là "đã sẵn sàng".</p>
   <p>Bạn có thể gắn từ khóa <code>async</code> vào các block và hàm để chỉ định rằng chúng có thể bị tạm dừng và tiếp tục. Bên trong một async block hoặc async function, bạn dùng từ khóa <code>await</code> để <em>await một future</em> (tức là chờ nó trở nên sẵn sàng). Bất kỳ điểm nào bạn await một future bên trong async block hay hàm đều là nơi tiềm năng để block/hàm đó tạm dừng rồi tiếp tục. Quá trình kiểm tra xem giá trị của một future đã có chưa được gọi là <em>polling</em>.</p>
@@ -117,6 +157,50 @@ fn page_title(url: &amp;str) -&gt; impl Future&lt;Output = Option&lt;String&gt;&
   <p>Giờ chúng ta có thể gọi <code>page_title</code> từ <code>main</code>.</p>
 
   <h3 id="executing-an-async-function-with-a-runtime">Chạy Async Function với Runtime</h3>
+
+  <figure style="margin:24px 0;text-align:center">
+    <svg width="580" viewBox="0 0 580 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
+      <!-- Left column header: fn bình thường -->
+      <rect x="18" y="10" width="252" height="26" rx="6" fill="#3b1f00" stroke="#f97316" stroke-width="1.5"/>
+      <text x="144" y="27" text-anchor="middle" fill="#fb923c" font-family="sans-serif" font-size="12" font-weight="bold">fn bình thường</text>
+
+      <!-- Left flow boxes -->
+      <rect x="30" y="46" width="100" height="28" rx="5" fill="#451a00" stroke="#f97316" stroke-width="1"/>
+      <text x="80" y="64" text-anchor="middle" fill="#fdba74" font-family="sans-serif" font-size="11">Gọi hàm</text>
+
+      <line x1="130" y1="60" x2="155" y2="60" stroke="#f97316" stroke-width="1.5"/>
+      <polygon points="155,56 165,60 155,64" fill="#f97316"/>
+
+      <rect x="165" y="46" width="90" height="28" rx="5" fill="#451a00" stroke="#f87171" stroke-width="1"/>
+      <text x="210" y="60" text-anchor="middle" fill="#fca5a5" font-family="sans-serif" font-size="10">Chặn (block)</text>
+      <text x="210" y="73" text-anchor="middle" fill="#fca5a5" font-family="sans-serif" font-size="10">thread</text>
+
+      <text x="144" y="108" text-anchor="middle" fill="#fb923c" font-family="sans-serif" font-size="10">Kết quả trả về ngay lập tức</text>
+
+      <!-- Divider -->
+      <line x1="290" y1="8" x2="290" y2="132" stroke="#374151" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+      <!-- Right column header: async fn -->
+      <rect x="308" y="10" width="256" height="26" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="436" y="27" text-anchor="middle" fill="#6ee7b7" font-family="sans-serif" font-size="12" font-weight="bold">async fn</text>
+
+      <!-- Right flow -->
+      <rect x="314" y="46" width="82" height="28" rx="5" fill="#065f46" stroke="#10b981" stroke-width="1"/>
+      <text x="355" y="64" text-anchor="middle" fill="#a7f3d0" font-family="sans-serif" font-size="11">Gọi hàm</text>
+
+      <line x1="396" y1="60" x2="408" y2="60" stroke="#10b981" stroke-width="1.5"/>
+      <polygon points="408,56 418,60 408,64" fill="#10b981"/>
+
+      <rect x="418" y="46" width="106" height="28" rx="5" fill="#065f46" stroke="#34d399" stroke-width="1"/>
+      <text x="471" y="60" text-anchor="middle" fill="#6ee7b7" font-family="monospace" font-size="10">Future&lt;Output=T&gt;</text>
+      <text x="471" y="73" text-anchor="middle" fill="#6ee7b7" font-family="sans-serif" font-size="9">trả về ngay (lazy)</text>
+
+      <text x="354" y="108" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="10">.await</text>
+      <text x="430" y="108" text-anchor="middle" fill="#6ee7b7" font-family="sans-serif" font-size="10">→ Executor tiếp tục khi ready</text>
+    </svg>
+    <figcaption><code>async fn</code> không chạy ngay — trả về Future. Chỉ thực thi khi được <code>.await</code></figcaption>
+  </figure>
+
   <p>Để bắt đầu, chúng ta sẽ lấy tiêu đề của một trang, như Listing 17-3. Tiếc là code này chưa biên dịch được.</p>
   <figure class="listing" id="listing-17-3">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -231,6 +315,6 @@ async fn page_title(url: &amp;str) -&gt; (&amp;str, Option&lt;String&gt;) {
   <div class="page-nav bottom"><a href="ch17-00-async-await.html">← Trước</a><a href="ch17-02-concurrency-with-async.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

@@ -209,6 +209,41 @@
 
 <h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Dùng Threads để Chạy Code Song Song</a></h2>
 
+<figure style="margin: 24px 0; text-align: center;">
+<svg width="600" height="140" viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:8px;background:#1e1e2e;padding:16px">
+  <!-- Timeline arrow -->
+  <defs>
+    <marker id="arrowhead1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4b5563"/>
+    </marker>
+  </defs>
+  <line x1="10" y1="130" x2="590" y2="130" stroke="#4b5563" stroke-width="1" marker-end="url(#arrowhead1)"/>
+  <text x="592" y="134" fill="#4b5563" font-size="10" font-family="monospace">thời gian</text>
+
+  <!-- Main thread bar -->
+  <rect x="20" y="38" width="200" height="14" rx="7" fill="#CE422B"/>
+  <rect x="440" y="38" width="140" height="14" rx="7" fill="#CE422B"/>
+  <text x="20" y="28" fill="#f87171" font-size="11" font-family="monospace" font-weight="bold">Main thread</text>
+
+  <!-- Spawn point vertical line -->
+  <line x1="220" y1="38" x2="220" y2="85" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="186" y="74" fill="#f59e0b" font-size="10" font-family="monospace">spawn()</text>
+
+  <!-- Child thread bar -->
+  <rect x="220" y="85" width="220" height="14" rx="7" fill="#3b82f6"/>
+  <text x="220" y="115" fill="#60a5fa" font-size="11" font-family="monospace" font-weight="bold">Child thread</text>
+
+  <!-- Join point vertical line -->
+  <line x1="440" y1="85" x2="440" y2="45" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="444" y="74" fill="#f59e0b" font-size="10" font-family="monospace">join()</text>
+
+  <!-- Concurrency brace / label -->
+  <rect x="220" y="56" width="220" height="4" rx="2" fill="#374151"/>
+  <text x="278" y="52" fill="#9ca3af" font-size="10" font-family="monospace">chạy song song</text>
+</svg>
+<figcaption style="margin-top:8px;font-size:0.9em;color:#6b7280;">Luồng chính (main thread) sinh ra luồng con (child thread) bằng <code>thread::spawn()</code>, chúng chạy song song, rồi main thread chờ con hoàn thành bằng <code>join()</code></figcaption>
+</figure>
+
 <p>Trong hầu hết các hệ điều hành hiện đại, code của một chương trình đang chạy được thực thi trong một <em>process</em>, và hệ điều hành sẽ quản lý nhiều process cùng một lúc. Bên trong một chương trình, bạn cũng có thể có các phần độc lập chạy đồng thời. Các tính năng chạy những phần độc lập này được gọi là <em>thread</em>. Ví dụ, một web server có thể có nhiều thread để có thể phản hồi nhiều hơn một request cùng một lúc.</p>
 
 <p>Chia tách tính toán trong chương trình thành nhiều thread để chạy nhiều task đồng thời có thể cải thiện hiệu suất, nhưng cũng thêm vào sự phức tạp. Bởi vì các thread có thể chạy đồng thời, không có gì đảm bảo thứ tự thực thi các phần code trên các thread khác nhau. Điều này có thể dẫn đến các vấn đề như:</p>
@@ -493,6 +528,6 @@ error: could not compile `threads` (bin "threads") due to 1 previous error
   <div class="page-nav bottom"><a href="ch16-00-concurrency.html">← Trước</a><a href="ch16-02-message-passing.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

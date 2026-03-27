@@ -48,11 +48,80 @@
   <div class="page-nav"><a href="ch15-04-rc.html">← Trước</a><a href="ch15-06-reference-cycles.html">Tiếp →</a></div>
 
   <h2 id="refcellt-and-the-interior-mutability-pattern"><code>RefCell&lt;T&gt;</code> và Pattern Interior Mutability</h2>
+<figure style="margin:24px 0;text-align:center">
+  <svg width="580" height="180" viewBox="0 0 580 180" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px" xmlns="http://www.w3.org/2000/svg">
+    <!-- Box 1: Rc<T> -->
+    <rect x="15" y="20" width="158" height="90" rx="9" fill="#3b82f6" opacity="0.80"/>
+    <text x="94" y="44" text-anchor="middle" fill="#ffffff" font-size="14" font-family="monospace" font-weight="bold">Rc&lt;T&gt;</text>
+    <!-- Multiple owners icon -->
+    <circle cx="70" cy="68" r="9" fill="#bfdbfe" opacity="0.7"/>
+    <circle cx="95" cy="68" r="9" fill="#bfdbfe" opacity="0.7"/>
+    <circle cx="120" cy="68" r="9" fill="#bfdbfe" opacity="0.7"/>
+    <text x="94" y="72" text-anchor="middle" fill="#1e40af" font-size="9" font-family="monospace">👥</text>
+    <text x="94" y="95" text-anchor="middle" fill="#bfdbfe" font-size="10" font-family="sans-serif">Nhiều owner / Không mutate</text>
+    <!-- Box 2: RefCell<T> -->
+    <rect x="205" y="20" width="160" height="90" rx="9" fill="#f59e0b" opacity="0.80"/>
+    <text x="285" y="44" text-anchor="middle" fill="#ffffff" font-size="13" font-family="monospace" font-weight="bold">RefCell&lt;T&gt;</text>
+    <!-- Lock icon -->
+    <text x="285" y="72" text-anchor="middle" fill="#fef3c7" font-size="18" font-family="sans-serif">🔓</text>
+    <text x="285" y="95" text-anchor="middle" fill="#fef3c7" font-size="10" font-family="sans-serif">1 owner / Mutate runtime</text>
+    <!-- Box 3: Rc<RefCell<T>> — highlighted -->
+    <rect x="397" y="15" width="168" height="105" rx="9" fill="#10b981" opacity="0.90"/>
+    <rect x="394" y="12" width="174" height="111" rx="11" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-dasharray="5,3"/>
+    <text x="481" y="40" text-anchor="middle" fill="#ffffff" font-size="12" font-family="monospace" font-weight="bold">Rc&lt;RefCell&lt;T&gt;&gt;</text>
+    <!-- Combined icons -->
+    <text x="481" y="72" text-anchor="middle" fill="#d1fae5" font-size="16" font-family="sans-serif">👥🔓</text>
+    <text x="481" y="92" text-anchor="middle" fill="#d1fae5" font-size="10" font-family="sans-serif">Nhiều owner / Mutate runtime</text>
+    <!-- Tick below box 3 -->
+    <text x="481" y="140" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="sans-serif">&#x2705; Dùng kết hợp khi cần vừa chia sẻ vừa thay đổi</text>
+  </svg>
+  <figcaption><code>Rc&lt;RefCell&lt;T&gt;&gt;</code> kết hợp: nhiều owner (Rc) + mutation at runtime (RefCell)</figcaption>
+</figure>
 <p><em>Interior mutability</em> là một design pattern trong Rust cho phép bạn thay đổi dữ liệu ngay cả khi đang có các immutable reference tới dữ liệu đó — điều mà bình thường bị cấm bởi các quy tắc borrowing. Để làm được điều này, pattern sử dụng code <code>unsafe</code> bên trong một cấu trúc dữ liệu nhằm "bẻ cong" các quy tắc thông thường của Rust về mutation và borrowing. Code unsafe báo hiệu với compiler rằng chúng ta đang tự tay kiểm tra các quy tắc thay vì nhờ compiler làm hộ; chúng ta sẽ bàn thêm về code unsafe ở Chương 20.</p>
 <p>Chúng ta chỉ có thể dùng các kiểu áp dụng interior mutability pattern khi ta có thể đảm bảo rằng các quy tắc borrowing sẽ được tuân thủ vào lúc chạy chương trình, dù compiler không thể tự xác nhận điều đó. Code <code>unsafe</code> khi đó được bọc trong một API an toàn, và kiểu bên ngoài vẫn là immutable.</p>
 <p>Hãy cùng khám phá khái niệm này qua kiểu <code>RefCell&lt;T&gt;</code> — kiểu tuân theo interior mutability pattern.</p>
 
 <h3 id="enforcing-borrowing-rules-at-runtime">Áp dụng các quy tắc Borrowing vào lúc Runtime</h3>
+<figure style="margin:24px 0;text-align:center">
+  <svg width="480" height="150" viewBox="0 0 480 150" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow-rc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+      </marker>
+      <marker id="arrow-red-rc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+      </marker>
+    </defs>
+    <!-- State: Không borrowed (center oval) -->
+    <ellipse cx="220" cy="38" rx="80" ry="24" fill="#3b82f6" opacity="0.85"/>
+    <text x="220" y="43" text-anchor="middle" fill="#ffffff" font-size="12" font-family="sans-serif" font-weight="bold">Không borrowed</text>
+    <!-- State: Borrowed (đọc) — bottom left -->
+    <ellipse cx="80" cy="110" rx="72" ry="22" fill="#f59e0b" opacity="0.85"/>
+    <text x="80" y="107" text-anchor="middle" fill="#ffffff" font-size="11" font-family="sans-serif" font-weight="bold">Borrowed (đọc)</text>
+    <text x="80" y="122" text-anchor="middle" fill="#fef3c7" font-size="10" font-family="monospace">immutable</text>
+    <!-- State: Mutably borrowed — bottom right -->
+    <ellipse cx="340" cy="110" rx="72" ry="22" fill="#8b5cf6" opacity="0.85"/>
+    <text x="340" y="107" text-anchor="middle" fill="#ffffff" font-size="11" font-family="sans-serif" font-weight="bold">Mutably borrowed</text>
+    <text x="340" y="122" text-anchor="middle" fill="#ddd6fe" font-size="10" font-family="monospace">mutable</text>
+    <!-- Arrow: Không → Borrowed (đọc) via borrow() -->
+    <line x1="155" y1="50" x2="105" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-rc)"/>
+    <text x="108" y="73" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">borrow()</text>
+    <!-- Arrow: Borrowed (đọc) → Không (drop) -->
+    <line x1="115" y1="90" x2="160" y2="54" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-rc)"/>
+    <text x="162" y="80" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">drop</text>
+    <!-- Arrow: Không → Mutably borrowed via borrow_mut() -->
+    <line x1="285" y1="50" x2="310" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-rc)"/>
+    <text x="328" y="73" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">borrow_mut()</text>
+    <!-- Arrow: Mutably borrowed → Không (drop) -->
+    <line x1="300" y1="92" x2="276" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-rc)"/>
+    <text x="265" y="80" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">drop</text>
+    <!-- Panic branch: from Borrowed(đọc) calling borrow_mut -->
+    <line x1="130" y1="118" x2="190" y2="138" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-red-rc)"/>
+    <text x="230" y="145" text-anchor="middle" fill="#ef4444" font-size="11" font-family="sans-serif" font-weight="bold">&#x274C; panic! at runtime</text>
+    <text x="155" y="135" text-anchor="middle" fill="#ef4444" font-size="8" font-family="monospace">borrow_mut()</text>
+  </svg>
+  <figcaption><code>RefCell&lt;T&gt;</code> enforce borrow rules tại runtime thay vì compile time</figcaption>
+</figure>
 <p>Khác với <code>Rc&lt;T&gt;</code>, kiểu <code>RefCell&lt;T&gt;</code> đại diện cho quyền sở hữu duy nhất đối với dữ liệu mà nó nắm giữ. Vậy điều gì làm cho <code>RefCell&lt;T&gt;</code> khác với kiểu như <code>Box&lt;T&gt;</code>? Hãy nhớ lại các quy tắc borrowing bạn đã học ở Chương 4:</p>
 <ul>
 <li>Tại bất kỳ thời điểm nào, bạn chỉ có thể có <em>một trong hai</em>: một mutable reference hoặc bất kỳ số lượng immutable reference nào (nhưng không thể cả hai cùng lúc).</li>
@@ -488,6 +557,6 @@ c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
   <div class="page-nav bottom"><a href="ch15-04-rc.html">← Trước</a><a href="ch15-06-reference-cycles.html">Tiếp →</a></div>
   </div>
 </main>
-<script src="script.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
