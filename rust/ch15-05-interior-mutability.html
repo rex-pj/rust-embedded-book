@@ -122,7 +122,7 @@
   </svg>
   <figcaption><code>RefCell&lt;T&gt;</code> enforce borrow rules tại runtime thay vì compile time</figcaption>
 </figure>
-<p>Khác với <code>Rc&lt;T&gt;</code>, kiểu <code>RefCell&lt;T&gt;</code> đại diện cho quyền sở hữu duy nhất đối với dữ liệu mà nó nắm giữ. Vậy điều gì làm cho <code>RefCell&lt;T&gt;</code> khác với kiểu như <code>Box&lt;T&gt;</code>? Hãy nhớ lại các quy tắc borrowing bạn đã học ở Chương 4:</p>
+<p>Khác với <code>Rc&lt;T&gt;</code>, kiểu <code>RefCell&lt;T&gt;</code> đại diện cho ownership duy nhất đối với dữ liệu mà nó nắm giữ. Vậy điều gì làm cho <code>RefCell&lt;T&gt;</code> khác với kiểu như <code>Box&lt;T&gt;</code>? Hãy nhớ lại các quy tắc borrowing bạn đã học ở Chương 4:</p>
 <ul>
 <li>Tại bất kỳ thời điểm nào, bạn chỉ có thể có <em>một trong hai</em>: một mutable reference hoặc bất kỳ số lượng immutable reference nào (nhưng không thể cả hai cùng lúc).</li>
 <li>Các reference luôn phải hợp lệ.</li>
@@ -134,7 +134,7 @@
 <p>Tương tự <code>Rc&lt;T&gt;</code>, <code>RefCell&lt;T&gt;</code> chỉ dùng trong các tình huống đơn luồng và sẽ báo lỗi compile-time nếu bạn cố dùng nó trong ngữ cảnh đa luồng. Chúng ta sẽ nói về cách đạt được chức năng của <code>RefCell&lt;T&gt;</code> trong chương trình đa luồng ở Chương 16.</p>
 <p>Tóm tắt lý do chọn <code>Box&lt;T&gt;</code>, <code>Rc&lt;T&gt;</code>, hay <code>RefCell&lt;T&gt;</code>:</p>
 <ul>
-<li><code>Rc&lt;T&gt;</code> cho phép nhiều chủ sở hữu của cùng một dữ liệu; <code>Box&lt;T&gt;</code> và <code>RefCell&lt;T&gt;</code> chỉ có một chủ sở hữu.</li>
+<li><code>Rc&lt;T&gt;</code> cho phép nhiều owner của cùng một dữ liệu; <code>Box&lt;T&gt;</code> và <code>RefCell&lt;T&gt;</code> chỉ có một owner.</li>
 <li><code>Box&lt;T&gt;</code> cho phép immutable hoặc mutable borrow được kiểm tra lúc compile; <code>Rc&lt;T&gt;</code> chỉ cho phép immutable borrow kiểm tra lúc compile; <code>RefCell&lt;T&gt;</code> cho phép cả hai loại borrow kiểm tra lúc runtime.</li>
 <li>Vì <code>RefCell&lt;T&gt;</code> cho phép mutable borrow kiểm tra lúc runtime, bạn có thể thay đổi giá trị bên trong <code>RefCell&lt;T&gt;</code> ngay cả khi <code>RefCell&lt;T&gt;</code> bản thân là immutable.</li>
 </ul>
@@ -509,9 +509,9 @@ error: test failed, to rerun pass `--lib`
 <p>Chú ý rằng code đã panic với thông báo <code>already borrowed: BorrowMutError</code>. Đây là cách <code>RefCell&lt;T&gt;</code> xử lý vi phạm các quy tắc borrowing lúc runtime.</p>
 <p>Chọn bắt lỗi borrowing lúc runtime thay vì lúc compile, như chúng ta đã làm ở đây, nghĩa là bạn có thể phát hiện lỗi muộn hơn trong quá trình phát triển: có thể không phát hiện cho đến khi code được triển khai lên môi trường production. Ngoài ra, code của bạn sẽ chịu một khoản phí hiệu suất runtime nhỏ do phải theo dõi các borrow lúc runtime thay vì lúc compile. Tuy nhiên, dùng <code>RefCell&lt;T&gt;</code> giúp bạn viết được một mock object có thể tự sửa đổi để theo dõi các thông báo mà nó đã thấy trong khi bạn đang dùng nó trong ngữ cảnh chỉ cho phép các giá trị immutable. Bạn có thể dùng <code>RefCell&lt;T&gt;</code> bất chấp những đánh đổi của nó để có được nhiều chức năng hơn so với references thông thường.</p>
 
-<h3 id="allowing-multiple-owners-of-mutable-data">Cho phép nhiều chủ sở hữu của dữ liệu có thể thay đổi</h3>
-<p>Cách dùng <code>RefCell&lt;T&gt;</code> phổ biến là kết hợp với <code>Rc&lt;T&gt;</code>. Hãy nhớ rằng <code>Rc&lt;T&gt;</code> cho phép nhiều chủ sở hữu của cùng dữ liệu, nhưng chỉ cho phép truy cập immutable tới dữ liệu đó. Nếu bạn có một <code>Rc&lt;T&gt;</code> chứa một <code>RefCell&lt;T&gt;</code>, bạn có thể có một giá trị với nhiều chủ sở hữu <em>và</em> có thể thay đổi!</p>
-<p>Ví dụ, hãy nhớ lại ví dụ cons list ở Listing 15-18 nơi chúng ta dùng <code>Rc&lt;T&gt;</code> để cho phép nhiều danh sách chia sẻ quyền sở hữu của một danh sách khác. Vì <code>Rc&lt;T&gt;</code> chỉ giữ các giá trị immutable, chúng ta không thể thay đổi bất kỳ giá trị nào trong danh sách sau khi tạo chúng. Hãy thêm <code>RefCell&lt;T&gt;</code> để có khả năng thay đổi các giá trị trong danh sách. Listing 15-24 cho thấy rằng bằng cách dùng <code>RefCell&lt;T&gt;</code> trong định nghĩa <code>Cons</code>, chúng ta có thể sửa đổi giá trị được lưu trong tất cả các danh sách.</p>
+<h3 id="allowing-multiple-owners-of-mutable-data">Cho phép nhiều owner của dữ liệu có thể thay đổi</h3>
+<p>Cách dùng <code>RefCell&lt;T&gt;</code> phổ biến là kết hợp với <code>Rc&lt;T&gt;</code>. Hãy nhớ rằng <code>Rc&lt;T&gt;</code> cho phép nhiều owner của cùng dữ liệu, nhưng chỉ cho phép truy cập immutable tới dữ liệu đó. Nếu bạn có một <code>Rc&lt;T&gt;</code> chứa một <code>RefCell&lt;T&gt;</code>, bạn có thể có một giá trị với nhiều owner <em>và</em> có thể thay đổi!</p>
+<p>Ví dụ, hãy nhớ lại ví dụ cons list ở Listing 15-18 nơi chúng ta dùng <code>Rc&lt;T&gt;</code> để cho phép nhiều danh sách chia sẻ ownership của một danh sách khác. Vì <code>Rc&lt;T&gt;</code> chỉ giữ các giá trị immutable, chúng ta không thể thay đổi bất kỳ giá trị nào trong danh sách sau khi tạo chúng. Hãy thêm <code>RefCell&lt;T&gt;</code> để có khả năng thay đổi các giá trị trong danh sách. Listing 15-24 cho thấy rằng bằng cách dùng <code>RefCell&lt;T&gt;</code> trong định nghĩa <code>Cons</code>, chúng ta có thể sửa đổi giá trị được lưu trong tất cả các danh sách.</p>
 <figure class="listing" id="listing-15-24">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
@@ -540,7 +540,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-15-24">Listing 15-24</a>: Dùng <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> để tạo một <code>List</code> có thể thay đổi</figcaption>
 </figure>
-<p>Chúng ta tạo một giá trị là instance của <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> và lưu nó trong biến tên <code>value</code> để truy cập trực tiếp sau này. Sau đó tạo một <code>List</code> trong <code>a</code> với variant <code>Cons</code> giữ <code>value</code>. Chúng ta cần clone <code>value</code> để cả <code>a</code> và <code>value</code> đều có quyền sở hữu của giá trị <code>5</code> bên trong, thay vì chuyển ownership từ <code>value</code> sang <code>a</code> hoặc cho <code>a</code> borrow từ <code>value</code>.</p>
+<p>Chúng ta tạo một giá trị là instance của <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> và lưu nó trong biến tên <code>value</code> để truy cập trực tiếp sau này. Sau đó tạo một <code>List</code> trong <code>a</code> với variant <code>Cons</code> giữ <code>value</code>. Chúng ta cần clone <code>value</code> để cả <code>a</code> và <code>value</code> đều có ownership của giá trị <code>5</code> bên trong, thay vì chuyển ownership từ <code>value</code> sang <code>a</code> hoặc cho <code>a</code> borrow từ <code>value</code>.</p>
 <p>Chúng ta bọc danh sách <code>a</code> trong một <code>Rc&lt;T&gt;</code> để khi tạo danh sách <code>b</code> và <code>c</code>, cả hai có thể tham chiếu tới <code>a</code>, như chúng ta đã làm ở Listing 15-18.</p>
 <p>Sau khi tạo các danh sách trong <code>a</code>, <code>b</code> và <code>c</code>, chúng ta muốn cộng 10 vào giá trị trong <code>value</code>. Chúng ta làm điều này bằng cách gọi <code>borrow_mut</code> trên <code>value</code>, sử dụng tính năng automatic dereferencing mà chúng ta đã thảo luận trong <a href="ch05-03-method-syntax.html#wheres-the---operator">"Where's the <code>-&gt;</code> Operator?"</a> ở Chương 5 để dereference <code>Rc&lt;T&gt;</code> tới giá trị <code>RefCell&lt;T&gt;</code> bên trong. Method <code>borrow_mut</code> trả về smart pointer <code>RefMut&lt;T&gt;</code>, và chúng ta dùng toán tử dereference trên đó để thay đổi giá trị bên trong.</p>
 <p>Khi in <code>a</code>, <code>b</code> và <code>c</code>, chúng ta có thể thấy cả ba đều có giá trị đã được sửa đổi là <code>15</code> thay vì <code>5</code>:</p>

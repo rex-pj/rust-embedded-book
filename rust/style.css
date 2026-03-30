@@ -210,15 +210,17 @@ pre[data-lang]::before {
 .note, .warning, .tip, .danger {
   border-radius: 8px; padding: 16px 20px;
   margin: 24px 0; border-left: 4px solid;
-  display: flex; gap: 12px;
+  display: flex; flex-direction: column; gap: 8px;
 }
+.note > *:last-child, .warning > *:last-child,
+.tip > *:last-child, .danger > *:last-child { margin-bottom: 0; }
+
 .note    { background: var(--note-bg);  border-color: var(--note-border); }
 .warning { background: var(--warn-bg);  border-color: var(--warn-border); }
 .tip     { background: var(--tip-bg);   border-color: var(--tip-border);  }
 .danger  { background: #fef2f2;         border-color: #ef4444; }
 
-.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.callout-body { flex: 1; }
+.callout-icon { font-size: 20px; }
 .callout-body p:last-child { margin-bottom: 0; }
 .callout-title { font-weight: 700; margin-bottom: 4px; font-size: .9rem; }
 .note    .callout-title { color: #1d4ed8; }
@@ -398,11 +400,7 @@ p.subtitle { color: var(--muted); font-size: 1rem; margin-top: -16px; margin-bot
   h1 { font-size: 1.3rem; }
   h2 { font-size: 1.15rem; }
   pre code { font-size: .75rem; padding: 12px 14px; }
-  /* Stack callout icon+body on tiny screens */
-  .note, .warning, .tip, .danger {
-    flex-direction: column; gap: 4px; padding: 12px 14px;
-  }
-  .callout-icon { font-size: 20px; }
+  .note, .warning, .tip, .danger { padding: 12px 14px; gap: 6px; }
   /* Topbar title smaller */
   #topbar .current { font-size: 12px; }
 }

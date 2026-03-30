@@ -536,7 +536,7 @@ fn main() {
   <p>Slice này có kiểu <code>&amp;[i32]</code>. Nó hoạt động theo cách tương tự như string slices, bằng cách lưu trữ tham chiếu đến phần tử đầu tiên và một độ dài. Bạn sẽ dùng kiểu slice này cho tất cả các loại collection khác. Chúng ta sẽ thảo luận chi tiết về các collection này khi nói về vectors trong Chương 8.</p>
 
   <h2 id="summary">📋 Tóm tắt</h2>
-  <p>Các khái niệm về ownership, borrowing, và slices đảm bảo an toàn bộ nhớ trong các chương trình Rust tại thời điểm biên dịch. Ngôn ngữ Rust cho phép bạn kiểm soát việc sử dụng bộ nhớ theo cách tương tự như các ngôn ngữ lập trình hệ thống khác. Nhưng việc chủ sở hữu của dữ liệu tự động dọn dẹp dữ liệu đó khi chủ sở hữu thoát ra khỏi phạm vi có nghĩa là bạn không phải viết và debug thêm code để có được khả năng kiểm soát này.</p>
+  <p>Các khái niệm về ownership, borrowing, và slices đảm bảo an toàn bộ nhớ trong các chương trình Rust tại thời điểm biên dịch. Ngôn ngữ Rust cho phép bạn kiểm soát việc sử dụng bộ nhớ theo cách tương tự như các ngôn ngữ lập trình hệ thống khác. Nhưng việc owner của dữ liệu tự động dọn dẹp dữ liệu đó khi owner thoát ra khỏi phạm vi có nghĩa là bạn không phải viết và debug thêm code để có được khả năng kiểm soát này.</p>
 
   <p>Ownership ảnh hưởng đến cách nhiều phần khác của Rust hoạt động, vì vậy chúng ta sẽ nói về các khái niệm này xa hơn trong suốt phần còn lại của cuốn sách. Hãy chuyển sang Chương 5 và xem cách nhóm các mảnh dữ liệu lại với nhau trong một <code>struct</code>.</p>
 

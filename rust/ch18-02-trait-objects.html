@@ -217,7 +217,7 @@
 
   <p>Để triển khai hành vi chúng ta muốn <code>gui</code> có, chúng ta sẽ định nghĩa một trait tên <code>Draw</code> với một phương thức tên <code>draw</code>. Sau đó, chúng ta có thể định nghĩa một vector nhận một <em>trait object</em>. Một <em>trait object</em> trỏ đến cả một instance của kiểu triển khai trait được chỉ định và một bảng tra cứu các phương thức trait trên kiểu đó ở runtime. Chúng ta tạo một trait object bằng cách chỉ định một loại con trỏ nào đó, chẳng hạn như tham chiếu hoặc smart pointer <code>Box&lt;T&gt;</code>, rồi từ khóa <code>dyn</code>, rồi trait liên quan.</p>
 
-  <p>Chúng ta có thể dùng trait objects thay thế cho kiểu generic hoặc kiểu cụ thể. Mọi nơi chúng ta dùng trait object, hệ thống kiểu của Rust sẽ đảm bảo tại compile time rằng bất kỳ giá trị nào được dùng trong ngữ cảnh đó sẽ triển khai trait của trait object. Do đó, chúng ta không cần biết tất cả các kiểu có thể xảy ra tại compile time.</p>
+  <p>Chúng ta có thể dùng trait objects thay thế cho generic hoặc kiểu cụ thể. Mọi nơi chúng ta dùng trait object, hệ thống kiểu của Rust sẽ đảm bảo tại compile time rằng bất kỳ giá trị nào được dùng trong ngữ cảnh đó sẽ triển khai trait của trait object. Do đó, chúng ta không cần biết tất cả các kiểu có thể xảy ra tại compile time.</p>
 
   <p>Listing 18-3 cho thấy cách định nghĩa một trait tên <code>Draw</code> với một phương thức tên <code>draw</code>:</p>
 
@@ -253,7 +253,7 @@
     <figcaption>Listing 18-5: Phương thức <code>run</code> trên <code>Screen</code> gọi <code>draw</code> trên từng component</figcaption>
   </figure>
 
-  <p>Cách này khác với việc định nghĩa struct dùng type parameter generic với trait bounds. Một type parameter generic chỉ có thể được thay thế bởi một kiểu cụ thể tại một thời điểm, trong khi trait objects cho phép nhiều kiểu cụ thể lấp đầy cho trait object tại runtime. Ví dụ, chúng ta có thể định nghĩa struct <code>Screen</code> dùng kiểu generic và trait bound:</p>
+  <p>Cách này khác với việc định nghĩa struct dùng type parameter generic với trait bounds. Một type parameter generic chỉ có thể được thay thế bởi một kiểu cụ thể tại một thời điểm, trong khi trait objects cho phép nhiều kiểu cụ thể lấp đầy cho trait object tại runtime. Ví dụ, chúng ta có thể định nghĩa struct <code>Screen</code> dùng generic và trait bound:</p>
 
   <figure class="listing">
     <span class="file-name">Filename: src/lib.rs</span>

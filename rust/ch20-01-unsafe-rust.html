@@ -315,7 +315,7 @@ error: could not compile `unsafe-example` (bin "unsafe-example") due to 1 previo
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-20-4">Listing 20-4</a>: Sử dụng safe function <code>split_at_mut</code></figcaption>
 </figure>
-<p>Chúng ta không thể implement function này chỉ dùng safe Rust. Một nỗ lực có thể trông như Listing 20-5, sẽ không compile được. Để đơn giản, chúng ta sẽ implement <code>split_at_mut</code> như một function thay vì method và chỉ cho slices của giá trị <code>i32</code> thay vì kiểu generic <code>T</code>.</p>
+<p>Chúng ta không thể implement function này chỉ dùng safe Rust. Một nỗ lực có thể trông như Listing 20-5, sẽ không compile được. Để đơn giản, chúng ta sẽ implement <code>split_at_mut</code> như một function thay vì method và chỉ cho slices của giá trị <code>i32</code> thay vì generic <code>T</code>.</p>
 <figure class="listing" id="listing-20-5">
 <pre><code class="language-rust ignore does_not_compile">fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
     let len = values.len();

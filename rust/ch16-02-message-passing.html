@@ -364,7 +364,7 @@ error[E0382]: borrow of moved value: `val`
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `message-passing` (bin "message-passing") due to 1 previous error
 </code></pre>
-<p>Lỗi concurrent của chúng ta đã tạo ra lỗi compile-time. Hàm <code>send</code> lấy quyền sở hữu tham số của nó, và khi giá trị được move, receiver lấy quyền sở hữu nó. Điều này ngăn chúng ta vô tình dùng lại giá trị sau khi đã gửi; hệ thống ownership kiểm tra mọi thứ đều ổn.</p>
+<p>Lỗi concurrent của chúng ta đã tạo ra lỗi compile-time. Hàm <code>send</code> lấy ownership tham số của nó, và khi giá trị được move, receiver lấy ownership nó. Điều này ngăn chúng ta vô tình dùng lại giá trị sau khi đã gửi; hệ thống ownership kiểm tra mọi thứ đều ổn.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="sending-multiple-values-and-seeing-the-receiver-waiting"></a></p>
 <h3 id="sending-multiple-values"><a class="header" href="#sending-multiple-values">Gửi Nhiều Giá Trị</a></h3>

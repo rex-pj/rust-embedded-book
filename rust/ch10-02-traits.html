@@ -210,7 +210,7 @@
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="traits-defining-shared-behavior"></a></p>
 <h2 id="defining-shared-behavior-with-traits">Định Nghĩa Hành Vi Chung Bằng Trait</h2>
-<p>Một <em>trait</em> định nghĩa chức năng mà một kiểu cụ thể có và có thể chia sẻ với các kiểu khác. Ta dùng trait để định nghĩa hành vi chung theo cách trừu tượng. Ta có thể dùng <em>trait bounds</em> để chỉ rõ rằng một kiểu generic chỉ được là kiểu nào có những hành vi nhất định.</p>
+<p>Một <em>trait</em> định nghĩa chức năng mà một kiểu cụ thể có và có thể chia sẻ với các kiểu khác. Ta dùng trait để định nghĩa hành vi chung theo cách trừu tượng. Ta có thể dùng <em>trait bounds</em> để chỉ rõ rằng một generic chỉ được là kiểu nào có những hành vi nhất định.</p>
 <section class="note" aria-role="note">
 <p>Lưu ý: Trait tương tự với tính năng thường gọi là <em>interfaces</em> trong các ngôn ngữ khác, dù có một số điểm khác biệt.</p>
 </section>
@@ -446,7 +446,7 @@ fn main() {
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item: &amp;T) {
     println!("Breaking news! {}", item.summarize());
 }</code></pre>
-<p>Dạng dài hơn này tương đương với ví dụ ở phần trên nhưng verbose hơn. Ta đặt trait bounds cùng với khai báo tham số kiểu generic sau dấu hai chấm và bên trong cặp ngoặc nhọn.</p>
+<p>Dạng dài hơn này tương đương với ví dụ ở phần trên nhưng verbose hơn. Ta đặt trait bounds cùng với khai báo tham số generic sau dấu hai chấm và bên trong cặp ngoặc nhọn.</p>
 <p>Cú pháp <code>impl Trait</code> tiện lợi và làm code súc tích hơn trong các trường hợp đơn giản, trong khi cú pháp trait bound đầy đủ có thể diễn đạt sự phức tạp hơn trong các trường hợp khác. Ví dụ, ta có thể có hai tham số đều implement <code>Summary</code>. Làm vậy với cú pháp <code>impl Trait</code> trông như thế này:</p>
 <pre><code class="language-rust ignore">pub fn notify(item1: &amp;impl Summary, item2: &amp;impl Summary) {</code></pre>
 <p>Dùng <code>impl Trait</code> là hợp lý nếu ta muốn hàm này cho phép <code>item1</code> và <code>item2</code> có thể khác kiểu (miễn là cả hai đều implement <code>Summary</code>). Nhưng nếu ta muốn ép cả hai tham số phải cùng kiểu, ta phải dùng trait bound, như thế này:</p>
@@ -458,12 +458,12 @@ fn main() {
 <h4 id="multiple-trait-bounds-with-the--syntax">Nhiều Trait Bounds Với Cú Pháp <code>+</code></h4>
 <p>Ta cũng có thể chỉ định nhiều hơn một trait bound. Giả sử ta muốn <code>notify</code> dùng cả định dạng hiển thị lẫn <code>summarize</code> trên <code>item</code>: Ta chỉ định trong định nghĩa <code>notify</code> rằng <code>item</code> phải implement cả <code>Display</code> lẫn <code>Summary</code>. Ta làm điều này bằng cú pháp <code>+</code>:</p>
 <pre><code class="language-rust ignore">pub fn notify(item: &amp;(impl Summary + Display)) {</code></pre>
-<p>Cú pháp <code>+</code> cũng hợp lệ với trait bounds trên kiểu generic:</p>
+<p>Cú pháp <code>+</code> cũng hợp lệ với trait bounds trên generic:</p>
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary + Display&gt;(item: &amp;T) {</code></pre>
 <p>Với hai trait bounds được chỉ định, thân hàm <code>notify</code> có thể gọi <code>summarize</code> và dùng <code>{}</code> để format <code>item</code>.</p>
 
 <h4 id="clearer-trait-bounds-with-where-clauses">Trait Bounds Rõ Ràng Hơn Với Mệnh Đề <code>where</code></h4>
-<p>Dùng quá nhiều trait bounds cũng có mặt trái của nó. Mỗi generic có trait bounds riêng, nên các hàm với nhiều tham số kiểu generic có thể chứa cả đống thông tin trait bound giữa tên hàm và danh sách tham số, làm chữ ký hàm rất khó đọc. Vì vậy, Rust có cú pháp thay thế để chỉ định trait bounds bên trong mệnh đề <code>where</code> sau chữ ký hàm. Thay vì viết thế này:</p>
+<p>Dùng quá nhiều trait bounds cũng có mặt trái của nó. Mỗi generic có trait bounds riêng, nên các hàm với nhiều tham số generic có thể chứa cả đống thông tin trait bound giữa tên hàm và danh sách tham số, làm chữ ký hàm rất khó đọc. Vì vậy, Rust có cú pháp thay thế để chỉ định trait bounds bên trong mệnh đề <code>where</code> sau chữ ký hàm. Thay vì viết thế này:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {</code></pre>
 <p>ta có thể dùng mệnh đề <code>where</code>, như thế này:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T, U&gt;(t: &amp;T, u: &amp;U) -&gt; i32
@@ -577,7 +577,7 @@ where
 <p>Việc trả về <code>NewsArticle</code> hoặc <code>SocialPost</code> không được phép vì các hạn chế xung quanh cách cú pháp <code>impl Trait</code> được implement trong trình biên dịch. Ta sẽ đề cập cách viết hàm với hành vi này trong phần <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">"Using Trait Objects to Abstract over Shared Behavior"</a> ở Chương 18.</p>
 
 <h3 id="using-trait-bounds-to-conditionally-implement-methods">Dùng Trait Bounds Để Implement Method Có Điều Kiện</h3>
-<p>Bằng cách dùng trait bound với khối <code>impl</code> sử dụng tham số kiểu generic, ta có thể implement method có điều kiện cho các kiểu implement các trait được chỉ định. Ví dụ, kiểu <code>Pair&lt;T&gt;</code> trong Listing 10-15 luôn implement hàm <code>new</code> để trả về một instance mới của <code>Pair&lt;T&gt;</code> (nhớ lại ở phần <a href="ch05-03-method-syntax.html#method-syntax">"Method Syntax"</a> Chương 5 rằng <code>Self</code> là type alias cho kiểu của khối <code>impl</code> — trong trường hợp này là <code>Pair&lt;T&gt;</code>). Nhưng ở khối <code>impl</code> tiếp theo, <code>Pair&lt;T&gt;</code> chỉ implement method <code>cmp_display</code> nếu kiểu bên trong <code>T</code> implement trait <code>PartialOrd</code> cho phép so sánh <em>và</em> trait <code>Display</code> cho phép in.</p>
+<p>Bằng cách dùng trait bound với khối <code>impl</code> sử dụng tham số generic, ta có thể implement method có điều kiện cho các kiểu implement các trait được chỉ định. Ví dụ, kiểu <code>Pair&lt;T&gt;</code> trong Listing 10-15 luôn implement hàm <code>new</code> để trả về một instance mới của <code>Pair&lt;T&gt;</code> (nhớ lại ở phần <a href="ch05-03-method-syntax.html#method-syntax">"Method Syntax"</a> Chương 5 rằng <code>Self</code> là type alias cho kiểu của khối <code>impl</code> — trong trường hợp này là <code>Pair&lt;T&gt;</code>). Nhưng ở khối <code>impl</code> tiếp theo, <code>Pair&lt;T&gt;</code> chỉ implement method <code>cmp_display</code> nếu kiểu bên trong <code>T</code> implement trait <code>PartialOrd</code> cho phép so sánh <em>và</em> trait <code>Display</code> cho phép in.</p>
 <figure class="listing" id="listing-10-15">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt::Display;
@@ -602,7 +602,7 @@ impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
         }
     }
 }</code></pre>
-<figcaption><a href="#listing-10-15">Listing 10-15</a>: Implement method có điều kiện trên kiểu generic tùy thuộc vào trait bounds</figcaption>
+<figcaption><a href="#listing-10-15">Listing 10-15</a>: Implement method có điều kiện trên generic tùy thuộc vào trait bounds</figcaption>
 </figure>
 <p>Ta cũng có thể implement trait có điều kiện cho bất kỳ kiểu nào implement một trait khác. Các implementation của trait trên bất kỳ kiểu nào thỏa mãn trait bounds được gọi là <em>blanket implementations</em> và được dùng rộng rãi trong standard library của Rust. Ví dụ, standard library implement trait <code>ToString</code> trên bất kỳ kiểu nào implement trait <code>Display</code>. Khối <code>impl</code> trong standard library trông tương tự như code sau:</p>
 <pre><code class="language-rust ignore">impl&lt;T: Display&gt; ToString for T {
@@ -614,7 +614,7 @@ impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
 </span>let s = 3.to_string();
 <span class="boring">}</span></code></pre>
 <p>Blanket implementations xuất hiện trong tài liệu cho trait ở phần "Implementors".</p>
-<p>Traits và trait bounds giúp ta viết code dùng tham số kiểu generic để giảm trùng lặp, đồng thời chỉ rõ cho trình biên dịch rằng ta muốn kiểu generic có hành vi cụ thể. Trình biên dịch có thể dùng thông tin trait bound để kiểm tra rằng tất cả các kiểu cụ thể dùng trong code đều cung cấp đúng hành vi mong muốn. Trong các ngôn ngữ kiểu động, ta sẽ nhận lỗi lúc runtime nếu gọi method trên kiểu không định nghĩa method đó. Nhưng Rust chuyển các lỗi này sang thời điểm compile để ta buộc phải sửa vấn đề trước khi code có thể chạy. Ngoài ra, ta không phải viết code kiểm tra hành vi lúc runtime vì ta đã kiểm tra lúc compile rồi. Điều này cải thiện hiệu suất mà không phải hy sinh sự linh hoạt của generics.</p>
+<p>Traits và trait bounds giúp ta viết code dùng tham số generic để giảm trùng lặp, đồng thời chỉ rõ cho trình biên dịch rằng ta muốn generic có hành vi cụ thể. Trình biên dịch có thể dùng thông tin trait bound để kiểm tra rằng tất cả các kiểu cụ thể dùng trong code đều cung cấp đúng hành vi mong muốn. Trong các ngôn ngữ kiểu động, ta sẽ nhận lỗi lúc runtime nếu gọi method trên kiểu không định nghĩa method đó. Nhưng Rust chuyển các lỗi này sang thời điểm compile để ta buộc phải sửa vấn đề trước khi code có thể chạy. Ngoài ra, ta không phải viết code kiểm tra hành vi lúc runtime vì ta đã kiểm tra lúc compile rồi. Điều này cải thiện hiệu suất mà không phải hy sinh sự linh hoạt của generics.</p>
 
   <div class="page-nav bottom"><a href="ch10-01-syntax.html">← Trước</a><a href="ch10-03-lifetime-syntax.html">Tiếp →</a></div>
   </div>

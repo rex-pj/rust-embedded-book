@@ -372,7 +372,7 @@ help: consider moving the expression out of the loop so it is only moved once
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `shared-state` (bin "shared-state") due to 1 previous error
 </code></pre>
-<p>Thông báo lỗi cho biết giá trị <code>counter</code> đã được move ở vòng lặp trước. Rust đang nói với chúng ta rằng không thể move quyền sở hữu <code>counter</code> vào nhiều thread. Hãy sửa lỗi compiler bằng phương pháp multiple-ownership đã thảo luận ở Chương 15.</p>
+<p>Thông báo lỗi cho biết giá trị <code>counter</code> đã được move ở vòng lặp trước. Rust đang nói với chúng ta rằng không thể move ownership <code>counter</code> vào nhiều thread. Hãy sửa lỗi compiler bằng phương pháp multiple-ownership đã thảo luận ở Chương 15.</p>
 <h4 id="multiple-ownership-with-multiple-threads"><a class="header" href="#multiple-ownership-with-multiple-threads">Multiple Ownership Với Multiple Threads</a></h4>
 <p>Ở Chương 15, chúng ta đã giao một giá trị cho nhiều owner bằng cách dùng smart pointer <code>Rc&lt;T&gt;</code> để tạo giá trị reference-counted. Hãy làm tương tự ở đây và xem điều gì xảy ra. Chúng ta sẽ bọc <code>Mutex&lt;T&gt;</code> trong <code>Rc&lt;T&gt;</code> ở Listing 16-14 và clone <code>Rc&lt;T&gt;</code> trước khi move ownership vào thread.</p>
 <figure class="listing" id="listing-16-14">

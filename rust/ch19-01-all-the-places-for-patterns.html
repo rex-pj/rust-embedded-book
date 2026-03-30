@@ -308,7 +308,7 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 <p>Nhược điểm của việc dùng biểu thức <code>if let</code> là trình biên dịch không kiểm tra tính exhaustiveness (đầy đủ) — trong khi với biểu thức <code>match</code> thì có. Nếu ta bỏ qua khối <code>else</code> cuối cùng và do đó bỏ sót xử lý một số trường hợp, trình biên dịch sẽ không báo cho ta về bug logic tiềm ẩn đó.</p>
 
 <h3 id="while-let-conditional-loops"><a class="header" href="#while-let-conditional-loops">Vòng Lặp Có Điều Kiện <code>while let</code></a></h3>
-<p>Tương tự về cấu trúc với <code>if let</code>, vòng lặp có điều kiện <code>while let</code> cho phép một vòng lặp <code>while</code> tiếp tục chạy miễn là pattern vẫn còn khớp. Trong Listing 19-4, chúng ta thấy một vòng lặp <code>while let</code> chờ nhận tin nhắn gửi giữa các luồng (thread), nhưng trong trường hợp này kiểm tra <code>Result</code> thay vì <code>Option</code>.</p>
+<p>Tương tự về cấu trúc với <code>if let</code>, vòng lặp có điều kiện <code>while let</code> cho phép một vòng lặp <code>while</code> tiếp tục chạy miễn là pattern vẫn còn khớp. Trong Listing 19-4, chúng ta thấy một vòng lặp <code>while let</code> chờ nhận tin nhắn gửi giữa các thread, nhưng trong trường hợp này kiểm tra <code>Result</code> thay vì <code>Option</code>.</p>
 <figure class="listing" id="listing-19-4">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let (tx, rx) = std::sync::mpsc::channel();

@@ -598,7 +598,7 @@ impl Worker {
     <figcaption>Listing 21-20: Code hoàn chỉnh của thread pool</figcaption>
   </figure>
 
-  <p>Chúng ta đã hoàn thành! Trong <code>ThreadPool::new</code>, chúng ta đặt receiver trong <code>Arc</code> và <code>Mutex</code>. Với mỗi <code>Worker</code> mới, chúng ta clone <code>Arc</code> để tăng reference count để các <code>Worker</code> có thể chia sẻ quyền sở hữu receiver.</p>
+  <p>Chúng ta đã hoàn thành! Trong <code>ThreadPool::new</code>, chúng ta đặt receiver trong <code>Arc</code> và <code>Mutex</code>. Với mỗi <code>Worker</code> mới, chúng ta clone <code>Arc</code> để tăng reference count để các <code>Worker</code> có thể chia sẻ ownership receiver.</p>
 
   <p>Với những thay đổi này, code biên dịch thành công! Hãy thử chạy server và xem nó xử lý đồng thời như thế nào — truy cập <em>/sleep</em> trong một tab và <em>/</em> trong tab khác, bạn sẽ thấy <em>/</em> không cần chờ <em>/sleep</em> nữa.</p>
 

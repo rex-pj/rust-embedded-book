@@ -207,7 +207,7 @@
   </div>
 
   <h2 id="references-and-borrowing">📍 Tham chiếu và Mượn (References and Borrowing)</h2>
-  <p>Vấn đề với đoạn code tuple trong Listing 4-5 là chúng ta phải trả <code>String</code> về cho hàm gọi để vẫn có thể sử dụng <code>String</code> sau lệnh gọi <code>calculate_length</code>, vì <code>String</code> đã bị di chuyển vào <code>calculate_length</code>. Thay vào đó, chúng ta có thể cung cấp một tham chiếu đến giá trị <code>String</code>. Một tham chiếu giống như một con trỏ ở chỗ nó là một địa chỉ chúng ta có thể đi theo để truy cập dữ liệu được lưu ở địa chỉ đó; dữ liệu đó được sở hữu bởi một biến khác. Khác với con trỏ, tham chiếu được đảm bảo luôn trỏ đến một giá trị hợp lệ của một kiểu dữ liệu cụ thể trong suốt vòng đời của tham chiếu đó.</p>
+  <p>Vấn đề với đoạn code tuple trong Listing 4-5 là chúng ta phải trả <code>String</code> về cho hàm gọi để vẫn có thể sử dụng <code>String</code> sau lệnh gọi <code>calculate_length</code>, vì <code>String</code> đã bị di chuyển vào <code>calculate_length</code>. Thay vào đó, chúng ta có thể cung cấp một tham chiếu đến giá trị <code>String</code>. Một tham chiếu giống như một con trỏ ở chỗ nó là một địa chỉ chúng ta có thể đi theo để truy cập dữ liệu được lưu ở địa chỉ đó; dữ liệu đó được sở hữu bởi một biến khác. Khác với con trỏ, tham chiếu được đảm bảo luôn trỏ đến một giá trị hợp lệ của một kiểu dữ liệu cụ thể trong suốt lifetime của tham chiếu đó.</p>
 
   <p>Đây là cách bạn sẽ định nghĩa và sử dụng một hàm <code>calculate_length</code> có tham chiếu đến một đối tượng làm tham số thay vì nhận ownership của giá trị:</p>
 

@@ -424,14 +424,14 @@ vì nó không biết lifetime của <code>x</code> và <code>y</code> liên qua
 trả về thế nào. Để sửa lỗi này, ta sẽ thêm tham số lifetime generic xác định
 mối quan hệ giữa các reference để borrow checker có thể phân tích.</p>
 <h3 id="lifetime-annotation-syntax"><a class="header" href="#lifetime-annotation-syntax">Cú pháp chú thích Lifetime</a></h3>
-<p>Chú thích lifetime không thay đổi thời gian sống của bất kỳ reference nào.
+<p>Chú thích lifetime không thay đổi lifetime của bất kỳ reference nào.
 Thay vào đó, chúng mô tả mối quan hệ giữa lifetime của nhiều reference với
 nhau mà không ảnh hưởng đến lifetime. Cũng như các hàm có thể chấp nhận bất
-kỳ kiểu nào khi signature chỉ định tham số kiểu generic, các hàm có thể chấp
+kỳ kiểu nào khi signature chỉ định tham số generic, các hàm có thể chấp
 nhận reference với bất kỳ lifetime nào khi chỉ định tham số lifetime generic.</p>
 <p>Chú thích lifetime có cú pháp hơi khác thường: Tên của tham số lifetime phải
 bắt đầu bằng dấu nháy đơn (<code>'</code>) và thường viết thường toàn bộ, ngắn gọn như
-kiểu generic. Hầu hết mọi người dùng tên <code>'a</code> cho chú thích lifetime đầu
+generic. Hầu hết mọi người dùng tên <code>'a</code> cho chú thích lifetime đầu
 tiên. Ta đặt chú thích tham số lifetime sau ký tự <code>&amp;</code> của reference, cách
 chú thích với kiểu của reference bằng một khoảng trắng.</p>
 <p>Đây là một số ví dụ — reference đến <code>i32</code> không có tham số lifetime, reference
@@ -449,7 +449,7 @@ trong ngữ cảnh của hàm <code>longest</code>.</p>
 <h3 id="in-function-signatures"><a class="header" href="#in-function-signatures">Trong signature của hàm</a></h3>
 <p>Để dùng chú thích lifetime trong signature hàm, ta cần khai báo các tham số
 lifetime generic bên trong dấu ngoặc góc giữa tên hàm và danh sách tham số,
-giống như ta đã làm với tham số kiểu generic.</p>
+giống như ta đã làm với tham số generic.</p>
 <p>Ta muốn signature thể hiện ràng buộc sau: Reference được trả về sẽ hợp lệ
 miễn là cả hai tham số đều hợp lệ. Đây là mối quan hệ giữa lifetime của các
 tham số và giá trị trả về. Ta đặt tên lifetime là <code>'a</code> rồi thêm nó vào mỗi
@@ -604,7 +604,7 @@ trước khi compile; rồi kiểm tra xem bạn có đúng không!</p>
   <!-- explanation -->
   <rect x="30" y="138" width="560" height="40" rx="6" fill="#0f3460" opacity="0.7"/>
   <text x="310" y="153" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="monospace">Lifetime 'a của return value = lifetime ngắn nhất trong x và y</text>
-  <text x="310" y="169" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">Rust đảm bảo reference trả về luôn hợp lệ trong suốt vòng đời 'a</text>
+  <text x="310" y="169" text-anchor="middle" fill="#6b7280" font-size="10" font-family="monospace">Rust đảm bảo reference trả về luôn hợp lệ trong suốt lifetime 'a</text>
 </svg>
 <figcaption>Lifetime annotation <code>'a</code> cho biết reference trả về sống ít nhất bằng lifetime ngắn nhất của các tham số đầu vào</figcaption>
 </figure>
@@ -820,7 +820,7 @@ thường không cần chú thích lifetime trong signature method.</p>
 <p><a id="lifetime-annotations-in-method-definitions"></a></p>
 <h3 id="in-method-definitions"><a class="header" href="#in-method-definitions">Trong định nghĩa Method</a></h3>
 <p>Khi ta implement method trên struct có lifetime, ta dùng cú pháp giống với
-tham số kiểu generic như trong Listing 10-11. Nơi ta khai báo và dùng tham
+tham số generic như trong Listing 10-11. Nơi ta khai báo và dùng tham
 số lifetime phụ thuộc vào chúng có liên quan đến field struct hay tham số
 method và giá trị trả về không.</p>
 <p>Tên lifetime cho field struct luôn cần được khai báo sau keyword <code>impl</code> rồi
@@ -908,7 +908,7 @@ những vấn đề đó, không phải chỉ định lifetime <code>'static</co
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="generic-type-parameters-trait-bounds-and-lifetimes-together"></a></p>
 <h2 id="generic-type-parameters-trait-bounds-and-lifetimes"><a class="header" href="#generic-type-parameters-trait-bounds-and-lifetimes">Generic Type Parameters, Trait Bounds và Lifetimes cùng nhau</a></h2>
-<p>Hãy nhìn lướt qua cú pháp chỉ định tham số kiểu generic, trait bound và
+<p>Hãy nhìn lướt qua cú pháp chỉ định tham số generic, trait bound và
 lifetime cùng trong một hàm!</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let string1 = String::from("abcd");
@@ -936,17 +936,17 @@ where
     if x.len() &gt; y.len() { x } else { y }
 }</code></pre>
 <p>Đây là hàm <code>longest</code> từ Listing 10-21 trả về chuỗi dài hơn trong hai string
-slice. Nhưng giờ nó có thêm tham số tên <code>ann</code> kiểu generic <code>T</code>, có thể được
+slice. Nhưng giờ nó có thêm tham số tên <code>ann</code> generic <code>T</code>, có thể được
 điền vào bởi bất kỳ kiểu nào implement trait <code>Display</code> như được chỉ định bởi
 mệnh đề <code>where</code>. Tham số thêm này sẽ được in bằng <code>{}</code>, đó là lý do tại sao
 trait bound <code>Display</code> cần thiết. Vì lifetime là một loại generic, khai báo
-tham số lifetime <code>'a</code> và tham số kiểu generic <code>T</code> nằm cùng danh sách bên
+tham số lifetime <code>'a</code> và tham số generic <code>T</code> nằm cùng danh sách bên
 trong dấu ngoặc góc sau tên hàm.</p>
 <h2 id="summary"><a class="header" href="#summary">Tóm tắt</a></h2>
 <p>Ta đã đề cập nhiều trong chương này! Bây giờ bạn đã biết về tham số kiểu
 generic, trait và trait bound, và tham số lifetime generic, bạn đã sẵn sàng
 viết code không lặp lại mà hoạt động trong nhiều tình huống khác nhau. Tham
-số kiểu generic cho phép bạn áp dụng code cho các kiểu khác nhau. Trait và
+số generic cho phép bạn áp dụng code cho các kiểu khác nhau. Trait và
 trait bound đảm bảo rằng dù kiểu là generic, chúng vẫn có hành vi mà code
 cần. Bạn đã học cách dùng chú thích lifetime để đảm bảo rằng code linh hoạt
 này sẽ không có dangling reference. Và tất cả phân tích này diễn ra lúc

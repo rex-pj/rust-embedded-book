@@ -417,7 +417,7 @@ again!
   <p>Chúng ta cũng đã dùng <code>continue</code> trong trò chơi đoán số, từ khóa này trong một vòng lặp sẽ báo cho chương trình bỏ qua phần code còn lại trong lần lặp hiện tại và chuyển sang lần lặp tiếp theo.</p>
 
   <h4 id="returning-values-from-loops">Trả về Giá trị từ Vòng Lặp</h4>
-  <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một luồng đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của code. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
+  <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một thread đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của code. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut counter = 0;

@@ -31,16 +31,23 @@
     });
   }
 
-  /* ── 3. Mark active sidebar link ── */
+  /* ── 3. Mark active sidebar link & center it ── */
   var path = window.location.pathname;
+  var activeLink = null;
   document.querySelectorAll('#sidebar a').forEach(function (a) {
     var href = a.getAttribute('href');
     if (!href) return;
     var normalized = href.replace(/^\.\.\//, '').replace(/^\.\//, '');
     if (path.endsWith(normalized) || a.href === window.location.href) {
       a.classList.add('active');
+      activeLink = a;
     }
   });
+  if (sidebar && activeLink) {
+    requestAnimationFrame(function () {
+      activeLink.scrollIntoView({ block: 'center', behavior: 'instant' });
+    });
+  }
 
   /* ── 4. Inject clickable § anchors on headings ── */
   document.querySelectorAll('#main h2, #main h3').forEach(function (h) {
