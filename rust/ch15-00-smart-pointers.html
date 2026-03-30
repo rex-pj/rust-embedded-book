@@ -209,13 +209,13 @@
 
 <h1 id="smart-pointers"><a class="header" href="#smart-pointers">Smart Pointers</a></h1>
 
-<p>Pointer là một khái niệm tổng quát chỉ một biến chứa một địa chỉ bộ nhớ. Địa chỉ đó trỏ tới, hay "chỉ ngón" vào, một mảnh dữ liệu nào đó nằm chỗ khác. Loại pointer phổ biến nhất trong Rust chính là reference, thứ mà bạn đã làm quen hồi Chương 4. Reference được ký hiệu bằng dấu <code>&amp;</code> và mượn tạm giá trị mà chúng trỏ tới. Ngoài cái việc trỏ vào dữ liệu ra thì chúng chả có năng lực gì đặc biệt, cũng chẳng có chi phí overhead nào thêm thắt.</p>
+<p>Pointer là một khái niệm tổng quát chỉ một biến chứa một địa chỉ bộ nhớ. Địa chỉ đó trỏ tới, hay "chỉ ngón" vào, một mảnh dữ liệu nào đó nằm chỗ khác. Loại pointer phổ biến nhất trong Rust chính là reference, thứ mà bạn đã làm quen hồi Chương 4. Reference được ký hiệu bằng dấu <code>&amp;</code> và mượn tạm giá trị mà chúng trỏ tới. Ngoài việc trỏ vào dữ liệu, chúng không có khả năng đặc biệt nào, cũng không có chi phí overhead nào thêm vào.</p>
 
-<p><em>Smart pointers</em>, ngược lại, là những cấu trúc dữ liệu hoạt động như pointer nhưng còn mang theo cả metadata lẫn khả năng bổ sung. Khái niệm smart pointer không phải đặc sản riêng của Rust: chúng ra đời từ C++ và hiện diện trong nhiều ngôn ngữ khác nữa. Rust có sẵn một bộ smart pointers kha khá được định nghĩa trong standard library, cung cấp nhiều tính năng vượt ra ngoài phạm vi của reference thông thường. Để khám phá khái niệm tổng quát này, mình sẽ dạo qua vài ví dụ smart pointer khác nhau, trong đó có kiểu smart pointer <em>đếm reference</em> (reference counting). Loại pointer này cho phép dữ liệu có nhiều chủ sở hữu bằng cách theo dõi số lượng chủ, và khi không còn chủ nào nữa thì tự động dọn dẹp dữ liệu đó đi.</p>
+<p><em>Smart pointers</em>, ngược lại, là những cấu trúc dữ liệu hoạt động như pointer nhưng còn mang theo cả metadata lẫn khả năng bổ sung. Khái niệm smart pointer không phải đặc sản riêng của Rust: chúng ra đời từ C++ và hiện diện trong nhiều ngôn ngữ khác nữa. Rust có sẵn một bộ smart pointers kha khá được định nghĩa trong standard library, cung cấp nhiều tính năng vượt ra ngoài phạm vi của reference thông thường. Để khám phá khái niệm tổng quát này, chúng ta sẽ dạo qua vài ví dụ smart pointer khác nhau, trong đó có kiểu smart pointer <em>đếm reference</em> (reference counting). Loại pointer này cho phép dữ liệu có nhiều chủ sở hữu bằng cách theo dõi số lượng chủ, và khi không còn chủ nào nữa thì tự động dọn dẹp dữ liệu đó đi.</p>
 
 <p>Trong Rust, với khái niệm ownership và borrowing, có thêm một điểm khác biệt giữa reference và smart pointer: trong khi reference chỉ mượn dữ liệu, thì ở nhiều trường hợp smart pointer thực sự <em>sở hữu</em> dữ liệu mà chúng trỏ tới.</p>
 
-<p>Smart pointer thường được xây dựng bằng struct. Điểm phân biệt với struct thông thường là smart pointer implement cả hai trait <code>Deref</code> và <code>Drop</code>. Trait <code>Deref</code> cho phép một instance của smart pointer struct hành xử như một reference, để bạn có thể viết code dùng được cho cả hai. Trait <code>Drop</code> cho phép bạn tùy biến đoạn code sẽ chạy khi một instance của smart pointer bước ra khỏi scope. Trong chương này, tụi mình sẽ bàn về cả hai trait đó và giải thích tại sao chúng lại quan trọng đến thế với smart pointers.</p>
+<p>Smart pointer thường được xây dựng bằng struct. Điểm phân biệt với struct thông thường là smart pointer implement cả hai trait <code>Deref</code> và <code>Drop</code>. Trait <code>Deref</code> cho phép một instance của smart pointer struct hành xử như một reference, để bạn có thể viết code dùng được cho cả hai. Trait <code>Drop</code> cho phép bạn tùy biến đoạn code sẽ chạy khi một instance của smart pointer bước ra khỏi scope. Trong chương này, chúng ta sẽ bàn về cả hai trait đó và giải thích tại sao chúng lại quan trọng đến thế với smart pointers.</p>
 
 <p>Vì pattern smart pointer là một design pattern tổng quát được dùng rất nhiều trong Rust, chương này sẽ không bao quát hết toàn bộ smart pointers hiện có. Nhiều thư viện tự xây dựng smart pointer riêng, và bạn cũng hoàn toàn có thể tự viết. Chúng ta sẽ tập trung vào những smart pointer phổ biến nhất trong standard library:</p>
 
@@ -225,9 +225,9 @@
 <li><code>Ref&lt;T&gt;</code> và <code>RefMut&lt;T&gt;</code>, truy cập qua <code>RefCell&lt;T&gt;</code>, một kiểu áp đặt các quy tắc borrowing lúc runtime thay vì lúc biên dịch</li>
 </ul>
 
-<p>Thêm vào đó, mình cũng sẽ đề cập tới pattern <em>interior mutability</em> — nơi một kiểu bất biến lộ ra API cho phép thay đổi giá trị bên trong. Và cả chủ đề reference cycles nữa: chúng có thể gây rò rỉ bộ nhớ thế nào và làm sao để ngăn chặn.</p>
+<p>Thêm vào đó, chúng ta cũng sẽ đề cập tới pattern <em>interior mutability</em> — nơi một kiểu bất biến lộ ra API cho phép thay đổi giá trị bên trong. Và cả chủ đề reference cycles nữa: chúng có thể gây rò rỉ bộ nhớ thế nào và làm sao để ngăn chặn.</p>
 
-<p>Thôi, nhảy vào thôi!</p>
+<p>Hãy cùng bắt đầu!</p>
 
   <div class="page-nav bottom"><a href="ch14-05-extending-cargo.html">← Trước</a><a href="ch15-01-box.html">Tiếp →</a></div>
   </div>

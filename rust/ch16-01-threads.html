@@ -253,7 +253,7 @@
 <li>Các bug chỉ xảy ra trong một số tình huống nhất định và khó tái tạo và sửa chữa một cách đáng tin cậy</li>
 </ul>
 
-<p>Rust cố gắng giảm thiểu tác động tiêu cực của việc dùng thread, nhưng lập trình trong ngữ cảnh đa luồng vẫn đòi hỏi suy nghĩ cẩn thận và yêu cầu cấu trúc code khác so với các chương trình chạy trong một thread duy nhất.</p>
+<p>Rust giảm thiểu các rủi ro khi dùng thread, nhưng lập trình đa luồng vẫn đòi hỏi suy nghĩ cẩn thận và cấu trúc code khác so với chương trình đơn luồng.</p>
 
 <p>Các ngôn ngữ lập trình triển khai thread theo một vài cách khác nhau, và nhiều hệ điều hành cung cấp API mà ngôn ngữ lập trình có thể gọi để tạo thread mới. Thư viện chuẩn của Rust dùng mô hình thread kiểu <em>1:1</em>, tức là một chương trình dùng một thread của hệ điều hành cho mỗi một thread của ngôn ngữ. Có những crate triển khai các mô hình thread khác với những đánh đổi khác so với mô hình 1:1. (Hệ thống async của Rust, mà chúng ta sẽ thấy ở chương tiếp theo, cũng cung cấp một cách tiếp cận khác với concurrency.)</p>
 

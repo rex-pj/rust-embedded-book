@@ -361,7 +361,7 @@ ta chỉ có thể thêm một string slice vào một <code>String</code>; khô
 vẫn compile được?</p>
 <p>Lý do ta dùng được <code>&amp;s2</code> trong lời gọi <code>add</code> là vì compiler có thể ép kiểu
 <code>&amp;String</code> thành <code>&amp;str</code>. Khi ta gọi method <code>add</code>, Rust dùng deref coercion,
-ở đây biến <code>&amp;s2</code> thành <code>&amp;s2[..]</code>. Ta sẽ bàn sâu hơn về deref coercion ở
+để biến đổi <code>&amp;s2</code> thành <code>&amp;s2[..]</code>. Ta sẽ bàn sâu hơn về deref coercion ở
 Chương 15. Vì <code>add</code> không lấy ownership của tham số <code>s</code>, <code>s2</code> vẫn là một
 <code>String</code> hợp lệ sau thao tác này.</p>
 <p>Thứ hai, ta thấy trong signature rằng <code>add</code> lấy ownership của <code>self</code> vì

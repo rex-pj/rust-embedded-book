@@ -208,16 +208,16 @@
   </div>
 
 <h1 id="common-collections">Các Kiểu Cấu Trúc Dữ Liệu Tập Hợp Phổ Biến (Common Collections)</h1>
-<p>Thư viện chuẩn của Rust bao gồm một loạt các cấu trúc dữ liệu rất hữu ích được gọi là các <em>collection</em> (cấu trúc tập hợp). Trong khi phần lớn các kiểu dữ liệu khác chỉ rập khuôn đại diện cho một mẩu giá trị cụ thể, thì các bộ collection lại thâu tóm ôm trọn được liền một lúc nhiều giá trị. Khác biệt với kiểu mảng (array) và kiểu bộ (tuple) được tích hợp sẵn, loại dữ liệu mà các bộ collections này trỏ đến lại được cất giữ trên vùng nhớ heap, đồng nghĩa với việc dung lượng dữ liệu không cần phải được chốt cứng ngay từ thời điểm biên dịch (compile time) và có thể vươn vai tự do phình to hay co rút xê dịch linh hoạt trong lúc chương trình đang chạy. Mỗi một chủng collection đều nắm giữ trên mình những ưu điểm và cái giá đánh đổi riêng, nên tài nghệ lựa chọn đúng bộ collection ướm vừa với hoàn cảnh hiện tại của bạn là một loại kỹ năng mà bạn sẽ dần trui rèn đắp nặn được theo chặng thời gian. Ngay trong chương này, bọn mình sẽ đàm đạo về ba cấu trúc collection kinh điển mà trổ mặt đi đâu cũng sẽ thấy đám chương trình Rust nào cũng nhẵn mặt tin dùng nhất:</p>
+<p>Thư viện chuẩn của Rust bao gồm một số cấu trúc dữ liệu rất hữu ích được gọi là các <em>collection</em> (cấu trúc tập hợp). Trong khi phần lớn các kiểu dữ liệu khác chỉ biểu diễn một giá trị cụ thể, thì collection lại có thể lưu trữ nhiều giá trị. Khác với kiểu mảng (array) và bộ (tuple) được tích hợp sẵn, dữ liệu mà các collection này trỏ đến được lưu trên vùng nhớ heap, nghĩa là dung lượng dữ liệu không cần phải biết trước tại thời điểm biên dịch (compile time) và có thể tăng hoặc giảm linh hoạt trong khi chương trình đang chạy. Mỗi loại collection có những ưu điểm và chi phí khác nhau, và lựa chọn collection phù hợp với tình huống hiện tại là một kỹ năng bạn sẽ phát triển theo thời gian. Trong chương này, chúng ta sẽ thảo luận về ba collection được sử dụng thường xuyên nhất trong các chương trình Rust:</p>
 <ul>
-<li>Một <em>vector</em> cho phép bạn khả năng nhồi nhét thao túng một lượng biến thiên các giá trị nằm đứng xếp hàng ngay sát cạnh nhau.</li>
-<li>Một <em>string</em> lại mang bản ngã là một bộ collection gom xếp nhiều mảnh ký tự. Mặc dù chúng mình từng vắn tắt nói về loại <code>String</code> ở các phần trước, nhưng trọn tại không gian phân chương này, ta mới vạch lối mổ xẻ băm vằm sâu vào trong ruột nội hàm nó.</li>
-<li>Một <em>hash map</em> (bản đồ băm) mở cửa cho bạn xâu chuỗi gán kết một giá trị quy quyện với một chiếc khóa (key) định danh cụ thể. Nó là một hiện thân ứng dụng đặc thù của cái danh cấu trúc dữ liệu tổng bát ngát hơn quen gọi là hàm <em>map</em>.</li>
+<li>Một <em>vector</em> cho phép lưu trữ nhiều giá trị liên tiếp cạnh nhau.</li>
+<li>Một <em>string</em> là một collection tập hợp các ký tự. Mặc dù chúng ta đã đề cập đến kiểu <code>String</code> ở các phần trước, nhưng trong chương này, chúng ta sẽ đi vào chi tiết hơn về nó.</li>
+<li>Một <em>hash map</em> (bản đồ băm) cho phép liên kết một giá trị với một khóa (key) cụ thể. Đây là một cách triển khai cụ thể của cấu trúc dữ liệu tổng quát hơn gọi là <em>map</em>.</li>
 </ul>
 
-<p>Để đánh hơi nạp thêm kiến thức về ti tỉ loại mặt hàng collections khác được dọn hậu thuẫn bởi bệ móng standard library, mời bạn ghé mắt xem qua <a href="../std/collections/index.html">bộ bách khoa tài liệu chuẩn này</a>.</p>
+<p>Để tìm hiểu thêm về các loại collection khác được hỗ trợ bởi thư viện chuẩn, hãy xem <a href="../std/collections/index.html">tài liệu chính thức</a>.</p>
 
-<p>Chúng tớ sẽ xoay vòng đi sâu phân bua việc làm thế nào để tạo dựng và tân trang nhào nặn chắp vá những vạch vectors, bộ strings, với cả mớ hash maps, đi kèm với việc vạch rõ thứ bản sức cốt lõi nào làm cho mỗi đứa chúng nó trở nên sáng giá dị biệt.</p>
+<p>Chúng ta sẽ đi vào chi tiết cách tạo, cập nhật và sử dụng vector, string và hash map, cũng như những gì làm cho mỗi loại trở nên đặc biệt.</p>
 
   <div class="page-nav bottom"><a href="ch07-05-separating-modules-into-different-files.html">← Trước</a><a href="ch08-01-vectors.html">Tiếp →</a></div>
   </div>

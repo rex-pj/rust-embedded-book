@@ -209,17 +209,17 @@
 
 <h2 id="using-boxt-to-point-to-data-on-the-heap"><a class="header" href="#using-boxt-to-point-to-data-on-the-heap">Dùng <code>Box&lt;T&gt;</code> để Trỏ tới Dữ liệu trên Heap</a></h2>
 
-<p>Smart pointer đơn giản nhất chính là box, có kiểu được viết là <code>Box&lt;T&gt;</code>. <em>Box</em> cho phép bạn nhét dữ liệu xuống heap thay vì để trên stack. Thứ còn nằm trên stack chỉ là cái pointer trỏ xuống dữ liệu heap đó thôi. Xem lại Chương 4 nếu bạn muốn ôn lại sự khác biệt giữa stack và heap nhé.</p>
+<p>Smart pointer đơn giản nhất chính là box, có kiểu được viết là <code>Box&lt;T&gt;</code>. <em>Box</em> cho phép bạn cấp phát dữ liệu trên heap thay vì để trên stack. Thứ còn nằm trên stack chỉ là một con trỏ (pointer) tới dữ liệu đó. Xem lại Chương 4 nếu bạn muốn ôn lại sự khác biệt giữa stack và heap.</p>
 
 <p>Box không có overhead về hiệu năng, ngoài việc lưu dữ liệu trên heap thay vì stack. Nhưng đổi lại, chúng cũng không có quá nhiều khả năng đặc biệt. Bạn sẽ dùng tới box thường nhất trong những tình huống sau:</p>
 
 <ul>
 <li>Khi bạn có một kiểu mà kích thước không thể biết lúc biên dịch, nhưng bạn cần dùng giá trị đó trong ngữ cảnh yêu cầu kích thước chính xác</li>
-<li>Khi bạn có một đống dữ liệu lớn và muốn chuyển ownership mà không để dữ liệu bị copy</li>
+<li>Khi bạn có một lượng dữ liệu lớn và muốn chuyển ownership mà không để dữ liệu bị copy</li>
 <li>Khi bạn muốn sở hữu một giá trị và chỉ quan tâm nó implement một trait cụ thể nào đó, chứ không quan tâm chính xác kiểu của nó là gì</li>
 </ul>
 
-<p>Tình huống đầu tiên sẽ được minh họa trong phần <a href="#enabling-recursive-types-with-boxes">"Kích hoạt Kiểu Đệ Quy với Box"</a>. Với tình huống thứ hai, chuyển ownership của một đống dữ liệu lớn có thể mất nhiều thời gian vì dữ liệu bị copy trên stack. Để cải thiện hiệu năng, ta có thể nhét đống dữ liệu lớn đó vào heap trong một cái box — khi đó chỉ có phần pointer nhỏ xíu được copy trên stack, còn dữ liệu thực sự vẫn nằm yên một chỗ trên heap. Tình huống thứ ba được gọi là <em>trait object</em>, và Chương 18 sẽ đào sâu về chủ đề đó. Vậy là kiến thức bạn học ở đây sẽ được tái sử dụng sau!</p>
+<p>Tình huống đầu tiên sẽ được minh họa trong phần <a href="#enabling-recursive-types-with-boxes">"Kích hoạt Kiểu Đệ Quy với Box"</a>. Với tình huống thứ hai, chuyển ownership của một lượng dữ liệu lớn có thể mất nhiều thời gian vì dữ liệu bị copy trên stack. Để cải thiện hiệu năng, ta có thể cấp phát lượng dữ liệu lớn đó lên heap trong một box — khi đó chỉ có phần pointer nhỏ được copy trên stack, còn dữ liệu thực sự vẫn nằm yên một chỗ trên heap. Tình huống thứ ba được gọi là <em>trait object</em>, và Chương 18 sẽ đào sâu về chủ đề đó. Vậy là kiến thức bạn học ở đây sẽ được tái sử dụng sau!</p>
 
 <h3 id="storing-data-on-the-heap"><a class="header" href="#storing-data-on-the-heap">Lưu Dữ Liệu Lên Heap</a></h3>
 
@@ -269,11 +269,11 @@
 
 <p>Ta định nghĩa biến <code>b</code> có giá trị là một <code>Box</code> trỏ tới số <code>5</code> được cấp phát trên heap. Chương trình này sẽ in ra <code>b = 5</code>; trong trường hợp này ta có thể truy cập dữ liệu trong box y như khi dữ liệu nằm trên stack. Giống như bất kỳ giá trị nào được sở hữu, khi box bước ra khỏi scope — như <code>b</code> ở cuối hàm <code>main</code> — nó sẽ bị deallocate. Việc deallocate xảy ra cả với box (lưu trên stack) lẫn dữ liệu mà nó trỏ tới (lưu trên heap).</p>
 
-<p>Nhét một giá trị đơn độc lên heap không phải lúc nào cũng hữu ích, nên bạn sẽ hiếm khi dùng box theo cách này. Có một <code>i32</code> đơn độc trên stack — nơi nó được lưu mặc định — thích hợp hơn trong đại đa số tình huống. Hãy xem một trường hợp mà box cho phép ta định nghĩa các kiểu mà không có box thì ta không thể làm được.</p>
+<p>Cấp phát một giá trị đơn độc lên heap không phải lúc nào cũng hữu ích, nên bạn sẽ hiếm khi dùng box theo cách này. Có một <code>i32</code> đơn độc trên stack — nơi nó được lưu mặc định — thích hợp hơn trong đại đa số tình huống. Hãy xem một trường hợp mà box cho phép ta định nghĩa các kiểu mà không có box thì ta không thể làm được.</p>
 
 <h3 id="enabling-recursive-types-with-boxes"><a class="header" href="#enabling-recursive-types-with-boxes">Kích Hoạt Kiểu Đệ Quy Bằng Box</a></h3>
 
-<p>Một giá trị của <em>kiểu đệ quy</em> (recursive type) có thể chứa một giá trị khác cùng kiểu với nó như một phần của chính nó. Kiểu đệ quy đặt ra vấn đề bởi vì Rust cần biết lúc biên dịch một kiểu chiếm bao nhiêu bộ nhớ. Tuy nhiên, sự lồng nhau của các giá trị kiểu đệ quy về mặt lý thuyết có thể tiếp tục vô tận, nên Rust không thể biết giá trị đó cần bao nhiêu chỗ. Vì box có kích thước đã biết, ta có thể kích hoạt kiểu đệ quy bằng cách chèn một cái box vào định nghĩa kiểu đệ quy đó.</p>
+<p><em>Kiểu đệ quy</em> (recursive type) là kiểu có thể chứa giá trị cùng kiểu với nó như một phần của chính nó. Kiểu đệ quy đặt ra vấn đề bởi vì Rust cần biết lúc biên dịch một kiểu chiếm bao nhiêu bộ nhớ. Tuy nhiên, sự lồng nhau của các giá trị kiểu đệ quy về mặt lý thuyết có thể tiếp tục vô tận, nên Rust không thể biết giá trị đó cần bao nhiêu chỗ. Vì box có kích thước đã biết, ta có thể kích hoạt kiểu đệ quy bằng cách chèn một box vào định nghĩa kiểu đệ quy đó.</p>
 
 <p>Như một ví dụ về kiểu đệ quy, hãy cùng khám phá cons list — một cấu trúc dữ liệu phổ biến trong các ngôn ngữ lập trình hàm. Kiểu cons list ta sẽ định nghĩa khá đơn giản ngoại trừ phần đệ quy; do đó các khái niệm trong ví dụ này sẽ hữu dụng bất cứ lúc nào bạn gặp tình huống phức tạp hơn liên quan tới kiểu đệ quy.</p>
 

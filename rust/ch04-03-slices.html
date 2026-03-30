@@ -310,7 +310,7 @@ fn main() {
     let world = &amp;s[6..11];
 }</code></pre>
 
-  <p>Thay vì tham chiếu toàn bộ <code>String</code>, <code>hello</code> là tham chiếu đến một phần của <code>String</code>, được chỉ định trong phần <code>[0..5]</code>. Chúng ta tạo slices bằng cách dùng một khoảng trong ngoặc vuông bằng cách chỉ định <code>[vị_trí_bắt_đầu..vị_trí_kết_thúc]</code>, trong đó <em><code>vị_trí_bắt_đầu</code></em> là vị trí đầu tiên trong slice và <em><code>vị_trí_kết_thúc</code></em> lớn hơn một so với vị trí cuối cùng trong slice. Trong nội bộ, cấu trúc dữ liệu slice lưu trữ vị trí bắt đầu và độ dài của slice, tương ứng với <em><code>vị_trí_kết_thúc</code></em> trừ <em><code>vị_trí_bắt_đầu</code></em>. Vậy, trong trường hợp <code>let world = &amp;s[6..11];</code>, <code>world</code> sẽ là một slice chứa con trỏ đến byte tại chỉ số 6 của <code>s</code> với giá trị độ dài là <code>5</code>.</p>
+  <p>Thay vì tham chiếu toàn bộ <code>String</code>, <code>hello</code> là tham chiếu đến một phần của <code>String</code>, được chỉ định trong phần <code>[0..5]</code>. Chúng ta tạo slices bằng cách dùng một khoảng trong ngoặc vuông bằng cách chỉ định <code>[starting_index..ending_index]</code>, trong đó <em><code>starting_index</code></em> là vị trí đầu tiên trong slice và <em><code>ending_index</code></em> lớn hơn một so với vị trí cuối cùng trong slice. Trong nội bộ, cấu trúc dữ liệu slice lưu trữ vị trí bắt đầu và độ dài của slice, tương ứng với <em><code>ending_index</code></em> trừ <em><code>starting_index</code></em>. Vậy, trong trường hợp <code>let world = &amp;s[6..11];</code>, <code>world</code> sẽ là một slice chứa con trỏ đến byte tại chỉ số 6 của <code>s</code> với giá trị độ dài là <code>5</code>.</p>
 
   <p>Hình 4-7 minh họa điều này trong sơ đồ.</p>
 
@@ -438,7 +438,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
 
 <pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 
-  <p>Một Rustacean có kinh nghiệm hơn sẽ viết chữ ký như trong Listing 4-9 thay vì vì nó cho phép chúng ta dùng cùng một hàm cho cả giá trị <code>&amp;String</code> và <code>&amp;str</code>.</p>
+  <p>Một Rustacean có kinh nghiệm hơn sẽ viết chữ ký như trong Listing 4-9, vì nó cho phép chúng ta dùng cùng một hàm cho cả giá trị <code>&amp;String</code> và <code>&amp;str</code>.</p>
 
   <figure class="listing" id="listing-4-9">
 <pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {
@@ -456,21 +456,21 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
 fn main() {
     let my_string = String::from("hello world");
 
-    // `first_word` chạy mượt trên chuỗi cắt của `String`, bất kể 1 phần hay toàn bộ
+    // `first_word` hoạt động trên string slice của `String`, một phần hoặc toàn bộ
     let word = first_word(&amp;my_string[0..6]);
     let word = first_word(&amp;my_string[..]);
-    // `first_word` cũng chạy trên tham chiếu đến `String`, cái được tính
-    // tương đương với cắt chuỗi toàn phần
+    // `first_word` cũng hoạt động trên tham chiếu đến `String`,
+    // tương đương với slice toàn bộ chuỗi
     let word = first_word(&amp;my_string);
 
     let my_string_literal = "hello world";
 
-    // `first_word` mượt với cả chuỗi cắt của string literals
+    // `first_word` hoạt động trên string slice của string literal
     let word = first_word(&amp;my_string_literal[0..6]);
     let word = first_word(&amp;my_string_literal[..]);
 
-    // Bởi vì string literals *là* một cái lát cắt rồi
-    // thế nên cái này chạy tốt, chả cần cú pháp lát cắt
+    // Vì string literals bản thân đã là string slice,
+    // có thể truyền trực tiếp mà không cần cú pháp slice
     let word = first_word(my_string_literal);
 }</code></pre>
     <figcaption><a href="#listing-4-9">Listing 4-9</a>: Cải thiện hàm <code>first_word</code> bằng cách dùng string slice cho kiểu của tham số <code>s</code></figcaption>
@@ -497,21 +497,21 @@ fn main() {
 fn main() {
     let my_string = String::from("hello world");
 
-    // `first_word` chạy mượt trên chuỗi cắt của `String`, bất kể 1 phần hay toàn bộ
+    // `first_word` hoạt động trên string slice của `String`, một phần hoặc toàn bộ
     let word = first_word(&amp;my_string[0..6]);
     let word = first_word(&amp;my_string[..]);
-    // `first_word` cũng chạy trên tham chiếu đến `String`, cái được tính
-    // tương đương với cắt chuỗi toàn phần
+    // `first_word` cũng hoạt động trên tham chiếu đến `String`,
+    // tương đương với slice toàn bộ chuỗi
     let word = first_word(&amp;my_string);
 
     let my_string_literal = "hello world";
 
-    // `first_word` mượt với cả chuỗi cắt của string literals
+    // `first_word` hoạt động trên string slice của string literal
     let word = first_word(&amp;my_string_literal[0..6]);
     let word = first_word(&amp;my_string_literal[..]);
 
-    // Bởi vì string literals *là* một cái lát cắt rồi
-    // thế nên cái này chạy tốt, chả cần cú pháp lát cắt
+    // Vì string literals bản thân đã là string slice,
+    // có thể truyền trực tiếp mà không cần cú pháp slice
     let word = first_word(my_string_literal);
 }</code></pre>
   </figure>

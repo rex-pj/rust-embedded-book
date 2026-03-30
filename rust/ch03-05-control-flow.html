@@ -228,9 +228,9 @@
 
   <p>Tất cả các biểu thức <code>if</code> đều bắt đầu bằng từ khóa <code>if</code>, theo sau đó là một điều kiện. Trong trường hợp này, điều kiện để kiểm tra là liệu giá trị của tham số <code>number</code> có mang giá trị nhỏ hơn 5 hay không. Chúng ta viết các đoạn mã mà khi có câu điều kiện là <code>true</code> sẽ thực thi ngay sau ngoặc ngọn của điều kiện đó. Các khối mã gắn với các điều kiện trong các câu lệnh của <code>if</code> đôi khi được gọi chung là “nhánh” (arms), hoàn toàn giống với khái niệm arm của biểu thức lệnh <code>match</code> mà chúng ta vừa nhắc ở <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">Phần "So sánh số dự đoán với con số bí mật"</a> tại Chương 2.</p>
 
-  <p>Điều có thể được tùy ý thay đổi là chúng ta cũng có thể viết một chuỗi lệnh bao gồm thêm mệnh đề <code>else</code>, như ở đây để đưa cho chương trình một dòng mã có thể thực thi được với điều kiện là khi phần còn lại của mệnh đề không được thỏa mãn. (Trong ví dụ là <code>false</code>). Nếu bạn không sử dụng các biểu thức liên kết với hàm điều kiện là hàm <code>else</code> thì nó sẽ bỏ hẳn biểu thức có liên kết đến điều kiện <code>if</code> đó đi.</p>
+  <p>Chúng ta cũng có thể thêm mệnh đề <code>else</code> để cung cấp cho chương trình một khối lệnh thay thế khi điều kiện không được thỏa mãn (tức là khi điều kiện là <code>false</code>). Nếu bạn không cung cấp mệnh đề <code>else</code>, chương trình sẽ bỏ qua khối <code>if</code> và tiếp tục thực thi phần tiếp theo.</p>
 
-  <p>Hãy cùng quan sát những thứ sẽ xuất ra. Sau đó bạn hãy thử kiểm tra code:</p>
+  <p>Hãy xem kết quả xuất ra. Sau đó thử với code sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -239,11 +239,11 @@
 condition was true
 </code></pre>
 
-  <p>Hành động sẽ thú vị hơn khi thử chỉnh số đầu ra <code>number</code> mang giá trị làm cho biểu thức trên hóa <code>false</code> để tiện nhìn hơn:</p>
+  <p>Hãy thử thay đổi giá trị của <code>number</code> thành một giá trị làm cho điều kiện trở thành <code>false</code> để xem điều gì xảy ra:</p>
 
 <pre><code class="language-rust">    let number = 7;</code></pre>
 
-  <p>Và thử bấm chạy nào, cùng nhìn thứ sẽ hiện ra nha:</p>
+  <p>Chạy lại chương trình để xem kết quả:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -264,7 +264,7 @@ condition was false
     }
 }</code></pre>
 
-  <p>Trong lệnh điều kiện của <code>if</code> này biến <code>3</code> sẽ thành nội dung, sau đó làm báo có dạng lỗi trong phần xử lý. Ví dụ như Rust sau đó tạo ra cảnh báo có sự nhầm lẫn với:</p>
+  <p>Lần này Rust sẽ báo lỗi vì điều kiện không phải kiểu <code>bool</code>. Rust sẽ hiển thị lỗi sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -290,9 +290,9 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
     }
 }</code></pre>
 
-  <p>Kết quả sau xử lí code ở máy bạn, in lệnh này rồi hiện: <code>number was something other than zero</code>.</p>
+  <p>Chạy code này sẽ in ra: <code>number was something other than zero</code>.</p>
 
-  <h4 id="handling-multiple-conditions-with-else-if">Đồng thời nhiều hàm xử lý <code>else if</code></h4>
+  <h4 id="handling-multiple-conditions-with-else-if">Nhiều Điều kiện với <code>else if</code></h4>
   <p>Bạn có thể sử dụng nhiều điều kiện bằng cách kết hợp <code>if</code> và <code>else</code> trong một biểu thức <code>else if</code>. Ví dụ:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
@@ -324,7 +324,7 @@ number is divisible by 3
 
   <p>Sử dụng quá nhiều biểu thức <code>else if</code> có thể làm cho code trở nên lộn xộn, vì vậy nếu bạn có nhiều hơn một điều kiện, bạn có thể muốn tái cấu trúc code của mình. Chương 6 mô tả một cấu trúc rẽ nhánh mạnh mẽ của Rust gọi là <code>match</code> dành cho những trường hợp như vậy.</p>
 
-  <h4 id="using-if-in-a-let-statement">Sử dụng câu lệnh có <code>if</code> trong khi vẫn xài được <code>let</code></h4>
+  <h4 id="using-if-in-a-let-statement">Dùng <code>if</code> trong Câu Lệnh <code>let</code></h4>
   <p>Vì <code>if</code> là một biểu thức, chúng ta có thể dùng nó ở vế phải của câu lệnh <code>let</code> để gán kết quả vào một biến, như trong Listing 3-2.</p>
 
   <figure class="listing" id="listing-3-2">
@@ -416,7 +416,7 @@ again!
 
   <p>Chúng ta cũng đã dùng <code>continue</code> trong trò chơi đoán số, từ khóa này trong một vòng lặp sẽ báo cho chương trình bỏ qua phần code còn lại trong lần lặp hiện tại và chuyển sang lần lặp tiếp theo.</p>
 
-  <h4 id="returning-values-from-loops">Trả lại giá trị của sau các dùng từ phần lặp</h4>
+  <h4 id="returning-values-from-loops">Trả về Giá trị từ Vòng Lặp</h4>
   <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một luồng đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của code. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
 
 <pre><code class="language-rust">fn main() {

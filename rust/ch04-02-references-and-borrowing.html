@@ -286,7 +286,7 @@ fn change(some_string: &amp;String) {
     <figcaption><a href="#listing-4-6">Listing 4-6</a>: Cố thay đổi một giá trị đang mượn</figcaption>
   </figure>
 
-  <p>Đây trong là lỗi đoạn:</p>
+  <p>Đây là thông báo lỗi:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -339,7 +339,7 @@ fn change(some_string: &amp;mut String) {
 }</code></pre>
   </figure>
 
-  <p>Lỗi đây nữa chữ báo này nha:</p>
+  <p>Thông báo lỗi như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -394,7 +394,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
     println!("{r1}, {r2}, and {r3}");
 }</code></pre>
 
-  <p>Sau đó trên vòng của báo từ vậy:</p>
+  <p>Rust sẽ báo lỗi như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -455,7 +455,7 @@ fn dangle() -&gt; &amp;String {
 }</code></pre>
   </figure>
 
-  <p>Lỗi của khi dịch dưới nó cho đoạn:</p>
+  <p>Đây là lỗi khi biên dịch đoạn code trên:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)

@@ -368,7 +368,7 @@ fn main() {
   <section class="note">
   <h3>🔐 Ownership của Dữ liệu Struct</h3>
 
-  <p>Trong định nghĩa struct <code>User</code> ở Listing 5-1, ta đã dùng kiểu <code>String</code> sở hữu thay vì kiểu slice chuỗi <code>&amp;str</code>. Đây là lựa chọn có chủ ý vì ta muốn mỗi instance của struct này sở hữu toàn bộ dữ liệu của nó và dữ liệu đó hợp lệ miễn là toàn bộ struct hợp lệ.</p>
+  <p>Trong định nghĩa struct <code>User</code> ở Listing 5-1, chúng ta đã dùng kiểu <code>String</code> (owned) thay vì kiểu string slice <code>&amp;str</code>. Đây là lựa chọn có chủ ý vì chúng ta muốn mỗi instance của struct này sở hữu toàn bộ dữ liệu của nó, và dữ liệu đó hợp lệ miễn là toàn bộ struct còn hợp lệ.</p>
 
   <p>Các struct cũng có thể lưu trữ tham chiếu đến dữ liệu do ai đó khác sở hữu, nhưng để làm vậy cần sử dụng <em>lifetime</em> (thời gian sống), một tính năng của Rust mà chúng ta sẽ thảo luận trong Chương 10. Lifetime đảm bảo rằng dữ liệu được tham chiếu bởi struct hợp lệ miễn là struct còn tồn tại. Giả sử bạn cố lưu trữ tham chiếu trong struct mà không chỉ định lifetime, như sau trong <em>src/main.rs</em>; điều này sẽ không hoạt động:</p>
 
