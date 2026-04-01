@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm quen với Phần mềm - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html" class="active"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Làm quen với Phần mềm</span>
+  </div>
+  <main id="main">
+
+    <h1>Làm quen với Phần mềm</h1>
+
+    <p>Chương này giới thiệu những kiến thức cơ bản về việc build, chạy và debug các chương trình đơn giản. Thay vì đi sâu ngay vào các khái niệm lập trình Rust embedded cho MB2, chúng ta sẽ tập trung vào việc làm quen với quy trình làm việc thực tế.</p>
+
+    <div class="diagram">
+      <p class="diagram-title diagram-title--center" style="color:#1f2328;">Workflow phát triển embedded</p>
+      <div class="flow-diagram">
+        <div class="flow-step active-step">✍️ Viết code<br><small>src/main.rs</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">🔨 Build<br><small>cargo build</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">⚡ Flash<br><small>cargo embed</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">🔍 Debug<br><small>GDB</small></div>
+      </div>
+    </div>
+
+    <h2>Bắt đầu</h2>
+
+    <p>Tài liệu và mã nguồn của cuốn sách có thể lấy về bằng lệnh:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">git clone http://github.com/rust-embedded/discovery-mb2</code></pre>
+
+    <p>Mã nguồn markdown và code chương trình nằm trong thư mục <code>discovery-mb2/mdbook/src</code>. Mỗi thư mục chương đều chứa cả tài liệu lẫn ví dụ code hoàn chỉnh. Các tham chiếu đến file như <code>src/main.rs</code> đều là đường dẫn tương đối so với chương đang học.</p>
+
+    <h2>Hiểu cách tổ chức code Rust</h2>
+
+    <p>Dự án Rust có hai loại code chính: binary (chương trình thực thi) và library (thư viện module). Trong cuốn sách này, binary là trọng tâm chính.</p>
+
+    <p>Chương trình binary có thể nằm ở ba vị trí chuẩn:</p>
+    <ul>
+      <li><strong>src/main.rs</strong> — Tự động được biên dịch và chạy bằng <code>cargo embed</code> hoặc <code>cargo run</code></li>
+      <li><strong>examples/foo.rs</strong> — Biên dịch và chạy bằng <code>cargo embed --example foo</code> hoặc <code>cargo run --example foo</code></li>
+      <li><strong>src/bin/bar.rs</strong> — Biên dịch và chạy bằng <code>cargo embed --bin bar</code> hoặc <code>cargo run --bin bar</code></li>
+    </ul>
+
+    <p>Các vị trí này theo quy ước đã được thiết lập sẵn của Cargo, dù ban đầu có thể trông hơi phức tạp.</p>
+
+    <h2>Thiết lập embedded</h2>
+
+    <p>Thư mục <code>05-meet-your-software</code> chứa chương trình đầu tiên để chúng ta đi qua toàn bộ quy trình embedded.</p>
+
+    <h2>Build (Biên dịch)</h2>
+
+    <p>Bước đầu tiên là build binary crate bằng cross-compilation — điều này cần thiết vì microcontroller có kiến trúc khác với máy tính thông thường. Cross-compiling trong Rust rất đơn giản: chỉ cần truyền thêm flag <code>--target</code> cho <code>rustc</code> hoặc Cargo.</p>
+
+    <h3>Chọn target</h3>
+
+    <p>micro:bit v2 chứa bộ xử lý Cortex-M4F. Trình biên dịch Rust hỗ trợ nhiều cross-compilation target cho kiến trúc Cortex-M:</p>
+    <ul>
+      <li><code>thumbv6m-none-eabi</code> (Cortex-M0 và M1)</li>
+      <li><code>thumbv7m-none-eabi</code> (Cortex-M3)</li>
+      <li><code>thumbv7em-none-eabi</code> (Cortex-M4 và M7)</li>
+      <li><code>thumbv7em-none-eabihf</code> (Cortex-M4F và M7F)</li>
+      <li><code>thumbv8m.main-none-eabi</code> (Cortex-M33 và M35P)</li>
+      <li><code>thumbv8m.main-none-eabihf</code> (Cortex-M33F và M35PF)</li>
+    </ul>
+
+    <p>Với micro:bit v2, cần dùng target <code>thumbv7em-none-eabihf</code> — phiên bản có hỗ trợ tăng tốc phần cứng cho số thực dấu chấm động (floating-point).</p>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Ghi chú</div>
+        <p>Hậu tố <code>hf</code> trong <code>eabihf</code> là viết tắt của "hard float" — tức là chip có đơn vị xử lý số thực bằng phần cứng (FPU). Điều này quan trọng vì nếu dùng target sai, code sẽ không chạy được hoặc chạy rất chậm.</p>
+      </div>
+    </div>
+
+    <h3>Cài đặt và biên dịch</h3>
+
+    <p>Trước khi cross-compile, cần cài đặt standard library cho target:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ rustup target add thumbv7em-none-eabihf</code></pre>
+
+    <p>Sau đó biên dịch code ví dụ:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo build --example init
+   Compiling semver-parser v0.7.0
+   Compiling proc-macro2 v1.0.86
+   ...
+
+    Finished dev [unoptimized + debuginfo] target(s) in 33.67s</code></pre>
+
+    <h3>Kiểm tra kết quả</h3>
+
+    <p>Xác nhận file thực thi là binary Arm bằng lệnh:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo readobj --example init -- --file-headers</code></pre>
+
+    <p>Kết quả đầu ra xác nhận file tạo ra là một file ELF32 được định dạng đúng cho kiến trúc Arm.</p>
+
+    <h2>Flash (Nạp firmware)</h2>
+
+    <p><strong>Flashing</strong> là quá trình chuyển chương trình vào bộ nhớ vĩnh viễn (flash) của microcontroller. Sau khi flash, microcontroller sẽ chạy chương trình đó mỗi khi khởi động.</p>
+
+    <p>Chương trình trở thành phần mềm duy nhất chạy trên thiết bị — không có hệ điều hành hay tiến trình nền nào cả. Chương trình có toàn quyền kiểm soát phần cứng.</p>
+
+    <h3>Quy trình flash hoạt động như thế nào</h3>
+
+    <p>micro:bit có ba khối đen riêng biệt khi nhìn từ phía cổng USB:</p>
+    <ol>
+      <li><strong>Speaker</strong> — thiết bị xuất âm thanh</li>
+      <li><strong>NRF52833 MCU</strong> — microcontroller chính</li>
+      <li><strong>NRF52820 MCU</strong> — microcontroller phụ đóng vai trò bridge (cầu nối)</li>
+    </ol>
+
+    <p>MCU phụ thực hiện ba chức năng quan trọng:</p>
+    <ul>
+      <li>Quản lý nguồn điện và reset của NRF52833 qua kết nối USB</li>
+      <li>Thiết lập cầu nối serial-to-USB</li>
+      <li>Cung cấp khả năng lập trình và debug thông qua giao thức SWD</li>
+    </ul>
+
+    <p>Kiến trúc bridge này cho phép giao tiếp giữa máy tính và MCU chính, hỗ trợ việc nạp firmware, kiểm tra trạng thái chương trình khi debug, và nhiều tác vụ phát triển khác.</p>
+
+    <h3>Lệnh thực thi</h3>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo embed --example init
+  (...)
+     Erasing sectors ✔ [00:00:00] [####################]  2.00KiB/ 2.00KiB @  4.21KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [####################]  2.00KiB/ 2.00KiB @  2.71KiB/s (eta 0s )
+    Finished flashing in 0.608s</code></pre>
+
+    <p>Công cụ <code>cargo embed</code> tự động build và flash binary. Sau khi flash xong, tiến trình vẫn tiếp tục chạy để hỗ trợ các thao tác debug tiếp theo.</p>
+
+    <h2>Debug (Gỡ lỗi)</h2>
+
+    <h3>Cơ chế hoạt động</h3>
+
+    <p>Trước khi debug chương trình, hãy hiểu rõ cơ chế bên dưới. Cài đặt <code>default.gdb.enabled = true</code> trong file <code>Embed.toml</code> sẽ khởi động một "GDB stub" sau khi flash. Server này nhận các lệnh GDB như đặt breakpoint rồi chuyển tiếp qua USB đến debug probe trên chip thứ hai, chip đó lại giao tiếp với microcontroller chính.</p>
+
+    <div class="diagram">
+      <div class="flex-center" style="gap:12px;flex-wrap:wrap;padding:16px;">
+        <div class="info-card info-card--border-blue text-center" style="font-size:0.85rem;">
+          💻 <strong>Máy tính</strong><br>GDB Client
+        </div>
+        <div class="text-center text-xs text-muted">←TCP:1337→<br>GDB protocol</div>
+        <div class="info-card info-card--border-green text-center" style="font-size:0.85rem;">
+          🔌 <strong>cargo-embed</strong><br>GDB Stub Server
+        </div>
+        <div class="text-center text-xs text-muted">←USB→<br>SWD protocol</div>
+        <div class="info-card info-card--border-yellow text-center" style="font-size:0.85rem;">
+          🔬 <strong>nRF52820</strong><br>Debug Bridge MCU
+        </div>
+        <div class="text-center text-xs text-muted">←SWD→</div>
+        <div class="info-card info-card--red text-center" style="padding:12px 16px;border:2px solid #cf222e;font-size:0.85rem;">
+          🧠 <strong>nRF52833</strong><br>MCU chính
+        </div>
+      </div>
+    </div>
+
+    <h3>Bắt đầu debug!</h3>
+
+    <p>Khi <code>cargo-embed</code> đang chạy, mở một terminal mới, điều hướng đến thư mục dự án rồi khởi động debugger:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init</code></pre>
+
+    <p>Đường dẫn lồng nhau phản ánh cấu trúc workspace, trong đó tất cả các ví dụ dùng chung một thư mục target.</p>
+
+    <p>Kết nối đến GDB stub (mặc định chạy trên <code>localhost:1337</code>):</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) target remote :1337
+Remote debugging using :1337
+0x00000116 in nrf52833_pac::{{impl}}::fmt...</code></pre>
+
+    <p>Đặt breakpoint tại hàm main rồi tiếp tục chạy:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) break main
+Breakpoint 1 at 0x104: file src/05-meet-your-software/examples/init.rs, line 9.
+(gdb) continue
+Continuing.
+
+Breakpoint 1, init::__cortex_m_rt_main_trampoline ()...</code></pre>
+
+    <p>Để xem code nguồn ngay trong terminal, bật chế độ TUI:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) layout src</code></pre>
+
+    <p>Kiểm tra giá trị biến:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) print x
+$1 = 42
+(gdb) print &amp;x
+$2 = (*mut i32) 0x20003fe8</code></pre>
+
+    <p>Lệnh <code>info locals</code> hiển thị toàn bộ biến cục bộ cùng một lúc.</p>
+
+    <p>Dùng <code>next</code> để bước qua từng dòng lệnh; dùng <code>stepi</code> để bước từng lệnh assembly. Reset lại chương trình:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) monitor reset
+(gdb) c</code></pre>
+
+    <p>Để kết thúc phiên debug:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) quit</code></pre>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý</div>
+        <p>Phải để <code>cargo embed</code> chạy trong terminal đầu tiên trong suốt quá trình debug. GDB cần kết nối đến GDB stub server do <code>cargo embed</code> tạo ra. Nếu đóng terminal đó, kết nối debug sẽ bị mất.</p>
+      </div>
+    </div>
+
+    <h2>Bật đèn LED đầu tiên</h2>
+
+    <p>micro:bit v2 có màn hình LED matrix 5×5. Để bật một LED, chương trình cần thiết lập các chân GPIO đúng mức điện áp tương ứng.</p>
+
+    <p>Với LED ở góc trên bên trái:</p>
+    <ul>
+      <li>LED này kết nối với dây <code>ROW1</code> và <code>COL1</code></li>
+      <li>Hai dây này dẫn đến các chân <code>P0.21</code> và <code>P0.28</code> trên nRF52833</li>
+      <li>Đặt <code>P0.21</code> ở mức HIGH (xuất 3.3V) và <code>P0.28</code> ở mức LOW (nhận điện áp) sẽ làm LED sáng lên</li>
+    </ul>
+
+    <p>Chạy ví dụ bằng lệnh:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">cargo run --example light-up</code></pre>
+
+    <p>Code ví dụ:</p>
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use nrf52833_hal::{gpio, pac};
+use panic_halt as _;
+
+#[entry]
+fn main() -&gt; ! {
+    let peripherals = pac::Peripherals::take().unwrap();
+    let p0 = gpio::p0::Parts::new(peripherals.P0);
+    let _row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
+    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
+
+    #[allow(clippy::empty_loop)]
+    loop {}
+}</code></pre>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Giải thích code</div>
+        <p><code>#![no_main]</code> và <code>#![no_std]</code> cho biết đây là chương trình embedded — không có hệ điều hành, không có standard library đầy đủ. <code>#[entry]</code> đánh dấu hàm main là điểm vào chương trình. Kiểu trả về <code>-&gt; !</code> có nghĩa là hàm không bao giờ kết thúc (vòng lặp vô tận), đây là đặc trưng của embedded firmware.</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="04-meet-your-hardware.html" class="nav-btn">← Làm quen với Phần cứng</a>
+      <a href="06-hello-world.html" class="nav-btn next">Hello World →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

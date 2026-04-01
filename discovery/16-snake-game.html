@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html" class="active"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Snake Game</span>
+  </div>
+  <main id="main">
+
+    <h1>Snake Game 🐍</h1>
+
+    <p>Chương này xây dựng game <strong>rắn săn mồi</strong> cổ điển trên MB2 — dùng ma trận LED 5×5 làm màn hình và hai nút bấm làm điều khiển. Đây là dự án tổng hợp toàn bộ kiến thức đã học.</p>
+
+    <h2>Kiến trúc Module</h2>
+
+    <p>Project được tổ chức theo kiến trúc modular, xây dựng 3 module trước rồi ghép lại:</p>
+
+    <div class="diagram">
+      <div class="diagram-title diagram-title--lg">🏗️ Cấu trúc Project</div>
+      <div class="flex-row">
+        <div class="module-card module-card--blue">
+          <div class="module-card__title module-card__title--blue">📦 mod game</div>
+          <ul style="font-size:0.84rem;margin:0;padding-left:16px;color:#424a53;">
+            <li>Logic game</li>
+            <li>Vị trí rắn</li>
+            <li>Thức ăn</li>
+            <li>Collision detection</li>
+            <li>Scoring</li>
+          </ul>
+          <div class="module-card__path">src/game.rs<br>src/game/coords.rs<br>src/game/movement.rs</div>
+        </div>
+        <div class="module-card module-card--green">
+          <div class="module-card__title module-card__title--green">📦 mod controls</div>
+          <ul style="font-size:0.84rem;margin:0;padding-left:16px;color:#424a53;">
+            <li>Interrupt handlers</li>
+            <li>Button A: rẽ trái</li>
+            <li>Button B: rẽ phải</li>
+            <li>Shared direction</li>
+          </ul>
+          <div class="module-card__path">src/controls.rs</div>
+        </div>
+        <div class="module-card module-card--yellow">
+          <div class="module-card__title module-card__title--yellow">📦 mod display</div>
+          <ul style="font-size:0.84rem;margin:0;padding-left:16px;color:#424a53;">
+            <li>Timer interrupt</li>
+            <li>LED multiplexing</li>
+            <li>Non-blocking update</li>
+            <li>~100Hz refresh</li>
+          </ul>
+          <div class="module-card__path">src/display.rs</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Game Logic</h2>
+
+    <p>Module <code>game</code> xử lý toàn bộ logic game:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🎮 Logic Game Snake</div>
+      <div class="flex-row--gap8">
+        <div class="feature-card feature-card--blue" style="flex:1;min-width:130px;">
+          <div class="feature-card__title">🐍 Snake Body</div>
+          <p class="info-card__desc">Queue các tọa độ lưới. Khi di chuyển: thêm đầu mới, xóa đuôi cũ (trừ khi vừa ăn thức ăn)</p>
+        </div>
+        <div class="feature-card feature-card--green" style="flex:1;min-width:130px;">
+          <div class="feature-card__title">🍎 Food</div>
+          <p class="info-card__desc">Vị trí ngẫu nhiên không trùng với thân rắn. Khi ăn → rắn dài thêm + spawn thức ăn mới</p>
+        </div>
+        <div class="feature-card feature-card--red" style="flex:1;min-width:130px;">
+          <div class="feature-card__title">💥 Collision</div>
+          <p class="info-card__desc">Va tường hoặc va vào thân mình → Game Over</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Controls — Input qua Interrupt</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">// src/controls.rs
+use core::sync::atomic::{AtomicU8, Ordering};
+use nrf52833_pac::interrupt;
+
+// 0=Up, 1=Right, 2=Down, 3=Left
+static DIRECTION: AtomicU8 = AtomicU8::new(0);
+
+#[interrupt]
+fn GPIOTE() {
+    let gpiote = unsafe { &amp;*nrf52833_pac::GPIOTE::ptr() };
+    let dir = DIRECTION.load(Ordering::SeqCst);
+
+    if gpiote.events_in[0].read().bits() != 0 {
+        // Button A: rẽ trái (relative)
+        gpiote.events_in[0].write(|w| w);
+        DIRECTION.store((dir + 3) % 4, Ordering::SeqCst);
+    }
+    if gpiote.events_in[1].read().bits() != 0 {
+        // Button B: rẽ phải (relative)
+        gpiote.events_in[1].write(|w| w);
+        DIRECTION.store((dir + 1) % 4, Ordering::SeqCst);
+    }
+}
+
+pub fn current_direction() -&gt; u8 {
+    DIRECTION.load(Ordering::SeqCst)
+}</code></pre>
+
+    <h2>Non-blocking Display</h2>
+
+    <p>Ma trận 5×5 là <strong>multiplexed display</strong>: để hiển thị ảnh ổn định, các hàng phải được quét tuần tự rất nhanh. Module display dùng timer interrupt để quét tự động:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">⚡ Tại sao cần Non-blocking Display?</div>
+      <table>
+        <thead><tr><th>Component</th><th>Yêu cầu tốc độ</th><th>Giải pháp</th></tr></thead>
+        <tbody>
+          <tr><td>Game loop</td><td>~2 lần/giây (500ms/step)</td><td>Chạy trong main loop</td></tr>
+          <tr><td>LED refresh</td><td>~100Hz (10ms/frame)</td><td>Timer interrupt tự động</td></tr>
+          <tr><td>Button input</td><td>Phản hồi ngay lập tức</td><td>GPIOTE interrupt</td></tr>
+        </tbody>
+      </table>
+      <p class="diagram-caption" style="margin-top:8px;text-align:left;">Nếu dùng blocking display trong game loop, LED sẽ chớp nháy vì game loop quá chậm.</p>
+    </div>
+
+    <h2>Final Assembly — Ghép tất cả lại</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use microbit::Board;
+use panic_rtt_target as _;
+
+mod game;
+mod controls;
+mod display;
+
+#[entry]
+fn main() -&gt; ! {
+    let board = Board::take().unwrap();
+
+    // 1. Khởi tạo display interrupt (refresh LED ở 100Hz)
+    display::init(board.display_pins, board.TIMER0);
+
+    // 2. Khởi tạo controls interrupt (phản hồi button)
+    controls::init(board.buttons, board.GPIOTE);
+
+    // 3. Khởi tạo game state
+    let mut game_state = game::GameState::new();
+
+    loop {
+        // Lấy hướng hiện tại từ controls module
+        let direction = controls::current_direction();
+
+        // Cập nhật game state
+        game_state.step(direction);
+
+        if game_state.is_over() {
+            // Hiển thị animation game over
+            display::show_game_over();
+            // Reset game
+            game_state = game::GameState::new();
+        } else {
+            // Cập nhật LED matrix buffer
+            display::update(game_state.led_matrix());
+        }
+
+        // Ngủ đến timer interrupt tiếp theo (game tick ~500ms)
+        cortex_m::asm::wfi();
+    }
+}</code></pre>
+
+    <div class="callout tip">
+      <div class="callout-icon">🏆</div>
+      <div class="callout-body">
+        <div class="callout-title">Chúc mừng! Bạn đã hoàn thành project lớn nhất</div>
+        <p>Snake game tổng hợp toàn bộ kiến thức trong sách: GPIO, timers, I/O polling, interrupts, non-blocking design patterns, và kiến trúc modular. Đây là nền tảng vững chắc để bước sang các project embedded phức tạp hơn.</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="15-interrupts.html" class="nav-btn">← Interrupts</a>
+      <a href="17-explore.html" class="nav-btn next">Khám phá thêm →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

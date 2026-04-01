@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inputs, Outputs & Polling - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html" class="active"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Inputs, Outputs &amp; Polling</span>
+  </div>
+  <main id="main">
+
+    <h1>Inputs, Outputs &amp; Polling 🕹️</h1>
+
+    <p>Cho đến nay chúng ta chỉ dùng GPIO làm <strong>output</strong> (điều khiển LED). Chương này chuyển sang <strong>input</strong> — đọc tín hiệu từ thế giới bên ngoài như nút bấm.</p>
+
+    <h2>Đọc trạng thái nút bấm</h2>
+
+    <p>Micro:bit v2 có hai nút bấm vật lý:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🔘 Nút bấm → GPIO Pin</div>
+      <table>
+        <thead><tr><th>Nút</th><th>GPIO Pin</th><th>Logic khi nhấn</th><th>Logic khi thả</th></tr></thead>
+        <tbody>
+          <tr><td>Button A</td><td>P0.14</td><td>LOW (0V)</td><td>HIGH (3.3V)</td></tr>
+          <tr><td>Button B</td><td>P0.23</td><td>LOW (0V)</td><td>HIGH (3.3V)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout note">
+      <div class="callout-icon">🔌</div>
+      <div class="callout-body">
+        <div class="callout-title">Tại sao nhấn = LOW?</div>
+        <p>Các nút được kết nối với điện trở pull-up nội. Khi không nhấn, pin được kéo lên 3.3V (HIGH). Khi nhấn, pin được nối đất (GND) → 0V (LOW). Đây là thiết kế phổ biến trong embedded — gọi là <strong>active-low</strong>.</p>
+      </div>
+    </div>
+
+    <h2>Polling — Cách kiểm tra input đơn giản nhất</h2>
+
+    <p><strong>Polling</strong> là kỹ thuật liên tục hỏi trạng thái input trong vòng lặp. Đơn giản về mặt khái niệm và phù hợp để bắt đầu:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::digital::InputPin;
+use microbit::Board;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+
+    let mut button_a = board.buttons.button_a;
+    let mut button_state = false;
+
+    loop {
+        if button_a.is_low().unwrap() {
+            // Nút đang được nhấn (LOW = pressed)
+            if !button_state {
+                button_state = true;
+                rprintln!("Button A pressed");
+            }
+        } else if button_state {
+            // Nút vừa được thả
+            button_state = false;
+            rprintln!("Button A not pressed");
+        }
+    }
+}</code></pre>
+
+    <p>Chương trình liên tục theo dõi trạng thái nút và báo cáo mỗi khi trạng thái thay đổi. Kỹ thuật này gọi là <strong>edge detection</strong> — chỉ phản ứng khi có thay đổi chứ không phải mỗi lần lặp.</p>
+
+    <h2>Bài tập: Turn Signaller (Đèn xi-nhan)</h2>
+
+    <p>Viết chương trình dùng cả hai nút và LED display để tạo "đèn xi-nhan":</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🎯 Đặc tả bài tập</div>
+      <table>
+        <thead><tr><th>Sự kiện</th><th>Kết quả</th></tr></thead>
+        <tbody>
+          <tr><td>Button A được nhấn</td><td>Hiển thị mũi tên trái ←</td></tr>
+          <tr><td>Button B được nhấn</td><td>Hiển thị mũi tên phải →</td></tr>
+          <tr><td>Không nhấn nút nào</td><td>Tắt display</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Giải pháp (my solution)</h2>
+
+    <p>Dùng BSP's display và button abstractions cùng với polling:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::{delay::DelayNs, digital::InputPin};
+use microbit::{board::Board, display::blocking::Display, hal::Timer};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+// Mũi tên trái: 1 = LED sáng
+const LEFT_ARROW: [[u8; 5]; 5] = [
+    [0, 0, 1, 0, 0],
+    [0, 1, 0, 0, 0],
+    [1, 1, 1, 1, 1],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+];
+
+// Mũi tên phải
+const RIGHT_ARROW: [[u8; 5]; 5] = [
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 1, 1, 1],
+    [0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0],
+];
+
+const BLANK: [[u8; 5]; 5] = [[0; 5]; 5];
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+    let mut btn_a = board.buttons.button_a;
+    let mut btn_b = board.buttons.button_b;
+
+    loop {
+        let pattern = if btn_a.is_low().unwrap() {
+            LEFT_ARROW
+        } else if btn_b.is_low().unwrap() {
+            RIGHT_ARROW
+        } else {
+            BLANK
+        };
+        display.show(&amp;mut timer, pattern, 10);
+    }
+}</code></pre>
+
+    <h2>Polling có vấn đề gì không?</h2>
+
+    <h3>Superloop — Vòng lặp vô tận</h3>
+
+    <p>Cách polling đơn giản với vòng lặp liên tục (còn gọi là <strong>superloop</strong>) có những hạn chế:</p>
+
+    <div class="diagram">
+      <div class="diagram-title diagram-title--red">⚠️ Nhược điểm của Polling/Superloop</div>
+      <div class="flex-col">
+        <div class="warn-item">
+          <span>🔋</span>
+          <div><strong>Tốn điện:</strong> CPU chạy 100% ngay cả khi không có sự kiện nào</div>
+        </div>
+        <div class="warn-item">
+          <span>🔀</span>
+          <div><strong>Khó mở rộng:</strong> Thêm task mới làm tăng độ phức tạp theo cấp số nhân</div>
+        </div>
+        <div class="warn-item">
+          <span>⏰</span>
+          <div><strong>Timing không chính xác:</strong> Khó đảm bảo phản hồi trong thời gian cố định</div>
+        </div>
+        <div class="warn-item">
+          <span>🔒</span>
+          <div><strong>Blocking:</strong> Một task delay sẽ block toàn bộ chương trình</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>State Machine — Giải pháp tốt hơn</h3>
+
+    <p>Dùng state machine để theo dõi trạng thái hệ thống và phản ứng với sự kiện. Cách này tách biệt "đang ở trạng thái gì" với "cần làm gì":</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🔄 State Machine đơn giản cho Turn Signaller</div>
+      <div style="text-align:center;">
+        <svg width="480" height="160" viewBox="0 0 480 160" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
+          <!-- States -->
+          <rect x="10" y="60" width="100" height="40" rx="20" fill="#ddf4ff" stroke="#54aeff" stroke-width="2"/>
+          <text x="60" y="85" text-anchor="middle" font-size="13" font-weight="600" fill="#0550ae">IDLE</text>
+
+          <rect x="190" y="10" width="100" height="40" rx="20" fill="#dcffe4" stroke="#2da44e" stroke-width="2"/>
+          <text x="240" y="35" text-anchor="middle" font-size="13" font-weight="600" fill="#1a7f37">LEFT</text>
+
+          <rect x="190" y="110" width="100" height="40" rx="20" fill="#fff8c5" stroke="#d1a317" stroke-width="2"/>
+          <text x="240" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#7d4e00">RIGHT</text>
+
+          <rect x="370" y="60" width="100" height="40" rx="20" fill="#f6f8fa" stroke="#8b949e" stroke-width="2"/>
+          <text x="420" y="85" text-anchor="middle" font-size="13" font-weight="600" fill="#656d76">IDLE</text>
+
+          <!-- Arrows -->
+          <path d="M 110 70 Q 150 30 190 25" stroke="#2da44e" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+          <text x="145" y="38" font-size="10" fill="#2da44e">btn_a pressed</text>
+
+          <path d="M 110 90 Q 150 130 190 125" stroke="#d1a317" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+          <text x="130" y="126" font-size="10" fill="#9a6700">btn_b pressed</text>
+
+          <path d="M 290 30 Q 330 50 370 72" stroke="#8b949e" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+          <text x="330" y="48" font-size="10" fill="#656d76">release</text>
+
+          <path d="M 290 130 Q 330 110 370 88" stroke="#8b949e" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+          <text x="326" y="126" font-size="10" fill="#656d76">release</text>
+
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M 0 0 L 8 3 L 0 6 z" fill="#8b949e"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <p>State machines là nền tảng tốt cho lập trình interrupt-driven — chủ đề sẽ được đề cập ở chương sau.</p>
+
+    <div class="nav-buttons">
+      <a href="07-led-roulette.html" class="nav-btn">← LED Roulette</a>
+      <a href="09-registers.html" class="nav-btn next">Registers →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

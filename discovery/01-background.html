@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Background - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div>
+        <h1>Discovery MB2</h1>
+        <p>micro:bit v2 · Tiếng Việt</p>
+      </div>
+    </a>
+  </div>
+  <div id="sidebar-search">
+    <input type="text" id="sidebar-search-input" placeholder="Tìm kiếm...">
+  </div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Background</span>
+  </div>
+  <main id="main">
+
+    <h1>Background</h1>
+
+    <h2>Microcontroller là gì?</h2>
+
+    <p>Một microcontroller đại diện cho một <em>"hệ thống trên một chip"</em> (system on a chip) — tích hợp processor, RAM, bộ nhớ lưu trữ và các cổng giao tiếp vào một gói duy nhất. Điều này cho phép thiết kế hệ thống đơn giản hơn so với kiến trúc sử dụng các linh kiện rời.</p>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Ghi chú — Tương tự trong thế giới .NET</div>
+        <p>Nếu bạn nghĩ về một ứng dụng .NET chạy trên máy tính, bạn có CPU riêng, RAM riêng, ổ cứng riêng — mỗi thứ là một linh kiện tách biệt. Microcontroller gộp tất cả vào một chip nhỏ duy nhất, thường rẻ hơn một USD.</p>
+      </div>
+    </div>
+
+    <h2>Microcontroller có thể làm gì?</h2>
+
+    <p>Microcontroller cung cấp năng lượng cho các hệ thống embedded xuất hiện khắp nơi trong cuộc sống hằng ngày — từ thiết bị gia dụng, hệ thống điều hòa không khí đến các hệ thống xe hơi. Những thiết bị này thường hoạt động tự động, sử dụng sensor để theo dõi trạng thái môi trường và actuator để tạo ra các thay đổi vật lý.</p>
+
+    <p>Ví dụ điển hình là hệ thống điều hòa không khí trong tòa nhà — sử dụng sensor nhiệt độ và actuator là quạt/bộ sưởi để duy trì nhiệt độ mong muốn.</p>
+
+    <!-- Ví dụ thực tế về embedded system -->
+    <div class="diagram">
+      <div class="diagram-title diagram-title--center">Ví dụ: Hệ thống điều hòa không khí</div>
+      <div class="flow-diagram">
+        <div class="flow-step">🌡️ Sensor<br><small>Đọc nhiệt độ</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active-step">🔬 MCU<br><small>Xử lý dữ liệu</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">⚙️ Actuator<br><small>Điều khiển quạt/sưởi</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">🏠 Môi trường<br><small>Nhiệt độ thay đổi</small></div>
+      </div>
+    </div>
+
+    <h2>Khi nào nên dùng microcontroller?</h2>
+
+    <p>Những ưu điểm chính bao gồm:</p>
+
+    <!-- Bảng so sánh MCU vs Máy tính -->
+    <table>
+      <thead>
+        <tr>
+          <th>Tiêu chí</th>
+          <th>Microcontroller (MCU)</th>
+          <th>Máy tính thông thường (PC)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chi phí</strong></td>
+          <td>Rất thấp — thường &lt; $1–5 USD/chip</td>
+          <td>Cao — hàng trăm đến hàng nghìn USD</td>
+        </tr>
+        <tr>
+          <td><strong>Điện năng tiêu thụ</strong></td>
+          <td>Rất thấp — lý tưởng cho thiết bị dùng pin</td>
+          <td>Cao — cần nguồn điện ổn định</td>
+        </tr>
+        <tr>
+          <td><strong>Phản hồi real-time</strong></td>
+          <td>Xuất sắc — đáp ứng hard real-time requirements</td>
+          <td>Hạn chế — OS tạo ra độ trễ không xác định</td>
+        </tr>
+        <tr>
+          <td><strong>RAM</strong></td>
+          <td>Rất ít — thường 4KB–512KB</td>
+          <td>Nhiều — thường 8GB–64GB</td>
+        </tr>
+        <tr>
+          <td><strong>Flash (bộ nhớ chương trình)</strong></td>
+          <td>Hạn chế — thường 16KB–2MB</td>
+          <td>Lớn — hàng trăm GB đến TB</td>
+        </tr>
+        <tr>
+          <td><strong>Độ tin cậy</strong></td>
+          <td>Cao — ít linh kiện, ít điểm hỏng hóc</td>
+          <td>Thấp hơn — nhiều linh kiện, nhiều điểm hỏng hóc</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Mẹo</div>
+        <p><strong>Hard real-time requirement</strong> có nghĩa là nếu hệ thống không phản hồi trong thời gian quy định, hậu quả có thể là thảm họa (ví dụ: túi khí xe hơi không bung kịp thời). MCU có thể đảm bảo điều này vì không có OS phức tạp chen ngang.</p>
+      </div>
+    </div>
+
+    <h2>Khi nào <em>không</em> nên dùng microcontroller?</h2>
+
+    <p>Microcontroller thiếu tài nguyên cho các tính toán nặng. Chúng thực thi ít lệnh hơn mỗi giây, có cache tối thiểu và có thể không có phần cứng floating-point. Hạn chế về bộ nhớ — đôi khi chỉ 16KB cho chương trình và 4KB cho dữ liệu — đặt ra những thách thức lập trình đáng kể.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý</div>
+        <p>Đừng cố chạy các tác vụ nặng như xử lý hình ảnh độ phân giải cao, machine learning phức tạp, hoặc web server đầy đủ tính năng trên microcontroller. Với những tác vụ đó, hãy dùng SBC (Single-Board Computer) như Raspberry Pi.</p>
+      </div>
+    </div>
+
+    <h2>Tại sao dùng Rust thay vì C?</h2>
+
+    <p>Rust cung cấp quản lý package vượt trội thông qua Cargo, thay vì hệ sinh thái phân mảnh của C, khuyến khích tái sử dụng code dễ dàng hơn và tích hợp thư viện thuận tiện hơn.</p>
+
+    <!-- Diagram so sánh Rust vs C -->
+    <div class="diagram">
+      <div class="diagram-title diagram-title--center" style="color:#1f2328;">So sánh Rust vs C cho Embedded</div>
+      <div class="card-grid--2col">
+        <div class="compare-col compare-col--green">
+          <div class="compare-col__title compare-col__title--green">✅ Rust</div>
+          <ul style="margin-left:16px;font-size:0.88rem;">
+            <li>Package manager (Cargo) — tích hợp sẵn</li>
+            <li>Memory safety tại compile time</li>
+            <li>Tooling hiện đại, dễ sử dụng</li>
+            <li>Dễ tái sử dụng code qua crates.io</li>
+            <li>Ownership/borrow ngăn lỗi bộ nhớ</li>
+            <li>Type system mạnh mẽ</li>
+          </ul>
+        </div>
+        <div class="compare-col compare-col--yellow">
+          <div class="compare-col__title compare-col__title--yellow">⚠️ C</div>
+          <ul style="margin-left:16px;font-size:0.88rem;">
+            <li>Hệ sinh thái lâu đời, rộng lớn</li>
+            <li>RTOS thương mại đã thành thục</li>
+            <li>Phổ biến rộng rãi trong ngành</li>
+            <li>Manual memory management</li>
+            <li>Dễ mắc lỗi buffer overflow, use-after-free</li>
+            <li>Quản lý dependency thủ công</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2>Tại sao <em>không</em> nên dùng Rust?</h2>
+
+    <p>Hệ sinh thái của C bao gồm các Real-Time Operating System (RTOS) thương mại đã được kiểm chứng và hoàn thiện. Trong khi đó, "RTOS production-grade cho Rust" vẫn chưa có sẵn, đòi hỏi developer phải tự xây dựng các giải pháp tùy chỉnh.</p>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Ghi chú — Tình hình hiện tại</div>
+        <p>Tình hình đang thay đổi nhanh chóng. Các dự án như <strong>Embassy</strong> (async embedded framework cho Rust) đang trở nên rất phổ biến và dần thu hẹp khoảng cách với C trong lĩnh vực embedded. Rust embedded ecosystem phát triển rất nhanh từ năm 2020 đến nay.</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="index.html" class="nav-btn">← Giới thiệu</a>
+      <a href="02-requirements.html" class="nav-btn next">Yêu cầu →</a>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

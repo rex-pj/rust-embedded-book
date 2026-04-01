@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yêu cầu phần cứng & kiến thức - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div>
+        <h1>Discovery MB2</h1>
+        <p>micro:bit v2 · Tiếng Việt</p>
+      </div>
+    </a>
+  </div>
+  <div id="sidebar-search">
+    <input type="text" id="sidebar-search-input" placeholder="Tìm kiếm...">
+  </div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Yêu cầu phần cứng &amp; kiến thức</span>
+  </div>
+  <main id="main">
+
+    <h1>Yêu cầu phần cứng &amp; kiến thức</h1>
+
+    <h2>Yêu cầu về kiến thức</h2>
+
+    <p>Tài liệu này kỳ vọng người đọc đã có nền tảng Rust cơ bản. Hiểu biết về generics, trait và closure là đặc biệt quan trọng. Ngoài ra, cần quen thuộc với các idiom của Rust edition hiện tại.</p>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Ghi chú cho developer .NET/C#</div>
+        <p>Nếu bạn đến từ nền tảng C#, đây là bảng tương đồng nhanh:</p>
+        <ul>
+          <li><strong>trait</strong> ↔ interface (nhưng mạnh hơn, có thể implement sau)</li>
+          <li><strong>generic</strong> ↔ generic trong C# (cú pháp tương tự)</li>
+          <li><strong>closure</strong> ↔ lambda expression trong C#</li>
+          <li><strong>ownership/borrow</strong> ↔ không có tương đương trực tiếp — đây là điểm khác biệt lớn nhất</li>
+        </ul>
+        <p>Nếu chưa biết Rust, hãy học qua <a href="https://doc.rust-lang.org/book/" target="_blank">The Rust Book</a> trước.</p>
+      </div>
+    </div>
+
+    <h2>Yêu cầu phần cứng</h2>
+
+    <p>Để theo dõi tài liệu này, bạn cần có:</p>
+
+    <!-- Checklist phần cứng -->
+    <div class="diagram">
+      <div class="diagram-title diagram-title--center diagram-title--lg">📦 Checklist phần cứng cần có</div>
+      <div class="centered-col">
+
+        <div class="checklist-item checklist-item--green">
+          <span class="checklist-item__emoji">✅</span>
+          <div>
+            <div class="checklist-item__title checklist-item__title--green">Micro:Bit v2 (MB2) Board</div>
+            <div class="checklist-item__desc">Board chính dùng xuyên suốt khóa học. Có thể mua từ Amazon, Shopee, hoặc nhà phân phối chính thức của BBC.</div>
+            <div class="checklist-item__note">Bất kỳ biến thể V2 nào đều hoạt động. Phiên bản được viết cho: v2.00</div>
+          </div>
+        </div>
+
+        <div class="checklist-item checklist-item--green">
+          <span class="checklist-item__emoji">✅</span>
+          <div>
+            <div class="checklist-item__title checklist-item__title--green">Cáp Micro-B USB</div>
+            <div class="checklist-item__desc">Dùng để cấp nguồn cho board và giao tiếp dữ liệu. <strong>Phải hỗ trợ truyền dữ liệu</strong> — không phải cáp sạc đơn thuần.</div>
+            <div class="checklist-item__note">Bạn có thể đã có sẵn từ các thiết bị di động cũ (Android, Kindle, v.v.).</div>
+          </div>
+        </div>
+
+        <div class="checklist-item checklist-item--yellow">
+          <span class="checklist-item__emoji">🔋</span>
+          <div>
+            <div class="checklist-item__title checklist-item__title--yellow">Pin/Battery Pack (tùy chọn)</div>
+            <div class="checklist-item__desc">Kit chính thức micro:bit Go bao gồm cả cáp USB và battery pack. Không bắt buộc nhưng tiện cho các bài thực hành di động.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>Board Micro:Bit v2 (MB2)</h3>
+
+    <p>Board <a href="https://tech.microbit.org/hardware/" target="_blank">Micro:Bit v2</a> (MB2) là phần cứng chính. Board này có sẵn từ nhiều nhà bán lẻ bao gồm Amazon và Ali Baba, với danh sách nhà cung cấp có thể tìm từ nhà sản xuất BBC. Mặc dù tài liệu được viết cho phiên bản 2.00, bất kỳ biến thể V2 nào cũng sẽ hoạt động với nội dung này.</p>
+
+    <h3>Cáp Micro-B USB</h3>
+
+    <p>Một cáp micro-B USB (không có gì đặc biệt — bạn có thể đã có nhiều cái như vậy) là cần thiết để cấp nguồn cho board và kích hoạt giao tiếp. Cáp phải hỗ trợ truyền dữ liệu, không chỉ sạc. Một số kit MB2 đã bao gồm cáp, và cáp từ các thiết bị di động khác cũng hoạt động nếu chúng là micro-B và có khả năng truyền dữ liệu.</p>
+
+    <p>Kit micro:bit Go chính thức bao gồm cả cáp USB và battery pack.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý về cáp USB</div>
+        <p>Nhiều cáp micro-B rẻ tiền chỉ hỗ trợ sạc điện, không hỗ trợ truyền dữ liệu. Nếu máy tính không nhận ra board sau khi cắm, hãy thử cáp khác trước khi xem xét các nguyên nhân khác.</p>
+      </div>
+    </div>
+
+    <h2>Phần FAQ</h2>
+
+    <h3>Tại sao phải dùng phần cứng cụ thể này?</h3>
+
+    <p>Tài liệu dễ tiếp cận hơn đáng kể khi không phải lo lắng về sự khác biệt giữa các loại phần cứng. Toàn bộ hướng dẫn, ví dụ và hình ảnh đều được tối ưu cho Micro:Bit v2.</p>
+
+    <h3>Có thể dùng board phát triển khác không?</h3>
+
+    <p>Có thể, tùy thuộc vào kinh nghiệm microcontroller trước đây và các HAL (Hardware Abstraction Layer) hoặc Board Support crate có sẵn. Tuy nhiên, tài liệu sẽ mất tính thân thiện với người mới khi dùng board khác. Những ai có board dựa trên Arm mà không hoàn toàn là người mới có thể cân nhắc template dự án quickstart thay thế.</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Mẹo mua hàng</div>
+        <p>Tại Việt Nam, bạn có thể tìm Micro:Bit v2 trên Shopee, Tiki hoặc các cửa hàng điện tử như Cytron, DFRobot Store. Giá thường dao động từ 300.000 – 500.000 VND. Đảm bảo mua đúng <strong>v2</strong>, không phải v1 (v1 dùng chip khác).</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="01-background.html" class="nav-btn">← Background</a>
+      <a href="03-setup.html" class="nav-btn next">Cài đặt môi trường →</a>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Punch-o-meter - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html" class="active"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Punch-o-meter</span>
+  </div>
+  <main id="main">
+
+    <h1>Punch-o-meter 👊</h1>
+
+    <p>Chương này xây dựng một <strong>máy đo lực đấm</strong> — dùng accelerometer tích hợp để đo gia tốc tối đa khi đấm. Sức mạnh và gia tốc tỉ lệ thuận nhau, nên gia tốc là proxy hợp lý cho lực.</p>
+
+    <div class="callout note">
+      <div class="callout-icon">📐</div>
+      <div class="callout-body">
+        <div class="callout-title">Accelerometer là gì?</div>
+        <p>Accelerometer đo <strong>gia tốc tuyến tính</strong> — sự thay đổi vận tốc theo thời gian. Đơn vị đo là "g" (gravitational acceleration, ~9.8 m/s²). LSM303AGR của MB2 đo theo 3 trục và trả về đơn vị <strong>milli-g (mg)</strong>.</p>
+      </div>
+    </div>
+
+    <h2>Trọng lực đang hướng lên?!</h2>
+
+    <p>Đây là điều gây nhầm lẫn nhất với người mới làm quen accelerometer:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🌍 Accelerometer đo gì khi đứng yên</div>
+      <div class="flex-row">
+        <div class="state-card state-card--green">
+          <div class="state-card__icon">📏</div>
+          <div class="state-card__title state-card__title--green">Board đứng yên, nằm phẳng</div>
+          <div class="state-card__values">
+            X = ~0 mg<br>Y = ~0 mg<br><strong style="color:#1a7f37;">Z = ~+1000 mg</strong>
+          </div>
+          <div class="state-card__note">Vì mặt bàn đẩy lên board bằng phản lực trọng lực</div>
+        </div>
+        <div class="state-card state-card--red">
+          <div class="state-card__icon">🪂</div>
+          <div class="state-card__title state-card__title--red">Board rơi tự do</div>
+          <div class="state-card__values">
+            X = ~0 mg<br>Y = ~0 mg<br><strong style="color:#82071e;">Z = ~0 mg</strong>
+          </div>
+          <div class="state-card__note">Không có lực phản tác động nào</div>
+        </div>
+        <div class="state-card state-card--blue">
+          <div class="state-card__icon">👊</div>
+          <div class="state-card__title state-card__title--blue">Khi đấm</div>
+          <div class="state-card__values">
+            Trục đấm: <strong style="color:#0550ae;">rất cao</strong><br>Trục khác: thay đổi
+          </div>
+          <div class="state-card__note">Gia tốc tức thời lớn</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Tính magnitude của gia tốc</h2>
+
+    <p>Để đo "sức mạnh" tổng hợp bất kể hướng đấm, dùng <strong>vector magnitude</strong>:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">use libm::sqrtf;
+
+// Đọc gia tốc (đơn vị: milli-g)
+let accel = sensor.acceleration().unwrap();
+let x = accel.x_mg() as f32;
+let y = accel.y_mg() as f32;
+let z = accel.z_mg() as f32;
+
+// Tính magnitude
+let magnitude = sqrtf(x*x + y*y + z*z);
+
+// Trừ đi 1g (trọng lực ở trạng thái tĩnh)
+// 1g = 1000 mg
+let net_accel = magnitude - 1000.0;</code></pre>
+
+    <h2>Bài tập: Punch-o-meter</h2>
+
+    <p>Viết chương trình:</p>
+    <ol>
+      <li>Liên tục đọc accelerometer</li>
+      <li>Tính magnitude của vector gia tốc</li>
+      <li>Trừ đi 1g (thành phần trọng lực khi đứng yên)</li>
+      <li>Theo dõi giá trị tối đa</li>
+      <li>Nhấn Button A để hiển thị kết quả tối đa qua RTT</li>
+    </ol>
+
+    <h2>Giải pháp (my solution)</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::digital::InputPin;
+use libm::sqrtf;
+use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr};
+use microbit::Board;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+
+    // Khởi tạo I2C và sensor
+    let i2c = microbit::hal::Twim::new(
+        board.TWIM0, board.i2c_internal.into(),
+        microbit::hal::twim::Frequency::K100,
+    );
+    let mut delay = microbit::hal::Timer::new(board.TIMER0);
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_accel_mode_and_odr(
+        &amp;mut delay,
+        AccelMode::Normal,
+        AccelOutputDataRate::Hz50,
+    ).unwrap();
+
+    let mut btn_a = board.buttons.button_a;
+    let mut max_g: f32 = 0.0;
+
+    loop {
+        if sensor.accel_status().unwrap().xyz_new_data() {
+            let accel = sensor.acceleration().unwrap();
+            let x = accel.x_mg() as f32;
+            let y = accel.y_mg() as f32;
+            let z = accel.z_mg() as f32;
+
+            let magnitude = sqrtf(x*x + y*y + z*z);
+            // Trừ 1g = 1000mg
+            let net = if magnitude &gt; 1000.0 { magnitude - 1000.0 } else { 0.0 };
+
+            if net &gt; max_g {
+                max_g = net;
+            }
+        }
+
+        // Nhấn Button A để xem kết quả
+        if btn_a.is_low().unwrap() {
+            rprintln!("Max acceleration: {:.0} mg ({:.2} g)", max_g, max_g / 1000.0);
+            // Reset sau khi xem
+            max_g = 0.0;
+            // Debounce
+            while btn_a.is_low().unwrap() {}
+        }
+    }
+}</code></pre>
+
+    <div class="callout tip">
+      <div class="callout-icon">🥊</div>
+      <div class="callout-body">
+        <div class="callout-title">Cách chơi</div>
+        <p>Kẹp MB2 trong tay, đấm vào không khí càng mạnh càng tốt. Nhấn Button A để xem kết quả. Giá trị điển hình: nhẹ ~500mg, mạnh &gt;3000mg, chuyên nghiệp có thể &gt;10000mg!</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="13-led-compass.html" class="nav-btn">← LED Compass</a>
+      <a href="15-interrupts.html" class="nav-btn next">Interrupts →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

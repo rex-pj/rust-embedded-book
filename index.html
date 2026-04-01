@@ -39,11 +39,10 @@
   }
 
   .cards {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 320px);
     gap: 28px;
-    flex-wrap: wrap;
     justify-content: center;
-    max-width: 760px;
   }
 
   .card {
@@ -52,7 +51,6 @@
     padding: 36px 32px;
     text-decoration: none;
     color: #333;
-    width: 320px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.35);
     transition: transform 0.18s, box-shadow 0.18s;
     display: flex;
@@ -103,7 +101,19 @@
     width: 100%;
   }
 
-  /* Adult version */
+  /* Discovery */
+  .card-discovery .card-title  { color: #22543d; }
+  .card-discovery .card-badge  { background: #f0fff4; color: #276749; }
+  .card-discovery .card-btn    { background: linear-gradient(135deg, #38a169, #68d391); }
+  .card-discovery::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #38a169, #68d391);
+  }
+
+  /* Embedded Book */
   .card-adult .card-title  { color: #1a365d; }
   .card-adult .card-badge  { background: #ebf8ff; color: #2b6cb0; }
   .card-adult .card-btn    { background: linear-gradient(135deg, #2b6cb0, #4299e1); }
@@ -127,7 +137,7 @@
     background: linear-gradient(90deg, #ff6b35, #f7c948);
   }
 
-  /* Rust Book version */
+  /* Rust Book */
   .card-rust .card-title  { color: #8b2e18; }
   .card-rust .card-badge  { background: #fef2f2; color: #991b1b; }
   .card-rust .card-btn    { background: linear-gradient(135deg, #CE422B, #e07050); }
@@ -144,11 +154,12 @@
     font-size: 0.8em;
     color: #4a5568;
     text-align: center;
+    line-height: 1.8;
   }
 
-  @media (max-width: 520px) {
+  @media (max-width: 700px) {
     h1 { font-size: 1.5em; }
-    .card { width: 100%; max-width: 340px; }
+    .cards { grid-template-columns: 1fr; max-width: 340px; }
   }
 </style>
 </head>
@@ -156,13 +167,24 @@
 
   <div class="logo">🦀</div>
   <h1>Rust Embedded Book</h1>
-  <p class="subtitle">Phiên bản Tiếng Việt — Chọn phiên bản phù hợp với bạn</p>
+  <p class="subtitle">Phiên bản Tiếng Việt — Chọn tài liệu phù hợp với bạn</p>
 
   <div class="cards">
 
+    <a href="discovery/index.html" class="card card-discovery">
+      <div class="card-icon">🔬</div>
+      <div class="card-title">Discovery — micro:bit v2</div>
+      <span class="card-badge">🧪 Thực hành với micro:bit</span>
+      <p class="card-desc">
+        Khóa học thực hành lập trình embedded Rust trên board micro:bit v2.
+        Từ Hello World, LED, serial, I2C đến làm game Snake.
+      </p>
+      <span class="card-btn">Bắt đầu học 🚀</span>
+    </a>
+
     <a href="docs/index.html" class="card card-adult">
       <div class="card-icon">📘</div>
-      <div class="card-title">Phiên bản đầy đủ</div>
+      <div class="card-title">The Embedded Rust Book</div>
       <span class="card-badge">👩‍💻 Dành cho lập trình viên</span>
       <p class="card-desc">
         Nội dung kỹ thuật đầy đủ về lập trình hệ thống nhúng với Rust.
@@ -196,7 +218,9 @@
   </div>
 
   <footer>
-    Dựa trên <em><a href="https://doc.rust-lang.org/stable/embedded-book/" style="color:inherit">The Embedded Rust Book</a></em>
+    Dựa trên
+    <em><a href="https://docs.rust-embedded.org/discovery/microbit/" style="color:inherit">Discovery MB2</a></em>,
+    <em><a href="https://doc.rust-lang.org/stable/embedded-book/" style="color:inherit">The Embedded Rust Book</a></em>
     và <em><a href="https://github.com/rust-lang/book" style="color:inherit">The Rust Programming Language</a></em> — Bản dịch Tiếng Việt<br>
     Nội dung văn bản: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener" style="color:inherit">CC-BY-SA 4.0</a> ·
     Mã nguồn: MIT / Apache 2.0 ·

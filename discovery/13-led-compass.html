@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LED Compass - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html" class="active"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">LED Compass</span>
+  </div>
+  <main id="main">
+
+    <h1>LED Compass 🧭</h1>
+
+    <p>Trong chương này, chúng ta xây dựng một <strong>la bàn LED</strong>: dùng magnetometer trên MB2 để xác định hướng từ bắc và hiển thị bằng LED trên ma trận 5×5.</p>
+
+    <h2>Đo từ trường</h2>
+
+    <p>Magnetometer đo cả độ lớn lẫn hướng của từ trường, báo cáo theo ba trục. Khi board nằm phẳng với LED hướng lên và logo hướng về phía trước:</p>
+
+    <div class="diagram">
+      <div class="diagram-title diagram-title--lg">📐 Hệ trục tọa độ của MB2</div>
+      <div class="flex-row--gap16">
+        <div class="axis-card axis-card--blue">
+          <div class="axis-card__dir">←</div>
+          <div class="axis-card__title axis-card__title--blue">Trục X</div>
+          <div class="axis-card__desc">Hướng sang cạnh trái</div>
+        </div>
+        <div class="axis-card axis-card--green">
+          <div class="axis-card__dir">↓</div>
+          <div class="axis-card__title axis-card__title--green">Trục Y</div>
+          <div class="axis-card__desc">Hướng về cạnh dưới (card connector)</div>
+        </div>
+        <div class="axis-card axis-card--yellow">
+          <div class="axis-card__dir">⬇</div>
+          <div class="axis-card__title axis-card__title--yellow">Trục Z</div>
+          <div class="axis-card__desc">Hướng xuống sàn (right-hand system)</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Bài tập thực hành: Quan sát từ trường</h2>
+
+    <p>Viết chương trình (<code>examples/show-mag.rs</code>) liên tục in dữ liệu magnetometer lên RTT console:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-body">
+          <h4>Xác định hướng Bắc tại vị trí của bạn</h4>
+          <p>Dùng la bàn điện thoại để biết hướng. Căn thẳng MB2 theo hướng đó và ghi lại giá trị X, Y.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Xoay 90° và ghi lại</h4>
+          <p>Giữ board song song với mặt đất (không nghiêng), xoay 90° và xem giá trị thay đổi ra sao.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Xoay thêm 90° nữa</h4>
+          <p>Tiếp tục quan sát. Mỗi 90° xoay, giá trị X và Y sẽ hoán đổi và đổi dấu.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý về độ chính xác</div>
+        <ul>
+          <li>Từ bắc địa lý ≠ từ bắc từ tính — có sai lệch (magnetic declination) tùy địa điểm</li>
+          <li>Một số MB2 có offset trên trục Z — cần calibration</li>
+          <li>Vật liệu sắt thép gần board sẽ làm nhiễu phép đo</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Tính toán góc hướng (Heading)</h2>
+
+    <p>Để xác định hướng la bàn, chỉ cần X và Y (giả sử board nằm phẳng). Dùng hàm <code>atan2</code>:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">📐 Công thức tính heading</div>
+      <div class="flex-row--gap16" style="align-items:flex-start;">
+        <div style="flex:1;min-width:200px;">
+          <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+          <pre><code class="language-rust">use libm::atan2f;
+use core::f32::consts::PI;
+
+// Đọc magnetometer
+let mag = sensor.magnetic_field().unwrap();
+let x = mag.x_nt() as f32;
+let y = mag.y_nt() as f32;
+
+// Tính góc hướng (radians)
+let heading_rad = atan2f(y, x);
+
+// Chuyển sang degrees (0–360)
+let mut heading_deg = heading_rad * 180.0 / PI;
+if heading_deg &lt; 0.0 {
+    heading_deg += 360.0;
+}</code></pre>
+        </div>
+        <div style="flex:0 0 180px;">
+          <svg width="170" height="170" viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="85" cy="85" r="70" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.5"/>
+            <!-- compass points -->
+            <text x="85" y="22" text-anchor="middle" font-weight="700" fill="#0550ae" font-size="13">N</text>
+            <text x="156" y="89" text-anchor="middle" font-weight="700" fill="#1a7f37" font-size="13">E</text>
+            <text x="85" y="160" text-anchor="middle" font-weight="700" fill="#9a6700" font-size="13">S</text>
+            <text x="16" y="89" text-anchor="middle" font-weight="700" fill="#82071e" font-size="13">W</text>
+            <text x="135" y="38" text-anchor="middle" font-size="10" fill="#656d76">NE</text>
+            <text x="135" y="140" text-anchor="middle" font-size="10" fill="#656d76">SE</text>
+            <text x="38" y="140" text-anchor="middle" font-size="10" fill="#656d76">SW</text>
+            <text x="38" y="38" text-anchor="middle" font-size="10" fill="#656d76">NW</text>
+            <!-- needle pointing north -->
+            <line x1="85" y1="85" x2="85" y2="25" stroke="#0550ae" stroke-width="3" marker-end="url(#needle)"/>
+            <circle cx="85" cy="85" r="5" fill="#0550ae"/>
+            <defs>
+              <marker id="needle" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+                <path d="M 0 0 L 8 3 L 0 6 z" fill="#0550ae"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <h2>Ánh xạ góc → LED</h2>
+
+    <p>Ma trận 5×5 có 8 vị trí ở rìa ngoài tương ứng với 8 hướng la bàn (N, NE, E, SE, S, SW, W, NW). Mỗi hướng chiếm ~45°:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🗺️ Ánh xạ Heading → LED Position</div>
+      <div class="flex-row--gap16" style="align-items:flex-start;">
+        <div style="flex:1;min-width:200px;">
+          <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+          <pre><code class="language-rust">// 8 vị trí LED rìa ngoài theo chiều kim đồng hồ từ hướng Bắc
+// (row, col) trong ma trận 5x5
+const COMPASS_LEDS: [(usize, usize); 8] = [
+    (0, 2), // N  — góc trên giữa
+    (0, 4), // NE — góc trên phải
+    (2, 4), // E  — giữa phải
+    (4, 4), // SE — góc dưới phải
+    (4, 2), // S  — góc dưới giữa
+    (4, 0), // SW — góc dưới trái
+    (2, 0), // W  — giữa trái
+    (0, 0), // NW — góc trên trái
+];
+
+fn heading_to_led_index(heading_deg: f32) -&gt; usize {
+    // Mỗi sector = 45°, offset 22.5° để center
+    let index = ((heading_deg + 22.5) / 45.0) as usize % 8;
+    index
+}</code></pre>
+        </div>
+        <div style="flex:0 0 160px;">
+          <!-- 5x5 LED grid -->
+          <svg width="155" height="155" viewBox="0 0 155 155" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid -->
+            <rect x="5" y="5" width="145" height="145" rx="8" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+            <!-- LEDs (all dim) -->
+            <g fill="#2a2a3a">
+              <circle cx="27" cy="27" r="11"/><circle cx="55" cy="27" r="11"/><circle cx="83" cy="27" r="11"/><circle cx="111" cy="27" r="11"/><circle cx="139" cy="27" r="11"/>
+              <circle cx="27" cy="55" r="11"/><circle cx="55" cy="55" r="11"/><circle cx="83" cy="55" r="11"/><circle cx="111" cy="55" r="11"/><circle cx="139" cy="55" r="11"/>
+              <circle cx="27" cy="83" r="11"/><circle cx="55" cy="83" r="11"/><circle cx="83" cy="83" r="11"/><circle cx="111" cy="83" r="11"/><circle cx="139" cy="83" r="11"/>
+              <circle cx="27" cy="111" r="11"/><circle cx="55" cy="111" r="11"/><circle cx="83" cy="111" r="11"/><circle cx="111" cy="111" r="11"/><circle cx="139" cy="111" r="11"/>
+              <circle cx="27" cy="139" r="11"/><circle cx="55" cy="139" r="11"/><circle cx="83" cy="139" r="11"/><circle cx="111" cy="139" r="11"/><circle cx="139" cy="139" r="11"/>
+            </g>
+            <!-- Compass LEDs (bright) -->
+            <circle cx="83" cy="27" r="11" fill="#58a6ff"/><!-- N -->
+            <circle cx="139" cy="27" r="11" fill="#3fb950"/><!-- NE -->
+            <circle cx="139" cy="83" r="11" fill="#3fb950"/><!-- E -->
+            <circle cx="139" cy="139" r="11" fill="#3fb950"/><!-- SE -->
+            <circle cx="83" cy="139" r="11" fill="#58a6ff"/><!-- S -->
+            <circle cx="27" cy="139" r="11" fill="#3fb950"/><!-- SW -->
+            <circle cx="27" cy="83" r="11" fill="#3fb950"/><!-- W -->
+            <circle cx="27" cy="27" r="11" fill="#3fb950"/><!-- NW -->
+            <!-- Labels -->
+            <text x="83" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="white">N</text>
+            <text x="83" y="143" text-anchor="middle" font-size="9" font-weight="700" fill="white">S</text>
+            <text x="139" y="87" text-anchor="middle" font-size="9" font-weight="700" fill="white">E</text>
+            <text x="27" y="87" text-anchor="middle" font-size="9" font-weight="700" fill="white">W</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <h2>Giải pháp hoàn chỉnh</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use libm::atan2f;
+use core::f32::consts::PI;
+use lsm303agr::{MagMode, MagOutputDataRate, Lsm303agr};
+use microbit::{board::Board, display::blocking::Display, hal::Timer};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+const COMPASS_LEDS: [(usize, usize); 8] = [
+    (0, 2), (0, 4), (2, 4), (4, 4),
+    (4, 2), (4, 0), (2, 0), (0, 0),
+];
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+
+    let i2c = microbit::hal::Twim::new(
+        board.TWIM0, board.i2c_internal.into(), microbit::hal::twim::Frequency::K100,
+    );
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_mag_mode_and_odr(&amp;mut timer, MagMode::HighResolution, MagOutputDataRate::Hz10).unwrap();
+
+    loop {
+        if sensor.mag_status().unwrap().xyz_new_data() {
+            let mag = sensor.magnetic_field().unwrap();
+            let x = mag.x_nt() as f32;
+            let y = mag.y_nt() as f32;
+
+            let heading_rad = atan2f(y, x);
+            let mut heading_deg = heading_rad * 180.0 / PI;
+            if heading_deg &lt; 0.0 { heading_deg += 360.0; }
+
+            let idx = ((heading_deg + 22.5) / 45.0) as usize % 8;
+            let (row, col) = COMPASS_LEDS[idx];
+
+            let mut grid = [[0u8; 5]; 5];
+            grid[row][col] = 1;
+            display.show(&amp;mut timer, grid, 100);
+        }
+    }
+}</code></pre>
+
+    <div class="nav-buttons">
+      <a href="12-i2c.html" class="nav-btn">← I2C</a>
+      <a href="14-punch-o-meter.html" class="nav-btn next">Punch-o-meter →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

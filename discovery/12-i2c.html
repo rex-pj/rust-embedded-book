@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I2C - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html" class="active"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">I2C</span>
+  </div>
+  <main id="main">
+
+    <h1>I2C 🔗</h1>
+
+    <p>I2C là giao thức truyền thông thay thế cho UART. Trong khi UART đơn giản và phổ biến, nó có giới hạn: tốc độ tối đa ~115200 baud, chỉ kết nối point-to-point (1-1). I2C giải quyết cả hai vấn đề này.</p>
+
+    <h2>I2C là gì?</h2>
+
+    <p>I2C (<strong>Inter-Integrated Circuit</strong>, phát âm là "EYE-SQUARED-CEE") là giao thức serial bus <strong>đồng bộ</strong> dùng hai dây:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🔌 Topology I2C Bus</div>
+      <div style="text-align:center;">
+        <svg width="520" height="150" viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
+          <!-- SDA line -->
+          <line x1="20" y1="50" x2="500" y2="50" stroke="#54aeff" stroke-width="2.5"/>
+          <text x="10" y="46" font-size="11" font-weight="700" fill="#0550ae">SDA</text>
+          <!-- SCL line -->
+          <line x1="20" y1="80" x2="500" y2="80" stroke="#2da44e" stroke-width="2.5"/>
+          <text x="10" y="76" font-size="11" font-weight="700" fill="#1a7f37">SCL</text>
+
+          <!-- Controller (nRF52833) -->
+          <rect x="20" y="95" width="100" height="45" rx="6" fill="#ddf4ff" stroke="#54aeff" stroke-width="2"/>
+          <text x="70" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#0550ae">Controller</text>
+          <text x="70" y="131" text-anchor="middle" font-size="9" fill="#656d76">nRF52833</text>
+          <line x1="70" y1="95" x2="70" y2="80" stroke="#666" stroke-width="1.5"/>
+          <line x1="70" y1="95" x2="70" y2="50" stroke="#666" stroke-width="1.5"/>
+
+          <!-- Device 1 (Accelerometer) -->
+          <rect x="170" y="95" width="100" height="45" rx="6" fill="#dcffe4" stroke="#2da44e" stroke-width="2"/>
+          <text x="220" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#1a7f37">Accel.</text>
+          <text x="220" y="131" text-anchor="middle" font-size="9" fill="#656d76">addr: 0x19</text>
+          <line x1="220" y1="95" x2="220" y2="80" stroke="#666" stroke-width="1.5"/>
+          <line x1="220" y1="95" x2="220" y2="50" stroke="#666" stroke-width="1.5"/>
+
+          <!-- Device 2 (Magnetometer) -->
+          <rect x="310" y="95" width="100" height="45" rx="6" fill="#fff8c5" stroke="#d1a317" stroke-width="2"/>
+          <text x="360" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#9a6700">Magneto.</text>
+          <text x="360" y="131" text-anchor="middle" font-size="9" fill="#656d76">addr: 0x1E</text>
+          <line x1="360" y1="95" x2="360" y2="80" stroke="#666" stroke-width="1.5"/>
+          <line x1="360" y1="95" x2="360" y2="50" stroke="#666" stroke-width="1.5"/>
+
+          <!-- VCC pull-up resistors -->
+          <text x="460" y="35" font-size="10" fill="#656d76">Pull-up</text>
+          <text x="460" y="48" font-size="10" fill="#656d76">resistors</text>
+          <line x1="470" y1="50" x2="470" y2="20" stroke="#656d76" stroke-dasharray="3" stroke-width="1.5"/>
+          <line x1="490" y1="80" x2="490" y2="20" stroke="#656d76" stroke-dasharray="3" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <p class="diagram-caption" style="margin-top:10px;">Nhiều thiết bị chia sẻ cùng 2 dây — mỗi thiết bị có địa chỉ riêng</p>
+    </div>
+
+    <h2>So sánh I2C với UART</h2>
+
+    <table>
+      <thead><tr><th>Tiêu chí</th><th>UART</th><th>I2C</th></tr></thead>
+      <tbody>
+        <tr><td>Số dây</td><td>2 (TX, RX) + GND</td><td>2 (SDA, SCL) + GND</td></tr>
+        <tr><td>Số thiết bị</td><td>1-1 (point-to-point)</td><td>1 controller, nhiều targets</td></tr>
+        <tr><td>Tốc độ</td><td>~115 Kbps</td><td>100 / 250 / 400 Kbps</td></tr>
+        <tr><td>Đồng bộ</td><td>Asynchronous</td><td>Synchronous (có clock)</td></tr>
+        <tr><td>Ứng dụng</td><td>Debug, GPS, Bluetooth module</td><td>Sensor, EEPROM, display</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Giao thức I2C</h2>
+
+    <p>Một transaction I2C gồm:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">📦 Cấu trúc I2C Transaction</div>
+      <div style="display:flex;gap:3px;align-items:stretch;font-size:0.8rem;flex-wrap:wrap;">
+        <div class="frame-box frame-box--start"><div class="frame-box__label">START</div></div>
+        <div class="frame-box frame-box--data" style="min-width:80px;"><div class="frame-box__label">7-bit ADDR</div><div class="frame-box__sub">+ R/W bit</div></div>
+        <div class="frame-box frame-box--stop"><div class="frame-box__label">ACK</div></div>
+        <div class="frame-box frame-box--parity" style="min-width:80px;"><div class="frame-box__label">DATA</div><div class="frame-box__sub">1+ bytes</div></div>
+        <div class="frame-box frame-box--stop"><div class="frame-box__label">ACK</div></div>
+        <div class="frame-box frame-box--start"><div class="frame-box__label">STOP</div></div>
+      </div>
+    </div>
+
+    <h2>LSM303AGR — Cảm biến trên MB2</h2>
+
+    <p>Micro:bit v2 tích hợp chip <strong>LSM303AGR</strong> — một module cảm biến kết hợp:</p>
+
+    <div class="diagram">
+      <div class="hw-diagram">
+        <div class="hw-title">LSM303AGR Sensor Package</div>
+        <div class="hw-components">
+          <div class="hw-component">
+            <span class="hw-component-icon">📐</span>
+            <div class="hw-component-name">3-axis Accelerometer</div>
+            <div class="hw-component-desc">Địa chỉ I2C: 0x19<br>Đo gia tốc (mg)</div>
+          </div>
+          <div class="hw-component">
+            <span class="hw-component-icon">🧭</span>
+            <div class="hw-component-name">3-axis Magnetometer</div>
+            <div class="hw-component-desc">Địa chỉ I2C: 0x1E<br>Đo từ trường (nT)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Đọc một register</h2>
+
+    <p>Để đọc từ I2C device register, trình tự là:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">// Đọc register WHO_AM_I từ LSM303AGR accelerometer
+// Giá trị trả về phải là 0x33 nếu chip đúng
+const ACC_ADDR: u8 = 0x19;
+const WHO_AM_I_REG: u8 = 0x0F;
+
+let mut buffer = [0u8; 1];
+i2c.write_read(ACC_ADDR, &amp;[WHO_AM_I_REG], &amp;mut buffer).unwrap();
+
+// buffer[0] == 0x33 ✅ chip được nhận dạng đúng</code></pre>
+
+    <h2>Dùng Driver crate</h2>
+
+    <p>Crate <code>lsm303agr</code> cung cấp driver high-level cho LSM303AGR. Thay vì đọc raw registers, dùng API của driver:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr};
+
+// Khởi tạo sensor
+let mut sensor = Lsm303agr::new_with_i2c(i2c);
+sensor.init().unwrap();
+sensor.set_accel_mode_and_odr(
+    &amp;mut delay,
+    AccelMode::Normal,
+    AccelOutputDataRate::Hz50,  // 50 lần đo/giây
+).unwrap();
+
+// Đọc gia tốc
+let data = sensor.acceleration().unwrap();
+// Đơn vị: milli-g (1g ≈ 9.8 m/s²)
+let x = data.x_mg();
+let y = data.y_mg();
+let z = data.z_mg();</code></pre>
+
+    <h2>Bài tập: Compass bằng Magnetometer</h2>
+
+    <p>Dùng LSM303AGR magnetometer để đọc từ trường và hiển thị hướng la bàn trên LED matrix:</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Gợi ý</div>
+        <p>Tính góc hướng từ các giá trị X, Y của magnetometer: <code>heading = atan2(y, x)</code>. Ánh xạ góc (0–360°) sang một trong 8 vị trí LED ở rìa ma trận 5×5.</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="11-uart.html" class="nav-btn">← UART</a>
+      <a href="13-led-compass.html" class="nav-btn next">LED Compass →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

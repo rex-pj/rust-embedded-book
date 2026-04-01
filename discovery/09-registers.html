@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registers - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html" class="active"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Registers</span>
+  </div>
+  <main id="main">
+
+    <h1>Registers 📟</h1>
+
+    <p>Chương này là phần khám phá kỹ thuật về cách tương tác phần cứng ở mức thấp. Bạn có thể bỏ qua và quay lại sau nếu muốn.</p>
+
+    <p>Câu hỏi: điều gì thực sự xảy ra khi gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code>? Câu trả lời: chúng ta đang ghi vào các <strong>vùng bộ nhớ đặc biệt</strong> gọi là registers.</p>
+
+    <h2>Ví dụ trực tiếp với register</h2>
+
+    <p>Thư mục <code>09-registers</code> chứa code demo thao tác register trực tiếp:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+#[allow(unused_imports)]
+use registers::entry;
+
+#[entry]
+fn main() -&gt; ! {
+    registers::init();
+
+    unsafe {
+        // Địa chỉ "magic" của GPIO Port 0 Output register
+        const PORT_P0_OUT: u32 = 0x50000504;
+
+        // Bật hàng trên cùng (bit 21)
+        *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
+
+        // Bật hàng dưới (bit 19)
+        *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;
+
+        // Tắt hàng trên
+        *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
+
+        // Tắt hàng dưới
+        *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
+    }
+
+    loop {
+        core::hint::spin_loop();
+    }
+}</code></pre>
+
+    <h2>Register là gì?</h2>
+
+    <p>Địa chỉ <code>0x50000504</code> tham chiếu đến một <strong>register</strong> — vùng bộ nhớ đặc biệt kiểm soát một peripheral. Peripheral cung cấp tính năng mở rộng ngoài khả năng tính toán/logic gốc của processor.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🗺️ Memory Map của nRF52833 (đơn giản hóa)</div>
+      <table>
+        <thead><tr><th>Địa chỉ</th><th>Vùng</th><th>Mô tả</th></tr></thead>
+        <tbody>
+          <tr><td><code>0x00000000</code></td><td>Flash</td><td>Code của chương trình (512KB)</td></tr>
+          <tr><td><code>0x20000000</code></td><td>RAM</td><td>Biến, stack, heap (128KB)</td></tr>
+          <tr><td><code>0x40000000</code></td><td>APB Peripherals</td><td>UART, SPI, I2C, Timer...</td></tr>
+          <tr style="background:#dcffe4;"><td><code>0x50000000</code></td><td>AHB Peripherals</td><td>GPIO (P0 tại 0x50000504)</td></tr>
+          <tr><td><code>0xE0000000</code></td><td>Core Peripherals</td><td>NVIC, SysTick, Debug...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Register tại <code>0x50000504</code> cụ thể quản lý các GPIO pin trong nhóm P0. nRF52833 có hơn 32 GPIO pin tổ chức thành hai nhóm ("P0" và "P1"), mỗi nhóm có bộ register riêng.</p>
+
+    <h2>LED, Digital Outputs và Mức điện áp</h2>
+
+    <div class="diagram">
+      <div class="diagram-title">💡 Cách LED hoạt động</div>
+      <div class="flex-row--gap16">
+        <div class="info-card info-card--green" style="flex:1;min-width:180px;">
+          <div class="info-card__title info-card__title--green">HIGH (3.3V) = 1</div>
+          <p class="text-sm" style="margin:0;">Pin đang cấp điện áp 3.3V. LED kết nối đúng chiều sẽ sáng.</p>
+        </div>
+        <div class="info-card info-card--neutral" style="flex:1;min-width:180px;">
+          <div class="info-card__title info-card__title--neutral">LOW (0V) = 0</div>
+          <p class="text-sm" style="margin:0;">Pin ở mức 0V (GND). LED tắt.</p>
+        </div>
+      </div>
+      <div class="diagram-caption" style="margin-top:12px;text-align:left;">
+        LED là diode — chỉ dẫn điện một chiều. Đấu ngược chiều → không sáng (không hỏng).
+      </div>
+    </div>
+
+    <h2>RTRM — Reading the Reference Manual</h2>
+
+    <p>Khi cần tra cứu địa chỉ register và bit fields chính xác, hãy xem <strong>nRF52833 Product Specification</strong> (Reference Manual). Đây là tài liệu dứt khoát cho mọi thứ liên quan đến peripheral registers.</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">📖</div>
+      <div class="callout-body">
+        <div class="callout-title">Đọc Reference Manual hiệu quả</div>
+        <p>Tìm chapter "GPIO" (General Purpose Input/Output) → tìm mục "Registers" → tìm đến register "OUT" hay "IN". Reference manual sẽ cho biết từng bit có nghĩa gì.</p>
+      </div>
+    </div>
+
+    <h2>(Mis)Optimization — Khi compiler "tối ưu" nhầm</h2>
+
+    <p>Khi ghi trực tiếp vào hardware registers, compiler có thể <strong>tối ưu bỏ đi</strong> những lần ghi mà nó nghĩ là "thừa". Trong embedded, những lần ghi đó có tác dụng thực trên phần cứng — không được bỏ.</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">// KHÔNG tốt: compiler có thể tối ưu bỏ một số lần ghi
+*(PORT_P0_OUT as *mut u32) = 1 &lt;&lt; 21;
+*(PORT_P0_OUT as *mut u32) = 0;  // có thể bị bỏ!
+
+// TỐT hơn: dùng volatile write để đảm bảo mọi lần ghi đều thực thi
+use core::ptr;
+ptr::write_volatile(PORT_P0_OUT as *mut u32, 1 &lt;&lt; 21);
+ptr::write_volatile(PORT_P0_OUT as *mut u32, 0);</code></pre>
+
+    <p>Đây là một trong những lý do tại sao HAL và PAC tồn tại — chúng xử lý volatile access tự động cho bạn.</p>
+
+    <h2>Địa chỉ <code>0xBAAAAAAD</code> — Lỗi truy cập bộ nhớ</h2>
+
+    <p>Truy cập vào địa chỉ không hợp lệ gây ra <strong>hardware fault</strong>. Processor phát hiện truy cập bộ nhớ không hợp lệ và kích hoạt fault handler — thường dẫn đến reset hoặc dừng hệ thống.</p>
+
+    <div class="callout danger">
+      <div class="callout-icon">💥</div>
+      <div class="callout-body">
+        <div class="callout-title">HardFault — Không như Exception trong .NET</div>
+        <p>Trong .NET, access violation ném ra exception và bạn có thể catch. Trong embedded bare-metal, không có OS, không có exception handler mặc định. HardFault thường có nghĩa là board reset hoặc treo máy. Đây là lý do tại sao Rust's type system giúp prevent rất nhiều lỗi loại này.</p>
+      </div>
+    </div>
+
+    <h2>Spooky action at a distance — Tác dụng phụ không ngờ</h2>
+
+    <p>Ghi vào một peripheral register có thể ảnh hưởng đến các peripheral khác do kết nối phần cứng. "Tác dụng từ xa" này khiến lập trình embedded phức tạp và là một trong những lý do tại sao dùng HAL abstractions an toàn hơn thao tác register trực tiếp.</p>
+
+    <h2>Type-safe Manipulation với PAC</h2>
+
+    <p><strong>Peripheral Access Crate (PAC)</strong> cung cấp wrappers type-safe quanh registers, ngăn chặn nhiều loại lỗi. Thay vì magic numbers như <code>0x50000504</code>, bạn dùng named types và methods:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">// Cách thủ công với raw pointer — dễ sai
+unsafe {
+    *(0x50000504 as *mut u32) |= 1 &lt;&lt; 21;
+}
+
+// Cách dùng PAC — type-safe, tự document
+let peripherals = pac::Peripherals::take().unwrap();
+peripherals.P0.out.modify(|_, w| w.pin21().high());</code></pre>
+
+    <div class="diagram">
+      <div class="diagram-title">🏗️ So sánh cách tiếp cận</div>
+      <table>
+        <thead><tr><th>Cách tiếp cận</th><th>An toàn</th><th>Dễ đọc</th><th>Khi dùng</th></tr></thead>
+        <tbody>
+          <tr><td>Raw register (unsafe)</td><td>❌</td><td>❌</td><td>Debug, học nguyên lý</td></tr>
+          <tr><td>PAC</td><td>✅</td><td>⚠️</td><td>Khi HAL thiếu tính năng</td></tr>
+          <tr><td>HAL</td><td>✅</td><td>✅</td><td>Phần lớn use case</td></tr>
+          <tr style="background:#dcffe4;"><td>BSP</td><td>✅</td><td>✅✅</td><td>Prototyping, học nhanh</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="08-inputs-and-outputs.html" class="nav-btn">← Inputs &amp; Polling</a>
+      <a href="10-serial-port.html" class="nav-btn next">Serial Port →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

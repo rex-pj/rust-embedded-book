@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UART - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html" class="active"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">UART</span>
+  </div>
+  <main id="main">
+
+    <h1>UART 🔄</h1>
+
+    <p>MCU trên MB2 có hai biến thể UART peripheral: <code>UART</code> truyền thống và <code>UARTE</code> nâng cao (với Easy DMA). Chương này tập trung vào <strong>UARTE</strong> để giao tiếp serial phần cứng.</p>
+
+    <h2>Khởi tạo UARTE</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">use nrf52833_hal::uarte::{Uarte, Parity, Baudrate};
+
+let uarte = Uarte::new(
+    board.UARTE0,
+    board.uart.into(),   // TX và RX pins
+    Parity::EXCLUDED,    // không dùng parity bit
+    Baudrate::BAUD115200,
+);</code></pre>
+
+    <h2>Gửi một byte</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-body">
+          <h4>Khởi tạo UARTE với baud rate đúng</h4>
+          <p>Đảm bảo cả hai bên (MB2 và máy tính) đều dùng cùng baud rate — thường là 115200.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Cấu hình TX và RX pins</h4>
+          <p>Trên MB2, UART pins được expose qua BSP's <code>board.uart</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Ghi byte vào transmit buffer</h4>
+          <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+          <pre><code class="language-rust">let byte: u8 = b'A';
+uarte.write(&amp;[byte]).unwrap();</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <h2>Gửi một chuỗi</h2>
+
+    <p>Gửi string là gửi nhiều bytes liên tiếp:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">let message = b"Hello from MB2!\r\n";
+uarte.write(message).unwrap();</code></pre>
+
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Dùng <code>\r\n</code> (CRLF) thay vì chỉ <code>\n</code></div>
+        <p>Terminal emulators thường cần cả <code>\r</code> (carriage return) lẫn <code>\n</code> (newline) để xuống dòng đúng cách — đặc biệt trên Windows với PuTTY.</p>
+      </div>
+    </div>
+
+    <h2>Dùng macro <code>write!</code></h2>
+
+    <p>Macro <code>write!</code> của Rust cho phép format và gửi data — giống <code>println!</code> nhưng cho embedded. Cần implement trait <code>Write</code> cho UART type:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">use core::fmt::Write;
+
+// Sau khi wrap uarte trong struct implement fmt::Write:
+write!(serial, "Sensor value: {}\r\n", sensor_reading).unwrap();</code></pre>
+
+    <h2>Nhận một byte</h2>
+
+    <p>Nhận data cần đọc từ receive buffer của UART. UARTE có thể báo hiệu khi có data qua polling hoặc interrupts:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">let mut buf = [0u8; 1];
+uarte.read(&amp;mut buf).unwrap();
+let received_byte = buf[0];</code></pre>
+
+    <h2>Echo Server</h2>
+
+    <p>Bài tập cổ điển với UART: xây dựng <strong>echo server</strong> — đọc bất cứ thứ gì máy tính gửi và gửi lại ngay. Điều này xác nhận cả transmit lẫn receive đều hoạt động:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use microbit::Board;
+use nrf52833_hal::uarte::{Uarte, Parity, Baudrate};
+use panic_rtt_target as _;
+
+#[entry]
+fn main() -&gt; ! {
+    let board = Board::take().unwrap();
+    let mut serial = Uarte::new(
+        board.UARTE0,
+        board.uart.into(),
+        Parity::EXCLUDED,
+        Baudrate::BAUD115200,
+    );
+
+    let mut buf = [0u8; 1];
+    loop {
+        // Đọc 1 byte từ UART
+        serial.read(&amp;mut buf).unwrap();
+        // Gửi lại (echo)
+        serial.write(&amp;buf).unwrap();
+    }
+}</code></pre>
+
+    <h2>Bài tập: Đảo ngược chuỗi</h2>
+
+    <p>Bài tập nâng cao hơn: nhận chuỗi ký tự (kết thúc bằng newline), đảo ngược chuỗi đó, rồi gửi lại. Bài này luyện buffer management và string manipulation trong môi trường no-std:</p>
+
+    <div class="diagram">
+      <div class="diagram-title">🔄 Luồng xử lý "Reverse String"</div>
+      <div class="flow-diagram">
+        <div class="flow-step">Nhận byte</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active-step">Thêm vào buffer</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Newline?</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Đảo buffer</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Gửi lại</div>
+      </div>
+    </div>
+
+    <h2>Giải pháp (my solution)</h2>
+
+    <p>Dùng fixed-size buffer để tích lũy bytes đến cho đến khi phát hiện newline, rồi đảo nội dung buffer và truyền ngược lại:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use microbit::Board;
+use nrf52833_hal::uarte::{Uarte, Parity, Baudrate};
+use panic_rtt_target as _;
+
+const BUF_SIZE: usize = 32;
+
+#[entry]
+fn main() -&gt; ! {
+    let board = Board::take().unwrap();
+    let mut serial = Uarte::new(
+        board.UARTE0, board.uart.into(),
+        Parity::EXCLUDED, Baudrate::BAUD115200,
+    );
+
+    let mut buf = [0u8; BUF_SIZE];
+    let mut pos = 0;
+
+    loop {
+        let mut byte = [0u8; 1];
+        serial.read(&amp;mut byte).unwrap();
+
+        if byte[0] == b'\n' || byte[0] == b'\r' {
+            // Đảo ngược buffer và gửi
+            buf[..pos].reverse();
+            serial.write(&amp;buf[..pos]).unwrap();
+            serial.write(b"\r\n").unwrap();
+            pos = 0; // reset buffer
+        } else if pos &lt; BUF_SIZE {
+            buf[pos] = byte[0];
+            pos += 1;
+        }
+    }
+}</code></pre>
+
+    <div class="nav-buttons">
+      <a href="10-serial-port.html" class="nav-btn">← Serial Port</a>
+      <a href="12-i2c.html" class="nav-btn next">I2C →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

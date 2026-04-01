@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cài đặt môi trường - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html" class="active"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Cài đặt môi trường</span>
+  </div>
+  <main id="main">
+
+    <h1>Cài đặt môi trường phát triển</h1>
+
+    <p>Làm việc với microcontroller đòi hỏi một bộ công cụ đặc biệt — chúng ta đang viết code cho một kiến trúc khác với máy tính của bạn, và cần chạy/debug trên một thiết bị "từ xa".</p>
+
+    <div class="callout note">
+      <div class="callout-icon">📚</div>
+      <div class="callout-body">
+        <div class="callout-title">Tài liệu kỹ thuật chính thức</div>
+        <p>Tài liệu kỹ thuật của MB2 có tại <a href="https://tech.microbit.org" target="_blank">https://tech.microbit.org</a>. Đây là nguồn tham khảo đáng tin cậy khi bạn gặp vấn đề về phần cứng.</p>
+      </div>
+    </div>
+
+    <h2>Các công cụ cần thiết</h2>
+
+    <div class="diagram">
+      <div style="font-weight:700;margin-bottom:16px;color:#0550ae;">🔧 Checklist công cụ cần cài</div>
+      <table>
+        <thead><tr><th>Công cụ</th><th>Phiên bản tối thiểu</th><th>Mục đích</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Rust</strong> (qua rustup)</td><td>1.79.0</td><td>Compiler và toolchain</td></tr>
+          <tr><td><strong>gdb-multiarch</strong></td><td>10.2</td><td>Debug trên kiến trúc ARM</td></tr>
+          <tr><td><strong>cargo-binutils</strong></td><td>0.3.6</td><td>Kiểm tra file binary</td></tr>
+          <tr><td><strong>probe-rs-tools</strong></td><td>0.24.0</td><td>Flash &amp; debug qua USB</td></tr>
+          <tr><td><strong>minicom</strong> (Linux/macOS)</td><td>2.7.1</td><td>Serial terminal</td></tr>
+          <tr><td><strong>PuTTY</strong> (Windows)</td><td>Mới nhất</td><td>Serial terminal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Hướng dẫn cài đặt</h2>
+
+    <h3>1. Rust &amp; Cargo</h3>
+    <p>Cài rustup từ <a href="https://rustup.rs" target="_blank">https://rustup.rs</a>, sau đó thêm target cho ARM Cortex-M4:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup target add thumbv7em-none-eabihf</code></pre>
+
+    <h3>2. cargo-binutils</h3>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">rustup component add llvm-tools
+cargo install cargo-binutils --vers '^0.3'</code></pre>
+
+    <h3>3. probe-rs-tools</h3>
+    <p>Xem hướng dẫn cài đặt mới nhất tại <a href="https://probe.rs" target="_blank">https://probe.rs</a>. Hoặc cài thẳng qua cargo:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">cargo install --locked probe-rs-tools</code></pre>
+
+    <h3>4. Lấy source code của sách</h3>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">git clone http://github.com/rust-embedded/discovery-mb2</code></pre>
+
+    <h2>Cài đặt theo hệ điều hành</h2>
+
+    <h3>🐧 Linux</h3>
+
+    <p><strong>Ubuntu 20.04+ / Debian 10+:</strong></p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">sudo apt-get install gdb-multiarch minicom libunwind-dev</code></pre>
+
+    <p><strong>Fedora 32+:</strong></p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">sudo dnf install gdb minicom libunwind-devel</code></pre>
+
+    <p><strong>Arch Linux:</strong></p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">sudo pacman -S arm-none-eabi-gdb minicom libunwind</code></pre>
+
+    <h4>Cấu hình udev Rules (Linux)</h4>
+    <p>Để dùng micro:bit mà không cần quyền root, tạo file:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">sudo nano /etc/udev/rules.d/69-microbit.rules</code></pre>
+    <p>Thêm nội dung sau (vendor ID của BBC micro:bit):</p>
+    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-text">SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", MODE="0666"</code></pre>
+    <p>Sau đó reload rules:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">sudo udevadm control --reload
+sudo udevadm trigger</code></pre>
+
+    <h3>🪟 Windows</h3>
+
+    <p><strong>arm-none-eabi-gdb:</strong> Tải file <code>.exe</code> installer từ <a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads" target="_blank">Arm GNU Toolchain Downloads</a>. Trong quá trình cài, tick vào <em>"Add path to environment variable"</em>.</p>
+
+    <p>Kiểm tra cài đặt:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">arm-none-eabi-gcc -v</code></pre>
+
+    <p><strong>PuTTY:</strong> Tải file <code>putty.exe</code> từ trang chính thức và đặt vào thư mục trong <code>%PATH%</code>.</p>
+
+    <h3>🍎 macOS</h3>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">brew install arm-none-eabi-gdb minicom</code></pre>
+
+    <h2>Xác nhận cài đặt thành công</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-body">
+          <h4>Cắm micro:bit vào máy tính qua cáp USB</h4>
+          <p>Đèn LED màu cam gần cổng USB sẽ sáng lên. Có thể thấy chương trình blinky mặc định chạy.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Chạy <code>probe-rs list</code></h4>
+          <p>Lệnh này liệt kê các debug probe đang kết nối. Nếu thành công, bạn sẽ thấy:</p>
+          <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
+          <pre><code class="language-text">BBC micro:bit CMSIS-DAP -- [device ID] (CMSIS-DAP)</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Chạy <code>probe-rs info</code></h4>
+          <p>Lệnh này hiển thị thông tin chi tiết về chip ARM, bao gồm Cortex-M4 processor và debug port.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <h4>Test build đầu tiên</h4>
+          <p>Từ thư mục <code>src/03-setup</code> trong repository:</p>
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+          <pre><code class="language-bash">rustup target add thumbv7em-none-eabihf
+cargo embed --target thumbv7em-none-eabihf</code></pre>
+          <p>Nếu thành công, <code>cargo-embed</code> sẽ compile, flash lên micro:bit và hiển thị giao diện terminal với output <strong>"Hello World"</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Cấu hình IDE</h2>
+
+    <p>Để có IDE support đầy đủ (rust-analyzer trong VS Code hoặc IntelliJ), cần cấu hình cross-compilation target đúng:</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">VS Code với rust-analyzer</div>
+        <p>Thêm vào <code>.vscode/settings.json</code>:</p>
+        <div class="code-header"><span class="code-lang">json</span><button class="copy-btn">⎘ Copy</button></div>
+        <pre><code class="language-json">{
+  "rust-analyzer.cargo.target": "thumbv7em-none-eabihf"
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">IntelliJ/RustRover</div>
+        <p>Cần cấu hình thêm build settings để xử lý embedded target. Xem tài liệu của plugin Rust trong IntelliJ để biết chi tiết.</p>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="02-requirements.html" class="nav-btn">← Yêu cầu</a>
+      <a href="04-meet-your-hardware.html" class="nav-btn next">Làm quen phần cứng →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>
