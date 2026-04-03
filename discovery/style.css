@@ -624,6 +624,17 @@ pre code.hljs { background: transparent !important; padding: 20px 24px !importan
   .flow-diagram { flex-direction: column; }
   .flow-arrow { transform: rotate(90deg); }
   .nav-btn.next { margin-left: 0; }
+  .stack-layer {
+    flex-direction: column;
+    padding: 10px 14px;
+    gap: 4px;
+    text-align: center;
+  }
+  .stack-layer .layer-badge {
+    position: static;
+    font-size: 0.65rem;
+    margin-top: 2px;
+  }
 }
 
 /* ===== COMPONENT CLASSES (replaces inline styles) ===== */
