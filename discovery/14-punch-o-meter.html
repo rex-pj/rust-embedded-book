@@ -131,76 +131,90 @@ let net_accel = magnitude - 1000.0;</code></pre>
       <li>Nhấn Button A để hiển thị kết quả tối đa qua RTT</li>
     </ol>
 
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý</div>
+        <p>Bạn có thể đạt giá trị G khá cao bằng cách gõ cạnh MB2 xuống bàn. Tuy nhiên, làm vậy có thể làm hỏng accelerometer, vì vậy tốt nhất là đừng làm thế.</p>
+      </div>
+    </div>
+
     <h2>Giải pháp (my solution)</h2>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![no_main]
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
 #![no_std]
 
+const TICKS_PER_SEC: u32 = 400;
+const THRESHOLD: f32 = 1.5;
+
+use cortex_m::asm::nop;
 use cortex_m_rt::entry;
-use embedded_hal::digital::InputPin;
-use libm::sqrtf;
-use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr};
-use microbit::Board;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
+
+use microbit::{
+    hal::{twim, Timer},
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+use lsm303agr::{AccelMode, AccelOutputDataRate, AccelScale, Lsm303agr};
 
 #[entry]
 fn main() -&gt; ! {
     rtt_init_print!();
-    let board = Board::take().unwrap();
+    let board = microbit::Board::take().unwrap();
 
-    // Khởi tạo I2C và sensor
-    let i2c = microbit::hal::Twim::new(
-        board.TWIM0, board.i2c_internal.into(),
-        microbit::hal::twim::Frequency::K100,
-    );
-    let mut delay = microbit::hal::Timer::new(board.TIMER0);
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut delay = Timer::new(board.TIMER0);
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
-    sensor.set_accel_mode_and_odr(
-        &amp;mut delay,
-        AccelMode::Normal,
-        AccelOutputDataRate::Hz50,
-    ).unwrap();
+    sensor
+        .set_accel_mode_and_odr(&amp;mut delay, AccelMode::Normal, AccelOutputDataRate::Hz400)
+        .unwrap();
+    // Allow the sensor to measure up to 16 G since human punches
+    // can actually be quite fast
+    sensor.set_accel_scale(AccelScale::G16).unwrap();
 
-    let mut btn_a = board.buttons.button_a;
-    let mut max_g: f32 = 0.0;
+    let mut max_g = 0.;
+    let mut countdown_ticks = None;
 
     loop {
-        if sensor.accel_status().unwrap().xyz_new_data() {
-            let accel = sensor.acceleration().unwrap();
-            let x = accel.x_mg() as f32;
-            let y = accel.y_mg() as f32;
-            let z = accel.z_mg() as f32;
-
-            let magnitude = sqrtf(x*x + y*y + z*z);
-            // Trừ 1g = 1000mg
-            let net = if magnitude &gt; 1000.0 { magnitude - 1000.0 } else { 0.0 };
-
-            if net &gt; max_g {
-                max_g = net;
-            }
+        while !sensor.accel_status().unwrap().xyz_new_data() {
+            nop();
         }
+        // x acceleration in g
+        let (x, _, _) = sensor.acceleration().unwrap().xyz_mg();
+        let g_x = x as f32 / 1000.0;
 
-        // Nhấn Button A để xem kết quả
-        if btn_a.is_low().unwrap() {
-            rprintln!("Max acceleration: {:.0} mg ({:.2} g)", max_g, max_g / 1000.0);
-            // Reset sau khi xem
-            max_g = 0.0;
-            // Debounce
-            while btn_a.is_low().unwrap() {}
+        if let Some(ticks) = countdown_ticks {
+            if ticks &gt; 0 {
+                // countdown isn't done yet
+                if g_x &gt; max_g {
+                    max_g = g_x;
+                }
+                countdown_ticks = Some(ticks - 1);
+            } else {
+                // Countdown is done: report max value
+                rprintln!("Max acceleration: {}g", max_g);
+
+                // Reset
+                max_g = 0.;
+                countdown_ticks = None;
+            }
+        } else {
+            // If acceleration goes above a threshold, we start measuring
+            if g_x &gt; THRESHOLD {
+                rprintln!("START!");
+
+                max_g = g_x;
+                countdown_ticks = Some(TICKS_PER_SEC);
+            }
         }
     }
 }</code></pre>
-
-    <div class="callout tip">
-      <div class="callout-icon">🥊</div>
-      <div class="callout-body">
-        <div class="callout-title">Cách chơi</div>
-        <p>Kẹp MB2 trong tay, đấm vào không khí càng mạnh càng tốt. Nhấn Button A để xem kết quả. Giá trị điển hình: nhẹ ~500mg, mạnh &gt;3000mg, chuyên nghiệp có thể &gt;10000mg!</p>
-      </div>
-    </div>
 
     <div class="nav-buttons">
       <a href="13-led-compass.html" class="nav-btn">← LED Compass</a>

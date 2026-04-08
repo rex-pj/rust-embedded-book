@@ -122,16 +122,9 @@
       </div>
     </div>
 
-    <p>Tốc độ truyền đo bằng <strong>baud rate</strong> (bits/giây). Các tốc độ phổ biến:</p>
+    <p>Tốc độ truyền đo bằng <strong>baud rate</strong> (bits/giây). Các tốc độ phổ biến bao gồm 9600, 19200, 115200 bps và hiện đại hơn là 921600 bps. Ở tốc độ 115200 bps, với mỗi frame 10 bits (1 start + 8 data + 1 stop), thông lượng thực tế là 11.52K bytes/giây.</p>
 
-    <table>
-      <thead><tr><th>Baud Rate</th><th>Tốc độ dữ liệu</th><th>Độ trễ/byte</th><th>Ứng dụng</th></tr></thead>
-      <tbody>
-        <tr><td>9,600</td><td>~960 B/s</td><td>~1ms</td><td>Thiết bị cũ, GPS đơn giản</td></tr>
-        <tr><td>115,200</td><td>~11.5 KB/s</td><td>~87µs</td><td>Debug, phổ biến nhất</td></tr>
-        <tr><td>921,600</td><td>~92 KB/s</td><td>~11µs</td><td>Ứng dụng tốc độ cao</td></tr>
-      </tbody>
-    </table>
+    <p>Ví dụ: ký tự ASCII <code>'E'</code> (0b0100_0101 = 0x45) được truyền như sau: 1 start bit (0), sau đó 8 data bits theo thứ tự LSB-first: 1,0,1,0,0,0,1,0, rồi 1 stop bit (1).</p>
 
     <div class="callout note">
       <div class="callout-icon">💡</div>
@@ -153,28 +146,17 @@
       </div>
     </div>
 
-    <h2>Công cụ serial terminal</h2>
-
-    <h3>🐧 Linux / macOS</h3>
-    <p>Serial ports xuất hiện dưới dạng device files (<code>/dev/ttyACM0</code>, <code>/dev/ttyUSB0</code>). Dùng các công cụ:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash"># Minicom
-minicom -D /dev/ttyACM0 -b 115200
-
-# Picocom (đơn giản hơn)
-picocom -b 115200 /dev/ttyACM0</code></pre>
-
-    <h3>🪟 Windows</h3>
-    <p>Serial ports xuất hiện là COM ports (ví dụ <code>COM3</code>). Mở Device Manager để xem port number. Dùng <strong>PuTTY</strong>:</p>
-    <ul>
-      <li>Connection type: Serial</li>
-      <li>Serial line: COM3 (hoặc số của bạn)</li>
-      <li>Speed: 115200</li>
-    </ul>
-
     <h2>RS-232 — Chuẩn serial truyền thống</h2>
 
     <p>RS-232 là chuẩn truyền thống cho serial communication. Dù hệ thống hiện đại dùng USB-to-serial adapters, hiểu về RS-232 framing (start bits, data bits, stop bits, parity) là nền tảng để làm việc với UART peripheral trên MCU.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý về mức điện áp</div>
+        <p>Serial port hiện đại hoạt động ở +5V. Serial port RS-232 cổ hơn hoạt động ở ±12V. Nếu kết nối nhầm, bạn có thể làm hỏng phần cứng. MB2 có USB-to-serial tích hợp sẵn nên bạn không cần lo điều này.</p>
+      </div>
+    </div>
 
     <div class="nav-buttons">
       <a href="09-registers.html" class="nav-btn">← Registers</a>

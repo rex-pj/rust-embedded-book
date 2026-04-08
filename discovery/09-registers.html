@@ -54,15 +54,13 @@
   </div>
   <main id="main">
 
-    <h1>Registers 📟</h1>
+    <h1>Registers</h1>
 
-    <p>Chương này là phần khám phá kỹ thuật về cách tương tác phần cứng ở mức thấp. Bạn có thể bỏ qua và quay lại sau nếu muốn.</p>
+    <p>Câu hỏi đặt ra: điều gì thực sự xảy ra khi gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code>? Câu trả lời là: chúng ta đang ghi vào các <strong>vùng bộ nhớ đặc biệt</strong> gọi là register.</p>
 
-    <p>Câu hỏi: điều gì thực sự xảy ra khi gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code>? Câu trả lời: chúng ta đang ghi vào các <strong>vùng bộ nhớ đặc biệt</strong> gọi là registers.</p>
+    <p>Một register là một vùng bộ nhớ đặc biệt dùng để điều khiển một <em>peripheral</em>. Peripheral cung cấp những tính năng mở rộng ngoài khả năng tính toán và logic gốc của processor.</p>
 
-    <h2>Ví dụ trực tiếp với register</h2>
-
-    <p>Thư mục <code>09-registers</code> chứa code demo thao tác register trực tiếp:</p>
+    <p>Đây là đoạn code demo thao tác register trực tiếp:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -76,19 +74,19 @@ fn main() -&gt; ! {
     registers::init();
 
     unsafe {
-        // Địa chỉ "magic" của GPIO Port 0 Output register
+        // Một địa chỉ "magic"!
         const PORT_P0_OUT: u32 = 0x50000504;
 
-        // Bật hàng trên cùng (bit 21)
+        // Bật hàng trên cùng
         *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
 
-        // Bật hàng dưới (bit 19)
+        // Bật hàng dưới cùng
         *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;
 
-        // Tắt hàng trên
+        // Tắt hàng trên cùng
         *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
 
-        // Tắt hàng dưới
+        // Tắt hàng dưới cùng
         *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
     }
 
@@ -97,115 +95,95 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h2>Register là gì?</h2>
+    <p>Địa chỉ <code>0x50000504</code> là địa chỉ của register <code>OUT</code> thuộc GPIO Port 0. Register 32-bit này điều khiển các pin output — mỗi bit tương ứng với một pin. Đặt bit lên 1 → pin xuất ra điện áp cao; đặt về 0 → pin xuất ra mức thấp.</p>
 
-    <p>Địa chỉ <code>0x50000504</code> tham chiếu đến một <strong>register</strong> — vùng bộ nhớ đặc biệt kiểm soát một peripheral. Peripheral cung cấp tính năng mở rộng ngoài khả năng tính toán/logic gốc của processor.</p>
+    <p>Các chân GPIO hoạt động như các tiếp điểm điện. Digital output có thể tạo ra hai mức điện áp: "thấp" (0V, logic 0) hoặc "cao" (3V, logic 1). LED sáng khi được cấp điện áp cao đúng chiều. Digital input thì <em>đọc</em> mức điện áp thay vì tạo ra nó.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">🗺️ Memory Map của nRF52833 (đơn giản hóa)</div>
-      <table>
-        <thead><tr><th>Địa chỉ</th><th>Vùng</th><th>Mô tả</th></tr></thead>
-        <tbody>
-          <tr><td><code>0x00000000</code></td><td>Flash</td><td>Code của chương trình (512KB)</td></tr>
-          <tr><td><code>0x20000000</code></td><td>RAM</td><td>Biến, stack, heap (128KB)</td></tr>
-          <tr><td><code>0x40000000</code></td><td>APB Peripherals</td><td>UART, SPI, I2C, Timer...</td></tr>
-          <tr style="background:#dcffe4;"><td><code>0x50000000</code></td><td>AHB Peripherals</td><td>GPIO (P0 tại 0x50000504)</td></tr>
-          <tr><td><code>0xE0000000</code></td><td>Core Peripherals</td><td>NVIC, SysTick, Debug...</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p>Vì nRF52833 có hơn 32 GPIO pin nhưng là kiến trúc 32-bit, các pin được tổ chức thành hai nhóm "P0" và "P1" — mỗi nhóm có bộ register riêng.</p>
 
-    <p>Register tại <code>0x50000504</code> cụ thể quản lý các GPIO pin trong nhóm P0. nRF52833 có hơn 32 GPIO pin tổ chức thành hai nhóm ("P0" và "P1"), mỗi nhóm có bộ register riêng.</p>
+    <h2>RTRM — Đọc Reference Manual</h2>
 
-    <h2>LED, Digital Outputs và Mức điện áp</h2>
+    <p>Để tìm hiểu địa chỉ register và ý nghĩa từng bit, cần tra <strong>nRF52833 Product Specification</strong>. Peripheral GPIO P0 có base address là <code>0x5000_0000</code>. Register <code>OUT</code> nằm ở offset <code>0x504</code>, tức địa chỉ đầy đủ là <code>0x50000504</code>.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">💡 Cách LED hoạt động</div>
-      <div class="flex-row--gap16">
-        <div class="info-card info-card--green" style="flex:1;min-width:180px;">
-          <div class="info-card__title info-card__title--green">HIGH (3.3V) = 1</div>
-          <p class="text-sm" style="margin:0;">Pin đang cấp điện áp 3.3V. LED kết nối đúng chiều sẽ sáng.</p>
-        </div>
-        <div class="info-card info-card--neutral" style="flex:1;min-width:180px;">
-          <div class="info-card__title info-card__title--neutral">LOW (0V) = 0</div>
-          <p class="text-sm" style="margin:0;">Pin ở mức 0V (GND). LED tắt.</p>
-        </div>
-      </div>
-      <div class="diagram-caption" style="margin-top:12px;text-align:left;">
-        LED là diode — chỉ dẫn điện một chiều. Đấu ngược chiều → không sáng (không hỏng).
-      </div>
-    </div>
+    <p>Khi chạy chương trình trên và quan sát qua debugger, giá trị register thay đổi như sau:</p>
 
-    <h2>RTRM — Reading the Reference Manual</h2>
+    <ul>
+      <li>Giá trị ban đầu: <code>0x00000000</code></li>
+      <li>Sau khi bật hàng trên (bit 21): <code>0x00200000</code></li>
+      <li>Sau khi bật thêm hàng dưới (bit 19): <code>0x00280000</code></li>
+      <li>Sau khi tắt hàng trên (xóa bit 21): <code>0x00080000</code></li>
+      <li>Sau khi tắt hàng dưới (xóa bit 19): <code>0x00000000</code></li>
+    </ul>
 
-    <p>Khi cần tra cứu địa chỉ register và bit fields chính xác, hãy xem <strong>nRF52833 Product Specification</strong> (Reference Manual). Đây là tài liệu dứt khoát cho mọi thứ liên quan đến peripheral registers.</p>
+    <h2>Spooky action at a distance</h2>
 
-    <div class="callout tip">
-      <div class="callout-icon">📖</div>
-      <div class="callout-body">
-        <div class="callout-title">Đọc Reference Manual hiệu quả</div>
-        <p>Tìm chapter "GPIO" (General Purpose Input/Output) → tìm mục "Registers" → tìm đến register "OUT" hay "IN". Reference manual sẽ cho biết từng bit có nghĩa gì.</p>
-      </div>
-    </div>
+    <p><code>OUT</code> không phải là register duy nhất điều khiển các pin của Port P0. Còn có hai register nữa: <code>OUTSET</code> và <code>OUTCLR</code>.</p>
 
-    <h2>(Mis)Optimization — Khi compiler "tối ưu" nhầm</h2>
-
-    <p>Khi ghi trực tiếp vào hardware registers, compiler có thể <strong>tối ưu bỏ đi</strong> những lần ghi mà nó nghĩ là "thừa". Trong embedded, những lần ghi đó có tác dụng thực trên phần cứng — không được bỏ.</p>
+    <p>Đoạn code sau (<code>examples/spooky.rs</code>) in ra giá trị của <code>P0.OUT</code> sau mỗi thao tác, nhưng thay vì ghi thẳng vào <code>OUT</code>, nó ghi vào <code>OUTSET</code> và <code>OUTCLR</code>:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">// KHÔNG tốt: compiler có thể tối ưu bỏ một số lần ghi
-*(PORT_P0_OUT as *mut u32) = 1 &lt;&lt; 21;
-*(PORT_P0_OUT as *mut u32) = 0;  // có thể bị bỏ!
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
 
-// TỐT hơn: dùng volatile write để đảm bảo mọi lần ghi đều thực thi
 use core::ptr;
-ptr::write_volatile(PORT_P0_OUT as *mut u32, 1 &lt;&lt; 21);
-ptr::write_volatile(PORT_P0_OUT as *mut u32, 0);</code></pre>
 
-    <p>Đây là một trong những lý do tại sao HAL và PAC tồn tại — chúng xử lý volatile access tự động cho bạn.</p>
+#[allow(unused_imports)]
+use registers::{entry, rprintln};
 
-    <h2>Địa chỉ <code>0xBAAAAAAD</code> — Lỗi truy cập bộ nhớ</h2>
+// In ra giá trị hiện tại của P0.OUT
+fn print_out() {
+    const P0_OUT: u32 = 0x5000_0504;
 
-    <p>Truy cập vào địa chỉ không hợp lệ gây ra <strong>hardware fault</strong>. Processor phát hiện truy cập bộ nhớ không hợp lệ và kích hoạt fault handler — thường dẫn đến reset hoặc dừng hệ thống.</p>
+    let out = unsafe { ptr::read_volatile(P0_OUT as *const u32) };
 
-    <div class="callout danger">
-      <div class="callout-icon">💥</div>
-      <div class="callout-body">
-        <div class="callout-title">HardFault — Không như Exception trong .NET</div>
-        <p>Trong .NET, access violation ném ra exception và bạn có thể catch. Trong embedded bare-metal, không có OS, không có exception handler mặc định. HardFault thường có nghĩa là board reset hoặc treo máy. Đây là lý do tại sao Rust's type system giúp prevent rất nhiều lỗi loại này.</p>
-      </div>
-    </div>
-
-    <h2>Spooky action at a distance — Tác dụng phụ không ngờ</h2>
-
-    <p>Ghi vào một peripheral register có thể ảnh hưởng đến các peripheral khác do kết nối phần cứng. "Tác dụng từ xa" này khiến lập trình embedded phức tạp và là một trong những lý do tại sao dùng HAL abstractions an toàn hơn thao tác register trực tiếp.</p>
-
-    <h2>Type-safe Manipulation với PAC</h2>
-
-    <p><strong>Peripheral Access Crate (PAC)</strong> cung cấp wrappers type-safe quanh registers, ngăn chặn nhiều loại lỗi. Thay vì magic numbers như <code>0x50000504</code>, bạn dùng named types và methods:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">// Cách thủ công với raw pointer — dễ sai
-unsafe {
-    *(0x50000504 as *mut u32) |= 1 &lt;&lt; 21;
+    rprintln!("P0.OUT = {:#08x}", out);
 }
 
-// Cách dùng PAC — type-safe, tự document
-let peripherals = pac::Peripherals::take().unwrap();
-peripherals.P0.out.modify(|_, w| w.pin21().high());</code></pre>
+#[entry]
+fn main() -&gt; ! {
+    registers::init();
 
-    <div class="diagram">
-      <div class="diagram-title">🏗️ So sánh cách tiếp cận</div>
-      <table>
-        <thead><tr><th>Cách tiếp cận</th><th>An toàn</th><th>Dễ đọc</th><th>Khi dùng</th></tr></thead>
-        <tbody>
-          <tr><td>Raw register (unsafe)</td><td>❌</td><td>❌</td><td>Debug, học nguyên lý</td></tr>
-          <tr><td>PAC</td><td>✅</td><td>⚠️</td><td>Khi HAL thiếu tính năng</td></tr>
-          <tr><td>HAL</td><td>✅</td><td>✅</td><td>Phần lớn use case</td></tr>
-          <tr style="background:#dcffe4;"><td>BSP</td><td>✅</td><td>✅✅</td><td>Prototyping, học nhanh</td></tr>
-        </tbody>
-      </table>
-    </div>
+    unsafe {
+        // Một loạt địa chỉ "magic"!
+        const P0_OUTSET: u32 = 0x5000_0508;
+        const P0_OUTCLR: u32 = 0x5000_050C;
+
+        // In giá trị ban đầu của OUT
+        print_out();
+
+        // Bật hàng LED trên cùng
+        ptr::write_volatile(P0_OUTSET as *mut u32, 1 &lt;&lt; 21);
+        print_out();
+
+        // Bật hàng LED dưới cùng
+        ptr::write_volatile(P0_OUTSET as *mut u32, 1 &lt;&lt; 19);
+        print_out();
+
+        // Tắt hàng LED trên cùng
+        ptr::write_volatile(P0_OUTCLR as *mut u32, 1 &lt;&lt; 21);
+        print_out();
+
+        // Tắt hàng LED dưới cùng
+        ptr::write_volatile(P0_OUTCLR as *mut u32, 1 &lt;&lt; 19);
+        print_out();
+    }
+
+    loop {
+        core::hint::spin_loop();
+    }
+}</code></pre>
+
+    <p>Output:</p>
+    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-text">15:13:24.055: P0.OUT = 0x000000
+15:13:24.055: P0.OUT = 0x200000
+15:13:24.055: P0.OUT = 0x280000
+15:13:24.055: P0.OUT = 0x080000
+15:13:24.055: P0.OUT = 0x000000</code></pre>
+
+    <p>Điều kỳ lạ: mặc dù chúng ta đọc cùng một địa chỉ nhiều lần mà không trực tiếp sửa đổi nó, giá trị vẫn thay đổi — đây là tác dụng phụ của việc ghi vào <code>OUTSET</code> hoặc <code>OUTCLR</code>.</p>
+
+    <p>Lưu ý rằng <code>OUTSET</code> và <code>OUTCLR</code> không cho phép đọc trạng thái output hiện tại của Port P0 — khác với <code>OUT</code> vừa đọc được vừa ghi được.</p>
 
     <div class="nav-buttons">
       <a href="08-inputs-and-outputs.html" class="nav-btn">← Inputs &amp; Polling</a>

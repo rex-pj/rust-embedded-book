@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello World (Blinky) - Discovery MB2 Tiếng Việt</title>
+<title>Hello World - Discovery MB2 Tiếng Việt</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
@@ -50,59 +50,29 @@
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Hello World — Blinky</span>
+    <span class="current">Hello World</span>
   </div>
   <main id="main">
 
-    <h1>Hello World 💡</h1>
+    <h1>Hello World</h1>
 
-    <p>"Hello World" của lập trình embedded không phải là in text ra console — mà là nhấp nháy một chiếc LED. Chương trình này được gọi là <strong>"blinky"</strong>.</p>
+    <p>Trong phần trước, bạn đã viết một dạng chương trình "Hello World". Nhưng với lập trình viên embedded, "Hello World thực sự" là nhấp nháy một chiếc LED.</p>
 
-    <div class="callout note">
-      <div class="callout-icon">🎯</div>
-      <div class="callout-body">
-        <div class="callout-title">Tại sao Blinky lại quan trọng?</div>
-        <p>Khi blinky chạy được, bạn đã chứng minh:</p>
-        <ul>
-          <li>✅ Load và chạy được chương trình trên thiết bị</li>
-          <li>✅ Tìm đúng pin trên microcontroller</li>
-          <li>✅ Kiểm soát được GPIO output</li>
-          <li>✅ Tạo được delay chính xác</li>
-        </ul>
-        <p>Sau khi nắm vững những điều này, mọi thứ khác sẽ dễ hơn nhiều.</p>
-      </div>
-    </div>
+    <p>Chương trình như vậy thường được gọi là <em>"blinky"</em>.</p>
 
-    <h2>Tìm đúng pin để điều khiển LED</h2>
+    <p>Bởi vì điều này chứng minh bạn đã có đủ khả năng kiểm soát board mà bạn đang làm việc để thực hiện tác vụ đơn giản này. Bạn có thể nạp và chạy chương trình lên thiết bị, tìm đúng pin trên MCU và bật nó, tạo được delay trong một khoảng thời gian cố định.</p>
 
-    <p>Để biết pin nào điều khiển một LED, cần tra cứu schematic của MB2 và truy ngược từ LED đến chân GPIO trên nRF52833.</p>
+    <p>Chúng ta sẽ làm việc với LED ở góc trên-trái của màn hình hiển thị MB2. Truy ngược các dây <code>ROW1</code> và <code>COL1</code> mà LED này được kết nối đến, chúng ta thấy chúng đi đến các chân trên nRF52833 có nhãn <code>AC17</code>/<code>P0.21</code> và <code>B11</code>/<code>AIN4</code>/<code>P0.28</code>.</p>
 
-    <p>Với LED ở góc trên-trái của ma trận hiển thị MB2:</p>
+    <p>Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (chấp nhận điện áp) thì LED sẽ sáng lên.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">🔌 Kết nối LED ↔ GPIO Pin</div>
-      <div class="flow-diagram">
-        <div class="flow-step flow-step--yellow">LED (góc trên-trái)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step flow-step--blue">ROW1 &amp; COL1</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step flow-step--green">P0.21 &amp; P0.28</div>
-      </div>
-      <div class="diagram-caption" style="margin-top:16px;text-align:left;">
-        <p>👉 Để LED sáng: P0.21 = HIGH (3.3V) và P0.28 = LOW (0V)</p>
-      </div>
-    </div>
-
-    <h2>Toggle LED — Nhấp nháy nhanh</h2>
-
-    <p>Để LED nhấp nháy, cần bật và tắt nó liên tục. File <code>examples/fast-blink.rs</code> demo cách toggle LED:</p>
+    <p>Dưới đây là chương trình bật sáng LED đó:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
 use cortex_m_rt::entry;
-use embedded_hal::digital::OutputPin;
 use nrf52833_hal::{gpio, pac};
 use panic_halt as _;
 
@@ -111,156 +81,15 @@ fn main() -&gt; ! {
     let peripherals = pac::Peripherals::take().unwrap();
     let p0 = gpio::p0::Parts::new(peripherals.P0);
     let _row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
-    let mut row2 = p0.p0_22.into_push_pull_output(gpio::Level::Low);
     let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
 
-    loop {
-        row2.set_high().unwrap();
-        row2.set_low().unwrap();
-    }
+    #[allow(clippy::empty_loop)]
+    loop {}
 }</code></pre>
 
-    <div class="callout warn">
-      <div class="callout-icon">⚡</div>
-      <div class="callout-body">
-        <div class="callout-title">LED không nhìn thấy nhấp nháy!</div>
-        <p>MB2 thực thi <strong>64 triệu lệnh mỗi giây</strong>. Vòng loop trên toggle LED hàng triệu lần mỗi giây — nhanh đến mức mắt người không nhận ra. Cần thêm <strong>delay</strong> để có hiệu ứng nhấp nháy thật sự.</p>
-      </div>
-    </div>
-
-    <h2>Spin Wait — Cách chờ đơn giản nhất</h2>
-
-    <p>Cách đơn giản nhất để tạo delay là chạy vòng lặp "không làm gì" — gọi là <strong>spin wait</strong> hay <strong>busy wait</strong>:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">// Delay thô bằng cách lãng phí CPU cycles
-for _ in 0..1_000_000 {
-    core::hint::spin_loop();
-}</code></pre>
-
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Nhược điểm của spin wait</div>
-        <p>CPU bận rộn 100% chỉ để "chờ" — lãng phí điện năng và không chính xác (thay đổi theo tốc độ clock, optimization flags, v.v.).</p>
-      </div>
-    </div>
-
-    <h2>NOP — No Operation</h2>
-
-    <p>Lệnh assembly <strong>NOP</strong> (No Operation) khiến processor không làm gì trong một chu kỳ clock. Dùng trong spin-wait loop để tạo delay chính xác hơn:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">for _ in 0..800_000 {
-    cortex_m::asm::nop();
-}</code></pre>
-
-    <h2>Timers — Cách đúng để tạo delay</h2>
-
-    <p>Hệ thống bare-metal cho phép kiểm soát thời gian chính xác vì bạn quản lý mọi thứ trực tiếp. nRF52833 có <strong>4 timer hardware</strong> — các peripheral chuyên dụng để đo thời gian với độ chính xác cao.</p>
-
-    <p>HAL đơn giản hóa việc sử dụng timer. File <code>examples/timer-blinky.rs</code> demo delay 500ms:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use embedded_hal::{delay::DelayNs, digital::OutputPin};
-use nrf52833_hal::{gpio, pac, timer};
-use panic_halt as _;
-
-#[entry]
-fn main() -&gt; ! {
-    let peripherals = pac::Peripherals::take().unwrap();
-
-    let p0 = gpio::p0::Parts::new(peripherals.P0);
-    let mut row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
-    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
-
-    // Khởi tạo timer hardware
-    let mut timer0 = timer::Timer::new(peripherals.TIMER0);
-
-    loop {
-        timer0.delay_ms(500);   // chờ 500ms
-        row1.set_high().unwrap();  // bật LED
-        timer0.delay_ms(500);   // chờ 500ms
-        row1.set_low().unwrap();   // tắt LED
-    }
-}</code></pre>
-
-    <p>Chạy thử:</p>
+    <p>Chạy chương trình bằng lệnh:</p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">cargo run --release --example timer-blinky</code></pre>
-
-    <div class="callout tip">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <div class="callout-title">Điểm quan trọng</div>
-        <ul>
-          <li>Trait <code>embedded_hal::delay::DelayNs</code> cung cấp method <code>delay_ms()</code></li>
-          <li>Lấy peripheral từ PAC structure và truyền vào HAL wrapper</li>
-          <li>Kết quả: LED nhấp nháy đúng 1 giây bật/tắt</li>
-        </ul>
-      </div>
-    </div>
-
-    <h2>Portability — Code chạy được trên nhiều chip</h2>
-
-    <p>Trait <code>embedded-hal</code> cho phép viết code portable giữa các microcontroller khác nhau. Code dùng <code>embedded-hal</code> traits có thể tái sử dụng trên bất kỳ chip nào có HAL implement các traits đó.</p>
-
-    <div class="diagram">
-      <div class="diagram-title">🔄 Tầng abstraction</div>
-      <div class="stack-diagram">
-        <div class="stack-layer layer-bsp">Application Code (Blinky) <span class="layer-badge">bạn viết</span></div>
-        <div class="stack-arrow">↕</div>
-        <div class="stack-layer layer-hal">embedded-hal traits <span class="layer-badge">portable</span></div>
-        <div class="stack-arrow">↕</div>
-        <div class="stack-layer layer-hal">nRF52833-hal <span class="layer-badge">chip-specific</span></div>
-        <div class="stack-arrow">↕</div>
-        <div class="stack-layer layer-hw">Hardware (nRF52833) <span class="layer-badge">phần cứng</span></div>
-      </div>
-    </div>
-
-    <h2>Dùng Board Support Crate (BSP)</h2>
-
-    <p>Thay vì quản lý từng pin LED riêng lẻ, dùng crate <code>microbit-v2</code> BSP để tương tác với ma trận LED 5×5 tiện hơn nhiều:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use embedded_hal::delay::DelayNs;
-use microbit::{board::Board, display::blocking::Display, hal::Timer};
-use panic_rtt_target as _;
-use rtt_target::rtt_init_print;
-
-#[entry]
-fn main() -&gt; ! {
-    rtt_init_print!();
-
-    let board = Board::take().unwrap();
-    let mut timer = Timer::new(board.TIMER0);
-    let mut display = Display::new(board.display_pins);
-
-    // Ma trận 5x5: 1 = LED sáng, 0 = tắt
-    let light_it_all = [
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-    ];
-
-    loop {
-        // Hiển thị pattern trong 1000ms
-        display.show(&amp;mut timer, light_it_all, 1000);
-        // Tắt toàn bộ
-        display.clear();
-        timer.delay_ms(1000_u32);
-    }
-}</code></pre>
+    <pre><code class="language-bash">cargo run --example light-up</code></pre>
 
     <div class="nav-buttons">
       <a href="05-meet-your-software.html" class="nav-btn">← Làm quen phần mềm</a>

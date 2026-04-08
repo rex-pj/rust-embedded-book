@@ -136,13 +136,21 @@
 
     Finished dev [unoptimized + debuginfo] target(s) in 33.67s</code></pre>
 
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý</div>
+        <p>Hãy chắc chắn biên dịch crate này <strong>không có tối ưu hóa</strong>. File <code>Cargo.toml</code> được cung cấp và lệnh build trên đây sẽ đảm bảo tắt tối ưu hóa, miễn là bạn không truyền flag <code>--release</code> cho <code>cargo</code>.</p>
+      </div>
+    </div>
+
     <h3>Kiểm tra kết quả</h3>
 
     <p>Xác nhận file thực thi là binary Arm bằng lệnh:</p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">$ cargo readobj --example init -- --file-headers</code></pre>
 
-    <p>Kết quả đầu ra xác nhận file tạo ra là một file ELF32 được định dạng đúng cho kiến trúc Arm.</p>
+    <p>Output sẽ chứa <code>Machine: Arm</code> trong ELF header, xác nhận đã cross-compile thành công.</p>
 
     <h2>Flash (Nạp firmware)</h2>
 
@@ -227,6 +235,14 @@ Continuing.
 
 Breakpoint 1, init::__cortex_m_rt_main_trampoline ()...</code></pre>
 
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý cho người dùng Windows</div>
+        <p>Xin lỗi người dùng Windows. GDB đi kèm với GNU Arm Embedded Toolchain không hỗ trợ chế độ TUI này. Lệnh <code>layout src</code> bên dưới sẽ không hoạt động trên Windows.</p>
+      </div>
+    </div>
+
     <p>Để xem code nguồn ngay trong terminal, bật chế độ TUI:</p>
     <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-gdb">(gdb) layout src</code></pre>
@@ -240,7 +256,44 @@ $2 = (*mut i32) 0x20003fe8</code></pre>
 
     <p>Lệnh <code>info locals</code> hiển thị toàn bộ biến cục bộ cùng một lúc.</p>
 
-    <p>Dùng <code>next</code> để bước qua từng dòng lệnh; dùng <code>stepi</code> để bước từng lệnh assembly. Reset lại chương trình:</p>
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Nếu chương trình không halt sau khi khởi động</div>
+        <p>Nếu chương trình không halt sau khi khởi động và bạn đang ở đâu đó sâu hơn trong chương trình, hãy thử chạy <code>monitor reset halt</code> để reset. Đây là do một bug trong <code>probe-rs</code>.</p>
+      </div>
+    </div>
+
+    <p>Đặt breakpoint ở số dòng cụ thể:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) break 13</code></pre>
+
+    <p>Liệt kê tất cả breakpoints hiện có, rồi xóa một breakpoint cụ thể:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) info break
+(gdb) delete 1</code></pre>
+
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Giới hạn breakpoint phần cứng</div>
+        <p>Processor chỉ hỗ trợ một số lượng giới hạn breakpoints. Hãy theo dõi số lượng breakpoint hiện có và xóa những cái không còn cần thiết.</p>
+      </div>
+    </div>
+
+    <p>Dùng <code>next</code> để bước qua từng dòng lệnh; dùng <code>stepi</code> để bước từng lệnh assembly. Xem assembly với ngữ cảnh source:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) disassemble /m</code></pre>
+
+    <p>Bật chế độ TUI assembly:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) layout asm</code></pre>
+
+    <p>Thoát chế độ TUI:</p>
+    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-gdb">(gdb) tui disable</code></pre>
+
+    <p>Reset lại chương trình:</p>
     <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-gdb">(gdb) monitor reset
 (gdb) c</code></pre>
@@ -272,33 +325,28 @@ $2 = (*mut i32) 0x20003fe8</code></pre>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">cargo run --example light-up</code></pre>
 
-    <p>Code ví dụ:</p>
+    <p>Code ví dụ (<code>examples/light-it-up.rs</code>):</p>
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![no_main]
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
 #![no_std]
 
 use cortex_m_rt::entry;
-use nrf52833_hal::{gpio, pac};
+use embedded_hal::digital::OutputPin;
+use microbit::board::Board;
 use panic_halt as _;
 
 #[entry]
 fn main() -&gt; ! {
-    let peripherals = pac::Peripherals::take().unwrap();
-    let p0 = gpio::p0::Parts::new(peripherals.P0);
-    let _row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
-    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
+    let mut board = Board::take().unwrap();
 
-    #[allow(clippy::empty_loop)]
-    loop {}
+    board.display_pins.col1.set_low().unwrap();
+    board.display_pins.row1.set_high().unwrap();
+
+    loop {
+        core::hint::spin_loop();
+    }
 }</code></pre>
-
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Giải thích code</div>
-        <p><code>#![no_main]</code> và <code>#![no_std]</code> cho biết đây là chương trình embedded — không có hệ điều hành, không có standard library đầy đủ. <code>#[entry]</code> đánh dấu hàm main là điểm vào chương trình. Kiểu trả về <code>-&gt; !</code> có nghĩa là hàm không bao giờ kết thúc (vòng lặp vô tận), đây là đặc trưng của embedded firmware.</p>
-      </div>
-    </div>
 
     <div class="nav-buttons">
       <a href="04-meet-your-hardware.html" class="nav-btn">← Làm quen với Phần cứng</a>

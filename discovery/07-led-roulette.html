@@ -29,7 +29,7 @@
     <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
     <div class="nav-group-title">Thực hành cơ bản</div>
     <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
-    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="07-led-roulette.html" class="active"><span class="nav-icon">🎯</span>LED Roulette</a>
     <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
     <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
     <div class="nav-group-title">Giao tiếp</div>
@@ -45,6 +45,7 @@
     <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
   </nav>
 </nav>
+
 <div id="content">
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
@@ -55,78 +56,11 @@
 
     <h1>LED Roulette</h1>
 
-    <p>Mục tiêu của chương này là tạo hiệu ứng đèn xoay vòng (roulette) trên bo mạch Micro:bit v2 bằng cách sử dụng Rust cho embedded.</p>
+    <p>Được rồi, hãy xây dựng một ứng dụng "thực sự". Mục tiêu là tạo ra màn hình ánh đèn quay vòng này.</p>
 
-    <h2>Sử dụng Board Support Crate</h2>
+    <p>Làm việc với các LED pin riêng lẻ khá phiền phức (đặc biệt khi bạn phải dùng gần như tất cả chúng như ở đây), vì vậy chúng ta sẽ sử dụng BSP crate <code>microbit-v2</code>.</p>
 
-    <p>Thay vì điều khiển từng pin LED riêng lẻ, chúng ta có thể tận dụng BSP crate <code>microbit-v2</code> để làm việc với ma trận LED 5×5 của MB2 một cách tiện lợi hơn.</p>
-
-    <p>BSP cung cấp abstraction <code>Display</code> nhận vào một mảng 5×5 biểu diễn các LED cần bật sáng.</p>
-
-    <div class="diagram">
-      <p class="diagram-title diagram-title--center" style="color:#1f2328;">Ma trận LED 5×5 trên micro:bit v2</p>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px;">
-        <div style="display:flex;gap:8px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#21262d;border:2px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#8b949e;">0</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#ffeb3b;border:2px solid #f9a825;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">1</div>
-        </div>
-      </div>
-      <p class="diagram-caption">Ví dụ: viền ngoài sáng, bên trong tắt — hiệu ứng "khung"</p>
-    </div>
-
-    <h2>Thử thách</h2>
-
-    <div class="callout tip">
-      <div class="callout-icon">🎯</div>
-      <div class="callout-body">
-        <div class="callout-title">Thử thách</div>
-        <p>Viết một chương trình tạo hiệu ứng xoay vòng (roulette) trên ma trận LED — bật sáng từng LED theo thứ tự dọc theo chu vi của màn hình, tạo ảo giác chuyển động.</p>
-        <p>Kỹ năng cần có:</p>
-        <ul>
-          <li>Sử dụng abstraction <code>Display</code> từ BSP <code>microbit-v2</code></li>
-          <li>Quản lý thời gian với hardware timer</li>
-          <li>Xây dựng các pattern LED dưới dạng mảng 5×5</li>
-          <li>Duyệt qua các pattern theo thứ tự</li>
-        </ul>
-      </div>
-    </div>
-
-    <h2>Giải pháp</h2>
-
-    <p>Cách tiếp cận là định nghĩa một loạt các mảng LED pattern 5×5, mỗi pattern dịch chuyển vị trí sáng sang một LED kế tiếp dọc theo cạnh của ma trận, sau đó lặp qua chúng với độ trễ phù hợp.</p>
-
-    <p>Cấu trúc ví dụ sử dụng BSP:</p>
+    <p>Mảng Rust <code>light_it_all</code> trong ví dụ chứa 1 ở chỗ LED bật và 0 ở chỗ LED tắt. Lời gọi <code>show()</code> nhận vào một timer để BSP display code dùng cho việc tạo delay, một bản sao của mảng, và thời gian hiển thị tính bằng millisecond.</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -139,45 +73,126 @@ use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
 #[entry]
-fn main() -> ! {
+fn main() -&gt; ! {
     rtt_init_print!();
 
     let board = Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0);
     let mut display = Display::new(board.display_pins);
-
-    // Định nghĩa các pattern cho hiệu ứng LED roulette
-    let patterns = [
-        [[1,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-        [[0,1,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-        // ... thêm các pattern
+    let light_it_all = [
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
     ];
 
     loop {
-        for pattern in &patterns {
-            display.show(&mut timer, *pattern, 100);
-            display.clear();
+        // Hiển thị light_it_all trong 1000ms
+        display.show(&amp;mut timer, light_it_all, 1000);
+        // Xóa màn hình
+        display.clear();
+        timer.delay_ms(1000_u32);
+    }
+}</code></pre>
+
+    <h2>Giải pháp</h2>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use microbit::{board::Board, display::blocking::Display, hal::Timer};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+#[rustfmt::skip]
+const PIXELS: [(usize, usize); 16] = [
+    (0, 0),
+    (0, 1),
+    (0, 2),
+    (0, 3),
+    (0, 4),
+    (1, 4),
+    (2, 4),
+    (3, 4),
+    (4, 4),
+    (4, 3),
+    (4, 2),
+    (4, 1),
+    (4, 0),
+    (3, 0),
+    (2, 0),
+    (1, 0),
+];
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+    #[rustfmt::skip]
+    let mut leds = [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ];
+
+    let mut last_led = (0, 0);
+
+    loop {
+        for current_led in PIXELS {
+            leds[last_led.0][last_led.1] = 0;
+            leds[current_led.0][current_led.1] = 1;
+            display.show(&amp;mut timer, leds, 200);
+            last_led = current_led;
         }
     }
 }</code></pre>
 
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Ghi chú</div>
-        <p>Tham số cuối của <code>display.show()</code> là thời gian hiển thị tính bằng millisecond. Thay đổi giá trị này để điều chỉnh tốc độ xoay của hiệu ứng roulette.</p>
-      </div>
-    </div>
+    <h2>Build cho bản release</h2>
 
-    <h2>Mở rộng thêm</h2>
+    <p>Cho đến nay chúng ta đã build với mode debug. Khi build với mode release, compiler sẽ tối ưu hóa code nhưng điều này làm cho việc debug trở nên khó hơn (vì code đã được tái cấu trúc lại). Hãy thử:</p>
 
-    <p>Sau khi hoàn thành bài cơ bản, bạn có thể thử thêm các biến thể:</p>
-    <ul>
-      <li>Tăng tốc hoặc giảm tốc dần dần (acceleration/deceleration)</li>
-      <li>Đổi chiều xoay khi nhấn button</li>
-      <li>Hiển thị nhiều LED cùng lúc tạo hiệu ứng "đuôi" (trailing effect)</li>
-      <li>Kết hợp nhiều pattern khác nhau</li>
-    </ul>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo embed --release</code></pre>
+
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ gdb ../../../target/thumbv7em-none-eabihf/release/led-roulette</code></pre>
+
+    <p>Bạn có thể kiểm tra kích thước binary bằng <code>cargo size</code>:</p>
+
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo size --release -- -A</code></pre>
+
+    <pre><code class="language-text">    Finished release [optimized + debuginfo] target(s) in 0.02s
+led-roulette  :
+section              size        addr
+.vector_table         256         0x0
+.text                6332       0x100
+.rodata               648      0x19bc
+.data                   0  0x20000000
+.bss                 1076  0x20000000
+.uninit                 0  0x20000434
+.debug_loc           9036         0x0
+.debug_abbrev        2754         0x0
+.debug_info         96460         0x0
+.debug_aranges       1120         0x0
+.debug_ranges       11520         0x0
+.debug_str          71325         0x0
+.debug_pubnames     32316         0x0
+.debug_pubtypes     29294         0x0
+.Arm.attributes        58         0x0
+.debug_frame         2108         0x0
+.debug_line         19303         0x0
+.comment              109         0x0
+Total              283715</code></pre>
 
     <div class="nav-buttons">
       <a href="06-hello-world.html" class="nav-btn">← Hello World</a>

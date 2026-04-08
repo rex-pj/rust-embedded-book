@@ -54,233 +54,133 @@
   </div>
   <main id="main">
 
-    <h1>LED Compass 🧭</h1>
+    <h1>LED Compass</h1>
 
-    <p>Trong chương này, chúng ta xây dựng một <strong>la bàn LED</strong>: dùng magnetometer trên MB2 để xác định hướng từ bắc và hiển thị bằng LED trên ma trận 5×5.</p>
+    <p>Trong phần này, chúng ta sẽ triển khai một la bàn dùng các LED trên MB2. Như những chiếc la bàn thực sự, la bàn LED của chúng ta phải chỉ về hướng bắc bằng cách nào đó. Nó sẽ làm điều đó bằng cách bật một trong các LED ở rìa ngoài; LED được bật phải chỉ về phía bắc.</p>
 
     <h2>Đo từ trường</h2>
 
-    <p>Magnetometer đo cả độ lớn lẫn hướng của từ trường, báo cáo theo ba trục. Khi board nằm phẳng với LED hướng lên và logo hướng về phía trước:</p>
+    <p>Từ trường có cả <em>độ lớn</em>, đo bằng Gauss hoặc Tesla, và <em>hướng</em>. Magnetometer trên MB2 đo cả độ lớn lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo lại <em>thành phần</em> của trường đó theo <em>các trục của nó</em>.</p>
 
-    <div class="diagram">
-      <div class="diagram-title diagram-title--lg">📐 Hệ trục tọa độ của MB2</div>
-      <div class="flex-row--gap16">
-        <div class="axis-card axis-card--blue">
-          <div class="axis-card__dir">←</div>
-          <div class="axis-card__title axis-card__title--blue">Trục X</div>
-          <div class="axis-card__desc">Hướng sang cạnh trái</div>
-        </div>
-        <div class="axis-card axis-card--green">
-          <div class="axis-card__dir">↓</div>
-          <div class="axis-card__title axis-card__title--green">Trục Y</div>
-          <div class="axis-card__desc">Hướng về cạnh dưới (card connector)</div>
-        </div>
-        <div class="axis-card axis-card--yellow">
-          <div class="axis-card__dir">⬇</div>
-          <div class="axis-card__title axis-card__title--yellow">Trục Z</div>
-          <div class="axis-card__desc">Hướng xuống sàn (right-hand system)</div>
-        </div>
-      </div>
-    </div>
-
-    <h2>Bài tập thực hành: Quan sát từ trường</h2>
-
-    <p>Viết chương trình (<code>examples/show-mag.rs</code>) liên tục in dữ liệu magnetometer lên RTT console:</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-body">
-          <h4>Xác định hướng Bắc tại vị trí của bạn</h4>
-          <p>Dùng la bàn điện thoại để biết hướng. Căn thẳng MB2 theo hướng đó và ghi lại giá trị X, Y.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-body">
-          <h4>Xoay 90° và ghi lại</h4>
-          <p>Giữ board song song với mặt đất (không nghiêng), xoay 90° và xem giá trị thay đổi ra sao.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-body">
-          <h4>Xoay thêm 90° nữa</h4>
-          <p>Tiếp tục quan sát. Mỗi 90° xoay, giá trị X và Y sẽ hoán đổi và đổi dấu.</p>
-        </div>
-      </div>
-    </div>
+    <p>Khi board được giữ phẳng với LED hướng lên và logo hướng về phía trước, trục X và Y tạo thành mặt phẳng của sàn. Trục X hướng về cạnh trái của board. Trục Y hướng về cạnh dưới (card connector) của board. Trục Z hướng "vào sàn", tức là hướng xuống.</p>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <div class="callout-title">Lưu ý về độ chính xác</div>
-        <ul>
-          <li>Từ bắc địa lý ≠ từ bắc từ tính — có sai lệch (magnetic declination) tùy địa điểm</li>
-          <li>Một số MB2 có offset trên trục Z — cần calibration</li>
-          <li>Vật liệu sắt thép gần board sẽ làm nhiễu phép đo</li>
-        </ul>
+        <div class="callout-title">Chú ý về phần cứng</div>
+        <p>Trong số hai chiếc MB2 tác giả có lúc viết cuốn sách này, một chiếc dường như có magnetometer hơi hỏng: trục Z bị offset đến mức không dùng được.</p>
       </div>
     </div>
 
-    <h2>Tính toán góc hướng (Heading)</h2>
-
-    <p>Để xác định hướng la bàn, chỉ cần X và Y (giả sử board nằm phẳng). Dùng hàm <code>atan2</code>:</p>
-
-    <div class="diagram">
-      <div class="diagram-title">📐 Công thức tính heading</div>
-      <div class="flex-row--gap16" style="align-items:flex-start;">
-        <div style="flex:1;min-width:200px;">
-          <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-          <pre><code class="language-rust">use libm::atan2f;
-use core::f32::consts::PI;
-
-// Đọc magnetometer
-let mag = sensor.magnetic_field().unwrap();
-let x = mag.x_nt() as f32;
-let y = mag.y_nt() as f32;
-
-// Tính góc hướng (radians)
-let heading_rad = atan2f(y, x);
-
-// Chuyển sang degrees (0–360)
-let mut heading_deg = heading_rad * 180.0 / PI;
-if heading_deg &lt; 0.0 {
-    heading_deg += 360.0;
-}</code></pre>
-        </div>
-        <div style="flex:0 0 180px;">
-          <svg width="170" height="170" viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="85" cy="85" r="70" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.5"/>
-            <!-- compass points -->
-            <text x="85" y="22" text-anchor="middle" font-weight="700" fill="#0550ae" font-size="13">N</text>
-            <text x="156" y="89" text-anchor="middle" font-weight="700" fill="#1a7f37" font-size="13">E</text>
-            <text x="85" y="160" text-anchor="middle" font-weight="700" fill="#9a6700" font-size="13">S</text>
-            <text x="16" y="89" text-anchor="middle" font-weight="700" fill="#82071e" font-size="13">W</text>
-            <text x="135" y="38" text-anchor="middle" font-size="10" fill="#656d76">NE</text>
-            <text x="135" y="140" text-anchor="middle" font-size="10" fill="#656d76">SE</text>
-            <text x="38" y="140" text-anchor="middle" font-size="10" fill="#656d76">SW</text>
-            <text x="38" y="38" text-anchor="middle" font-size="10" fill="#656d76">NW</text>
-            <!-- needle pointing north -->
-            <line x1="85" y1="85" x2="85" y2="25" stroke="#0550ae" stroke-width="3" marker-end="url(#needle)"/>
-            <circle cx="85" cy="85" r="5" fill="#0550ae"/>
-            <defs>
-              <marker id="needle" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
-                <path d="M 0 0 L 8 3 L 0 6 z" fill="#0550ae"/>
-              </marker>
-            </defs>
-          </svg>
-        </div>
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Từ bắc địa lý và từ bắc từ tính</div>
+        <p>Từ bắc của Trái Đất là thứ thất thường: nó khác với từ bắc thực sự ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống đất khá nhiều. Ở vị trí của tác giả, "độ lệch" (sự khác biệt giữa từ bắc thực và từ bắc từ tính) là khoảng 15°; "độ nghiêng" là một con số đáng ngạc nhiên là 67° hướng xuống đất. Bạn có thể tính toán những giá trị này cho vị trí của mình bằng các máy tính trực tuyến như máy tính của US NOAA hoặc UK BGS.</p>
+        <p>Crate <code>lsm303agr</code> hiện tại không hỗ trợ bù đắp những điều này, và có vẻ như đây là quá nhiều cho một hướng dẫn nhập môn về hệ thống nhúng.</p>
       </div>
     </div>
 
-    <h2>Ánh xạ góc → LED</h2>
-
-    <p>Ma trận 5×5 có 8 vị trí ở rìa ngoài tương ứng với 8 hướng la bàn (N, NE, E, SE, S, SW, W, NW). Mỗi hướng chiếm ~45°:</p>
-
-    <div class="diagram">
-      <div class="diagram-title">🗺️ Ánh xạ Heading → LED Position</div>
-      <div class="flex-row--gap16" style="align-items:flex-start;">
-        <div style="flex:1;min-width:200px;">
-          <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-          <pre><code class="language-rust">// 8 vị trí LED rìa ngoài theo chiều kim đồng hồ từ hướng Bắc
-// (row, col) trong ma trận 5x5
-const COMPASS_LEDS: [(usize, usize); 8] = [
-    (0, 2), // N  — góc trên giữa
-    (0, 4), // NE — góc trên phải
-    (2, 4), // E  — giữa phải
-    (4, 4), // SE — góc dưới phải
-    (4, 2), // S  — góc dưới giữa
-    (4, 0), // SW — góc dưới trái
-    (2, 0), // W  — giữa trái
-    (0, 0), // NW — góc trên trái
-];
-
-fn heading_to_led_index(heading_deg: f32) -&gt; usize {
-    // Mỗi sector = 45°, offset 22.5° để center
-    let index = ((heading_deg + 22.5) / 45.0) as usize % 8;
-    index
-}</code></pre>
-        </div>
-        <div style="flex:0 0 160px;">
-          <!-- 5x5 LED grid -->
-          <svg width="155" height="155" viewBox="0 0 155 155" xmlns="http://www.w3.org/2000/svg">
-            <!-- Grid -->
-            <rect x="5" y="5" width="145" height="145" rx="8" fill="#161b22" stroke="#30363d" stroke-width="2"/>
-            <!-- LEDs (all dim) -->
-            <g fill="#2a2a3a">
-              <circle cx="27" cy="27" r="11"/><circle cx="55" cy="27" r="11"/><circle cx="83" cy="27" r="11"/><circle cx="111" cy="27" r="11"/><circle cx="139" cy="27" r="11"/>
-              <circle cx="27" cy="55" r="11"/><circle cx="55" cy="55" r="11"/><circle cx="83" cy="55" r="11"/><circle cx="111" cy="55" r="11"/><circle cx="139" cy="55" r="11"/>
-              <circle cx="27" cy="83" r="11"/><circle cx="55" cy="83" r="11"/><circle cx="83" cy="83" r="11"/><circle cx="111" cy="83" r="11"/><circle cx="139" cy="83" r="11"/>
-              <circle cx="27" cy="111" r="11"/><circle cx="55" cy="111" r="11"/><circle cx="83" cy="111" r="11"/><circle cx="111" cy="111" r="11"/><circle cx="139" cy="111" r="11"/>
-              <circle cx="27" cy="139" r="11"/><circle cx="55" cy="139" r="11"/><circle cx="83" cy="139" r="11"/><circle cx="111" cy="139" r="11"/><circle cx="139" cy="139" r="11"/>
-            </g>
-            <!-- Compass LEDs (bright) -->
-            <circle cx="83" cy="27" r="11" fill="#58a6ff"/><!-- N -->
-            <circle cx="139" cy="27" r="11" fill="#3fb950"/><!-- NE -->
-            <circle cx="139" cy="83" r="11" fill="#3fb950"/><!-- E -->
-            <circle cx="139" cy="139" r="11" fill="#3fb950"/><!-- SE -->
-            <circle cx="83" cy="139" r="11" fill="#58a6ff"/><!-- S -->
-            <circle cx="27" cy="139" r="11" fill="#3fb950"/><!-- SW -->
-            <circle cx="27" cy="83" r="11" fill="#3fb950"/><!-- W -->
-            <circle cx="27" cy="27" r="11" fill="#3fb950"/><!-- NW -->
-            <!-- Labels -->
-            <text x="83" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="white">N</text>
-            <text x="83" y="143" text-anchor="middle" font-size="9" font-weight="700" fill="white">S</text>
-            <text x="139" y="87" text-anchor="middle" font-size="9" font-weight="700" fill="white">E</text>
-            <text x="27" y="87" text-anchor="middle" font-size="9" font-weight="700" fill="white">W</text>
-          </svg>
-        </div>
+    <div class="callout note">
+      <div class="callout-icon">📝</div>
+      <div class="callout-body">
+        <div class="callout-title">Độ chính xác của thiết bị</div>
+        <p>Magnetometer LSM303AGR không phải là thiết bị đặc biệt chính xác khi dùng ngay từ hộp. Nhà sản xuất khuyến nghị một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đọc từ magnetometer.</p>
       </div>
     </div>
 
-    <h2>Giải pháp hoàn chỉnh</h2>
+    <h2>Bài tập: Quan sát từ trường</h2>
+
+    <p>Trong chương I2C, bạn đã viết chương trình <code>examples/show-mag.rs</code> in liên tục dữ liệu magnetometer. Dùng chương trình đó để quan sát sự thay đổi của các giá trị khi bạn xoay board theo các hướng khác nhau.</p>
+
+    <h2>Giải pháp</h2>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![no_main]
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
 #![no_std]
 
 use cortex_m_rt::entry;
-use libm::atan2f;
-use core::f32::consts::PI;
-use lsm303agr::{MagMode, MagOutputDataRate, Lsm303agr};
-use microbit::{board::Board, display::blocking::Display, hal::Timer};
+use embedded_hal::delay::DelayNs;
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
-const COMPASS_LEDS: [(usize, usize); 8] = [
-    (0, 2), (0, 4), (2, 4), (4, 4),
-    (4, 2), (4, 0), (2, 0), (0, 0),
-];
+use core::f32::consts::PI;
+use libm::{atan2f, floorf};
+
+use microbit::{
+    display::blocking::Display,
+    hal::{twim, Timer},
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+use lsm303agr::{Lsm303agr, MagMode, MagOutputDataRate};
 
 #[entry]
 fn main() -&gt; ! {
     rtt_init_print!();
-    let board = Board::take().unwrap();
-    let mut timer = Timer::new(board.TIMER0);
+    let board = microbit::Board::take().unwrap();
+
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut timer0 = Timer::new(board.TIMER0);
     let mut display = Display::new(board.display_pins);
 
-    let i2c = microbit::hal::Twim::new(
-        board.TWIM0, board.i2c_internal.into(), microbit::hal::twim::Frequency::K100,
-    );
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
-    sensor.set_mag_mode_and_odr(&amp;mut timer, MagMode::HighResolution, MagOutputDataRate::Hz10).unwrap();
+    sensor
+        .set_mag_mode_and_odr(
+            &amp;mut timer0,
+            MagMode::HighResolution,
+            MagOutputDataRate::Hz10,
+        )
+        .unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    let mut leds = [[0u8; 5]; 5];
+
+    #[rustfmt::skip]
+    let indices = [
+        (2, 0), /* W */
+        (3, 0), /* W-SW */
+        (3, 1), /* SW */
+        (4, 1), /* S-SW */
+        (4, 2), /* S */
+        (4, 3), /* S-SE */
+        (3, 3), /* SE */
+        (3, 4), /* E-SE */
+        (2, 4), /* E */
+        (1, 4), /* E-NE */
+        (1, 3), /* NE */
+        (0, 3), /* N-NE */
+        (0, 2), /* N */
+        (0, 1), /* N-NW */
+        (1, 1), /* NW */
+        (1, 0), /* W-NW */
+    ];
 
     loop {
-        if sensor.mag_status().unwrap().xyz_new_data() {
-            let mag = sensor.magnetic_field().unwrap();
-            let x = mag.x_nt() as f32;
-            let y = mag.y_nt() as f32;
-
-            let heading_rad = atan2f(y, x);
-            let mut heading_deg = heading_rad * 180.0 / PI;
-            if heading_deg &lt; 0.0 { heading_deg += 360.0; }
-
-            let idx = ((heading_deg + 22.5) / 45.0) as usize % 8;
-            let (row, col) = COMPASS_LEDS[idx];
-
-            let mut grid = [[0u8; 5]; 5];
-            grid[row][col] = 1;
-            display.show(&amp;mut timer, grid, 100);
+        while !sensor.mag_status().unwrap().xyz_new_data() {
+            timer0.delay_ms(1u32);
         }
+        let (x, y, _) = sensor.magnetic_field().unwrap().xyz_nt();
+
+        let theta = atan2f(y as f32, x as f32);
+        let seg = floorf(16.0 * theta / PI) as i8;
+
+        let index = if seg &gt;= 15 || seg &lt;= -15 {
+            8
+        } else if seg &gt;= 0 {
+            (seg / 2) as usize
+        } else {
+            ((31 + seg) / 2) as usize
+        };
+
+        let (r, c) = indices[index];
+        leds[r][c] = 255u8;
+        display.show(&amp;mut timer0, leds, 50);
+        leds[r][c] = 0u8;
+        display.show(&amp;mut timer0, leds, 50);
     }
 }</code></pre>
 

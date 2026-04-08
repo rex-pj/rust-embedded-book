@@ -133,6 +133,14 @@
       </div>
     </div>
 
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý về thuật ngữ</div>
+        <p>"Controller/target" trước đây được gọi là "master/slave". Bạn vẫn có thể thấy thuật ngữ cũ trong tài liệu hoặc trên nhãn board. Thuật ngữ này hiện đã bị deprecated trong các chuẩn chính thức và tài liệu mới, nhưng vẫn còn xuất hiện trong tài liệu Nordic cho chip nRF52833 và một số tài liệu embedded Rust.</p>
+      </div>
+    </div>
+
     <h2>LSM303AGR — Cảm biến trên MB2</h2>
 
     <p>Micro:bit v2 tích hợp chip <strong>LSM303AGR</strong> — một module cảm biến kết hợp:</p>
@@ -154,44 +162,6 @@
         </div>
       </div>
     </div>
-
-    <h2>Đọc một register</h2>
-
-    <p>Để đọc từ I2C device register, trình tự là:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">// Đọc register WHO_AM_I từ LSM303AGR accelerometer
-// Giá trị trả về phải là 0x33 nếu chip đúng
-const ACC_ADDR: u8 = 0x19;
-const WHO_AM_I_REG: u8 = 0x0F;
-
-let mut buffer = [0u8; 1];
-i2c.write_read(ACC_ADDR, &amp;[WHO_AM_I_REG], &amp;mut buffer).unwrap();
-
-// buffer[0] == 0x33 ✅ chip được nhận dạng đúng</code></pre>
-
-    <h2>Dùng Driver crate</h2>
-
-    <p>Crate <code>lsm303agr</code> cung cấp driver high-level cho LSM303AGR. Thay vì đọc raw registers, dùng API của driver:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr};
-
-// Khởi tạo sensor
-let mut sensor = Lsm303agr::new_with_i2c(i2c);
-sensor.init().unwrap();
-sensor.set_accel_mode_and_odr(
-    &amp;mut delay,
-    AccelMode::Normal,
-    AccelOutputDataRate::Hz50,  // 50 lần đo/giây
-).unwrap();
-
-// Đọc gia tốc
-let data = sensor.acceleration().unwrap();
-// Đơn vị: milli-g (1g ≈ 9.8 m/s²)
-let x = data.x_mg();
-let y = data.y_mg();
-let z = data.z_mg();</code></pre>
 
     <h2>Bài tập: Compass bằng Magnetometer</h2>
 

@@ -54,240 +54,229 @@
   </div>
   <main id="main">
 
-    <h1>Interrupts ⚡</h1>
+    <h1>Interrupts</h1>
 
-    <p>Polling lãng phí điện năng và giới hạn chức năng — CPU phải liên tục kiểm tra xem peripheral đã sẵn sàng chưa. <strong>Interrupt</strong> cho phép peripheral "ngắt" luồng chương trình bất cứ lúc nào khi có sự kiện xảy ra.</p>
+    <p>Cho đến nay, chúng ta đã tương tác với nhiều phần cứng trên MB2. Chúng ta đã đọc nút bấm, chờ timer, thực hiện serial communication, và nói chuyện với các thiết bị qua I2C. Mỗi việc đó đều liên quan đến việc chờ một hoặc nhiều peripheral sẵn sàng. Cho đến giờ, cách chờ của chúng ta là "polling": liên tục hỏi peripheral xem nó đã xong chưa, cho đến khi xong.</p>
 
-    <h2>Interrupt hoạt động như thế nào</h2>
+    <p>Vì microcontroller của chúng ta chỉ có một CPU core, nó không thể làm gì khác trong khi chờ đợi. Hơn nữa, một CPU core liên tục polling một peripheral sẽ lãng phí điện năng, và trong nhiều ứng dụng, chúng ta không thể để điều đó xảy ra. Liệu chúng ta có thể làm tốt hơn không?</p>
 
-    <div class="diagram">
-      <div class="diagram-title">⚡ Luồng xử lý Interrupt</div>
-      <div style="text-align:center;">
-        <svg width="520" height="200" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
-          <!-- Main program flow -->
-          <rect x="10" y="20" width="500" height="30" rx="4" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.5"/>
-          <text x="260" y="40" text-anchor="middle" font-size="12" fill="#0550ae" font-weight="600">Chương trình chính đang chạy bình thường...</text>
+    <p>May mắn thay, có thể! Dù microcontroller nhỏ bé của chúng ta không thể tính toán song song, nó có thể dễ dàng chuyển đổi giữa các tác vụ khác nhau trong quá trình thực thi, phản hồi các sự kiện từ thế giới bên ngoài. Việc chuyển đổi này được thực hiện bằng một tính năng gọi là "interrupts" (ngắt).</p>
 
-          <!-- Interrupt signal -->
-          <line x1="200" y1="50" x2="200" y2="90" stroke="#cf222e" stroke-width="2" stroke-dasharray="4" marker-end="url(#intarr)"/>
-          <text x="210" y="75" font-size="11" fill="#cf222e" font-weight="600">Interrupt!</text>
+    <p>Interrupts được đặt tên rất phù hợp: chúng cho phép các peripheral thực sự <em>ngắt</em> quá trình thực thi chương trình chính tại bất kỳ thời điểm nào. Trên nRF52833 của MB2, các peripheral được kết nối với Nested Vectored Interrupt Controller (NVIC) của core. NVIC có thể dừng CPU tức thì, ra lệnh cho nó đi làm gì đó khác, và sau khi xong, đưa CPU trở về nơi nó đang làm trước khi bị ngắt.</p>
 
-          <!-- Save context -->
-          <rect x="10" y="90" width="230" height="30" rx="4" fill="#fff8c5" stroke="#d1a317" stroke-width="1.5"/>
-          <text x="125" y="110" text-anchor="middle" font-size="11" fill="#9a6700">1. Lưu registers vào stack</text>
+    <h2>Xử lý Interrupt như thế nào</h2>
 
-          <!-- Execute ISR -->
-          <rect x="10" y="130" width="230" height="30" rx="4" fill="#dcffe4" stroke="#2da44e" stroke-width="1.5"/>
-          <text x="125" y="150" text-anchor="middle" font-size="11" fill="#1a7f37">2. Chạy ISR (Interrupt Service Routine)</text>
+    <p>Mô hình tính toán của nRF52833 là mô hình được hầu hết mọi CPU hiện đại sử dụng. Bên trong CPU có các bộ nhớ tạm gọi là "CPU registers". (Chú ý rằng các CPU register này khác với "device registers" mà chúng ta đã thảo luận trong chương Registers.) Để thực hiện một phép tính, CPU thường nạp các giá trị từ bộ nhớ vào CPU registers, thực hiện phép tính bằng các giá trị trong register, rồi lưu kết quả trở lại bộ nhớ. (Đây gọi là "kiến trúc load-store".)</p>
 
-          <!-- Restore and resume -->
-          <rect x="10" y="170" width="230" height="22" rx="4" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.5"/>
-          <text x="125" y="185" text-anchor="middle" font-size="11" fill="#0550ae">3. Restore registers, tiếp tục chương trình</text>
+    <p>Mọi thông tin về phép tính mà CPU đang chạy đều được lưu trong CPU registers. Nếu core sắp chuyển tác vụ, nó phải lưu nội dung các CPU registers vào đâu đó để tác vụ mới có thể dùng các register như bộ nhớ tạm của riêng mình. Khi tác vụ mới hoàn thành, CPU có thể khôi phục các giá trị register và tiếp tục tính toán cũ. Đúng vậy, đó chính xác là điều đầu tiên core làm khi nhận được interrupt request: nó dừng lại ngay lập tức và lưu nội dung các CPU registers lên stack.</p>
 
-          <!-- NVIC box -->
-          <rect x="310" y="90" width="190" height="100" rx="8" fill="#1c2128" stroke="#30363d" stroke-width="2"/>
-          <text x="405" y="115" text-anchor="middle" font-size="12" fill="#58a6ff" font-weight="700">NVIC</text>
-          <text x="405" y="133" text-anchor="middle" font-size="10" fill="#8b949e">Nested Vectored</text>
-          <text x="405" y="148" text-anchor="middle" font-size="10" fill="#8b949e">Interrupt Controller</text>
-          <text x="405" y="168" text-anchor="middle" font-size="10" fill="#3fb950">Quản lý priority</text>
-          <text x="405" y="182" text-anchor="middle" font-size="10" fill="#3fb950">của nhiều interrupt</text>
+    <p>Bước tiếp theo là nhảy đến code cần chạy để phản hồi interrupt. Một <strong>Interrupt Service Routine (ISR)</strong>, thường gọi là interrupt "handler", là một hàm đặc biệt trong code ứng dụng của bạn được core gọi để phản hồi interrupt. Một "interrupt table" trong bộ nhớ chứa một "interrupt vector" cho mỗi interrupt có thể xảy ra: interrupt vector chỉ ra ISR nào cần gọi khi một interrupt cụ thể được nhận.</p>
 
-          <defs>
-            <marker id="intarr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M 0 0 L 8 3 L 0 6 z" fill="#cf222e"/>
-            </marker>
-          </defs>
-        </svg>
-      </div>
-    </div>
+    <p>Một hàm ISR "return" bằng một lệnh máy return-from-interrupt đặc biệt, khiến CPU khôi phục các CPU registers và nhảy trở về nơi nó đang ở trước khi ISR được gọi.</p>
 
-    <h2>NVIC và Interrupt Priority</h2>
+    <h2>Poke the MB2</h2>
 
-    <p>nRF52833 dùng <strong>NVIC (Nested Vectored Interrupt Controller)</strong> để quản lý interrupt priority. Interrupt có priority cao hơn có thể preempt interrupt có priority thấp hơn. Điều này đảm bảo các sự kiện time-critical được xử lý trước.</p>
-
-    <h2>Chia sẻ dữ liệu với ISR</h2>
-
-    <p>Thách thức lớn nhất: chia sẻ dữ liệu giữa chương trình chính và ISR. Vì ISR có thể chạy bất cứ lúc nào, dữ liệu chia sẻ phải được xử lý cẩn thận để tránh race conditions.</p>
-
-    <p>Trong Rust, thường dùng:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">use core::sync::atomic::{AtomicBool, Ordering};
-use cortex_m::interrupt::Mutex;
-use core::cell::Cell;
-
-// Cách 1: Atomic types (đơn giản, thread-safe)
-static BUTTON_PRESSED: AtomicBool = AtomicBool::new(false);
-
-// ISR có thể set:
-BUTTON_PRESSED.store(true, Ordering::SeqCst);
-
-// Main loop kiểm tra:
-if BUTTON_PRESSED.load(Ordering::SeqCst) {
-    BUTTON_PRESSED.store(false, Ordering::SeqCst);
-    // Xử lý sự kiện
-}
-
-// Cách 2: Mutex + Cell/RefCell cho dữ liệu phức tạp hơn
-static COUNTER: Mutex&lt;Cell&lt;u32&gt;&gt; = Mutex::new(Cell::new(0));
-
-// Trong ISR (đã ở trong critical section):
-cortex_m::interrupt::free(|cs| {
-    let val = COUNTER.borrow(cs).get();
-    COUNTER.borrow(cs).set(val + 1);
-});</code></pre>
-
-    <h2>Cấu hình GPIOTE Interrupt cho Button A</h2>
+    <p>Hãy định nghĩa một ISR và cấu hình một interrupt để "chọc" MB2 khi nhấn Button A (<code>examples/poke.rs</code>). Board sẽ phản hồi bằng cách in "ouch" và panic.</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
+use cortex_m::asm;
 use cortex_m_rt::entry;
-use core::sync::atomic::{AtomicBool, Ordering};
-use microbit::Board;
-use nrf52833_hal::gpiote::Gpiote;
-use nrf52833_pac::interrupt;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-static BUTTON_A_PRESSED: AtomicBool = AtomicBool::new(false);
+use microbit::{
+    hal::{
+        gpiote,
+        pac::{self, interrupt},
+    },
+    Board,
+};
 
+/// "Hàm" này sẽ được gọi khi nhận được interrupt. Bây giờ, chỉ
+/// báo cáo và panic.
 #[interrupt]
 fn GPIOTE() {
-    // QUAN TRỌNG: xóa event để tránh trigger lại
-    let gpiote = unsafe { &amp;*nrf52833_pac::GPIOTE::ptr() };
-    gpiote.events_in[0].write(|w| w);
-
-    BUTTON_A_PRESSED.store(true, Ordering::SeqCst);
+    rprintln!("ouch");
+    panic!();
 }
 
 #[entry]
 fn main() -&gt; ! {
     rtt_init_print!();
     let board = Board::take().unwrap();
+    let button_a = board.buttons.button_a.into_floating_input();
 
-    // Cấu hình GPIOTE channel 0 cho Button A (P0.14)
-    let gpiote = Gpiote::new(board.GPIOTE);
-    gpiote.channel0()
-        .input_pin(&amp;board.buttons.button_a.degrade())
-        .hi_to_lo()  // trigger khi nhấn (HIGH → LOW)
+    // Cấu hình GPIOTE để tạo ra interrupt khi Button A được nhấn
+    // (dây GPIO chuyển từ mức cao về thấp).
+    let gpiote = gpiote::Gpiote::new(board.GPIOTE);
+    let channel = gpiote.channel0();
+    channel
+        .input_pin(&amp;button_a.degrade())
+        .hi_to_lo()
         .enable_interrupt();
+    channel.reset_events();
 
-    // Enable GPIOTE interrupt trong NVIC
-    unsafe {
-        cortex_m::peripheral::NVIC::unmask(nrf52833_pac::Interrupt::GPIOTE);
-    }
+    // Cấu hình NVIC để xử lý GPIO interrupts.
+    unsafe { pac::NVIC::unmask(pac::Interrupt::GPIOTE) };
+    pac::NVIC::unpend(pac::Interrupt::GPIOTE);
 
-    rprintln!("Đang chờ Button A...");
     loop {
-        if BUTTON_A_PRESSED.load(Ordering::SeqCst) {
-            BUTTON_A_PRESSED.store(false, Ordering::SeqCst);
-            rprintln!("Button A được nhấn! (qua interrupt)");
-        }
-
-        // Ngủ cho đến interrupt tiếp theo — tiết kiệm điện
-        cortex_m::asm::wfi();
+        // "wait for interrupt": CPU vào chế độ ngủ cho đến khi có interrupt.
+        asm::wfi();
     }
 }</code></pre>
+
+    <p>Hàm ISR handler có tính chất "đặc biệt". Tên <code>GPIOTE</code> là bắt buộc, chỉ ra rằng ISR này cần được lưu tại entry của interrupt <code>GPIOTE</code> trong interrupt table.</p>
+
+    <p>Annotation <code>#[interrupt]</code> được dùng lúc compile time để đánh dấu một hàm được xử lý đặc biệt như một ISR. Đánh dấu hàm với <code>#[interrupt]</code> hàm ý một số điều đặc biệt:</p>
+
+    <ul>
+      <li>Compiler sẽ kiểm tra rằng hàm không nhận tham số và không trả về giá trị (hoặc không bao giờ return). CPU không có tham số để cung cấp cho ISR và không có chỗ nhận giá trị return từ ISR.</li>
+      <li>Một vector trỏ đến hàm này sẽ được đặt tại vị trí trong interrupt table tương ứng với tên hàm.</li>
+      <li>Compiler sẽ ngăn không cho gọi trực tiếp ISR từ code thông thường.</li>
+    </ul>
+
+    <p>Có hai bước để cấu hình interrupt. Thứ nhất, GPIOTE phải được cấu hình để tạo ra interrupt khi pin kết nối với Button A chuyển từ điện áp cao xuống thấp. Thứ hai, NVIC phải được cấu hình để cho phép interrupt đó. Thứ tự quan trọng: làm theo "thứ tự sai" có thể tạo ra interrupt trước khi bạn sẵn sàng xử lý nó.</p>
 
     <div class="callout note">
-      <div class="callout-icon">⚡</div>
+      <div class="callout-icon">📝</div>
       <div class="callout-body">
-        <div class="callout-title">Macro <code>#[interrupt]</code></div>
-        <p>Macro này đánh dấu hàm là ISR với các yêu cầu compiler cụ thể: hàm không nhận argument, không trả về value, và tên phải khớp với tên interrupt trong PAC. NVIC còn phải được configure riêng để enable interrupt đó.</p>
+        <div class="callout-title">Lưu ý</div>
+        <p>Trên nRF52833, interrupt tạo ra một event phải được xóa thủ công trong ISR để đảm bảo ISR không được gọi lần thứ hai cho cùng một interrupt. Nếu không có <code>panic!()</code>, khi interrupt handler return, NVIC sẽ re-enable interrupt, nhận thấy vẫn còn event pending, và chạy handler lại — lặp mãi mãi. Chỉ thị interrupt có thể được xóa từ bên trong interrupt handler bằng phương thức <code>reset_event()</code> của peripheral.</p>
       </div>
     </div>
 
-    <h2>Debouncing — Xử lý bounce của nút bấm</h2>
+    <p>Bạn có thể định nghĩa ISR cho nhiều nguồn interrupt khác nhau: khi I2C sẵn sàng, khi timer hết hạn, và nhiều tình huống khác. Bên trong ISR bạn có thể làm hầu hết mọi thứ, nhưng thực hành tốt là giữ cho các interrupt handler ngắn gọn và nhanh chóng.</p>
 
-    <p>Nút bấm vật lý có hiện tượng "bounce" — tiếp xúc điện tử nảy lên/xuống nhiều lần khi nhấn, tạo ra hàng chục interrupt events từ một lần nhấn duy nhất.</p>
+    <h2>NVIC và Interrupt Priority</h2>
 
-    <div class="diagram">
-      <div class="diagram-title">🔘 Hiện tượng Bounce</div>
-      <svg width="460" height="80" viewBox="0 0 460 80" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
-        <text x="10" y="15" font-size="11" fill="#656d76">Điện áp pin:</text>
-        <!-- Before press: HIGH -->
-        <line x1="10" y1="30" x2="100" y2="30" stroke="#2da44e" stroke-width="2.5"/>
-        <!-- Bouncing -->
-        <polyline points="100,30 110,60 120,30 130,60 140,30 150,60 160,30 170,60 175,60" stroke="#cf222e" stroke-width="2" fill="none"/>
-        <!-- After press: LOW -->
-        <line x1="175" y1="60" x2="380" y2="60" stroke="#2da44e" stroke-width="2.5"/>
-        <!-- Labels -->
-        <text x="40" y="25" text-anchor="middle" font-size="10" fill="#1a7f37">HIGH</text>
-        <text x="280" y="75" text-anchor="middle" font-size="10" fill="#1a7f37">LOW (nhấn)</text>
-        <text x="140" y="20" text-anchor="middle" font-size="10" fill="#cf222e">Bounce!</text>
-        <!-- Arrow -->
-        <line x1="100" y1="10" x2="100" y2="70" stroke="#d1a317" stroke-dasharray="3" stroke-width="1.5"/>
-        <text x="105" y="10" font-size="9" fill="#9a6700">Nhấn</text>
-      </svg>
-      <p class="diagram-caption" style="margin-top:8px;text-align:left;">Giải pháp: bỏ qua các sự kiện xảy ra trong vòng ~50ms sau sự kiện đầu tiên (software debounce)</p>
-    </div>
+    <p>NVIC (Nested Vector Interrupt Controller) trên các processor Arm xử lý việc ưu tiên và thực thi các interrupt từ nhiều peripheral. Preemption cho phép processor phản hồi rất nhanh với các sự kiện quan trọng. Interrupt "pending" được nhớ lại và thực thi sau khi interrupt service routine hiện tại hoàn thành.</p>
 
-    <h2>WFI — Chờ interrupt để tiết kiệm điện</h2>
+    <p>Interrupt table lưu các địa chỉ của các hàm interrupt handler trong bộ nhớ. Bytes 64 đến 256 chứa địa chỉ của tất cả 48 interrupt handler cho nRF processor chúng ta dùng, bốn byte cho mỗi địa chỉ. Ví dụ, TIMER0 là interrupt số 8, vì vậy bytes 96 đến 100 chứa địa chỉ bốn byte của interrupt handler TIMER0. Crate <code>cortex-m-rt</code> quản lý bảng này bằng macro <code>#[interrupt]</code>.</p>
 
-    <p>Thay vì spin trong busy loop, processor có thể vào trạng thái sleep và chờ interrupt:</p>
+    <h2>Giải pháp — Còi hú (Siren)</h2>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">loop {
-    // Xử lý công việc đang pending...
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
 
-    // Ngủ đến khi có interrupt tiếp theo
-    // CPU clock gần như dừng → tiết kiệm điện đáng kể
-    cortex_m::asm::wfi();
+use cortex_m::asm;
+use cortex_m_rt::entry;
+use critical_section_lock_mut::LockMut;
+use embedded_hal::{delay::DelayNs, digital::OutputPin};
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+use microbit::{
+    hal::{
+        gpio,
+        pac::{self, interrupt},
+        timer,
+    },
+    Board,
+};
+
+/// Tần số cơ bản của còi hú, tính bằng Hz.
+const BASE_FREQ: u32 = 440;
+/// Mức tăng tối đa của tần số còi hú, tính bằng Hz.
+const FREQ_RISE: u32 = 220;
+/// Thời gian cho một chu kỳ đầy đủ, tính bằng µs.
+const RISE_TIME: u32 = 500_000;
+
+type SpeakerPin = gpio::Pin&lt;gpio::Output&lt;gpio::PushPull&gt;&gt;;
+type SirenTimer = timer::Timer&lt;pac::TIMER0&gt;;
+
+struct Siren {
+    timer: SirenTimer,
+    speaker_pin: SpeakerPin,
+    pin_high: bool,
+    cur_time: u32,
+}
+
+impl Siren {
+    fn new(speaker_pin: SpeakerPin, timer: SirenTimer) -&gt; Self {
+        Self { timer, speaker_pin, pin_high: false, cur_time: 0 }
+    }
+
+    fn start(&amp;mut self) {
+        self.speaker_pin.set_low().unwrap();
+        self.pin_high = false;
+        self.cur_time = 0;
+        self.timer.enable_interrupt();
+        self.timer.start(1_000_000 / BASE_FREQ);
+    }
+
+    fn stop(&amp;mut self) {
+        self.timer.disable_interrupt();
+    }
+
+    fn step(&amp;mut self) {
+        if self.pin_high {
+            self.speaker_pin.set_low().unwrap();
+            self.pin_high = false;
+        } else {
+            self.speaker_pin.set_high().unwrap();
+            self.pin_high = true;
+        }
+
+        while self.cur_time &gt;= 2 * RISE_TIME {
+            self.cur_time -= 2 * RISE_TIME;
+        }
+        let cycle_time = if self.cur_time &lt; RISE_TIME {
+            self.cur_time
+        } else {
+            2 * RISE_TIME - self.cur_time
+        };
+        let frequency = BASE_FREQ + FREQ_RISE * cycle_time / RISE_TIME;
+        let period = 1_000_000 / frequency;
+
+        self.cur_time += period / 2;
+
+        // Đảm bảo xóa interrupt hiện tại trước khi bắt đầu interrupt tiếp theo.
+        self.timer.reset_event();
+        self.timer.start(period / 2);
+    }
+}
+
+static SIREN: LockMut&lt;Siren&gt; = LockMut::new();
+
+#[interrupt]
+fn TIMER0() {
+    SIREN.with_lock(|siren| siren.step());
+}
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let speaker_pin = board
+        .speaker_pin
+        .into_push_pull_output(gpio::Level::Low)
+        .degrade();
+    let timer0 = timer::Timer::new(board.TIMER0);
+    let mut timer1 = timer::Timer::new(board.TIMER1);
+
+    unsafe { pac::NVIC::unmask(pac::Interrupt::TIMER0) };
+    pac::NVIC::unpend(pac::Interrupt::TIMER0);
+
+    let siren = Siren::new(speaker_pin, timer0);
+    SIREN.init(siren);
+
+    SIREN.with_lock(|siren| siren.start());
+    for t in (1..=10).rev() {
+        rprintln!("{}", t);
+        timer1.delay_ms(1_000);
+    }
+    rprintln!("launch!");
+    SIREN.with_lock(|siren| siren.stop());
+
+    loop {
+        asm::wfi();
+    }
 }</code></pre>
-
-    <h2>Speaker MB2 + PWM</h2>
-
-    <p>MB2 có loa nhỏ tích hợp kết nối với GPIO pin. Dùng <strong>PWM (Pulse Width Modulation)</strong> với timer interrupt, có thể tạo âm thanh bằng cách toggle pin loa ở tần số âm thanh:</p>
-
-    <div class="diagram">
-      <div class="diagram-title">🎵 PWM tạo âm thanh</div>
-      <svg width="400" height="80" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
-        <!-- 440Hz square wave (note A4) -->
-        <polyline points="10,60 10,20 60,20 60,60 110,60 110,20 160,20 160,60 210,60 210,20 260,20 260,60 310,60 310,20 360,20 360,60" stroke="#2f81f7" stroke-width="2.5" fill="none"/>
-        <text x="200" y="75" text-anchor="middle" font-size="10" fill="#656d76">440 Hz = nốt La (A4) — toggle 440 lần/giây</text>
-        <text x="10" y="16" font-size="9" fill="#0550ae">HIGH (loa ON)</text>
-        <text x="10" y="70" font-size="9" fill="#656d76">LOW (loa OFF)</text>
-      </svg>
-    </div>
-
-    <h2>Bài tập: Chơi nhạc bằng Interrupts</h2>
-
-    <p>Viết chương trình phát các tông âm khác nhau trên loa khi nhấn nút, dùng interrupt thay vì polling cho button input. ISR cập nhật shared state variables; main loop điều khiển PWM để phát âm.</p>
-
-    <h2>Addendum: PWM</h2>
-
-    <p>PWM (Pulse Width Modulation) là kỹ thuật kiểm soát công suất hiệu dụng bằng cách bật/tắt nhanh. Tỉ lệ thời gian bật trên tổng chu kỳ gọi là <strong>duty cycle</strong>:</p>
-
-    <div class="diagram">
-      <div class="diagram-title">⚙️ PWM Duty Cycle</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
-        <div style="text-align:center;padding:10px;">
-          <svg width="120" height="50" viewBox="0 0 120 50">
-            <polyline points="0,40 0,10 30,10 30,40 60,40 60,10 90,10 90,40 120,40" stroke="#2f81f7" stroke-width="2" fill="none"/>
-          </svg>
-          <div style="font-size:0.8rem;font-weight:700;color:#0550ae;">50% duty cycle</div>
-          <div style="font-size:0.75rem;color:#656d76;">LED mờ / âm chuẩn</div>
-        </div>
-        <div style="text-align:center;padding:10px;">
-          <svg width="120" height="50" viewBox="0 0 120 50">
-            <polyline points="0,40 0,10 80,10 80,40 120,40" stroke="#3fb950" stroke-width="2" fill="none"/>
-          </svg>
-          <div style="font-size:0.8rem;font-weight:700;color:#1a7f37;">80% duty cycle</div>
-          <div style="font-size:0.75rem;color:#656d76;">LED sáng hơn</div>
-        </div>
-        <div style="text-align:center;padding:10px;">
-          <svg width="120" height="50" viewBox="0 0 120 50">
-            <polyline points="0,40 0,10 10,10 10,40 60,40 60,10 70,10 70,40 120,40" stroke="#f78166" stroke-width="2" fill="none"/>
-          </svg>
-          <div style="font-size:0.8rem;font-weight:700;color:#cf222e;">20% duty cycle</div>
-          <div style="font-size:0.75rem;color:#656d76;">LED mờ nhất</div>
-        </div>
-      </div>
-    </div>
-
-    <p>nRF52833 có dedicated PWM peripheral tạo PWM signal mà không cần CPU involvement — phù hợp cho motor control, LED dimming và âm thanh.</p>
 
     <div class="nav-buttons">
       <a href="14-punch-o-meter.html" class="nav-btn">← Punch-o-meter</a>

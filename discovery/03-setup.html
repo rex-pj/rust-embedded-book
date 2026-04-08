@@ -97,9 +97,26 @@ rustup target add thumbv7em-none-eabihf</code></pre>
 cargo install cargo-binutils --vers '^0.3'</code></pre>
 
     <h3>3. probe-rs-tools</h3>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý</div>
+        <p>Nếu bạn đã cài các phiên bản cũ của <code>probe-run</code>, <code>probe-rs</code> hoặc <code>cargo-embed</code>, hãy gỡ chúng trước khi thực hiện bước này, vì chúng có thể gây ra vấn đề. Đặc biệt, <code>probe-run</code> không còn tồn tại chính thức nữa.</p>
+        <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+        <pre><code class="language-bash">$ cargo uninstall cargo-embed
+$ cargo uninstall probe-run
+$ cargo uninstall probe-rs
+$ cargo uninstall probe-rs-cli</code></pre>
+      </div>
+    </div>
     <p>Xem hướng dẫn cài đặt mới nhất tại <a href="https://probe.rs" target="_blank">https://probe.rs</a>. Hoặc cài thẳng qua cargo:</p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">cargo install --locked probe-rs-tools</code></pre>
+
+    <p>Kiểm tra cài đặt thành công:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">cargo embed --version
+cargo-embed 0.24.0 (git commit: crates.io)</code></pre>
 
     <h3>4. Lấy source code của sách</h3>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
@@ -111,27 +128,59 @@ cargo install cargo-binutils --vers '^0.3'</code></pre>
 
     <p><strong>Ubuntu 20.04+ / Debian 10+:</strong></p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">sudo apt-get install gdb-multiarch minicom libunwind-dev</code></pre>
+    <pre><code class="language-bash">$ sudo apt install gdb-multiarch minicom libunwind-dev</code></pre>
 
     <p><strong>Fedora 32+:</strong></p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">sudo dnf install gdb minicom libunwind-devel</code></pre>
+    <pre><code class="language-bash">$ sudo dnf install gdb minicom libunwind-devel</code></pre>
 
     <p><strong>Arch Linux:</strong></p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">sudo pacman -S arm-none-eabi-gdb minicom libunwind</code></pre>
+    <pre><code class="language-bash">$ sudo pacman -S arm-none-eabi-gdb minicom libunwind</code></pre>
+
+    <h4>Các bản phân phối Linux khác</h4>
+    <p>Với các bản phân phối không có sẵn package của Arm's pre-built toolchain, hãy tải file "Linux 64-bit" và thêm thư mục <code>bin</code> vào PATH:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ mkdir -p ~/local
+$ cd ~/local
+$ tar xjf /path/to/downloaded/XXX.tar.bz2</code></pre>
+    <p>Thêm vào cuối file <code>~/.zshrc</code> hoặc <code>~/.bashrc</code>:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">PATH=$PATH:$HOME/local/XXX/bin</code></pre>
 
     <h4>Cấu hình udev Rules (Linux)</h4>
-    <p>Để dùng micro:bit mà không cần quyền root, tạo file:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">sudo nano /etc/udev/rules.d/69-microbit.rules</code></pre>
-    <p>Thêm nội dung sau (vendor ID của BBC micro:bit):</p>
+    <p>Để dùng micro:bit mà không cần quyền root, tạo file <code>/etc/udev/rules.d/69-microbit.rules</code> với nội dung:</p>
     <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", MODE="0666"</code></pre>
-    <p>Sau đó reload rules:</p>
+    <pre><code class="language-text"># CMSIS-DAP for microbit
+ACTION!="add|change", GOTO="microbit_rules_end"
+SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess"
+LABEL="microbit_rules_end"</code></pre>
+    <p>Reload rules:</p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">sudo udevadm control --reload
-sudo udevadm trigger</code></pre>
+    <pre><code class="language-bash">$ sudo udevadm control --reload</code></pre>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ sudo udevadm trigger</code></pre>
+
+    <p>Kiểm tra micro:bit được nhận diện:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ lsusb | grep -i "NXP Arm mbed"
+Bus 001 Device 065: ID 0d28:0204 NXP Arm mbed</code></pre>
+
+    <p>Kiểm tra quyền truy cập file:</p>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ ls -l /dev/bus/usb/001/065
+crw-rw-r--+ 1 nobody nobody 189, 64 Sep  5 14:27 /dev/bus/usb/001/065</code></pre>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ getfacl /dev/bus/usb/001/065
+getfacl: Removing leadin '/' from absolute path names
+# file: dev/bus/usb/001/065
+# owner: nobody
+# group: nobody
+user::rw-
+user:&lt;YOUR-USER-NAME&gt;:rw-
+group::rw-
+mask::rw-
+other::r--</code></pre>
 
     <h3>🪟 Windows</h3>
 
@@ -139,13 +188,22 @@ sudo udevadm trigger</code></pre>
 
     <p>Kiểm tra cài đặt:</p>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">arm-none-eabi-gcc -v</code></pre>
+    <pre><code class="language-bash">$ arm-none-eabi-gcc -v
+(..)
+gcc version 5.4.1 20160919 (release) (..)</code></pre>
 
     <p><strong>PuTTY:</strong> Tải file <code>putty.exe</code> từ trang chính thức và đặt vào thư mục trong <code>%PATH%</code>.</p>
 
     <h3>🍎 macOS</h3>
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">brew install arm-none-eabi-gdb minicom</code></pre>
+    <pre><code class="language-bash">$ # GDB debugger - The version in brew is built for all architectures including all of the ARM embedded cores
+$ brew install gdb</code></pre>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ # Minicom
+$ brew install minicom</code></pre>
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ # lsusb lists USB ports
+$ brew install lsusb</code></pre>
 
     <h2>Xác nhận cài đặt thành công</h2>
 
@@ -179,30 +237,6 @@ sudo udevadm trigger</code></pre>
 cargo embed --target thumbv7em-none-eabihf</code></pre>
           <p>Nếu thành công, <code>cargo-embed</code> sẽ compile, flash lên micro:bit và hiển thị giao diện terminal với output <strong>"Hello World"</strong>.</p>
         </div>
-      </div>
-    </div>
-
-    <h2>Cấu hình IDE</h2>
-
-    <p>Để có IDE support đầy đủ (rust-analyzer trong VS Code hoặc IntelliJ), cần cấu hình cross-compilation target đúng:</p>
-
-    <div class="callout tip">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">VS Code với rust-analyzer</div>
-        <p>Thêm vào <code>.vscode/settings.json</code>:</p>
-        <div class="code-header"><span class="code-lang">json</span><button class="copy-btn">⎘ Copy</button></div>
-        <pre><code class="language-json">{
-  "rust-analyzer.cargo.target": "thumbv7em-none-eabihf"
-}</code></pre>
-      </div>
-    </div>
-
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">IntelliJ/RustRover</div>
-        <p>Cần cấu hình thêm build settings để xử lý embedded target. Xem tài liệu của plugin Rust trong IntelliJ để biết chi tiết.</p>
       </div>
     </div>
 

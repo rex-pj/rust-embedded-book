@@ -93,19 +93,6 @@
 
     <p>Micro:bit v2 được vận hành bởi microcontroller Nordic nRF52833. Chip này có 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này kết nối với các đường dẫn trên mạch in, hoạt động như những "con đường điện" nối liền các thành phần lại với nhau. MCU có thể điều khiển động luồng điện qua các chân để vận hành các thiết bị kết nối như LED.</p>
 
-    <h3>Hiểu ký hiệu trên chip</h3>
-
-    <p>Ký hiệu <code>N52833 QIAAA0 2024AL</code> trên chip được giải mã như sau:</p>
-    <ul>
-      <li><strong>N</strong> — Nordic Semiconductor là nhà sản xuất</li>
-      <li><strong>N52</strong> — dòng MCU</li>
-      <li><strong>833</strong> — mã sản phẩm cụ thể</li>
-      <li><strong>QI</strong> — mã đóng gói (aQFN73)</li>
-      <li><strong>AA</strong> — cấu hình bộ nhớ: 512 kilobytes flash và 128 kilobytes RAM</li>
-      <li><strong>A0</strong> — phiên bản phần cứng và cấu hình sản phẩm</li>
-      <li><strong>2024AL</strong> — mã theo dõi, có thể khác nhau giữa các đơn vị</li>
-    </ul>
-
     <h3>Kiến trúc Arm Cortex-M4</h3>
 
     <p>nRF52833 được xây dựng dựa trên "bộ xử lý Arm® Cortex™-M4 32-bit". Arm Holdings thiết kế lõi xử lý rồi cấp phép cho các nhà sản xuất như Nordic Semiconductor, thay vì tự sản xuất chip. Thiết kế Cortex-M4 ưu tiên chi phí thấp và tiêu thụ điện năng thấp, rất phù hợp cho các ứng dụng microcontroller.</p>
@@ -146,14 +133,6 @@
     <h3>Kết nối các lớp với nhau</h3>
 
     <p>Crate <code>embedded-hal</code> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các cài đặt của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng, tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip.</p>
-
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Ghi chú</div>
-        <p>Nếu bạn có background .NET/C#, hãy nghĩ về <code>embedded-hal</code> như là một tập hợp <strong>interface</strong> (tương tự <code>IDisposable</code>, <code>IEnumerable</code> trong .NET). PAC giống như code tự sinh (auto-generated), HAL giống như wrapper tiện ích, còn BSP giống như SDK của nhà sản xuất board.</p>
-      </div>
-    </div>
 
     <h3>Tài liệu tham khảo thêm</h3>
 
