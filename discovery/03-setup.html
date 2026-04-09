@@ -56,121 +56,161 @@
 
     <h1>Cài đặt môi trường phát triển</h1>
 
-    <p>Làm việc với microcontroller đòi hỏi một bộ công cụ đặc biệt — chúng ta đang viết code cho một kiến trúc khác với máy tính của bạn, và cần chạy/debug trên một thiết bị "từ xa".</p>
+    <p>Làm việc với microcontroller đòi hỏi một bộ công cụ đặc biệt vì chúng ta sẽ làm việc với một kiến trúc khác với máy tính của bạn, và cần phải chạy cũng như debug chương trình trên một thiết bị "remote".</p>
 
-    <div class="callout note">
-      <div class="callout-icon">📚</div>
-      <div class="callout-body">
-        <div class="callout-title">Tài liệu kỹ thuật chính thức</div>
-        <p>Tài liệu kỹ thuật của MB2 có tại <a href="https://tech.microbit.org" target="_blank">https://tech.microbit.org</a>. Đây là nguồn tham khảo đáng tin cậy khi bạn gặp vấn đề về phần cứng.</p>
-      </div>
-    </div>
+    <h2>Tài liệu tham khảo</h2>
+    <p>Tuy nhiên công cụ không phải là tất cả. Nếu không có tài liệu, việc làm việc với microcontroller gần như là bất khả thi. Chúng ta sẽ tham khảo tất cả những tài liệu này xuyên suốt cuốn sách:</p>
+    <ul>
+      <li><a href="https://www.st.com/resource/en/datasheet/lsm303agr.pdf">LSM303AGR</a></li>
+    </ul>
 
-    <h2>Các công cụ cần thiết</h2>
+    <h2>Công cụ cần thiết</h2>
 
-    <div class="diagram">
-      <div style="font-weight:700;margin-bottom:16px;color:#0550ae;">🔧 Checklist công cụ cần cài</div>
-      <table>
-        <thead><tr><th>Công cụ</th><th>Phiên bản tối thiểu</th><th>Mục đích</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Rust</strong> (qua rustup)</td><td>1.79.0</td><td>Compiler và toolchain</td></tr>
-          <tr><td><strong>gdb-multiarch</strong></td><td>10.2</td><td>Debug trên kiến trúc ARM</td></tr>
-          <tr><td><strong>cargo-binutils</strong></td><td>0.3.6</td><td>Kiểm tra file binary</td></tr>
-          <tr><td><strong>probe-rs-tools</strong></td><td>0.24.0</td><td>Flash &amp; debug qua USB</td></tr>
-          <tr><td><strong>minicom</strong> (Linux/macOS)</td><td>2.7.1</td><td>Serial terminal</td></tr>
-          <tr><td><strong>PuTTY</strong> (Windows)</td><td>Mới nhất</td><td>Serial terminal</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p>Chúng ta sẽ dùng tất cả các công cụ được liệt kê bên dưới. Nếu không chỉ định phiên bản tối thiểu, bất kỳ phiên bản gần đây nào cũng sẽ hoạt động, nhưng chúng tôi đã liệt kê phiên bản đã được thử nghiệm.</p>
 
-    <h2>Hướng dẫn cài đặt</h2>
+    <ul>
+      <li>Rust 1.57.0 hoặc toolchain mới hơn.</li>
+      <li><code>gdb-multiarch</code>. Phiên bản đã thử nghiệm: 10.2. Các phiên bản khác rất có thể cũng hoạt động. Nếu bản phân phối/nền tảng của bạn không có <code>gdb-multiarch</code>, thì <code>arm-none-eabi-gdb</code> cũng được. Hơn nữa, một số binary <code>gdb</code> thông thường cũng được build với khả năng multiarch — bạn có thể tìm thêm thông tin về điều này trong các phần con.</li>
+      <li><a href="https://github.com/rust-embedded/cargo-binutils">cargo-binutils</a>. Phiên bản 0.3.3 hoặc mới hơn.</li>
+      <li><a href="https://probe.rs/docs/tools/cargo-embed/">cargo-embed</a>. Phiên bản 0.24.0 hoặc mới hơn.</li>
+      <li><code>minicom</code> trên Linux và macOS. Phiên bản đã thử nghiệm: 2.7.1. Các phiên bản khác rất có thể cũng hoạt động.</li>
+      <li><code>PuTTY</code> trên Windows.</li>
+    </ul>
 
-    <h3>1. Rust &amp; Cargo</h3>
-    <p>Cài rustup từ <a href="https://rustup.rs" target="_blank">https://rustup.rs</a>, sau đó thêm target cho ARM Cortex-M4:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup target add thumbv7em-none-eabihf</code></pre>
+    <table>
+      <thead>
+        <tr><th>Công cụ</th><th>Phiên bản tối thiểu</th><th>Mục đích</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rust (rustup)</td><td>1.57.0</td><td>Trình biên dịch và toolchain manager</td></tr>
+        <tr><td><code>gdb-multiarch</code> / <code>arm-none-eabi-gdb</code></td><td>10.2 (đã thử)</td><td>Debugger cho ARM Cortex-M</td></tr>
+        <tr><td><code>cargo-binutils</code></td><td>0.3.3</td><td>Kiểm tra binary ARM (size, objdump…)</td></tr>
+        <tr><td><code>cargo-embed</code></td><td>0.24.0</td><td>Flash &amp; debug qua probe-rs/USB</td></tr>
+        <tr><td><code>minicom</code> (Linux/macOS)</td><td>2.7.1 (đã thử)</td><td>Terminal serial</td></tr>
+        <tr><td><code>PuTTY</code> (Windows)</td><td>–</td><td>Terminal serial</td></tr>
+      </tbody>
+    </table>
 
-    <h3>2. cargo-binutils</h3>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">rustup component add llvm-tools
-cargo install cargo-binutils --vers '^0.3'</code></pre>
+    <p>Tiếp theo, hãy làm theo hướng dẫn cài đặt chung (không phụ thuộc hệ điều hành) cho một số công cụ:</p>
 
-    <h3>3. probe-rs-tools</h3>
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý</div>
-        <p>Nếu bạn đã cài các phiên bản cũ của <code>probe-run</code>, <code>probe-rs</code> hoặc <code>cargo-embed</code>, hãy gỡ chúng trước khi thực hiện bước này, vì chúng có thể gây ra vấn đề. Đặc biệt, <code>probe-run</code> không còn tồn tại chính thức nữa.</p>
-        <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-        <pre><code class="language-bash">$ cargo uninstall cargo-embed
-$ cargo uninstall probe-run
-$ cargo uninstall probe-rs
-$ cargo uninstall probe-rs-cli</code></pre>
-      </div>
-    </div>
-    <p>Xem hướng dẫn cài đặt mới nhất tại <a href="https://probe.rs" target="_blank">https://probe.rs</a>. Hoặc cài thẳng qua cargo:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">cargo install --locked probe-rs-tools</code></pre>
+    <h3>rustc &amp; Cargo</h3>
 
-    <p>Kiểm tra cài đặt thành công:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">cargo embed --version
+    <p>Cài đặt rustup bằng cách làm theo hướng dẫn tại <a href="https://rustup.rs">https://rustup.rs</a>.</p>
+    <p>Nếu bạn đã cài rustup, hãy đảm bảo bạn đang ở kênh stable và toolchain stable của bạn đã được cập nhật. <code>rustc -V</code> nên trả về ngày mới hơn ngày hiển thị bên dưới:</p>
+    <pre><code class="language-bash">$ rustc -V
+rustc 1.53.0 (53cb7b09b 2021-06-17)</code></pre>
+
+    <h3>cargo-binutils</h3>
+
+    <pre><code class="language-bash">$ rustup component add llvm-tools
+$ cargo install cargo-binutils --vers 0.3.3
+$ cargo size --version
+cargo-size 0.3.3</code></pre>
+
+    <h3>cargo-embed</h3>
+
+    <p>Để cài đặt cargo-embed, trước hết hãy cài đặt các <a href="https://probe.rs/docs/getting-started/installation/">prerequisites</a> của nó (lưu ý: những hướng dẫn này là một phần của bộ công cụ debug embedded tổng quát hơn: <a href="https://probe.rs/">probe-rs</a>). Sau đó cài đặt bằng cargo:</p>
+
+    <pre><code class="language-bash">$ cargo install --locked probe-rs-tools --vers '^0.24'</code></pre>
+
+    <p><strong>LƯU Ý:</strong> Quá trình này có thể thất bại do các thay đổi thường xuyên trong probe-rs. Nếu vậy, hãy truy cập <a href="https://probe.rs">https://probe.rs</a> và làm theo hướng dẫn cài đặt hiện tại ở đó.</p>
+
+    <p>Cuối cùng, xác nhận rằng bạn đã cài đặt thành công cargo-embed bằng cách chạy:</p>
+
+    <pre><code class="language-bash">$ cargo embed --version
 cargo-embed 0.24.0 (git commit: crates.io)</code></pre>
 
-    <h3>4. Lấy source code của sách</h3>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">git clone http://github.com/rust-embedded/discovery-mb2</code></pre>
+    <h3>Repository của sách này</h3>
 
-    <h2>Cài đặt theo hệ điều hành</h2>
+    <p>Vì cuốn sách này cũng chứa một số code base Rust nhỏ được dùng trong các chương khác nhau, bạn cũng sẽ cần tải mã nguồn của nó. Bạn có thể làm điều này bằng một trong các cách sau:</p>
+    <ul>
+      <li>Truy cập <a href="https://github.com/rust-embedded/discovery/">repository</a>, nhấn nút "Code" màu xanh rồi nhấn "Download Zip"</li>
+      <li>Clone bằng git (nếu bạn biết git thì chắc đã cài rồi) từ cùng repository đã nêu trên</li>
+    </ul>
+
+    <h2>Hướng dẫn theo hệ điều hành</h2>
+
+    <p>Bây giờ hãy làm theo hướng dẫn dành riêng cho hệ điều hành bạn đang dùng:</p>
 
     <h3>🐧 Linux</h3>
 
-    <p><strong>Ubuntu 20.04+ / Debian 10+:</strong></p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ sudo apt install gdb-multiarch minicom libunwind-dev</code></pre>
+    <p>Dưới đây là các lệnh cài đặt cho một số bản phân phối Linux.</p>
 
-    <p><strong>Fedora 32+:</strong></p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ sudo dnf install gdb minicom libunwind-devel</code></pre>
+    <h4>Ubuntu 20.04 trở lên / Debian 10 trở lên</h4>
+    <p><strong>LƯU Ý:</strong> <code>gdb-multiarch</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
+    <pre><code class="language-bash">$ sudo apt-get install \
+    gdb-multiarch \
+    minicom</code></pre>
 
-    <p><strong>Arch Linux:</strong></p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ sudo pacman -S arm-none-eabi-gdb minicom libunwind</code></pre>
+    <h4>Fedora 32 trở lên</h4>
+    <p><strong>LƯU Ý:</strong> <code>gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
+    <pre><code class="language-bash">$ sudo dnf install \
+    gdb \
+    minicom</code></pre>
 
-    <h4>Các bản phân phối Linux khác</h4>
-    <p>Với các bản phân phối không có sẵn package của Arm's pre-built toolchain, hãy tải file "Linux 64-bit" và thêm thư mục <code>bin</code> vào PATH:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ mkdir -p ~/local
-$ cd ~/local
-$ tar xjf /path/to/downloaded/XXX.tar.bz2</code></pre>
-    <p>Thêm vào cuối file <code>~/.zshrc</code> hoặc <code>~/.bashrc</code>:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">PATH=$PATH:$HOME/local/XXX/bin</code></pre>
+    <h4>Arch Linux</h4>
+    <p><strong>LƯU Ý:</strong> <code>arm-none-eabi-gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
+    <pre><code class="language-bash">$ sudo pacman -S \
+    arm-none-eabi-gdb \
+    minicom</code></pre>
 
-    <h4>Cấu hình udev Rules (Linux)</h4>
-    <p>Để dùng micro:bit mà không cần quyền root, tạo file <code>/etc/udev/rules.d/69-microbit.rules</code> với nội dung:</p>
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
+    <h4>Các bản phân phối khác</h4>
+    <p><strong>LƯU Ý:</strong> <code>arm-none-eabi-gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
+    <p>Với các bản phân phối không có package cho <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads">pre-built toolchain của ARM</a>, hãy tải file "Linux 64-bit" và đưa thư mục <code>bin</code> của nó vào PATH. Đây là một cách làm:</p>
+    <pre><code class="language-bash">$ mkdir -p ~/local &amp;&amp; cd ~/local
+$ tar xjf /path/to/downloaded/file/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2</code></pre>
+    <p>Sau đó, dùng trình soạn thảo yêu thích để thêm vào PATH trong file init của shell phù hợp (ví dụ <code>~/.zshrc</code> hoặc <code>~/.bashrc</code>):</p>
+    <pre><code class="language-bash">PATH=$PATH:$HOME/local/gcc-arm-none-eabi-9-2020-q2-update/bin</code></pre>
+
+    <h4>Cấu hình udev rules</h4>
+    <p>Các rules này cho phép bạn dùng thiết bị USB như micro:bit mà không cần quyền root, tức là không cần <code>sudo</code>.</p>
+    <p>Tạo file này trong <code>/etc/udev/rules.d</code> với nội dung bên dưới.</p>
+    <pre><code class="language-bash">$ cat /etc/udev/rules.d/69-microbit.rules</code></pre>
     <pre><code class="language-text"># CMSIS-DAP for microbit
 ACTION!="add|change", GOTO="microbit_rules_end"
 SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess"
 LABEL="microbit_rules_end"</code></pre>
-    <p>Reload rules:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <p>Sau đó reload udev rules bằng:</p>
     <pre><code class="language-bash">$ sudo udevadm control --reload</code></pre>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <p>Nếu bạn đã cắm board nào vào máy tính, hãy rút ra rồi cắm lại, hoặc chạy lệnh sau:</p>
     <pre><code class="language-bash">$ sudo udevadm trigger</code></pre>
 
-    <p>Kiểm tra micro:bit được nhận diện:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ lsusb | grep -i "NXP Arm mbed"
-Bus 001 Device 065: ID 0d28:0204 NXP Arm mbed</code></pre>
+    <h3>🪟 Windows</h3>
 
-    <p>Kiểm tra quyền truy cập file:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <h4>arm-none-eabi-gdb</h4>
+    <p>ARM cung cấp file <code>.exe</code> installer cho Windows. Tải một file từ <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads">đây</a>, và làm theo hướng dẫn. Ngay trước khi quá trình cài đặt hoàn tất, hãy tick/chọn tùy chọn "Add path to environment variable". Sau đó xác nhận rằng các công cụ đã nằm trong <code>%PATH%</code> của bạn:</p>
+    <pre><code class="language-bash">$ arm-none-eabi-gcc -v
+(..)
+gcc version 5.4.1 20160919 (release) (..)</code></pre>
+
+    <h4>PuTTY</h4>
+    <p>Tải file <code>putty.exe</code> mới nhất từ <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">trang này</a> và đặt nó vào đâu đó trong <code>%PATH%</code> của bạn.</p>
+
+    <h3>🍎 macOS</h3>
+    <p>Tất cả các công cụ có thể được cài đặt bằng <a href="http://brew.sh/">Homebrew</a>:</p>
+    <pre><code class="language-bash">$ # ARM GCC debugger
+$ brew install arm-none-eabi-gdb
+$ # Minicom
+$ brew install minicom
+$ # lsusb (liệt kê thiết bị USB kết nối)
+$ brew install lsusb</code></pre>
+
+    <h2>Xác nhận cài đặt</h2>
+
+    <p>Hãy xác nhận rằng tất cả các công cụ đã được cài đặt đúng cách.</p>
+
+    <h3>Chỉ Linux</h3>
+
+    <h4>Xác nhận quyền truy cập</h4>
+    <p>Kết nối micro:bit với máy tính bằng cáp USB.</p>
+    <p>Micro:bit bây giờ sẽ xuất hiện dưới dạng thiết bị USB (file) trong <code>/dev/bus/usb</code>. Hãy tìm xem nó được gán số nào:</p>
+    <pre><code class="language-bash">$ lsusb | grep -i "NXP ARM mbed"
+Bus 001 Device 065: ID 0d28:0204 NXP ARM mbed
+$ #                ]+]+]+]+]+]+]]]]]]]]]]]]]]  ^^^]+]+]]+]]+]]+]^^^</code></pre>
+    <p>Trong trường hợp của tôi, micro:bit được kết nối vào bus #1 và được gán là device #65. Điều này có nghĩa file <code>/dev/bus/usb/001/065</code> chính là micro:bit. Hãy kiểm tra quyền của file:</p>
     <pre><code class="language-bash">$ ls -l /dev/bus/usb/001/065
 crw-rw-r--+ 1 nobody nobody 189, 64 Sep  5 14:27 /dev/bus/usb/001/065</code></pre>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <p>Quyền nên là <code>crw-rw-r--+</code>, lưu ý dấu <code>+</code> ở cuối, sau đó xem quyền truy cập của bạn bằng lệnh sau:</p>
     <pre><code class="language-bash">$ getfacl /dev/bus/usb/001/065
 getfacl: Removing leadin '/' from absolute path names
 # file: dev/bus/usb/001/065
@@ -180,65 +220,67 @@ user::rw-
 user:&lt;YOUR-USER-NAME&gt;:rw-
 group::rw-
 mask::rw-
-other::r--</code></pre>
+other::r-</code></pre>
+    <p>Bạn nên thấy username của mình trong danh sách trên với quyền <code>rw-</code>. Nếu không, hãy kiểm tra lại <a href="#cấu-hình-udev-rules">udev rules</a> và thử reload chúng bằng:</p>
+    <pre><code class="language-bash">$ sudo udevadm control --reload
+$ sudo udevadm trigger</code></pre>
 
-    <h3>🪟 Windows</h3>
+    <h3>Tất cả hệ điều hành</h3>
 
-    <p><strong>arm-none-eabi-gdb:</strong> Tải file <code>.exe</code> installer từ <a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads" target="_blank">Arm GNU Toolchain Downloads</a>. Trong quá trình cài, tick vào <em>"Add path to environment variable"</em>.</p>
+    <h4>Xác nhận cargo-embed</h4>
+    <p>Đầu tiên, kết nối micro:bit với máy tính bằng cáp USB.</p>
+    <p>Ít nhất một đèn LED màu cam gần cổng USB của micro:bit sẽ sáng lên. Hơn nữa, nếu bạn chưa bao giờ flash chương trình nào khác lên micro:bit, chương trình mặc định đi kèm sẽ bắt đầu nhấp nháy các LED đỏ ở mặt sau — bạn có thể bỏ qua chúng.</p>
+    <p>Bây giờ hãy xem probe-rs, và qua đó cargo-embed, có nhìn thấy micro:bit của bạn không. Bạn có thể làm điều này bằng cách chạy lệnh sau:</p>
+    <pre><code class="language-bash">$ probe-rs list
+The following debug probes were found:
+[0]: BBC micro:bit CMSIS-DAP -- 0d28:0204:990636020005282030f57fa14252d446000000006e052820 (CMSIS-DAP)</code></pre>
 
-    <p>Kiểm tra cài đặt:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ arm-none-eabi-gcc -v
-(..)
-gcc version 5.4.1 20160919 (release) (..)</code></pre>
+    <p>Hoặc nếu bạn muốn thêm thông tin về khả năng debug của micro:bit thì có thể chạy:</p>
+    <pre><code class="language-bash">$ probe-rs info
+Probing target via JTAG
 
-    <p><strong>PuTTY:</strong> Tải file <code>putty.exe</code> từ trang chính thức và đặt vào thư mục trong <code>%PATH%</code>.</p>
+ Error identifying target using protocol JTAG: The probe does not support the JTAG protocol.
 
-    <h3>🍎 macOS</h3>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ # GDB debugger - The version in brew is built for all architectures including all of the ARM embedded cores
-$ brew install gdb</code></pre>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ # Minicom
-$ brew install minicom</code></pre>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ # lsusb lists USB ports
-$ brew install lsusb</code></pre>
+Probing target via SWD
 
-    <h2>Xác nhận cài đặt thành công</h2>
+ARM Chip with debug port Default:
+Debug Port: DPv1, DP Designer: ARM Ltd
+├── 0 MemoryAP
+│   └── ROM Table (Class 1), Designer: Nordic VLSI ASA
+│       ├── Cortex-M4 SCS   (Generic IP component)
+│       │   └── CPUID
+│       │       ├── IMPLEMENTER: ARM Ltd
+│       │       ├── VARIANT: 0
+│       │       ├── PARTNO: Cortex-M4
+│       │       └── REVISION: 1
+│       ├── Cortex-M3 DWT   (Generic IP component)
+│       ├── Cortex-M3 FBP   (Generic IP component)
+│       ├── Cortex-M3 ITM   (Generic IP component)
+│       ├── Cortex-M4 TPIU  (Coresight Component)
+│       └── Cortex-M4 ETM   (Coresight Component)
+└── 1 Unknown AP (Designer: Nordic VLSI ASA, Class: Undefined, Type: 0x0, Variant: 0x0, Revision: 0x0)</code></pre>
 
-    <div class="steps">
-      <div class="step">
-        <div class="step-body">
-          <h4>Cắm micro:bit vào máy tính qua cáp USB</h4>
-          <p>Đèn LED màu cam gần cổng USB sẽ sáng lên. Có thể thấy chương trình blinky mặc định chạy.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-body">
-          <h4>Chạy <code>probe-rs list</code></h4>
-          <p>Lệnh này liệt kê các debug probe đang kết nối. Nếu thành công, bạn sẽ thấy:</p>
-          <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-          <pre><code class="language-text">BBC micro:bit CMSIS-DAP -- [device ID] (CMSIS-DAP)</code></pre>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-body">
-          <h4>Chạy <code>probe-rs info</code></h4>
-          <p>Lệnh này hiển thị thông tin chi tiết về chip ARM, bao gồm Cortex-M4 processor và debug port.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-body">
-          <h4>Test build đầu tiên</h4>
-          <p>Từ thư mục <code>src/03-setup</code> trong repository:</p>
-          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-          <pre><code class="language-bash">rustup target add thumbv7em-none-eabihf
-cargo embed --target thumbv7em-none-eabihf</code></pre>
-          <p>Nếu thành công, <code>cargo-embed</code> sẽ compile, flash lên micro:bit và hiển thị giao diện terminal với output <strong>"Hello World"</strong>.</p>
-        </div>
-      </div>
-    </div>
+    <p>Tiếp theo, bạn sẽ cần chỉnh sửa <code>Embed.toml</code> trong thư mục <code>src/03-setup</code> của mã nguồn sách. Trong phần <code>default.general</code>, bạn sẽ thấy hai biến chip bị comment:</p>
+
+    <pre><code class="language-toml">[default.general]
+# chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2
+# chip = "nrf51822_xxAA" # uncomment this line for micro:bit V1</code></pre>
+
+    <p>Nếu bạn đang làm việc với board micro:bit v2, hãy bỏ comment dòng đầu tiên. Với v1, hãy bỏ comment dòng thứ hai.</p>
+
+    <p>Tiếp theo, chạy một trong các lệnh sau:</p>
+    <pre><code class="language-bash">$ # đảm bảo bạn đang ở thư mục src/03-setup của mã nguồn sách
+$ # Nếu bạn đang dùng micro:bit v2
+$ rustup target add thumbv7em-none-eabihf
+$ cargo embed --target thumbv7em-none-eabihf
+
+$ # Nếu bạn đang dùng micro:bit v1
+$ rustup target add thumbv6m-none-eabi
+$ cargo embed --target thumbv6m-none-eabi</code></pre>
+
+    <p>Nếu mọi thứ hoạt động đúng, cargo-embed sẽ đầu tiên compile chương trình ví dụ nhỏ trong thư mục này, sau đó flash nó, và cuối cùng mở một giao diện dạng văn bản hiển thị <strong>Hello World</strong>.</p>
+    <p>(Nếu không hoạt động, hãy xem hướng dẫn <a href="https://docs.rust-embedded.org/discovery/microbit/appendix/1-general-troubleshooting/index.html">khắc phục sự cố chung</a>.)</p>
+    <p>Output này đến từ chương trình Rust nhỏ mà bạn vừa flash lên micro:bit. Mọi thứ đang hoạt động đúng và bạn có thể tiếp tục với các chương tiếp theo!</p>
 
     <div class="nav-buttons">
       <a href="02-requirements.html" class="nav-btn">← Yêu cầu</a>

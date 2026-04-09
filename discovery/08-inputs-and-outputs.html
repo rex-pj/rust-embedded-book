@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inputs, Outputs & Polling - Discovery MB2 Tiếng Việt</title>
+<title>Inputs &amp; Polling - Discovery MB2 Tiếng Việt</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
@@ -50,40 +50,15 @@
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Inputs, Outputs &amp; Polling</span>
+    <span class="current">Inputs &amp; Polling</span>
   </div>
   <main id="main">
 
-    <h1>Inputs, Outputs &amp; Polling 🕹️</h1>
+    <h1>Inputs &amp; Polling</h1>
 
-    <p>Cho đến nay chúng ta chỉ dùng GPIO làm <strong>output</strong> (điều khiển LED). Chương này chuyển sang <strong>input</strong> — đọc tín hiệu từ thế giới bên ngoài như nút bấm.</p>
+    <p>Cho đến nay chúng ta chỉ dùng GPIO làm <strong>output</strong> (điều khiển LED). Bây giờ hãy thử làm điều gì đó phức tạp hơn: đọc trạng thái của một nút bấm.</p>
 
-    <h2>Đọc trạng thái nút bấm</h2>
-
-    <p>Micro:bit v2 có hai nút bấm vật lý:</p>
-
-    <div class="diagram">
-      <div class="diagram-title">🔘 Nút bấm → GPIO Pin</div>
-      <table>
-        <thead><tr><th>Nút</th><th>GPIO Pin</th><th>Logic khi nhấn</th><th>Logic khi thả</th></tr></thead>
-        <tbody>
-          <tr><td>Button A</td><td>P0.14</td><td>LOW (0V)</td><td>HIGH (3.3V)</td></tr>
-          <tr><td>Button B</td><td>P0.23</td><td>LOW (0V)</td><td>HIGH (3.3V)</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout note">
-      <div class="callout-icon">🔌</div>
-      <div class="callout-body">
-        <div class="callout-title">Tại sao nhấn = LOW?</div>
-        <p>Các nút được kết nối với điện trở pull-up nội. Khi không nhấn, pin được kéo lên 3.3V (HIGH). Khi nhấn, pin được nối đất (GND) → 0V (LOW). Đây là thiết kế phổ biến trong embedded — gọi là <strong>active-low</strong>.</p>
-      </div>
-    </div>
-
-    <h2>Polling — Cách kiểm tra input đơn giản nhất</h2>
-
-    <p><strong>Polling</strong> là kỹ thuật liên tục hỏi trạng thái input trong vòng lặp. Đơn giản về mặt khái niệm và phù hợp để bắt đầu:</p>
+    <p>Đây là chương trình polling đơn giản — liên tục kiểm tra trạng thái nút trong vòng lặp và in ra mỗi khi trạng thái đó thay đổi:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -118,7 +93,150 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Chúng ta liên tục theo dõi trạng thái nút, và báo cáo mỗi khi trạng thái đó thay đổi.</p>
+    <p>Chúng ta liên tục theo dõi trạng thái nút, và báo cáo mỗi khi trạng thái đó thay đổi. Đây gọi là <strong>polling</strong> — kiểm tra trạng thái liên tục.</p>
+
+    <p>Nút bấm A kết nối với chân <code>P0.14</code>, nút B kết nối với <code>P0.23</code>. Khi không nhấn, các chân được giữ ở mức cao (3.3V); khi nhấn, chân bị kéo xuống thấp (0V). Đó là lý do tại sao <code>is_low()</code> nghĩa là "đang được nhấn".</p>
+
+    <h2>Polling — điều khiển LED bằng nút</h2>
+
+    <p>Hãy kết hợp cả hai nút để điều khiển một LED: nút A bật, nút B tắt.</p>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::delay::DelayNs;
+use embedded_hal::digital::{InputPin, OutputPin};
+use microbit::hal::timer::Timer;
+use microbit::{hal::gpio, Board};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+
+    let mut button_a = board.buttons.button_a;
+    let mut button_b = board.buttons.button_b;
+
+    let mut row1 = board
+        .display_pins
+        .row1
+        .into_push_pull_output(gpio::Level::Low);
+    let _col1 = board
+        .display_pins
+        .col1
+        .into_push_pull_output(gpio::Level::Low);
+
+    loop {
+        let on_pressed = button_a.is_low().unwrap();
+        let off_pressed = button_b.is_low().unwrap();
+        match (on_pressed, off_pressed) {
+            (false, false) =&gt; (),
+            (true, false) =&gt; row1.set_high().unwrap(),
+            (false, true) =&gt; row1.set_low().unwrap(),
+            (true, true) =&gt; (),
+        }
+        timer.delay_ms(10_u32);
+    }
+}</code></pre>
+
+    <p>Chúng ta kiểm tra cả hai nút mỗi 10ms. Nếu chỉ nút A được nhấn, bật LED; nếu chỉ nút B, tắt LED; nhấn cả hai hoặc không nhấn gì thì không làm gì.</p>
+
+    <h2>Thử thách — Turn Signaller</h2>
+
+    <p>Bạn đã được trang bị đủ để đối mặt với thử thách này! Người tham gia giao thông bực bội nhất là người <em>không bật xi-nhan đúng cách</em>. Hãy implement một chương trình bật xi-nhan:</p>
+    <ul>
+      <li>Nhấn nút A → hiển thị mũi tên trái (←) trên ma trận LED</li>
+      <li>Nhấn nút B → hiển thị mũi tên phải (→) trên ma trận LED</li>
+      <li>Không nhấn nút nào → hiển thị một LED ở giữa</li>
+    </ul>
+
+    <p>Dùng <code>Display::new(board.display_pins)</code> và <code>display.show()</code> từ BSP để hiển thị các mẫu LED.</p>
+
+    <h2>Lời giải</h2>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::digital::InputPin;
+use microbit::{board::Board, display::blocking::Display, hal::Timer};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+const LEFT_ARROW: [[u8; 5]; 5] = [
+    [0, 0, 1, 0, 0],
+    [0, 1, 0, 0, 0],
+    [1, 1, 1, 1, 1],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+];
+
+const RIGHT_ARROW: [[u8; 5]; 5] = [
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 1, 1, 1],
+    [0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0],
+];
+
+const CENTER_LED: [[u8; 5]; 5] = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+];
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+
+    let mut display = Display::new(board.display_pins);
+    let mut button_a = board.buttons.button_a;
+    let mut button_b = board.buttons.button_b;
+
+    loop {
+        if button_a.is_low().unwrap() {
+            display.show(&amp;mut timer, LEFT_ARROW, 10);
+        } else if button_b.is_low().unwrap() {
+            display.show(&amp;mut timer, RIGHT_ARROW, 10);
+        } else {
+            display.show(&amp;mut timer, CENTER_LED, 10);
+        }
+    }
+}</code></pre>
+
+    <h2>Polling có vấn đề</h2>
+
+    <p>Polling đơn giản như trên không thực tế lắm. Vấn đề: processor không thể vừa kiểm tra nút vừa thực thi delay dài. Nếu bạn thêm một đoạn blink LED vào vòng lặp, board sẽ không còn phản hồi nút nhanh nữa.</p>
+
+    <p>Giải pháp là dùng <strong>superloop</strong> với state machine — vòng lặp chính chạy rất nhanh (mỗi 10ms), và thay vì chờ đợi, chúng ta theo dõi <em>trạng thái</em> và đếm số lần lặp:</p>
+
+    <pre><code class="language-rust">// Hai trạng thái LED: đang sáng (với số tick còn lại) hoặc tắt
+enum Light {
+    Lit(u16),    // LED đang sáng, còn n tick
+    Unlit(u16),  // LED đang tắt, còn n tick
+}
+
+// Trạng thái tổng thể của indicator
+enum Indicator {
+    Off,              // Không nhấp nháy
+    Blinking(Light),  // Đang nhấp nháy
+}
+
+// Trong vòng lặp chính (chạy mỗi 10ms):
+// 1. Kiểm tra nút
+// 2. Cập nhật trạng thái
+// 3. Áp dụng trạng thái (bật/tắt LED)
+// 4. delay_ms(10)</code></pre>
+
+    <p>Cách tiếp cận này cho phép processor vẫn phản hồi được nút bấm trong khi quản lý hiệu ứng nhấp nháy. Vòng lặp 10ms là đủ nhanh để bắt được mọi thao tác bấm nút của người dùng.</p>
 
     <div class="nav-buttons">
       <a href="07-led-roulette.html" class="nav-btn">← LED Roulette</a>

@@ -27,7 +27,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html" class="active"><span class="nav-icon">🔍</span>Background</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -64,135 +64,32 @@
 
     <h2>Microcontroller là gì?</h2>
 
-    <p>Một microcontroller đại diện cho một <em>"hệ thống trên một chip"</em> (system on a chip) — tích hợp processor, RAM, bộ nhớ lưu trữ và các cổng giao tiếp vào một gói duy nhất. Điều này cho phép thiết kế hệ thống đơn giản hơn so với kiến trúc sử dụng các linh kiện rời.</p>
-
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Ghi chú — Tương tự trong thế giới .NET</div>
-        <p>Nếu bạn nghĩ về một ứng dụng .NET chạy trên máy tính, bạn có CPU riêng, RAM riêng, ổ cứng riêng — mỗi thứ là một linh kiện tách biệt. Microcontroller gộp tất cả vào một chip nhỏ duy nhất, thường rẻ hơn một USD.</p>
-      </div>
-    </div>
+    <p>Một microcontroller là một <em>hệ thống</em> trên một chip. Trong khi máy tính của bạn được tạo thành từ nhiều linh kiện rời: một processor, RAM, bộ nhớ lưu trữ, cổng Ethernet, v.v.; một microcontroller tích hợp tất cả những loại linh kiện đó vào một "chip" hoặc gói duy nhất.</p>
 
     <h2>Microcontroller có thể làm gì?</h2>
 
-    <p>Microcontroller cung cấp năng lượng cho các hệ thống embedded xuất hiện khắp nơi trong cuộc sống hằng ngày — từ thiết bị gia dụng, hệ thống điều hòa không khí đến các hệ thống xe hơi. Những thiết bị này thường hoạt động tự động, sử dụng sensor để theo dõi trạng thái môi trường và actuator để tạo ra các thay đổi vật lý.</p>
+    <p>Microcontroller là thành phần trung tâm của những gì được gọi là các hệ thống <em>embedded</em> (nhúng). Chúng điều khiển các máy móc giặt quần áo, in tài liệu và nấu thức ăn của bạn. Các hệ thống embedded duy trì nhiệt độ thoải mái trong những tòa nhà bạn sinh sống và làm việc, đồng thời điều khiển các bộ phận khiến các phương tiện bạn di chuyển dừng lại và chạy tiếp.</p>
 
-    <p>Ví dụ điển hình là hệ thống điều hòa không khí trong tòa nhà — sử dụng sensor nhiệt độ và actuator là quạt/bộ sưởi để duy trì nhiệt độ mong muốn.</p>
-
-    <!-- Ví dụ thực tế về embedded system -->
-    <div class="diagram">
-      <div class="diagram-title diagram-title--center">Ví dụ: Hệ thống điều hòa không khí</div>
-      <div class="flow-diagram">
-        <div class="flow-step">🌡️ Sensor<br><small>Đọc nhiệt độ</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step active-step">🔬 MCU<br><small>Xử lý dữ liệu</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">⚙️ Actuator<br><small>Điều khiển quạt/sưởi</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">🏠 Môi trường<br><small>Nhiệt độ thay đổi</small></div>
-      </div>
-    </div>
+    <p>Những hệ thống này thường hoạt động tự động — chúng sử dụng sensor để phát hiện trạng thái của môi trường và actuator để thực hiện các thay đổi vật lý. Ví dụ điển hình là hệ thống điều hòa không khí trong tòa nhà, sử dụng sensor nhiệt độ/độ ẩm và actuator là quạt/bộ sưởi để duy trì nhiệt độ mong muốn.</p>
 
     <h2>Khi nào nên dùng microcontroller?</h2>
 
-    <p>Những ưu điểm chính bao gồm:</p>
+    <p>Có một số lý do để chọn microcontroller thay vì máy tính đa năng:</p>
 
-    <!-- Bảng so sánh MCU vs Máy tính -->
-    <table>
-      <thead>
-        <tr>
-          <th>Tiêu chí</th>
-          <th>Microcontroller (MCU)</th>
-          <th>Máy tính thông thường (PC)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Chi phí</strong></td>
-          <td>Rất thấp — thường &lt; $1–5 USD/chip</td>
-          <td>Cao — hàng trăm đến hàng nghìn USD</td>
-        </tr>
-        <tr>
-          <td><strong>Điện năng tiêu thụ</strong></td>
-          <td>Rất thấp — lý tưởng cho thiết bị dùng pin</td>
-          <td>Cao — cần nguồn điện ổn định</td>
-        </tr>
-        <tr>
-          <td><strong>Phản hồi real-time</strong></td>
-          <td>Xuất sắc — đáp ứng hard real-time requirements</td>
-          <td>Hạn chế — OS tạo ra độ trễ không xác định</td>
-        </tr>
-        <tr>
-          <td><strong>RAM</strong></td>
-          <td>Rất ít — thường 4KB–512KB</td>
-          <td>Nhiều — thường 8GB–64GB</td>
-        </tr>
-        <tr>
-          <td><strong>Flash (bộ nhớ chương trình)</strong></td>
-          <td>Hạn chế — thường 16KB–2MB</td>
-          <td>Lớn — hàng trăm GB đến TB</td>
-        </tr>
-        <tr>
-          <td><strong>Độ tin cậy</strong></td>
-          <td>Cao — ít linh kiện, ít điểm hỏng hóc</td>
-          <td>Thấp hơn — nhiều linh kiện, nhiều điểm hỏng hóc</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="callout tip">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <div class="callout-title">Mẹo</div>
-        <p><strong>Hard real-time requirement</strong> có nghĩa là nếu hệ thống không phản hồi trong thời gian quy định, hậu quả có thể là thảm họa (ví dụ: túi khí xe hơi không bung kịp thời). MCU có thể đảm bảo điều này vì không có OS phức tạp chen ngang.</p>
-      </div>
-    </div>
+    <ul>
+      <li><p><strong>Chi phí.</strong> Một microcontroller rẻ hơn nhiều so với máy tính đa năng và yêu cầu ít linh kiện ngoài hơn. Điều này giúp bo mạch in (PCB) nhỏ hơn, rẻ hơn để thiết kế và sản xuất.</p></li>
+      <li><p><strong>Điện năng tiêu thụ.</strong> Hầu hết các microcontroller tiêu thụ một phần nhỏ điện năng so với một processor đầy đủ. Điều này rất quan trọng nếu thiết bị của bạn chạy bằng pin.</p></li>
+      <li><p><strong>Khả năng phản hồi.</strong> Để hoàn thành mục đích của mình, một số hệ thống embedded phải luôn phản hồi trong một khoảng thời gian giới hạn (ví dụ: hệ thống phanh ABS của ô tô). Nếu hệ thống bỏ lỡ loại <em>deadline</em> này, có thể xảy ra thất bại thảm khốc. Một deadline như vậy được gọi là yêu cầu "hard real time". Một máy tính đa năng và hệ điều hành thường có nhiều thành phần phần mềm chia sẻ tài nguyên xử lý của máy tính. Điều này khiến việc đảm bảo thực thi chương trình trong các ràng buộc thời gian chặt chẽ trở nên khó khăn hơn.</p></li>
+      <li><p><strong>Độ tin cậy.</strong> Trong các hệ thống có ít linh kiện hơn (cả phần cứng lẫn phần mềm), có ít thứ hơn có thể xảy ra sự cố!</p></li>
+    </ul>
 
     <h2>Khi nào <em>không</em> nên dùng microcontroller?</h2>
 
-    <p>Microcontroller thiếu tài nguyên cho các tính toán nặng. Chúng thực thi ít lệnh hơn mỗi giây, có cache tối thiểu và có thể không có phần cứng floating-point. Hạn chế về bộ nhớ — đôi khi chỉ 16KB cho chương trình và 4KB cho dữ liệu — đặt ra những thách thức lập trình đáng kể.</p>
-
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý</div>
-        <p>Đừng cố chạy các tác vụ nặng như xử lý hình ảnh độ phân giải cao, machine learning phức tạp, hoặc web server đầy đủ tính năng trên microcontroller. Với những tác vụ đó, hãy dùng SBC (Single-Board Computer) như Raspberry Pi.</p>
-      </div>
-    </div>
+    <p>Khi liên quan đến các tính toán nặng. Để giữ mức tiêu thụ điện năng thấp, microcontroller có rất ít tài nguyên tính toán. Ví dụ, một số microcontroller thậm chí không có hỗ trợ phần cứng cho các phép tính dấu phẩy động. Trên những thiết bị đó, thực hiện một phép cộng đơn giản các số dấu phẩy động đơn có thể tốn hàng trăm chu kỳ CPU.</p>
 
     <h2>Tại sao dùng Rust thay vì C?</h2>
 
-    <p>Rust cung cấp quản lý package vượt trội thông qua Cargo, thay vì hệ sinh thái phân mảnh của C, khuyến khích tái sử dụng code dễ dàng hơn và tích hợp thư viện thuận tiện hơn.</p>
-
-    <!-- Diagram so sánh Rust vs C -->
-    <div class="diagram">
-      <div class="diagram-title diagram-title--center" style="color:#1f2328;">So sánh Rust vs C cho Embedded</div>
-      <div class="card-grid--2col">
-        <div class="compare-col compare-col--green">
-          <div class="compare-col__title compare-col__title--green">✅ Rust</div>
-          <ul style="margin-left:16px;font-size:0.88rem;">
-            <li>Package manager (Cargo) — tích hợp sẵn</li>
-            <li>Memory safety tại compile time</li>
-            <li>Tooling hiện đại, dễ sử dụng</li>
-            <li>Dễ tái sử dụng code qua crates.io</li>
-            <li>Ownership/borrow ngăn lỗi bộ nhớ</li>
-            <li>Type system mạnh mẽ</li>
-          </ul>
-        </div>
-        <div class="compare-col compare-col--yellow">
-          <div class="compare-col__title compare-col__title--yellow">⚠️ C</div>
-          <ul style="margin-left:16px;font-size:0.88rem;">
-            <li>Hệ sinh thái lâu đời, rộng lớn</li>
-            <li>RTOS thương mại đã thành thục</li>
-            <li>Phổ biến rộng rãi trong ngành</li>
-            <li>Manual memory management</li>
-            <li>Dễ mắc lỗi buffer overflow, use-after-free</li>
-            <li>Quản lý dependency thủ công</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <p>C thiếu một giải pháp quản lý gói chính thức, được chấp nhận rộng rãi trong khi Rust có Cargo. Điều này giúp việc phát triển <em>dễ dàng hơn nhiều</em> vì tái sử dụng code trở nên đơn giản hơn — bạn không cần phải tự xây dựng tất cả mọi thứ từ đầu.</p>
 
     <h2>Tại sao <em>không</em> nên dùng Rust?</h2>
 

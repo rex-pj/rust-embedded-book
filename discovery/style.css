@@ -878,6 +878,19 @@ pre code.hljs { background: transparent !important; padding: 20px 24px !importan
 /* ---- SVG / image max-width helper ---- */
 .svg-responsive { max-width: 100%; }
 
+/* ---- Global image constraint ---- */
+main img, #main img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---- White background for SVG diagrams (needed in dark mode) ---- */
+img.white_bg {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 8px;
+}
+
 /* ===== THEME TOGGLE BUTTON ===== */
 #theme-toggle {
   margin-left: auto;

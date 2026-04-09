@@ -56,46 +56,385 @@
 
     <h1>LED Compass</h1>
 
-    <p>Trong phần này, chúng ta sẽ triển khai một la bàn dùng các LED trên MB2. Như những chiếc la bàn thực sự, la bàn LED của chúng ta phải chỉ về hướng bắc bằng cách nào đó. Nó sẽ làm điều đó bằng cách bật một trong các LED ở rìa ngoài; LED được bật phải chỉ về phía bắc.</p>
+    <p>Trong phần này, chúng ta sẽ implement một la bàn sử dụng LED trên micro:bit. Giống như la bàn thật, la bàn LED của chúng ta phải chỉ về hướng Bắc. Nó sẽ làm điều đó bằng cách bật một trong các LED ở vòng ngoài cùng — LED được bật nên chỉ về hướng Bắc.</p>
 
-    <h2>Đo từ trường</h2>
+    <p>Từ trường có cả cường độ (magnitude), đo bằng Gauss hoặc Tesla, và hướng (direction). Magnetometer trên micro:bit đo cả cường độ lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo sự phân rã (decomposition) của từ trường đó dọc theo các trục của nó.</p>
 
-    <p>Từ trường có cả <em>độ lớn</em>, đo bằng Gauss hoặc Tesla, và <em>hướng</em>. Magnetometer trên MB2 đo cả độ lớn lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo lại <em>thành phần</em> của trường đó theo <em>các trục của nó</em>.</p>
+    <p>Magnetometer có ba trục liên kết với nó. Các trục X và Y cơ bản trải trên mặt phẳng sàn nhà. Trục Z chỉ "ra ngoài" khỏi sàn, tức là hướng lên trên.</p>
 
-    <p>Khi board được giữ phẳng với LED hướng lên và logo hướng về phía trước, trục X và Y tạo thành mặt phẳng của sàn. Trục X hướng về cạnh trái của board. Trục Y hướng về cạnh dưới (card connector) của board. Trục Z hướng "vào sàn", tức là hướng xuống.</p>
+    <p align="center">
+      <img class="white_bg" title="MB2 Axes" src="assets/mb2-axes.svg" width="500" />
+    </p>
 
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Chú ý về phần cứng</div>
-        <p>Trong số hai chiếc MB2 tác giả có lúc viết cuốn sách này, một chiếc dường như có magnetometer hơi hỏng: trục Z bị offset đến mức không dùng được.</p>
-      </div>
-    </div>
+    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu magnetometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Sau khi viết chương trình đó, hãy xác định hướng Bắc ở vị trí hiện tại của bạn. Sau đó canh chỉnh micro:bit theo hướng đó và quan sát xem các số đo của cảm biến trông như thế nào.</p>
 
-    <div class="callout note">
-      <div class="callout-icon">📝</div>
-      <div class="callout-body">
-        <div class="callout-title">Từ bắc địa lý và từ bắc từ tính</div>
-        <p>Từ bắc của Trái Đất là thứ thất thường: nó khác với từ bắc thực sự ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống đất khá nhiều. Ở vị trí của tác giả, "độ lệch" (sự khác biệt giữa từ bắc thực và từ bắc từ tính) là khoảng 15°; "độ nghiêng" là một con số đáng ngạc nhiên là 67° hướng xuống đất. Bạn có thể tính toán những giá trị này cho vị trí của mình bằng các máy tính trực tuyến như máy tính của US NOAA hoặc UK BGS.</p>
-        <p>Crate <code>lsm303agr</code> hiện tại không hỗ trợ bù đắp những điều này, và có vẻ như đây là quá nhiều cho một hướng dẫn nhập môn về hệ thống nhúng.</p>
-      </div>
-    </div>
+    <p>Bây giờ hãy xoay board 90 độ trong khi giữ nó song song với mặt đất. Bạn thấy giá trị X, Y và Z gì lần này? Sau đó xoay thêm 90 độ nữa. Bạn thấy giá trị gì?</p>
 
-    <div class="callout note">
-      <div class="callout-icon">📝</div>
-      <div class="callout-body">
-        <div class="callout-title">Độ chính xác của thiết bị</div>
-        <p>Magnetometer LSM303AGR không phải là thiết bị đặc biệt chính xác khi dùng ngay từ hộp. Nhà sản xuất khuyến nghị một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đọc từ magnetometer.</p>
-      </div>
-    </div>
+    <!-- ============================================================ -->
+    <h2>Magnitude (Cường độ từ trường)</h2>
 
-    <h2>Bài tập: Quan sát từ trường</h2>
+    <p>Hàm <code>mag_data()</code> trả về các giá trị x, y, z được đo bằng nanotesla. Để tính cường độ của từ trường, chúng ta tính độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả:</p>
 
-    <p>Trong chương I2C, bạn đã viết chương trình <code>examples/show-mag.rs</code> in liên tục dữ liệu magnetometer. Dùng chương trình đó để quan sát sự thay đổi của các giá trị khi bạn xoay board theo các hướng khác nhau.</p>
+    <pre><code>magnitude = √(x² + y² + z²)</code></pre>
 
-    <h2>Giải pháp</h2>
+    <p>Trong Rust, không có hàm <code>sqrtf</code> trong <code>core</code>, nên chúng ta dùng <code>libm::sqrtf</code>. Đây là chương trình hoàn chỉnh tính cường độ từ trường:</p>
 
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::delay::DelayNs;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+use libm::sqrtf;
+
+use microbit::{
+    hal::{twim, Timer},
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+use lsm303agr::{Lsm303agr, MagMode, MagOutputDataRate};
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+    let mut timer0 = Timer::new(board.TIMER0);
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor
+        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz10)
+        .unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    loop {
+        while !sensor.mag_status().unwrap().xyz_new_data() {
+            timer0.delay_ms(1u32);
+        }
+        let (x, y, z) = sensor.magnetic_field().unwrap().xyz_nt();
+        let (x, y, z) = (x as f32, y as f32, z as f32);
+        let magnitude = sqrtf(x * x + y * y + z * z);
+        rprintln!("{} mG", magnitude / 100.0);
+    }
+}</code></pre>
+
+    <p>Cường độ từ trường của Trái Đất nằm trong khoảng từ <code>250 mG</code> đến <code>650 mG</code> tùy thuộc vào vị trí địa lý. Ví dụ, tác giả quan sát khoảng 340 mG.</p>
+
+    <p><strong>Câu hỏi thảo luận:</strong></p>
+    <ul>
+      <li>Khi board đứng yên, giá trị cường độ có giữ nguyên không?</li>
+      <li>Khi bạn xoay board, cường độ có thay đổi không? Lý thuyết nó có nên thay đổi không?</li>
+      <li>Lý thuyết thì cường độ nên giữ nguyên bất kể hướng xoay vì ta chỉ xoay vector, không thay đổi độ dài của nó.</li>
+    </ul>
+
+    <!-- ============================================================ -->
+    <h2>Hiệu chỉnh (Calibration)</h2>
+
+    <p>Một điều rất quan trọng cần làm trước khi sử dụng cảm biến và cố gắng phát triển ứng dụng với nó là xác minh rằng đầu ra của nó thực sự chính xác. Nếu không phải như vậy, chúng ta cần hiệu chỉnh (calibrate) cảm biến (hoặc nó có thể bị hỏng, nhưng điều đó khá khó xảy ra trong trường hợp này).</p>
+
+    <p>Trong thực tế, trên hai chiếc micro:bit khác nhau, magnetometer mà không có hiệu chỉnh đã cho kết quả sai khá nhiều so với những gì nó đáng ra phải đo. Do đó, trong chương này chúng ta sẽ giả định rằng cảm biến cần được hiệu chỉnh.</p>
+
+    <p>Việc hiệu chỉnh liên quan đến khá nhiều toán học (ma trận) nên chúng ta sẽ không đề cập ở đây, nhưng <a href="https://www.st.com/resource/en/design_tip/dt0103-compensating-for-magnetometer-installation-error-and-hardiron-effects-using-accelerometerassisted-2d-calibration-stmicroelectronics.pdf">Design Note của ST Microelectronics</a> mô tả quy trình nếu bạn quan tâm.</p>
+
+    <p>May mắn thay, nhóm đã xây dựng phần mềm gốc cho micro:bit đã implement một cơ chế hiệu chỉnh bằng C++ <a href="https://github.com/lancaster-university/codal-microbit-v2/blob/006abf5566774fbcf674c0c7df27e8a9d20013de/source/MicroBitCompassCalibrator.cpp">ở đây</a>.</p>
+
+    <p>Bạn có thể tìm thấy bản dịch sang Rust trong <code>src/calibration.rs</code>. Cách sử dụng được minh họa trong file <code>src/main.rs</code> mặc định. Cách hiệu chỉnh hoạt động như sau:</p>
+
+    <p>Bạn phải nghiêng micro:bit cho đến khi tất cả các LED trên ma trận LED sáng lên.</p>
+
+    <p>Nếu bạn không muốn chơi "trò chơi" đó mỗi lần khởi động lại ứng dụng trong quá trình phát triển, bạn có thể tự do chỉnh sửa template <code>src/main.rs</code> để chỉ sử dụng cùng một giá trị hiệu chỉnh tĩnh một khi bạn đã có lần đầu tiên.</p>
+
+    <p>Bây giờ sau khi đã xong phần hiệu chỉnh cảm biến, hãy cùng tìm hiểu cách thực sự xây dựng ứng dụng này!</p>
+
+    <!-- ============================================================ -->
+    <h2>Take 1: Phương pháp quadrant (góc phần tư)</h2>
+
+    <p>Vì la bàn thường được cầm theo chiều ngang, chúng ta chủ yếu quan tâm đến các thành phần X và Y của từ trường. Nếu chỉ nhìn vào dấu của các thành phần X và Y, ta có thể xác định từ trường thuộc góc phần tư nào. Qua quan sát khi xoay micro:bit, ta có thể ánh xạ các góc phần tư đó thành hướng la bàn.</p>
+
+    <p align="center">
+      <img title="Quadrants" src="assets/quadrants.png" class="white_bg" style="max-width:100%">
+    </p>
+
+    <p>Ví dụ, khi micro:bit chỉ về hướng Đông Bắc (NorthEast), cả X lẫn Y đều dương.</p>
+
+    <p>Bảng ánh xạ quadrant sang hướng:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dấu X</th>
+          <th>Dấu Y</th>
+          <th>Quadrant</th>
+          <th>Hướng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>dương (+)</td><td>dương (+)</td><td>I</td><td>NorthEast (Đông Bắc)</td></tr>
+        <tr><td>âm (−)</td><td>dương (+)</td><td>II</td><td>NorthWest (Tây Bắc)</td></tr>
+        <tr><td>âm (−)</td><td>âm (−)</td><td>III</td><td>SouthWest (Tây Nam)</td></tr>
+        <tr><td>dương (+)</td><td>âm (−)</td><td>IV</td><td>SouthEast (Đông Nam)</td></tr>
+      </tbody>
+    </table>
+
+    <p>Màn hình LED hiển thị mũi tên theo hướng tương ứng. Ví dụ:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Hướng</th>
+          <th>LED sáng (hàng, cột) — 0-indexed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>North (Bắc)</td><td>góc trên giữa</td></tr>
+        <tr><td>NorthEast</td><td>góc trên phải</td></tr>
+        <tr><td>East (Đông)</td><td>giữa phải</td></tr>
+        <tr><td>SouthEast</td><td>góc dưới phải</td></tr>
+        <tr><td>South (Nam)</td><td>góc dưới giữa</td></tr>
+        <tr><td>SouthWest</td><td>góc dưới trái</td></tr>
+        <tr><td>West (Tây)</td><td>giữa trái</td></tr>
+        <tr><td>NorthWest</td><td>góc trên trái</td></tr>
+      </tbody>
+    </table>
+
+    <p>Dưới đây là template code để bạn hoàn thiện:</p>
+
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+mod calibration;
+use crate::calibration::calc_calibration;
+use crate::calibration::calibrated_measurement;
+
+mod led;
+use led::Direction;
+
+use microbit::{display::blocking::Display, hal::Timer};
+
+#[cfg(feature = "v1")]
+use microbit::{hal::twi, pac::twi0::frequency::FREQUENCY_A};
+
+#[cfg(feature = "v2")]
+use microbit::{hal::twim, pac::twim0::frequency::FREQUENCY_A};
+
+use lsm303agr::{AccelOutputDataRate, Lsm303agr, MagOutputDataRate};
+
+#[entry]
+fn main() -> ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    #[cfg(feature = "v1")]
+    let i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+
+    #[cfg(feature = "v2")]
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_mag_odr(MagOutputDataRate::Hz10).unwrap();
+    sensor.set_accel_odr(AccelOutputDataRate::Hz10).unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    let calibration = calc_calibration(&mut sensor, &mut display, &mut timer);
+    rprintln!("Calibration: {:?}", calibration);
+    rprintln!("Calibration done, entering busy loop");
+    loop {
+        while !sensor.mag_status().unwrap().xyz_new_data {}
+        let mut data = sensor.mag_data().unwrap();
+        data = calibrated_measurement(data, &calibration);
+
+        let dir = match (data.x > 0, data.y > 0) {
+            // Quadrant ???
+            (true, true) => Direction::NorthEast,
+            // Quadrant ???
+            (false, true) => panic!("TODO"),
+            // Quadrant ???
+            (false, false) => panic!("TODO"),
+            // Quadrant ???
+            (true, false) => panic!("TODO"),
+        };
+
+        // dùng module led để chuyển hướng thành mũi tên LED
+        // và dùng các hàm hiển thị LED từ chương 5 để hiển thị mũi tên
+    }
+}</code></pre>
+
+    <!-- ============================================================ -->
+    <h2>Take 2: Phương pháp atan2f (góc chính xác)</h2>
+
+    <p>Cách tiếp cận theo quadrant chỉ cho 4 hướng. Để có độ chính xác hơn (8 hướng), ta có thể tính góc chính xác mà từ trường tạo với các trục X và Y của magnetometer bằng hàm <code>atan2</code>. Hàm này trả về một góc trong khoảng <code>-PI</code> đến <code>PI</code>.</p>
+
+    <p align="center">
+      <img title="atan2" src="https://upload.wikimedia.org/wikipedia/commons/0/03/Atan2_60.svg" class="white_bg" style="max-width:100%;height:360px">
+    </p>
+
+    <p>Một vòng tròn = 360 độ = 2·PI radian. PI radian = 180 độ. Khi theta bằng 0, micro:bit đang chỉ về hướng Đông. Khi theta tăng dần (ngược chiều kim đồng hồ), ta đến các hướng khác.</p>
+
+    <p>Dưới đây là template code để bạn hoàn thiện phần xác định hướng từ theta:</p>
+
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+mod calibration;
+use crate::calibration::calc_calibration;
+use crate::calibration::calibrated_measurement;
+
+mod led;
+use crate::led::Direction;
+use crate::led::direction_to_led;
+
+// You'll find this useful ;-)
+use core::f32::consts::PI;
+use libm::atan2f;
+
+use microbit::{display::blocking::Display, hal::Timer};
+
+#[cfg(feature = "v1")]
+use microbit::{hal::twi, pac::twi0::frequency::FREQUENCY_A};
+
+#[cfg(feature = "v2")]
+use microbit::{hal::twim, pac::twim0::frequency::FREQUENCY_A};
+
+use lsm303agr::{AccelOutputDataRate, Lsm303agr, MagOutputDataRate};
+
+#[entry]
+fn main() -> ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    #[cfg(feature = "v1")]
+    let i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+
+    #[cfg(feature = "v2")]
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_mag_odr(MagOutputDataRate::Hz10).unwrap();
+    sensor.set_accel_odr(AccelOutputDataRate::Hz10).unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    let calibration = calc_calibration(&mut sensor, &mut display, &mut timer);
+    rprintln!("Calibration: {:?}", calibration);
+    rprintln!("Calibration done, entering busy loop");
+    loop {
+        while !sensor.mag_status().unwrap().xyz_new_data {}
+        let mut data = sensor.mag_data().unwrap();
+        data = calibrated_measurement(data, &calibration);
+
+        // dùng libm's atan2f vì hàm này chưa có trong core
+        let theta = atan2f(data.y as f32, data.x as f32);
+
+        // Xác định hướng dựa trên theta
+        let dir = Direction::NorthEast; // TODO: thay thế bằng logic thực
+
+        display.show(&mut timer, direction_to_led(dir), 100);
+    }
+}</code></pre>
+
+    <!-- ============================================================ -->
+    <h2>Solution 1: Lời giải quadrant</h2>
+
+    <p>Đây là lời giải hoàn chỉnh cho cách tiếp cận theo quadrant, xác định 4 hướng chéo:</p>
+
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+mod calibration;
+use crate::calibration::calc_calibration;
+use crate::calibration::calibrated_measurement;
+
+mod led;
+use crate::led::Direction;
+use crate::led::direction_to_led;
+
+use microbit::{display::blocking::Display, hal::Timer};
+
+#[cfg(feature = "v1")]
+use microbit::{hal::twi, pac::twi0::frequency::FREQUENCY_A};
+
+#[cfg(feature = "v2")]
+use microbit::{hal::twim, pac::twim0::frequency::FREQUENCY_A};
+
+use lsm303agr::{AccelOutputDataRate, Lsm303agr, MagOutputDataRate};
+
+#[entry]
+fn main() -> ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    #[cfg(feature = "v1")]
+    let i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+
+    #[cfg(feature = "v2")]
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut timer = Timer::new(board.TIMER0);
+    let mut display = Display::new(board.display_pins);
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_mag_odr(MagOutputDataRate::Hz10).unwrap();
+    sensor.set_accel_odr(AccelOutputDataRate::Hz10).unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    let calibration = calc_calibration(&mut sensor, &mut display, &mut timer);
+    rprintln!("Calibration: {:?}", calibration);
+    rprintln!("Calibration done, entering busy loop");
+    loop {
+        while !sensor.mag_status().unwrap().xyz_new_data {}
+        let mut data = sensor.mag_data().unwrap();
+        data = calibrated_measurement(data, &calibration);
+
+        let dir = match (data.x > 0, data.y > 0) {
+            // Quadrant I
+            (true, true) => Direction::NorthEast,
+            // Quadrant II
+            (false, true) => Direction::NorthWest,
+            // Quadrant III
+            (false, false) => Direction::SouthWest,
+            // Quadrant IV
+            (true, false) => Direction::SouthEast,
+        };
+
+        // dùng module led để chuyển hướng thành mũi tên LED
+        // và dùng các hàm hiển thị LED từ chương 5 để hiển thị mũi tên
+        display.show(&mut timer, direction_to_led(dir), 100);
+    }
+}</code></pre>
+
+    <!-- ============================================================ -->
+    <h2>Solution 2: Lời giải atan2f (16 hướng)</h2>
+
+    <p>Đây là lời giải hoàn chỉnh từ bản gốc — dùng <code>atan2f</code> và <code>floorf</code> để xác định 16 hướng la bàn, mỗi hướng tương ứng một LED trên vòng ngoài ma trận 5×5:</p>
+
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
@@ -122,38 +461,33 @@ fn main() -&gt; ! {
     let board = microbit::Board::take().unwrap();
 
     let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
-
     let mut timer0 = Timer::new(board.TIMER0);
     let mut display = Display::new(board.display_pins);
 
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
     sensor
-        .set_mag_mode_and_odr(
-            &amp;mut timer0,
-            MagMode::HighResolution,
-            MagOutputDataRate::Hz10,
-        )
+        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz10)
         .unwrap();
     let mut sensor = sensor.into_mag_continuous().ok().unwrap();
 
     let mut leds = [[0u8; 5]; 5];
 
-    #[rustfmt::skip]
+    // 16 vị trí LED trên vòng ngoài, bắt đầu từ hướng Tây, đi theo chiều kim đồng hồ
     let indices = [
-        (2, 0), /* W */
+        (2, 0), /* W  */
         (3, 0), /* W-SW */
         (3, 1), /* SW */
         (4, 1), /* S-SW */
-        (4, 2), /* S */
+        (4, 2), /* S  */
         (4, 3), /* S-SE */
         (3, 3), /* SE */
         (3, 4), /* E-SE */
-        (2, 4), /* E */
+        (2, 4), /* E  */
         (1, 4), /* E-NE */
         (1, 3), /* NE */
         (0, 3), /* N-NE */
-        (0, 2), /* N */
+        (0, 2), /* N  */
         (0, 1), /* N-NW */
         (1, 1), /* NW */
         (1, 0), /* W-NW */
@@ -165,11 +499,13 @@ fn main() -&gt; ! {
         }
         let (x, y, _) = sensor.magnetic_field().unwrap().xyz_nt();
 
+        // theta: góc từ trục X, khoảng -PI đến PI
         let theta = atan2f(y as f32, x as f32);
+        // Chia vòng tròn thành 32 phần (mỗi phần PI/16 radian), lấy nửa
         let seg = floorf(16.0 * theta / PI) as i8;
 
         let index = if seg &gt;= 15 || seg &lt;= -15 {
-            8
+            8 // East
         } else if seg &gt;= 0 {
             (seg / 2) as usize
         } else {
@@ -185,8 +521,8 @@ fn main() -&gt; ! {
 }</code></pre>
 
     <div class="nav-buttons">
-      <a href="12-i2c.html" class="nav-btn">← I2C</a>
-      <a href="14-punch-o-meter.html" class="nav-btn next">Punch-o-meter →</a>
+      <a href="12-i2c.html" class="nav-btn">&larr; I2C</a>
+      <a href="14-punch-o-meter.html" class="nav-btn next">Punch-o-meter &rarr;</a>
     </div>
   </main>
 </div>

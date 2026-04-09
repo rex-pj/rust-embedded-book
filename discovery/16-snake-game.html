@@ -56,9 +56,762 @@
 
     <h1>Snake Game</h1>
 
-    <p>Bây giờ chúng ta sẽ triển khai một game rắn cơ bản mà bạn có thể chơi trên MB2 bằng ma trận LED 5×5 làm màn hình và hai nút bấm làm điều khiển.</p>
+    <p>Bây giờ chúng ta sẽ implement một trò chơi <a href="https://en.wikipedia.org/wiki/Snake_(video_game_genre)">snake</a> cơ bản mà bạn có thể chơi trên micro:bit v2, sử dụng ma trận LED 5x5 làm màn hình và hai nút bấm làm điều khiển. Trong quá trình này, chúng ta sẽ xây dựng trên một số khái niệm đã được đề cập trong các chương trước của cuốn sách, và cũng học về một số peripheral và khái niệm mới.</p>
 
-    <p>Chúng ta sẽ xây dựng code theo kiểu "bottom-up" với ba module chính: <code>game</code>, <code>controls</code> và <code>display</code>. Mỗi module bao gồm một file nguồn cấp cao nhất cùng các subfile được include bằng câu lệnh <code>mod</code> của Rust.</p>
+    <p>Cụ thể, chúng ta sẽ sử dụng khái niệm <strong>hardware interrupts</strong> để cho phép chương trình tương tác với nhiều peripheral cùng lúc. Interrupts là cách phổ biến để implement concurrency trong bối cảnh embedded. Có một giới thiệu tốt về concurrency trong bối cảnh embedded trong <a href="https://docs.rust-embedded.org/book/concurrency/index.html">Embedded Rust Book</a> mà tôi khuyến khích bạn đọc qua trước khi tiếp tục.</p>
+
+    <div class="callout callout-warning">
+      <strong>LƯU Ý:</strong> Chương này được phát triển chỉ cho micro:bit v2, không phải v1. Đóng góp port code sang v1 luôn được hoan nghênh.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>LƯU Ý — Phiên bản thư viện:</strong> Trong chương này, chúng ta sẽ dùng các phiên bản mới hơn của một số thư viện đã được dùng trong các chương trước. Chúng ta sẽ dùng phiên bản <code>0.13.0</code> của thư viện <code>microbit</code> (các chương trước dùng <code>0.12.0</code>). Phiên bản 0.13.0 sửa một vài bug trong code hiển thị non-blocking mà chúng ta sẽ sử dụng. Chúng ta cũng sẽ dùng phiên bản <code>0.8.0</code> của thư viện <code>heapless</code> (các chương trước dùng <code>0.7.10</code>), cho phép chúng ta dùng một số cấu trúc dữ liệu của nó với các struct implement trait <code>core::Hash</code> của Rust.
+    </div>
+
+    <h2>Tổng quan kiến trúc dự án</h2>
+
+    <p>Dự án cuối cùng được chia thành ba module, mỗi module đảm nhiệm một trách nhiệm riêng biệt:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Module (file)</th>
+          <th>Trách nhiệm</th>
+          <th>Peripheral sử dụng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>game.rs</code></td>
+          <td>Logic trò chơi: snake, food, điểm số, trạng thái</td>
+          <td>RNG (để lấy seed ban đầu)</td>
+        </tr>
+        <tr>
+          <td><code>controls.rs</code></td>
+          <td>Đọc input từ nút bấm qua interrupt</td>
+          <td>GPIOTE</td>
+        </tr>
+        <tr>
+          <td><code>display.rs</code></td>
+          <td>Hiển thị non-blocking với các mức độ sáng</td>
+          <td>TIMER1, DisplayPins</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Trạng thái trò chơi (Game State Machine)</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Trạng thái (<code>GameStatus</code>)</th>
+          <th>Ý nghĩa</th>
+          <th>Chuyển sang</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Ongoing</code></td>
+          <td>Trò chơi đang diễn ra</td>
+          <td><code>Won</code> (lấp đầy lưới) hoặc <code>Lost</code> (đụng đuôi)</td>
+        </tr>
+        <tr>
+          <td><code>Won</code></td>
+          <td>Snake chiếm đầy 25 ô (tail dài 23 + head + food)</td>
+          <td>Reset → <code>Ongoing</code></td>
+        </tr>
+        <tr>
+          <td><code>Lost</code></td>
+          <td>Snake va chạm vào đuôi của chính nó</td>
+          <td>Reset → <code>Ongoing</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <h2 id="game-logic">Phần 1 — Game Logic (<code>game.rs</code>)</h2>
+    <!-- ================================================================ -->
+
+    <p>Bạn hẳn đã quen với trò chơi snake rồi, nhưng nếu chưa, ý tưởng cơ bản là người chơi dẫn dắt một con rắn trên một lưới 2D. Tại bất kỳ thời điểm nào, có một "thức ăn" tại một vị trí ngẫu nhiên trên lưới, và mục tiêu của trò chơi là đưa con rắn đến "ăn" càng nhiều thức ăn càng tốt. Mỗi lần snake ăn thức ăn, nó sẽ dài thêm. Người chơi thua nếu snake va vào đuôi của chính nó. Trong một số biến thể của trò chơi, người chơi cũng thua nếu snake chạm vào rìa lưới, nhưng vì kích thước lưới của chúng ta nhỏ, chúng ta sẽ implement quy tắc "wraparound" — nếu snake đi ra ngoài một cạnh của lưới, nó sẽ tiếp tục từ cạnh đối diện.</p>
+
+    <p>Code trong phần này nên được đặt trong một file riêng, <code>game.rs</code>, trong thư mục <code>src</code> của chúng ta.</p>
+
+    <p>Chúng ta dùng struct <code>Coords</code> để tham chiếu đến một vị trí trên lưới. Vì <code>Coords</code> chỉ chứa hai số nguyên, chúng ta yêu cầu compiler derive implementation của trait <code>Copy</code> cho nó, để chúng ta có thể truyền các struct <code>Coords</code> mà không cần lo về ownership.</p>
+
+    <p>Chúng ta định nghĩa một associated function <code>Coords::random</code>, cho chúng ta một vị trí ngẫu nhiên trên lưới. Chúng ta sẽ dùng điều này sau để xác định nơi đặt thức ăn cho snake. Để làm điều này, chúng ta cần một nguồn số ngẫu nhiên. nRF52833 có một peripheral random number generator (RNG), được ghi ở mục 6.19 của spec sheet. HAL cho chúng ta một interface đơn giản đến RNG qua struct <code>microbit::hal::rng::Rng</code>. Tuy nhiên, đó là một blocking interface, và thời gian cần thiết để tạo ra một byte dữ liệu ngẫu nhiên là thay đổi và không thể đoán trước. Do đó chúng ta định nghĩa một pseudo-random number generator (PRNG) sử dụng thuật toán xorshift để tạo ra các giá trị <code>u32</code> giả ngẫu nhiên mà chúng ta có thể dùng để xác định nơi đặt thức ăn. Thuật toán này cơ bản và không an toàn về mặt mật mã, nhưng nó hiệu quả, dễ implement và đủ tốt cho trò chơi snake khiêm tốn của chúng ta. Struct <code>Prng</code> của chúng ta cần một giá trị seed ban đầu, mà chúng ta lấy từ RNG peripheral.</p>
+
+    <p>Chúng ta cũng cần định nghĩa một vài <code>enum</code> giúp chúng ta quản lý trạng thái của trò chơi: hướng di chuyển, hướng rẽ, trạng thái trò chơi hiện tại, và kết quả của một "bước" cụ thể trong trò chơi (tức là một lần di chuyển đơn lẻ của snake).</p>
+
+    <p>Tiếp theo chúng ta định nghĩa struct <code>Snake</code>, theo dõi các tọa độ bị snake chiếm và hướng di chuyển của nó. Chúng ta dùng một queue (<code>heapless::spsc::Queue</code>) để theo dõi thứ tự của các tọa độ và một hash set (<code>heapless::FnvIndexSet</code>) để phát hiện va chạm nhanh chóng. <code>Snake</code> có các method để di chuyển.</p>
+
+    <p>Struct <code>Game</code> theo dõi trạng thái trò chơi. Nó chứa một đối tượng <code>Snake</code>, tọa độ hiện tại của thức ăn, tốc độ của trò chơi (được dùng để xác định thời gian trôi qua giữa mỗi lần di chuyển của snake), trạng thái của trò chơi (game đang diễn ra hay người chơi đã thắng hoặc thua) và điểm số của người chơi.</p>
+
+    <p>Struct này chứa các method xử lý từng bước của trò chơi, xác định bước đi tiếp theo của snake và cập nhật trạng thái trò chơi cho phù hợp. Nó cũng chứa hai method — <code>game_matrix</code> và <code>score_matrix</code> — xuất ra các mảng 2D các giá trị có thể được dùng để hiển thị trạng thái trò chơi hoặc điểm số của người chơi trên ma trận LED (như chúng ta sẽ thấy sau).</p>
+
+    <pre><code class="language-rust">use heapless::FnvIndexSet;
+
+/// A single point on the grid.
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+struct Coords {
+   row: i8,
+   col: i8
+}
+
+impl Coords {
+   fn random(
+      rng: &amp;mut Prng,
+      exclude: Option&lt;&amp;FnvIndexSet&lt;Coords, 32&gt;&gt;
+   ) -&gt; Self {
+      let mut coords = Coords {
+         row: ((rng.random_u32() as usize) % 5) as i8,
+         col: ((rng.random_u32() as usize) % 5) as i8
+      };
+      while exclude.is_some_and(|exc| exc.contains(&amp;coords)) {
+         coords = Coords {
+            row: ((rng.random_u32() as usize) % 5) as i8,
+            col: ((rng.random_u32() as usize) % 5) as i8
+         }
+      }
+      coords
+   }
+
+   fn is_out_of_bounds(&amp;self) -&gt; bool {
+      self.row &lt; 0 || self.row &gt;= 5 || self.col &lt; 0 || self.col &gt;= 5
+   }
+}
+
+/// A basic pseudo-random number generator.
+struct Prng {
+    value: u32
+}
+
+impl Prng {
+    fn new(seed: u32) -&gt; Self {
+        Self {value: seed}
+    }
+
+    fn xorshift32(mut input: u32) -&gt; u32 {
+        input ^= input &lt;&lt; 13;
+        input ^= input &gt;&gt; 17;
+        input ^= input &lt;&lt; 5;
+        input
+    }
+
+    fn random_u32(&amp;mut self) -&gt; u32 {
+        self.value = Self::xorshift32(self.value);
+        self.value
+    }
+}
+
+/// Define the directions the snake can move.
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+/// What direction the snake should turn.
+#[derive(Debug, Copy, Clone)]
+pub enum Turn {
+    Left,
+    Right,
+    None
+}
+
+/// The current status of the game.
+pub enum GameStatus {
+    Won,
+    Lost,
+    Ongoing
+}
+
+/// The outcome of a single move/step.
+enum StepOutcome {
+    Full(Coords),
+    Collision(Coords),
+    Eat(Coords),
+    Move(Coords)
+}
+
+use heapless::spsc::Queue;
+
+struct Snake {
+    head: Coords,
+    tail: Queue&lt;Coords, 32&gt;,
+    coord_set: FnvIndexSet&lt;Coords, 32&gt;,
+    direction: Direction
+}
+
+impl Snake {
+    fn new() -&gt; Self {
+        let head = Coords { row: 2, col: 2 };
+        let initial_tail = Coords { row: 2, col: 1 };
+        let mut tail = Queue::new();
+        tail.enqueue(initial_tail).unwrap();
+        let mut coord_set: FnvIndexSet&lt;Coords, 32&gt; = FnvIndexSet::new();
+        coord_set.insert(head).unwrap();
+        coord_set.insert(initial_tail).unwrap();
+        Self {
+            head,
+            tail,
+            coord_set,
+            direction: Direction::Right,
+        }
+    }
+
+    fn move_snake(&amp;mut self, coords: Coords, extend: bool) {
+        self.tail.enqueue(self.head).unwrap();
+        self.head = coords;
+        self.coord_set.insert(coords).unwrap();
+        if !extend {
+            let back = self.tail.dequeue().unwrap();
+            self.coord_set.remove(&amp;back);
+        }
+    }
+
+    fn turn_right(&amp;mut self) {
+        self.direction = match self.direction {
+            Direction::Up =&gt; Direction::Right,
+            Direction::Down =&gt; Direction::Left,
+            Direction::Left =&gt; Direction::Up,
+            Direction::Right =&gt; Direction::Down
+        }
+    }
+
+    fn turn_left(&amp;mut self) {
+        self.direction = match self.direction {
+            Direction::Up =&gt; Direction::Left,
+            Direction::Down =&gt; Direction::Right,
+            Direction::Left =&gt; Direction::Down,
+            Direction::Right =&gt; Direction::Up
+        }
+    }
+
+    fn turn(&amp;mut self, direction: Turn) {
+        match direction {
+            Turn::Left =&gt; self.turn_left(),
+            Turn::Right =&gt; self.turn_right(),
+            Turn::None =&gt; ()
+        }
+    }
+}
+
+/// Struct to hold game state and associated behaviour
+pub(crate) struct Game {
+    rng: Prng,
+    snake: Snake,
+    food_coords: Coords,
+    speed: u8,
+    pub(crate) status: GameStatus,
+    score: u8
+}
+
+impl Game {
+    pub(crate) fn new(rng_seed: u32) -&gt; Self {
+        let mut rng = Prng::new(rng_seed);
+        let mut tail: FnvIndexSet&lt;Coords, 32&gt; = FnvIndexSet::new();
+        tail.insert(Coords { row: 2, col: 1 }).unwrap();
+        let snake = Snake::new();
+        let food_coords = Coords::random(&amp;mut rng, Some(&amp;snake.coord_set));
+        Self {
+            rng,
+            snake,
+            food_coords,
+            speed: 1,
+            status: GameStatus::Ongoing,
+            score: 0
+        }
+    }
+
+    pub(crate) fn reset(&amp;mut self) {
+        self.snake = Snake::new();
+        self.place_food();
+        self.speed = 1;
+        self.status = GameStatus::Ongoing;
+        self.score = 0;
+    }
+
+    fn place_food(&amp;mut self) -&gt; Coords {
+        let coords = Coords::random(&amp;mut self.rng, Some(&amp;self.snake.coord_set));
+        self.food_coords = coords;
+        coords
+    }
+
+    fn wraparound(&amp;self, coords: Coords) -&gt; Coords {
+        if coords.row &lt; 0 {
+            Coords { row: 4, ..coords }
+        } else if coords.row &gt;= 5 {
+            Coords { row: 0, ..coords }
+        } else if coords.col &lt; 0 {
+            Coords { col: 4, ..coords }
+        } else {
+            Coords { col: 0, ..coords }
+        }
+    }
+
+    fn get_next_move(&amp;self) -&gt; Coords {
+        let head = &amp;self.snake.head;
+        let next_move = match self.snake.direction {
+            Direction::Up =&gt; Coords { row: head.row - 1, col: head.col },
+            Direction::Down =&gt; Coords { row: head.row + 1, col: head.col },
+            Direction::Left =&gt; Coords { row: head.row, col: head.col - 1 },
+            Direction::Right =&gt; Coords { row: head.row, col: head.col + 1 },
+        };
+        if next_move.is_out_of_bounds() {
+            self.wraparound(next_move)
+        } else {
+            next_move
+        }
+    }
+
+    fn get_step_outcome(&amp;self) -&gt; StepOutcome {
+        let next_move = self.get_next_move();
+        if self.snake.coord_set.contains(&amp;next_move) {
+            if next_move != *self.snake.tail.peek().unwrap() {
+                StepOutcome::Collision(next_move)
+            } else {
+                StepOutcome::Move(next_move)
+            }
+        } else if next_move == self.food_coords {
+            if self.snake.tail.len() == 23 {
+                StepOutcome::Full(next_move)
+            } else {
+                StepOutcome::Eat(next_move)
+            }
+        } else {
+            StepOutcome::Move(next_move)
+        }
+    }
+
+    fn handle_step_outcome(&amp;mut self, outcome: StepOutcome) {
+        self.status = match outcome {
+            StepOutcome::Collision(_) =&gt; GameStatus::Lost,
+            StepOutcome::Full(_) =&gt; GameStatus::Won,
+            StepOutcome::Eat(c) =&gt; {
+                self.snake.move_snake(c, true);
+                self.place_food();
+                self.score += 1;
+                if self.score % 5 == 0 {
+                    self.speed += 1
+                }
+                GameStatus::Ongoing
+            },
+            StepOutcome::Move(c) =&gt; {
+                self.snake.move_snake(c, false);
+                GameStatus::Ongoing
+            }
+        }
+    }
+
+    pub(crate) fn step(&amp;mut self, turn: Turn) {
+        self.snake.turn(turn);
+        let outcome = self.get_step_outcome();
+        self.handle_step_outcome(outcome);
+    }
+
+    pub(crate) fn step_len_ms(&amp;self) -&gt; u32 {
+        let result = 1000 - (200 * ((self.speed as i32) - 1));
+        if result &lt; 200 {
+            200u32
+        } else {
+            result as u32
+        }
+    }
+
+    pub(crate) fn game_matrix(
+        &amp;self,
+        head_brightness: u8,
+        tail_brightness: u8,
+        food_brightness: u8
+    ) -&gt; [[u8; 5]; 5] {
+        let mut values = [[0u8; 5]; 5];
+        values[self.snake.head.row as usize][self.snake.head.col as usize] = head_brightness;
+        for t in &amp;self.snake.tail {
+            values[t.row as usize][t.col as usize] = tail_brightness
+        }
+        values[self.food_coords.row as usize][self.food_coords.col as usize] = food_brightness;
+        values
+    }
+
+    pub(crate) fn score_matrix(&amp;self) -&gt; [[u8; 5]; 5] {
+        let mut values = [[0u8; 5]; 5];
+        let full_rows = (self.score as usize) / 5;
+        for r in 0..full_rows {
+            values[r] = [1; 5];
+        }
+        for c in 0..(self.score as usize) % 5 {
+            values[full_rows][c] = 1;
+        }
+        values
+    }
+}</code></pre>
+
+    <h3>File <code>main.rs</code> ban đầu</h3>
+
+    <p>Code sau đây nên được đặt trong file <code>main.rs</code> của chúng ta.</p>
+
+    <p>Sau khi khởi tạo board và các peripheral timer và RNG của nó, chúng ta khởi tạo một struct <code>Game</code> và một <code>Display</code> từ module <code>microbit::display::blocking</code>.</p>
+
+    <p>Trong "vòng lặp game" (chạy bên trong "vòng lặp chính" mà chúng ta đặt trong hàm <code>main</code>), chúng ta liên tục thực hiện các bước sau:</p>
+
+    <ol>
+      <li>Lấy một mảng 5x5 bytes biểu diễn lưới. Method <code>Game::game_matrix</code> nhận ba đối số nguyên (nên từ 0 đến 9) biểu diễn độ sáng của đầu, đuôi và thức ăn. <code>Display</code> cơ bản mà chúng ta đang dùng ở thời điểm này không hỗ trợ độ sáng thay đổi, nên chúng ta chỉ cung cấp giá trị 9 cho mỗi cái (nhưng bất kỳ giá trị khác 0 nào cũng được) ở giai đoạn này.</li>
+      <li>Hiển thị ma trận, trong một khoảng thời gian được xác định bởi method <code>Game::step_len_ms</code>. Như hiện tại, method này về cơ bản cung cấp 1 giây giữa các bước, giảm 200ms mỗi khi người chơi ghi được 5 điểm (ăn 1 thức ăn = 1 điểm), với mức tối thiểu là 200ms.</li>
+      <li>Kiểm tra trạng thái game. Nếu là <code>Ongoing</code> (giá trị ban đầu của nó), chạy một bước game và cập nhật trạng thái game (bao gồm thuộc tính <code>status</code> của nó). Nếu không, game đã kết thúc, vì vậy nhấp nháy hình ảnh hiện tại ba lần, sau đó hiển thị điểm số của người chơi (được biểu diễn bằng số lượng LED sáng tương ứng với điểm số), và thoát vòng lặp game.</li>
+    </ol>
+
+    <p>Vòng lặp chính của chúng ta chỉ chạy vòng lặp game liên tục, reset trạng thái game sau mỗi lần lặp.</p>
+
+    <p>Nếu bạn chạy code này, bạn sẽ thấy hai LED sáng ở giữa màn hình (đầu snake ở giữa và đuôi bên trái). Bạn cũng sẽ thấy một LED khác sáng ở đâu đó trên board, đại diện cho thức ăn của snake. Cứ khoảng một giây, snake sẽ di chuyển một ô sang phải.</p>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+mod game;
+
+use cortex_m_rt::entry;
+use microbit::{
+   Board,
+   hal::{prelude::*, Rng, Timer},
+   display::blocking::Display
+};
+use rtt_target::rtt_init_print;
+use panic_rtt_target as _;
+use crate::game::{Game, GameStatus, Turn};
+
+#[entry]
+fn main() -&gt; ! {
+   rtt_init_print!();
+   let mut board = Board::take().unwrap();
+   let mut timer = Timer::new(board.TIMER0);
+   let mut rng = Rng::new(board.RNG);
+   let mut game = Game::new(rng.random_u32());
+   let mut display = Display::new(board.display_pins);
+
+   loop {
+      loop {
+         let image = game.game_matrix(9, 9, 9);
+         display.show(&amp;mut timer, image, game.step_len_ms());
+         match game.status {
+            GameStatus::Ongoing =&gt; game.step(Turn::None),
+            _ =&gt; {
+               for _ in 0..3 {
+                  display.clear();
+                  timer.delay_ms(200u32);
+                  display.show(&amp;mut timer, image, 200);
+               }
+               display.clear();
+               display.show(&amp;mut timer, game.score_matrix(), 1000);
+               break
+            }
+         }
+      }
+      game.reset();
+   }
+}</code></pre>
+
+    <p>Tiếp theo chúng ta sẽ thêm khả năng điều khiển chuyển động của snake.</p>
+
+    <!-- ================================================================ -->
+    <h2 id="controls">Phần 2 — Controls (<code>controls.rs</code>)</h2>
+    <!-- ================================================================ -->
+
+    <p>Nhân vật chính của chúng ta sẽ được điều khiển bởi hai nút bấm ở mặt trước của micro:bit. Nút A sẽ rẽ sang (trái của snake), và nút B sẽ rẽ sang (phải của snake).</p>
+
+    <p>Implementation sử dụng macro <code>microbit::pac::interrupt</code> để xử lý các lần nhấn nút đồng thời. Interrupt đến từ peripheral GPIOTE (<strong>G</strong>eneral <strong>P</strong>urpose <strong>I</strong>nput/<strong>O</strong>utput <strong>T</strong>asks and <strong>E</strong>vents) của micro:bit.</p>
+
+    <h3>Module <code>controls</code></h3>
+
+    <p>Code trong phần này nên được đặt trong một file riêng, <code>controls.rs</code>, trong thư mục <code>src</code>.</p>
+
+    <p>Hai mảnh trạng thái global mutable riêng biệt phải được theo dõi: một tham chiếu đến peripheral <code>GPIOTE</code> và một bản ghi về hướng rẽ đã chọn tiếp theo.</p>
+
+    <pre><code class="language-rust">use core::cell::RefCell;
+use cortex_m::interrupt::Mutex;
+use microbit::hal::gpiote::Gpiote;
+use crate::game::Turn;
+
+static GPIO: Mutex&lt;RefCell&lt;Option&lt;Gpiote&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
+static TURN: Mutex&lt;RefCell&lt;Turn&gt;&gt; = Mutex::new(RefCell::new(Turn::None));</code></pre>
+
+    <p>Dữ liệu được bọc trong <code>RefCell</code> để cho phép interior mutability. <code>RefCell</code> được bọc trong <code>cortex_m::interrupt::Mutex</code> để cho phép truy cập an toàn. Mutex sử dụng khái niệm critical section — dữ liệu chỉ có thể được truy cập từ bên trong một function hoặc closure được truyền vào <code>cortex_m::interrupt::free</code>, đảm bảo code không thể bị ngắt.</p>
+
+    <p>Đầu tiên, khởi tạo các nút bấm:</p>
+
+    <pre><code class="language-rust">use cortex_m::interrupt::free;
+use microbit::{
+    board::Buttons,
+    pac::{self, GPIOTE}
+};
+
+pub(crate) fn init_buttons(board_gpiote: GPIOTE, board_buttons: Buttons) {
+    let gpiote = Gpiote::new(board_gpiote);
+
+    let channel0 = gpiote.channel0();
+    channel0
+        .input_pin(&amp;board_buttons.button_a.degrade())
+        .hi_to_lo()
+        .enable_interrupt();
+    channel0.reset_events();
+
+    let channel1 = gpiote.channel1();
+    channel1
+        .input_pin(&amp;board_buttons.button_b.degrade())
+        .hi_to_lo()
+        .enable_interrupt();
+    channel1.reset_events();
+
+    free(move |cs| {
+        *GPIO.borrow(cs).borrow_mut() = Some(gpiote);
+
+        unsafe {
+            pac::NVIC::unmask(pac::Interrupt::GPIOTE);
+        }
+        pac::NVIC::unpend(pac::Interrupt::GPIOTE);
+    });
+}</code></pre>
+
+    <p>Peripheral <code>GPIOTE</code> trên nRF52 có 8 "channel", mỗi channel kết nối với một pin <code>GPIO</code> và được cấu hình để phản hồi với các sự kiện nhất định, bao gồm các chuyển đổi rising edge và falling edge. Một nút bấm là một pin <code>GPIO</code> với tín hiệu cao khi không được nhấn và thấp khi nhấn, vì vậy một lần nhấn nút là một falling edge.</p>
+
+    <p>Channel 0 kết nối với nút A và channel 1 kết nối với nút B, cả hai được cấu hình để tạo ra sự kiện khi falling edge. Một tham chiếu đến peripheral <code>GPIOTE</code> được lưu trong <code>GPIO</code> Mutex. Interrupts sau đó được unmask và bất kỳ trạng thái pending nào được xóa.</p>
+
+    <p>Tiếp theo, viết interrupt handler sử dụng macro <code>interrupt</code> từ <code>microbit::pac</code>:</p>
+
+    <pre><code class="language-rust">use microbit::pac::interrupt;
+
+#[interrupt]
+fn GPIOTE() {
+    free(|cs| {
+        if let Some(gpiote) = GPIO.borrow(cs).borrow().as_ref() {
+            let a_pressed = gpiote.channel0().is_event_triggered();
+            let b_pressed = gpiote.channel1().is_event_triggered();
+
+            let turn = match (a_pressed, b_pressed) {
+                (true, false) =&gt; Turn::Left,
+                (false, true) =&gt; Turn::Right,
+                _ =&gt; Turn::None
+            };
+
+            gpiote.channel0().reset_events();
+            gpiote.channel1().reset_events();
+
+            *TURN.borrow(cs).borrow_mut() = turn;
+        }
+    });
+}</code></pre>
+
+    <p>Khi một interrupt <code>GPIOTE</code> xảy ra, mỗi nút được kiểm tra. Nếu chỉ có nút A được nhấn, snake nên rẽ trái. Nếu chỉ có nút B được nhấn, nó nên rẽ phải. Nếu không, không có lượt rẽ nào được ghi lại. Tất cả điều này xảy ra trong một block <code>free</code> để ngăn chặn việc bị ngắt thêm.</p>
+
+    <p>Cuối cùng, expose một function đơn giản để lấy lượt rẽ tiếp theo:</p>
+
+    <pre><code class="language-rust">pub fn get_turn(reset: bool) -&gt; Turn {
+    free(|cs| {
+        let turn = *TURN.borrow(cs).borrow();
+        if reset {
+            *TURN.borrow(cs).borrow_mut() = Turn::None
+        }
+        turn
+    })
+}</code></pre>
+
+    <p>Function này trả về giá trị hiện tại của <code>TURN</code> Mutex. Nó nhận một đối số boolean, <code>reset</code>. Khi <code>reset</code> là <code>true</code>, giá trị được reset về <code>Turn::None</code>.</p>
+
+    <h3>Cập nhật file <code>main.rs</code></h3>
+
+    <p>Quay lại hàm <code>main</code> và thêm một lời gọi đến <code>init_buttons</code> trước vòng lặp chính. Trong vòng lặp game, thay thế đối số placeholder <code>Turn::None</code> cho <code>game.step</code> bằng giá trị trả về từ <code>get_turn</code>.</p>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+mod game;
+mod control;
+
+use cortex_m_rt::entry;
+use microbit::{
+    Board,
+    hal::{prelude::*, Rng, Timer},
+    display::blocking::Display
+};
+use rtt_target::rtt_init_print;
+use panic_rtt_target as _;
+
+use crate::game::{Game, GameStatus};
+use crate::control::{init_buttons, get_turn};
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let mut board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0);
+    let mut rng = Rng::new(board.RNG);
+    let mut game = Game::new(rng.random_u32());
+
+    let mut display = Display::new(board.display_pins);
+
+    init_buttons(board.GPIOTE, board.buttons);
+
+    loop {
+        loop {
+            let image = game.game_matrix(9, 9, 9);
+            display.show(&amp;mut timer, image, game.step_len_ms());
+            match game.status {
+                GameStatus::Ongoing =&gt; game.step(get_turn(true)),
+                _ =&gt; {
+                    for _ in 0..3 {
+                        display.clear();
+                        timer.delay_ms(200u32);
+                        display.show(&amp;mut timer, image, 200);
+                    }
+                    display.clear();
+                    display.show(&amp;mut timer, game.score_matrix(), 1000);
+                    break
+                }
+            }
+        }
+        game.reset();
+    }
+}</code></pre>
+
+    <p>Bây giờ snake có thể được điều khiển bằng các nút bấm của micro:bit!</p>
+
+    <!-- ================================================================ -->
+    <h2 id="nonblocking-display">Phần 3 — Non-blocking Display (<code>display.rs</code>)</h2>
+    <!-- ================================================================ -->
+
+    <p>Bây giờ chúng ta đã có một trò chơi snake cơ bản hoạt động được. Nhưng bạn có thể thấy rằng khi snake dài hơn một chút, có thể khó phân biệt snake với thức ăn, và khó xác định hướng đầu snake đang hướng tới, vì tất cả LED đều có cùng độ sáng. Hãy khắc phục điều đó.</p>
+
+    <p>Thư viện <code>microbit</code> cung cấp hai interface khác nhau đến ma trận LED: một interface blocking cơ bản mà chúng ta đã dùng, và một interface non-blocking cho phép bạn tùy chỉnh độ sáng của từng LED. Ở cấp độ phần cứng, mỗi LED chỉ "bật" hoặc "tắt", nhưng module <code>microbit::display::nonblocking</code> mô phỏng mười mức độ sáng cho mỗi LED bằng cách nhanh chóng chuyển đổi LED bật và tắt.</p>
+
+    <p>Code để tương tác với interface non-blocking khá đơn giản và sẽ theo cấu trúc tương tự như code chúng ta đã dùng để tương tác với các nút bấm.</p>
+
+    <pre><code class="language-rust">use core::cell::RefCell;
+use cortex_m::interrupt::{free, Mutex};
+use microbit::display::nonblocking::Display;
+use microbit::gpio::DisplayPins;
+use microbit::pac;
+use microbit::pac::TIMER1;
+
+static DISPLAY: Mutex&lt;RefCell&lt;Option&lt;Display&lt;TIMER1&gt;&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
+
+pub(crate) fn init_display(board_timer: TIMER1, board_display: DisplayPins) {
+    let display = Display::new(board_timer, board_display);
+
+    free(move |cs| {
+        *DISPLAY.borrow(cs).borrow_mut() = Some(display);
+    });
+    unsafe {
+        pac::NVIC::unmask(pac::Interrupt::TIMER1)
+    }
+}</code></pre>
+
+    <p>Đầu tiên, chúng ta khởi tạo một struct <code>microbit::display::nonblocking::Display</code> đại diện cho màn hình LED, truyền vào peripheral <code>TIMER1</code> và <code>DisplayPins</code> của board. Sau đó chúng ta lưu display trong một Mutex. Cuối cùng, chúng ta unmask interrupt <code>TIMER1</code>.</p>
+
+    <p>Chúng ta sau đó định nghĩa một vài convenience function cho phép chúng ta dễ dàng set (hoặc unset) hình ảnh được hiển thị.</p>
+
+    <pre><code class="language-rust">use tiny_led_matrix::Render;
+
+pub(crate) fn display_image(image: &amp;impl Render) {
+    free(|cs| {
+        if let Some(display) = DISPLAY.borrow(cs).borrow_mut().as_mut() {
+            display.show(image);
+        }
+    })
+}
+
+pub(crate) fn clear_display() {
+    free(|cs| {
+        if let Some(display) = DISPLAY.borrow(cs).borrow_mut().as_mut() {
+            display.clear();
+        }
+    })
+}</code></pre>
+
+    <p><code>display_image</code> nhận một hình ảnh và yêu cầu display hiển thị nó. Giống như method <code>Display::show</code> mà nó gọi, function này nhận một struct implement trait <code>tiny_led_matrix::Render</code>. Trait đó đảm bảo rằng struct chứa dữ liệu và các method cần thiết để <code>Display</code> render trên ma trận LED. Hai implementation của <code>Render</code> được cung cấp bởi module <code>microbit::display::nonblocking</code> là <code>BitImage</code> và <code>GreyscaleImage</code>. Trong một <code>BitImage</code>, mỗi "pixel" (hoặc LED) hoặc được chiếu sáng hoặc không (như khi chúng ta dùng blocking interface), trong khi đó trong <code>GreyscaleImage</code> mỗi "pixel" có thể có độ sáng khác nhau.</p>
+
+    <p><code>clear_display</code> làm đúng như tên gọi của nó.</p>
+
+    <p>Cuối cùng, chúng ta dùng macro <code>interrupt</code> để định nghĩa một handler cho interrupt <code>TIMER1</code>. Interrupt này kích hoạt nhiều lần trong một giây, và đây là điều cho phép <code>Display</code> nhanh chóng chu kỳ bật và tắt các LED khác nhau để tạo ra ảo giác về các mức độ sáng khác nhau. Tất cả code handler của chúng ta làm là gọi method <code>Display::handle_display_event</code>, xử lý điều này.</p>
+
+    <pre><code class="language-rust">use microbit::pac::interrupt;
+
+#[interrupt]
+fn TIMER1() {
+    free(|cs| {
+        if let Some(display) = DISPLAY.borrow(cs).borrow_mut().as_mut() {
+            display.handle_display_event();
+        }
+    })
+}</code></pre>
+
+    <h3>File <code>main.rs</code> hoàn chỉnh</h3>
+
+    <p>Bây giờ chúng ta chỉ cần cập nhật hàm <code>main</code> để gọi <code>init_display</code> và sử dụng các function mới mà chúng ta đã định nghĩa để tương tác với màn hình mới đẹp mắt của chúng ta.</p>
+
+    <p>Lưu ý rằng bây giờ chúng ta gọi <code>game.game_matrix(6, 3, 9)</code> thay vì <code>game.game_matrix(9, 9, 9)</code>. Điều này có nghĩa là:</p>
+    <ul>
+      <li>Đầu snake được hiển thị ở độ sáng <strong>6</strong> (trung bình)</li>
+      <li>Đuôi snake được hiển thị ở độ sáng <strong>3</strong> (tối nhất)</li>
+      <li>Thức ăn được hiển thị ở độ sáng <strong>9</strong> (sáng nhất)</li>
+    </ul>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+mod game;
+mod control;
+mod display;
+
+use cortex_m_rt::entry;
+use microbit::{
+    Board,
+    hal::{prelude::*, Rng, Timer},
+    display::nonblocking::{BitImage, GreyscaleImage}
+};
+use rtt_target::rtt_init_print;
+use panic_rtt_target as _;
+
+use crate::control::{get_turn, init_buttons};
+use crate::display::{clear_display, display_image, init_display};
+use crate::game::{Game, GameStatus};
+
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let mut board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0).into_periodic();
+    let mut rng = Rng::new(board.RNG);
+    let mut game = Game::new(rng.random_u32());
+
+    init_buttons(board.GPIOTE, board.buttons);
+    init_display(board.TIMER1, board.display_pins);
+
+
+    loop {
+        loop {  // Game loop
+            let image = GreyscaleImage::new(&amp;game.game_matrix(6, 3, 9));
+            display_image(&amp;image);
+            timer.delay_ms(game.step_len_ms());
+            match game.status {
+                GameStatus::Ongoing =&gt; game.step(get_turn(true)),
+                _ =&gt; {
+                    for _ in 0..3 {
+                        clear_display();
+                        timer.delay_ms(200u32);
+                        display_image(&amp;image);
+                        timer.delay_ms(200u32);
+                    }
+                    clear_display();
+                    display_image(&amp;BitImage::new(&amp;game.score_matrix()));
+                    timer.delay_ms(2000u32);
+                    break
+                }
+            }
+        }
+        game.reset();
+    }
+}</code></pre>
 
     <div class="nav-buttons">
       <a href="15-interrupts.html" class="nav-btn">← Interrupts</a>

@@ -54,94 +54,65 @@
   </div>
   <main id="main">
 
-    <h1>Punch-o-meter 👊</h1>
+    <h1>Punch-o-meter</h1>
 
-    <p>Chương này xây dựng một <strong>máy đo lực đấm</strong> — dùng accelerometer tích hợp để đo gia tốc tối đa khi đấm. Sức mạnh và gia tốc tỉ lệ thuận nhau, nên gia tốc là proxy hợp lý cho lực.</p>
+    <p>Trong phần này chúng ta sẽ chơi với accelerometer trên board.</p>
 
-    <div class="callout note">
-      <div class="callout-icon">📐</div>
-      <div class="callout-body">
-        <div class="callout-title">Accelerometer là gì?</div>
-        <p>Accelerometer đo <strong>gia tốc tuyến tính</strong> — sự thay đổi vận tốc theo thời gian. Đơn vị đo là "g" (gravitational acceleration, ~9.8 m/s²). LSM303AGR của MB2 đo theo 3 trục và trả về đơn vị <strong>milli-g (mg)</strong>.</p>
-      </div>
-    </div>
+    <p>Chúng ta đang xây dựng cái gì lần này? Một punch-o-meter! Chúng ta sẽ đo sức mạnh cú đấm của bạn. À thực ra là gia tốc (acceleration) tối đa mà bạn có thể đạt được, vì gia tốc là thứ mà accelerometer đo. Tuy nhiên, sức mạnh và gia tốc tỷ lệ thuận nên đây là một xấp xỉ tốt.</p>
 
-    <h2>Trọng lực đang hướng lên?!</h2>
+    <p>Như chúng ta đã biết từ các chương trước, accelerometer được tích hợp bên trong package LSM303AGR. Và giống như magnetometer, nó có thể truy cập thông qua bus I2C. Nó cũng có cùng hệ tọa độ như magnetometer.</p>
 
-    <p>Đây là điều gây nhầm lẫn nhất với người mới làm quen accelerometer:</p>
+    <h2>Gravity is up?</h2>
 
-    <div class="diagram">
-      <div class="diagram-title">🌍 Accelerometer đo gì khi đứng yên</div>
-      <div class="flex-row">
-        <div class="state-card state-card--green">
-          <div class="state-card__icon">📏</div>
-          <div class="state-card__title state-card__title--green">Board đứng yên, nằm phẳng</div>
-          <div class="state-card__values">
-            X = ~0 mg<br>Y = ~0 mg<br><strong style="color:#1a7f37;">Z = ~+1000 mg</strong>
-          </div>
-          <div class="state-card__note">Vì mặt bàn đẩy lên board bằng phản lực trọng lực</div>
-        </div>
-        <div class="state-card state-card--red">
-          <div class="state-card__icon">🪂</div>
-          <div class="state-card__title state-card__title--red">Board rơi tự do</div>
-          <div class="state-card__values">
-            X = ~0 mg<br>Y = ~0 mg<br><strong style="color:#82071e;">Z = ~0 mg</strong>
-          </div>
-          <div class="state-card__note">Không có lực phản tác động nào</div>
-        </div>
-        <div class="state-card state-card--blue">
-          <div class="state-card__icon">👊</div>
-          <div class="state-card__title state-card__title--blue">Khi đấm</div>
-          <div class="state-card__values">
-            Trục đấm: <strong style="color:#0550ae;">rất cao</strong><br>Trục khác: thay đổi
-          </div>
-          <div class="state-card__note">Gia tốc tức thời lớn</div>
-        </div>
-      </div>
-    </div>
+    <p>Chúng ta sẽ làm gì đầu tiên?</p>
 
-    <h2>Tính magnitude của gia tốc</h2>
+    <p>Thực hiện một sanity check!</p>
 
-    <p>Để đo "sức mạnh" tổng hợp bất kể hướng đấm, dùng <strong>vector magnitude</strong>:</p>
+    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu accelerometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Bạn có quan sát thấy điều gì thú vị ngay cả khi giữ board song song với sàn nhà với mặt LED hướng xuống?</p>
 
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">use libm::sqrtf;
+    <p>Bạn sẽ thấy rằng cả giá trị X và Y đều khá gần 0, trong khi giá trị Z ở khoảng 1000. Điều này lạ vì board không di chuyển mà gia tốc của nó lại khác không. Chuyện gì đang xảy ra? Chắc phải liên quan đến trọng lực, đúng không? Vì gia tốc trọng trường là 1 g (aha, <code>1 g</code> = 1000 từ accelerometer). Nhưng trọng lực kéo vật thể xuống nên gia tốc theo trục Z phải là âm, không phải dương.</p>
 
-// Đọc gia tốc (đơn vị: milli-g)
-let accel = sensor.acceleration().unwrap();
-let x = accel.x_mg() as f32;
-let y = accel.y_mg() as f32;
-let z = accel.z_mg() as f32;
+    <p>Chương trình có lấy ngược trục Z không? Không, bạn có thể thử xoay board để canh chỉnh trọng lực theo trục X hoặc Y nhưng gia tốc đo bởi accelerometer luôn chỉ lên trên.</p>
 
-// Tính magnitude
-let magnitude = sqrtf(x*x + y*y + z*z);
+    <p>Điều xảy ra ở đây là accelerometer đo <em>gia tốc riêng</em> (proper acceleration) của board, không phải gia tốc mà bạn đang quan sát. Gia tốc riêng này là gia tốc của board nhìn từ một người quan sát đang rơi tự do. Một người quan sát đang rơi tự do di chuyển về phía tâm Trái Đất với gia tốc <code>1g</code>; từ góc nhìn của họ, board thực sự đang di chuyển lên trên (xa khỏi tâm Trái Đất) với gia tốc <code>1g</code>. Và đó là lý do tại sao gia tốc riêng chỉ lên trên. Điều này cũng có nghĩa là nếu board đang rơi tự do, accelerometer sẽ báo cáo gia tốc riêng bằng không. Xin đừng thử ở nhà.</p>
 
-// Trừ đi 1g (trọng lực ở trạng thái tĩnh)
-// 1g = 1000 mg
-let net_accel = magnitude - 1000.0;</code></pre>
+    <table>
+      <caption>Gia tốc riêng (proper acceleration) đo bởi LSM303AGR trong các tư thế khác nhau</caption>
+      <thead>
+        <tr><th>Tư thế board</th><th>Trục X (mg)</th><th>Trục Y (mg)</th><th>Trục Z (mg)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nằm phẳng, mặt LED lên trên</td><td>≈ 0</td><td>≈ 0</td><td>≈ +1000</td></tr>
+        <tr><td>Nằm phẳng, mặt LED xuống dưới</td><td>≈ 0</td><td>≈ 0</td><td>≈ −1000</td></tr>
+        <tr><td>Nghiêng cạnh X lên trên</td><td>≈ +1000</td><td>≈ 0</td><td>≈ 0</td></tr>
+        <tr><td>Rơi tự do</td><td>≈ 0</td><td>≈ 0</td><td>≈ 0</td></tr>
+      </tbody>
+    </table>
 
-    <h2>Bài tập: Punch-o-meter</h2>
+    <p>Vâng, vật lý rất khó. Hãy tiếp tục.</p>
 
-    <p>Viết chương trình:</p>
-    <ol>
-      <li>Liên tục đọc accelerometer</li>
-      <li>Tính magnitude của vector gia tốc</li>
-      <li>Trừ đi 1g (thành phần trọng lực khi đứng yên)</li>
-      <li>Theo dõi giá trị tối đa</li>
-      <li>Nhấn Button A để hiển thị kết quả tối đa qua RTT</li>
-    </ol>
+    <h2>Thử thách</h2>
 
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý</div>
-        <p>Bạn có thể đạt giá trị G khá cao bằng cách gõ cạnh MB2 xuống bàn. Tuy nhiên, làm vậy có thể làm hỏng accelerometer, vì vậy tốt nhất là đừng làm thế.</p>
-      </div>
-    </div>
+    <p>Để giữ mọi thứ đơn giản, chúng ta sẽ chỉ đo gia tốc theo trục X trong khi board giữ nằm ngang. Bằng cách đó chúng ta sẽ không phải trừ đi <code>1g</code> ảo mà chúng ta quan sát trước đó — điều này sẽ rất khó vì <code>1g</code> đó có thể có các thành phần X Y Z tùy thuộc vào cách board được đặt.</p>
 
-    <h2>Giải pháp (my solution)</h2>
+    <p align="center">
+      <img src="assets/mb2-punch-axis.svg" title="Punch Axis" class="white_bg" />
+    </p>
 
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <p>Đây là những gì punch-o-meter phải làm:</p>
+    <ul>
+      <li>Mặc định, ứng dụng không "quan sát" gia tốc của board.</li>
+      <li>Khi phát hiện gia tốc X đáng kể (tức là gia tốc vượt ngưỡng nào đó), ứng dụng nên bắt đầu đo lường mới.</li>
+      <li>Trong khoảng thời gian đo lường đó, ứng dụng nên theo dõi gia tốc tối đa quan sát được.</li>
+      <li>Sau khi khoảng thời gian đo kết thúc, ứng dụng phải báo cáo gia tốc tối đa đã quan sát. Bạn có thể báo cáo giá trị bằng macro <code>rprintln!</code>.</li>
+    </ul>
+
+    <p>Hãy thử và cho tôi biết bạn có thể đấm mạnh đến mức nào ;-)</p>
+
+    <p><strong>LƯU Ý:</strong> Có hai API bổ sung hữu ích cho nhiệm vụ này mà chúng ta chưa thảo luận. Đầu tiên là <a href="https://docs.rs/lsm303agr/0.2.2/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale">set_accel_scale</a> — bạn cần nó để đo giá trị g cao. Thứ hai là trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/timer/trait.CountDown.html">Countdown</a> từ <code>embedded_hal</code>. Nếu bạn quyết định dùng nó để giữ khoảng thời gian đo, bạn sẽ phải pattern match trên kiểu <a href="https://docs.rs/nb/1.0.0/nb/type.Result.html">nb::Result</a> thay vì dùng macro <code>block!</code> như trong các chương trước.</p>
+
+    <h2>Lời giải của tôi</h2>
+
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
@@ -174,41 +145,33 @@ fn main() -&gt; ! {
     sensor
         .set_accel_mode_and_odr(&amp;mut delay, AccelMode::Normal, AccelOutputDataRate::Hz400)
         .unwrap();
-    // Allow the sensor to measure up to 16 G since human punches
-    // can actually be quite fast
+    // Cho phép đo đến 16G vì cú đấm của người thực sự rất nhanh
     sensor.set_accel_scale(AccelScale::G16).unwrap();
 
     let mut max_g = 0.;
-    let mut countdown_ticks = None;
+    let mut countdown_ticks: Option&lt;u32&gt; = None;
 
     loop {
         while !sensor.accel_status().unwrap().xyz_new_data() {
             nop();
         }
-        // x acceleration in g
         let (x, _, _) = sensor.acceleration().unwrap().xyz_mg();
         let g_x = x as f32 / 1000.0;
 
         if let Some(ticks) = countdown_ticks {
             if ticks &gt; 0 {
-                // countdown isn't done yet
                 if g_x &gt; max_g {
                     max_g = g_x;
                 }
                 countdown_ticks = Some(ticks - 1);
             } else {
-                // Countdown is done: report max value
                 rprintln!("Max acceleration: {}g", max_g);
-
-                // Reset
                 max_g = 0.;
                 countdown_ticks = None;
             }
         } else {
-            // If acceleration goes above a threshold, we start measuring
             if g_x &gt; THRESHOLD {
                 rprintln!("START!");
-
                 max_g = g_x;
                 countdown_ticks = Some(TICKS_PER_SEC);
             }

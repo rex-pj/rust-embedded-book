@@ -155,7 +155,119 @@ fn main() -&gt; ! {
 
     <p>NVIC (Nested Vector Interrupt Controller) trên các processor Arm xử lý việc ưu tiên và thực thi các interrupt từ nhiều peripheral. Preemption cho phép processor phản hồi rất nhanh với các sự kiện quan trọng. Interrupt "pending" được nhớ lại và thực thi sau khi interrupt service routine hiện tại hoàn thành.</p>
 
-    <p>Interrupt table lưu các địa chỉ của các hàm interrupt handler trong bộ nhớ. Bytes 64 đến 256 chứa địa chỉ của tất cả 48 interrupt handler cho nRF processor chúng ta dùng, bốn byte cho mỗi địa chỉ. Ví dụ, TIMER0 là interrupt số 8, vì vậy bytes 96 đến 100 chứa địa chỉ bốn byte của interrupt handler TIMER0. Crate <code>cortex-m-rt</code> quản lý bảng này bằng macro <code>#[interrupt]</code>.</p>
+    <p>Mỗi interrupt có một mức ưu tiên (priority). Interrupt có ưu tiên cao hơn có thể preempt (chen ngang) interrupt đang chạy. Ví dụ, một robot controller có thể dùng low-priority interrupt để gửi status cho operator, nhưng dùng high-priority interrupt khi cảm biến phát hiện va chạm sắp xảy ra.</p>
+
+    <p>Interrupt table nằm đầu flash memory, chứa địa chỉ của các handler. Bytes 64 đến 256 chứa 48 interrupt handler cho nRF processor của chúng ta (4 byte mỗi địa chỉ). TIMER0 là interrupt số 8, nên bytes 96–100 chứa địa chỉ handler TIMER0. Crate <code>cortex-m-rt</code> quản lý bảng này bằng macro <code>#[interrupt]</code>.</p>
+
+    <h2>Chia sẻ dữ liệu với globals</h2>
+
+    <p>ISR không nhận tham số và không trả về giá trị — vậy ISR tương tác với phần còn lại của chương trình bằng cách nào? Qua <strong>biến global</strong> (<code>static</code>).</p>
+
+    <p>Trong Rust thông thường, chia sẻ dữ liệu giữa các thread dùng <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>. Trong embedded (không có heap), ta dùng <code>static</code> được bảo vệ bởi <strong>critical section</strong> — đoạn code tạm thời vô hiệu hóa tất cả interrupt để đảm bảo atomic access:</p>
+
+    <pre><code class="language-rust">use core::sync::atomic::{AtomicUsize, Ordering};
+use critical_section::Mutex;
+use core::cell::RefCell;
+
+// Biến đếm đơn giản: dùng Atomic
+static COUNTER: AtomicUsize = AtomicUsize::new(0);
+
+// Peripheral phức tạp: dùng Mutex + RefCell
+static TIMER: Mutex&lt;RefCell&lt;Option&lt;Timer&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
+
+// Trong ISR:
+#[interrupt]
+fn GPIOTE() {
+    COUNTER.fetch_add(1, Ordering::Relaxed);
+}
+
+// Trong main hoặc ISR khác, truy cập với critical section:
+critical_section::with(|cs| {
+    if let Some(timer) = TIMER.borrow(cs).borrow_mut().as_mut() {
+        // dùng timer
+    }
+});</code></pre>
+
+    <p>Giữ interrupt handler ngắn gọn và nhanh chóng. Chỉ cập nhật trạng thái trong handler, để main loop đọc và xử lý.</p>
+
+    <h2>Debouncing — Chống nảy phím</h2>
+
+    <p>Khi nhấn nút vật lý, tiếp điểm kim loại nảy (bounce) nhiều lần trước khi ổn định, mỗi lần nảy tạo ra một interrupt riêng. MCU chạy rất nhanh nên một lần nhấn có thể đếm thành nhiều lần.</p>
+
+    <p>Giải pháp: sau khi nhận interrupt, bỏ qua tất cả interrupt trong khoảng 50–100ms (debounce interval) bằng cách dùng timer. Khi timer còn chạy, handler không xử lý thêm sự kiện nào:</p>
+
+    <pre><code class="language-rust">// nrf-hal timer chạy ở 1 MHz (1_000_000 ticks/giây)
+// 100ms = 100 * 1_000_000 / 1000 = 100_000 ticks
+const DEBOUNCE_TIME: u32 = 100 * 1_000_000 / 1000;
+
+#[interrupt]
+fn GPIOTE() {
+    // Kiểm tra timer: nếu bằng 0 thì timer không chạy (debounce window đã qua)
+    critical_section::with(|cs| {
+        let mut timer = DEBOUNCE_TIMER.borrow(cs).borrow_mut();
+        if let Some(timer) = timer.as_mut() {
+            if timer.read() == 0 {
+                // Hợp lệ: đếm lần nhấn và bắt đầu debounce window
+                COUNTER.fetch_add(1, Ordering::Relaxed);
+                timer.start(DEBOUNCE_TIME);
+            }
+            // Nếu timer != 0: đang trong debounce window, bỏ qua
+        }
+    });
+    // Xóa event GPIOTE để tránh re-trigger ngay lập tức
+    critical_section::with(|cs| {
+        GPIOTE_CHANNEL.borrow(cs).borrow().as_ref().unwrap().reset_events();
+    });
+}</code></pre>
+
+    <h2>Waiting to be interrupted — wfi()</h2>
+
+    <p>Trong vòng lặp chính của chương trình interrupt-driven, thay vì dùng <code>asm::nop()</code> (không làm gì, nhưng vẫn tiêu thụ điện), hãy dùng <code>asm::wfi()</code> (<em>Wait For Interrupt</em>):</p>
+
+    <pre><code class="language-rust">loop {
+    asm::wfi(); // CPU ngủ cho đến khi có interrupt
+}</code></pre>
+
+    <p>Khi CPU ở chế độ WFI, nó ngừng fetch instruction, tắt một số clock và peripheral, vào trạng thái tiết kiệm điện — nhưng vẫn giữ core hoạt động để đánh thức khi có interrupt. Đây là cách tốt nhất để chờ trong embedded programming.</p>
+
+    <p>Nhiều chương trình interrupt-driven đơn giản chỉ có <code>asm::wfi()</code> trong main loop và toàn bộ logic nằm trong interrupt handler.</p>
+
+    <h2>MB2 Speaker</h2>
+
+    <p>MB2 có speaker tích hợp điều khiển bởi một GPIO pin. Khi pin HIGH (3.3V), màng loa (diaphragm) đẩy ra ngoài; khi pin LOW (GND), màng loa kéo vào. Rung nhanh tạo ra sóng âm.</p>
+
+    <p align="center">
+      <img src="assets/speaker.svg" title="Speaker Wiring" class="white_bg" />
+    </p>
+
+    <p>Ví dụ tạo sóng vuông 220Hz trong 5 giây:</p>
+
+    <pre><code class="language-rust">// Chu kỳ 220Hz: 1000ms / 220 ≈ 4.5ms
+// → mỗi nửa chu kỳ: ~2.27ms
+const FREQ: u32 = 220;
+const PERIOD_MS: u32 = 1000 / FREQ;   // 4ms (xấp xỉ)
+const CYCLES: u32 = FREQ * 5;          // 5 giây × 220Hz
+
+let mut speaker = board.speaker_pin.into_push_pull_output(gpio::Level::Low);
+for _ in 0..CYCLES {
+    speaker.set_high().unwrap();
+    timer.delay_ms(PERIOD_MS / 2);
+    speaker.set_low().unwrap();
+    timer.delay_ms(PERIOD_MS / 2);
+}
+loop { asm::wfi(); }</code></pre>
+
+    <h2>Thử thách — Còi hú (Siren)</h2>
+
+    <p>Hãy biến MB2 thành một còi hú! Yêu cầu:</p>
+    <ul>
+      <li>Còi quét tần số từ 440Hz đến 660Hz và ngược lại, hoàn thành một chu kỳ trong 1 giây</li>
+      <li>Còi chạy hoàn toàn bằng interrupt-driven (TIMER0)</li>
+      <li>Main program chạy một countdown 10 giây độc lập, không can thiệp còi</li>
+      <li>Sau countdown, dừng còi và in "launch!"</li>
+    </ul>
+
+    <p><strong>Gợi ý:</strong> Dùng một struct <code>Siren</code> global được bảo vệ bởi <code>LockMut</code> để sở hữu trạng thái còi và các peripheral cần thiết. ISR <code>TIMER0</code> gọi <code>siren.step()</code> để toggle speaker pin và lập lịch interrupt tiếp theo.</p>
 
     <h2>Giải pháp — Còi hú (Siren)</h2>
 

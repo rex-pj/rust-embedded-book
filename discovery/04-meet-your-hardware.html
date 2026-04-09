@@ -59,21 +59,15 @@
 
     <h2>micro:bit</h2>
 
-    <p>Dưới đây là một số thành phần nổi bật trên board:</p>
+    <p align="center">
+      <img title="micro:bit" src="assets/microbit-v2.jpg">
+    </p>
 
-    <div class="diagram hw-diagram">
-      <div class="hw-board">
-        <div class="hw-title">🔬 BBC micro:bit v2</div>
-        <div class="hw-components">
-          <div class="hw-component"><span class="hw-component-icon">🧠</span><div class="hw-component-name">nRF52833</div><div class="hw-component-desc">MCU chính · 512KB Flash · 128KB RAM</div></div>
-          <div class="hw-component"><span class="hw-component-icon">💡</span><div class="hw-component-name">LED Matrix</div><div class="hw-component-desc">5×5 = 25 LEDs</div></div>
-          <div class="hw-component"><span class="hw-component-icon">🔘</span><div class="hw-component-name">Buttons</div><div class="hw-component-desc">Button A + Button B</div></div>
-          <div class="hw-component"><span class="hw-component-icon">🧲</span><div class="hw-component-name">LSM303AGR</div><div class="hw-component-desc">Magnetometer + Accelerometer</div></div>
-          <div class="hw-component"><span class="hw-component-icon">🔊</span><div class="hw-component-name">Speaker</div><div class="hw-component-desc">Tích hợp sẵn</div></div>
-          <div class="hw-component"><span class="hw-component-icon">🔌</span><div class="hw-component-name">USB</div><div class="hw-component-desc">Power + Debug bridge</div></div>
-        </div>
-      </div>
-    </div>
+    <blockquote>
+      <p><strong>Lưu ý:</strong> Đây là ảnh của micro:bit v2. Mặt trước của v1 trông hơi khác một chút.</p>
+    </blockquote>
+
+    <p>Dưới đây là một số thành phần nổi bật trên board:</p>
 
     <ul>
       <li>Một microcontroller</li>
@@ -85,17 +79,34 @@
 
     <p>Trong số các thành phần đó, quan trọng nhất là microcontroller (thường viết tắt là "MCU" — microcontroller unit). Đây là khối vuông đen lớn hơn trong hai khối đen nằm ở phía mặt có cổng USB. MCU là nơi code của bạn chạy trực tiếp. Đôi khi bạn sẽ nghe người ta nói "lập trình board", nhưng thực chất chúng ta đang lập trình cho MCU được gắn trên board đó.</p>
 
-    <p>Nếu bạn muốn tìm hiểu thêm về board, có thể truy cập trang web chính thức của micro:bit để đọc mô tả chi tiết hơn.</p>
+    <p>Nếu bạn muốn tìm hiểu thêm về board, có thể truy cập <a href="https://microbit.org" target="_blank">trang web chính thức của micro:bit</a> để đọc mô tả chi tiết hơn.</p>
 
-    <p>Vì MCU quan trọng như vậy, hãy cùng tìm hiểu kỹ hơn về con chip đang có mặt trên board của chúng ta.</p>
+    <p>Vì MCU quan trọng như vậy, hãy cùng tìm hiểu kỹ hơn về con chip đang có mặt trên board của chúng ta. Lưu ý rằng chỉ một trong hai phần tiếp theo áp dụng cho board của bạn, tùy thuộc vào việc bạn đang dùng micro:bit v2 hay v1.</p>
 
     <h2>Nordic nRF52833 (hay còn gọi là "nRF52", dành cho micro:bit v2)</h2>
 
-    <p>Micro:bit v2 được vận hành bởi microcontroller Nordic nRF52833. Chip này có 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này kết nối với các đường dẫn trên mạch in, hoạt động như những "con đường điện" nối liền các thành phần lại với nhau. MCU có thể điều khiển động luồng điện qua các chân để vận hành các thiết bị kết nối như LED.</p>
+    <p>Micro:bit v2 được trang bị một MCU của Nordic Semiconductor với 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này kết nối với các đường dẫn trên mạch in, cho phép MCU điều khiển luồng điện để vận hành các thành phần như LED.</p>
+
+    <p>Nordic Semiconductor mô tả nRF52833 là một <strong>"Bluetooth Low Energy and 2.4 GHz SoC"</strong> (System on a Chip — hệ thống trên một chip). Chữ <strong>RF</strong> trong tên sản phẩm là viết tắt của <em>radio frequency</em> (tần số vô tuyến), phản ánh khả năng truyền thông không dây tích hợp trong chip.</p>
+
+    <h3>Giải mã số hiệu linh kiện</h3>
+
+    <p>Số hiệu linh kiện đầy đủ <code>N52833 QIAAA0 2024AL</code> được phân tích như sau:</p>
+
+    <ul>
+      <li><strong>N52</strong>: Dòng MCU, cho biết có các biến thể nRF52 khác cùng họ</li>
+      <li><strong>833</strong>: Mã linh kiện cụ thể (part code)</li>
+      <li><strong>QI</strong>: Mã đóng gói (package code), viết tắt của aQFN73</li>
+      <li><strong>AA</strong>: Mã biến thể (variant code), xác định 512 kilobyte flash và 128 kilobyte RAM</li>
+      <li><strong>A0</strong>: Mã build (build code), cho biết phiên bản phần cứng (A) và cấu hình sản phẩm (0)</li>
+      <li><strong>2024AL</strong>: Mã truy xuất nguồn gốc (tracking code), có thể khác nhau giữa các chip riêng lẻ</li>
+    </ul>
 
     <h3>Kiến trúc Arm Cortex-M4</h3>
 
-    <p>nRF52833 được xây dựng dựa trên "bộ xử lý Arm® Cortex™-M4 32-bit". Arm Holdings thiết kế lõi xử lý rồi cấp phép cho các nhà sản xuất như Nordic Semiconductor, thay vì tự sản xuất chip. Thiết kế Cortex-M4 ưu tiên chi phí thấp và tiêu thụ điện năng thấp, rất phù hợp cho các ứng dụng microcontroller.</p>
+    <p>nRF52833 được xây dựng dựa trên "bộ xử lý Arm® Cortex™-M4 32-bit". Arm Holdings không tự sản xuất chip; thay vào đó, họ thiết kế lõi xử lý rồi cấp phép cho các nhà sản xuất như Nordic Semiconductor. Dòng Cortex-M được thiết kế chủ yếu để dùng làm lõi microcontroller. Cortex-M4 (lõi mà chip của chúng ta sử dụng) được thiết kế hướng tới chi phí thấp và tiêu thụ điện năng thấp, trong khi các dòng cao cấp hơn như Cortex-M7 cung cấp nhiều tính năng và hiệu năng hơn.</p>
+
+    <p>Khi làm việc với nRF52833, bạn cũng sẽ gặp tài liệu và công cụ dành cho các chip Cortex-M nói chung do kiến trúc dùng chung này.</p>
 
     <h2>Thuật ngữ trong Rust Embedded</h2>
 
@@ -110,33 +121,33 @@
       <div class="stack-diagram">
         <div class="stack-layer layer-bsp">🎛️ Board Support Crate (BSP)<span class="layer-badge">micro:bit crate</span></div>
         <div class="stack-arrow">↑ dùng</div>
-        <div class="stack-layer layer-hal">⚙️ Hardware Abstraction Layer (HAL)<span class="layer-badge">nrf52-hal</span></div>
+        <div class="stack-layer layer-hal">⚙️ Hardware Abstraction Layer (HAL)<span class="layer-badge">nrf52-hal / nrf51-hal</span></div>
         <div class="stack-arrow">↑ dùng</div>
-        <div class="stack-layer layer-pac">📋 Peripheral Access Crate (PAC)<span class="layer-badge">nrf52833-pac</span></div>
+        <div class="stack-layer layer-pac">📋 Peripheral Access Crate (PAC)<span class="layer-badge">nrf52833-pac / nrf51-pac</span></div>
         <div class="stack-arrow">↑ wrap</div>
-        <div class="stack-layer layer-hw">🔧 Phần cứng thực tế (Hardware)<span class="layer-badge">nRF52833 chip</span></div>
+        <div class="stack-layer layer-hw">🔧 Phần cứng thực tế (Hardware)<span class="layer-badge">nRF52833 / nRF51 chip</span></div>
       </div>
     </div>
 
     <h4>Peripheral Access Crate (PAC)</h4>
 
-    <p>PAC cung cấp "giao diện trực tiếp (tương đối) an toàn đến các peripheral của chip, cho phép bạn cấu hình từng bit theo ý muốn." Các lập trình viên thường dùng PAC khi các lớp cấp cao hơn không đáp ứng được nhu cầu, hoặc khi đang xây dựng code ở tầng cao hơn. Dự án này sử dụng nRF52 PAC.</p>
+    <p>Nhiệm vụ của PAC là "cung cấp giao diện trực tiếp (tương đối) an toàn đến các peripheral của chip, cho phép bạn cấu hình từng bit theo ý muốn." Các lập trình viên thường dùng PAC khi các lớp cấp cao hơn không đáp ứng được nhu cầu, hoặc khi đang xây dựng code ở tầng cao hơn. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-pac" target="_blank">nRF52 PAC</a>; nếu bạn dùng micro:bit v1, hãy tham khảo <a href="https://crates.io/crates/nrf51-pac" target="_blank">nRF51 PAC</a>.</p>
 
     <h4>Hardware Abstraction Layer (HAL)</h4>
 
-    <p>Xây dựng trên nền PAC, HAL "cung cấp một lớp abstraction thực sự dễ dùng cho người không cần biết về mọi hành vi đặc biệt của chip." HAL đơn giản hóa các peripheral thành các struct dễ dùng cho các thao tác phổ biến như truyền dữ liệu. Dự án này sử dụng nrf52-hal.</p>
+    <p>Xây dựng trên nền PAC, HAL "cung cấp một lớp abstraction thực sự dễ dùng cho người không cần biết về mọi hành vi đặc biệt của chip." HAL đơn giản hóa các peripheral thành các struct dễ dùng cho các thao tác phổ biến như truyền dữ liệu. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-hal" target="_blank">nrf52-hal</a>; nếu bạn dùng micro:bit v1, hãy tham khảo <a href="https://crates.io/crates/nrf51-hal" target="_blank">nrf51-hal</a>.</p>
 
     <h4>Board Support Crate (BSP)</h4>
 
-    <p>BSP trừu tượng hóa toàn bộ một board cùng một lúc, cung cấp giao diện cho cả microcontroller lẫn các thành phần trên board như cảm biến và LED. micro:bit có BSP sẵn có, rất tiện lợi cho dự án này.</p>
+    <p>BSP trừu tượng hóa toàn bộ một board (như micro:bit) cùng một lúc, cung cấp giao diện cho cả microcontroller lẫn các thành phần trên board như cảm biến và LED. micro:bit có <a href="https://crates.io/crates/microbit" target="_blank">BSP sẵn có</a>, rất tiện lợi cho dự án này.</p>
 
     <h3>Kết nối các lớp với nhau</h3>
 
-    <p>Crate <code>embedded-hal</code> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các cài đặt của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng, tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip.</p>
+    <p>Crate <a href="https://crates.io/crates/embedded-hal" target="_blank"><code>embedded-hal</code></a> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các cài đặt của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng (<em>platform agnostic</em>), tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip miễn là chúng triển khai các trait chuẩn.</p>
 
     <h3>Tài liệu tham khảo thêm</h3>
 
-    <p>Để hiểu sâu hơn, hãy xem bài nói chuyện của Franz Skarman tại Oxidize 2020: "An Overview of the Embedded Rust Ecosystem."</p>
+    <p>Để hiểu sâu hơn về toàn bộ hệ sinh thái Rust embedded, hãy xem bài trình bày của Franz Skarman (TheZoq2) tại Oxidize 2020: <a href="https://www.youtube.com/watch?v=vLYit_HHPaY" target="_blank">"An Overview of the Embedded Rust Ecosystem"</a>.</p>
 
     <div class="nav-buttons">
       <a href="03-setup.html" class="nav-btn">← Cài đặt môi trường</a>

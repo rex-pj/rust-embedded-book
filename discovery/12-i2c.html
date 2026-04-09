@@ -54,126 +54,300 @@
   </div>
   <main id="main">
 
-    <h1>I2C 🔗</h1>
+    <h1>I2C</h1>
 
-    <p>I2C là giao thức truyền thông thay thế cho UART. Trong khi UART đơn giản và phổ biến, nó có giới hạn: tốc độ tối đa ~115200 baud, chỉ kết nối point-to-point (1-1). I2C giải quyết cả hai vấn đề này.</p>
+    <p>Chúng ta vừa thấy giao thức serial communication. Đó là một giao thức được dùng rộng rãi vì nó rất đơn giản và sự đơn giản này giúp nó dễ dàng implement trên các giao thức khác như Bluetooth và USB.</p>
 
-    <h2>I2C là gì?</h2>
+    <p>Tuy nhiên, sự đơn giản cũng là nhược điểm. Các trao đổi dữ liệu phức tạp hơn, như đọc cảm biến kỹ thuật số, sẽ đòi hỏi nhà cung cấp cảm biến phải tạo ra một giao thức khác bên trên serial.</p>
 
-    <p>I2C (<strong>Inter-Integrated Circuit</strong>, phát âm là "EYE-SQUARED-CEE") là giao thức serial bus <strong>đồng bộ</strong> dùng hai dây:</p>
+    <p>(Không) May mắn cho chúng ta, có rất nhiều giao thức truyền thông khác trong lĩnh vực embedded. Một số trong đó được dùng rộng rãi trong cảm biến kỹ thuật số.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">🔌 Topology I2C Bus</div>
-      <div style="text-align:center;">
-        <svg width="520" height="150" viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
-          <!-- SDA line -->
-          <line x1="20" y1="50" x2="500" y2="50" stroke="#54aeff" stroke-width="2.5"/>
-          <text x="10" y="46" font-size="11" font-weight="700" fill="#0550ae">SDA</text>
-          <!-- SCL line -->
-          <line x1="20" y1="80" x2="500" y2="80" stroke="#2da44e" stroke-width="2.5"/>
-          <text x="10" y="76" font-size="11" font-weight="700" fill="#1a7f37">SCL</text>
+    <p>Board micro:bit mà chúng ta đang dùng có hai cảm biến chuyển động: accelerometer và magnetometer. Cả hai cảm biến này đều được đóng gói trong một component duy nhất và có thể truy cập qua bus I2C.</p>
 
-          <!-- Controller (nRF52833) -->
-          <rect x="20" y="95" width="100" height="45" rx="6" fill="#ddf4ff" stroke="#54aeff" stroke-width="2"/>
-          <text x="70" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#0550ae">Controller</text>
-          <text x="70" y="131" text-anchor="middle" font-size="9" fill="#656d76">nRF52833</text>
-          <line x1="70" y1="95" x2="70" y2="80" stroke="#666" stroke-width="1.5"/>
-          <line x1="70" y1="95" x2="70" y2="50" stroke="#666" stroke-width="1.5"/>
+    <p>I2C viết tắt của Inter-Integrated Circuit và là một giao thức truyền thông serial đồng bộ. Nó dùng hai đường để trao đổi dữ liệu: đường dữ liệu (SDA) và đường clock (SCL). Vì có đường clock dùng để đồng bộ giao tiếp nên đây là giao thức đồng bộ (synchronous).</p>
 
-          <!-- Device 1 (Accelerometer) -->
-          <rect x="170" y="95" width="100" height="45" rx="6" fill="#dcffe4" stroke="#2da44e" stroke-width="2"/>
-          <text x="220" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#1a7f37">Accel.</text>
-          <text x="220" y="131" text-anchor="middle" font-size="9" fill="#656d76">addr: 0x19</text>
-          <line x1="220" y1="95" x2="220" y2="80" stroke="#666" stroke-width="1.5"/>
-          <line x1="220" y1="95" x2="220" y2="50" stroke="#666" stroke-width="1.5"/>
+    <p>Giao thức này dùng mô hình controller-target trong đó controller là thiết bị khởi tạo và điều khiển giao tiếp với thiết bị target. Nhiều thiết bị, cả controller lẫn target, có thể được kết nối vào cùng một bus đồng thời. Một thiết bị controller có thể giao tiếp với một thiết bị target cụ thể bằng cách đầu tiên phát (broadcast) địa chỉ của target lên bus. Địa chỉ này có thể dài 7 bit hoặc 10 bit. Khi controller đã bắt đầu giao tiếp với target, không thiết bị nào khác có thể dùng bus cho đến khi controller dừng giao tiếp.</p>
 
-          <!-- Device 2 (Magnetometer) -->
-          <rect x="310" y="95" width="100" height="45" rx="6" fill="#fff8c5" stroke="#d1a317" stroke-width="2"/>
-          <text x="360" y="117" text-anchor="middle" font-weight="700" font-size="11" fill="#9a6700">Magneto.</text>
-          <text x="360" y="131" text-anchor="middle" font-size="9" fill="#656d76">addr: 0x1E</text>
-          <line x1="360" y1="95" x2="360" y2="80" stroke="#666" stroke-width="1.5"/>
-          <line x1="360" y1="95" x2="360" y2="50" stroke="#666" stroke-width="1.5"/>
+    <p>Đường clock quyết định tốc độ trao đổi dữ liệu và thường hoạt động ở tần số 100 kHz (standard mode) hoặc 400 kHz (fast mode).</p>
 
-          <!-- VCC pull-up resistors -->
-          <text x="460" y="35" font-size="10" fill="#656d76">Pull-up</text>
-          <text x="460" y="48" font-size="10" fill="#656d76">resistors</text>
-          <line x1="470" y1="50" x2="470" y2="20" stroke="#656d76" stroke-dasharray="3" stroke-width="1.5"/>
-          <line x1="490" y1="80" x2="490" y2="20" stroke="#656d76" stroke-dasharray="3" stroke-width="1.5"/>
-        </svg>
-      </div>
-      <p class="diagram-caption" style="margin-top:10px;">Nhiều thiết bị chia sẻ cùng 2 dây — mỗi thiết bị có địa chỉ riêng</p>
-    </div>
-
-    <h2>So sánh I2C với UART</h2>
+    <p align="center">
+      <a href="https://commons.wikimedia.org/wiki/File:I2C_controller-target.svg">
+        <img height="360" title="I2C Controller and Targets" src="assets/I2C_controller-target.svg" />
+      </a>
+    </p>
 
     <table>
-      <thead><tr><th>Tiêu chí</th><th>UART</th><th>I2C</th></tr></thead>
+      <caption>So sánh I2C và UART</caption>
+      <thead>
+        <tr><th>Đặc điểm</th><th>UART</th><th>I2C</th></tr>
+      </thead>
       <tbody>
-        <tr><td>Số dây</td><td>2 (TX, RX) + GND</td><td>2 (SDA, SCL) + GND</td></tr>
-        <tr><td>Số thiết bị</td><td>1-1 (point-to-point)</td><td>1 controller, nhiều targets</td></tr>
-        <tr><td>Tốc độ</td><td>~115 Kbps</td><td>100 / 250 / 400 Kbps</td></tr>
-        <tr><td>Đồng bộ</td><td>Asynchronous</td><td>Synchronous (có clock)</td></tr>
-        <tr><td>Ứng dụng</td><td>Debug, GPS, Bluetooth module</td><td>Sensor, EEPROM, display</td></tr>
+        <tr><td>Số dây dữ liệu</td><td>2 (TX + RX)</td><td>2 (SDA + SCL)</td></tr>
+        <tr><td>Số thiết bị</td><td>1-to-1</td><td>1 controller + nhiều target</td></tr>
+        <tr><td>Tốc độ</td><td>Baud rate tự cấu hình</td><td>100 kHz (standard) / 400 kHz (fast)</td></tr>
+        <tr><td>Đồng bộ</td><td>Bất đồng bộ (asynchronous)</td><td>Đồng bộ (synchronous — có SCL)</td></tr>
+        <tr><td>Địa chỉ thiết bị</td><td>Không (point-to-point)</td><td>7 bit hoặc 10 bit</td></tr>
+        <tr><td>Ứng dụng điển hình</td><td>Debug console, GPS, module BT</td><td>Cảm biến, EEPROM, màn hình</td></tr>
       </tbody>
     </table>
 
-    <h2>Giao thức I2C</h2>
+    <h2>Giao thức tổng quan</h2>
 
-    <p>Một transaction I2C gồm:</p>
+    <p>Một giao tiếp I2C luôn do controller khởi xướng. Controller gửi địa chỉ của target, sau đó là một hoặc nhiều byte dữ liệu.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">📦 Cấu trúc I2C Transaction</div>
-      <div style="display:flex;gap:3px;align-items:stretch;font-size:0.8rem;flex-wrap:wrap;">
-        <div class="frame-box frame-box--start"><div class="frame-box__label">START</div></div>
-        <div class="frame-box frame-box--data" style="min-width:80px;"><div class="frame-box__label">7-bit ADDR</div><div class="frame-box__sub">+ R/W bit</div></div>
-        <div class="frame-box frame-box--stop"><div class="frame-box__label">ACK</div></div>
-        <div class="frame-box frame-box--parity" style="min-width:80px;"><div class="frame-box__label">DATA</div><div class="frame-box__sub">1+ bytes</div></div>
-        <div class="frame-box frame-box--stop"><div class="frame-box__label">ACK</div></div>
-        <div class="frame-box frame-box--start"><div class="frame-box__label">STOP</div></div>
-      </div>
-    </div>
+    <h3>Thao tác ghi (Controller → Target)</h3>
 
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý về thuật ngữ</div>
-        <p>"Controller/target" trước đây được gọi là "master/slave". Bạn vẫn có thể thấy thuật ngữ cũ trong tài liệu hoặc trên nhãn board. Thuật ngữ này hiện đã bị deprecated trong các chuẩn chính thức và tài liệu mới, nhưng vẫn còn xuất hiện trong tài liệu Nordic cho chip nRF52833 và một số tài liệu embedded Rust.</p>
-      </div>
-    </div>
 
-    <h2>LSM303AGR — Cảm biến trên MB2</h2>
 
-    <p>Micro:bit v2 tích hợp chip <strong>LSM303AGR</strong> — một module cảm biến kết hợp:</p>
+    <ol>
+      <li>Controller phát tín hiệu START</li>
+      <li>Controller phát địa chỉ target (7 bit) kèm bit R/W = WRITE (0)</li>
+      <li>Target phản hồi ACK</li>
+      <li>Controller gửi một byte</li>
+      <li>Target phản hồi ACK</li>
+      <li>Bước 4–5 lặp lại thêm không hoặc nhiều lần</li>
+      <li>Controller phát STOP hoặc RESTART</li>
+    </ol>
 
-    <div class="diagram">
-      <div class="hw-diagram">
-        <div class="hw-title">LSM303AGR Sensor Package</div>
-        <div class="hw-components">
-          <div class="hw-component">
-            <span class="hw-component-icon">📐</span>
-            <div class="hw-component-name">3-axis Accelerometer</div>
-            <div class="hw-component-desc">Địa chỉ I2C: 0x19<br>Đo gia tốc (mg)</div>
-          </div>
-          <div class="hw-component">
-            <span class="hw-component-icon">🧭</span>
-            <div class="hw-component-name">3-axis Magnetometer</div>
-            <div class="hw-component-desc">Địa chỉ I2C: 0x1E<br>Đo từ trường (nT)</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h3>Thao tác đọc (Controller ← Target)</h3>
 
-    <h2>Bài tập: Compass bằng Magnetometer</h2>
 
-    <p>Dùng LSM303AGR magnetometer để đọc từ trường và hiển thị hướng la bàn trên LED matrix:</p>
 
-    <div class="callout tip">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Gợi ý</div>
-        <p>Tính góc hướng từ các giá trị X, Y của magnetometer: <code>heading = atan2(y, x)</code>. Ánh xạ góc (0–360°) sang một trong 8 vị trí LED ở rìa ma trận 5×5.</p>
-      </div>
-    </div>
+    <ol>
+      <li>Controller phát tín hiệu START</li>
+      <li>Controller phát địa chỉ target (7 bit) kèm bit R/W = READ (1)</li>
+      <li>Target phản hồi ACK</li>
+      <li>Target gửi một byte</li>
+      <li>Controller phản hồi ACK</li>
+      <li>Bước 4–5 lặp lại thêm không hoặc nhiều lần</li>
+      <li>Controller phát STOP hoặc RESTART</li>
+    </ol>
+
+    <p>Địa chỉ target có thể là 10 bit thay vì 7 bit — không có gì khác thay đổi.</p>
+
+    <h2>LSM303AGR</h2>
+
+    <p>Chip LSM303AGR trên micro:bit kết hợp hai cảm biến: accelerometer và magnetometer. Cả hai đều có thể truy cập qua bus I2C, mỗi cái có địa chỉ riêng. Các thanh ghi (registers) lưu dữ liệu đo được và có thể đọc/ghi qua I2C — tương tự như các peripheral trong MCU, nhưng phải truy cập qua bus thay vì ánh xạ bộ nhớ trực tiếp.</p>
+
+    <p>Để biết cách đọc thanh ghi, xem <strong>LSM303AGR Data Sheet</strong> (ST Microelectronics):</p>
+    <ul>
+      <li>Mục 6.1.1 (trang 38): "I2C Operation" — mô tả quy trình đọc thanh ghi</li>
+      <li>Mục 8 (trang 46): "Register description" — danh sách chi tiết các thanh ghi</li>
+    </ul>
+
+    <h2>Đọc một thanh ghi đơn</h2>
+
+    <p><strong>LƯU Ý:</strong> Chip nRF thực ra không có peripheral I2C thực sự. Thay vào đó, chúng có TWI (Two Wire Interface) và TWIM — các giao diện tương thích I2C. Điều này không ảnh hưởng đến cách bạn dùng HAL.</p>
+
+    <p>Chương trình dưới đây đọc thanh ghi WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động:</p>
+
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+#[cfg(feature = "v1")]
+use microbit::{
+    hal::twi,
+    pac::twi0::frequency::FREQUENCY_A,
+};
+
+#[cfg(feature = "v2")]
+use microbit::{
+    hal::twim,
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+const ACCELEROMETER_ADDR: u8 = 0b0011001;
+const MAGNETOMETER_ADDR: u8  = 0b0011110;
+
+const ACCELEROMETER_ID_REG: u8 = 0x0f;
+const MAGNETOMETER_ID_REG:  u8 = 0x4f;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    #[cfg(feature = "v1")]
+    let mut i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+
+    #[cfg(feature = "v2")]
+    let mut i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut acc = [0u8; 1];
+    let mut mag = [0u8; 1];
+
+    i2c.write_read(ACCELEROMETER_ADDR, &amp;[ACCELEROMETER_ID_REG], &amp;mut acc).unwrap();
+    i2c.write_read(MAGNETOMETER_ADDR,  &amp;[MAGNETOMETER_ID_REG],  &amp;mut mag).unwrap();
+
+    rprintln!("Accelerometer WHO_AM_I: {:#010b}", acc[0]);
+    rprintln!("Magnetometer  WHO_AM_I: {:#010b}", mag[0]);
+
+    loop {}
+}</code></pre>
+
+    <pre><code class="language-bash"># Cho micro:bit v2
+$ cargo embed --features v2 --target thumbv7em-none-eabihf
+# Cho micro:bit v1
+$ cargo embed --features v1 --target thumbv6m-none-eabi</code></pre>
+
+    <h2>Dùng driver có sẵn</h2>
+
+    <p>Đọc thanh ghi thô khá tẻ nhạt. Thay vào đó, chúng ta sẽ dùng crate <code>lsm303agr</code> — một driver được viết theo chuẩn <code>embedded-hal</code>, có nghĩa là cùng một driver có thể chạy trên bất kỳ nền tảng nào implement các trait đó (Linux, micro:bit, hay bất kỳ MCU nào khác).</p>
+
+    <pre><code class="language-rust">#![deny(unsafe_code)]
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+#[cfg(feature = "v1")]
+use microbit::{
+    hal::twi,
+    pac::twi0::frequency::FREQUENCY_A,
+};
+
+#[cfg(feature = "v2")]
+use microbit::{
+    hal::twim,
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+use lsm303agr::{AccelOutputDataRate, Lsm303agr};
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    #[cfg(feature = "v1")]
+    let i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+
+    #[cfg(feature = "v2")]
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor.set_accel_odr(AccelOutputDataRate::Hz50).unwrap();
+
+    loop {
+        if sensor.accel_status().unwrap().xyz_new_data {
+            let data = sensor.accel_data().unwrap();
+            rprintln!("Acceleration: x {} y {} z {}", data.x, data.y, data.z);
+        }
+    }
+}</code></pre>
+
+    <pre><code class="language-bash"># Cho micro:bit v2
+$ cargo embed --features v2 --target thumbv7em-none-eabihf
+# Cho micro:bit v1
+$ cargo embed --features v1 --target thumbv6m-none-eabi</code></pre>
+
+    <h2>Thử thách</h2>
+
+    <p>Viết một ứng dụng kết hợp serial UART với I2C sensor. Chương trình nhận lệnh qua serial và trả về dữ liệu cảm biến:</p>
+    <ul>
+      <li>Nhập <code>acc</code> + Enter → in dữ liệu accelerometer (x, y, z tính bằng mg)</li>
+      <li>Nhập <code>mag</code> + Enter → in dữ liệu magnetometer (x, y, z tính bằng nT)</li>
+    </ul>
+
+    <p><strong>Gợi ý:</strong> Dùng <code>core::str::from_utf8</code> để chuyển buffer byte thành <code>&amp;str</code> để so sánh. Kết quả in ra cả serial lẫn RTT đều được. Cần khởi động magnetometer ở chế độ continuous mode (<code>into_mag_continuous()</code>).</p>
+
+    <h2>Lời giải</h2>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::str;
+use core::fmt::Write;
+
+use cortex_m_rt::entry;
+use embedded_hal::delay::DelayNs;
+use heapless::Vec;
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+
+use microbit::{
+    hal::uarte::{self, Baudrate, Parity},
+    hal::{twim, Timer},
+    pac::twim0::frequency::FREQUENCY_A,
+};
+
+use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr, MagMode, MagOutputDataRate};
+
+mod serial_setup;
+use serial_setup::UartePort;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    let serial = uarte::Uarte::new(
+        board.UARTE0,
+        board.uart.into(),
+        Parity::EXCLUDED,
+        Baudrate::BAUD115200,
+    );
+    let mut serial = UartePort::new(serial);
+
+    let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+    let mut timer0 = Timer::new(board.TIMER0);
+
+    let mut sensor = Lsm303agr::new_with_i2c(i2c);
+    sensor.init().unwrap();
+    sensor
+        .set_accel_mode_and_odr(&amp;mut timer0, AccelMode::HighResolution, AccelOutputDataRate::Hz50)
+        .unwrap();
+    sensor
+        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz50)
+        .unwrap();
+    let mut sensor = sensor.into_mag_continuous().ok().unwrap();
+
+    let mut buffer: Vec&lt;u8, 32&gt; = Vec::new();
+    rprintln!("setup complete");
+
+    loop {
+        buffer.clear();
+
+        loop {
+            let byte = serial.read().unwrap();
+            serial.write(byte).unwrap();
+
+            if byte == b'\r' {
+                serial.write(b'\n').unwrap();
+                break;
+            }
+
+            if buffer.push(byte).is_err() {
+                write!(serial, "error: buffer full\r\n").unwrap();
+                break;
+            }
+        }
+
+        if str::from_utf8(&amp;buffer).unwrap().trim() == "acc" {
+            while !sensor.accel_status().unwrap().xyz_new_data() {
+                timer0.delay_ms(1u32);
+            }
+            let (x, y, z) = sensor.acceleration().unwrap().xyz_mg();
+            write!(serial, "Accelerometer: x {} y {} z {}\r\n", x, y, z).unwrap();
+        } else if str::from_utf8(&amp;buffer).unwrap().trim() == "mag" {
+            while !sensor.mag_status().unwrap().xyz_new_data() {
+                timer0.delay_ms(1u32);
+            }
+            let (x, y, z) = sensor.magnetic_field().unwrap().xyz_nt();
+            write!(serial, "Magnetometer: x {} y {} z {}\r\n", x, y, z).unwrap();
+        } else {
+            write!(serial, "error: command not detected\r\n").unwrap();
+        }
+    }
+}</code></pre>
 
     <div class="nav-buttons">
       <a href="11-uart.html" class="nav-btn">← UART</a>

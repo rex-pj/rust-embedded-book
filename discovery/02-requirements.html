@@ -28,7 +28,7 @@
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
     <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
-    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="02-requirements.html" class="active"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
     <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
@@ -60,77 +60,45 @@
   </div>
   <main id="main">
 
-    <h1>Yêu cầu phần cứng &amp; kiến thức</h1>
+    <h1>Yêu cầu phần cứng/kiến thức</h1>
 
     <h2>Yêu cầu về kiến thức</h2>
 
-    <p>Tài liệu này kỳ vọng người đọc đã có nền tảng Rust cơ bản. Hiểu biết về generics, trait và closure là đặc biệt quan trọng. Ngoài ra, cần quen thuộc với các idiom của Rust edition hiện tại.</p>
+    <p>Yêu cầu kiến thức chính để đọc cuốn sách này là biết <em>một chút</em> Rust. Bạn không cần phải hiểu sâu về generics, nhưng bạn cần biết cách <em>sử dụng</em> closure. Bạn cũng cần quen với các idiom của edition 2018, đặc biệt là thực tế rằng <code>extern crate</code> không còn cần thiết trong edition 2018.</p>
 
     <h2>Yêu cầu phần cứng</h2>
 
-    <p>Để theo dõi tài liệu này, bạn cần có:</p>
+    <p>Ngoài ra, để theo dõi tài liệu này, bạn cần có các phần cứng sau:</p>
 
-    <!-- Checklist phần cứng -->
-    <div class="diagram">
-      <div class="diagram-title diagram-title--center diagram-title--lg">📦 Checklist phần cứng cần có</div>
-      <div class="centered-col">
+    <ul>
+      <li>
+        <p>Một board <a href="https://tech.microbit.org/hardware/">micro:bit v2</a>, hoặc thay thế là một board <a href="https://tech.microbit.org/hardware/1-5-revision/">micro:bit v1.5</a> (trong sách sẽ gọi tắt v1.5 là "v1").</p>
+        <p align="center">
+          <img title="micro:bit" src="assets/microbit-v2.jpg" style="max-width:480px;width:100%">
+        </p>
+        <blockquote><p>Đây là ảnh của micro:bit v2. Mặt trước của v1 trông hơi khác một chút.</p></blockquote>
+      </li>
+      <li>
+        <p>Một cáp micro-B USB. Hãy đảm bảo cáp hỗ trợ truyền dữ liệu vì một số cáp chỉ hỗ trợ sạc thiết bị. Bạn có thể đã có sẵn loại cáp này, vì một số kit micro:bit đi kèm với cáp như vậy. Một số cáp USB dùng để sạc thiết bị di động cũng có thể dùng được, nếu chúng là đầu micro-B và có khả năng truyền dữ liệu.</p>
+        <p align="center">
+          <img title="micro-B USB cable" src="assets/usb-cable.jpg" style="max-width:480px;width:100%">
+        </p>
+      </li>
+    </ul>
 
-        <div class="checklist-item checklist-item--green">
-          <span class="checklist-item__emoji">✅</span>
-          <div>
-            <div class="checklist-item__title checklist-item__title--green">Micro:Bit v2 (MB2) Board</div>
-            <div class="checklist-item__desc">Board chính dùng xuyên suốt khóa học. Có thể mua từ Amazon, Shopee, hoặc nhà phân phối chính thức của BBC.</div>
-            <div class="checklist-item__note">Bất kỳ biến thể V2 nào đều hoạt động. Phiên bản được viết cho: v2.00</div>
-          </div>
-        </div>
+    <h2>Câu hỏi thường gặp</h2>
 
-        <div class="checklist-item checklist-item--green">
-          <span class="checklist-item__emoji">✅</span>
-          <div>
-            <div class="checklist-item__title checklist-item__title--green">Cáp Micro-B USB</div>
-            <div class="checklist-item__desc">Dùng để cấp nguồn cho board và giao tiếp dữ liệu. <strong>Phải hỗ trợ truyền dữ liệu</strong> — không phải cáp sạc đơn thuần.</div>
-            <div class="checklist-item__note">Bạn có thể đã có sẵn từ các thiết bị di động cũ (Android, Kindle, v.v.).</div>
-          </div>
-        </div>
+    <h3>Ủa, tại sao tôi lại cần đúng phần cứng này?</h3>
 
-        <div class="checklist-item checklist-item--yellow">
-          <span class="checklist-item__emoji">🔋</span>
-          <div>
-            <div class="checklist-item__title checklist-item__title--yellow">Pin/Battery Pack (tùy chọn)</div>
-            <div class="checklist-item__desc">Kit chính thức micro:bit Go bao gồm cả cáp USB và battery pack. Không bắt buộc nhưng tiện cho các bài thực hành di động.</div>
-          </div>
-        </div>
+    <p>Nó giúp cuộc sống của tôi và của bạn dễ dàng hơn nhiều. Tài liệu dễ tiếp cận hơn rất, rất nhiều nếu chúng ta không phải lo lắng về sự khác biệt giữa các loại phần cứng. Hãy tin tôi điều này.</p>
 
-      </div>
-    </div>
+    <h3>Tôi có thể theo dõi tài liệu này với một board phát triển khác không?</h3>
 
-    <h3>Board Micro:Bit v2 (MB2)</h3>
+    <p>Có thể? Điều đó phụ thuộc chủ yếu vào hai thứ: kinh nghiệm trước đây của bạn với microcontroller và/hoặc liệu đã có sẵn một crate cấp cao, như <a href="https://github.com/nrf-rs/nrf-hal"><code>nrf52-hal</code></a>, cho board phát triển của bạn ở đâu đó chưa. Bạn có thể tìm kiếm trong <a href="https://github.com/rust-embedded/awesome-embedded-rust#hal-implementation-crates">danh sách HAL của Awesome Embedded Rust</a> cho microcontroller của mình, nếu bạn định dùng một loại khác.</p>
 
-    <p>Board <a href="https://tech.microbit.org/hardware/" target="_blank">Micro:Bit v2</a> (MB2) là phần cứng chính. Board này có sẵn từ nhiều nhà bán lẻ bao gồm Amazon và Ali Baba, với danh sách nhà cung cấp có thể tìm từ nhà sản xuất BBC. Mặc dù tài liệu được viết cho phiên bản 2.00, bất kỳ biến thể V2 nào cũng sẽ hoạt động với nội dung này.</p>
+    <p>Với một board phát triển khác, cuốn sách này sẽ mất đi hầu hết hoặc toàn bộ tính thân thiện với người mới và tính "dễ theo dõi", theo quan điểm của tôi.</p>
 
-    <h3>Cáp Micro-B USB</h3>
-
-    <p>Một cáp micro-B USB (không có gì đặc biệt — bạn có thể đã có nhiều cái như vậy) là cần thiết để cấp nguồn cho board và kích hoạt giao tiếp. Cáp phải hỗ trợ truyền dữ liệu, không chỉ sạc. Một số kit MB2 đã bao gồm cáp, và cáp từ các thiết bị di động khác cũng hoạt động nếu chúng là micro-B và có khả năng truyền dữ liệu.</p>
-
-    <p>Kit micro:bit Go chính thức bao gồm cả cáp USB và battery pack.</p>
-
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý về cáp USB</div>
-        <p>Nhiều cáp micro-B rẻ tiền chỉ hỗ trợ sạc điện, không hỗ trợ truyền dữ liệu. Nếu máy tính không nhận ra board sau khi cắm, hãy thử cáp khác trước khi xem xét các nguyên nhân khác.</p>
-      </div>
-    </div>
-
-    <h2>Phần FAQ</h2>
-
-    <h3>Tại sao phải dùng phần cứng cụ thể này?</h3>
-
-    <p>Tài liệu dễ tiếp cận hơn đáng kể khi không phải lo lắng về sự khác biệt giữa các loại phần cứng. Toàn bộ hướng dẫn, ví dụ và hình ảnh đều được tối ưu cho Micro:Bit v2.</p>
-
-    <h3>Có thể dùng board phát triển khác không?</h3>
-
-    <p>Có thể, tùy thuộc vào kinh nghiệm microcontroller trước đây và các HAL (Hardware Abstraction Layer) hoặc Board Support crate có sẵn. Tuy nhiên, tài liệu sẽ mất tính thân thiện với người mới khi dùng board khác. Những ai có board dựa trên Arm mà không hoàn toàn là người mới có thể cân nhắc template dự án quickstart thay thế.</p>
+    <p>Nếu bạn có một board phát triển khác và bạn không tự coi mình là người mới hoàn toàn, bạn tốt hơn nên bắt đầu với <a href="https://rust-embedded.github.io/cortex-m-quickstart/cortex_m_quickstart/">template dự án quickstart</a>.</p>
 
     <div class="nav-buttons">
       <a href="01-background.html" class="nav-btn">← Background</a>

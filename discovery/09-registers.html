@@ -99,21 +99,80 @@ fn main() -&gt; ! {
 
     <p>Các chân GPIO hoạt động như các tiếp điểm điện. Digital output có thể tạo ra hai mức điện áp: "thấp" (0V, logic 0) hoặc "cao" (3V, logic 1). LED sáng khi được cấp điện áp cao đúng chiều. Digital input thì <em>đọc</em> mức điện áp thay vì tạo ra nó.</p>
 
+    <p align="center">
+      <a href="https://commons.wikimedia.org/wiki/File:LED_circuit.svg">
+        <img class="white_bg" height="180" title="LED circuit" src="assets/LED_circuit.svg" />
+      </a>
+    </p>
+
     <p>Vì nRF52833 có hơn 32 GPIO pin nhưng là kiến trúc 32-bit, các pin được tổ chức thành hai nhóm "P0" và "P1" — mỗi nhóm có bộ register riêng.</p>
 
     <h2>RTRM — Đọc Reference Manual</h2>
 
     <p>Để tìm hiểu địa chỉ register và ý nghĩa từng bit, cần tra <strong>nRF52833 Product Specification</strong>. Peripheral GPIO P0 có base address là <code>0x5000_0000</code>. Register <code>OUT</code> nằm ở offset <code>0x504</code>, tức địa chỉ đầy đủ là <code>0x50000504</code>.</p>
 
-    <p>Khi chạy chương trình trên và quan sát qua debugger, giá trị register thay đổi như sau:</p>
+    <p>Register này 32-bit, mỗi bit tương ứng một pin: đặt bit lên 1 → pin xuất điện áp cao; đặt về 0 → pin xuất mức thấp. Giá trị reset là 0 (tất cả output tắt).</p>
 
-    <ul>
-      <li>Giá trị ban đầu: <code>0x00000000</code></li>
-      <li>Sau khi bật hàng trên (bit 21): <code>0x00200000</code></li>
-      <li>Sau khi bật thêm hàng dưới (bit 19): <code>0x00280000</code></li>
-      <li>Sau khi tắt hàng trên (xóa bit 21): <code>0x00080000</code></li>
-      <li>Sau khi tắt hàng dưới (xóa bit 19): <code>0x00000000</code></li>
-    </ul>
+    <p>Theo pinmap của MB2: ROW1 (hàng trên cùng) là <code>P0.21</code>, ROW5 (hàng dưới cùng) là <code>P0.19</code>.</p>
+
+    <p>Khi chạy chương trình trên và quan sát qua GDB, giá trị register thay đổi như sau:</p>
+
+    <pre><code class="language-gdb">(gdb) set mem inaccessible-by-default off
+(gdb) break 16
+(gdb) break 19
+(gdb) break 22
+(gdb) break 25
+(gdb) monitor reset halt
+(gdb) c
+Breakpoint 1 ... line 16: *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
+(gdb) x 0x50000504
+0x50000504:     0x00000000       &lt;-- trước khi set bit 21
+
+(gdb) c
+Breakpoint 2 ... line 19: *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;
+(gdb) x 0x50000504
+0x50000504:     0x00200000       &lt;-- 2^21 = bit 21 đã set
+
+(gdb) c
+Breakpoint 3 ... line 22: *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
+(gdb) x 0x50000504
+0x50000504:     0x00280000       &lt;-- 2^21 + 2^19 = cả hai hàng sáng
+
+(gdb) c
+Breakpoint 4 ... line 25: *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
+(gdb) x 0x50000504
+0x50000504:     0x00080000       &lt;-- chỉ còn 2^19 = hàng trên đã tắt
+
+(gdb) c
+(gdb) x 0x50000504
+0x50000504:     0x00000000       &lt;-- tất cả đã tắt</code></pre>
+
+    <h2>(mis)Optimization — Vấn đề với compiler tối ưu hóa</h2>
+
+    <p>Khi biên dịch với <code>--release</code>, LLVM có thể tối ưu hóa bốn lần ghi vào register thành một lần duy nhất — vì nó không biết rằng địa chỉ đó có tác dụng phụ trên phần cứng. Kết quả là LED sẽ không nhấp nháy như mong đợi.</p>
+
+    <p>Giải pháp: dùng <strong>volatile operations</strong> qua <code>core::ptr</code>:</p>
+
+    <pre><code class="language-rust">use core::ptr;
+
+// Thay vì:
+*(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
+
+// Dùng:
+let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
+ptr::write_volatile(PORT_P0_OUT as *mut u32, out | 1 &lt;&lt; 21);</code></pre>
+
+    <p>Volatile read/write báo cho compiler biết: "Các thao tác này có tác dụng phụ — đừng tối ưu hóa chúng đi." Build release với volatile sẽ giữ đủ bốn lần load-modify-store như thiết kế.</p>
+
+    <h2>0xBAAAAAAD — Địa chỉ không hợp lệ</h2>
+
+    <p>Điều gì xảy ra nếu bạn đọc từ một địa chỉ không hợp lệ, ví dụ <code>0x5000_A784</code> (không tương ứng với peripheral register nào)?</p>
+
+    <pre><code class="language-rust">unsafe {
+    ptr::read_volatile(0x5000_A784 as *const u32);
+}</code></pre>
+
+    <p>Processor không thể hoàn thành thao tác đó và ném ra một <strong>hardware exception (HardFault)</strong>. Debugger dừng lại tại handler <code>HardFault_</code>. Bằng cách kiểm tra <code>ExceptionFrame</code>, bạn có thể xác định instruction nào gây ra lỗi — <code>pc</code> trỏ tới instruction đó, và <code>r0</code> chứa địa chỉ sai (<code>0x5000a784</code>). Đây là cách Rust embedded xử lý memory access violations.</p>
 
     <h2>Spooky action at a distance</h2>
 
@@ -184,6 +243,24 @@ fn main() -&gt; ! {
     <p>Điều kỳ lạ: mặc dù chúng ta đọc cùng một địa chỉ nhiều lần mà không trực tiếp sửa đổi nó, giá trị vẫn thay đổi — đây là tác dụng phụ của việc ghi vào <code>OUTSET</code> hoặc <code>OUTCLR</code>.</p>
 
     <p>Lưu ý rằng <code>OUTSET</code> và <code>OUTCLR</code> không cho phép đọc trạng thái output hiện tại của Port P0 — khác với <code>OUT</code> vừa đọc được vừa ghi được.</p>
+
+    <h2>Type-safe manipulation — Thao tác an toàn kiểu</h2>
+
+    <p>Làm việc trực tiếp với địa chỉ hex rất dễ xảy ra lỗi: nhầm địa chỉ, truy cập register read-only để ghi, hay vô tình xóa các bit reserved. PAC (Peripheral Access Crate) giải quyết vấn đề này bằng cách cung cấp một API type-safe được tự động sinh ra từ file SVD (System View Description) của Nordic.</p>
+
+    <p>Thay vì ghi thẳng vào địa chỉ, bạn viết:</p>
+
+    <pre><code class="language-rust">p0.out.modify(|_, w| w.pin21().set_bit());</code></pre>
+
+    <p>Phương thức <code>modify()</code> đọc giá trị register hiện tại, truyền vào closure để thay đổi, rồi ghi kết quả lại. API này:</p>
+    <ul>
+      <li>Chỉ expose các thao tác được phép (read-only register không có <code>write()</code>)</li>
+      <li>Dùng builder pattern để ngăn sửa đổi các bit reserved</li>
+      <li>Không có unsafe code hay địa chỉ hex magic</li>
+      <li>Zero-cost: compiler (với LTO) sinh ra <strong>cùng instructions</strong> như code unsafe gốc</li>
+    </ul>
+
+    <p>Toàn bộ API này được tự động tạo ra — không ai viết tay. Vendor (Nordic) cung cấp file SVD mô tả tất cả registers và quyền truy cập; công cụ <code>svd2rust</code> chuyển nó thành Rust code.</p>
 
     <div class="nav-buttons">
       <a href="08-inputs-and-outputs.html" class="nav-btn">← Inputs &amp; Polling</a>

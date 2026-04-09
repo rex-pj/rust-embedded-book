@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serial Port - Discovery MB2 Tiếng Việt</title>
+<title>Serial Communication - Discovery MB2 Tiếng Việt</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
@@ -50,113 +50,206 @@
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Serial Port</span>
+    <span class="current">Serial Communication</span>
   </div>
   <main id="main">
 
-    <h1>Serial Port 📡</h1>
+    <h1>Serial Communication</h1>
 
-    <p>Serial port là chuẩn giao tiếp nền tảng trong embedded systems. Hầu như mọi microcontroller đều có khả năng serial port — và MB2 cũng không ngoại lệ.</p>
+    <p align="center">
+      <a href="https://en.wikipedia.org/wiki/File:Serial_port.jpg">
+        <img title="Standard serial port connector DE-9" src="assets/Serial_port.jpg" height="240">
+      </a>
+    </p>
 
-    <h2>Tổng quan</h2>
+    <p>Đây là thứ chúng ta sẽ dùng. Hy vọng máy tính của bạn có một cái!</p>
 
-    <p>Serial port cho phép hai thiết bị trao đổi dữ liệu từng bit một, dùng các đường dữ liệu riêng biệt cho mỗi chiều, cộng thêm một đường GND chung. Giao thức này là <strong>asynchronous</strong> — không có clock chung giữa hai bên. Thay vào đó, cả hai phải thỏa thuận trước về tốc độ truyền.</p>
+    <p>Đùa thôi, đừng lo. Đầu nối này, DE-9, đã lỗi thời trên PC từ khá lâu rồi; nó đã bị thay thế bởi Universal Serial Bus (USB). Chúng ta sẽ không làm việc với bản thân đầu nối DE-9 mà là với giao thức truyền thông mà cáp này thường được dùng.</p>
 
-    <div class="diagram">
-      <div class="diagram-title">🔗 Kết nối Serial</div>
-      <div style="text-align:center;">
-        <svg width="500" height="120" viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" class="svg-responsive">
-          <!-- Device A (microcontroller) -->
-          <rect x="20" y="20" width="140" height="80" rx="8" fill="#ddf4ff" stroke="#54aeff" stroke-width="2"/>
-          <text x="90" y="48" text-anchor="middle" font-weight="700" font-size="13" fill="#0550ae">micro:bit</text>
-          <text x="90" y="66" text-anchor="middle" font-size="11" fill="#424a53">TX (P0.6)</text>
-          <text x="90" y="82" text-anchor="middle" font-size="11" fill="#424a53">RX (P1.8)</text>
+    <p>Vậy <a href="https://en.wikipedia.org/wiki/Asynchronous_serial_communication">serial communication</a> là gì? Đó là một giao thức truyền thông bất đồng bộ (asynchronous) trong đó hai thiết bị trao đổi dữ liệu theo kiểu nối tiếp (serial), tức là từng bit một, sử dụng hai đường dữ liệu (cộng thêm đường ground chung). Giao thức này bất đồng bộ theo nghĩa là không có đường nào trong các đường chia sẻ mang tín hiệu clock. Thay vào đó, cả hai bên phải thỏa thuận trước về tốc độ gửi dữ liệu trên đường dây trước khi giao tiếp diễn ra. Một thiết bị (UART) gửi các bit ở tốc độ được chỉ định trên đường truyền (output) của nó, và đợi bit bắt đầu (start bit) trên đường nhận (input) của nó.</p>
 
-          <!-- Arrows in middle -->
-          <line x1="160" y1="58" x2="340" y2="58" stroke="#2da44e" stroke-width="2" marker-end="url(#arr2)"/>
-          <text x="250" y="50" text-anchor="middle" font-size="10" fill="#1a7f37">TX → RX</text>
-          <line x1="340" y1="72" x2="160" y2="72" stroke="#d1a317" stroke-width="2" marker-end="url(#arr3)"/>
-          <text x="250" y="85" text-anchor="middle" font-size="10" fill="#9a6700">RX ← TX</text>
+    <p align="center">
+      <img class="white_bg" height="100" title="Serial Protocol" src="assets/serial-proto.svg" />
+    </p>
 
-          <!-- GND line -->
-          <line x1="160" y1="100" x2="340" y2="100" stroke="#656d76" stroke-width="1.5" stroke-dasharray="4"/>
-          <text x="250" y="115" text-anchor="middle" font-size="9" fill="#656d76">GND chung</text>
+    <p>Giao thức này cho phép truyền thông song công (duplex) vì dữ liệu có thể được gửi từ A sang B và từ B sang A đồng thời.</p>
 
-          <!-- Device B (computer) -->
-          <rect x="340" y="20" width="140" height="80" rx="8" fill="#dcffe4" stroke="#2da44e" stroke-width="2"/>
-          <text x="410" y="48" text-anchor="middle" font-weight="700" font-size="13" fill="#1a7f37">Máy tính</text>
-          <text x="410" y="66" text-anchor="middle" font-size="11" fill="#424a53">RX</text>
-          <text x="410" y="82" text-anchor="middle" font-size="11" fill="#424a53">TX</text>
+    <p>Chúng ta sẽ dùng giao thức này để trao đổi dữ liệu giữa microcontroller và máy tính của bạn. Bây giờ bạn có thể tự hỏi tại sao chúng ta không dùng RTT cho việc này như trước. RTT là giao thức được thiết kế chỉ dành cho debugging. Bạn gần như chắc chắn sẽ không tìm thấy thiết bị nào thực sự dùng RTT để giao tiếp với thiết bị khác trong sản xuất. Tuy nhiên, serial communication được dùng khá thường xuyên. Ví dụ, một số GPS receiver gửi thông tin định vị mà chúng nhận được thông qua serial communication. Hơn nữa, RTT, giống như nhiều giao thức debugging khác, khá chậm so với tốc độ truyền tải của serial.</p>
 
-          <defs>
-            <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M 0 0 L 8 3 L 0 6 z" fill="#2da44e"/>
-            </marker>
-            <marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M 0 0 L 8 3 L 0 6 z" fill="#d1a317"/>
-            </marker>
-          </defs>
-        </svg>
-      </div>
-    </div>
+    <p align="center">
+      <img class="white_bg" height="500" title="Serial" src="assets/serial.svg" />
+    </p>
 
-    <div class="callout note">
-      <div class="callout-icon">🔀</div>
-      <div class="callout-body">
-        <div class="callout-title">TX ↔ RX phải bắt chéo</div>
-        <p>TX (transmit) của thiết bị A phải nối với RX (receive) của thiết bị B — và ngược lại. Đây là lỗi phổ biến khi kết nối serial. Trên MB2, có USB-to-serial converter tích hợp sẵn nên bạn không cần lo điều này.</p>
-      </div>
-    </div>
+    <p>Câu hỏi thực tế tiếp theo bạn có lẽ muốn hỏi là: Chúng ta có thể gửi dữ liệu qua giao thức này nhanh đến mức nào?</p>
 
-    <h2>Giao thức truyền thông</h2>
+    <p>Giao thức này hoạt động với các frame. Mỗi frame có một start bit, 5 đến 9 bit payload (dữ liệu) và 1 đến 2 stop bit. Tốc độ của giao thức được gọi là baud rate và được đo bằng bits per second (bps). Các baud rate phổ biến là: 9600, 19200, 38400, 57600 và 115200 bps.</p>
 
-    <p>Serial communication dùng <strong>frames</strong>, mỗi frame chứa:</p>
+    <table>
+      <caption>Cấu trúc một frame UART (cấu hình 8N1 phổ biến nhất)</caption>
+      <thead>
+        <tr><th>Phần</th><th>Số bit</th><th>Mô tả</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Start bit</td><td>1</td><td>Luôn là logic 0 — báo hiệu bắt đầu frame</td></tr>
+        <tr><td>Data bits</td><td>5–9 (thường là 8)</td><td>Dữ liệu, gửi theo thứ tự LSB trước</td></tr>
+        <tr><td>Parity bit</td><td>0 hoặc 1 (tùy chọn)</td><td>Kiểm tra lỗi (thường bỏ qua — "N")</td></tr>
+        <tr><td>Stop bit(s)</td><td>1 hoặc 2</td><td>Luôn là logic 1 — báo hiệu kết thúc frame</td></tr>
+      </tbody>
+    </table>
 
-    <div class="diagram">
-      <div class="diagram-title">📦 Cấu trúc một Frame UART</div>
-      <div style="display:flex;gap:2px;align-items:stretch;font-family:monospace;font-size:0.82rem;">
-        <div class="frame-box frame-box--start"><div class="frame-box__label">START</div><div class="frame-box__sub">1 bit</div><div>logic 0</div></div>
-        <div class="frame-box frame-box--data"><div class="frame-box__label">DATA</div><div class="frame-box__sub">5–9 bits</div><div>LSB first</div></div>
-        <div class="frame-box frame-box--parity"><div class="frame-box__label">PARITY</div><div class="frame-box__sub">0–1 bit</div><div>tùy chọn</div></div>
-        <div class="frame-box frame-box--stop"><div class="frame-box__label">STOP</div><div class="frame-box__sub">1–2 bits</div><div>logic 1</div></div>
-      </div>
-    </div>
+    <p>Để thực sự trả lời câu hỏi: Với cấu hình phổ biến gồm 1 start bit, 8 bit dữ liệu, 1 stop bit và baud rate 115200 bps, về lý thuyết có thể gửi 11.520 frame mỗi giây. Vì mỗi frame mang một byte dữ liệu, kết quả là tốc độ dữ liệu 11.52 KB/s. Trong thực tế, tốc độ dữ liệu có thể sẽ thấp hơn do thời gian xử lý ở phía chậm hơn của giao tiếp (microcontroller).</p>
 
-    <p>Tốc độ truyền đo bằng <strong>baud rate</strong> (bits/giây). Các tốc độ phổ biến bao gồm 9600, 19200, 115200 bps và hiện đại hơn là 921600 bps. Ở tốc độ 115200 bps, với mỗi frame 10 bits (1 start + 8 data + 1 stop), thông lượng thực tế là 11.52K bytes/giây.</p>
+    <table>
+      <caption>Baud rate phổ biến và thông lượng tương ứng (8N1)</caption>
+      <thead>
+        <tr><th>Baud rate (bps)</th><th>Thông lượng lý thuyết</th><th>Ứng dụng điển hình</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>9600</td><td>~960 B/s</td><td>GPS, cảm biến cũ</td></tr>
+        <tr><td>19200</td><td>~1.9 KB/s</td><td>Cảm biến công nghiệp</td></tr>
+        <tr><td>38400</td><td>~3.8 KB/s</td><td>–</td></tr>
+        <tr><td>57600</td><td>~5.6 KB/s</td><td>–</td></tr>
+        <tr><td>115200</td><td>~11.5 KB/s</td><td>Debug console, module Bluetooth</td></tr>
+      </tbody>
+    </table>
 
-    <p>Ví dụ: ký tự ASCII <code>'E'</code> (0b0100_0101 = 0x45) được truyền như sau: 1 start bit (0), sau đó 8 data bits theo thứ tự LSB-first: 1,0,1,0,0,0,1,0, rồi 1 stop bit (1).</p>
+    <p>Máy tính ngày nay thường không có cổng serial, và ngay cả khi có, mức điện áp chúng dùng (+5V trên cổng serial hiện đại, ±12V trên cổng RS-232 cổ) nằm ngoài giới hạn chịu đựng của phần cứng MB2 và có thể gây hỏng hóc. <em>Vì vậy bạn không thể kết nối trực tiếp máy tính với microcontroller.</em></p>
 
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Tại sao dùng Serial thay vì RTT?</div>
-        <p>RTT tốt cho debug, nhưng serial communication được ứng dụng rộng hơn nhiều trong thực tế. GPS receivers, cảm biến, module Bluetooth giá rẻ — hầu hết đều dùng serial. Ngoài ra, serial hỗ trợ tốc độ cao hơn RTT.</p>
-      </div>
-    </div>
+    <p align="center">
+      <a href="https://en.wikipedia.org/wiki/File:UART_to_USB_adapter.jpg">
+        <img height="240" title="UART To USB Adapter" src="assets/UART_to_USB_adapter.jpg" />
+      </a>
+    </p>
 
-    <h2>Cân nhắc phần cứng</h2>
+    <p>May mắn cho chúng ta, debug probe trên micro:bit có một bộ chuyển đổi gọi là USB-to-serial converter. Điều này có nghĩa là bộ chuyển đổi sẽ nằm giữa hai thiết bị và cung cấp giao diện serial cho microcontroller và giao diện USB cho máy tính. Microcontroller sẽ thấy máy tính của bạn như một thiết bị serial khác và máy tính sẽ thấy microcontroller như một thiết bị serial ảo.</p>
 
-    <p>Máy tính hiện đại không có serial port vật lý (RS-232) và hoạt động ở điện áp khác với microcontroller. Giải pháp: dùng bộ chuyển đổi <strong>USB-to-serial</strong> (giá thường dưới 5 USD), hỗ trợ điện áp +3.3V của MCU hiện đại.</p>
+    <p>Bây giờ, hãy làm quen với serial module và các công cụ serial communication mà hệ điều hành của bạn cung cấp. Chọn đường đi phù hợp:</p>
 
-    <div class="callout tip">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <div class="callout-title">MB2 có sẵn USB-to-serial converter!</div>
-        <p>MB2 tích hợp bộ chuyển đổi USB-to-serial trong chip MCU thứ hai (NRF52820), không cần phần cứng thêm. Kết nối MB2 qua USB là đủ để giao tiếp serial với máy tính.</p>
-      </div>
-    </div>
+    <h2>Công cụ trên *nix (Linux/macOS)</h2>
 
-    <h2>RS-232 — Chuẩn serial truyền thống</h2>
+    <h3>Kết nối board micro:bit</h3>
+    <p>Nếu bạn kết nối board micro:bit vào máy tính, bạn sẽ thấy một thiết bị TTY mới xuất hiện trong <code>/dev</code>.</p>
 
-    <p>RS-232 là chuẩn truyền thống cho serial communication. Dù hệ thống hiện đại dùng USB-to-serial adapters, hiểu về RS-232 framing (start bits, data bits, stop bits, parity) là nền tảng để làm việc với UART peripheral trên MCU.</p>
+    <pre><code class="language-bash">$ # Linux
+$ dmesg | grep -i tty
+[63712.446286] cdc_acm 1-1.7:1.1: ttyACM0: USB ACM device</code></pre>
 
-    <div class="callout warn">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý về mức điện áp</div>
-        <p>Serial port hiện đại hoạt động ở +5V. Serial port RS-232 cổ hơn hoạt động ở ±12V. Nếu kết nối nhầm, bạn có thể làm hỏng phần cứng. MB2 có USB-to-serial tích hợp sẵn nên bạn không cần lo điều này.</p>
-      </div>
-    </div>
+    <p>Đây là thiết bị USB ↔ Serial. Trên Linux, nó có tên <code>tty*</code> (thường là <code>ttyACM*</code> hoặc <code>ttyUSB*</code>). Trên Mac OS, <code>ls /dev/cu.usbmodem*</code> sẽ hiển thị thiết bị serial.</p>
+
+    <p>Nhưng chính xác <code>ttyACM0</code> là gì? Tất nhiên là một file! Mọi thứ đều là file trong *nix:</p>
+
+    <pre><code class="language-bash">$ ls -l /dev/ttyACM0
+crw-rw----. 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0</code></pre>
+
+    <p>Bạn có thể gửi dữ liệu bằng cách đơn giản ghi vào file này:</p>
+
+    <pre><code class="language-bash">$ echo 'Hello, world!' > /dev/ttyACM0</code></pre>
+
+    <p>Bạn sẽ thấy LED màu cam trên micro:bit, ngay cạnh cổng USB, nhấp nháy một chút mỗi khi bạn nhập lệnh này.</p>
+
+    <h3>minicom</h3>
+
+    <p>Chúng ta sẽ dùng chương trình <code>minicom</code> để tương tác với thiết bị serial bằng bàn phím.</p>
+
+    <p>Chúng ta cần cấu hình minicom trước khi dùng. Có khá nhiều cách để làm điều đó nhưng chúng ta sẽ dùng file <code>.minirc.dfl</code> trong thư mục home. Tạo file <code>~/.minirc.dfl</code> với nội dung sau:</p>
+
+    <pre><code class="language-text">$ cat ~/.minirc.dfl
+pu baudrate 115200
+pu bits 8
+pu parity N
+pu stopbits 1
+pu rtscts No
+pu xonxoff No</code></pre>
+
+    <p><strong>LƯU Ý:</strong> Đảm bảo file này kết thúc bằng dòng mới (newline)! Nếu không, minicom sẽ không đọc được nó.</p>
+
+    <p>File đó khá dễ hiểu (trừ hai dòng cuối), nhưng hãy đi qua từng dòng:</p>
+    <ul>
+      <li><code>pu baudrate 115200</code>. Đặt baud rate thành 115200 bps.</li>
+      <li><code>pu bits 8</code>. 8 bit mỗi frame.</li>
+      <li><code>pu parity N</code>. Không kiểm tra parity.</li>
+      <li><code>pu stopbits 1</code>. 1 stop bit.</li>
+      <li><code>pu rtscts No</code>. Không dùng hardware control flow.</li>
+      <li><code>pu xonxoff No</code>. Không dùng software control flow.</li>
+    </ul>
+
+    <p>Khi đã sẵn sàng, chúng ta có thể khởi động minicom.</p>
+
+    <pre><code class="language-bash">$ # LƯU Ý: bạn có thể cần dùng thiết bị khác ở đây
+$ minicom -D /dev/ttyACM0 -b 115200</code></pre>
+
+    <p>Lệnh này nói cho minicom mở thiết bị serial tại <code>/dev/ttyACM0</code> và đặt baud rate thành 115200. Một giao diện người dùng dạng văn bản (TUI) sẽ xuất hiện.</p>
+
+    <p align="center">
+      <img title="minicom" src="assets/minicom.png" style="max-width:100%">
+    </p>
+
+    <p>Bây giờ bạn có thể gửi dữ liệu bằng bàn phím! Hãy thử gõ gì đó. Lưu ý rằng giao diện sẽ không hiển thị lại (echo) những gì bạn gõ. Tuy nhiên, nếu bạn chú ý đến LED vàng phía trên micro:bit, bạn sẽ thấy nó nhấp nháy mỗi khi bạn gõ.</p>
+
+    <h4>Các lệnh minicom</h4>
+    <p><code>minicom</code> cung cấp các lệnh thông qua phím tắt. Trên Linux, các phím tắt bắt đầu bằng <code>Ctrl+A</code>. Trên Mac, các phím tắt bắt đầu bằng phím <code>Meta</code>. Một số lệnh hữu ích:</p>
+    <ul>
+      <li><code>Ctrl+A</code> + <code>Z</code>: Tóm tắt các lệnh Minicom</li>
+      <li><code>Ctrl+A</code> + <code>C</code>: Xóa màn hình</li>
+      <li><code>Ctrl+A</code> + <code>X</code>: Thoát và reset</li>
+      <li><code>Ctrl+A</code> + <code>Q</code>: Thoát mà không reset</li>
+    </ul>
+    <p><strong>LƯU Ý</strong> cho người dùng Mac: Trong các lệnh trên, thay <code>Ctrl+A</code> bằng <code>Meta</code>.</p>
+
+    <h2>Công cụ trên Windows</h2>
+
+    <p>Bắt đầu bằng cách rút micro:bit ra.</p>
+
+    <p>Trước khi cắm micro:bit, chạy lệnh sau trên terminal:</p>
+
+    <pre><code class="language-bash">$ mode</code></pre>
+
+    <p>Nó sẽ in ra danh sách các thiết bị đang kết nối với máy tính. Những thiết bị có tên bắt đầu bằng <code>COM</code> là thiết bị serial. Đây là loại thiết bị chúng ta sẽ làm việc. Ghi lại tất cả các cổng COM mà <code>mode</code> hiển thị trước khi cắm serial module.</p>
+
+    <p>Bây giờ, cắm micro:bit vào và chạy lệnh <code>mode</code> lần nữa. Nếu bạn thấy một cổng <code>COM</code> mới xuất hiện trong danh sách, thì đó là cổng COM được gán cho chức năng serial trên micro:bit.</p>
+
+    <p>Bây giờ khởi động <code>putty</code>. Một giao diện đồ họa sẽ xuất hiện.</p>
+
+    <p align="center">
+      <img title="PuTTY settings" src="assets/putty-settings.png" style="max-width:100%">
+    </p>
+
+    <p>Trên màn hình khởi động (category "Session"), chọn "Serial" làm "Connection type". Trong trường "Serial line", nhập thiết bị COM bạn tìm được ở bước trước, ví dụ <code>COM3</code>.</p>
+
+    <p>Tiếp theo, chọn category "Connection/Serial" từ menu bên trái. Trong giao diện mới này, đảm bảo rằng serial port được cấu hình như sau:</p>
+    <ul>
+      <li>"Speed (baud)": 115200</li>
+      <li>"Data bits": 8</li>
+      <li>"Stop bits": 1</li>
+      <li>"Parity": None</li>
+      <li>"Flow control": None</li>
+    </ul>
+
+    <p>Cuối cùng, nhấn nút Open. Một console sẽ xuất hiện.</p>
+
+    <p align="center">
+      <img title="PuTTY console" src="assets/putty-console.png" style="max-width:100%">
+    </p>
+
+    <p>Nếu bạn gõ trên console này, LED vàng phía trên micro:bit sẽ nhấp nháy. Mỗi phím bấm sẽ làm LED nhấp nháy một lần. Lưu ý rằng console sẽ không hiển thị lại những gì bạn gõ nên màn hình sẽ vẫn trống.</p>
+
+    <h2>RS-232 — Lịch sử (tùy chọn)</h2>
+
+    <p>Đây là phần tùy chọn, nhưng sẽ hữu ích khi bạn nói chuyện với người khác về serial communication.</p>
+
+    <p>RS-232 (Revised Standard 232) ra đời khoảng năm 1960, là chuẩn serial port lâu đời nhất. Nó được thiết kế để kết nối modem (Data Communications Equipment — DCE) với terminal (Data Terminal Equipment — DTE), mỗi chiều một dây.</p>
+
+    <p>RS-232 ban đầu dùng đầu nối 25 chân với mức điện áp kỳ lạ: <strong>-12V cho logic cao, +12V cho logic thấp</strong> — tiêu chuẩn của ngành điện thoại cũ. Tốc độ truyền ban đầu từ 300 đến 9600 bps, phù hợp với modem thời đó.</p>
+
+    <p align="center">
+      <a href="https://en.wikipedia.org/wiki/File:DB-25_male.jpg">
+        <img height="240" title="DB-25 male connector" src="assets/DB-25_male.jpg" />
+      </a>
+    </p>
+
+    <p>Qua nhiều năm, chuẩn được đơn giản hóa: IBM PC AT đưa vào dùng đầu nối 9 chân (DE-9), điện áp giảm về 0V/+5V và 0V/+3.3V, và cuối cùng chỉ còn 3 dây cần thiết: TX (transmit), RX (receive), và GND.</p>
+
+    <p>USB cuối cùng thay thế RS-232 trên máy tính tiêu dùng. Để dễ dàng chuyển đổi, Microsoft thiết kế lớp thiết bị USB CDC-ACM (Communications Device Class - Abstract Control Model) để tương thích ngược với modem RS-232. Đó là lý do tại sao khi bạn cắm micro:bit vào máy tính, nó hiện ra như một thiết bị <code>ttyACM*</code> hoặc <code>COM*</code> — một cổng serial ảo qua USB.</p>
 
     <div class="nav-buttons">
       <a href="09-registers.html" class="nav-btn">← Registers</a>

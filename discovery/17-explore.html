@@ -54,163 +54,137 @@
   </div>
   <main id="main">
 
-    <h1>Còn rất nhiều điều để khám phá 🚀</h1>
+    <h1>Còn gì để bạn khám phá</h1>
 
-    <p>Bạn đã hoàn thành toàn bộ nội dung chính của sách. Nhưng thế giới embedded Rust còn rất rộng lớn. Chương này gợi ý các hướng tiếp theo.</p>
+    <p>Chúng ta mới chỉ cào bề mặt! Còn rất nhiều thứ để bạn khám phá.</p>
 
-    <h2>Khám phá thêm về MB2</h2>
+    <p><strong>LƯU Ý:</strong> Nếu bạn đang đọc phần này và muốn giúp thêm ví dụ hoặc bài tập vào cuốn sách Discovery cho bất kỳ mục nào bên dưới, hoặc bất kỳ chủ đề embedded nào khác có liên quan, chúng tôi rất muốn nhận sự giúp đỡ của bạn!</p>
 
-    <div class="diagram">
-      <div class="diagram-title diagram-title--lg">🔧 Tính năng nRF52833 chưa dùng đến</div>
-      <div class="card-grid--200">
+    <p>Hãy <a href="https://github.com/rust-embedded/discovery/issues/new">mở một issue</a> nếu bạn muốn giúp nhưng cần hỗ trợ hoặc hướng dẫn về cách đóng góp vào sách, hoặc mở Pull Request để thêm thông tin!</p>
 
-        <div class="feature-card feature-card--blue">
-          <div class="feature-card__title">🚀 DMA</div>
-          <p class="info-card__desc">Direct Memory Access — di chuyển dữ liệu giữa RAM và peripherals mà không cần CPU. Dùng cho transfer dữ liệu lớn từ UARTE, SPI, I2C.</p>
-        </div>
+    <h2>Chủ đề về phần mềm embedded</h2>
 
-        <div class="feature-card feature-card--green">
-          <div class="feature-card__title">📊 ADC (Analog-to-Digital)</div>
-          <p class="info-card__desc">Đọc điện áp analog (0–3.3V) và chuyển thành giá trị số. Dùng cho cảm biến nhiệt độ, ánh sáng, microphone analog.</p>
-        </div>
+    <p>Các chủ đề này thảo luận về chiến lược viết phần mềm embedded. Mặc dù nhiều vấn đề có thể được giải quyết bằng nhiều cách khác nhau, các phần này nói về một số chiến lược và khi nào chúng có ý nghĩa (hoặc không có ý nghĩa) để sử dụng.</p>
 
-        <div class="feature-card feature-card--yellow">
-          <div class="feature-card__title">🕐 RTC (Real Time Clock)</div>
-          <p class="info-card__desc">nRF52833 có Real-Time Counter (RTC) — hoạt động với external battery để theo dõi thời gian ngay cả khi MCU ở chế độ ngủ.</p>
-        </div>
+    <h3>Multitasking</h3>
 
-        <div class="feature-card feature-card--red">
-          <div class="feature-card__title">📻 Bluetooth</div>
-          <p class="info-card__desc">nRF52833 có Bluetooth 5 hardware tích hợp. Truy cập tốt nhất qua <strong>Embassy's nrf-softdevice</strong>. Đây là tính năng mạnh mẽ nhất của chip này.</p>
-        </div>
+    <p>Hầu hết các chương trình của chúng ta thực thi một tác vụ duy nhất. Làm thế nào để đạt được multitasking trong hệ thống không có OS, và do đó không có thread? Có hai cách tiếp cận chính cho multitasking: preemptive multitasking và cooperative multitasking.</p>
 
-        <div class="feature-card feature-card--neutral">
-          <div class="feature-card__title">⚡ SPI</div>
-          <p class="info-card__desc">High-speed serial interface, nhanh hơn I2C nhiều (lên đến vài MHz). Thường dùng cho màn hình, SD card, flash memory.</p>
-        </div>
+    <p>Trong preemptive multitasking, một tác vụ đang được thực thi có thể, tại bất kỳ thời điểm nào, bị preempt (bị ngắt) bởi tác vụ khác. Khi bị preempt, tác vụ đầu tiên sẽ bị tạm dừng và processor sẽ thay vào đó thực thi tác vụ thứ hai. Tại một thời điểm nào đó tác vụ đầu tiên sẽ được tiếp tục. Microcontroller cung cấp hỗ trợ phần cứng cho preemption dưới dạng interrupt. Chúng ta đã được giới thiệu về interrupt khi xây dựng trò chơi snake ở chương 11.</p>
 
-        <div class="feature-card feature-card--neutral">
-          <div class="feature-card__title">🎵 I2S</div>
-          <p class="info-card__desc">Audio transmission protocol. Kết hợp với loa/microphone ngoài để làm ứng dụng âm thanh chất lượng cao.</p>
-        </div>
+    <p>Trong cooperative multitasking, tác vụ đang được thực thi sẽ chạy cho đến khi đạt tới điểm tạm dừng (suspension point). Khi processor đến điểm tạm dừng đó, nó sẽ ngừng thực thi tác vụ hiện tại và thay vào đó đi thực thi tác vụ khác. Tại một thời điểm nào đó tác vụ đầu tiên sẽ được tiếp tục. Sự khác biệt chính giữa hai cách tiếp cận multitasking là trong cooperative multitasking, tác vụ nhường quyền điều khiển thực thi tại các điểm tạm dừng đã biết thay vì bị ép preempt tại bất kỳ điểm nào của quá trình thực thi.</p>
 
-      </div>
-    </div>
+    <h3>Sleeping</h3>
 
-    <h2>Chủ đề Embedded Rust quan trọng</h2>
+    <p>Tất cả các chương trình của chúng ta đều liên tục poll các peripheral để xem có gì cần làm không. Tuy nhiên, đôi khi không có gì cần làm! Vào những lúc đó, microcontroller nên "sleep".</p>
 
-    <h3>Multitasking — Hai hướng tiếp cận</h3>
+    <p>Khi processor sleep, nó ngừng thực thi instruction và điều này tiết kiệm năng lượng. Hầu như luôn là ý tưởng tốt để tiết kiệm năng lượng nên microcontroller của bạn nên sleep nhiều nhất có thể. Nhưng làm sao nó biết khi nào phải thức dậy để thực thi? "Interrupts" là một trong những sự kiện đánh thức microcontroller, và <code>wfi</code> cùng <code>wfe</code> là các instruction làm processor "sleep".</p>
 
-    <div class="diagram">
-      <div class="diagram-title diagram-title--lg">⚡ Preemptive vs Cooperative Multitasking</div>
-      <div class="flex-row">
-        <div class="compare-col compare-col--green">
-          <div class="compare-col__title compare-col__title--green" style="font-size:1rem;">⚔️ Preemptive (RTIC)</div>
-          <ul style="font-size:0.84rem;margin:0;padding-left:16px;">
-            <li>Hardware interrupt based</li>
-            <li>Task có priority — task cao preempt task thấp</li>
-            <li>Framework: <strong>RTIC</strong> (Real-Time Interrupt-driven Concurrency)</li>
-            <li>Phù hợp: hard real-time requirements</li>
-          </ul>
-          <div style="margin-top:10px;">
-            <a href="https://rtic.rs" target="_blank" style="font-size:0.82rem;">rtic.rs →</a>
-          </div>
-        </div>
-        <div class="compare-col compare-col--green">
-          <div class="compare-col__title compare-col__title--green" style="font-size:1rem;">🤝 Cooperative (Embassy)</div>
-          <ul style="font-size:0.84rem;margin:0;padding-left:16px;">
-            <li>Async/await, explicit suspension points</li>
-            <li>Task tự yield khi chờ I/O</li>
-            <li>Framework: <strong>Embassy</strong></li>
-            <li>Phù hợp: IoT, networking, nhiều I/O concurrent</li>
-          </ul>
-          <div style="margin-top:10px;">
-            <a href="https://embassy.dev" target="_blank" style="font-size:0.82rem;">embassy.dev →</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h2>Chủ đề liên quan đến khả năng của microcontroller</h2>
 
-    <div class="callout note">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Gợi ý tiếp theo cho .NET developer</div>
-        <p>Nếu bạn quen với <code>async/await</code> trong C#, <strong>Embassy</strong> sẽ cảm thấy quen thuộc hơn. Cú pháp Rust async/await rất giống C# — khác biệt lớn nhất là không có garbage collector, nên bạn cần hiểu lifetime của futures.</p>
-      </div>
-    </div>
+    <p>Microcontroller (như nRF52/nRF51 của chúng ta) có nhiều khả năng. Tuy nhiên, nhiều microcontroller chia sẻ các khả năng tương tự có thể được dùng để giải quyết nhiều vấn đề khác nhau.</p>
 
-    <h3>Sensor Fusion</h3>
-    <p>Kết hợp dữ liệu từ nhiều cảm biến (accelerometer + magnetometer + gyroscope) để có kết quả đáng tin cậy hơn. Ví dụ: kết hợp accelerometer và magnetometer để tính orientation 3D chính xác hơn.</p>
+    <h3>Direct Memory Access (DMA)</h3>
+
+    <p>Peripheral này là một loại <code>memcpy</code> bất đồng bộ. Nếu bạn đang làm việc với micro:bit v2, thực ra bạn đã dùng nó rồi — HAL làm điều này cho bạn với các peripheral UARTE và TWIM. Peripheral DMA có thể được dùng để thực hiện truyền dữ liệu khối lượng lớn. Từ RAM sang RAM, từ peripheral (như UARTE) sang RAM, hoặc từ RAM sang peripheral. Bạn có thể lên lịch DMA transfer, như đọc 256 byte từ UARTE vào buffer này, để nó chạy ở background và sau đó poll một register nào đó để xem nó đã hoàn thành chưa — để bạn có thể làm việc khác trong khi transfer đang diễn ra. Để biết thêm về cách implement, bạn có thể xem module <code>serial_setup</code> từ chương UART. Nếu chưa đủ, bạn thậm chí có thể thử đào sâu vào code của <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a>.</p>
+
+    <h3>Interrupts</h3>
+
+    <p>Để tương tác với thế giới thực, microcontroller thường cần phản ứng ngay lập tức khi một loại sự kiện nào đó xảy ra.</p>
+
+    <p>Microcontroller có khả năng bị ngắt (interrupted), nghĩa là khi một sự kiện nhất định xảy ra, nó sẽ dừng bất cứ thứ gì đang làm tại thời điểm đó để thay vào đó phản ứng với sự kiện đó. Điều này rất hữu ích khi chúng ta muốn dừng motor khi nút được nhấn, hoặc đo cảm biến khi timer đếm xong.</p>
+
+    <p>Mặc dù interrupt rất hữu ích, chúng cũng có thể hơi khó để làm việc đúng cách. Chúng ta muốn đảm bảo rằng chúng ta phản ứng nhanh với sự kiện, nhưng cũng cho phép công việc khác tiếp tục.</p>
+
+    <p>Trong Rust, chúng ta mô hình hóa interrupt tương tự khái niệm threading trên Rust desktop. Điều này có nghĩa chúng ta cũng phải nghĩ về các khái niệm <code>Send</code> và <code>Sync</code> của Rust khi chia sẻ dữ liệu giữa ứng dụng chính và code xử lý interrupt.</p>
+
+    <h3>Pulse Width Modulation (PWM)</h3>
+
+    <p>Tóm lại, PWM là bật một thứ gì đó rồi tắt nó một cách chu kỳ trong khi giữ một tỷ lệ ("duty cycle") giữa "thời gian bật" và "thời gian tắt". Khi dùng trên LED với tần số đủ cao, điều này có thể được dùng để điều chỉnh độ sáng LED. Duty cycle thấp, ví dụ 10% bật và 90% tắt, sẽ làm LED rất mờ, trong khi duty cycle cao, ví dụ 90% bật và 10% tắt, sẽ làm LED sáng hơn nhiều (gần như được cấp nguồn đầy đủ).</p>
+
+    <p>Nói chung, PWM có thể được dùng để kiểm soát lượng điện năng cung cấp cho thiết bị điện. Với electronics (nguồn) phù hợp giữa microcontroller và motor điện, PWM có thể kiểm soát lượng điện năng cung cấp cho motor, do đó kiểm soát moment xoắn và tốc độ. Thêm cảm biến vị trí góc và bạn có một bộ điều khiển vòng kín (closed loop controller) có thể kiểm soát vị trí motor ở các tải khác nhau.</p>
+
+    <p>PWM đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/trait.Pwm.html">embedded-hal Pwm trait</a> và bạn sẽ tìm thấy implementation trong <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a>.</p>
+
+    <h3>Digital inputs</h3>
+
+    <p>Chúng ta đã dùng các pin microcontroller làm digital output để điều khiển LED. Khi xây dựng trò chơi snake, chúng ta cũng đã thoáng thấy cách cấu hình các pin này làm digital input. Dưới dạng digital input, các pin này có thể đọc trạng thái nhị phân của switch (bật/tắt) hoặc nút bấm (nhấn/không nhấn).</p>
+
+    <p>Digital input cũng được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/digital/v2/trait.InputPin.html">embedded-hal InputPin trait</a> và tất nhiên <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> có implementation cho chúng.</p>
+
+    <p>(spoiler: đọc trạng thái nhị phân của switch/button không đơn giản như tưởng tượng ;-) )</p>
+
+    <h3>Analog-to-Digital Converters (ADC)</h3>
+
+    <p>Ngoài kia có rất nhiều cảm biến kỹ thuật số. Bạn có thể dùng giao thức như I2C và SPI để đọc chúng. Nhưng cảm biến analog cũng tồn tại! Các cảm biến này chỉ đơn giản output một mức điện áp tỷ lệ với đại lượng chúng đang đo.</p>
+
+    <p>Peripheral ADC có thể được dùng để chuyển đổi mức điện áp "analog" đó, ví dụ <code>1.25</code> Volt, thành một số "digital", ví dụ trong range <code>[0, 65535]</code>, mà processor có thể dùng trong tính toán.</p>
+
+    <p><a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/adc/index.html">embedded-hal adc module</a> cũng như <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> đều hỗ trợ.</p>
+
+    <h3>Digital-to-Analog Converters (DAC)</h3>
+
+    <p>Như bạn có thể mong đợi, DAC chính xác là ngược lại của ADC. Bạn có thể ghi một giá trị digital vào register để tạo ra điện áp trong range <code>[0, 3.3V]</code> (giả sử nguồn cấp 3.3V) trên một pin "analog" nào đó. Khi pin analog này được kết nối với electronics phù hợp và register được ghi vào với tốc độ không đổi, nhanh (tần số) với các giá trị đúng, bạn có thể tạo ra âm thanh hoặc thậm chí nhạc!</p>
+
+    <h3>Real Time Clock (RTC)</h3>
+
+    <p>Peripheral này có thể được dùng để theo dõi thời gian theo "định dạng con người". Giây, phút, giờ, ngày, tháng và năm. Peripheral này xử lý việc chuyển đổi từ "tick" sang các đơn vị thời gian thân thiện với con người. Nó thậm chí xử lý năm nhuận và Daylight Save Time cho bạn!</p>
+
+    <h2>Các giao thức truyền thông khác</h2>
+
+    <ul>
+      <li>SPI, đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/spi/index.html">embedded-hal spi module</a> và được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+      <li>I2S, hiện chưa được trừu tượng hóa trong embedded-hal nhưng được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+      <li>Ethernet, có tồn tại một TCP/IP stack nhỏ tên là <a href="https://github.com/smoltcp-rs/smoltcp">smoltcp</a> được implement cho một số chip nhưng chip trên micro:bit không có Ethernet peripheral</li>
+      <li>USB, có một số công việc thử nghiệm về điều này, ví dụ với crate <a href="https://github.com/mvirkkunen/usb-device">usb-device</a></li>
+      <li>Bluetooth, có tồn tại một BLE stack chưa hoàn chỉnh tên là <a href="https://github.com/jonas-schievink/rubble">rubble</a> hỗ trợ chip nrf</li>
+      <li>SMBUS, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+      <li>CAN, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+      <li>IrDA, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+    </ul>
+
+    <p>Các ứng dụng khác nhau dùng các giao thức truyền thông khác nhau. Các ứng dụng hướng người dùng thường có đầu nối USB vì USB là giao thức phổ biến trên PC và smartphone. Trong khi đó, bên trong xe ô tô bạn sẽ tìm thấy rất nhiều "bus" CAN. Một số cảm biến kỹ thuật số dùng SPI, số khác dùng I2C và số khác nữa dùng SMBUS.</p>
+
+    <p>Nếu bạn quan tâm đến việc phát triển abstraction trong <code>embedded-hal</code> hoặc implementation của peripheral nói chung, đừng ngại mở issue trong các repository HAL. Hoặc bạn cũng có thể tham gia <a href="https://matrix.to/#/%23rust-embedded:matrix.org">Rust Embedded matrix channel</a> và liên lạc với hầu hết những người đã xây dựng các thứ ở trên.</p>
+
+    <h2>Các chủ đề embedded tổng quát</h2>
+
+    <p>Các chủ đề này bao gồm những mục không đặc thù cho thiết bị hoặc phần cứng của chúng ta. Thay vào đó, chúng thảo luận về các kỹ thuật hữu ích có thể được dùng trên hệ thống embedded.</p>
+
+    <h3>Gyroscopes</h3>
+
+    <p>Trong bài tập Punch-o-meter, chúng ta đã dùng accelerometer để đo thay đổi gia tốc trong ba chiều. Nhưng còn có các cảm biến chuyển động khác như gyroscope, cho phép đo thay đổi "spin" trong ba chiều.</p>
+
+    <p>Điều này rất hữu ích khi xây dựng một số hệ thống nhất định, chẳng hạn như robot muốn tránh bị lật. Thêm vào đó, dữ liệu từ cảm biến gyroscope cũng có thể được kết hợp với dữ liệu từ accelerometer bằng kỹ thuật gọi là Sensor Fusion (xem bên dưới).</p>
 
     <h3>Servo và Stepper Motors</h3>
-    <p>Điều khiển motor servo (góc quay chính xác) và stepper motor (từng bước nhỏ). Kết hợp với encoder để đo vị trí thực tế.</p>
 
-    <h2>Bước tiếp theo — Lộ trình học</h2>
+    <p>Trong khi một số motor được dùng chủ yếu chỉ để quay theo một hướng hoặc hướng khác, ví dụ lái xe điều khiển từ xa tiến hoặc lùi, đôi khi hữu ích để đo chính xác hơn motor quay bao nhiêu vòng.</p>
 
-    <div class="diagram">
-      <div class="diagram-title diagram-title--lg">🗺️ Lộ trình Embedded Rust</div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-body">
-            <h4>✅ Discovery MB2 (Đã hoàn thành!)</h4>
-            <p>Nền tảng embedded Rust với micro:bit v2</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-body">
-            <h4>📖 The Embedded Rust Book</h4>
-            <p>Đọc sâu hơn về lý thuyết: HAL design, portability, no_std ecosytem. Bản dịch tiếng Việt ngay trên trang này tại <a href="../docs/index.html">Embedded Rust Book →</a></p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-body">
-            <h4>⚡ Embassy Framework</h4>
-            <p>Framework async/await cho embedded Rust. Hỗ trợ nRF52, STM32, RP2040 và nhiều hơn nữa. Cú pháp quen thuộc với C# developer.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-body">
-            <h4>🔧 Thử thêm board</h4>
-            <p>Sau khi vững với MB2, thử sang <strong>STM32</strong> (phổ biến trong industry), <strong>ESP32</strong> (WiFi/Bluetooth), hoặc <strong>RP2040</strong> (Raspberry Pi Pico).</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-body">
-            <h4>🏭 Dự án thực tế</h4>
-            <p>Làm driver cho cảm biến chưa có crate, đóng góp vào embedded-hal ecosystem, hoặc xây dựng product thực tế.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <p>Microcontroller có thể được dùng để điều khiển Servo hoặc Stepper motor, cho phép kiểm soát chính xác hơn số vòng quay của motor, hoặc thậm chí định vị motor ở một vị trí cụ thể, ví dụ nếu chúng ta muốn di chuyển kim đồng hồ về một hướng cụ thể.</p>
 
-    <h2>Tài nguyên cộng đồng</h2>
+    <h3>Sensor Fusion</h3>
 
-    <div class="card-grid">
-      <a href="https://matrix.to/#/#rust-embedded:matrix.org" target="_blank" class="resource-link">
-        <div class="resource-link__title">💬 Matrix Chat</div>
-        <div class="resource-link__desc">Cộng đồng Rust Embedded chính thức</div>
-      </a>
-      <a href="https://github.com/rust-embedded/awesome-embedded-rust" target="_blank" class="resource-link">
-        <div class="resource-link__title">⭐ Awesome Embedded Rust</div>
-        <div class="resource-link__desc">Danh sách curated các crate và tài nguyên</div>
-      </a>
-      <a href="https://github.com/bbcmicrobit/micropython/tree/master/examples" target="_blank" class="resource-link">
-        <div class="resource-link__title">🔬 microbit-v2 BSP</div>
-        <div class="resource-link__desc">Examples từ Board Support Crate</div>
-      </a>
-      <a href="https://docs.rust-embedded.org" target="_blank" class="resource-link">
-        <div class="resource-link__title">📚 Embedded Rust Bookshelf</div>
-        <div class="resource-link__desc">Tất cả tài liệu chính thức</div>
-      </a>
-    </div>
+    <p>Micro:bit chứa hai cảm biến chuyển động: accelerometer và magnetometer. Riêng lẻ chúng đo: gia tốc (riêng) và từ trường (Trái Đất). Nhưng các đại lượng này có thể được "fuse" thành thứ hữu ích hơn: một phép đo "robust" hướng của board. Ở đây robust có nghĩa là ít sai số đo lường hơn so với khả năng của một cảm biến đơn lẻ.</p>
 
-    <div class="callout tip">
-      <div class="callout-icon">🎉</div>
-      <div class="callout-body">
-        <div class="callout-title">Bạn đã hoàn thành cuốn sách này!</div>
-        <p>Từ một lập trình viên .NET chưa biết gì về embedded, bây giờ bạn đã có nền tảng vững chắc để tiếp tục khám phá thế giới embedded Rust. Chúc mừng và chúc bạn học tốt! 🦀</p>
-      </div>
-    </div>
+    <p>Ý tưởng suy ra dữ liệu đáng tin cậy hơn từ các nguồn khác nhau được gọi là sensor fusion.</p>
+
+    <h2>Tiếp theo đi đâu?</h2>
+
+    <p>Có nhiều lựa chọn:</p>
+
+    <ul>
+      <li>Bạn có thể xem các ví dụ trong <a href="https://github.com/nrf-rs/microbit/">microbit</a> board support crate. Tất cả các ví dụ đó hoạt động cho board micro:bit bạn có.</li>
+      <li>Bạn có thể tham gia <a href="https://matrix.to/#/%23rust-embedded:matrix.org">Rust Embedded matrix channel</a>, nơi rất nhiều người đóng góp hoặc làm việc trên phần mềm embedded thường trú. Bao gồm ví dụ những người viết microbit BSP, nrf52-hal, embedded-hal, v.v.</li>
+      <li>Nếu bạn đang tìm tổng quan về những gì có sẵn trong Rust Embedded hiện tại, hãy xem danh sách <a href="https://github.com/rust-embedded/awesome-embedded-rust/">Awesome Rust Embedded</a>.</li>
+      <li>Bạn có thể xem <a href="https://rtic.rs">Real-Time Interrupt-driven Concurrency</a>. Một framework preemptive multitasking rất hiệu quả hỗ trợ task prioritization và thực thi không dead lock.</li>
+      <li>Bạn có thể khám phá thêm các abstraction của dự án <a href="https://github.com/rust-embedded/embedded-hal">embedded-hal</a> và thậm chí thử viết driver platform agnostic dựa trên nó.</li>
+      <li>Bạn có thể thử chạy Rust trên development board khác. Cách dễ nhất để bắt đầu là dùng template dự án Cargo <a href="https://docs.rs/cortex-m-quickstart/0.3.1/cortex_m_quickstart/">cortex-m-quickstart</a>.</li>
+      <li>Bạn có thể thử <a href="https://mobile.twitter.com/japaricious/status/962770003325005824">demo motion sensors này</a>. Chi tiết về implementation và source code có sẵn trong <a href="http://blog.japaric.io/wd-1-2-l3gd20-lsm303dlhc-madgwick/">bài blog này</a>.</li>
+      <li>Bạn có thể đọc <a href="http://blog.japaric.io/brave-new-io/">bài blog này</a> mô tả cách type system của Rust có thể ngăn ngừa bug trong cấu hình I/O.</li>
+      <li>Bạn có thể xem <a href="http://blog.japaric.io">blog của japaric</a> cho các chủ đề khác nhau về phát triển embedded với Rust.</li>
+      <li>Bạn có thể tham gia <a href="https://github.com/rust-lang-nursery/embedded-wg/issues/39">Weekly driver initiative</a> và giúp chúng tôi viết generic driver trên các trait <code>embedded-hal</code> hoạt động trên mọi loại platform (ARM Cortex-M, AVR, MSP430, RISCV, v.v.)</li>
+    </ul>
 
     <div class="nav-buttons">
       <a href="16-snake-game.html" class="nav-btn">← Snake Game</a>
