@@ -232,11 +232,15 @@ pub enum GameStatus {
 }
 
 /// The outcome of a single move/step.
-enum StepOutcome {
-    Full(Coords),
-    Collision(Coords),
+pub enum StepOutcome {
+    /// Grid full (player wins)
+    Full,
+    /// Snake has collided with itself (player loses)
+    Collision,
+    /// Snake has eaten some food
     Eat(Coords),
-    Move(Coords)
+    /// Snake has moved (and nothing else has happened)
+    Move(Coords),
 }
 
 use heapless::spsc::Queue;
@@ -313,10 +317,8 @@ pub(crate) struct Game {
 }
 
 impl Game {
-    pub(crate) fn new(rng_seed: u32) -&gt; Self {
-        let mut rng = Prng::new(rng_seed);
-        let mut tail: FnvIndexSet&lt;Coords, 32&gt; = FnvIndexSet::new();
-        tail.insert(Coords { row: 2, col: 1 }).unwrap();
+    pub fn new(rng: &amp;mut microbit::hal::Rng) -&gt; Self {
+        let mut rng = Prng::seeded(rng);
         let snake = Snake::new();
         let food_coords = Coords::random(&amp;mut rng, Some(&amp;snake.coord_set));
         Self {
@@ -374,13 +376,13 @@ impl Game {
         let next_move = self.get_next_move();
         if self.snake.coord_set.contains(&amp;next_move) {
             if next_move != *self.snake.tail.peek().unwrap() {
-                StepOutcome::Collision(next_move)
+                StepOutcome::Collision
             } else {
                 StepOutcome::Move(next_move)
             }
         } else if next_move == self.food_coords {
             if self.snake.tail.len() == 23 {
-                StepOutcome::Full(next_move)
+                StepOutcome::Full
             } else {
                 StepOutcome::Eat(next_move)
             }
@@ -391,8 +393,8 @@ impl Game {
 
     fn handle_step_outcome(&amp;mut self, outcome: StepOutcome) {
         self.status = match outcome {
-            StepOutcome::Collision(_) =&gt; GameStatus::Lost,
-            StepOutcome::Full(_) =&gt; GameStatus::Won,
+            StepOutcome::Collision =&gt; GameStatus::Lost,
+            StepOutcome::Full =&gt; GameStatus::Won,
             StepOutcome::Eat(c) =&gt; {
                 self.snake.move_snake(c, true);
                 self.place_food();
@@ -491,7 +493,7 @@ fn main() -&gt; ! {
    let mut board = Board::take().unwrap();
    let mut timer = Timer::new(board.TIMER0);
    let mut rng = Rng::new(board.RNG);
-   let mut game = Game::new(rng.random_u32());
+   let mut game = Game::new(&amp;mut rng);
    let mut display = Display::new(board.display_pins);
 
    loop {
@@ -630,7 +632,7 @@ fn GPIOTE() {
 #![no_std]
 
 mod game;
-mod control;
+mod controls;
 
 use cortex_m_rt::entry;
 use microbit::{
@@ -642,7 +644,7 @@ use rtt_target::rtt_init_print;
 use panic_rtt_target as _;
 
 use crate::game::{Game, GameStatus};
-use crate::control::{init_buttons, get_turn};
+use crate::controls::{init_buttons, get_turn};
 
 #[entry]
 fn main() -&gt; ! {
@@ -650,7 +652,7 @@ fn main() -&gt; ! {
     let mut board = Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0);
     let mut rng = Rng::new(board.RNG);
-    let mut game = Game::new(rng.random_u32());
+    let mut game = Game::new(&amp;mut rng);
 
     let mut display = Display::new(board.display_pins);
 
@@ -764,7 +766,7 @@ fn TIMER1() {
 #![no_std]
 
 mod game;
-mod control;
+mod controls;
 mod display;
 
 use cortex_m_rt::entry;
@@ -787,7 +789,7 @@ fn main() -&gt; ! {
     let mut board = Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0).into_periodic();
     let mut rng = Rng::new(board.RNG);
-    let mut game = Game::new(rng.random_u32());
+    let mut game = Game::new(&amp;mut rng);
 
     init_buttons(board.GPIOTE, board.buttons);
     init_display(board.TIMER1, board.display_pins);

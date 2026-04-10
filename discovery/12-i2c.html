@@ -130,6 +130,14 @@
 
     <p>Địa chỉ target có thể là 10 bit thay vì 7 bit — không có gì khác thay đổi.</p>
 
+    <h3>Device Registers</h3>
+
+    <p>Nhiều thiết bị I2C tổ chức dữ liệu dưới dạng <em>device registers</em> — mỗi thanh ghi có một địa chỉ 8-bit và một nội dung. Để ghi vào một thanh ghi, controller gửi hai byte: byte đầu tiên là địa chỉ thanh ghi, byte thứ hai là giá trị mới.</p>
+
+    <p>Để đọc một thanh ghi, thường dùng một giao dịch kết hợp: ghi địa chỉ thanh ghi, ngay sau đó đọc lại nội dung. Một số thiết bị hỗ trợ <em>address auto-increment</em> — cho phép đọc/ghi nhiều thanh ghi liên tiếp mà không cần chỉ định lại địa chỉ mỗi lần.</p>
+
+    <p>I2C là một giao thức phức tạp với nhiều biến thể và tính năng đặc biệt. Hãy đọc kỹ datasheet của thiết bị target để biết cách giao tiếp đúng cách.</p>
+
     <h2>LSM303AGR</h2>
 
     <p>Chip LSM303AGR trên micro:bit kết hợp hai cảm biến: accelerometer và magnetometer. Cả hai đều có thể truy cập qua bus I2C, mỗi cái có địa chỉ riêng. Các thanh ghi (registers) lưu dữ liệu đo được và có thể đọc/ghi qua I2C — tương tự như các peripheral trong MCU, nhưng phải truy cập qua bus thay vì ánh xạ bộ nhớ trực tiếp.</p>
@@ -146,64 +154,57 @@
 
     <p>Chương trình dưới đây đọc thanh ghi WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động:</p>
 
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
 
+use cortex_m::asm::wfi;
 use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::twi,
-    pac::twi0::frequency::FREQUENCY_A,
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::twim,
-    pac::twim0::frequency::FREQUENCY_A,
-};
+use embedded_hal::i2c::I2c;
+use microbit::{hal::twim, pac::twim0::frequency::FREQUENCY_A};
 
 const ACCELEROMETER_ADDR: u8 = 0b0011001;
-const MAGNETOMETER_ADDR: u8  = 0b0011110;
+const MAGNETOMETER_ADDR: u8 = 0b0011110;
 
 const ACCELEROMETER_ID_REG: u8 = 0x0f;
-const MAGNETOMETER_ID_REG:  u8 = 0x4f;
+const MAGNETOMETER_ID_REG: u8 = 0x4f;
 
 #[entry]
 fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let mut i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
+    let mut i2c = twim::Twim::new(
+        board.TWIM0,
+        board.i2c_internal.into(),
+        FREQUENCY_A::K100,
+    );
 
-    #[cfg(feature = "v2")]
-    let mut i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
-
-    let mut acc = [0u8; 1];
-    let mut mag = [0u8; 1];
+    let mut acc = [0u8];
+    let mut mag = [0u8];
 
     i2c.write_read(ACCELEROMETER_ADDR, &amp;[ACCELEROMETER_ID_REG], &amp;mut acc).unwrap();
-    i2c.write_read(MAGNETOMETER_ADDR,  &amp;[MAGNETOMETER_ID_REG],  &amp;mut mag).unwrap();
+    i2c.write_read(MAGNETOMETER_ADDR, &amp;[MAGNETOMETER_ID_REG], &amp;mut mag).unwrap();
 
-    rprintln!("Accelerometer WHO_AM_I: {:#010b}", acc[0]);
-    rprintln!("Magnetometer  WHO_AM_I: {:#010b}", mag[0]);
+    rprintln!("The accelerometer chip's id is: {:#b}", acc[0]);
+    rprintln!("The magnetometer chip's id is: {:#b}", mag[0]);
 
-    loop {}
+    loop {
+        wfi();
+    }
 }</code></pre>
 
-    <pre><code class="language-bash"># Cho micro:bit v2
-$ cargo embed --features v2 --target thumbv7em-none-eabihf
-# Cho micro:bit v1
-$ cargo embed --features v1 --target thumbv6m-none-eabi</code></pre>
+    <pre><code class="language-bash">$ cargo embed --example chip-id</code></pre>
 
     <h2>Dùng driver có sẵn</h2>
 
     <p>Đọc thanh ghi thô khá tẻ nhạt. Thay vào đó, chúng ta sẽ dùng crate <code>lsm303agr</code> — một driver được viết theo chuẩn <code>embedded-hal</code>, có nghĩa là cùng một driver có thể chạy trên bất kỳ nền tảng nào implement các trait đó (Linux, micro:bit, hay bất kỳ MCU nào khác).</p>
 
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
@@ -212,47 +213,40 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-#[cfg(feature = "v1")]
 use microbit::{
-    hal::twi,
-    pac::twi0::frequency::FREQUENCY_A,
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::twim,
+    hal::{twim, Timer},
     pac::twim0::frequency::FREQUENCY_A,
 };
 
-use lsm303agr::{AccelOutputDataRate, Lsm303agr};
+use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr};
 
 #[entry]
 fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let i2c = { twi::Twi::new(board.TWI0, board.i2c.into(), FREQUENCY_A::K100) };
-
-    #[cfg(feature = "v2")]
     let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
+    let mut timer0 = Timer::new(board.TIMER0);
 
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
-    sensor.set_accel_odr(AccelOutputDataRate::Hz50).unwrap();
+    sensor
+        .set_accel_mode_and_odr(
+            &amp;mut timer0,
+            AccelMode::HighResolution,
+            AccelOutputDataRate::Hz50,
+        )
+        .unwrap();
 
     loop {
-        if sensor.accel_status().unwrap().xyz_new_data {
-            let data = sensor.accel_data().unwrap();
-            rprintln!("Acceleration: x {} y {} z {}", data.x, data.y, data.z);
+        if sensor.accel_status().unwrap().xyz_new_data() {
+            let (x, y, z) = sensor.acceleration().unwrap().xyz_mg();
+            rprintln!("Acceleration: x {} y {} z {}", x, y, z);
         }
     }
 }</code></pre>
 
-    <pre><code class="language-bash"># Cho micro:bit v2
-$ cargo embed --features v2 --target thumbv7em-none-eabihf
-# Cho micro:bit v1
-$ cargo embed --features v1 --target thumbv6m-none-eabi</code></pre>
+    <pre><code class="language-bash">$ cargo embed --example show-accel</code></pre>
 
     <h2>Thử thách</h2>
 

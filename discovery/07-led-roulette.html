@@ -93,9 +93,14 @@ fn main() -&gt; ! {
 
     <p>File <code>.cargo/config</code> điều chỉnh quá trình linking để điều chỉnh layout bộ nhớ của chương trình theo yêu cầu của thiết bị mục tiêu.</p>
 
-    <p>File <code>Embed.toml</code> cấu hình chip (nrf52833 hoặc nrf51822), dừng chip sau khi nạp firmware để chương trình không nhảy ngay vào vòng lặp, vô hiệu hóa RTT và bật GDB để debug.</p>
+    <p>File <code>Embed.toml</code> cấu hình chip (nrf52833), dừng chip sau khi nạp firmware để chương trình không nhảy ngay vào vòng lặp, vô hiệu hóa RTT và bật GDB để debug.</p>
 
-    <h2>Debug it</h2>
+    <h2>Flash &amp; Debug</h2>
+
+    <p>Chạy lệnh sau để nạp firmware và mở GDB stub:</p>
+
+    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-bash">$ cargo embed</code></pre>
 
     <h3>Cơ chế hoạt động</h3>
 
@@ -106,11 +111,7 @@ fn main() -&gt; ! {
     <p>Mở một terminal mới và khởi chạy GDB với binary đã build:</p>
 
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ # Dành cho micro:bit v2
-$ gdb target/thumbv7em-none-eabihf/debug/led-roulette
-
-$ # Dành cho micro:bit v1
-$ gdb target/thumbv6m-none-eabi/debug/led-roulette</code></pre>
+    <pre><code class="language-bash">$ gdb target/thumbv7em-none-eabihf/debug/led-roulette</code></pre>
 
     <p>Trong GDB, kết nối tới GDB stub:</p>
 

@@ -79,12 +79,6 @@
 
     <p>Trong cooperative multitasking, tác vụ đang được thực thi sẽ chạy cho đến khi đạt tới điểm tạm dừng (suspension point). Khi processor đến điểm tạm dừng đó, nó sẽ ngừng thực thi tác vụ hiện tại và thay vào đó đi thực thi tác vụ khác. Tại một thời điểm nào đó tác vụ đầu tiên sẽ được tiếp tục. Sự khác biệt chính giữa hai cách tiếp cận multitasking là trong cooperative multitasking, tác vụ nhường quyền điều khiển thực thi tại các điểm tạm dừng đã biết thay vì bị ép preempt tại bất kỳ điểm nào của quá trình thực thi.</p>
 
-    <h3>Sleeping</h3>
-
-    <p>Tất cả các chương trình của chúng ta đều liên tục poll các peripheral để xem có gì cần làm không. Tuy nhiên, đôi khi không có gì cần làm! Vào những lúc đó, microcontroller nên "sleep".</p>
-
-    <p>Khi processor sleep, nó ngừng thực thi instruction và điều này tiết kiệm năng lượng. Hầu như luôn là ý tưởng tốt để tiết kiệm năng lượng nên microcontroller của bạn nên sleep nhiều nhất có thể. Nhưng làm sao nó biết khi nào phải thức dậy để thực thi? "Interrupts" là một trong những sự kiện đánh thức microcontroller, và <code>wfi</code> cùng <code>wfe</code> là các instruction làm processor "sleep".</p>
-
     <h2>Chủ đề liên quan đến khả năng của microcontroller</h2>
 
     <p>Microcontroller (như nRF52/nRF51 của chúng ta) có nhiều khả năng. Tuy nhiên, nhiều microcontroller chia sẻ các khả năng tương tự có thể được dùng để giải quyết nhiều vấn đề khác nhau.</p>
@@ -109,13 +103,13 @@
 
     <p>Nói chung, PWM có thể được dùng để kiểm soát lượng điện năng cung cấp cho thiết bị điện. Với electronics (nguồn) phù hợp giữa microcontroller và motor điện, PWM có thể kiểm soát lượng điện năng cung cấp cho motor, do đó kiểm soát moment xoắn và tốc độ. Thêm cảm biến vị trí góc và bạn có một bộ điều khiển vòng kín (closed loop controller) có thể kiểm soát vị trí motor ở các tải khác nhau.</p>
 
-    <p>PWM đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/trait.Pwm.html">embedded-hal Pwm trait</a> và bạn sẽ tìm thấy implementation trong <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a>.</p>
+    <p>PWM đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/latest/embedded_hal/pwm/index.html">embedded-hal Pwm trait</a> và bạn sẽ tìm thấy implementation trong <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a>.</p>
 
     <h3>Digital inputs</h3>
 
     <p>Chúng ta đã dùng các pin microcontroller làm digital output để điều khiển LED. Khi xây dựng trò chơi snake, chúng ta cũng đã thoáng thấy cách cấu hình các pin này làm digital input. Dưới dạng digital input, các pin này có thể đọc trạng thái nhị phân của switch (bật/tắt) hoặc nút bấm (nhấn/không nhấn).</p>
 
-    <p>Digital input cũng được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/digital/v2/trait.InputPin.html">embedded-hal InputPin trait</a> và tất nhiên <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> có implementation cho chúng.</p>
+    <p>Digital input cũng được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.InputPin.html">embedded-hal InputPin trait</a> và tất nhiên <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> có implementation cho chúng.</p>
 
     <p>(spoiler: đọc trạng thái nhị phân của switch/button không đơn giản như tưởng tượng ;-) )</p>
 
@@ -125,11 +119,11 @@
 
     <p>Peripheral ADC có thể được dùng để chuyển đổi mức điện áp "analog" đó, ví dụ <code>1.25</code> Volt, thành một số "digital", ví dụ trong range <code>[0, 65535]</code>, mà processor có thể dùng trong tính toán.</p>
 
-    <p><a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/adc/index.html">embedded-hal adc module</a> cũng như <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> đều hỗ trợ.</p>
+    <p><a href="https://docs.rs/embedded-hal/latest/embedded_hal/">embedded-hal adc module</a> cũng như <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a> đều hỗ trợ.</p>
 
     <h3>Digital-to-Analog Converters (DAC)</h3>
 
-    <p>Như bạn có thể mong đợi, DAC chính xác là ngược lại của ADC. Bạn có thể ghi một giá trị digital vào register để tạo ra điện áp trong range <code>[0, 3.3V]</code> (giả sử nguồn cấp 3.3V) trên một pin "analog" nào đó. Khi pin analog này được kết nối với electronics phù hợp và register được ghi vào với tốc độ không đổi, nhanh (tần số) với các giá trị đúng, bạn có thể tạo ra âm thanh hoặc thậm chí nhạc!</p>
+    <p>DAC chính xác là ngược lại của ADC — có thể dùng để tạo ra âm thanh hoặc nhạc. Tuy nhiên, nRF52833 trên MB2 <strong>không có DAC chuyên dụng</strong>. Thay vào đó, có thể mô phỏng DAC bằng cách dùng PWM kết hợp với bộ lọc RC.</p>
 
     <h3>Real Time Clock (RTC)</h3>
 
@@ -138,11 +132,11 @@
     <h2>Các giao thức truyền thông khác</h2>
 
     <ul>
-      <li>SPI, đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/spi/index.html">embedded-hal spi module</a> và được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
+      <li>SPI, đã được trừu tượng hóa trong <a href="https://docs.rs/embedded-hal/latest/embedded_hal/spi/index.html">embedded-hal spi module</a> và được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
       <li>I2S, hiện chưa được trừu tượng hóa trong embedded-hal nhưng được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
       <li>Ethernet, có tồn tại một TCP/IP stack nhỏ tên là <a href="https://github.com/smoltcp-rs/smoltcp">smoltcp</a> được implement cho một số chip nhưng chip trên micro:bit không có Ethernet peripheral</li>
       <li>USB, có một số công việc thử nghiệm về điều này, ví dụ với crate <a href="https://github.com/mvirkkunen/usb-device">usb-device</a></li>
-      <li>Bluetooth, có tồn tại một BLE stack chưa hoàn chỉnh tên là <a href="https://github.com/jonas-schievink/rubble">rubble</a> hỗ trợ chip nrf</li>
+      <li>Bluetooth, có thể dùng <a href="https://github.com/embassy-rs/nrf-softdevice">nrf-softdevice</a> hoặc <a href="https://github.com/embassy-rs/trouble">TrouBLE</a> (BLE stack của Embassy) hỗ trợ chip nrf</li>
       <li>SMBUS, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
       <li>CAN, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
       <li>IrDA, hiện chưa được trừu tượng hóa trong embedded-hal và chưa được implement bởi <a href="https://github.com/nrf-rs/nrf-hal">nrf52-hal</a></li>
@@ -179,16 +173,13 @@
     <p>Có nhiều lựa chọn:</p>
 
     <ul>
-      <li>Bạn có thể xem các ví dụ trong <a href="https://github.com/nrf-rs/microbit/">microbit</a> board support crate. Tất cả các ví dụ đó hoạt động cho board micro:bit bạn có.</li>
-      <li>Bạn có thể tham gia <a href="https://matrix.to/#/%23rust-embedded:matrix.org">Rust Embedded matrix channel</a>, nơi rất nhiều người đóng góp hoặc làm việc trên phần mềm embedded thường trú. Bao gồm ví dụ những người viết microbit BSP, nrf52-hal, embedded-hal, v.v.</li>
+      <li>Bạn có thể xem các ví dụ trong <a href="https://github.com/nrf-rs/microbit/">microbit-v2</a> board support crate. Tất cả các ví dụ đó hoạt động cho board micro:bit v2 bạn có.</li>
+      <li>Bạn có thể tham gia <a href="https://matrix.to/#/%23rust-embedded:matrix.org">Rust Embedded matrix channel</a>, nơi rất nhiều người đóng góp hoặc làm việc trên phần mềm embedded thường trú.</li>
       <li>Nếu bạn đang tìm tổng quan về những gì có sẵn trong Rust Embedded hiện tại, hãy xem danh sách <a href="https://github.com/rust-embedded/awesome-embedded-rust/">Awesome Rust Embedded</a>.</li>
-      <li>Bạn có thể xem <a href="https://rtic.rs">Real-Time Interrupt-driven Concurrency</a>. Một framework preemptive multitasking rất hiệu quả hỗ trợ task prioritization và thực thi không dead lock.</li>
+      <li>Bạn có thể khám phá <a href="https://embassy.dev">Embassy</a> — framework async/await cho embedded Rust hỗ trợ cooperative multitasking rất hiệu quả trên nRF52.</li>
+      <li>Bạn có thể xem <a href="https://rtic.rs">Real-Time Interrupt-driven Concurrency (RTIC)</a>. Một framework preemptive multitasking hỗ trợ task prioritization và thực thi không dead lock.</li>
       <li>Bạn có thể khám phá thêm các abstraction của dự án <a href="https://github.com/rust-embedded/embedded-hal">embedded-hal</a> và thậm chí thử viết driver platform agnostic dựa trên nó.</li>
-      <li>Bạn có thể thử chạy Rust trên development board khác. Cách dễ nhất để bắt đầu là dùng template dự án Cargo <a href="https://docs.rs/cortex-m-quickstart/0.3.1/cortex_m_quickstart/">cortex-m-quickstart</a>.</li>
-      <li>Bạn có thể thử <a href="https://mobile.twitter.com/japaricious/status/962770003325005824">demo motion sensors này</a>. Chi tiết về implementation và source code có sẵn trong <a href="http://blog.japaric.io/wd-1-2-l3gd20-lsm303dlhc-madgwick/">bài blog này</a>.</li>
-      <li>Bạn có thể đọc <a href="http://blog.japaric.io/brave-new-io/">bài blog này</a> mô tả cách type system của Rust có thể ngăn ngừa bug trong cấu hình I/O.</li>
-      <li>Bạn có thể xem <a href="http://blog.japaric.io">blog của japaric</a> cho các chủ đề khác nhau về phát triển embedded với Rust.</li>
-      <li>Bạn có thể tham gia <a href="https://github.com/rust-lang-nursery/embedded-wg/issues/39">Weekly driver initiative</a> và giúp chúng tôi viết generic driver trên các trait <code>embedded-hal</code> hoạt động trên mọi loại platform (ARM Cortex-M, AVR, MSP430, RISCV, v.v.)</li>
+      <li>Bạn có thể thử chạy Rust trên development board khác như ESP-32, Raspberry Pi Pico, hoặc Arduino. Xem <a href="https://github.com/rust-embedded/awesome-embedded-rust">Awesome Embedded Rust</a> để tìm board support crate phù hợp.</li>
     </ul>
 
     <div class="nav-buttons">

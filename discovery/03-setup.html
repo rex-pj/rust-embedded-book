@@ -66,6 +66,7 @@
     <h2>Tài liệu tham khảo</h2>
     <p>Tuy nhiên công cụ không phải là tất cả. Nếu không có tài liệu, việc làm việc với microcontroller gần như là bất khả thi. Chúng ta sẽ tham khảo tất cả những tài liệu này xuyên suốt cuốn sách:</p>
     <ul>
+      <li>Tài liệu kỹ thuật MB2 chính thức tại <a href="https://tech.microbit.org">https://tech.microbit.org</a></li>
       <li><a href="https://www.st.com/resource/en/datasheet/lsm303agr.pdf">LSM303AGR</a></li>
     </ul>
 
@@ -74,9 +75,9 @@
     <p>Chúng ta sẽ dùng tất cả các công cụ được liệt kê bên dưới. Nếu không chỉ định phiên bản tối thiểu, bất kỳ phiên bản gần đây nào cũng sẽ hoạt động, nhưng chúng tôi đã liệt kê phiên bản đã được thử nghiệm.</p>
 
     <ul>
-      <li>Rust 1.57.0 hoặc toolchain mới hơn.</li>
+      <li>Rust 1.79.0 hoặc toolchain mới hơn.</li>
       <li><code>gdb-multiarch</code>. Phiên bản đã thử nghiệm: 10.2. Các phiên bản khác rất có thể cũng hoạt động. Nếu bản phân phối/nền tảng của bạn không có <code>gdb-multiarch</code>, thì <code>arm-none-eabi-gdb</code> cũng được. Hơn nữa, một số binary <code>gdb</code> thông thường cũng được build với khả năng multiarch — bạn có thể tìm thêm thông tin về điều này trong các phần con.</li>
-      <li><a href="https://github.com/rust-embedded/cargo-binutils">cargo-binutils</a>. Phiên bản 0.3.3 hoặc mới hơn.</li>
+      <li><a href="https://github.com/rust-embedded/cargo-binutils">cargo-binutils</a>. Phiên bản 0.3.6 hoặc mới hơn.</li>
       <li><a href="https://probe.rs/docs/tools/cargo-embed/">cargo-embed</a>. Phiên bản 0.24.0 hoặc mới hơn.</li>
       <li><code>minicom</code> trên Linux và macOS. Phiên bản đã thử nghiệm: 2.7.1. Các phiên bản khác rất có thể cũng hoạt động.</li>
       <li><code>PuTTY</code> trên Windows.</li>
@@ -87,9 +88,9 @@
         <tr><th>Công cụ</th><th>Phiên bản tối thiểu</th><th>Mục đích</th></tr>
       </thead>
       <tbody>
-        <tr><td>Rust (rustup)</td><td>1.57.0</td><td>Trình biên dịch và toolchain manager</td></tr>
+        <tr><td>Rust (rustup)</td><td>1.79.0</td><td>Trình biên dịch và toolchain manager</td></tr>
         <tr><td><code>gdb-multiarch</code> / <code>arm-none-eabi-gdb</code></td><td>10.2 (đã thử)</td><td>Debugger cho ARM Cortex-M</td></tr>
-        <tr><td><code>cargo-binutils</code></td><td>0.3.3</td><td>Kiểm tra binary ARM (size, objdump…)</td></tr>
+        <tr><td><code>cargo-binutils</code></td><td>0.3.6</td><td>Kiểm tra binary ARM (size, objdump…)</td></tr>
         <tr><td><code>cargo-embed</code></td><td>0.24.0</td><td>Flash &amp; debug qua probe-rs/USB</td></tr>
         <tr><td><code>minicom</code> (Linux/macOS)</td><td>2.7.1 (đã thử)</td><td>Terminal serial</td></tr>
         <tr><td><code>PuTTY</code> (Windows)</td><td>–</td><td>Terminal serial</td></tr>
@@ -103,20 +104,26 @@
     <p>Cài đặt rustup bằng cách làm theo hướng dẫn tại <a href="https://rustup.rs">https://rustup.rs</a>.</p>
     <p>Nếu bạn đã cài rustup, hãy đảm bảo bạn đang ở kênh stable và toolchain stable của bạn đã được cập nhật. <code>rustc -V</code> nên trả về ngày mới hơn ngày hiển thị bên dưới:</p>
     <pre><code class="language-bash">$ rustc -V
-rustc 1.53.0 (53cb7b09b 2021-06-17)</code></pre>
+rustc 1.79.0 (129f3b996 2024-06-10)</code></pre>
 
     <h3>cargo-binutils</h3>
 
     <pre><code class="language-bash">$ rustup component add llvm-tools
-$ cargo install cargo-binutils --vers 0.3.3
+$ cargo install cargo-binutils --vers 0.3.6
 $ cargo size --version
-cargo-size 0.3.3</code></pre>
+cargo-size 0.3.6</code></pre>
 
     <h3>cargo-embed</h3>
 
     <p>Để cài đặt cargo-embed, trước hết hãy cài đặt các <a href="https://probe.rs/docs/getting-started/installation/">prerequisites</a> của nó (lưu ý: những hướng dẫn này là một phần của bộ công cụ debug embedded tổng quát hơn: <a href="https://probe.rs/">probe-rs</a>). Sau đó cài đặt bằng cargo:</p>
 
-    <pre><code class="language-bash">$ cargo install --locked probe-rs-tools --vers '^0.24'</code></pre>
+    <p>Nếu bạn đã từng cài đặt các phiên bản cũ của các công cụ này, hãy gỡ cài đặt chúng trước:</p>
+    <pre><code class="language-bash">$ cargo uninstall cargo-embed
+$ cargo uninstall probe-run
+$ cargo uninstall probe-rs
+$ cargo uninstall probe-rs-cli</code></pre>
+
+    <pre><code class="language-bash">$ cargo install --locked probe-rs-tools</code></pre>
 
     <p><strong>LƯU Ý:</strong> Quá trình này có thể thất bại do các thay đổi thường xuyên trong probe-rs. Nếu vậy, hãy truy cập <a href="https://probe.rs">https://probe.rs</a> và làm theo hướng dẫn cài đặt hiện tại ở đó.</p>
 
@@ -145,19 +152,22 @@ cargo-embed 0.24.0 (git commit: crates.io)</code></pre>
     <p><strong>LƯU Ý:</strong> <code>gdb-multiarch</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
     <pre><code class="language-bash">$ sudo apt-get install \
     gdb-multiarch \
-    minicom</code></pre>
+    minicom \
+    libunwind-dev</code></pre>
 
     <h4>Fedora 32 trở lên</h4>
     <p><strong>LƯU Ý:</strong> <code>gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
     <pre><code class="language-bash">$ sudo dnf install \
     gdb \
-    minicom</code></pre>
+    minicom \
+    libunwind-devel</code></pre>
 
     <h4>Arch Linux</h4>
     <p><strong>LƯU Ý:</strong> <code>arm-none-eabi-gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
     <pre><code class="language-bash">$ sudo pacman -S \
     arm-none-eabi-gdb \
-    minicom</code></pre>
+    minicom \
+    libunwind</code></pre>
 
     <h4>Các bản phân phối khác</h4>
     <p><strong>LƯU Ý:</strong> <code>arm-none-eabi-gdb</code> là lệnh GDB bạn sẽ dùng để debug chương trình ARM Cortex-M</p>
@@ -193,8 +203,8 @@ gcc version 5.4.1 20160919 (release) (..)</code></pre>
 
     <h3>🍎 macOS</h3>
     <p>Tất cả các công cụ có thể được cài đặt bằng <a href="http://brew.sh/">Homebrew</a>:</p>
-    <pre><code class="language-bash">$ # ARM GCC debugger
-$ brew install arm-none-eabi-gdb
+    <pre><code class="language-bash">$ # GDB debugger
+$ brew install gdb
 $ # Minicom
 $ brew install minicom
 $ # lsusb (liệt kê thiết bị USB kết nối)
@@ -268,20 +278,14 @@ Debug Port: DPv1, DP Designer: ARM Ltd
     <p>Tiếp theo, bạn sẽ cần chỉnh sửa <code>Embed.toml</code> trong thư mục <code>src/03-setup</code> của mã nguồn sách. Trong phần <code>default.general</code>, bạn sẽ thấy hai biến chip bị comment:</p>
 
     <pre><code class="language-toml">[default.general]
-# chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2
-# chip = "nrf51822_xxAA" # uncomment this line for micro:bit V1</code></pre>
+# chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2</code></pre>
 
-    <p>Nếu bạn đang làm việc với board micro:bit v2, hãy bỏ comment dòng đầu tiên. Với v1, hãy bỏ comment dòng thứ hai.</p>
+    <p>Hãy bỏ comment dòng đó để chọn chip cho micro:bit V2.</p>
 
-    <p>Tiếp theo, chạy một trong các lệnh sau:</p>
+    <p>Tiếp theo, chạy các lệnh sau:</p>
     <pre><code class="language-bash">$ # đảm bảo bạn đang ở thư mục src/03-setup của mã nguồn sách
-$ # Nếu bạn đang dùng micro:bit v2
 $ rustup target add thumbv7em-none-eabihf
-$ cargo embed --target thumbv7em-none-eabihf
-
-$ # Nếu bạn đang dùng micro:bit v1
-$ rustup target add thumbv6m-none-eabi
-$ cargo embed --target thumbv6m-none-eabi</code></pre>
+$ cargo embed --target thumbv7em-none-eabihf</code></pre>
 
     <p>Nếu mọi thứ hoạt động đúng, cargo-embed sẽ đầu tiên compile chương trình ví dụ nhỏ trong thư mục này, sau đó flash nó, và cuối cùng mở một giao diện dạng văn bản hiển thị <strong>Hello World</strong>.</p>
     <p>(Nếu không hoạt động, hãy xem hướng dẫn <a href="https://docs.rust-embedded.org/discovery/microbit/appendix/1-general-troubleshooting/index.html">khắc phục sự cố chung</a>.)</p>

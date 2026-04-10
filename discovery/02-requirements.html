@@ -69,7 +69,7 @@
 
     <h2>Yêu cầu về kiến thức</h2>
 
-    <p>Yêu cầu kiến thức chính để đọc cuốn sách này là biết <em>một chút</em> Rust. Bạn không cần phải hiểu sâu về generics, nhưng bạn cần biết cách <em>sử dụng</em> closure. Bạn cũng cần quen với các idiom của edition 2018, đặc biệt là thực tế rằng <code>extern crate</code> không còn cần thiết trong edition 2018.</p>
+    <p>Yêu cầu kiến thức chính để đọc cuốn sách này là biết <em>một chút</em> Rust. Bạn cần hiểu về generics, traits, closures, và các idiom Rust hiện đại.</p>
 
     <h2>Yêu cầu phần cứng</h2>
 
@@ -77,14 +77,13 @@
 
     <ul>
       <li>
-        <p>Một board <a href="https://tech.microbit.org/hardware/">micro:bit v2</a>, hoặc thay thế là một board <a href="https://tech.microbit.org/hardware/1-5-revision/">micro:bit v1.5</a> (trong sách sẽ gọi tắt v1.5 là "v1").</p>
+        <p>Một board <a href="https://tech.microbit.org/hardware/">micro:bit v2</a> (MB2). Cuốn sách này được viết cho phiên bản V2.00; mọi thứ sẽ hoạt động tốt với bất kỳ board V2 nào.</p>
         <p align="center">
           <img title="micro:bit" src="assets/microbit-v2.jpg" style="max-width:480px;width:100%">
         </p>
-        <blockquote><p>Đây là ảnh của micro:bit v2. Mặt trước của v1 trông hơi khác một chút.</p></blockquote>
       </li>
       <li>
-        <p>Một cáp micro-B USB. Hãy đảm bảo cáp hỗ trợ truyền dữ liệu vì một số cáp chỉ hỗ trợ sạc thiết bị. Bạn có thể đã có sẵn loại cáp này, vì một số kit micro:bit đi kèm với cáp như vậy. Một số cáp USB dùng để sạc thiết bị di động cũng có thể dùng được, nếu chúng là đầu micro-B và có khả năng truyền dữ liệu.</p>
+        <p>Một cáp micro-B USB. Cáp này cần để cấp nguồn cho board micro:bit khi không dùng pin, và để giao tiếp với nó. Hãy đảm bảo cáp hỗ trợ truyền dữ liệu vì một số cáp chỉ hỗ trợ sạc thiết bị.</p>
         <p align="center">
           <img title="micro-B USB cable" src="assets/usb-cable.jpg" style="max-width:480px;width:100%">
         </p>
@@ -103,7 +102,7 @@
 
     <p>Với một board phát triển khác, cuốn sách này sẽ mất đi hầu hết hoặc toàn bộ tính thân thiện với người mới và tính "dễ theo dõi", theo quan điểm của tôi.</p>
 
-    <p>Nếu bạn có một board phát triển khác và bạn không tự coi mình là người mới hoàn toàn, bạn tốt hơn nên bắt đầu với <a href="https://rust-embedded.github.io/cortex-m-quickstart/cortex_m_quickstart/">template dự án quickstart</a>.</p>
+    <p>Nếu bạn có một board phát triển khác và bạn không tự coi mình là người mới hoàn toàn, bạn có thể tìm kiếm <a href="https://github.com/rust-embedded/awesome-embedded-rust#board-support-crates">Board Support crates</a> cho board của mình, hoặc cân nhắc dùng template Cortex-M quickstart.</p>
 
     <div class="nav-buttons">
       <a href="01-background.html" class="nav-btn">← Background</a>

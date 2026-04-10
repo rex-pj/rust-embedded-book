@@ -61,9 +61,19 @@
 
     <h1>Registers</h1>
 
-    <p>Câu hỏi đặt ra: điều gì thực sự xảy ra khi gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code>? Câu trả lời là: chúng ta đang ghi vào các <strong>vùng bộ nhớ đặc biệt</strong> gọi là register.</p>
+    <p>Chương này là một phần kỹ thuật chuyên sâu. Bạn có thể bỏ qua nó bây giờ và quay lại sau nếu muốn. Tuy nhiên, có rất nhiều nội dung hay ở đây, vì vậy tôi khuyến khích bạn nên đọc.</p>
 
-    <p>Một register là một vùng bộ nhớ đặc biệt dùng để điều khiển một <em>peripheral</em>. Peripheral cung cấp những tính năng mở rộng ngoài khả năng tính toán và logic gốc của processor.</p>
+    <p>Đã đến lúc khám phá xem việc gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code> thực sự làm gì bên dưới.</p>
+
+    <p>Nói ngắn gọn, gọi <code>display_pins.row1.set_high()</code> chỉ đơn giản là ghi vào một số vùng bộ nhớ đặc biệt. Hãy vào thư mục <code>09-registers</code> và chạy code khởi đầu từng câu lệnh một (<code>src/main.rs</code>).</p>
+
+    <p>Địa chỉ kỳ lạ này là gì?</p>
+
+    <p>Địa chỉ <code>0x50000504</code> trỏ đến một <em>register</em>. Một register là một vùng bộ nhớ đặc biệt điều khiển một <em>peripheral</em>. Peripheral là một linh kiện điện tử nằm ngay cạnh processor trong package microcontroller và cung cấp cho processor các tính năng bổ sung. Xét cho cùng, processor, khi hoạt động độc lập, chỉ có thể thực hiện toán học và logic.</p>
+
+    <p>Register cụ thể này điều khiển các <em>pin</em> GPIO (GPIO <em>là</em> một peripheral) và có thể dùng để <em>kéo</em> từng pin đó xuống <em>thấp</em> (low) hoặc lên <em>cao</em> (high).</p>
+
+    <p>(Trên nRF52833 có hơn 32 GPIO, nhưng CPU là 32-bit. Vì vậy, các GPIO pin được tổ chức thành hai nhóm "P0" và "P1", mỗi nhóm có một bộ register để đọc, ghi và cấu hình. Địa chỉ trên là địa chỉ của output register cho các pin P0.)</p>
 
     <p>Đây là đoạn code demo thao tác register trực tiếp:</p>
 
@@ -100,17 +110,23 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Địa chỉ <code>0x50000504</code> là địa chỉ của register <code>OUT</code> thuộc GPIO Port 0. Register 32-bit này điều khiển các pin output — mỗi bit tương ứng với một pin. Đặt bit lên 1 → pin xuất ra điện áp cao; đặt về 0 → pin xuất ra mức thấp.</p>
+    <p>Được rồi. Nhưng làm thế nào để biết register này làm gì? Đã đến lúc RTRM (Read the Reference Manual)!</p>
 
-    <p>Các chân GPIO hoạt động như các tiếp điểm điện. Digital output có thể tạo ra hai mức điện áp: "thấp" (0V, logic 0) hoặc "cao" (3V, logic 1). LED sáng khi được cấp điện áp cao đúng chiều. Digital input thì <em>đọc</em> mức điện áp thay vì tạo ra nó.</p>
+    <h2>An aside: LEDs, digital outputs and voltage levels</h2>
+
+    <p>Một pin là một tiếp điểm điện. Microcontroller của chúng ta có nhiều pin và một số trong đó được kết nối với các LED (Light Emitting Diode). Một LED sẽ phát sáng khi được cấp điện áp. Như tên gọi, LED cũng hoạt động như một "diode". Diode chỉ cho phép điện chạy theo một chiều. Kết nối LED đúng chiều thì có ánh sáng. Kết nối ngược thì không có gì xảy ra.</p>
+
+    <p>May mắn cho chúng ta, các pin của microcontroller được kết nối sao cho chúng ta có thể điều khiển LED đúng chiều. Tất cả những gì chúng ta phải làm là áp đủ điện áp qua các pin để bật LED. Các pin gắn với LED thường được cấu hình là <em>digital outputs</em> và có thể xuất hai mức điện áp khác nhau: "thấp" (low), 0 Volt, hoặc "cao" (high), 3 Volt. Mức "cao" (điện áp) sẽ bật LED còn mức "thấp" sẽ tắt LED.</p>
+
+    <p>Các trạng thái "thấp" và "cao" này ánh xạ trực tiếp vào khái niệm digital logic. "thấp" là <code>0</code> hoặc <code>false</code> và "cao" là <code>1</code> hoặc <code>true</code>. Đó là lý do tại sao cấu hình pin này được gọi là digital output.</p>
+
+    <p>Ngược lại với digital output là digital input. Giống như digital output có thể là <code>0</code> hoặc <code>1</code>, digital input cũng có thể là <code>0</code> hoặc <code>1</code>. Điểm khác biệt là digital output có thể tạo ra điện áp, còn digital input thì <em>đọc</em> điện áp. Khi microcontroller đọc mức điện áp cao hơn ngưỡng cao, nó sẽ hiểu là <code>1</code>; khi đọc mức điện áp thấp hơn ngưỡng thấp, nó sẽ hiểu là <code>0</code>.</p>
 
     <p align="center">
       <a href="https://commons.wikimedia.org/wiki/File:LED_circuit.svg">
         <img class="white_bg" height="180" title="LED circuit" src="assets/LED_circuit.svg" />
       </a>
     </p>
-
-    <p>Vì nRF52833 có hơn 32 GPIO pin nhưng là kiến trúc 32-bit, các pin được tổ chức thành hai nhóm "P0" và "P1" — mỗi nhóm có bộ register riêng.</p>
 
     <h2>RTRM — Đọc Reference Manual</h2>
 
@@ -156,28 +172,144 @@ Breakpoint 4 ... line 25: *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
 
     <p>Khi biên dịch với <code>--release</code>, LLVM có thể tối ưu hóa bốn lần ghi vào register thành một lần duy nhất — vì nó không biết rằng địa chỉ đó có tác dụng phụ trên phần cứng. Kết quả là LED sẽ không nhấp nháy như mong đợi.</p>
 
-    <p>Giải pháp: dùng <strong>volatile operations</strong> qua <code>core::ptr</code>:</p>
+    <p>Ta có thể xem assembly để kiểm chứng. Dùng lệnh sau để xuất assembly:</p>
 
-    <pre><code class="language-rust">use core::ptr;
+    <pre><code class="language-text"># Build debug
+cargo objdump -- --disassemble --no-show-raw-insn --source &gt; debug.dump
+# Build release
+cargo objdump --release -- --disassemble --no-show-raw-insn --source &gt; release.dump</code></pre>
 
-// Thay vì:
-*(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
+    <p>Assembly debug build (4 cặp load-modify-store như thiết kế):</p>
 
-// Dùng:
-let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
-ptr::write_volatile(PORT_P0_OUT as *mut u32, out | 1 &lt;&lt; 21);</code></pre>
+    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h0b7888ca966441cf&gt;:
+     16a:      	movw	r1, #0x504
+     16e:      	movt	r1, #0x5000
+     174:      	ldr	r0, [r1]          ; (16) load
+     176:      	orr	r0, r0, #0x200000 ; (16) set bit 21
+     17a:      	str	r0, [r1]          ; (16) store
+     17c:      	ldr	r0, [r1]          ; (19) load
+     17e:      	orr	r0, r0, #0x80000  ; (19) set bit 19
+     182:      	str	r0, [r1]          ; (19) store
+     184:      	ldr	r0, [r1]          ; (22) load
+     186:      	bic	r0, r0, #0x200000 ; (22) clear bit 21
+     18a:      	str	r0, [r1]          ; (22) store
+     18c:      	ldr	r0, [r1]          ; (25) load
+     18e:      	bic	r0, r0, #0x80000  ; (25) clear bit 19
+     192:      	str	r0, [r1]          ; (25) store</code></pre>
 
-    <p>Volatile read/write báo cho compiler biết: "Các thao tác này có tác dụng phụ — đừng tối ưu hóa chúng đi." Build release với volatile sẽ giữ đủ bốn lần load-modify-store như thiết kế.</p>
+    <p>Assembly release build — LLVM đã tối ưu hóa thành <strong>một lần</strong> load-modify-store duy nhất:</p>
+
+    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
+     168:      	movw	r0, #0x504
+     16c:      	movt	r0, #0x5000
+     170:      	ldr	r1, [r0]
+     172:      	bic	r1, r1, #0x280000  ; xóa cả bit 21 và 19 cùng lúc!
+     176:      	str	r1, [r0]</code></pre>
+
+    <p>Giải pháp: dùng <strong>volatile operations</strong> qua <code>core::ptr</code>. Đây là chương trình hoàn chỉnh (<code>examples/volatile.rs</code>):</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::ptr;
+
+#[allow(unused_imports)]
+use registers::entry;
+
+#[entry]
+fn main() -&gt; ! {
+    registers::init();
+
+    unsafe {
+        const PORT_P0_OUT: u32 = 0x50000504;
+
+        // Bật hàng trên cùng
+        let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
+        ptr::write_volatile(PORT_P0_OUT as *mut u32, out | 1 &lt;&lt; 21);
+
+        // Bật hàng dưới cùng
+        let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
+        ptr::write_volatile(PORT_P0_OUT as *mut u32, out | 1 &lt;&lt; 19);
+
+        // Tắt hàng trên cùng
+        let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
+        ptr::write_volatile(PORT_P0_OUT as *mut u32, out &amp; !(1 &lt;&lt; 21));
+
+        // Tắt hàng dưới cùng
+        let out = ptr::read_volatile(PORT_P0_OUT as *mut u32);
+        ptr::write_volatile(PORT_P0_OUT as *mut u32, out &amp; !(1 &lt;&lt; 19));
+    }
+
+    loop {
+        core::hint::spin_loop();
+    }
+}</code></pre>
+
+    <p>Kiểm tra volatile release build:</p>
+
+    <pre><code class="language-text">cargo objdump -q --release --example volatile -- --disassemble --no-show-raw-insn &gt; release.volatile.dump</code></pre>
+
+    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
+     168:      	movw	r0, #0x504
+     16c:      	movt	r0, #0x5000
+     170:      	ldr	r1, [r0]
+     172:      	orr	r1, r1, #0x200000
+     176:      	str	r1, [r0]
+     178:      	ldr	r1, [r0]
+     17a:      	orr	r1, r1, #0x80000
+     17e:      	str	r1, [r0]
+     180:      	ldr	r1, [r0]
+     182:      	bic	r1, r1, #0x200000
+     186:      	str	r1, [r0]
+     188:      	ldr	r1, [r0]
+     18a:      	bic	r1, r1, #0x80000
+     18e:      	str	r1, [r0]</code></pre>
+
+    <p>Volatile read/write báo cho compiler: "Các thao tác này có tác dụng phụ — đừng tối ưu hóa chúng đi." Build release với volatile giữ đủ 4 cặp load-modify-store như thiết kế.</p>
 
     <h2>0xBAAAAAAD — Địa chỉ không hợp lệ</h2>
 
     <p>Điều gì xảy ra nếu bạn đọc từ một địa chỉ không hợp lệ, ví dụ <code>0x5000_A784</code> (không tương ứng với peripheral register nào)?</p>
 
-    <pre><code class="language-rust">unsafe {
-    ptr::read_volatile(0x5000_A784 as *const u32);
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::ptr;
+
+#[allow(unused_imports)]
+use registers::entry;
+
+#[entry]
+fn main() -&gt; ! {
+    registers::init();
+
+    unsafe {
+        ptr::read_volatile(0x5000_A784 as *const u32);
+    }
+
+    loop {
+        core::hint::spin_loop();
+    }
 }</code></pre>
 
-    <p>Processor không thể hoàn thành thao tác đó và ném ra một <strong>hardware exception (HardFault)</strong>. Debugger dừng lại tại handler <code>HardFault_</code>. Bằng cách kiểm tra <code>ExceptionFrame</code>, bạn có thể xác định instruction nào gây ra lỗi — <code>pc</code> trỏ tới instruction đó, và <code>r0</code> chứa địa chỉ sai (<code>0x5000a784</code>). Đây là cách Rust embedded xử lý memory access violations.</p>
+    <p>Processor không thể hoàn thành thao tác đó và ném ra một <strong>hardware exception (HardFault)</strong>. Debugger dừng lại tại handler <code>HardFault_</code>. GDB hiện thị <code>ExceptionFrame</code> với toàn bộ trạng thái register khi exception xảy ra:</p>
+
+    <pre><code class="language-text">r0: 0x5000a784,
+r1: 0x3,
+r2: 0x2001ff24,
+r3: 0x0,
+r12: 0x1,
+lr: 0x4403,
+pc: 0x43ea,
+xpsr: 0x1000000</code></pre>
+
+    <p><code>pc</code> (<code>0x43ea</code>) trỏ tới instruction gây ra lỗi, <code>r0</code> chứa địa chỉ không hợp lệ (<code>0x5000a784</code>). Disassembly tại <code>pc</code> cho thấy instruction đó là:</p>
+
+    <pre><code class="language-text">ldr r0, [r0, #0]</code></pre>
+
+    <p>Đây là instruction load — đọc bộ nhớ tại địa chỉ trong <code>r0</code>. Vì địa chỉ đó không tồn tại, processor ném HardFault. Đây là cách Rust embedded xử lý memory access violations — không âm thầm bỏ qua mà crash rõ ràng với thông tin đầy đủ.</p>
 
     <h2>Spooky action at a distance</h2>
 
@@ -253,17 +385,61 @@ fn main() -&gt; ! {
 
     <p>Làm việc trực tiếp với địa chỉ hex rất dễ xảy ra lỗi: nhầm địa chỉ, truy cập register read-only để ghi, hay vô tình xóa các bit reserved. PAC (Peripheral Access Crate) giải quyết vấn đề này bằng cách cung cấp một API type-safe được tự động sinh ra từ file SVD (System View Description) của Nordic.</p>
 
-    <p>Thay vì ghi thẳng vào địa chỉ, bạn viết:</p>
+    <p>Thay vì ghi thẳng vào địa chỉ, bạn dùng API type-safe:</p>
 
-    <pre><code class="language-rust">p0.out.modify(|_, w| w.pin21().set_bit());</code></pre>
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+#[allow(unused_imports)]
+use registers::entry;
+
+#[entry]
+fn main() -&gt; ! {
+    let (p0, _p1) = registers::init();
+
+    // Bật hàng trên cùng
+    p0.out.modify(|_, w| w.pin21().set_bit());
+
+    // Bật hàng dưới cùng
+    p0.out.modify(|_, w| w.pin19().set_bit());
+
+    // Tắt hàng trên cùng
+    p0.out.modify(|_, w| w.pin21().clear_bit());
+
+    // Tắt hàng dưới cùng
+    p0.out.modify(|_, w| w.pin19().clear_bit());
+
+    loop {
+        core::hint::spin_loop();
+    }
+}</code></pre>
 
     <p>Phương thức <code>modify()</code> đọc giá trị register hiện tại, truyền vào closure để thay đổi, rồi ghi kết quả lại. API này:</p>
     <ul>
       <li>Chỉ expose các thao tác được phép (read-only register không có <code>write()</code>)</li>
       <li>Dùng builder pattern để ngăn sửa đổi các bit reserved</li>
       <li>Không có unsafe code hay địa chỉ hex magic</li>
-      <li>Zero-cost: compiler (với LTO) sinh ra <strong>cùng instructions</strong> như code unsafe gốc</li>
+      <li>Zero-cost: compiler sinh ra <strong>cùng instructions</strong> như code unsafe gốc</li>
     </ul>
+
+    <p>Bằng chứng zero-cost — assembly release build của chương trình type-safe <strong>giống hệt</strong> volatile.rs:</p>
+
+    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h0e9b57c6799332fd&gt;:
+     168:      	movw	r0, #0x504
+     16c:      	movt	r0, #0x5000
+     170:      	ldr	r1, [r0]
+     172:      	orr	r1, r1, #0x200000
+     176:      	str	r1, [r0]
+     178:      	ldr	r1, [r0]
+     17a:      	orr	r1, r1, #0x80000
+     17e:      	str	r1, [r0]
+     180:      	ldr	r1, [r0]
+     182:      	bic	r1, r1, #0x200000
+     186:      	str	r1, [r0]
+     188:      	ldr	r1, [r0]
+     18a:      	bic	r1, r1, #0x80000
+     18e:      	str	r1, [r0]</code></pre>
 
     <p>Toàn bộ API này được tự động tạo ra — không ai viết tay. Vendor (Nordic) cung cấp file SVD mô tả tất cả registers và quyền truy cập; công cụ <code>svd2rust</code> chuyển nó thành Rust code.</p>
 

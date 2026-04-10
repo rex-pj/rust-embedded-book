@@ -146,6 +146,16 @@ $ dmesg | grep -i tty
     <pre><code class="language-bash">$ ls -l /dev/ttyACM0
 crw-rw----. 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0</code></pre>
 
+    <p>Group của file là <code>plugdev</code>. Để truy cập thiết bị serial mà không cần <code>sudo</code>, bạn cần thêm mình vào group <code>plugdev</code> (trên các distro Debian/Ubuntu) hoặc <code>dialout</code> (trên Fedora/RHEL):</p>
+
+    <pre><code class="language-bash">$ # Debian/Ubuntu
+$ sudo usermod -aG plugdev $USER
+
+$ # Fedora/RHEL
+$ sudo usermod -aG dialout $USER</code></pre>
+
+    <p><strong>LƯU Ý:</strong> Bạn cần đăng xuất và đăng nhập lại để thay đổi group có hiệu lực.</p>
+
     <p>Bạn có thể gửi dữ liệu bằng cách đơn giản ghi vào file này:</p>
 
     <pre><code class="language-bash">$ echo 'Hello, world!' > /dev/ttyACM0</code></pre>

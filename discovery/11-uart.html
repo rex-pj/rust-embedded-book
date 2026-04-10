@@ -65,61 +65,27 @@
 
     <p>Xuyên suốt chương này, chúng ta sẽ dùng serial communication để trao đổi thông tin giữa microcontroller và máy tính của bạn.</p>
 
-    <p><strong>LƯU Ý:</strong> trên micro:bit v2, chúng ta sẽ dùng peripheral gọi là UARTE, hoạt động giống hệt UART thông thường, chỉ khác là HAL phải giao tiếp với nó theo cách khác. Tuy nhiên, điều này không phải là mối bận tâm của chúng ta.</p>
-
-    <h2>Setup</h2>
-
-    <p>Như thường lệ từ bây giờ, bạn sẽ phải chỉnh sửa <code>Embed.toml</code> cho phù hợp với phiên bản micro:bit của bạn:</p>
-
-    <pre><code class="language-toml">[default.general]
-chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2
-# chip = "nrf51822_xxAA" # uncomment this line for micro:bit V1
-
-[default.reset]
-halt_afterwards = false
-
-[default.rtt]
-enabled = true
-
-[default.gdb]
-enabled = false</code></pre>
+    <p>Có hai loại UART peripheral trên MB2: loại cũ hơn là <code>UART</code> và loại mới hơn là <code>UARTE</code> ("UART with Easy DMA"). Trong chương này, chúng ta sẽ dùng peripheral <code>UARTE</code> để giao tiếp serial giữa microcontroller và máy tính.</p>
 
     <h2>Gửi một byte đơn</h2>
 
     <p>Nhiệm vụ đầu tiên của chúng ta sẽ là gửi một byte đơn từ microcontroller đến máy tính qua kết nối serial.</p>
 
-    <p>Để làm điều đó, chúng ta sẽ dùng đoạn code sau (đoạn này đã có sẵn trong <code>07-uart/src/main.rs</code>):</p>
+    <p>Để làm điều đó, chúng ta sẽ dùng đoạn code sau (file <code>examples/send-byte.rs</code>):</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
+use cortex_m::asm::wfi;
 use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
-#[cfg(feature = "v1")]
 use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
     hal::uarte,
     hal::uarte::{Baudrate, Parity},
 };
 
-#[cfg(feature = "v1")]
-use embedded_io::Write;
-
-#[cfg(feature = "v2")]
-use embedded_hal_nb::serial::Write;
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
 use serial_setup::UartePort;
 
 #[entry]
@@ -127,18 +93,6 @@ fn main() -> ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        let serial = uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        );
-        serial
-    };
-
-    #[cfg(feature = "v2")]
     let mut serial = {
         let serial = uarte::Uarte::new(
             board.UARTE0,
@@ -149,23 +103,17 @@ fn main() -> ! {
         UartePort::new(serial)
     };
 
-    #[cfg(feature = "v1")]
-    serial.write(&amp;[b'X']).unwrap();
+    serial.write(b'X').unwrap();
+    serial.flush().unwrap();
 
-    #[cfg(feature = "v2")]
-    {
-        nb::block!(serial.write(b'X')).unwrap();
-        nb::block!(serial.flush()).unwrap();
+    loop {
+        wfi();
     }
-
-    loop {}
 }</code></pre>
 
-    <p>Điều mới nhất ở đây rõ ràng là các directive <code>cfg</code> để bao gồm/loại trừ các phần code có điều kiện. Điều này chủ yếu vì chúng ta muốn làm việc với UART thông thường cho micro:bit v1 và với UARTE cho micro:bit v2.</p>
+    <p>Bạn có thể nhận thấy rằng một trong những thư viện được dùng ở đây, module <code>serial_setup</code>, không đến từ <code>crates.io</code> mà được viết riêng cho dự án này. Mục đích của <code>serial_setup</code> là cung cấp một wrapper tiện lợi xung quanh peripheral UARTE. Nếu muốn, bạn có thể xem module này làm gì, nhưng bạn không cần phải hiểu nó để theo dõi chương này nói chung.</p>
 
-    <p>Bạn cũng sẽ nhận thấy đây là lần đầu tiên chúng ta include code không phải từ thư viện, cụ thể là module <code>serial_setup</code>. Mục đích duy nhất của nó là cung cấp một wrapper đẹp quanh UARTE để chúng ta có thể dùng nó cùng cách hệt như UART thông qua các trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/serial/index.html">embedded_hal::serial</a>. Nếu muốn, bạn có thể xem module này làm gì cụ thể, nhưng không bắt buộc phải hiểu nó để hiểu chương này nói chung.</p>
-
-    <p>Ngoài những khác biệt đó, quy trình khởi tạo cho UART và UARTE khá tương tự nên chúng ta sẽ chỉ thảo luận về khởi tạo UARTE. UARTE được khởi tạo bằng đoạn code:</p>
+    <p>Tiếp theo chúng ta sẽ thảo luận về việc khởi tạo UARTE. UARTE được khởi tạo bằng đoạn code sau:</p>
 
     <pre><code class="language-rust">uarte::Uarte::new(
     board.UARTE0,
@@ -174,101 +122,21 @@ fn main() -> ! {
     Baudrate::BAUD115200,
 );</code></pre>
 
-    <p>Hàm này lấy ownership của biểu diễn peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào peripheral UARTE hoặc các pin của chúng ta khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình cho constructor: baudrate (quen thuộc rồi) cũng như một tùy chọn gọi là "parity". Parity là cách cho phép các đường serial communication kiểm tra xem dữ liệu nhận được có bị hỏng trong quá trình truyền không. Chúng ta không muốn dùng nó ở đây nên loại trừ nó. Sau đó wrap nó trong kiểu <code>UartePort</code> để dùng cùng cách như serial của micro:bit v1.</p>
+    <p>Cụ thể, chúng ta lấy ownership của peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào chúng khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình: baudrate và parity. Parity là cách để kiểm tra dữ liệu có bị hỏng trong quá trình truyền không — chúng ta không dùng nó ở đây nên loại trừ nó. Cuối cùng, wrap UARTE trong kiểu <code>UartePort</code>.</p>
 
-    <p>Sau khởi tạo, chúng ta gửi ký tự <code>X</code> qua uart instance mới tạo. Macro <code>block!</code> ở đây là <code>nb::block!</code>. <code>nb</code> là (trích dẫn từ mô tả của nó) "Minimal and reusable non-blocking I/O layer". Nó cho phép chúng ta viết code có thể thực hiện các thao tác phần cứng ở background trong khi chúng ta đi làm việc khác (non-blocking). Tuy nhiên, trong trường hợp này và nhiều trường hợp khác, chúng ta không muốn làm việc gì khác nên chỉ gọi <code>block!</code> sẽ chờ cho đến khi thao tác I/O hoàn thành.</p>
-
-    <p>Cuối cùng nhưng không kém quan trọng, chúng ta <code>flush()</code> serial port. Điều này vì một implementor của các trait <code>embedded-hal::serial</code> có thể quyết định buffer output cho đến khi nhận đủ một số lượng byte nhất định để gửi (đây là trường hợp với implementation UARTE). Gọi <code>flush()</code> ép nó ghi ngay các byte hiện có thay vì chờ thêm.</p>
+    <p>Sau khởi tạo, chúng ta gọi <code>serial.write(b'X').unwrap()</code> để gửi ký tự <code>X</code>, rồi <code>flush()</code> để đảm bảo byte được gửi đi ngay thay vì bị buffer lại.</p>
 
     <h3>Thử nghiệm</h3>
 
     <p>Trước khi flash, bạn nên đảm bảo đã khởi động minicom/PuTTY vì dữ liệu nhận qua serial communication không được lưu trữ hay gì cả — chúng ta phải xem trực tiếp. Khi serial monitor đã chạy, bạn có thể flash chương trình:</p>
 
-    <pre><code class="language-bash"># Cho micro:bit v2
-$ cargo embed --features v2 --target thumbv7em-none-eabihf
-# Cho micro:bit v1
-$ cargo embed --features v1 --target thumbv6m-none-eabi</code></pre>
+    <pre><code class="language-bash">$ cargo embed --example send-byte</code></pre>
 
     <p>Sau khi flash xong, bạn sẽ thấy ký tự <code>X</code> xuất hiện trên terminal minicom/PuTTY của bạn.</p>
 
     <h2>Gửi một chuỗi</h2>
 
     <p>Bài tập tiếp theo là gửi chuỗi <code>"The quick brown fox jumps over the lazy dog."</code> từ microcontroller đến máy tính của bạn. Đến lượt bạn tự viết chương trình này.</p>
-
-    <h3>Lời giải</h3>
-
-    <pre><code class="language-rust">#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::rtt_init_print;
-
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
-    hal::uarte,
-    hal::uarte::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v1")]
-use embedded_io::Write;
-
-#[cfg(feature = "v2")]
-use embedded_hal_nb::serial::Write;
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
-use serial_setup::UartePort;
-
-#[entry]
-fn main() -> ! {
-    rtt_init_print!();
-    let board = microbit::Board::take().unwrap();
-
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        )
-    };
-
-    #[cfg(feature = "v2")]
-    let mut serial = {
-        let serial = uarte::Uarte::new(
-            board.UARTE0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        );
-        UartePort::new(serial)
-    };
-
-    #[cfg(feature = "v1")]
-    serial.write(b"The quick brown fox jumps over the lazy dog.\r\n").unwrap();
-
-    #[cfg(feature = "v2")]
-    {
-        let s = b"The quick brown fox jumps over the lazy dog.\r\n";
-        for byte in s.iter() {
-            nb::block!(serial.write(*byte)).unwrap();
-        }
-        nb::block!(serial.flush()).unwrap();
-    }
-
-    loop {}
-}</code></pre>
 
     <h2>Naive approach và <code>write!</code></h2>
 
@@ -416,92 +284,18 @@ fn main() -&gt; ! {
     };
 
     loop {
-        let byte = nb::block!(serial.read()).unwrap();
+        let byte = serial.read().unwrap();
         rprintln!("{}", byte);
     }
 }</code></pre>
 
     <p>Nếu bạn flash chương trình này và gõ ký tự trong minicom để gửi đến microcontroller, bạn sẽ chỉ thấy các <em>con số</em> trên RTT console vì code nhận giá trị <code>u8</code> thô. Việc chuyển đổi giá trị <code>u8</code> đó thành <code>char</code> để in ra là bài tập cho bạn tự làm.</p>
 
-    <h3>Lời giải</h3>
-
-    <pre><code class="language-rust">    loop {
-        let byte = nb::block!(serial.read()).unwrap();
-        rprintln!("{}", byte as char);
-    }</code></pre>
-
     <h2>Echo Server</h2>
 
     <p>Hãy kết hợp truyền và nhận vào một chương trình để viết một echo server. Echo server gửi lại cho client chính xác những gì nó nhận được — microcontroller đóng vai server, máy tính của bạn đóng vai client.</p>
 
     <p>Điều này khá đơn giản để implement. Gợi ý: làm từng byte một.</p>
-
-    <h3>Lời giải</h3>
-
-    <pre><code class="language-rust">#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::rtt_init_print;
-
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
-    hal::uarte,
-    hal::uarte::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v1")]
-use embedded_io::Write;
-
-#[cfg(feature = "v2")]
-use embedded_hal_nb::serial::Write;
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
-use serial_setup::UartePort;
-
-#[entry]
-fn main() -> ! {
-    rtt_init_print!();
-    let board = microbit::Board::take().unwrap();
-
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        )
-    };
-
-    #[cfg(feature = "v2")]
-    let mut serial = {
-        let serial = uarte::Uarte::new(
-            board.UARTE0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        );
-        UartePort::new(serial)
-    };
-
-    loop {
-        let byte = nb::block!(serial.read()).unwrap();
-        nb::block!(serial.write(byte)).unwrap();
-        nb::block!(serial.flush()).unwrap();
-    }
-}</code></pre>
 
     <h2>Đảo ngược chuỗi</h2>
 
@@ -512,29 +306,12 @@ fn main() -> ! {
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
-use cortex_m_rt::entry;
 use core::fmt::Write;
+use cortex_m_rt::entry;
 use heapless::Vec;
+use microbit::hal::uarte::{self, Baudrate, Parity};
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
-
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
-    hal::uarte,
-    hal::uarte::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
 use serial_setup::UartePort;
 
 #[entry]
@@ -542,17 +319,6 @@ fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        )
-    };
-
-    #[cfg(feature = "v2")]
     let mut serial = {
         let serial = uarte::Uarte::new(
             board.UARTE0,
@@ -581,29 +347,12 @@ fn main() -&gt; ! {
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
-use cortex_m_rt::entry;
 use core::fmt::Write;
+use cortex_m_rt::entry;
 use heapless::Vec;
+use microbit::hal::uarte::{self, Baudrate, Parity};
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
-
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
-    hal::uarte,
-    hal::uarte::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
 use serial_setup::UartePort;
 
 #[entry]
@@ -611,17 +360,6 @@ fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        )
-    };
-
-    #[cfg(feature = "v2")]
     let mut serial = {
         let serial = uarte::Uarte::new(
             board.UARTE0,
@@ -640,21 +378,21 @@ fn main() -&gt; ! {
 
         loop {
             // We assume that the receiving cannot fail
-            let byte = nb::block!(serial.read()).unwrap();
+            let byte = serial.read().unwrap();
 
             if buffer.push(byte).is_err() {
                 write!(serial, "error: buffer full\r\n").unwrap();
                 break;
             }
 
-            if byte == 13 {
-                for byte in buffer.iter().rev().chain(&amp;[b'\n', b'\r']) {
-                    nb::block!(serial.write(*byte)).unwrap();
+            if byte == b'\r' {
+                for byte in buffer.iter().rev().chain(b"\r\n") {
+                    serial.write(*byte).unwrap();
                 }
                 break;
             }
         }
-        nb::block!(serial.flush()).unwrap()
+        serial.flush().unwrap()
     }
 }</code></pre>
 
