@@ -43,6 +43,11 @@
     <a href="16-snake-game.html" class="active"><span class="nav-icon">🐍</span>Snake Game</a>
     <div class="nav-group-title">Tiếp theo</div>
     <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+    <div class="nav-group-title">Phụ lục</div>
+    <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
+    <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
 
@@ -806,6 +811,74 @@ fn main() -&gt; ! {
                     display_image(&amp;BitImage::new(&amp;game.score_matrix()));
                     timer.delay_ms(2000u32);
                     break
+                }
+            }
+        }
+        game.reset();
+    }
+}</code></pre>
+
+    <h2 id="final-assembly">Phần 4 — Final Assembly (<code>main.rs</code>)</h2>
+
+    <p>Đây là file <code>src/main.rs</code> hoàn chỉnh tích hợp tất cả các module lại với nhau. Vòng lặp game thực hiện 3 bước lặp đi lặp lại:</p>
+    <ol>
+      <li><strong>Render:</strong> Tạo ảnh 5×5 từ trạng thái game (<code>game_matrix(6, 3, 9)</code> — độ sáng đầu/thân/thức ăn)</li>
+      <li><strong>Hiển thị &amp; delay:</strong> Hiển thị ảnh và đợi <code>step_len_ms()</code> ms (ban đầu ~1 giây, giảm 200ms mỗi 5 điểm, tối thiểu 200ms)</li>
+      <li><strong>Cập nhật:</strong> Nếu game đang chạy thì bước một turn; nếu game kết thúc thì nhấp nháy 3 lần, hiển thị điểm số, rồi reset</li>
+    </ol>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+mod controls;
+mod display;
+pub mod game;
+
+use controls::{get_turn, init_buttons};
+use display::{clear_display, display_image, init_display};
+use game::{Game, GameStatus};
+
+use cortex_m_rt::entry;
+use embedded_hal::delay::DelayNs;
+use microbit::{
+    display::nonblocking::{BitImage, GreyscaleImage},
+    hal::{Rng, Timer},
+    Board,
+};
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = Board::take().unwrap();
+    let mut timer = Timer::new(board.TIMER0).into_periodic();
+    let mut rng = Rng::new(board.RNG);
+    let mut game = Game::new(&amp;mut rng);
+
+    init_buttons(board.GPIOTE, board.buttons);
+    init_display(board.TIMER1, board.display_pins);
+
+    loop {
+        loop {
+            // Game loop
+            let image = GreyscaleImage::new(&amp;game.game_matrix(6, 3, 9));
+            display_image(&amp;image);
+            timer.delay_ms(game.step_len_ms());
+            match game.status {
+                GameStatus::Ongoing =&gt; game.step(get_turn(true)),
+                _ =&gt; {
+                    for _ in 0..3 {
+                        clear_display();
+                        timer.delay_ms(200u32);
+                        display_image(&amp;image);
+                        timer.delay_ms(200u32);
+                    }
+                    clear_display();
+                    display_image(&amp;BitImage::new(&amp;game.score_matrix()));
+                    timer.delay_ms(2000u32);
+                    break;
                 }
             }
         }

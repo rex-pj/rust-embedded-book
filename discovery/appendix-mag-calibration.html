@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiệu chỉnh từ kế - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+    <div class="nav-group-title">Phụ lục</div>
+    <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
+    <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
+    <a href="appendix-mag-calibration.html" class="active"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Hiệu chỉnh từ kế</span>
+  </div>
+  <main id="main">
+
+    <h1>Hiệu chỉnh từ kế (Magnetometer Calibration)</h1>
+
+    <h2>Tại sao cần hiệu chỉnh?</h2>
+
+    <p>Trước khi sử dụng bất kỳ cảm biến nào và phát triển ứng dụng dựa trên nó, bước quan trọng đầu tiên là xác minh output của nó có thực sự chính xác không. Từ kế LSM303AGR trên MB2 có thể cho kết quả thiếu chính xác đáng kể trên một số thiết bị nếu chưa được hiệu chỉnh.</p>
+
+    <h2>Phương pháp hiệu chỉnh</h2>
+
+    <p>Quy trình hiệu chỉnh được nhà sản xuất STMicroelectronics chỉ định và liên quan đến các phép tính ma trận khá phức tạp. Thay vì giải thích toán học đầy đủ, tài liệu này giới thiệu implementation sẵn có.</p>
+
+    <p>Nhóm CODAL đã implement cơ chế hiệu chỉnh theo đặc tả của nhà sản xuất bằng C++ và bản dịch Rust của nó đã được cung cấp trong repository của dự án (xem <code>src/lib.rs</code> và <code>src/main.rs</code>).</p>
+
+    <h2>Cách thực hiện hiệu chỉnh</h2>
+
+    <p>Quy trình hiệu chỉnh thực tế như sau:</p>
+    <ol>
+      <li>Chạy chương trình hiệu chỉnh trên MB2</li>
+      <li>Nghiêng MB2 theo mọi hướng cho đến khi tất cả các đèn LED trên ma trận bật sáng — theo dõi con trỏ nhấp nháy chỉ vị trí LED mục tiêu tiếp theo</li>
+      <li>Sau khi hoàn tất, ma trận hiệu chỉnh được tạo ra có thể được hard-code vào chương trình của bạn để tránh phải hiệu chỉnh lại mỗi lần chạy</li>
+    </ol>
+
+    <h2>Lưu ý về trục tọa độ</h2>
+
+    <p>Sau khi áp dụng các giá trị hiệu chỉnh, các trục được hoán đổi (flip) để đạt được hướng chuẩn: khi nhìn MB2 từ trên xuống với đầu nối USB hướng về phía trước, trục X hướng phải, Y hướng về phía trước, Z hướng lên trên.</p>
+
+    <div class="nav-buttons">
+      <a href="appendix-gdb.html" class="nav-btn">← Cách dùng GDB</a>
+      <a href="appendix-licenses.html" class="nav-btn next">Giấy phép &amp; Tác quyền →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

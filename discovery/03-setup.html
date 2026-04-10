@@ -43,6 +43,11 @@
     <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
     <div class="nav-group-title">Tiếp theo</div>
     <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+    <div class="nav-group-title">Phụ lục</div>
+    <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
+    <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
 
@@ -281,6 +286,19 @@ $ cargo embed --target thumbv6m-none-eabi</code></pre>
     <p>Nếu mọi thứ hoạt động đúng, cargo-embed sẽ đầu tiên compile chương trình ví dụ nhỏ trong thư mục này, sau đó flash nó, và cuối cùng mở một giao diện dạng văn bản hiển thị <strong>Hello World</strong>.</p>
     <p>(Nếu không hoạt động, hãy xem hướng dẫn <a href="https://docs.rust-embedded.org/discovery/microbit/appendix/1-general-troubleshooting/index.html">khắc phục sự cố chung</a>.)</p>
     <p>Output này đến từ chương trình Rust nhỏ mà bạn vừa flash lên micro:bit. Mọi thứ đang hoạt động đúng và bạn có thể tiếp tục với các chương tiếp theo!</p>
+
+    <h2>Cài đặt IDE (tùy chọn)</h2>
+
+    <p>Tài liệu này giả định bạn dùng terminal để build và chạy code, không yêu cầu editor cụ thể nào. Tuy nhiên nếu bạn muốn tích hợp tốt hơn với IDE, phần này hướng dẫn cấu hình.</p>
+
+    <h3>IntelliJ</h3>
+
+    <p>Với IntelliJ, cần điều chỉnh 3 điểm:</p>
+    <ol>
+      <li><strong>Lệnh build:</strong> Khi tài liệu hướng dẫn chạy <code>cargo embed FLAGS</code>, thay giá trị <code>run</code> mặc định trong IntelliJ bằng <code>embed FLAGS</code>.</li>
+      <li><strong>Emulate terminal:</strong> Bật tùy chọn "Emulate terminal in output console" để chương trình có thể hiển thị output đúng cách.</li>
+      <li><strong>Working directory:</strong> Đặt thành <code>microbit/src/N-name</code> (thư mục của chương tương ứng), vì thư mục <code>src</code> gốc không có file Cargo.</li>
+    </ol>
 
     <div class="nav-buttons">
       <a href="02-requirements.html" class="nav-btn">← Yêu cầu</a>

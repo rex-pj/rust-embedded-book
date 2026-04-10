@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cách dùng GDB - Discovery MB2 Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div id="reading-progress"></div>
+<button id="hamburger">☰</button>
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🔬</div>
+      <div><h1>Discovery MB2</h1><p>micro:bit v2 · Tiếng Việt</p></div>
+    </a>
+  </div>
+  <div id="sidebar-search"><input type="text" id="sidebar-search-input" placeholder="Tìm kiếm..."></div>
+  <nav id="sidebar-nav">
+    <div class="nav-group-title">Bắt đầu</div>
+    <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
+    <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
+    <div class="nav-group-title">Làm quen</div>
+    <a href="04-meet-your-hardware.html"><span class="nav-icon">🔌</span>Phần cứng</a>
+    <a href="05-meet-your-software.html"><span class="nav-icon">💻</span>Phần mềm</a>
+    <div class="nav-group-title">Thực hành cơ bản</div>
+    <a href="06-hello-world.html"><span class="nav-icon">💡</span>Hello World</a>
+    <a href="07-led-roulette.html"><span class="nav-icon">🎯</span>LED Roulette</a>
+    <a href="08-inputs-and-outputs.html"><span class="nav-icon">🕹️</span>Inputs &amp; Polling</a>
+    <a href="09-registers.html"><span class="nav-icon">📟</span>Registers</a>
+    <div class="nav-group-title">Giao tiếp</div>
+    <a href="10-serial-port.html"><span class="nav-icon">📡</span>Serial Port</a>
+    <a href="11-uart.html"><span class="nav-icon">🔄</span>UART</a>
+    <a href="12-i2c.html"><span class="nav-icon">🔗</span>I2C</a>
+    <div class="nav-group-title">Dự án thực tế</div>
+    <a href="13-led-compass.html"><span class="nav-icon">🧭</span>LED Compass</a>
+    <a href="14-punch-o-meter.html"><span class="nav-icon">👊</span>Punch-o-meter</a>
+    <a href="15-interrupts.html"><span class="nav-icon">⚡</span>Interrupts</a>
+    <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
+    <div class="nav-group-title">Tiếp theo</div>
+    <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+    <div class="nav-group-title">Phụ lục</div>
+    <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
+    <a href="appendix-gdb.html" class="active"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
+  </nav>
+</nav>
+
+<div id="content">
+  <div id="topbar">
+    <a href="index.html">🏠 Trang chủ</a>
+    <span class="sep">›</span>
+    <span class="current">Cách dùng GDB</span>
+  </div>
+  <main id="main">
+
+    <h1>Cách dùng GDB</h1>
+
+    <p>Tham khảo nhanh các lệnh GDB thường dùng khi debug embedded Rust.</p>
+
+    <h2>Breakpoint</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>break $location</code></td><td>Đặt breakpoint tại vị trí chỉ định</td></tr>
+        <tr><td><code>break *main</code></td><td>Breakpoint tại địa chỉ hàm main</td></tr>
+        <tr><td><code>break *0x080012f2</code></td><td>Breakpoint tại địa chỉ bộ nhớ cụ thể</td></tr>
+        <tr><td><code>break 123</code></td><td>Breakpoint tại dòng 123</td></tr>
+        <tr><td><code>break main.rs:123</code></td><td>Breakpoint tại dòng 123 trong main.rs</td></tr>
+        <tr><td><code>info break</code></td><td>Xem danh sách breakpoint hiện tại</td></tr>
+        <tr><td><code>delete</code></td><td>Xóa tất cả breakpoint</td></tr>
+        <tr><td><code>delete $n</code></td><td>Xóa breakpoint số n</td></tr>
+        <tr><td><code>clear main.rs:$function</code></td><td>Xóa breakpoint tại entry của hàm</td></tr>
+        <tr><td><code>enable $n</code> / <code>disable $n</code></td><td>Bật/tắt breakpoint số n</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Điều khiển thực thi</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>continue</code></td><td>Bắt đầu hoặc tiếp tục thực thi chương trình</td></tr>
+        <tr><td><code>next</code></td><td>Thực thi dòng tiếp theo (không bước vào hàm)</td></tr>
+        <tr><td><code>nexti</code></td><td>Như <code>next</code> nhưng theo từng lệnh máy</td></tr>
+        <tr><td><code>step</code></td><td>Thực thi dòng tiếp theo (bước vào hàm nếu có)</td></tr>
+        <tr><td><code>stepi</code></td><td>Như <code>step</code> nhưng theo từng lệnh máy</td></tr>
+        <tr><td><code>jump $location</code></td><td>Tiếp tục thực thi từ vị trí chỉ định</td></tr>
+      </tbody>
+    </table>
+
+    <h2>In thông tin</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>print /$f $data</code></td><td>In giá trị của biến <code>$data</code>, tùy chọn format: <code>x</code>=hex, <code>d</code>=decimal, <code>u</code>=unsigned, <code>o</code>=octal, <code>t</code>=binary, <code>a</code>=address, <code>c</code>=char, <code>f</code>=float</td></tr>
+        <tr><td><code>x /$n$u$f $address</code></td><td>Kiểm tra bộ nhớ tại địa chỉ <code>$address</code></td></tr>
+        <tr><td><code>x /5i 0x080012c4</code></td><td>In 5 lệnh assembly tại địa chỉ</td></tr>
+        <tr><td><code>x/4xb $pc</code></td><td>In 4 byte tại program counter dưới dạng hex</td></tr>
+        <tr><td><code>disassemble $location</code></td><td>Chuyển machine code thành assembly</td></tr>
+        <tr><td><code>disassemble /r main</code></td><td>Hiển thị kèm byte lệnh</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Bảng ký hiệu (Symbol Table)</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>info functions $regex</code></td><td>Hiển thị tên và kiểu của các hàm khớp với regex</td></tr>
+        <tr><td><code>info address $symbol</code></td><td>Vị trí bộ nhớ của symbol</td></tr>
+        <tr><td><code>info variables $regex</code></td><td>Tên và kiểu của biến global khớp với regex</td></tr>
+        <tr><td><code>ptype $data</code></td><td>Thông tin kiểu chi tiết của dữ liệu</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Stack</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>backtrace $n</code></td><td>In trace n frame (bỏ $n để in tất cả)</td></tr>
+        <tr><td><code>frame $n</code></td><td>Chọn frame theo số thứ tự hoặc địa chỉ</td></tr>
+        <tr><td><code>up $n</code> / <code>down $n</code></td><td>Di chuyển lên/xuống n frame</td></tr>
+        <tr><td><code>info frame $address</code></td><td>Mô tả chi tiết frame</td></tr>
+        <tr><td><code>info args</code></td><td>In các tham số của frame đang chọn</td></tr>
+        <tr><td><code>info registers $r</code></td><td>Giá trị của register $r trong frame đang chọn</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Điều khiển từ xa</h2>
+
+    <table>
+      <thead><tr><th>Lệnh</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><code>monitor reset</code></td><td>Reset CPU, bắt đầu thực thi lại từ đầu (dùng khi đang kết nối qua cargo-embed)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="nav-buttons">
+      <a href="appendix-troubleshooting.html" class="nav-btn">← Khắc phục sự cố</a>
+      <a href="appendix-mag-calibration.html" class="nav-btn next">Hiệu chỉnh từ kế →</a>
+    </div>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="nav.js"></script>
+</body>
+</html>

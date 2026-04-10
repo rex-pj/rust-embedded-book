@@ -43,6 +43,11 @@
     <a href="16-snake-game.html"><span class="nav-icon">🐍</span>Snake Game</a>
     <div class="nav-group-title">Tiếp theo</div>
     <a href="17-explore.html"><span class="nav-icon">🚀</span>Khám phá thêm</a>
+    <div class="nav-group-title">Phụ lục</div>
+    <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
+    <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
 
@@ -263,6 +268,93 @@ fn main() -> ! {
     }
 
     loop {}
+}</code></pre>
+
+    <h2>Naive approach và <code>write!</code></h2>
+
+    <p>Cách gửi chuỗi ở phần trước (duyệt từng byte) hoạt động được, nhưng thiếu đi sự tiện lợi của <code>print!</code> như formatting tham số. Có hai cách tiếp cận:</p>
+
+    <h3>Naive approach</h3>
+
+    <p>Cách đơn giản nhất: duyệt từng byte và gửi từng cái một (<code>examples/naive-send-string.rs</code>):</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m::asm::wfi;
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+use microbit::hal::uarte::{self, Baudrate, Parity};
+
+use serial_setup::UartePort;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    let mut serial = {
+        let serial = uarte::Uarte::new(
+            board.UARTE0,
+            board.uart.into(),
+            Parity::EXCLUDED,
+            Baudrate::BAUD115200,
+        );
+        UartePort::new(serial)
+    };
+
+    for byte in b"The quick brown fox jumps over the lazy dog.\r\n".iter() {
+        serial.write(*byte).unwrap();
+    }
+    serial.flush().unwrap();
+
+    loop {
+        wfi();
+    }
+}</code></pre>
+
+    <h3><code>write!</code> và <code>core::fmt::Write</code></h3>
+
+    <p>Trait <code>core::fmt::Write</code> cho phép dùng bất kỳ struct nào implement nó giống như <code>print!</code> trong thế giới <code>std</code>. Vì HAL nRF đã implement <code>core::fmt::Write</code> cho <code>Uart</code>, ta có thể dùng macro <code>write!</code> trực tiếp (<code>examples/send-string.rs</code>):</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::fmt::Write;
+use cortex_m::asm::wfi;
+use cortex_m_rt::entry;
+use panic_rtt_target as _;
+use rtt_target::rtt_init_print;
+
+use microbit::hal::uarte::{self, Baudrate, Parity};
+
+use serial_setup::UartePort;
+
+#[entry]
+fn main() -&gt; ! {
+    rtt_init_print!();
+    let board = microbit::Board::take().unwrap();
+
+    let mut serial = {
+        let serial = uarte::Uarte::new(
+            board.UARTE0,
+            board.uart.into(),
+            Parity::EXCLUDED,
+            Baudrate::BAUD115200,
+        );
+        UartePort::new(serial)
+    };
+
+    write!(serial, "The quick brown fox jumps over the lazy dog.\r\n").unwrap();
+    serial.flush().unwrap();
+
+    loop {
+        wfi();
+    }
 }</code></pre>
 
     <h2>Nhận một byte đơn</h2>
