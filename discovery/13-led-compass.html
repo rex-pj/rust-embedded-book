@@ -65,30 +65,37 @@
 
     <p>Từ trường có cả cường độ (magnitude), đo bằng Gauss hoặc Tesla, và hướng (direction). Magnetometer trên micro:bit đo cả cường độ lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo sự phân rã (decomposition) của từ trường đó dọc theo các trục của nó.</p>
 
-    <p>Magnetometer có ba trục liên kết với nó. Các trục X và Y cơ bản trải trên mặt phẳng sàn nhà. Trục Z chỉ "vào trong" sàn nhà, tức là hướng xuống dưới.</p>
+    <p>Magnetometer có ba trục liên kết với nó. Khi board được giữ phẳng với các LED hướng lên trên và logo hướng về phía trước, trục X và Y trải trên mặt phẳng sàn nhà. Trục X chỉ về cạnh trái của board. Trục Y chỉ về cạnh dưới (cạnh card connector) của board. Trục Z chỉ "vào trong sàn nhà", tức là hướng xuống dưới: "ngược chiều" vì chip được gắn ở mặt sau. Đây là hệ tọa độ "tay phải". Tất cả hơi rối rắm vì các giá trị cường độ từ trường được báo cáo là các thành phần của vector từ trường.</p>
 
     <p align="center">
       <img class="white_bg" title="MB2 Axes" src="assets/mb2-axes.svg" width="500" />
     </p>
 
-    <p><strong>Lưu ý phần cứng:</strong> Một số bo MB2 có magnetometer bị lỗi với offset bất thường trên trục Z do đã bị tiếp xúc với từ trường mạnh trước đó. Ngoài ra, crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình hiệu chỉnh của nhà sản xuất.</p>
-
-    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu magnetometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Sau khi viết chương trình đó, hãy xác định hướng Bắc ở vị trí hiện tại của bạn. Sau đó canh chỉnh micro:bit theo hướng đó và quan sát xem các số đo của cảm biến trông như thế nào.</p>
+    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu magnetometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Sau khi viết chương trình đó (<code>examples/show-mag.rs</code>), hãy xác định hướng Bắc ở vị trí hiện tại của bạn. Sau đó canh chỉnh MB2 theo hướng đó và quan sát xem các số đo X và Y của cảm biến trông như thế nào.</p>
 
     <p>Bây giờ hãy xoay board 90 độ trong khi giữ nó song song với mặt đất. Bạn thấy giá trị X, Y và Z gì lần này? Sau đó xoay thêm 90 độ nữa. Bạn thấy giá trị gì?</p>
+
+    <blockquote>
+      <p><strong>LƯU Ý</strong> Trong số hai chiếc MB2 tôi có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Nhà sản xuất có quy trình tự test để phát hiện điều này và quy trình hiệu chỉnh để giảm thiểu loại lỗi "hard iron" này, thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó. Tuy nhiên, crate <code>lsm303agr</code> hiện chưa hỗ trợ một trong hai quy trình này, và có vẻ là quá nhiều cho một hướng dẫn giới thiệu về hệ thống embedded. Nếu bạn chỉ có một MB2 và nó có vẻ không hoạt động, bạn có thể muốn bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>. Phần cứng rẻ tiền: biết làm sao được?</p>
+    </blockquote>
+
+    <p>Từ trường Bắc của Trái Đất là thứ phức tạp: nó khác so với Bắc thực sự ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). Máy tính <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">NOAA của Mỹ</a> này có thể được truy cập trên thiết bị di động của bạn để có ước tính tốt về Bắc thực sự cũng như Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">máy tính</a> UK BGS này để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (sự khác biệt giữa Bắc thực và Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
+
+    <blockquote>
+      <p><strong>LƯU Ý</strong> Magnetometer LSM303AGR không phải là thiết bị đặc biệt chính xác out-of-the-box. Nhà sản xuất đề xuất một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đo magnetometer. Bạn có thể tìm thêm thông tin, một bản implement hiệu chỉnh mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>: vì chúng ta đang làm điều khá cơ bản với magnetometer nên chúng ta sẽ không lo lắng về điều đó trong chương này.</p>
+    </blockquote>
 
     <!-- ============================================================ -->
     <h2>Magnitude (Cường độ từ trường)</h2>
 
-    <p>Hàm <code>magnetic_field()</code> trả về các giá trị x, y, z được đo bằng nanotesla. Để tính cường độ của từ trường, chúng ta tính độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả:</p>
+    <p>Từ trường Trái Đất mạnh đến mức nào? Theo tài liệu về phương thức <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field"><code>magnetic_field()</code></a>, các giá trị <code>x</code>, <code>y</code>, <code>z</code> chúng ta nhận được tính bằng nanotesla. Điều đó có nghĩa là thứ duy nhất chúng ta phải tính để lấy cường độ của từ trường tính bằng nanotesla là độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả. Như bạn có thể nhớ từ trường học, đây đơn giản là:</p>
 
-    <pre><code>magnitude = √(x² + y² + z²)</code></pre>
+    <pre><code class="language-rust">use libm::sqrtf;
+let magnitude = sqrtf(x * x + y * y + z * z);</code></pre>
 
-    <p>Trong Rust, không có hàm <code>sqrtf</code> trong <code>core</code>, nên chúng ta dùng <code>libm::sqrtf</code>:</p>
+    <p>Rust không có các hàm toán học floating-point như <code>sqrtf()</code> trong <code>core</code>, nên chương trình <code>no_std</code> của chúng ta phải lấy implementation từ đâu đó. Chúng ta dùng crate <a href="https://crates.io/crates/libm">libm</a> cho việc này.</p>
 
-    <pre><code class="language-rust">let magnitude = sqrtf(x * x + y * y + z * z);</code></pre>
-
-    <p>Đây là chương trình hoàn chỉnh tính cường độ từ trường:</p>
+    <p>Kết hợp tất cả lại trong một chương trình (<code>examples/magnitude.rs</code>):</p>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
@@ -134,45 +141,32 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Cường độ từ trường của Trái Đất nằm trong khoảng từ <code>250 mG</code> đến <code>650 mG</code> tùy thuộc vào vị trí địa lý. Ví dụ, tác giả quan sát khoảng 340 mG.</p>
+    <p>Chạy với <code>cargo run --example magnitude</code>.</p>
 
-    <p><strong>Câu hỏi thảo luận:</strong></p>
+    <p>Chương trình này sẽ báo cáo cường độ (độ mạnh) của từ trường bằng nanotesla (<code>nT</code>) và milligauss (<code>mG</code>, trong đó 1 <code>mG</code> = 100 <code>nT</code>). Cường độ từ trường của Trái Đất nằm trong khoảng <code>250 mG</code> đến <code>650 mG</code> (cường độ thay đổi tùy theo vị trí địa lý) nên lý tưởng là bạn sẽ thấy giá trị gần đó. Giá trị của bạn có thể sai khá nhiều vì cảm biến chưa được hiệu chỉnh: xem <a href="appendix-mag-calibration.html">phụ lục 3</a> để hiệu chỉnh. Với hiệu chỉnh, tôi thấy cường độ khoảng <code>340 mG</code>.</p>
+
+    <p>Một số câu hỏi:</p>
     <ul>
-      <li>Khi board đứng yên, giá trị cường độ có giữ nguyên không?</li>
-      <li>Khi bạn xoay board, cường độ có thay đổi không? Lý thuyết nó có nên thay đổi không?</li>
+      <li><p>Khi không di chuyển board, bạn thấy giá trị gì? Bạn có luôn thấy cùng một giá trị không?</p></li>
+      <li><p>Nếu bạn xoay board, cường độ có thay đổi không? Lý thuyết nó có nên thay đổi không?</p></li>
     </ul>
-
-    <!-- ============================================================ -->
-    <h2>Hiệu chỉnh (Calibration)</h2>
-
-    <p>Một điều rất quan trọng cần làm trước khi sử dụng cảm biến và cố gắng phát triển ứng dụng với nó là xác minh rằng đầu ra của nó thực sự chính xác. Nếu không phải như vậy, chúng ta cần hiệu chỉnh (calibrate) cảm biến (hoặc nó có thể bị hỏng, nhưng điều đó khá khó xảy ra trong trường hợp này).</p>
-
-    <p>Trong thực tế, trên hai chiếc micro:bit khác nhau, magnetometer mà không có hiệu chỉnh đã cho kết quả sai khá nhiều so với những gì nó đáng ra phải đo. Do đó, trong chương này chúng ta sẽ giả định rằng cảm biến cần được hiệu chỉnh.</p>
-
-    <p>Việc hiệu chỉnh liên quan đến khá nhiều toán học (ma trận) nên chúng ta sẽ không đề cập ở đây, nhưng <a href="https://www.st.com/resource/en/design_tip/dt0103-compensating-for-magnetometer-installation-error-and-hardiron-effects-using-accelerometerassisted-2d-calibration-stmicroelectronics.pdf">Design Note của ST Microelectronics</a> mô tả quy trình nếu bạn quan tâm.</p>
-
-    <p>May mắn thay, nhóm đã xây dựng phần mềm gốc cho micro:bit đã implement một cơ chế hiệu chỉnh bằng C++ <a href="https://github.com/lancaster-university/codal-microbit-v2/blob/006abf5566774fbcf674c0c7df27e8a9d20013de/source/MicroBitCompassCalibrator.cpp">ở đây</a>.</p>
-
-    <p>Bạn có thể tìm thấy bản dịch sang Rust trong <code>src/calibration.rs</code>. Cách sử dụng được minh họa trong file <code>src/main.rs</code> mặc định. Cách hiệu chỉnh hoạt động như sau:</p>
-
-    <p>Bạn phải nghiêng micro:bit cho đến khi tất cả các LED trên ma trận LED sáng lên.</p>
-
-    <p>Nếu bạn không muốn chơi "trò chơi" đó mỗi lần khởi động lại ứng dụng trong quá trình phát triển, bạn có thể tự do chỉnh sửa template <code>src/main.rs</code> để chỉ sử dụng cùng một giá trị hiệu chỉnh tĩnh một khi bạn đã có lần đầu tiên.</p>
-
-    <p>Bây giờ sau khi đã xong phần hiệu chỉnh cảm biến, hãy cùng tìm hiểu cách thực sự xây dựng ứng dụng này!</p>
 
     <!-- ============================================================ -->
     <h2>Thử thách</h2>
 
-    <p>Chúng ta sẽ dùng hàm <code>atan2</code>. Hàm này trả về một góc trong khoảng <code>-PI</code> đến <code>PI</code>.</p>
+    <p>Chúng ta sẽ dùng một số toán học thú vị để lấy góc chính xác mà từ trường tạo với các trục X và Y của magnetometer. Điều này sẽ cho phép chúng ta xác định LED nào đang chỉ về hướng Bắc.</p>
 
-    <p align="center">
-      <img title="atan2" src="https://upload.wikimedia.org/wikipedia/commons/0/03/Atan2_60.svg" class="white_bg" style="max-width:100%;height:360px">
-    </p>
+    <p>Chúng ta sẽ dùng hàm <code>atan2</code>. Hàm này trả về một góc trong khoảng <code>-PI</code> đến <code>PI</code>. Đồ họa dưới đây cho thấy cách đo góc này:</p>
 
-    <p>Một vòng tròn = 360 độ = 2·PI radian. Khi theta bằng 0, micro:bit đang chỉ về hướng Đông. Khi theta tăng dần (ngược chiều kim đồng hồ), ta đến các hướng khác.</p>
+    <a href="https://commons.wikimedia.org/wiki/File:Atan2_60.svg">
+      <p align="center">
+        <img class="white_bg" title="atan2" src="https://upload.wikimedia.org/wikipedia/commons/0/03/Atan2_60.svg" />
+      </p>
+    </a>
 
-    <p>Dưới đây là template code để bạn hoàn thiện — điền vào hai chỗ <code>todo!()</code>:</p>
+    <p>Mặc dù không được hiển thị rõ ràng, trong đồ thị này trục X chỉ về bên phải và trục Y chỉ lên trên. Lưu ý rằng hệ tọa độ của chúng ta bị xoay 180° so với đây.</p>
+
+    <p>Đây là starter code (trong <code>templates/compass.rs</code>). <code>theta</code>, tính bằng radian, đã được tính sẵn. Bạn cần chọn LED nào để bật dựa trên giá trị của <code>theta</code>.</p>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
@@ -245,10 +239,19 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
+    <p>Suggestions/tips:</p>
+    <ul>
+      <li>Một vòng tròn = 360 độ.</li>
+      <li><code>PI</code> radian tương đương với 180 độ.</li>
+      <li>Nếu <code>theta</code> bằng 0, bạn đang chỉ về hướng nào?</li>
+      <li>Nếu <code>theta</code> thay vào đó rất gần với 0, bạn đang chỉ về hướng nào?</li>
+      <li>Nếu <code>theta</code> tiếp tục tăng, ở giá trị nào bạn nên thay đổi hướng?</li>
+    </ul>
+
     <!-- ============================================================ -->
     <h2>Lời giải</h2>
 
-    <p>Đây là lời giải hoàn chỉnh — dùng <code>atan2f</code> và <code>floorf</code> để xác định 16 hướng la bàn, mỗi hướng tương ứng một LED trên vòng ngoài ma trận 5×5:</p>
+    <p>Đây là lời giải của tôi (trong <code>src/main.rs</code>):</p>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]

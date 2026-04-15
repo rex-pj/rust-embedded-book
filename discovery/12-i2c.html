@@ -69,74 +69,65 @@
 
     <p>Board micro:bit mà chúng ta đang dùng có hai cảm biến chuyển động: accelerometer và magnetometer. Cả hai cảm biến này đều được đóng gói trong một component duy nhất và có thể truy cập qua bus I2C.</p>
 
-    <p>I2C viết tắt của Inter-Integrated Circuit và là một giao thức truyền thông serial đồng bộ. Nó dùng hai đường để trao đổi dữ liệu: đường dữ liệu (SDA) và đường clock (SCL). Vì có đường clock dùng để đồng bộ giao tiếp nên đây là giao thức đồng bộ (synchronous).</p>
+    <p>I2C phát âm là "EYE-SQUARED-CEE" và viết tắt của Inter-Integrated Circuit. I2C là một giao thức truyền thông serial <em>synchronous</em> dạng <em>bus</em>: nó dùng hai đường để trao đổi dữ liệu: đường dữ liệu (SDA) và đường clock (SCL). Đường clock được dùng để đồng bộ giao tiếp. Serial đồng bộ có thể chạy nhanh hơn và đáng tin cậy hơn serial bất đồng bộ. Các thiết bị I2C có <em>bus address</em>: việc implement phần cứng cho phép gửi byte đến một thiết bị cụ thể, trong khi các thiết bị khác kết nối vào cùng dây bỏ qua giao tiếp này.</p>
 
-    <p>Giao thức này dùng mô hình controller-target trong đó controller là thiết bị khởi tạo và điều khiển giao tiếp với thiết bị target. Nhiều thiết bị, cả controller lẫn target, có thể được kết nối vào cùng một bus đồng thời. Một thiết bị controller có thể giao tiếp với một thiết bị target cụ thể bằng cách đầu tiên phát (broadcast) địa chỉ của target lên bus. Địa chỉ này có thể dài 7 bit hoặc 10 bit. Khi controller đã bắt đầu giao tiếp với target, không thiết bị nào khác có thể dùng bus cho đến khi controller dừng giao tiếp.</p>
-
-    <p>Đường clock quyết định tốc độ trao đổi dữ liệu và thường hoạt động ở tần số 100 kHz (standard mode) hoặc 400 kHz (fast mode).</p>
-
-    <p align="center">
-      <a href="https://commons.wikimedia.org/wiki/File:I2C_controller-target.svg">
+    <a href="https://commons.wikimedia.org/wiki/File:I2C_controller-target.svg">
+      <p align="center">
         <img height="360" title="I2C Controller and Targets" src="assets/I2C_controller-target.svg" />
-      </a>
-    </p>
+      </p>
+    </a>
 
-    <table>
-      <caption>So sánh I2C và UART</caption>
-      <thead>
-        <tr><th>Đặc điểm</th><th>UART</th><th>I2C</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Số dây dữ liệu</td><td>2 (TX + RX)</td><td>2 (SDA + SCL)</td></tr>
-        <tr><td>Số thiết bị</td><td>1-to-1</td><td>1 controller + nhiều target</td></tr>
-        <tr><td>Tốc độ</td><td>Baud rate tự cấu hình</td><td>100 kHz (standard) / 400 kHz (fast)</td></tr>
-        <tr><td>Đồng bộ</td><td>Bất đồng bộ (asynchronous)</td><td>Đồng bộ (synchronous — có SCL)</td></tr>
-        <tr><td>Địa chỉ thiết bị</td><td>Không (point-to-point)</td><td>7 bit hoặc 10 bit</td></tr>
-        <tr><td>Ứng dụng điển hình</td><td>Debug console, GPS, module BT</td><td>Cảm biến, EEPROM, màn hình</td></tr>
-      </tbody>
-    </table>
+    <p>I2C dùng mô hình <em>controller</em>/<em>target</em>: controller là thiết bị <em>khởi xướng</em> và điều khiển giao tiếp với thiết bị target. Nhiều thiết bị có thể được kết nối vào cùng một bus đồng thời, và có thể chọn hoạt động như controller hoặc target. Một thiết bị controller có thể giao tiếp với một thiết bị target cụ thể bằng cách đầu tiên broadcast địa chỉ target lên bus. Địa chỉ này có thể dài 7 bit hoặc 10 bit. Khi controller đã bắt đầu giao tiếp với target, không thiết bị nào khác ngoài controller và target được phép truyền trên bus cho đến khi controller kết thúc giao tiếp.</p>
 
-    <h2>Giao thức tổng quan</h2>
+    <blockquote>
+      <p><strong>LƯU Ý</strong> "Controller/target" trước đây được gọi là "master/slave". Bạn vẫn có thể thấy thuật ngữ đó trong tài liệu hoặc nhãn trên board. Thuật ngữ này hiện đã lỗi thời trong cả các tiêu chuẩn chính thức và tài liệu mới hơn, nhưng vẫn được dùng trong tài liệu Nordic cho chip nRF52833 của chúng ta và trong một số tài liệu embedded Rust.</p>
+    </blockquote>
 
-    <p>Một giao tiếp I2C luôn do controller khởi xướng. Controller gửi địa chỉ của target, sau đó là một hoặc nhiều byte dữ liệu.</p>
+    <p>Đường clock quyết định tốc độ trao đổi dữ liệu có thể nhanh đến mức nào. Giao diện I2C của MB2 có thể hoạt động ở tốc độ 100, 250 hoặc 400 Kbps. Với các thiết bị khác, các chế độ nhanh hơn vẫn có thể.</p>
 
-    <h3>Thao tác ghi (Controller → Target)</h3>
+    <h1>Giao thức tổng quan</h1>
 
+    <p>Giao thức I2C phức tạp hơn giao thức serial communication vì nó hỗ trợ giao tiếp có cấu trúc giữa nhiều thiết bị. Hãy xem cách nó hoạt động:</p>
 
+    <h2>Controller → Target</h2>
 
+    <p>Nếu Controller muốn gửi dữ liệu đến Target:</p>
     <ol>
-      <li>Controller phát tín hiệu START</li>
-      <li>Controller phát địa chỉ target (7 bit) kèm bit R/W = WRITE (0)</li>
-      <li>Target phản hồi ACK</li>
-      <li>Controller gửi một byte</li>
-      <li>Target phản hồi ACK</li>
-      <li>Bước 4–5 lặp lại thêm không hoặc nhiều lần</li>
-      <li>Controller phát STOP hoặc RESTART</li>
+      <li>C: Broadcast START</li>
+      <li>C: Broadcast địa chỉ target (7 bit) + bit R/W (bit 8) đặt thành WRITE</li>
+      <li>Target: Phản hồi ACK (ACKnowledgement)</li>
+      <li>C: Gửi một byte</li>
+      <li>T: Phản hồi ACK</li>
+      <li>Lặp lại bước 4 và 5 không hoặc nhiều lần</li>
+      <li>C: Broadcast STOP, hoặc bắt đầu giao dịch read mới</li>
     </ol>
 
-    <h3>Thao tác đọc (Controller ← Target)</h3>
+    <blockquote>
+      <p><strong>LƯU Ý</strong> Địa chỉ target có thể là 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
+    </blockquote>
 
+    <h2>Controller ← Target</h2>
 
-
+    <p>Nếu controller muốn đọc dữ liệu từ target:</p>
     <ol>
-      <li>Controller phát tín hiệu START</li>
-      <li>Controller phát địa chỉ target (7 bit) kèm bit R/W = READ (1)</li>
-      <li>Target phản hồi ACK</li>
-      <li>Target gửi một byte</li>
-      <li>Controller phản hồi ACK</li>
-      <li>Bước 4–5 lặp lại thêm không hoặc nhiều lần</li>
-      <li>Controller phát STOP hoặc RESTART</li>
+      <li>C: Broadcast START</li>
+      <li>C: Broadcast địa chỉ target (7 bit) + bit R/W (bit 8) đặt thành READ</li>
+      <li>T: Phản hồi với ACK</li>
+      <li>T: Gửi byte</li>
+      <li>C: Phản hồi với ACK</li>
+      <li>Lặp lại bước 4 và 5 không hoặc nhiều lần</li>
+      <li>C: Broadcast STOP, hoặc bắt đầu giao dịch write mới</li>
     </ol>
 
-    <p>Địa chỉ target có thể là 10 bit thay vì 7 bit — không có gì khác thay đổi.</p>
+    <blockquote>
+      <p><strong>LƯU Ý</strong> Địa chỉ target có thể là 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
+    </blockquote>
 
-    <h3>Device Registers</h3>
+    <h2>Device Registers</h2>
 
     <p>Nhiều thiết bị I2C tổ chức dữ liệu dưới dạng <em>device registers</em> — mỗi thanh ghi có một địa chỉ 8-bit và một nội dung. Để ghi vào một thanh ghi, controller gửi hai byte: byte đầu tiên là địa chỉ thanh ghi, byte thứ hai là giá trị mới.</p>
 
     <p>Để đọc một thanh ghi, thường dùng một giao dịch kết hợp: ghi địa chỉ thanh ghi, ngay sau đó đọc lại nội dung. Một số thiết bị hỗ trợ <em>address auto-increment</em> — cho phép đọc/ghi nhiều thanh ghi liên tiếp mà không cần chỉ định lại địa chỉ mỗi lần.</p>
-
-    <p>I2C là một giao thức phức tạp với nhiều biến thể và tính năng đặc biệt. Hãy đọc kỹ datasheet của thiết bị target để biết cách giao tiếp đúng cách.</p>
 
     <h2>LSM303AGR</h2>
 
@@ -178,11 +169,7 @@ fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    let mut i2c = twim::Twim::new(
-        board.TWIM0,
-        board.i2c_internal.into(),
-        FREQUENCY_A::K100,
-    );
+    let mut i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
 
     let mut acc = [0u8];
     let mut mag = [0u8];
@@ -198,11 +185,23 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
+    <h2>Kiểm tra</h2>
+
+    <p>Như thường lệ</p>
+
     <pre><code class="language-bash">$ cargo embed --example chip-id</code></pre>
+
+    <p>để kiểm tra chương trình ví dụ nhỏ của chúng ta.</p>
 
     <h2>Dùng driver có sẵn</h2>
 
-    <p>Đọc thanh ghi thô khá tẻ nhạt. Thay vào đó, chúng ta sẽ dùng crate <code>lsm303agr</code> — một driver được viết theo chuẩn <code>embedded-hal</code>, có nghĩa là cùng một driver có thể chạy trên bất kỳ nền tảng nào implement các trait đó (Linux, micro:bit, hay bất kỳ MCU nào khác).</p>
+    <p>Như chúng ta đã thảo luận trong chương 5, <code>embedded-hal</code> cung cấp các abstraction có thể dùng để viết code độc lập với platform, tương tác với phần cứng. Trên thực tế, tất cả các method chúng ta đã dùng để tương tác với phần cứng trong chương LED roulette và cho đến nay trong chương này đều là từ các trait được định nghĩa bởi <code>embedded-hal</code>. Bây giờ chúng ta sẽ lần đầu tiên tận dụng thực sự các trait mà <code>embedded-hal</code> cung cấp.</p>
+
+    <p>Sẽ thật vô nghĩa khi phải implement driver cho LSM303AGR của chúng ta trên mọi platform mà embedded Rust hỗ trợ. Để tránh điều này, một driver có thể được viết để nhận các kiểu generic implement các trait <code>embedded-hal</code>, nhằm cung cấp phiên bản platform agnostic của driver. May mắn thay, điều này đã được thực hiện trong crate <a href="https://crates.io/crates/lsm303agr"><code>lsm303agr</code></a>. Do đó, việc đọc giá trị accelerometer và magnetometer thực sự sẽ gần như là plug and play (cộng với đọc một chút tài liệu).</p>
+
+    <p>Hãy xem trang được liên kết để biết code mẫu Linux cho Raspberry Pi.</p>
+
+    <p>Vì chúng ta đã biết cách tạo một instance của object implement các trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/blocking/i2c/index.html"><code>embedded_hal::blocking::i2c</code></a> từ <a href="12-i2c.html#đọc-một-thanh-ghi-đơn">trang trước</a>, việc điều chỉnh code mẫu rất đơn giản (<code>examples/show-accel.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
@@ -228,6 +227,7 @@ fn main() -&gt; ! {
     let i2c = { twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100) };
     let mut timer0 = Timer::new(board.TIMER0);
 
+    // Code from documentation
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
     sensor
@@ -237,38 +237,47 @@ fn main() -&gt; ! {
             AccelOutputDataRate::Hz50,
         )
         .unwrap();
-
     loop {
         if sensor.accel_status().unwrap().xyz_new_data() {
             let (x, y, z) = sensor.acceleration().unwrap().xyz_mg();
+            // RTT instead of normal print
             rprintln!("Acceleration: x {} y {} z {}", x, y, z);
         }
     }
 }</code></pre>
 
+    <p>Cũng giống như đoạn code trước, bạn có thể thử chương trình này như sau:</p>
+
     <pre><code class="language-bash">$ cargo embed --example show-accel</code></pre>
+
+    <p>Hơn nữa, nếu bạn di chuyển (theo nghĩa đen) micro:bit một chút, bạn sẽ thấy các con số gia tốc được in ra thay đổi.</p>
 
     <h2>Thử thách</h2>
 
-    <p>Viết một ứng dụng kết hợp serial UART với I2C sensor. Chương trình nhận lệnh qua serial và trả về dữ liệu cảm biến:</p>
+    <p>Thử thách cho chương này là xây dựng một ứng dụng nhỏ giao tiếp với thế giới bên ngoài qua giao diện serial được giới thiệu trong chương trước. Ứng dụng nên nhận lệnh "mag" cho magnetometer cũng như "acc" cho accelerometer từ serial port. Sau đó ứng dụng nên gửi dữ liệu cảm biến tương ứng đến serial port để phản hồi.</p>
+
+    <p>Lần này sẽ không có template code vì tất cả những gì bạn cần đã được cung cấp trong chương <a href="11-uart.html">UART</a> và chương này. Tuy nhiên, đây là một vài gợi ý:</p>
+
     <ul>
-      <li>Nhập <code>acc</code> + Enter → in dữ liệu accelerometer (x, y, z tính bằng mg)</li>
-      <li>Nhập <code>mag</code> + Enter → in dữ liệu magnetometer (x, y, z tính bằng nT)</li>
+      <li>
+        <p>Bạn có thể quan tâm đến <code>core::str::from_utf8</code> để chuyển đổi các byte trong buffer thành <code>&amp;str</code>, vì chúng ta cần so sánh với <code>"mag"</code> và <code>"acc"</code>.</p>
+      </li>
+      <li>
+        <p>Bạn sẽ phải đọc tài liệu về API và chức năng magnetometer. Trong khi crate <code>lsm303agr</code> cung cấp giao diện API, <a href="https://www.st.com/resource/en/datasheet/lsm303agr.pdf">LSM303AGR datasheet</a> trình bày chi tiết các tham số đo từ trường của cảm biến. Xem trang 13-15 về đặc tính cảm biến và quan trọng là trang 66-67 về định dạng output register.</p>
+      </li>
     </ul>
 
-    <p><strong>Gợi ý:</strong> Dùng <code>core::str::from_utf8</code> để chuyển buffer byte thành <code>&amp;str</code> để so sánh. Kết quả in ra cả serial lẫn RTT đều được. Cần khởi động magnetometer ở chế độ continuous mode (<code>into_mag_continuous()</code>).</p>
-
     <h2>Lời giải</h2>
+
+    <p>Lời giải của tôi nằm trong <code>src/main.rs</code>.</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
 use core::str;
-use core::fmt::Write;
 
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
-use heapless::Vec;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
@@ -278,9 +287,10 @@ use microbit::{
     pac::twim0::frequency::FREQUENCY_A,
 };
 
+use core::fmt::Write;
+use heapless::Vec;
 use lsm303agr::{AccelMode, AccelOutputDataRate, Lsm303agr, MagMode, MagOutputDataRate};
 
-mod serial_setup;
 use serial_setup::UartePort;
 
 #[entry]
@@ -302,10 +312,18 @@ fn main() -&gt; ! {
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
     sensor
-        .set_accel_mode_and_odr(&amp;mut timer0, AccelMode::HighResolution, AccelOutputDataRate::Hz50)
+        .set_accel_mode_and_odr(
+            &amp;mut timer0,
+            AccelMode::HighResolution,
+            AccelOutputDataRate::Hz50,
+        )
         .unwrap();
     sensor
-        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz50)
+        .set_mag_mode_and_odr(
+            &amp;mut timer0,
+            MagMode::HighResolution,
+            MagOutputDataRate::Hz50,
+        )
         .unwrap();
     let mut sensor = sensor.into_mag_continuous().ok().unwrap();
 

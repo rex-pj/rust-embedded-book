@@ -63,19 +63,11 @@
 
     <p>Chương này là một phần kỹ thuật chuyên sâu. Bạn có thể bỏ qua nó bây giờ và quay lại sau nếu muốn. Tuy nhiên, có rất nhiều nội dung hay ở đây, vì vậy tôi khuyến khích bạn nên đọc.</p>
 
+    <hr />
+
     <p>Đã đến lúc khám phá xem việc gọi <code>display_pins.row1.set_high()</code> hay <code>button_a_pin.is_high()</code> thực sự làm gì bên dưới.</p>
 
     <p>Nói ngắn gọn, gọi <code>display_pins.row1.set_high()</code> chỉ đơn giản là ghi vào một số vùng bộ nhớ đặc biệt. Hãy vào thư mục <code>09-registers</code> và chạy code khởi đầu từng câu lệnh một (<code>src/main.rs</code>).</p>
-
-    <p>Địa chỉ kỳ lạ này là gì?</p>
-
-    <p>Địa chỉ <code>0x50000504</code> trỏ đến một <em>register</em>. Một register là một vùng bộ nhớ đặc biệt điều khiển một <em>peripheral</em>. Peripheral là một linh kiện điện tử nằm ngay cạnh processor trong package microcontroller và cung cấp cho processor các tính năng bổ sung. Xét cho cùng, processor, khi hoạt động độc lập, chỉ có thể thực hiện toán học và logic.</p>
-
-    <p>Register cụ thể này điều khiển các <em>pin</em> GPIO (GPIO <em>là</em> một peripheral) và có thể dùng để <em>kéo</em> từng pin đó xuống <em>thấp</em> (low) hoặc lên <em>cao</em> (high).</p>
-
-    <p>(Trên nRF52833 có hơn 32 GPIO, nhưng CPU là 32-bit. Vì vậy, các GPIO pin được tổ chức thành hai nhóm "P0" và "P1", mỗi nhóm có một bộ register để đọc, ghi và cấu hình. Địa chỉ trên là địa chỉ của output register cho các pin P0.)</p>
-
-    <p>Đây là đoạn code demo thao tác register trực tiếp:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -110,17 +102,19 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Được rồi. Nhưng làm thế nào để biết register này làm gì? Đã đến lúc RTRM (Read the Reference Manual)!</p>
+    <p>Địa chỉ kỳ lạ này là gì?</p>
+
+    <p>Địa chỉ <code>0x50000504</code> trỏ đến một <em>register</em>. Một register là một vùng bộ nhớ đặc biệt điều khiển một <em>peripheral</em>. Peripheral là một linh kiện điện tử nằm ngay cạnh processor trong package microcontroller và cung cấp cho processor các tính năng bổ sung. Xét cho cùng, processor, khi hoạt động độc lập, chỉ có thể thực hiện toán học và logic.</p>
+
+    <p>Register cụ thể này điều khiển các <em>pin</em> GPIO (GPIO <em>là</em> một peripheral) và có thể dùng để <em>kéo</em> từng pin đó xuống <em>thấp</em> (low) hoặc lên <em>cao</em> (high).</p>
+
+    <p>(Trên nRF52833 có hơn 32 GPIO, nhưng CPU là 32-bit. Vì vậy, các GPIO pin được tổ chức thành hai nhóm "P0" và "P1", mỗi nhóm có một bộ register để đọc, ghi và cấu hình. Địa chỉ trên là địa chỉ của output register cho các pin P0.)</p>
 
     <h2>An aside: LEDs, digital outputs and voltage levels</h2>
 
+    <p>Drive? Pin? Low? High?</p>
+
     <p>Một pin là một tiếp điểm điện. Microcontroller của chúng ta có nhiều pin và một số trong đó được kết nối với các LED (Light Emitting Diode). Một LED sẽ phát sáng khi được cấp điện áp. Như tên gọi, LED cũng hoạt động như một "diode". Diode chỉ cho phép điện chạy theo một chiều. Kết nối LED đúng chiều thì có ánh sáng. Kết nối ngược thì không có gì xảy ra.</p>
-
-    <p>May mắn cho chúng ta, các pin của microcontroller được kết nối sao cho chúng ta có thể điều khiển LED đúng chiều. Tất cả những gì chúng ta phải làm là áp đủ điện áp qua các pin để bật LED. Các pin gắn với LED thường được cấu hình là <em>digital outputs</em> và có thể xuất hai mức điện áp khác nhau: "thấp" (low), 0 Volt, hoặc "cao" (high), 3 Volt. Mức "cao" (điện áp) sẽ bật LED còn mức "thấp" sẽ tắt LED.</p>
-
-    <p>Các trạng thái "thấp" và "cao" này ánh xạ trực tiếp vào khái niệm digital logic. "thấp" là <code>0</code> hoặc <code>false</code> và "cao" là <code>1</code> hoặc <code>true</code>. Đó là lý do tại sao cấu hình pin này được gọi là digital output.</p>
-
-    <p>Ngược lại với digital output là digital input. Giống như digital output có thể là <code>0</code> hoặc <code>1</code>, digital input cũng có thể là <code>0</code> hoặc <code>1</code>. Điểm khác biệt là digital output có thể tạo ra điện áp, còn digital input thì <em>đọc</em> điện áp. Khi microcontroller đọc mức điện áp cao hơn ngưỡng cao, nó sẽ hiểu là <code>1</code>; khi đọc mức điện áp thấp hơn ngưỡng thấp, nó sẽ hiểu là <code>0</code>.</p>
 
     <p align="center">
       <a href="https://commons.wikimedia.org/wiki/File:LED_circuit.svg">
@@ -128,85 +122,229 @@ fn main() -&gt; ! {
       </a>
     </p>
 
-    <h2>RTRM — Đọc Reference Manual</h2>
+    <p>May mắn cho chúng ta, các pin của microcontroller được kết nối sao cho chúng ta có thể điều khiển LED đúng chiều. Tất cả những gì chúng ta phải làm là áp đủ điện áp qua các pin để bật LED. Các pin gắn với LED thường được cấu hình là <em>digital outputs</em> và có thể xuất hai mức điện áp khác nhau: "thấp" (low), 0 Volt, hoặc "cao" (high), 3 Volt. Mức "cao" (điện áp) sẽ bật LED còn mức "thấp" sẽ tắt LED.</p>
 
-    <p>Để tìm hiểu địa chỉ register và ý nghĩa từng bit, cần tra <strong>nRF52833 Product Specification</strong>. Peripheral GPIO P0 có base address là <code>0x5000_0000</code>. Register <code>OUT</code> nằm ở offset <code>0x504</code>, tức địa chỉ đầy đủ là <code>0x50000504</code>.</p>
+    <p>Các trạng thái "thấp" và "cao" này ánh xạ trực tiếp vào khái niệm digital logic. "thấp" là <code>0</code> hoặc <code>false</code> và "cao" là <code>1</code> hoặc <code>true</code>. Đó là lý do tại sao cấu hình pin này được gọi là digital output.</p>
 
-    <p>Register này 32-bit, mỗi bit tương ứng một pin: đặt bit lên 1 → pin xuất điện áp cao; đặt về 0 → pin xuất mức thấp. Giá trị reset là 0 (tất cả output tắt).</p>
+    <p>Ngược lại với digital output là digital input. Giống như digital output có thể là <code>0</code> hoặc <code>1</code>, digital input cũng có thể là <code>0</code> hoặc <code>1</code>. Điểm khác biệt là digital output có thể tạo ra điện áp, còn digital input thì <em>đọc</em> điện áp. Khi microcontroller đọc mức điện áp cao hơn ngưỡng cao, nó sẽ hiểu là <code>1</code>; khi đọc mức điện áp thấp hơn ngưỡng thấp, nó sẽ hiểu là <code>0</code>.</p>
 
-    <p>Theo pinmap của MB2: ROW1 (hàng trên cùng) là <code>P0.21</code>, ROW5 (hàng dưới cùng) là <code>P0.19</code>.</p>
+    <hr />
 
-    <p>Khi chạy chương trình trên và quan sát qua GDB, giá trị register thay đổi như sau:</p>
+    <p>Được rồi. Nhưng làm thế nào để biết register này làm gì? Đã đến lúc RTRM (Read the Reference Manual)!</p>
+
+    <h1>RTRM: Đọc Reference Manual</h1>
+
+    <p>Chúng ta đã thấy các GPIO pin trên nRF52833. Trên chip này (và nhiều chip khác), các GPIO pin được nhóm thành các <em>port</em>. Có hai port, Port 0 và Port 1, viết tắt là <code>P0</code> và <code>P1</code>. Các pin trong mỗi port được đặt tên bắt đầu từ 0. Port 0 có 32 pin, đặt tên từ <code>P0.00</code> đến <code>P0.31</code>, Port 1 có 10 pin, từ <code>P1.00</code> đến <code>P1.09</code>.</p>
+
+    <p>Điều đầu tiên chúng ta cần xác định là pin nào được kết nối với LED nào. Thông tin này có trong <a href="https://tech.microbit.org/hardware/schematic/#v2-pinmap">bảng pinmap</a> của MB2.</p>
+
+    <p>Bảng đó cho biết:</p>
+    <ul>
+      <li><code>ROW1</code>, hàng LED trên cùng, được kết nối với pin <code>P0.21</code>. <code>P0.21</code> là cách viết ngắn của: Pin 21 trên Port 0.</li>
+      <li><code>ROW5</code>, hàng LED dưới cùng, được kết nối với pin <code>P0.19</code>.</li>
+    </ul>
+
+    <p>Đến đây, chúng ta biết rằng muốn thay đổi trạng thái của các pin <code>P0.21</code> và <code>P0.19</code> để bật và tắt hàng trên và hàng dưới. Các pin này thuộc Port 0, vì vậy chúng ta sẽ dùng peripheral <code>P0</code> để thiết lập chúng.</p>
+
+    <p>Mỗi peripheral có một <em>register block</em> liên kết với nó. Một register block là tập hợp các register được phân bổ trong vùng bộ nhớ liên tiếp. Địa chỉ bắt đầu của register block được gọi là base address. Chúng ta cần tìm base address của peripheral <code>P0</code>. Thông tin đó nằm trong phần sau của <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf">Product Specification</a> của microcontroller:</p>
+
+    <blockquote>
+      <p>Section 4.2.4 Instantiation - Page 22</p>
+    </blockquote>
+
+    <p>Bảng đó cho biết base address của register block <code>P0</code> là <code>0x5000_0000</code>.</p>
+
+    <p>Mỗi peripheral cũng có phần riêng của nó trong tài liệu. Mỗi phần đó kết thúc bằng một bảng các register mà register block của peripheral chứa. Đối với peripheral <code>GPIO</code>, bảng đó nằm ở:</p>
+
+    <blockquote>
+      <p>Section 6.8.2 Registers - Page 144</p>
+    </blockquote>
+
+    <p><code>OUT</code> là register mà chúng ta sẽ dùng để set/reset. Offset của nó là <code>0x504</code> so với base address của <code>P0</code>. Chúng ta có thể tra cứu <code>OUT</code> trong <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf">Product Specification</a>. Register đó được mô tả ngay dưới bảng registers của <code>GPIO</code>:</p>
+
+    <blockquote>
+      <p>Subsection 6.8.2.1 OUT - Page 145</p>
+    </blockquote>
+
+    <p>Vậy <code>0x5000_0000</code> + <code>0x504</code> = <code>0x50000504</code>. Quen thuộc rồi! Cuối cùng!</p>
+
+    <p>Đây chính là register mà chúng ta đang ghi vào. Tài liệu cho biết một số điều thú vị. Thứ nhất, register này có thể vừa ghi vừa đọc. Tiếp theo, register là một vùng bộ nhớ 32-bit, mỗi bit đại diện cho trạng thái của một pin tương ứng. Nghĩa là bit 19 tương ứng với pin 19 chẳng hạn. Đặt bit lên 1 sẽ bật output của pin đó, đặt về 0 sẽ reset nó. Hơn nữa, tất cả pin output đều bị tắt theo mặc định, vì reset value của tất cả các bit là 0.</p>
+
+    <p>Chúng ta sẽ dùng lệnh <code>examine</code> của GDB: <code>x</code>. Tùy thuộc vào cấu hình của GDB server, GDB có thể từ chối đọc bộ nhớ không được chỉ định. Bạn có thể tắt hành vi này bằng cách chạy:</p>
+
+    <pre><code class="language-gdb">set mem inaccessible-by-default off</code></pre>
+
+    <p>Vậy, hãy bắt đầu. Trước tiên tắt flag <code>inaccessible-by-default</code>, đặt một vài breakpoint, reset thiết bị và halt.</p>
 
     <pre><code class="language-gdb">(gdb) set mem inaccessible-by-default off
 (gdb) break 16
+Breakpoint 1 at 0x172: file src/07-registers/src/main.rs, line 16.
+Note: automatically using hardware breakpoints for read-only addresses.
 (gdb) break 19
+Breakpoint 2 at 0x17c: file src/07-registers/src/main.rs, line 19.
 (gdb) break 22
+Breakpoint 3 at 0x184: file src/07-registers/src/main.rs, line 22.
 (gdb) break 25
+Breakpoint 4 at 0x18c: file src/07-registers/src/main.rs, line 25.
 (gdb) monitor reset halt
-(gdb) c
-Breakpoint 1 ... line 16: *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
+Resetting and halting target
+Target halted</code></pre>
+
+    <p>Được rồi. Hãy tiếp tục đến breakpoint đầu tiên, ngay trước dòng 16, và in nội dung của register tại địa chỉ <code>0x50000504</code>.</p>
+
+    <pre><code class="language-gdb">(gdb) c
+Continuing.
+
+Breakpoint 1, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:16
+16              *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
 (gdb) x 0x50000504
-0x50000504:     0x00000000       &lt;-- trước khi set bit 21
+0x50000504:     0x00000000</code></pre>
 
+    <p>Được, chúng ta thấy giá trị của register là <code>0x00000000</code> tại thời điểm này. Điều này phù hợp với dữ liệu trong Product Specification, cho biết rằng <code>0</code> là 'reset value' của register này. Nghĩa là sau khi MCU reset, register sẽ có giá trị <code>0</code>.</p>
+
+    <p>Hãy tiếp tục. Dòng này bao gồm nhiều instruction (đọc, bitwise OR và ghi), vì vậy chúng ta cần tiếp tục thực thi nhiều lần cho đến khi đến breakpoint tiếp theo.</p>
+
+    <pre><code class="language-gdb">(gdb) c
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+0x00000174 in registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:16
+16              *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 21;
 (gdb) c
-Breakpoint 2 ... line 19: *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;
-(gdb) x 0x50000504
-0x50000504:     0x00200000       &lt;-- 2^21 = bit 21 đã set
+Continuing.
 
+Breakpoint 2, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:19
+19              *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;</code></pre>
+
+    <p>Chúng ta đã dừng ngay trước dòng 19, có nghĩa là dòng 16 đã được thực thi hoàn toàn tại thời điểm này. Hãy nhìn lại nội dung của register <code>OUT</code>:</p>
+
+    <pre><code class="language-gdb">(gdb) x 0x50000504
+0x50000504:     0x00200000</code></pre>
+
+    <p>Giá trị của register <code>OUT</code> là <code>0x00200000</code> tại thời điểm này, tức là <code>2097152</code> ở decimal, hay <code>2^21</code>. Điều đó có nghĩa là bit 21 được đặt lên 1, và các bit còn lại là 0. Điều này tương ứng với code ở dòng 16, vốn ghi <code>1 &lt;&lt; 21</code>, hay 1 dịch trái 21 vị trí, bitwise OR với giá trị hiện tại của <code>OUT</code> (vốn là 0), vào register <code>OUT</code>.</p>
+
+    <p>Việc ghi <code>1 &lt;&lt; 21</code> (<code>OUT[21]= 1</code>) vào <code>OUT</code> đặt <code>P0.21</code> lên <em>cao</em>. Điều đó bật hàng LED trên cùng. Kiểm tra xem hàng trên có đang sáng không.</p>
+
+    <pre><code class="language-gdb">(gdb) c
+Continuing.</code></pre>
+
+    <p>Đúng rồi. Bây giờ nhấn 'c' thêm một lần nữa để tiếp tục thực thi đến breakpoint tiếp theo và in giá trị của nó.</p>
+
+    <pre><code class="language-gdb">Program received signal SIGINT, Interrupt.
+0x0000017e in registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:19
+19              *(PORT_P0_OUT as *mut u32) |= 1 &lt;&lt; 19;
 (gdb) c
-Breakpoint 3 ... line 22: *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
-(gdb) x 0x50000504
-0x50000504:     0x00280000       &lt;-- 2^21 + 2^19 = cả hai hàng sáng
+Continuing.
 
+Breakpoint 3, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:22
+22              *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
+(gdb) x 0x50000504
+0x50000504:     0x00280000</code></pre>
+
+    <p>Ở dòng 19, chúng ta đã set bit 19 của <code>OUT</code> lên 1, giữ nguyên bit 21. Kết quả là <code>0x00280000</code>, tức <code>2621440</code> ở decimal, hay <code>2^19 + 2^21</code>, nghĩa là cả bit 19 lẫn bit 21 đều là 1.</p>
+
+    <p>Các dòng tiếp theo tắt các hàng lại. Trước tiên là hàng trên, rồi hàng dưới. Lần này, chúng ta thực hiện phép AND bit kết hợp với NOT bit. Chúng ta tính <code>!(1 &lt;&lt; 21)</code>, tức tất cả bit là 1, trừ bit 21. Tiếp theo, chúng ta AND bitwise với giá trị hiện tại của <code>OUT</code>, đảm bảo chỉ bit 21 được đặt về 0, giữ nguyên giá trị của các bit còn lại.</p>
+
+    <p>Tiếp tục thực thi và kiểm tra xem các giá trị được báo cáo của register <code>OUT</code> có khớp với những gì bạn mong đợi không. Bạn có thể nhấn <code>CTRL+C</code> để tạm dừng thực thi sau khi thiết bị vào vòng lặp vô tận ở cuối hàm <code>main</code>.</p>
+
+    <pre><code class="language-gdb">(gdb) c
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+0x00000186 in registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:22
+22              *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 21);
 (gdb) c
-Breakpoint 4 ... line 25: *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
-(gdb) x 0x50000504
-0x50000504:     0x00080000       &lt;-- chỉ còn 2^19 = hàng trên đã tắt
+Continuing.
 
+Breakpoint 4, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:25
+25              *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
+(gdb) x 0x50000504
+0x50000504:     0x00080000
 (gdb) c
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+0x0000018e in registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:25
+25              *(PORT_P0_OUT as *mut u32) &amp;= !(1 &lt;&lt; 19);
+(gdb) c
+Continuing.
+^C
+Program received signal SIGINT, Interrupt.
+0x00000196 in registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:28
+28          loop {}
 (gdb) x 0x50000504
-0x50000504:     0x00000000       &lt;-- tất cả đã tắt</code></pre>
+0x50000504:     0x00000000</code></pre>
 
-    <h2>(mis)Optimization — Vấn đề với compiler tối ưu hóa</h2>
+    <p>Và tại đây tất cả LED đã tắt trở lại!</p>
 
-    <p>Khi biên dịch với <code>--release</code>, LLVM có thể tối ưu hóa bốn lần ghi vào register thành một lần duy nhất — vì nó không biết rằng địa chỉ đó có tác dụng phụ trên phần cứng. Kết quả là LED sẽ không nhấp nháy như mong đợi.</p>
+    <h1>(mis)Optimization — Vấn đề với compiler tối ưu hóa</h1>
 
-    <p>Ta có thể xem assembly để kiểm chứng. Dùng lệnh sau để xuất assembly:</p>
+    <p>Các thao tác đọc/ghi vào register khá đặc biệt. Tôi thậm chí có thể nói rằng chúng là hiện thân của side effect. Trong ví dụ trước chúng ta ghi bốn giá trị khác nhau vào cùng một register. Nếu bạn không biết địa chỉ đó là một register, bạn có thể đã đơn giản hóa logic để chỉ ghi giá trị cuối cùng <code>0x00000000</code> vào register.</p>
 
-    <pre><code class="language-text"># Build debug
+    <p>Thực ra, LLVM, backend/optimizer của compiler, không biết chúng ta đang làm việc với register và sẽ hợp nhất các lần ghi, từ đó thay đổi hành vi của chương trình. Hãy kiểm tra điều đó nhanh.</p>
+
+    <p>Trước tiên, chúng ta sẽ dùng cargo objdump để lấy assembly của các build artifact từ cả build tối ưu hóa và không tối ưu hóa.</p>
+
+    <pre><code class="language-text"># Non-optimized
 cargo objdump -- --disassemble --no-show-raw-insn --source &gt; debug.dump
-# Build release
+# Optimized
 cargo objdump --release -- --disassemble --no-show-raw-insn --source &gt; release.dump</code></pre>
 
-    <p>Assembly debug build (4 cặp load-modify-store như thiết kế):</p>
+    <p>Hãy xem nội dung bên trong. Cụ thể, hãy tìm assembly thao tác register <code>OUT</code>. Trước tiên, nhìn vào nội dung của <code>debug.dump</code>, assembly từ build không tối ưu hóa. Tôi đã bỏ qua một phần và thêm comment sau <code>; &lt;--</code>, chỉ ra số dòng trong source code tương ứng với instruction.</p>
 
-    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h0b7888ca966441cf&gt;:
-     16a:      	movw	r1, #0x504
-     16e:      	movt	r1, #0x5000
-     174:      	ldr	r0, [r1]          ; (16) load
-     176:      	orr	r0, r0, #0x200000 ; (16) set bit 21
-     17a:      	str	r0, [r1]          ; (16) store
-     17c:      	ldr	r0, [r1]          ; (19) load
-     17e:      	orr	r0, r0, #0x80000  ; (19) set bit 19
-     182:      	str	r0, [r1]          ; (19) store
-     184:      	ldr	r0, [r1]          ; (22) load
-     186:      	bic	r0, r0, #0x200000 ; (22) clear bit 21
-     18a:      	str	r0, [r1]          ; (22) store
-     18c:      	ldr	r0, [r1]          ; (25) load
-     18e:      	bic	r0, r0, #0x80000  ; (25) clear bit 19
-     192:      	str	r0, [r1]          ; (25) store</code></pre>
+    <pre><code class="language-text">$ cat debug.dump
+[...]
+00000158 &lt;main&gt;:
+     158:      	push	{r7, lr}
+     15a:      	mov	r7, sp
+     15c:      	bl	0x160 &lt;registers::__cortex_m_rt_main::h0b7888ca966441cf&gt; @ imm = #0x0
 
-    <p>Assembly release build — LLVM đã tối ưu hóa thành <strong>một lần</strong> load-modify-store duy nhất:</p>
+00000160 &lt;registers::__cortex_m_rt_main::h0b7888ca966441cf&gt;:
+     160:      	push	{r7, lr}
+     162:      	mov	r7, sp
+     164:      	sub	sp, #0x8
+     166:      	bl	0x198 &lt;registers::init::hb6346637538e8ec5&gt; @ imm = #0x2e
+     16a:      	movw	r1, #0x504        ; &lt;-- Load lower half of `OUT` register address into register `r1`
+     16e:      	movt	r1, #0x5000       ; &lt;-- Load upper half of `OUT` register address into register `r1`
+     172:      	str	r1, [sp, #0x4]
+     174:      	ldr	r0, [r1]          ; &lt;-- (16) Load value at the address in `r1` into `r0`.
+     176:      	orr	r0, r0, #0x200000 ; &lt;-- (16) Bitwise OR the value in `r0` with `0x200000`, and store in `r0`
+     17a:      	str	r0, [r1]          ; &lt;-- (16) Store contents of `r0` in memory at address from `r1`
+     17c:      	ldr	r0, [r1]          ; &lt;-- (19) Load value at the address in `r1` into `r0`.
+     17e:      	orr	r0, r0, #0x80000  ; &lt;-- (19) Bitwise OR the value in `r0` with `0x80000`, and store in `r0`
+     182:      	str	r0, [r1]          ; &lt;-- (19) Store contents of `r0` in memory at address from `r1`
+     184:      	ldr	r0, [r1]          ; &lt;-- (22) Load value at the address in `r1` into `r0`.
+     186:      	bic	r0, r0, #0x200000 ; &lt;-- (22) Bitwise AND the value in `r0` with bitwise complement of `0x200000`, and store in `r0`
+     18a:      	str	r0, [r1]          ; &lt;-- (22) Store contents of `r0` in memory at address from `r1`
+     18c:      	ldr	r0, [r1]          ; &lt;-- (25) Load value at the address in `r1` into `r0`.
+     18e:      	bic	r0, r0, #0x80000  ; &lt;-- (25) Bitwise AND the value in `r0` with bitwise complement of `0x80000`, and store in `r0`
+     192:      	str	r0, [r1]          ; &lt;-- (25) Store contents of `r0` in memory at address from `r1`
+[...]</code></pre>
 
-    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
-     168:      	movw	r0, #0x504
-     16c:      	movt	r0, #0x5000
-     170:      	ldr	r1, [r0]
-     172:      	bic	r1, r1, #0x280000  ; xóa cả bit 21 và 19 cùng lúc!
-     176:      	str	r1, [r0]</code></pre>
+    <p>Như bạn thấy, assembly không tối ưu hóa chứa 4 load, 4 store và 4 instruction thao tác bit. Những điều đó tương ứng gọn gàng với code chúng ta đã viết. Bây giờ, hãy nhìn vào assembly tối ưu hóa.</p>
 
-    <p>Giải pháp: dùng <strong>volatile operations</strong> qua <code>core::ptr</code>. Đây là chương trình hoàn chỉnh (<code>examples/volatile.rs</code>):</p>
+    <pre><code class="language-text">$ cat release.dump
+[...]
+00000158 &lt;main&gt;:
+     158:      	push	{r7, lr}
+     15a:      	mov	r7, sp
+     15c:      	bl	0x160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt; @ imm = #0x0
+
+00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
+     160:      	push	{r7, lr}
+     162:      	mov	r7, sp
+     164:      	bl	0x17a &lt;registers::init::h4390f1d4f8a071f7&gt; @ imm = #0x12
+     168:      	movw	r0, #0x504          ; &lt;-- Load lower half of `OUT` register address into register `r0`
+     16c:      	movt	r0, #0x5000         ; &lt;-- Load upper half of `OUT` register address into register `r0`
+     170:      	ldr	r1, [r0]                ; &lt;-- (?) Load value at the address in `r0` into `r1`.
+     172:      	bic	r1, r1, #0x280000       ; &lt;-- (?) Bitwise AND the value in `r1` with bitwise complement of `0x280000`, and store in `r1`
+     176:      	str	r1, [r0]                ; &lt;-- (?) Store contents of `r0` in memory at address from `r0`
+     178:      	b	0x178 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485+0x18&gt; @ imm = #-0x4
+[...]</code></pre>
+
+    <p>Hả? Chỉ một lần load - thao tác bit - store? Trạng thái của LED không thay đổi lần này! Instruction <code>str</code> là instruction ghi giá trị vào register. Chương trình <em>debug</em> (không tối ưu) của chúng ta có bốn instruction đó, một cho mỗi lần ghi vào register, nhưng chương trình <em>release</em> (tối ưu) chỉ có một.</p>
+
+    <p>Làm thế nào để ngăn LLVM tối ưu hóa sai chương trình của chúng ta? Chúng ta dùng các thao tác <em>volatile</em> thay vì đọc/ghi thông thường (<code>examples/volatile.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -246,11 +384,23 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Kiểm tra volatile release build:</p>
+    <p>Hãy chạy cargo objdump một lần nữa, với tối ưu hóa được bật.</p>
 
     <pre><code class="language-text">cargo objdump -q --release --example volatile -- --disassemble --no-show-raw-insn &gt; release.volatile.dump</code></pre>
 
-    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
+    <p>Được rồi, hãy nhìn vào nội dung:</p>
+
+    <pre><code class="language-text">$ cat release.volatile.dump
+[...]
+00000158 &lt;main&gt;:
+     158:      	push	{r7, lr}
+     15a:      	mov	r7, sp
+     15c:      	bl	0x160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt; @ imm = #0x0
+
+00000160 &lt;registers::__cortex_m_rt_main::h1f38525e07b97485&gt;:
+     160:      	push	{r7, lr}
+     162:      	mov	r7, sp
+     164:      	bl	0x192 &lt;registers::init::h4390f1d4f8a071f7&gt; @ imm = #0x2a
      168:      	movw	r0, #0x504
      16c:      	movt	r0, #0x5000
      170:      	ldr	r1, [r0]
@@ -264,13 +414,14 @@ fn main() -&gt; ! {
      186:      	str	r1, [r0]
      188:      	ldr	r1, [r0]
      18a:      	bic	r1, r1, #0x80000
-     18e:      	str	r1, [r0]</code></pre>
+     18e:      	str	r1, [r0]
+[...]</code></pre>
 
-    <p>Volatile read/write báo cho compiler: "Các thao tác này có tác dụng phụ — đừng tối ưu hóa chúng đi." Build release với volatile giữ đủ 4 cặp load-modify-store như thiết kế.</p>
+    <p>Xem đây! Bây giờ chúng ta đã có lại bốn chu kỳ load - thao tác - store. Hãy step through code một lần nữa bằng GDB để thấy các volatile operation trong thực tế!</p>
 
-    <h2>0xBAAAAAAD — Địa chỉ không hợp lệ</h2>
+    <h1>0xBAAAAAAD — Địa chỉ không hợp lệ</h1>
 
-    <p>Điều gì xảy ra nếu bạn đọc từ một địa chỉ không hợp lệ, ví dụ <code>0x5000_A784</code> (không tương ứng với peripheral register nào)?</p>
+    <p>Không phải tất cả bộ nhớ peripheral đều có thể truy cập. Hãy nhìn vào chương trình này (<code>examples/bad.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -294,28 +445,90 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Processor không thể hoàn thành thao tác đó và ném ra một <strong>hardware exception (HardFault)</strong>. Debugger dừng lại tại handler <code>HardFault_</code>. GDB hiện thị <code>ExceptionFrame</code> với toàn bộ trạng thái register khi exception xảy ra:</p>
+    <p>Địa chỉ này gần với địa chỉ <code>OUT</code> mà chúng ta dùng trước đó nhưng địa chỉ này là <em>không hợp lệ</em>, theo nghĩa là không có register nào tại địa chỉ này.</p>
 
-    <pre><code class="language-text">r0: 0x5000a784,
-r1: 0x3,
-r2: 0x2001ff24,
-r3: 0x0,
-r12: 0x1,
-lr: 0x4403,
-pc: 0x43ea,
-xpsr: 0x1000000</code></pre>
+    <p>Hãy thử nó.</p>
 
-    <p><code>pc</code> (<code>0x43ea</code>) trỏ tới instruction gây ra lỗi, <code>r0</code> chứa địa chỉ không hợp lệ (<code>0x5000a784</code>). Disassembly tại <code>pc</code> cho thấy instruction đó là:</p>
+    <pre><code class="language-text">$ cargo run
+(..)
+Resetting and halting target
+Target halted
+(gdb) continue
+Continuing.
 
-    <pre><code class="language-text">ldr r0, [r0, #0]</code></pre>
+Breakpoint 1, registers::__cortex_m_rt_main_trampoline () at src/07-registers/src/main.rs:9
+9	#[entry]
+(gdb) continue
+Continuing.
 
-    <p>Đây là instruction load — đọc bộ nhớ tại địa chỉ trong <code>r0</code>. Vì địa chỉ đó không tồn tại, processor ném HardFault. Đây là cách Rust embedded xử lý memory access violations — không âm thầm bỏ qua mà crash rõ ràng với thông tin đầy đủ.</p>
+Program received signal SIGINT, Interrupt.
+registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:10
+10	fn main() -&gt; ! {
+(gdb) continue
+Continuing.
 
-    <h2>Spooky action at a distance</h2>
+Breakpoint 3, cortex_m_rt::HardFault_ (ef=0x2001ffb8) at src/lib.rs:1046
+1046	    loop {}</code></pre>
 
-    <p><code>OUT</code> không phải là register duy nhất điều khiển các pin của Port P0. Còn có hai register nữa: <code>OUTSET</code> và <code>OUTCLR</code>.</p>
+    <p>Chúng ta đã thử thực hiện một thao tác không hợp lệ, đọc bộ nhớ không tồn tại, nên processor đã ném ra một <em>exception</em>: một <em>hardware exception</em>.</p>
 
-    <p>Đoạn code sau (<code>examples/spooky.rs</code>) in ra giá trị của <code>P0.OUT</code> sau mỗi thao tác, nhưng thay vì ghi thẳng vào <code>OUT</code>, nó ghi vào <code>OUTSET</code> và <code>OUTCLR</code>:</p>
+    <p>Trong hầu hết các trường hợp, exception được ném ra khi processor cố gắng thực hiện một thao tác không hợp lệ. Exception phá vỡ luồng bình thường của chương trình và buộc processor thực thi một <em>exception handler</em>, vốn chỉ là một hàm/subroutine.</p>
+
+    <p>Có nhiều loại exception khác nhau. Mỗi loại exception được ném ra bởi các điều kiện khác nhau và mỗi loại được xử lý bởi một exception handler khác nhau.</p>
+
+    <p>Crate <code>registers</code> phụ thuộc vào crate <code>cortex-m-rt</code>, crate này định nghĩa một <em>hard fault</em> handler mặc định, tên là <code>HardFault_</code>, xử lý exception "invalid memory address". <code>embed.gdb</code> đặt breakpoint tại <code>HardFault</code>; đó là lý do tại sao debugger đã halt chương trình khi đang thực thi exception handler. Chúng ta có thể lấy thêm thông tin về exception từ debugger:</p>
+
+    <pre><code class="language-gdb">(gdb) list
+1040  #[allow(unused_variables)]
+1041	#[doc(hidden)]
+1042	#[cfg_attr(cortex_m, link_section = ".HardFault.default")]
+1043	#[no_mangle]
+1044	pub unsafe extern "C" fn HardFault_(ef: &amp;ExceptionFrame) -&gt; ! {
+1045	    #[allow(clippy::empty_loop)]
+1046	    loop {}
+1047	}
+1048
+1049	#[doc(hidden)]
+1050	#[no_mangle]</code></pre>
+
+    <p><code>ef</code> là snapshot của trạng thái chương trình ngay trước khi exception xảy ra. Hãy kiểm tra nó:</p>
+
+    <pre><code class="language-gdb">(gdb) print/x *ef
+$1 = cortex_m_rt::ExceptionFrame {
+  r0: 0x5000a784,
+  r1: 0x3,
+  r2: 0x2001ff24,
+  r3: 0x0,
+  r12: 0x1,
+  lr: 0x4403,
+  pc: 0x43ea,
+  xpsr: 0x1000000
+}</code></pre>
+
+    <p>Có nhiều field ở đây nhưng quan trọng nhất là <code>pc</code>, register Program Counter. Địa chỉ trong register này trỏ đến instruction đã tạo ra exception. Hãy disassemble chương trình xung quanh instruction lỗi:</p>
+
+    <pre><code class="language-gdb">(gdb) disassemble /m ef.pc
+Dump of assembler code for function core::ptr::read_volatile&lt;u32&gt;:
+[...]
+   0x000043ea &lt;+24&gt;:	ldr	r0, [r0, #0]          ; &lt;-- That's the one!
+[...]
+End of assembler dump.</code></pre>
+
+    <p>Exception được gây ra bởi instruction <code>ldr r0, [r0, #0]</code>, một instruction đọc. Instruction này cố gắng đọc bộ nhớ tại địa chỉ được chỉ ra bởi CPU register <code>r0</code>. Nhân tiện, một CPU (processor) register không phải là một memory-mapped register; nó không có địa chỉ liên kết như <code>OUT</code>.</p>
+
+    <p>Chúng ta có thể kiểm tra giá trị của register <code>r0</code> ngay tại thời điểm exception được ném ra không? Thực ra, chúng ta đã làm điều đó rồi! Field <code>r0</code> trong giá trị <code>ef</code> mà chúng ta in ra trước đó chính là giá trị mà register <code>r0</code> có khi exception được ném ra. <code>r0</code> chứa giá trị <code>0x5000_A784</code> — chính là địa chỉ không hợp lệ mà chúng ta đã gọi hàm <code>read_volatile</code> với nó.</p>
+
+    <h1>Spooky action at a distance</h1>
+
+    <p><code>OUT</code> không phải là register duy nhất có thể điều khiển các pin của port <code>P0</code>. Register <code>OUTSET</code> cũng cho phép bạn thay đổi giá trị của các pin, cũng như <code>OUTCLR</code>. Tuy nhiên, <code>OUTSET</code> và <code>OUTCLR</code> không cho phép bạn lấy trạng thái output hiện tại của port <code>P0</code>.</p>
+
+    <p><code>OUTSET</code> được mô tả trong <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf">Product Specification</a>:</p>
+
+    <blockquote>
+      <p>Subsection 6.8.2.2. OUTSET - Page 145</p>
+    </blockquote>
+
+    <p>Hãy nhìn vào chương trình dưới đây. Key của chương trình này là hàm <code>fn print_out</code>. Hàm này in giá trị hiện tại trong <code>OUT</code> ra console <code>RTT</code> (<code>examples/spooky.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -369,23 +582,40 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Output:</p>
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">15:13:24.055: P0.OUT = 0x000000
+    <p>Bạn sẽ thấy điều này nếu chạy chương trình:</p>
+
+    <pre><code class="language-text">$ cargo embed
+# cargo-embed's console
+(..)
+15:13:24.055: P0.OUT = 0x000000
 15:13:24.055: P0.OUT = 0x200000
 15:13:24.055: P0.OUT = 0x280000
 15:13:24.055: P0.OUT = 0x080000
 15:13:24.055: P0.OUT = 0x000000</code></pre>
 
-    <p>Điều kỳ lạ: mặc dù chúng ta đọc cùng một địa chỉ nhiều lần mà không trực tiếp sửa đổi nó, giá trị vẫn thay đổi — đây là tác dụng phụ của việc ghi vào <code>OUTSET</code> hoặc <code>OUTCLR</code>.</p>
+    <p>Side effect! Mặc dù chúng ta đọc cùng một địa chỉ nhiều lần mà không trực tiếp sửa đổi nó, chúng ta vẫn thấy giá trị của nó thay đổi mỗi khi <code>OUTSET</code> hoặc <code>OUTCLR</code> được ghi vào.</p>
 
-    <p>Lưu ý rằng <code>OUTSET</code> và <code>OUTCLR</code> không cho phép đọc trạng thái output hiện tại của Port P0 — khác với <code>OUT</code> vừa đọc được vừa ghi được.</p>
+    <h1>Type safe manipulation — Thao tác an toàn kiểu</h1>
 
-    <h2>Type-safe manipulation — Thao tác an toàn kiểu</h2>
+    <p>Một trong các register của <code>P0</code>, register <code>IN</code>, được tài liệu mô tả là register read-only.</p>
 
-    <p>Làm việc trực tiếp với địa chỉ hex rất dễ xảy ra lỗi: nhầm địa chỉ, truy cập register read-only để ghi, hay vô tình xóa các bit reserved. PAC (Peripheral Access Crate) giải quyết vấn đề này bằng cách cung cấp một API type-safe được tự động sinh ra từ file SVD (System View Description) của Nordic.</p>
+    <blockquote>
+      <p>6.8.2.4 IN - Pages 145 and 146</p>
+    </blockquote>
 
-    <p>Thay vì ghi thẳng vào địa chỉ, bạn dùng API type-safe:</p>
+    <p>Lưu ý rằng trong cột 'Access' của bảng, chỉ có 'R' được ghi cho register này. Chúng ta không được ghi vào register này, nếu không điều xấu có thể xảy ra.</p>
+
+    <p>Các register có quyền đọc/ghi khác nhau. Một số chỉ write-only, một số khác có thể đọc và ghi, và một số khác là read-only.</p>
+
+    <p>Làm việc trực tiếp với địa chỉ hex cũng rất dễ xảy ra lỗi. Bạn đã thấy rằng cố gắng truy cập địa chỉ bộ nhớ không hợp lệ gây ra exception làm gián đoạn việc thực thi chương trình của chúng ta.</p>
+
+    <p>Sẽ tuyệt vời nếu chúng ta có API để thao tác register theo cách "an toàn" không? Lý tưởng nhất, API nên mã hóa ba điểm tôi đã đề cập: không cần làm việc với địa chỉ thực, nên tôn trọng quyền đọc/ghi và nên ngăn việc sửa đổi các phần reserved của register.</p>
+
+    <p>Thực ra, chúng ta có! <code>registers::init()</code> thực ra trả về một giá trị cung cấp API type-safe để thao tác các register của port <code>P0</code> và <code>P1</code>.</p>
+
+    <p>Như bạn có thể nhớ: một nhóm register liên kết với một peripheral được gọi là register block, và nó nằm trong một vùng bộ nhớ liên tiếp. Trong API type-safe này, mỗi register block được mô hình hóa như một <code>struct</code> trong đó mỗi field đại diện cho một register. Mỗi register field là một newtype khác nhau trên ví dụ <code>u32</code>, expose một kết hợp các method sau: <code>read</code>, <code>write</code> hoặc <code>modify</code> tùy theo quyền đọc/ghi của nó. Cuối cùng, các method này không nhận các giá trị primitive như <code>u32</code>, thay vào đó chúng nhận một newtype khác có thể được xây dựng bằng builder pattern và ngăn việc sửa đổi các phần reserved của register.</p>
+
+    <p>Cách tốt nhất để làm quen với API này là port ví dụ đang chạy của chúng ta sang nó (<code>examples/type-safe.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -415,31 +645,73 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Phương thức <code>modify()</code> đọc giá trị register hiện tại, truyền vào closure để thay đổi, rồi ghi kết quả lại. API này:</p>
-    <ul>
-      <li>Chỉ expose các thao tác được phép (read-only register không có <code>write()</code>)</li>
-      <li>Dùng builder pattern để ngăn sửa đổi các bit reserved</li>
-      <li>Không có unsafe code hay địa chỉ hex magic</li>
-      <li>Zero-cost: compiler sinh ra <strong>cùng instructions</strong> như code unsafe gốc</li>
-    </ul>
+    <p>Điều đầu tiên bạn nhận thấy: không có địa chỉ magic nào. Thay vào đó chúng ta dùng cách thân thiện hơn với con người, <code>p0.out</code>, để tham chiếu đến register <code>OUT</code> trong register block của port <code>P0</code>.</p>
 
-    <p>Bằng chứng zero-cost — assembly release build của chương trình type-safe <strong>giống hệt</strong> volatile.rs:</p>
+    <p>Register block có một method <code>modify</code> nhận một closure. Trước khi closure này được gọi, giá trị của register <code>OUT</code> được đọc và truyền vào closure dưới dạng tham số <code>r</code>. Dựa vào giá trị của <code>r</code>, bạn có thể thao tác <code>w</code> để có giá trị mới mong muốn của register bằng các method của nó. Kết quả được ghi vào register sau khi closure trả về. Trong trường hợp của chúng ta, giá trị hiện tại của register cũng được truyền vào tham số <code>w</code>, cho phép chúng ta chỉ thao tác <code>w</code> khi muốn giữ nguyên các bit còn lại của register.</p>
 
-    <pre><code class="language-text">00000160 &lt;registers::__cortex_m_rt_main::h0e9b57c6799332fd&gt;:
-     168:      	movw	r0, #0x504
-     16c:      	movt	r0, #0x5000
-     170:      	ldr	r1, [r0]
-     172:      	orr	r1, r1, #0x200000
-     176:      	str	r1, [r0]
-     178:      	ldr	r1, [r0]
-     17a:      	orr	r1, r1, #0x80000
-     17e:      	str	r1, [r0]
-     180:      	ldr	r1, [r0]
-     182:      	bic	r1, r1, #0x200000
-     186:      	str	r1, [r0]
-     188:      	ldr	r1, [r0]
-     18a:      	bic	r1, r1, #0x80000
-     18e:      	str	r1, [r0]</code></pre>
+    <p>Method <code>modify</code> được định nghĩa cho các register cho phép cả quyền ghi và đọc. Nếu bạn chỉ muốn đọc giá trị của register mà không cập nhật nó, bạn có thể dùng method <code>read</code>. Hoặc, nếu bạn chỉ muốn ghi một giá trị register mà không đọc, có method <code>write</code>.</p>
+
+    <p>Register read-only chỉ expose <code>read</code>, và register write-only chỉ expose <code>write</code>. Điều này ngăn người dùng truy cập register theo cách không được phép, và do đó bạn không cần bọc các lệnh gọi trong block <code>unsafe</code>. Và bạn không cần tự tìm địa chỉ register và vị trí bit chính xác!</p>
+
+    <p>Hãy chạy chương trình này! Có một số thứ thú vị chúng ta có thể làm <em>trong khi</em> debug chương trình. <code>p0</code> là một reference đến register block của port <code>P0</code>. <code>print p0</code> sẽ trả về base address của register block, và <code>print *p0</code> sẽ in giá trị của nó.</p>
+
+    <pre><code class="language-gdb">$ cargo run
+(..)
+Target halted
+(gdb) set mem inaccessible-by-default off
+(gdb) break main.rs:12
+Breakpoint 4 at 0x162: main.rs:12. (2 locations)
+(gdb) continue
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+cortex_m_rt::DefaultPreInit () at src/lib.rs:1058
+1058	pub unsafe extern "C" fn DefaultPreInit() {}
+(gdb) continue
+Continuing.
+
+Breakpoint 1, registers::__cortex_m_rt_main_trampoline () at src/07-registers/src/main.rs:7
+7	#[entry]
+(gdb) continue
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:8
+8	fn main() -&gt; ! {
+(gdb) continue
+Continuing.
+
+Breakpoint 4.2, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:12
+12	    p0.out.modify(|_, w| w.pin21().set_bit());
+(gdb) print *p0
+$1 = nrf52833_pac::p0::RegisterBlock {
+  _reserved0: [0 &lt;repeats 1284 times&gt;],
+  out: nrf52833_pac::generic::Reg&lt;nrf52833_pac::p0::out::OUT_SPEC&gt; {
+    register: vcell::VolatileCell&lt;u32&gt; {
+      value: core::cell::UnsafeCell&lt;u32&gt; {
+        value: 0
+      }
+    },
+    _marker: core::marker::PhantomData&lt;nrf52833_pac::p0::out::OUT_SPEC&gt;
+  },
+  outset: nrf52833_pac::generic::Reg&lt;nrf52833_pac::p0::outset::OUTSET_SPEC&gt; {
+    register: vcell::VolatileCell&lt;u32&gt; {
+      value: core::cell::UnsafeCell&lt;u32&gt; {
+        value: 0
+      }
+    },
+    _marker: core::marker::PhantomData&lt;nrf52833_pac::p0::outset::OUTSET_SPEC&gt;
+  },
+  outclr: nrf52833_pac::generic::Reg&lt;nrf52833_pac::p0::outclr::OUTCLR_SPEC&gt; {
+    register: vcell::VolatileCell&lt;u32&gt; {
+      value: core::cell::UnsafeCell&lt;u32&gt; {
+        value: 0
+      }
+    },
+    _marker: core::marker::PhantomData&lt;nrf52833_pac::p0::outclr::OUTCLR_SPEC&gt;
+  },
+  [...]
+}</code></pre>
 
     <p>Toàn bộ API này được tự động tạo ra — không ai viết tay. Vendor (Nordic) cung cấp file SVD mô tả tất cả registers và quyền truy cập; công cụ <code>svd2rust</code> chuyển nó thành Rust code.</p>
 

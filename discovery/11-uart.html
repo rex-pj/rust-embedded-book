@@ -124,27 +124,35 @@ fn main() -> ! {
 
     <p>Cụ thể, chúng ta lấy ownership của peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào chúng khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình: baudrate và parity. Parity là cách để kiểm tra dữ liệu có bị hỏng trong quá trình truyền không — chúng ta không dùng nó ở đây nên loại trừ nó. Cuối cùng, wrap UARTE trong kiểu <code>UartePort</code>.</p>
 
-    <p>Sau khởi tạo, chúng ta gọi <code>serial.write(b'X').unwrap()</code> để gửi ký tự <code>X</code>, rồi <code>flush()</code> để đảm bảo byte được gửi đi ngay thay vì bị buffer lại.</p>
+    <p>Sau khởi tạo, chúng ta gửi <code>X</code> (giá trị byte ASCII là 88) qua instance uart mới tạo. Các hàm serial này là "blocking": chúng chờ cho đến khi dữ liệu được gửi trước khi trả về. Đây không phải lúc nào cũng là điều mong muốn: microcontroller có thể làm rất nhiều việc trong khi đợi byte đi ra trên dây. Tuy nhiên, trong trường hợp của chúng ta, nó tiện lợi và chúng ta không có việc khác để làm.</p>
 
-    <h3>Thử nghiệm</h3>
+    <p>Cuối cùng, chúng ta <code>flush()</code> serial port. Điều này là do UARTE có thể quyết định buffer output cho đến khi nó nhận được một số lượng byte nhất định để gửi. Gọi <code>flush()</code> buộc nó viết các byte mà nó hiện có ngay lập tức thay vì chờ thêm.</p>
+
+    <h2>Kiểm tra</h2>
 
     <p>Trước khi flash, bạn nên đảm bảo đã khởi động minicom/PuTTY vì dữ liệu nhận qua serial communication không được lưu trữ hay gì cả — chúng ta phải xem trực tiếp. Khi serial monitor đã chạy, bạn có thể flash chương trình:</p>
 
     <pre><code class="language-bash">$ cargo embed --example send-byte</code></pre>
 
-    <p>Sau khi flash xong, bạn sẽ thấy ký tự <code>X</code> xuất hiện trên terminal minicom/PuTTY của bạn.</p>
+    <p>Sau khi flash xong, bạn sẽ thấy ký tự <code>X</code> xuất hiện trên terminal minicom/PuTTY của bạn, xin chúc mừng!</p>
 
-    <h2>Gửi một chuỗi</h2>
+    <p>Nếu bạn bỏ lỡ, bạn có thể nhấn nút reset ở mặt sau của MB2. Điều này sẽ khiến chương trình bắt đầu lại từ đầu và gửi lại <code>X</code>.</p>
 
-    <p>Bài tập tiếp theo là gửi chuỗi <code>"The quick brown fox jumps over the lazy dog."</code> từ microcontroller đến máy tính của bạn. Đến lượt bạn tự viết chương trình này.</p>
+    <h1>Gửi một chuỗi</h1>
 
-    <h2>Naive approach và <code>write!</code></h2>
+    <p>Nhiệm vụ tiếp theo sẽ là gửi toàn bộ chuỗi từ microcontroller đến máy tính của bạn.</p>
+
+    <p>Tôi muốn bạn gửi chuỗi <code>"The quick brown fox jumps over the lazy dog."</code> từ microcontroller đến máy tính của bạn.</p>
+
+    <p>Đến lượt bạn viết chương trình.</p>
+
+    <h1>Naive approach và <code>write!</code></h1>
 
     <p>Cách gửi chuỗi ở phần trước (duyệt từng byte) hoạt động được, nhưng thiếu đi sự tiện lợi của <code>print!</code> như formatting tham số. Có hai cách tiếp cận:</p>
 
-    <h3>Naive approach</h3>
+    <h2>Naive approach</h2>
 
-    <p>Cách đơn giản nhất: duyệt từng byte và gửi từng cái một (<code>examples/naive-send-string.rs</code>):</p>
+    <p>Bạn có lẽ đã nghĩ ra một chương trình tương tự như sau (<code>examples/naive-send-string.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -184,9 +192,11 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h3><code>write!</code> và <code>core::fmt::Write</code></h3>
+    <p>Đây là một implementation hoàn toàn hợp lệ, nhưng tại một thời điểm nào đó bạn có thể muốn có tất cả những tính năng tiện lợi của <code>print!</code> như formatting đối số v.v. Nếu bạn đang tự hỏi cách làm, hãy đọc tiếp.</p>
 
-    <p>Trait <code>core::fmt::Write</code> cho phép dùng bất kỳ struct nào implement nó giống như <code>print!</code> trong thế giới <code>std</code>. Vì HAL nRF đã implement <code>core::fmt::Write</code> cho <code>Uart</code>, ta có thể dùng macro <code>write!</code> trực tiếp (<code>examples/send-string.rs</code>):</p>
+    <h2><code>write!</code> và <code>core::fmt::Write</code></h2>
+
+    <p>Trait <code>core::fmt::Write</code> cho phép chúng ta dùng bất kỳ struct nào implement nó theo cách cơ bản giống như chúng ta dùng <code>print!</code> trong thế giới <code>std</code>. Trong trường hợp này, struct <code>Uart</code> từ HAL <code>nrf</code> có implement <code>core::fmt::Write</code>, vì vậy chúng ta có thể refactor chương trình trước thành này (<code>examples/send-string.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -225,11 +235,11 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h2>Nhận một byte đơn</h2>
+    <p>Nếu bạn flash chương trình này lên micro:bit, bạn sẽ thấy rằng nó tương đương về mặt chức năng với chương trình dựa trên iterator mà bạn đã nghĩ ra.</p>
 
-    <p>Bây giờ chúng ta sẽ làm chiều ngược lại: nhận dữ liệu từ máy tính vào microcontroller.</p>
+    <h1>Nhận một byte đơn</h1>
 
-    <p>Thư viện <code>embedded-hal</code> cung cấp hàm <code>read()</code> để chờ cho đến khi có một byte và đọc nó:</p>
+    <p>Cho đến nay chúng ta có thể gửi dữ liệu từ microcontroller đến máy tính của bạn. Đã đến lúc thử chiều ngược lại: nhận dữ liệu từ máy tính (<code>examples/receive-byte.rs</code>).</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]
@@ -238,23 +248,8 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-#[cfg(feature = "v1")]
-use microbit::{
-    hal::prelude::*,
-    hal::uart,
-    hal::uart::{Baudrate, Parity},
-};
+use microbit::hal::uarte::{self, Baudrate, Parity};
 
-#[cfg(feature = "v2")]
-use microbit::{
-    hal::prelude::*,
-    hal::uarte,
-    hal::uarte::{Baudrate, Parity},
-};
-
-#[cfg(feature = "v2")]
-mod serial_setup;
-#[cfg(feature = "v2")]
 use serial_setup::UartePort;
 
 #[entry]
@@ -262,17 +257,6 @@ fn main() -&gt; ! {
     rtt_init_print!();
     let board = microbit::Board::take().unwrap();
 
-    #[cfg(feature = "v1")]
-    let mut serial = {
-        uart::Uart::new(
-            board.UART0,
-            board.uart.into(),
-            Parity::EXCLUDED,
-            Baudrate::BAUD115200,
-        )
-    };
-
-    #[cfg(feature = "v2")]
     let mut serial = {
         let serial = uarte::Uarte::new(
             board.UARTE0,
@@ -289,29 +273,38 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Nếu bạn flash chương trình này và gõ ký tự trong minicom để gửi đến microcontroller, bạn sẽ chỉ thấy các <em>con số</em> trên RTT console vì code nhận giá trị <code>u8</code> thô. Việc chuyển đổi giá trị <code>u8</code> đó thành <code>char</code> để in ra là bài tập cho bạn tự làm.</p>
+    <p>Phần duy nhất thay đổi, so với chương trình gửi byte của chúng ta, là vòng lặp ở cuối <code>main()</code>. Ở đây chúng ta dùng hàm <code>serial.read()</code> để chờ cho đến khi có một byte và đọc nó. Sau đó chúng ta in byte đó vào RTT debugging console để xem liệu mọi thứ có thực sự đến hay không.</p>
 
-    <h2>Echo Server</h2>
+    <p>Lưu ý rằng nếu bạn flash chương trình này và bắt đầu gõ ký tự trong <code>minicom</code> để gửi chúng đến microcontroller của bạn, bạn sẽ chỉ có thể thấy các con số trong RTT console vì chúng ta không chuyển đổi <code>u8</code> mà chúng ta nhận được thành <code>char</code> thực sự. Vì việc chuyển đổi từ <code>u8</code> sang <code>char</code> khá đơn giản, tôi sẽ để nhiệm vụ này cho bạn nếu bạn thực sự muốn thấy các ký tự trong RTT console.</p>
 
-    <p>Hãy kết hợp truyền và nhận vào một chương trình để viết một echo server. Echo server gửi lại cho client chính xác những gì nó nhận được — microcontroller đóng vai server, máy tính của bạn đóng vai client.</p>
+    <h1>Echo server</h1>
 
-    <p>Điều này khá đơn giản để implement. Gợi ý: làm từng byte một.</p>
+    <p>Hãy hợp nhất truyền và nhận vào một chương trình duy nhất và viết một echo server. Một echo server gửi lại cho client cùng text mà nó nhận được. Đối với ứng dụng này, microcontroller sẽ là server và bạn cùng máy tính của bạn sẽ là client.</p>
 
-    <h2>Đảo ngược chuỗi</h2>
+    <p>Điều này sẽ đơn giản để implement. (gợi ý: làm từng byte một)</p>
 
-    <p>Lần này, server cần phản hồi mỗi khi client nhấn ENTER, với mỗi phản hồi trên một dòng mới. Mỗi phản hồi là chuỗi ký tự mà client gửi — nhưng bị đảo ngược.</p>
+    <h1>Đảo ngược chuỗi</h1>
 
-    <p>Dùng một buffer 32 byte được triển khai bằng <code>heapless::Vec&lt;u8, 32&gt;</code>. Đây là code khởi đầu:</p>
+    <p>Được rồi, tiếp theo hãy làm server thú vị hơn bằng cách cho nó phản hồi với client với chuỗi ngược của text mà chúng đã gửi. Server sẽ phản hồi với client mỗi khi họ nhấn phím ENTER. Mỗi phản hồi của server sẽ trên một dòng mới.</p>
+
+    <p>Lần này bạn cần một buffer; bạn có thể dùng <a href="https://docs.rs/heapless/latest/heapless/struct.Vec.html"><code>heapless::Vec</code></a>. Đây là code khởi đầu:</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]
 
-use core::fmt::Write;
 use cortex_m_rt::entry;
+use core::fmt::Write;
 use heapless::Vec;
-use microbit::hal::uarte::{self, Baudrate, Parity};
-use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
+use panic_rtt_target as _;
+
+use microbit::{
+    hal::prelude::*,
+    hal::uarte,
+    hal::uarte::{Baudrate, Parity},
+};
+
+mod serial_setup;
 use serial_setup::UartePort;
 
 #[entry]
@@ -342,7 +335,9 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h2>Lời giải của tôi</h2>
+    <h1>Lời giải của tôi</h1>
+
+    <p>Bạn sẽ tìm thấy lời giải của tôi trong <code>src/main.rs</code>:</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]

@@ -61,21 +61,23 @@
 
     <h1>Interrupts</h1>
 
+    <h2>Interrupts</h2>
+
     <p>Cho đến nay, chúng ta đã tương tác với nhiều phần cứng trên MB2. Chúng ta đã đọc nút bấm, chờ timer, thực hiện serial communication, và nói chuyện với các thiết bị qua I2C. Mỗi việc đó đều liên quan đến việc chờ một hoặc nhiều peripheral sẵn sàng. Cho đến giờ, cách chờ của chúng ta là "polling": liên tục hỏi peripheral xem nó đã xong chưa, cho đến khi xong.</p>
 
     <p>Vì microcontroller của chúng ta chỉ có một CPU core, nó không thể làm gì khác trong khi chờ đợi. Hơn nữa, một CPU core liên tục polling một peripheral sẽ lãng phí điện năng, và trong nhiều ứng dụng, chúng ta không thể để điều đó xảy ra. Liệu chúng ta có thể làm tốt hơn không?</p>
 
-    <p>May mắn thay, có thể! Dù microcontroller nhỏ bé của chúng ta không thể tính toán song song, nó có thể dễ dàng chuyển đổi giữa các tác vụ khác nhau trong quá trình thực thi, phản hồi các sự kiện từ thế giới bên ngoài. Việc chuyển đổi này được thực hiện bằng một tính năng gọi là "interrupts" (ngắt).</p>
+    <p>May mắn thay, có thể! Dù microcontroller nhỏ bé của chúng ta không thể tính toán song song, nó có thể dễ dàng chuyển đổi giữa các tác vụ khác nhau trong quá trình thực thi, phản hồi các sự kiện từ thế giới bên ngoài. Việc chuyển đổi này được thực hiện bằng một tính năng gọi là "interrupts".</p>
 
-    <p>Interrupts được đặt tên rất phù hợp: chúng cho phép các peripheral thực sự <em>ngắt</em> quá trình thực thi chương trình chính tại bất kỳ thời điểm nào. Trên nRF52833 của MB2, các peripheral được kết nối với Nested Vectored Interrupt Controller (NVIC) của core. NVIC có thể dừng CPU tức thì, ra lệnh cho nó đi làm gì đó khác, và sau khi xong, đưa CPU trở về nơi nó đang làm trước khi bị ngắt.</p>
+    <p>Interrupts được đặt tên rất phù hợp: chúng cho phép các peripheral thực sự <em>ngắt</em> quá trình thực thi chương trình chính tại bất kỳ thời điểm nào. Trên nRF52833 của MB2, các peripheral được kết nối với Nested Vectored Interrupt Controller (NVIC) của core. NVIC có thể dừng CPU tức thì, ra lệnh cho nó đi làm gì đó khác, và sau khi xong, đưa CPU trở về nơi nó đang làm trước khi bị ngắt. Chúng ta sẽ đề cập đến phần "Nested" và "Vectored" của interrupt controller sau: trước tiên hãy tập trung vào cách core chuyển đổi tác vụ.</p>
 
-    <h2 id="handling-interrupts">Xử lý Interrupt như thế nào</h2>
+    <h3 id="handling-interrupts">Xử lý Interrupt như thế nào</h3>
 
     <p>Mô hình tính toán của nRF52833 là mô hình được hầu hết mọi CPU hiện đại sử dụng. Bên trong CPU có các bộ nhớ tạm gọi là "CPU registers". (Chú ý rằng các CPU register này khác với "device registers" mà chúng ta đã thảo luận trong chương Registers.) Để thực hiện một phép tính, CPU thường nạp các giá trị từ bộ nhớ vào CPU registers, thực hiện phép tính bằng các giá trị trong register, rồi lưu kết quả trở lại bộ nhớ. (Đây gọi là "kiến trúc load-store".)</p>
 
     <p>Mọi thông tin về phép tính mà CPU đang chạy đều được lưu trong CPU registers. Nếu core sắp chuyển tác vụ, nó phải lưu nội dung các CPU registers vào đâu đó để tác vụ mới có thể dùng các register như bộ nhớ tạm của riêng mình. Khi tác vụ mới hoàn thành, CPU có thể khôi phục các giá trị register và tiếp tục tính toán cũ. Đúng vậy, đó chính xác là điều đầu tiên core làm khi nhận được interrupt request: nó dừng lại ngay lập tức và lưu nội dung các CPU registers lên stack.</p>
 
-    <p>Bước tiếp theo là nhảy đến code cần chạy để phản hồi interrupt. Một <strong>Interrupt Service Routine (ISR)</strong>, thường gọi là interrupt "handler", là một hàm đặc biệt trong code ứng dụng của bạn được core gọi để phản hồi interrupt. Một "interrupt table" trong bộ nhớ chứa một "interrupt vector" cho mỗi interrupt có thể xảy ra: interrupt vector chỉ ra ISR nào cần gọi khi một interrupt cụ thể được nhận. Chúng ta sẽ mô tả chi tiết về vectơ ISR trong phần <a href="#nvic-and-priority">15.1. NVIC và ưu tiên ngắt</a>.</p>
+    <p>Bước tiếp theo là nhảy đến code cần chạy để phản hồi interrupt. Một <strong>Interrupt Service Routine (ISR)</strong>, thường gọi là interrupt "handler", là một hàm đặc biệt trong code ứng dụng của bạn được core gọi để phản hồi interrupt. Một "interrupt table" trong bộ nhớ chứa một "interrupt vector" cho mỗi interrupt có thể xảy ra: interrupt vector chỉ ra ISR nào cần gọi khi một interrupt cụ thể được nhận. Chúng ta sẽ mô tả chi tiết về vectơ ISR trong phần <a href="#nvic-and-priority">NVIC và ưu tiên ngắt</a>.</p>
 
     <p>Một hàm ISR "return" bằng một lệnh máy return-from-interrupt đặc biệt, khiến CPU khôi phục các CPU registers và nhảy trở về nơi nó đang ở trước khi ISR được gọi.</p>
 
@@ -136,32 +138,35 @@ fn main() -&gt; ! {
 
     <p>Hàm ISR handler có tính chất "đặc biệt". Tên <code>GPIOTE</code> là bắt buộc, chỉ ra rằng ISR này cần được lưu tại entry của interrupt <code>GPIOTE</code> trong interrupt table.</p>
 
-    <p>Annotation <code>#[interrupt]</code> được dùng lúc compile time để đánh dấu một hàm được xử lý đặc biệt như một ISR. Đánh dấu hàm với <code>#[interrupt]</code> hàm ý một số điều đặc biệt:</p>
+    <p>Annotation <code>#[interrupt]</code> được dùng lúc compile time để đánh dấu một hàm được xử lý đặc biệt như một ISR. (Đây là một "proc macro": bạn có thể đọc thêm về nó trong <a href="https://doc.rust-lang.org/book/ch20-05-macros.html">Rust book</a> nếu muốn.)</p>
+
+    <p>Về cơ bản, một "proc macro" dịch source code thành source code khác. Nếu bạn tò mò về việc một macro cụ thể được dịch thành gì, bạn có thể expand macro đó. Bạn có thể làm điều này bằng cách dùng Tools trong <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2024">Rust Playground</a> hoặc lệnh "rust-analyzer: Expand macro" trong IDE.</p>
+
+    <p>Đánh dấu hàm với <code>#[interrupt]</code> hàm ý một số điều đặc biệt:</p>
 
     <ul>
-      <li>Compiler sẽ kiểm tra rằng hàm không nhận tham số và không trả về giá trị (hoặc không bao giờ return). CPU không có tham số để cung cấp cho ISR và không có chỗ nhận giá trị return từ ISR.</li>
-      <li>Một vector trỏ đến hàm này sẽ được đặt tại vị trí trong interrupt table tương ứng với tên hàm.</li>
-      <li>Compiler sẽ ngăn không cho gọi trực tiếp ISR từ code thông thường.</li>
+      <li>
+        <p>Compiler sẽ kiểm tra rằng hàm không nhận tham số và không trả về giá trị (hoặc không bao giờ return). CPU không có tham số để cung cấp cho ISR và không có chỗ nhận giá trị return từ ISR. Điều này bởi vì các interrupt handler có call stack riêng của chúng (ít nhất là về mặt khái niệm, nếu không phải lúc nào cũng như vậy trong thực tế).</p>
+      </li>
+      <li>
+        <p>Một vector trỏ đến hàm này (tức là một function pointer) sẽ được đặt tại vị trí trong interrupt table tương ứng với tên hàm.</p>
+      </li>
+      <li>
+        <p>Compiler sẽ ngăn không cho gọi trực tiếp ISR từ code thông thường.</p>
+      </li>
     </ul>
 
     <p>Có hai bước để cấu hình interrupt. Thứ nhất, GPIOTE phải được cấu hình để tạo ra interrupt khi pin kết nối với Button A chuyển từ điện áp cao xuống thấp. Thứ hai, NVIC phải được cấu hình để cho phép interrupt đó. Thứ tự quan trọng: làm theo "thứ tự sai" có thể tạo ra interrupt trước khi bạn sẵn sàng xử lý nó.</p>
 
-    <div class="callout note">
-      <div class="callout-icon">📝</div>
-      <div class="callout-body">
-        <div class="callout-title">Lưu ý</div>
-        <p>Trên nRF52833, interrupt tạo ra một event phải được xóa thủ công trong ISR để đảm bảo ISR không được gọi lần thứ hai cho cùng một interrupt. Nếu không có <code>panic!()</code>, khi interrupt handler return, NVIC sẽ re-enable interrupt, nhận thấy vẫn còn event pending, và chạy handler lại — lặp mãi mãi. Chỉ thị interrupt có thể được xóa từ bên trong interrupt handler bằng phương thức <code>reset_event()</code> của peripheral.</p>
-      </div>
-    </div>
+    <p><strong>Lưu ý:</strong> Cũng như hầu hết các microcontroller, có rất nhiều linh hoạt trong việc GPIOTE có thể tạo ra interrupt khi nào. Interrupt có thể được tạo ra khi pin chuyển từ thấp lên cao, từ cao xuống thấp (như ở đây), bất kỳ thay đổi nào ("edge"), khi ở mức thấp, hoặc khi ở mức cao. Trên nRF52833, interrupt tạo ra một event phải được xóa thủ công trong ISR để đảm bảo ISR không được gọi lần thứ hai cho cùng một interrupt. Các microcontroller khác có thể hoạt động hơi khác — bạn nên đọc tài liệu Rust crate và microcontroller để hiểu chi tiết trên một board khác.</p>
+
+    <p>Khi bạn nhấn Button A, bạn sẽ thấy một thông báo "ouch" và sau đó là một panic. Tại sao interrupt handler lại gọi <code>panic!()</code>? Hãy thử comment dòng <code>panic!()</code> ra và xem điều gì xảy ra khi bạn nhấn nút. Bạn sẽ thấy các thông báo "ouch" cuộn qua liên tục. NVIC ghi lại khi nào một interrupt đã được phát ra: "event" đó được giữ cho đến khi chương trình đang chạy xóa nó đi một cách rõ ràng. Nếu không có <code>panic!()</code>, khi interrupt handler return, NVIC sẽ (trong trường hợp này) re-enable interrupt, nhận thấy vẫn còn event pending, và chạy handler lại. Điều này sẽ tiếp tục mãi mãi: mỗi lần interrupt handler return, nó sẽ được gọi lại. Như chúng ta sẽ thấy trong một lúc, chỉ thị interrupt có thể được xóa từ bên trong interrupt handler bằng phương thức <code>reset_event()</code> của peripheral.</p>
 
     <p>Bạn có thể định nghĩa ISR cho nhiều nguồn interrupt khác nhau: khi I2C sẵn sàng, khi timer hết hạn, và nhiều tình huống khác. Bên trong ISR bạn có thể làm hầu hết mọi thứ, nhưng thực hành tốt là giữ cho các interrupt handler ngắn gọn và nhanh chóng.</p>
 
-    <h2>NVIC và Interrupt Priority</h2>
+    <p>Thông thường, khi ISR hoàn thành, chương trình chính tiếp tục chạy như thể interrupt chưa từng xảy ra. Tuy nhiên, điều này đặt ra một vấn đề: làm thế nào ứng dụng của bạn nhận biết rằng ISR đã chạy và thực hiện điều gì đó? Vì ISR không có tham số đầu vào hay kết quả trả về, làm thế nào code ISR có thể tương tác với code ứng dụng?</p>
 
-    <p>NVIC (Nested Vector Interrupt Controller) trên các processor Arm xử lý việc ưu tiên và thực thi các interrupt từ nhiều peripheral. Preemption cho phép processor phản hồi rất nhanh với các sự kiện quan trọng. Interrupt "pending" được nhớ lại và thực thi sau khi interrupt service routine hiện tại hoàn thành.</p>
-
-    <hr/>
-    <p><em>Chi tiết kỹ thuật hơn:</em></p>
+    <h2 id="nvic-and-priority">NVIC và Interrupt Priority</h2>
 
     <p>Chúng ta đã thấy rằng các <strong>interrupt</strong> khiến <strong>processor</strong> của chúng ta ngay lập tức nhảy đến một hàm khác trong mã nguồn, nhưng điều gì đang thực sự diễn ra đằng sau hậu trường để cho phép điều này xảy ra? Trong phần này chúng ta sẽ đề cập đến một số chi tiết kỹ thuật không bắt buộc, vì vậy hãy thoải mái bỏ qua nếu bạn không quan tâm.</p>
 
@@ -174,9 +179,9 @@ fn main() -&gt; ! {
 
     <p>NVIC có thể nhận các yêu cầu kích hoạt interrupt từ nhiều peripheral. Thậm chí một peripheral thường có nhiều interrupt khả thi, ví dụ một cổng GPIO có một interrupt cho mỗi pin, hoặc một UART có cả interrupt "đã nhận dữ liệu" và interrupt "đã hoàn thành truyền dữ liệu". Công việc của NVIC là đặt <strong>priority</strong> cho các interrupt này, ghi nhớ những interrupt nào vẫn cần được xử lý (pending), và sau đó khiến processor chạy mã <strong>interrupt handler</strong> tương ứng.</p>
 
-    <p>NVIC có một <strong>priority</strong> có thể thiết lập cho mỗi interrupt. Tùy thuộc vào cấu hình, NVIC có thể đảm bảo interrupt hiện tại được xử lý hoàn toàn trước khi một interrupt mới được thực thi, hoặc nó có thể <strong>preempt</strong> (chiếm quyền) processor ngay giữa một interrupt để xử lý một interrupt khác có priority cao hơn.</p>
-
     <h3>Interrupt Priorities</h3>
+
+    <p>NVIC có một <strong>priority</strong> có thể thiết lập cho mỗi interrupt. Tùy thuộc vào cấu hình, NVIC có thể đảm bảo interrupt hiện tại được xử lý hoàn toàn trước khi một interrupt mới được thực thi, hoặc nó có thể <strong>preempt</strong> (chiếm quyền) processor ngay giữa một interrupt để xử lý một interrupt khác có priority cao hơn.</p>
 
     <p>Việc preemption cho phép các processor phản hồi rất nhanh các sự kiện quan trọng. Ví dụ, một bộ điều khiển robot có thể sử dụng các interrupt priority thấp để quản lý việc gửi thông tin trạng thái cho người vận hành, nhưng cũng nhận một interrupt priority cao khi cảm biến phát hiện va chạm sắp xảy ra để nó có thể ngay lập tức ngừng di chuyển các động cơ. Bạn chắc chắn không muốn robot phải đợi cho đến khi nó gửi xong một gói dữ liệu rồi mới dừng lại!</p>
 
@@ -184,53 +189,32 @@ fn main() -&gt; ! {
 
     <p>Lưu ý rằng nếu các interrupt bị vô hiệu hóa hoàn toàn, tất cả các interrupt đến sẽ được pending. Các interrupt pending sẽ được xử lý khi các interrupt được bật lại (re-enabled).</p>
 
-    <p>Trong Rust nhúng, chúng ta có thể lập trình NVIC bằng cách sử dụng <strong>crate</strong> <code>cortex-m</code>, cung cấp các phương thức để bật và tắt (được gọi là <code>unmask</code> và <code>mask</code>) các interrupt, thiết lập interrupt priority và kích hoạt interrupt từ phần mềm. Các frameworks như <a href="https://rtic.rs/">RTIC</a> có thể xử lý cấu hình NVIC cho bạn, tận dụng tính linh hoạt của NVIC để cung cấp việc chia sẻ tài nguyên và quản lý tác vụ thuận tiện.</p>
+    <p>Trong Rust nhúng, chúng ta có thể lập trình NVIC bằng cách sử dụng <strong>crate</strong> <a href="https://docs.rs/cortex-m/latest/cortex_m/peripheral/struct.NVIC.html"><code>cortex-m</code></a>, cung cấp các phương thức để bật và tắt (được gọi là <code>unmask</code> và <code>mask</code>) các interrupt, thiết lập interrupt priority và kích hoạt interrupt từ phần mềm. Các frameworks như <a href="https://rtic.rs/">RTIC</a> có thể xử lý cấu hình NVIC cho bạn, tận dụng tính linh hoạt của NVIC để cung cấp việc chia sẻ tài nguyên và quản lý tác vụ thuận tiện.</p>
+
+    <p>Bạn có thể đọc thêm thông tin về NVIC trong <a href="https://developer.arm.com/documentation/ddi0337/e/Nested-Vectored-Interrupt-Controller/About-the-NVIC">tài liệu của Arm</a>.</p>
 
     <h3>Bảng vectơ (The vector table)</h3>
     <p>Khi mô tả NVIC, tôi đã nói rằng nó có thể "khiến processor chạy mã interrupt handler tương ứng". Nhưng điều đó thực sự hoạt động như thế nào?</p>
 
-    <p>Đầu tiên, chúng ta cần một cách nào đó để processor biết mã nào cần chạy cho mỗi interrupt. Trên các processor Cortex-M, điều này liên quan đến một phần bộ nhớ được gọi là <strong>vector table</strong>. Nó thường nằm ở ngay đầu bộ nhớ flash chứa mã của chúng ta, và chứa một danh sách các địa chỉ – vị trí trong bộ nhớ của mỗi hàm ISR. Cách sắp xếp cụ thể của phần đầu bộ nhớ được Arm định nghĩa; đối với mục đích của chúng ta, phần quan trọng là các byte từ 64 đến 256 chứa địa chỉ của tất cả 48 <strong>interrupt handler</strong> cho processor nRF mà chúng ta sử dụng, mỗi địa chỉ 4 byte. Mỗi interrupt có một số hiệu, từ 0 đến 47. Ví dụ, <code>TIMER0</code> là interrupt số 8, và vì vậy các byte từ 96 đến 100 chứa địa chỉ 4 byte của <strong>ISR</strong> của nó. Khi NVIC báo cho processor xử lý interrupt số 8, CPU sẽ đọc địa chỉ được lưu trong các byte đó và nhảy đến thực thi tại đó.</p>
+    <p>Đầu tiên, chúng ta cần một cách nào đó để processor biết mã nào cần chạy cho mỗi interrupt. Trên các processor Cortex-M, điều này liên quan đến một phần bộ nhớ được gọi là <strong>vector table</strong>. Nó thường nằm ở ngay đầu bộ nhớ flash chứa mã của chúng ta, và chứa một danh sách các địa chỉ – vị trí trong bộ nhớ của mỗi hàm ISR. Cách sắp xếp cụ thể của phần đầu bộ nhớ được Arm định nghĩa trong <a href="https://developer.arm.com/documentation/ddi0403/latest">Architecture Reference Manual</a>; đối với mục đích của chúng ta, phần quan trọng là các byte từ 64 đến 256 chứa địa chỉ của tất cả 48 <strong>interrupt handler</strong> cho processor nRF mà chúng ta sử dụng, mỗi địa chỉ 4 byte. Mỗi interrupt có một số hiệu, từ 0 đến 47. Ví dụ, <code>TIMER0</code> là interrupt số 8, và vì vậy các byte từ 96 đến 100 chứa địa chỉ 4 byte của <strong>ISR</strong> của nó. Khi NVIC báo cho processor xử lý interrupt số 8, CPU sẽ đọc địa chỉ được lưu trong các byte đó và nhảy đến thực thi tại đó.</p>
 
     <p>Làm thế nào <strong>vector table</strong> này được tạo ra trong mã của chúng ta? Chúng ta sử dụng crate <a href="https://docs.rs/cortex-m-rt"><code>cortex-m-rt</code></a> để xử lý việc này. Nó cung cấp một interrupt mặc định cho mọi vị trí không sử dụng và cho phép mã của chúng ta ghi đè mặc định này bất cứ khi nào chúng ta muốn chỉ định ISR của riêng mình. Chúng ta thực hiện việc này bằng cách sử dụng macro <code>#[interrupt]</code>, macro này yêu cầu hàm của chúng ta được đặt một cái tên cụ thể liên quan đến interrupt mà nó xử lý. Sau đó crate <code>cortex-m-rt</code> sử dụng linker script của nó để sắp xếp địa chỉ của hàm đó vào đúng phần bộ nhớ.</p>
 
+    <p>Để biết thêm chi tiết về cách các interrupt handler được quản lý trong Rust, hãy xem các chương Exceptions và Interrupts trong <a href="https://docs.rust-embedded.org/book/">Embedded Rust Book</a>.</p>
+
     <h2>Chia sẻ dữ liệu với globals</h2>
 
-    <p>ISR không nhận tham số và không trả về giá trị — vậy ISR tương tác với phần còn lại của chương trình bằng cách nào? Qua <strong>biến global</strong> (<code>static</code>).</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Nội dung này được lấy một phần (có sự cho phép) từ bài viết blog <em><a href="https://onevariable.com/blog/interrupts-is-threads">Interrupts Is Threads</a></em> của James Munns, chứa nhiều thảo luận hơn về chủ đề này.</p>
+    </blockquote>
 
-    <p>Trong Rust thông thường, chia sẻ dữ liệu giữa các thread dùng <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>. Trong embedded (không có heap), ta dùng <code>static</code> được bảo vệ bởi <strong>critical section</strong> — đoạn code tạm thời vô hiệu hóa tất cả interrupt để đảm bảo atomic access:</p>
-
-    <pre><code class="language-rust">use core::sync::atomic::{AtomicUsize, Ordering};
-use critical_section::Mutex;
-use core::cell::RefCell;
-
-// Biến đếm đơn giản: dùng Atomic
-static COUNTER: AtomicUsize = AtomicUsize::new(0);
-
-// Peripheral phức tạp: dùng Mutex + RefCell
-static TIMER: Mutex&lt;RefCell&lt;Option&lt;Timer&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
-
-// Trong ISR:
-#[interrupt]
-fn GPIOTE() {
-    COUNTER.fetch_add(1, Ordering::Relaxed);
-}
-
-// Trong main hoặc ISR khác, truy cập với critical section:
-critical_section::with(|cs| {
-    if let Some(timer) = TIMER.borrow(cs).borrow_mut().as_mut() {
-        // dùng timer
-    }
-});</code></pre>
-
-    <hr/>
-    <p><em>Giải thích chi tiết:</em></p>
-
-    <p>Như đã đề cập trước đó, khi một interrupt xảy ra, chúng ta không nhận được bất kỳ đối số nào và không thể trả về bất kỳ kết quả nào. Điều này gây khó khăn cho chương trình trong việc tương tác với các <strong>peripheral</strong> và trạng thái chương trình chính khác. Trước khi lo lắng về vấn đề này trong hệ thống nhúng, hãy thử nghĩ về <strong>thread</strong> trong Rust "std" (thư viện chuẩn).</p>
+    <p>ISR không nhận tham số và không trả về giá trị — vậy ISR tương tác với phần còn lại của chương trình bằng cách nào? Như đã đề cập trước đó, khi một interrupt xảy ra, chúng ta không nhận được bất kỳ đối số nào và không thể trả về bất kỳ kết quả nào. Điều này gây khó khăn cho chương trình trong việc tương tác với các <strong>peripheral</strong> và trạng thái chương trình chính khác. Trước khi lo lắng về vấn đề này trong hệ thống nhúng, hãy thử nghĩ về <strong>thread</strong> trong Rust "std" (thư viện chuẩn).</p>
 
     <h3>Trong "std" Rust: Chia sẻ dữ liệu với một Thread</h3>
     <p>Trong "std" Rust, chúng ta cũng phải nghĩ về việc chia sẻ dữ liệu khi thực hiện những việc như tạo một <strong>thread</strong> mới.</p>
     <p>Khi bạn muốn <em>đưa</em> một thứ gì đó cho một thread, bạn có thể truyền nó vào một closure bằng cách <strong>transfer ownership</strong> (chuyển quyền sở hữu):</p>
 
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">// Tạo một string trong thread hiện tại
 let data = String::from("hello");
 
@@ -241,6 +225,27 @@ std::thread::spawn(move || {
 });</code></pre>
 
     <p>Nếu bạn muốn <em>chia sẻ</em> một thứ gì đó và vẫn có quyền truy cập nó trong thread ban đầu, bạn thường không thể truyền một reference đến nó — trình biên dịch sẽ báo lỗi vì dữ liệu không sống đủ lâu:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">use std::{thread::{sleep, spawn}, time::Duration};
+
+fn main() {
+    // Tạo một string trong thread hiện tại
+    let data = String::from("hello");
+
+    // tạo reference để truyền đi
+    let data_ref = &amp;data;
+
+    // Tạo thread mới và TRAO quyền sở hữu string cho nó
+    spawn(|| {
+        sleep(Duration::from_millis(1000));
+        println!("{data_ref}");
+    });
+
+    println!("{data_ref}");
+}</code></pre>
+
+    <p>bạn sẽ nhận được lỗi như thế này:</p>
 
     <pre><code class="language-text">error[E0597]: `data` does not live long enough
   --> src/main.rs:6:20
@@ -260,14 +265,19 @@ std::thread::spawn(move || {
 16 |   }
    |   - `data` dropped here while still borrowed</code></pre>
 
-    <p>Bạn cần đảm bảo dữ liệu tồn tại đủ lâu cho cả hai thread. Dùng <code>Arc</code> (Atomically Reference Counted heap allocation):</p>
+    <p>Bạn cần đảm bảo dữ liệu tồn tại đủ lâu cho cả hai thread. Dùng <code>Arc</code> (Atomically Reference Counted heap allocation) như thế này:</p>
 
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">use std::{sync::Arc, thread::{sleep, spawn}, time::Duration};
 
 fn main() {
+    // Tạo một string trong thread hiện tại
     let data = Arc::new(String::from("hello"));
 
     let handle = spawn({
+        // Tạo bản sao của handle để TRAO cho thread mới.
+        // Cả `data` và `new_thread_data` đều trỏ đến
+        // cùng một string!
         let new_thread_data = data.clone();
         move || {
             sleep(Duration::from_millis(1000));
@@ -276,58 +286,103 @@ fn main() {
     });
 
     println!("{data}");
+    // chờ thread dừng lại
     let _ = handle.join();
 }</code></pre>
 
-    <p>Nhưng nếu bạn muốn <em>mutate</em> dữ liệu ở cả hai nơi? Cần thêm <strong>inner mutability</strong> — dùng <code>Mutex</code> và <code>lock()</code>:</p>
+    <p>Tuyệt vời! Bây giờ bạn có thể truy cập dữ liệu trong cả thread chính. Nhưng nếu bạn muốn <em>mutate</em> dữ liệu ở cả hai nơi? Cần thêm <strong>inner mutability</strong> — dùng <code>Mutex</code> và <code>lock()</code>:</p>
 
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">use std::{sync::{Arc, Mutex}, thread::{sleep, spawn}, time::Duration};
 
 fn main() {
+    // Tạo một string trong thread hiện tại
     let data = Arc::new(Mutex::new(String::from("hello")));
 
+    // lock từ thread gốc
     {
         let guard = data.lock().unwrap();
         println!("{guard}");
+        // guard được drop ở đây khi kết thúc scope!
     }
 
     let handle = spawn({
+        // Tạo bản sao của handle, TRAO cho thread mới.
+        // Cả `data` và `new_thread_data` đều trỏ đến
+        // cùng một `Mutex&lt;String&gt;`!
         let new_thread_data = data.clone();
         move || {
             sleep(Duration::from_millis(1000));
             {
                 let mut guard = new_thread_data.lock().unwrap();
+                // chúng ta có thể thay đổi dữ liệu!
                 guard.push_str(" | thread was here! |");
+                // guard được drop ở đây khi kết thúc scope!
             }
         }
     });
 
+    // chờ thread dừng lại
     let _ = handle.join();
     {
         let guard = data.lock().unwrap();
         println!("{guard}");
+        // guard được drop ở đây khi kết thúc scope!
     }
 }</code></pre>
 
-    <p>Tại sao "std" Rust bắt chúng ta làm vậy? Rust giúp chúng ta suy nghĩ về hai điều: đảm bảo dữ liệu tồn tại đủ lâu và đảm bảo chỉ một đoạn mã có thể truy cập thay đổi dữ liệu tại một thời điểm để tránh <strong>data race</strong>.</p>
+    <p>Nếu bạn chạy code này, bạn sẽ thấy:</p>
+
+    <pre><code class="language-text">hello
+hello | thread was here! |
+</code></pre>
+
+    <p>Tại sao "std" Rust bắt chúng ta làm vậy? Rust giúp chúng ta suy nghĩ về hai điều:</p>
+    <ol>
+      <li>Dữ liệu tồn tại đủ lâu (có thể là "mãi mãi"!)</li>
+      <li>Chỉ một đoạn mã có thể truy cập thay đổi dữ liệu tại một thời điểm</li>
+    </ol>
+
+    <p>Nếu Rust cho phép chúng ta truy cập dữ liệu có thể không tồn tại đủ lâu, như dữ liệu được mượn từ một thread sang một thread khác, mọi thứ có thể bị sai. Chúng ta có thể bị corrupt dữ liệu nếu thread gốc kết thúc hoặc panic và sau đó thread thứ hai cố truy cập vào dữ liệu hiện đã không còn hợp lệ. Nếu Rust cho phép hai đoạn mã cố gắng mutate cùng một dữ liệu cùng lúc, chúng ta có thể có một data race, hoặc dữ liệu có thể bị corrupt.</p>
 
     <h3>Trong Embedded Rust: Chia sẻ dữ liệu với một ISR</h3>
-    <p>Trong hệ thống nhúng Rust, chúng ta cũng quan tâm đến những điều tương tự khi chia sẻ dữ liệu với các <strong>ISR</strong>! Tuy nhiên, chúng ta có một số khác biệt quan trọng:</p>
+    <p>Trong hệ thống nhúng Rust, chúng ta cũng quan tâm đến những điều tương tự khi chia sẻ dữ liệu với các <strong>ISR</strong>! Tương tự như threads, interrupt có thể xảy ra bất kỳ lúc nào, giống như một thread thức dậy và truy cập vào một số dữ liệu được chia sẻ. Điều này có nghĩa là dữ liệu chúng ta chia sẻ với interrupt phải tồn tại đủ lâu, và chúng ta phải cẩn thận để đảm bảo code chính của chúng ta không đang trong quá trình làm việc với dữ liệu được chia sẻ với một ISR khi ISR đó chạy và <em>cũng</em> cố gắng làm việc với dữ liệu!</p>
+
+    <p>Trên thực tế, trong Rust nhúng, chúng ta mô hình hóa interrupts theo cách tương tự như chúng ta mô hình hóa threads trong Rust: các quy tắc tương tự áp dụng, vì những lý do tương tự. Tuy nhiên, trong Rust nhúng, chúng ta có một số khác biệt quan trọng:</p>
+
     <ul>
-        <li>Các interrupt không hoạt động hoàn toàn giống như các threads: chúng được thiết lập trước và đợi cho đến khi một sự kiện xảy ra, không có quyền truy cập vào bất kỳ ngữ cảnh (context) nào được truyền vào.</li>
-        <li>Trong hệ thống "bare metal", chúng ta không có <strong>heap allocation</strong>: do đó <code>Arc</code> và các kiểu tương tự là không khả thi.</li>
+      <li><p>Các interrupt không hoạt động hoàn toàn giống như các threads: chúng ta thiết lập chúng trước và chúng đợi cho đến khi một sự kiện xảy ra (như nút bấm được nhấn, hoặc timer hết hạn). Tại thời điểm đó chúng chạy, nhưng không có quyền truy cập vào bất kỳ context nào được truyền vào.</p></li>
+      <li><p>Interrupt có thể được kích hoạt nhiều lần, mỗi lần cho mỗi sự kiện xảy ra.</p></li>
     </ul>
 
-    <p>Vì không thể truyền giá trị và không có heap, chúng ta chỉ còn một nơi duy nhất để đặt dữ liệu dùng chung mà ISR có thể truy cập: các biến <strong>static globals</strong>.</p>
+    <p>Vì chúng ta không thể truyền context cho interrupts như tham số hàm, chúng ta cần tìm một nơi khác để lưu trữ dữ liệu đó. Trong Rust nhúng "bare metal", chúng ta không có heap allocation: do đó <code>Arc</code> và các kiểu tương tự là không khả thi.</p>
+
+    <p>Không có khả năng truyền theo giá trị, và không có heap để lưu trữ dữ liệu, điều đó để lại cho chúng ta một nơi duy nhất để đặt dữ liệu dùng chung mà ISR có thể truy cập: các biến <strong>static</strong> globals.</p>
 
     <h3>Chia sẻ dữ liệu ISR: Phương pháp tiêu chuẩn</h3>
-    <p>Các <strong>global variables</strong> trong Rust có nhiều hạn chế. Việc sử dụng <code>static mut</code> là cực kỳ không an toàn (unsafe) vì nhiều đoạn mã có thể cố gắng cập nhật biến đó cùng lúc. Do đó, chúng ta cần cơ chế <strong>locking</strong>.</p>
 
-    <p><strong>Crate</strong> <code>critical-section</code> cung cấp một loại <code>Mutex</code> phù hợp cho <strong>microcontroller</strong> lõi đơn. Việc đồng bộ hóa được thực hiện đơn giản bằng cách <strong>disable interrupts</strong> trên toàn bộ <strong>critical section</strong> (vùng tới hạn). Điều này đảm bảo rằng không có ISR nào khác (có priority cao hơn) có thể can thiệp trong khi chúng ta đang truy cập dữ liệu.</p>
+    <p>Các biến global là công dân hạng hai trong Rust, với nhiều hạn chế so với biến cục bộ. Bạn có thể khai báo một biến trạng thái global như thế này:</p>
 
-    <p><code>critical_section::Mutex</code> cung cấp sự loại trừ lẫn nhau nhưng bản thân nó không cung cấp khả năng thay đổi. Để dữ liệu có thể thay đổi, bạn cần bảo vệ một kiểu dữ liệu có <strong>inner mutability</strong> — thường là <code>RefCell</code> — bên trong mutex. Bạn không dùng <code>.lock()</code>, thay vào đó bạn dùng <code>critical_section::with</code> để nhận một <strong>token</strong> chứng thực vùng tới hạn, sau đó truyền token đó vào phương thức <code>borrow()</code> của Mutex.</p>
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">static COUNTER: usize = 0;</code></pre>
 
-    <p>Ví dụ đầy đủ (<code>examples/count-once.rs</code>):</p>
+    <p>Tất nhiên, điều này không hữu ích lắm: bạn muốn có thể mutate <code>COUNTER</code>. Bạn có thể viết</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">static mut COUNTER: usize = 0;</code></pre>
+
+    <p>nhưng giờ tất cả các truy cập sẽ là unsafe.</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">unsafe { COUNTER += 1 };</code></pre>
+
+    <p>Sự unsafe ở đây có lý do: hãy tưởng tượng rằng ở giữa quá trình cập nhật <code>COUNTER</code>, một interrupt handler chạy và cũng cố cập nhật <code>COUNTER</code>. Sự hỗn loạn thông thường sẽ xảy ra. Rõ ràng là cần có một số loại locking.</p>
+
+    <p>Crate <code>critical-section</code> cung cấp một loại <code>Mutex</code> với API bất thường và các thao tác bất thường. Khi xem xét <code>Cargo.toml</code> cho chương này, bạn sẽ thấy tính năng <code>critical-section-single-core</code> trên crate <code>cortex-m</code> được bật. Tính năng này khẳng định rằng chỉ có một processor core trong hệ thống này, và do đó đồng bộ hóa có thể được thực hiện bằng cách đơn giản là <em>vô hiệu hóa interrupts</em> trên toàn bộ critical section. Nếu không ở trong interrupt, điều này sẽ đảm bảo rằng chỉ chương trình chính có quyền truy cập vào global. Nếu đang ở trong interrupt, điều này sẽ đảm bảo rằng chương trình chính không thể truy cập vào global (điều khiển chương trình đang ở trong interrupt handler) và không có interrupt handler có priority cao hơn nào có thể kích hoạt.</p>
+
+    <p><code>critical_section::Mutex</code> hơi kỳ lạ ở chỗ nó cung cấp sự loại trừ lẫn nhau nhưng bản thân nó không cung cấp khả năng thay đổi. Để dữ liệu có thể thay đổi, bạn sẽ cần bảo vệ một kiểu dữ liệu có inner mutability — thường là <code>RefCell</code> — với mutex. <code>Mutex</code> này cũng hơi kỳ lạ ở chỗ bạn không dùng <code>.lock()</code>. Thay vào đó, bạn khởi tạo một critical section với một closure nhận "critical section token" chứng nhận rằng việc thực thi chương trình khác bị ngăn chặn. Token này có thể được truyền vào phương thức <code>borrow()</code> của Mutex để cho phép truy cập.</p>
+
+    <p>Kết hợp tất cả lại cho bạn khả năng chia sẻ trạng thái giữa ISR và chương trình chính (<code>examples/count-once.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -351,6 +406,8 @@ use microbit::{
 
 static COUNTER: Mutex&lt;RefCell&lt;usize&gt;&gt; = Mutex::new(RefCell::new(0));
 
+/// "Hàm" này sẽ được gọi khi nhận được interrupt. Bây giờ, chỉ
+/// báo cáo và panic.
 #[interrupt]
 fn GPIOTE() {
     critical_section::with(|cs| {
@@ -367,6 +424,8 @@ fn main() -&gt; ! {
     let board = Board::take().unwrap();
     let button_a = board.buttons.button_a.into_floating_input();
 
+    // Cấu hình GPIOTE để tạo ra interrupt khi Button A được nhấn (GPIO
+    // wire chuyển sang thấp).
     let gpiote = gpiote::Gpiote::new(board.GPIOTE);
     let channel = gpiote.channel0();
     channel
@@ -375,20 +434,26 @@ fn main() -&gt; ! {
         .enable_interrupt();
     channel.reset_events();
 
+    // Cấu hình NVIC để xử lý GPIO interrupts.
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIOTE) };
     pac::NVIC::unpend(pac::Interrupt::GPIOTE);
 
     loop {
+        // "wait for interrupt": CPU vào chế độ ngủ cho đến khi có interrupt.
         asm::wfi();
     }
 }</code></pre>
 
+    <p>Bạn vẫn không thể an toàn return từ ISR, nhưng giờ bạn đã ở vị trí có thể làm điều gì đó về điều đó: chia sẻ <code>GPIOTE</code> với ISR để ISR có thể xóa interrupt.</p>
+
     <h3>Chia sẻ peripheral với biến toàn cục</h3>
-    <p>Một vấn đề khác là các biến toàn cục phải được khởi tạo tĩnh. Tuy nhiên, các peripheral (như <code>GPIOTE</code>) chỉ có sẵn sau khi chương trình đã chạy và được lấy ra từ cấu trúc <code>Board</code>. Chúng ta không thể khởi tạo chúng bằng <code>const</code>.</p>
+    <p>Còn một vấn đề nữa cần giải quyết: các biến toàn cục trong Rust phải được khởi tạo tĩnh — trước khi chương trình bắt đầu. Đối với counter thì dễ — chỉ cần khởi tạo bằng 0. Tuy nhiên, nếu bạn muốn chia sẻ peripheral <code>GPIOTE</code>, điều đó sẽ không hoạt động. Peripheral phải được lấy từ struct <code>Board</code> và thiết lập sau khi chương trình đã bắt đầu: không có <code>const</code> initializer cho điều này (cũng không thể có một cách hợp lý).</p>
 
-    <p>Dùng <code>LockMut</code> từ crate <code>critical-section-lock-mut</code>: khai báo global chưa khởi tạo, khởi tạo trong <code>main</code>, rồi ISR dùng sau. Di chuyển <code>rprintln!</code> ra khỏi ISR vào main loop là thực hành tốt — ISR chạy càng ngắn càng tốt.</p>
+    <p>Hãy viết lại button counter một chút. Trước tiên, chuyển count thực sự thành <code>AtomicUsize</code>. Đây là kiểu tự nhiên hơn cho global này. Tiếp theo, thêm một biến global <code>GPIOTE_PERIPHERAL</code> sử dụng kiểu <code>LockMut</code> từ crate <code>critical-section-lock-mut</code>. Crate này là một wrapper tiện lợi cho pattern của phần trước.</p>
 
-    <p>Ví dụ đầy đủ (<code>examples/count.rs</code>):</p>
+    <p>Giờ chương trình chính có thể thiết lập peripheral GPIOTE và sau đó cung cấp nó cho interrupt handler, bạn có thể thôi panic và để counter tăng lên mỗi lần nhấn nút. Chuyển việc hiển thị count vào main loop, để cho thấy rằng count được chia sẻ giữa interrupt handler và phần còn lại của chương trình.</p>
+
+    <p>Chạy ví dụ này (<code>examples/count.rs</code>) và lưu ý rằng count tăng lên 1 mỗi lần nhấn nút A của MB2.</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -428,6 +493,8 @@ fn main() -&gt; ! {
     let board = Board::take().unwrap();
     let button_a = board.buttons.button_a.into_floating_input();
 
+    // Cấu hình GPIOTE để tạo ra interrupt khi Button A được nhấn (GPIO
+    // wire chuyển sang thấp).
     let gpiote = gpiote::Gpiote::new(board.GPIOTE);
     let channel = gpiote.channel0();
     channel
@@ -437,15 +504,21 @@ fn main() -&gt; ! {
     channel.reset_events();
     GPIOTE_PERIPHERAL.init(gpiote);
 
+    // Cấu hình NVIC để xử lý GPIO interrupts.
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIOTE) };
     pac::NVIC::unpend(pac::Interrupt::GPIOTE);
 
     loop {
+        // "wait for interrupt": CPU vào chế độ ngủ cho đến khi có interrupt.
         asm::wfi();
     }
 }</code></pre>
 
-    <p>Thực tế, <code>rprintln!()</code> trong interrupt handler là thực hành không tốt: trong khi handler đang in, không gì khác có thể tiến triển. Hãy chuyển việc báo cáo ra main loop, ngay sau <code>wfi()</code>. Đếm sẽ được báo cáo mỗi khi interrupt handler kết thúc (<code>examples/count-bounce.rs</code>):</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Luôn luôn là ý hay khi biên dịch các ví dụ liên quan đến interrupt handling với <code>--release</code>. Interrupt handler dài có thể gây ra nhiều nhầm lẫn.</p>
+    </blockquote>
+
+    <p>Thực ra, <code>rprintln!()</code> trong interrupt handler là thực hành không tốt: trong khi interrupt handler đang chạy code in, không gì khác có thể tiến triển. Hãy chuyển việc báo cáo ra main loop, ngay sau <code>wfi()</code> "wait for interrupt". Count sẽ được báo cáo mỗi khi interrupt handler kết thúc (<code>examples/count-bounce.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -487,6 +560,8 @@ fn main() -&gt; ! {
     let board = Board::take().unwrap();
     let button_a = board.buttons.button_a.into_floating_input();
 
+    // Cấu hình GPIOTE để tạo ra interrupt khi Button A được nhấn (GPIO
+    // wire chuyển sang thấp).
     let gpiote = gpiote::Gpiote::new(board.GPIOTE);
     let channel = gpiote.channel0();
     channel
@@ -496,27 +571,29 @@ fn main() -&gt; ! {
     channel.reset_events();
     GPIOTE_PERIPHERAL.init(gpiote);
 
+    // Cấu hình NVIC để xử lý GPIO interrupts.
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIOTE) };
     pac::NVIC::unpend(pac::Interrupt::GPIOTE);
 
     loop {
+        // "wait for interrupt": CPU vào chế độ ngủ cho đến khi có interrupt.
         asm::wfi();
         let count = COUNTER.load(Acquire);
         rprintln!("ouch {}", count);
     }
 }</code></pre>
 
+    <p>Trong ví dụ này, count tăng lên 1 mỗi lần nhấn nút A của MB2. Có thể thôi. Đặc biệt nếu MB2 của bạn đã cũ (!), bạn có thể thấy một lần nhấn tăng counter lên vài đơn vị. <em>Đây không phải là lỗi phần mềm.</em> Phần lớn vậy. Trong phần tiếp theo, tôi sẽ nói về điều gì có thể đang xảy ra và cách chúng ta nên xử lý nó.</p>
+
     <h2>Debouncing — Chống nảy phím</h2>
 
-    <p>Khi nhấn nút vật lý, tiếp điểm kim loại nảy (bounce) nhiều lần trước khi ổn định, mỗi lần nảy tạo ra một interrupt riêng. MCU chạy rất nhanh nên một lần nhấn có thể đếm thành nhiều lần.</p>
+    <p>Như đã đề cập ở phần trước, phần cứng đôi khi hơi... đặc biệt. Điều này chắc chắn đúng với các button trên MB2, và thực sự với hầu hết mọi pushbutton hoặc công tắc trong hầu hết mọi hệ thống. Nếu bạn thấy nhiều interrupt cho một lần nhấn phím duy nhất, đó có thể là kết quả của hiện tượng "switch bouncing" (nảy phím): khi các tiếp điểm điện của công tắc chạm vào nhau, chúng có thể nảy ra và chạm lại vài lần cực nhanh trước khi tạo kết nối ổn định. Thật không may, processor của chúng ta <em>rất nhanh</em> theo tiêu chuẩn cơ khí: mỗi lần nảy tạo ra một interrupt mới.</p>
 
-    <p>Như đã đề cập ở phần trước, phần cứng đôi khi hơi... đặc biệt. Điều này chắc chắn đúng với các button trên MB2. Nếu bạn thấy nhiều interrupt cho một lần nhấn phím duy nhất, đó có thể là kết quả của hiện tượng "switch bouncing" (nảy phím): khi các tiếp điểm điện của công tắc chạm vào nhau, chúng có thể nảy ra và chạm lại vài lần cực nhanh. Processor của chúng ta <em>rất nhanh</em> so với tiêu chuẩn cơ khí — mỗi lần nảy tạo ra một interrupt mới.</p>
+    <p>Để "debounce" công tắc, bạn cần <em>không</em> xử lý interrupt nhấn nút trong một khoảng thời gian ngắn sau khi bạn nhận được interrupt đầu tiên. 50–100ms thường là khoảng debounce tốt. Thời gian debounce có vẻ khó: bạn chắc chắn không muốn spin trong một interrupt handler, nhưng sẽ khó xử lý điều này trong chương trình chính.</p>
 
-    <p>Để debounce, bạn cần <em>không</em> xử lý interrupt nhấn nút trong một khoảng thời gian ngắn sau khi nhận interrupt đầu tiên. 50–100ms là khoảng debounce phù hợp.</p>
+    <p>Giải pháp đến thông qua một dạng concurrency phần cứng khác: peripheral <code>TIMER</code> mà chúng ta đã dùng nhiều lần rồi. Bạn có thể thiết lập timer khi nhận được interrupt nút bấm "tốt", và không phản hồi các interrupt tiếp theo cho nút bấm đó cho đến khi peripheral timer đã đếm đủ thời gian. Các timer trong <code>nrf-hal</code> đến với giá trị đếm 32-bit và "tick rate" là 1 MHz: một triệu tick mỗi giây. Để debounce 100ms, chỉ cần để timer đếm 100,000 tick. Bất cứ khi nào button interrupt handler thấy timer đang chạy, nó có thể chỉ làm gì không cả.</p>
 
-    <p>Giải pháp dùng peripheral <code>TIMER</code>: thiết lập timer khi nhận interrupt "tốt", và bỏ qua mọi interrupt tiếp theo cho đến khi timer đếm xong. Timer trong <code>nrf-hal</code> chạy ở 1 MHz — cho debounce 100ms cần đếm 100,000 tick. Khi interrupt handler thấy timer đang chạy, nó không làm gì cả.</p>
-
-    <p>Triển khai đầy đủ (<code>examples/count-debounce.rs</code>). Khi chạy bạn sẽ thấy mỗi lần nhấn nút chỉ đếm đúng một lần:</p>
+    <p>Việc triển khai tất cả điều này có thể thấy trong ví dụ tiếp theo (<code>examples/count-debounce.rs</code>). Khi bạn chạy ví dụ bạn sẽ thấy mỗi lần nhấn nút chỉ đếm đúng một lần.</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -567,6 +644,8 @@ fn main() -&gt; ! {
     let board = Board::take().unwrap();
     let button_a = board.buttons.button_a.into_floating_input();
 
+    // Cấu hình GPIOTE để tạo ra interrupt khi Button A được nhấn (GPIO
+    // wire chuyển sang thấp).
     let gpiote = gpiote::Gpiote::new(board.GPIOTE);
     let channel = gpiote.channel0();
     channel
@@ -576,16 +655,19 @@ fn main() -&gt; ! {
     channel.reset_events();
     GPIOTE_PERIPHERAL.init(gpiote);
 
+    // Thiết lập debounce timer.
     let mut debounce_timer = hal::Timer::new(board.TIMER0);
     debounce_timer.disable_interrupt();
     debounce_timer.reset_event();
     DEBOUNCE_TIMER.init(debounce_timer);
 
+    // Cấu hình NVIC để xử lý interrupts.
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIOTE) };
     pac::NVIC::unpend(pac::Interrupt::GPIOTE);
 
     let mut cur_count = 0;
     loop {
+        // "wait for interrupt": CPU vào chế độ ngủ cho đến khi có interrupt.
         asm::wfi();
         let count = COUNTER.load(Acquire);
         if count &gt; cur_count {
@@ -595,44 +677,37 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <blockquote><p><strong>Lưu ý:</strong> Các nút trên MB2 hơi khó nhấn — khá dễ nhấn đủ để cảm thấy tiếng "click" nhưng không đủ để tạo tiếp xúc với công tắc. Khuyến nghị dùng móng tay để nhấn nút khi kiểm tra.</p></blockquote>
+    <p><strong>LƯU Ý:</strong> Các nút trên MB2 hơi khó nhấn — khá dễ nhấn đủ để cảm thấy tiếng "click" nhưng không đủ để tạo tiếp xúc với công tắc. Khuyến nghị dùng móng tay để nhấn nút khi kiểm tra.</p>
 
     <h2>Waiting to be interrupted — wfi()</h2>
 
-    <p>Trong vòng lặp chính của chương trình interrupt-driven, thay vì dùng <code>asm::nop()</code> (không làm gì, nhưng vẫn tiêu thụ điện), hãy dùng <code>asm::wfi()</code> (<em>Wait For Interrupt</em>):</p>
-
-    <pre><code class="language-rust">loop {
-    asm::wfi(); // CPU ngủ cho đến khi có interrupt
-}</code></pre>
-
-    <p>Khi CPU ở chế độ WFI, nó ngừng fetch instruction, tắt một số clock và peripheral, vào trạng thái tiết kiệm điện — nhưng vẫn giữ core hoạt động để đánh thức khi có interrupt. Đây là cách tốt nhất để chờ trong embedded programming.</p>
-
-    <p>Nhiều chương trình interrupt-driven đơn giản chỉ có <code>asm::wfi()</code> trong main loop và toàn bộ logic nằm trong interrupt handler.</p>
-
-    <hr/>
-    <p><em>Giải thích kỹ hơn:</em></p>
-
-    <p>Bạn có thể thắc mắc tại sao chúng ta sử dụng <code>asm::wfi()</code> (Wait For Interrupt) trong vòng lặp chính thay vì một cái gì đó như <code>asm::nop()</code>.</p>
+    <p>Bạn có thể thắc mắc tại sao chúng ta sử dụng <code>asm::wfi()</code> (wait for interrupt) trong vòng lặp chính thay vì một cái gì đó như <code>asm::nop()</code>.</p>
 
     <p>Như đã thảo luận trước đây, <code>asm::nop()</code> có nghĩa là "no-op" (không hoạt động), và là một lệnh mà CPU thực thi mà không làm gì cả. Chúng ta hoàn toàn có thể sử dụng <code>asm::nop()</code> trong vòng lặp chính của mình thay thế, và chương trình sẽ hoạt động theo cùng một cách. Tuy nhiên, <strong>microcontroller</strong> sẽ hành xử khác đi.</p>
 
-    <p>Gọi <code>asm::wfi()</code> đưa CPU vào chế độ "Wait For Interrupt". Khi CPU ở chế độ WFI, nó sẽ <strong>ngủ</strong> cho đến khi có interrupt đánh thức nó dậy. Trong khi ngủ, CPU sẽ ngừng <strong>fetch instruction</strong>, tắt một số clock và <strong>peripheral</strong>, và đi vào trạng thái <strong>low power</strong>, nhưng vẫn giữ cho <strong>core</strong> hoạt động. Khi có interrupt xảy ra, CPU sẽ thức dậy và thực thi bình thường.</p>
+    <p>Gọi <code>asm::wfi()</code> đưa CPU vào chế độ "Wait For Interrupt" (WFI). Khi CPU ở chế độ WFI, nó sẽ <strong>ngủ</strong> cho đến khi có interrupt đánh thức nó dậy. Trong khi ngủ, CPU sẽ ngừng <strong>fetch instruction</strong>, tắt một số clock và <strong>peripheral</strong>, và đi vào trạng thái <strong>low power</strong>, nhưng vẫn giữ cho <strong>core</strong> hoạt động. Khi có interrupt xảy ra, CPU sẽ thức dậy và thực thi bình thường.</p>
 
-    <p>Sự khác biệt chính giữa <code>asm::wfi()</code> và <code>asm::nop()</code> là lệnh NOP hoàn thành ngay lập tức và do đó sẽ được chạy lặp đi lặp lại trong vòng lặp. Lệnh NOP vẫn cần được lấy từ bộ nhớ chương trình và được thực thi mặc dù việc thực thi không làm gì cả. Hầu hết các <strong>microcontroller</strong> ngoài kia đều có chế độ <strong>low power</strong> (một số thậm chí có vài chế độ) có thể (và nên được dùng trong nhiều trường hợp) để tiết kiệm điện. Lệnh WFI tạm dừng việc thực thi <em>trong chế độ low power</em> cho đến khi nhận được interrupt.</p>
+    <p>Sự khác biệt chính giữa <code>asm::wfi()</code> và <code>asm::nop()</code> là lệnh NOP hoàn thành ngay lập tức và do đó sẽ được chạy lặp đi lặp lại trong vòng lặp. Lệnh NOP vẫn cần được lấy từ bộ nhớ chương trình và được thực thi mặc dù việc thực thi không làm gì cả. Hầu hết các <strong>microcontroller</strong> ngoài kia đều có chế độ <strong>low power</strong> (một số thậm chí có vài chế độ, mỗi chế độ với những thứ khác nhau vẫn hoạt động và mỗi chế độ với đặc tính tiêu thụ điện khác nhau) có thể (và nên được dùng trong nhiều trường hợp) để tiết kiệm điện. Lệnh WFI tạm dừng việc thực thi <em>trong chế độ low power</em> cho đến khi nhận được interrupt.</p>
 
-    <p>Bạn sẽ tìm thấy một số chương trình điều khiển bằng <strong>interrupt</strong> chỉ bao gồm không có gì ngoài <code>asm::wfi()</code> trong vòng lặp chính, với toàn bộ logic chương trình được triển khai trong các <strong>ISR</strong>.</p>
+    <p>Bạn sẽ tìm thấy một số chương trình interrupt-driven chỉ bao gồm <code>asm::wfi()</code> trong vòng lặp chính, với toàn bộ logic chương trình được triển khai trong các <strong>interrupt handler</strong>.</p>
 
     <h2>MB2 Speaker</h2>
 
-    <p>MB2 có speaker tích hợp — khối đen lớn có nhãn "SPEAKER" ở giữa mặt sau board.</p>
+    <p>MB2 của bạn có một speaker tích hợp — thiết bị hình vuông đen lớn có nhãn "SPEAKER" ở giữa mặt sau của board.</p>
 
-    <p>Speaker hoạt động bằng cách dịch chuyển không khí qua một GPIO pin: khi pin HIGH (3.3V), màng loa (diaphragm) bên trong bị đẩy ra ngoài hoàn toàn; khi pin LOW (GND), màng loa kéo vào trong hoàn toàn. Không khí ra vào qua lỗ hình chữ nhật nhỏ (speaker port) ở cạnh thiết bị. Làm đủ nhanh, sự thay đổi áp suất sẽ tạo ra âm thanh.</p>
+    <p>Speaker hoạt động bằng cách dịch chuyển không khí qua một GPIO pin: khi speaker pin ở mức cao (3.3V), màng loa (diaphragm) bên trong — "speaker cone" — bị đẩy ra ngoài hoàn toàn; khi speaker pin ở mức thấp (GND), nó bị kéo vào trong hoàn toàn. Khi không khí bị đẩy ra và hút vào, nó chảy vào và ra qua lỗ hình chữ nhật nhỏ — "speaker port" — ở cạnh của thiết bị. Làm điều này đủ nhanh, và sự thay đổi áp suất sẽ tạo ra âm thanh.</p>
 
     <p align="center">
-      <img src="assets/speaker.svg" title="Speaker Wiring" class="white_bg" />
+      <img src="assets/speaker.svg" title="Speaker" class="white_bg" height="350" />
     </p>
 
-    <p>Hãy đẩy màng loa ra ngoài rồi vào trong 220 lần mỗi giây. Điều này tạo ra sóng áp suất hình vuông 220 Hz (tức là âm nhạc "A3"), nghe không đến nỗi tệ trên chiếc loa nhỏ này. Chương trình sẽ phát trong 5 giây rồi dừng — quan trọng vì chương trình sống trong flash và sẽ phát lại mỗi khi reset (<code>examples/square-wave.rs</code>):</p>
+    <p>Với phần cứng phù hợp điều khiển nó, speaker cone này thực sự có thể được di chuyển đến bất kỳ vị trí nào trong phạm vi của nó với một dòng điện thích hợp. Điều này sẽ cho phép tái tạo khá tốt bất kỳ âm thanh nào, giống như một speaker "bình thường". Thật không may, những hạn chế trong phần cứng MB2 điều khiển speaker có nghĩa là chỉ có vị trí vào hoàn toàn và ra hoàn toàn mới dễ dàng sử dụng được.</p>
+
+    <p>Hãy đẩy speaker cone ra ngoài rồi vào trong 220 lần mỗi giây. Điều này sẽ tạo ra sóng áp suất hình vuông 220 chu kỳ mỗi giây. Đơn vị "chu kỳ mỗi giây" là Hertz; chúng ta sẽ tạo ra âm 220Hz (âm nhạc "A3"), nghe không đến nỗi tệ trên chiếc loa nhỏ có âm thanh sắc bén này.</p>
+
+    <p>Chúng ta sẽ để âm thanh phát trong năm giây rồi dừng. Điều quan trọng cần nhớ là chương trình của chúng ta sống trong flash trên MB2 — âm thanh sẽ bắt đầu lại mỗi lần chúng ta reset hoặc thậm chí cấp nguồn cho MB2. Nếu chúng ta để âm thanh chạy mãi mãi, hành vi này có thể nhanh chóng trở nên khá khó chịu.</p>
+
+    <p>Đây là code (<code>examples/square-wave.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -649,8 +724,8 @@ use microbit::{
     Board,
 };
 
-/// "Period" là thời gian mỗi chu kỳ.
-/// Bằng 1/f trong đó f là tần số tính bằng Hz.
+/// "Period" là thời gian mỗi chu kỳ. Bằng
+/// 1/f trong đó f là tần số tính bằng Hz.
 /// Ở đây chúng ta đo thời gian bằng milliseconds.
 const PERIOD: u32 = 1000 / 220;
 
@@ -678,23 +753,19 @@ fn main() -&gt; ! {
 
     <h2>Thử thách — Còi hú (Siren)</h2>
 
-    <p>Hãy biến MB2 thành một còi hú! Yêu cầu:</p>
-    <ul>
-      <li>Còi quét tần số từ 440Hz đến 660Hz và ngược lại, hoàn thành một chu kỳ trong 1 giây</li>
-      <li>Còi chạy hoàn toàn bằng interrupt-driven (TIMER0)</li>
-      <li>Main program chạy một countdown 10 giây độc lập, không can thiệp còi</li>
-      <li>Sau countdown, dừng còi và in "launch!"</li>
-    </ul>
+    <p>Hãy biến MB2 thành một còi hú! Nhưng không chỉ là bất kỳ còi hú nào — một còi hú interrupt-driven. Bằng cách đó, chúng ta có thể bật còi hú và phần còn lại của chương trình có thể tiếp tục chạy, bỏ qua nó.</p>
 
-    <p><strong>Gợi ý:</strong> Dùng một struct <code>Siren</code> global được bảo vệ bởi <code>LockMut</code> để sở hữu trạng thái còi và các peripheral cần thiết.</p>
+    <p>Làm cho còi hú của bạn quét âm từ 440Hz đến 660Hz và ngược lại trong một chu kỳ một giây. Chương trình chính nên bắt đầu còi hú, sau đó in đếm ngược mười giây từ 10 đến 1, rồi dừng còi hú và in "launch!". Chương trình chính không nên can thiệp vào còi hú trong thời gian đếm ngược — nó chỉ nên được điều khiển bởi interrupt.</p>
 
-    <p>Đây là một chương trình phức tạp, giới thiệu nhiều ý tưởng mới. Đừng ngạc nhiên nếu bạn cần một chút thời gian để hiểu ra.</p>
+    <p><em>Gợi ý:</em> Tôi thấy dễ nhất là sử dụng một struct <code>Siren</code> global được khóa sở hữu trạng thái của còi hú và các peripheral cần thiết để hoạt động.</p>
+
+    <p>Đây là một chương trình phức tạp, giới thiệu nhiều ý tưởng mới. Đừng ngạc nhiên nếu bạn cần một chút thời gian để tìm ra nó.</p>
 
     <h2>Giải pháp — Còi hú (Siren)</h2>
 
-    <p>Tôi thấy hơi khó để tính toán khi nào interrupt handler nên xác định thời gian interrupt tiếp theo để giữ cho còi tiếp tục hoạt động. Cuối cùng tôi dùng một vài biến trạng thái để theo dõi xem pin loa đang bật hay tắt (thực ra có thể kiểm tra phần cứng) và để theo dõi thời gian hiện tại của còi trong chu kỳ lên-xuống.</p>
+    <p>Tôi thấy hơi khó để tính toán khi nào interrupt handler nên xác định thời gian interrupt tiếp theo để giữ cho còi tiếp tục hoạt động. Cuối cùng tôi dùng một vài biến trạng thái để theo dõi xem speaker pin đang bật hay tắt (thực ra có thể kiểm tra phần cứng) và để theo dõi thời gian hiện tại của còi trong chu kỳ lên-xuống.</p>
 
-    <p>Chi tiết đầy đủ trong <code>src/main.rs</code>.</p>
+    <p>Code của tôi chứa tất cả các chi tiết (<code>src/main.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -723,34 +794,55 @@ const FREQ_RISE: u32 = 220;
 /// Thời gian cho một chu kỳ đầy đủ, tính bằng µs.
 const RISE_TIME: u32 = 500_000;
 
+/// Các kiểu tiện lợi này giúp cuộc sống dễ dàng hơn.
 type SpeakerPin = gpio::Pin&lt;gpio::Output&lt;gpio::PushPull&gt;&gt;;
 type SirenTimer = timer::Timer&lt;pac::TIMER0&gt;;
 
+/// Trạng thái hiện tại của còi hú. Được cập nhật bởi interrupt
+/// handler khi đang chạy.
 struct Siren {
+    /// Timer đang được còi hú sử dụng.
     timer: SirenTimer,
+    /// Speaker pin của MB2. Cần được sở hữu
+    /// ở đây cho interrupt handler.
     speaker_pin: SpeakerPin,
+    /// Speaker pin hiện đang ở mức cao hay thấp?
     pin_high: bool,
+    /// Thời gian tính bằng µs từ đầu chu kỳ còi hú hiện tại.
     cur_time: u32,
 }
 
 impl Siren {
+    /// Tạo còi hú mới với các peripheral đã cho.
     fn new(speaker_pin: SpeakerPin, timer: SirenTimer) -&gt; Self {
-        Self { timer, speaker_pin, pin_high: false, cur_time: 0 }
+        Self {
+            timer,
+            speaker_pin,
+            pin_high: false,
+            cur_time: 0,
+        }
     }
 
+    /// Bắt đầu còi hú chạy.
     fn start(&amp;mut self) {
         self.speaker_pin.set_low().unwrap();
         self.pin_high = false;
         self.cur_time = 0;
         self.timer.enable_interrupt();
+        // Timer interval tính bằng ticks.
+        // Timer [nrf52833_hal] được cố định ở 1M ticks/sec.
         self.timer.start(1_000_000 / BASE_FREQ);
     }
 
+    /// Dừng còi hú.
     fn stop(&amp;mut self) {
         self.timer.disable_interrupt();
     }
 
+    /// Step còi hú đến trạng thái thay đổi speaker hiện tại.
+    /// Thường được gọi từ timer interrupt.
     fn step(&amp;mut self) {
+        // Lật speaker pin.
         if self.pin_high {
             self.speaker_pin.set_low().unwrap();
             self.pin_high = false;
@@ -759,27 +851,37 @@ impl Siren {
             self.pin_high = true;
         }
 
+        // Tính toán chu kỳ tiếp theo. Toán học ở đây hơi đặc biệt.
+
+        // Đầu tiên, wrap sang chu kỳ còi hú tiếp theo nếu cần.
         while self.cur_time &gt;= 2 * RISE_TIME {
             self.cur_time -= 2 * RISE_TIME;
         }
+        // Tiếp theo, tìm ra vị trí chúng ta đang ở trong chu kỳ còi hú hiện tại.
         let cycle_time = if self.cur_time &lt; RISE_TIME {
             self.cur_time
         } else {
             2 * RISE_TIME - self.cur_time
         };
+        // Cuối cùng, tính tần số và chu kỳ.
         let frequency = BASE_FREQ + FREQ_RISE * cycle_time / RISE_TIME;
         let period = 1_000_000 / frequency;
 
+        // Dự đoán thời gian của interrupt tiếp theo.
         self.cur_time += period / 2;
 
-        // Đảm bảo xóa interrupt hiện tại trước khi bắt đầu interrupt tiếp theo.
+        // Đảm bảo xóa interrupt hiện tại trước khi bắt đầu interrupt tiếp theo,
+        // không thì bạn có thể bị interrupt lại ngay lập tức.
         self.timer.reset_event();
         self.timer.start(period / 2);
     }
 }
 
+/// Còi hú. Truy cập được từ cả interrupt handler
+/// và chương trình chính.
 static SIREN: LockMut&lt;Siren&gt; = LockMut::new();
 
+/// Timer interrupt cho còi hú. Chỉ step còi hú.
 #[interrupt]
 fn TIMER0() {
     SIREN.with_lock(|siren| siren.step());
@@ -789,6 +891,12 @@ fn TIMER0() {
 fn main() -&gt; ! {
     rtt_init_print!();
     let board = Board::take().unwrap();
+    // Thuận tiện khi dùng pin đã `degrade()`
+    // để tránh phải xử lý kiểu của speaker pin, thay vì tra cứu nó:
+    // pin được lưu globally trong `SIREN`, vì vậy kích thước của nó phải được biết.
+    //
+    // Điều này làm mất type safety, nhưng điều đó không quan trọng
+    // sau điểm này.
     let speaker_pin = board
         .speaker_pin
         .into_push_pull_output(gpio::Level::Low)
@@ -796,12 +904,15 @@ fn main() -&gt; ! {
     let timer0 = timer::Timer::new(board.TIMER0);
     let mut timer1 = timer::Timer::new(board.TIMER1);
 
+    // Cấu hình NVIC để xử lý interrupts.
     unsafe { pac::NVIC::unmask(pac::Interrupt::TIMER0) };
     pac::NVIC::unpend(pac::Interrupt::TIMER0);
 
+    // Đặt siren struct ở nơi interrupt handler có thể tìm thấy.
     let siren = Siren::new(speaker_pin, timer0);
     SIREN.init(siren);
 
+    // Bắt đầu còi hú và thực hiện đếm ngược.
     SIREN.with_lock(|siren| siren.start());
     for t in (1..=10).rev() {
         rprintln!("{}", t);
@@ -817,15 +928,17 @@ fn main() -&gt; ! {
 
     <h2 id="addendum-pwm">Phụ lục: PWM</h2>
 
-    <p>Việc sử dụng interrupt đôi khi khá "đắt đỏ" về mặt tài nguyên. Processor phải hoàn tất hoặc hủy bỏ lệnh đang chạy hiện tại, lưu trạng thái (context saving), rồi mới gọi ISR. Tất cả điều này tiêu tốn vài chu kỳ CPU quý giá.</p>
+    <p>Một lưu ý cuối cùng trước khi chúng ta tiếp tục.</p>
 
-    <p>Cách thực hiện còi hú ở phần trước cần khoảng hai interrupt cho mỗi chu kỳ output của loa — tức là khoảng 1000 interrupt mỗi giây. Trên processor như nRF52833 điều này vẫn hoạt động tốt.</p>
+    <p>Việc sử dụng interrupt đôi khi khá "đắt đỏ" về mặt tài nguyên. Processor phải hoàn tất hoặc hủy bỏ lệnh đang chạy hiện tại, sau đó lưu đủ trạng thái để khởi động lại việc thực thi, rồi gọi interrupt handler. Tất cả điều này tiêu tốn vài chu kỳ CPU quý giá của runtime.</p>
 
-    <p>Tuy nhiên, nRF52833 có một peripheral có thể giúp giảm đáng kể tần suất interrupt. Đơn vị <strong>Pulse-Width Modulation (PWM)</strong> có thể tự động tạo ra các chu kỳ trên pin loa với tốc độ được kiểm soát bởi một thanh ghi PWM. Chúng ta có thể dùng nó để tạo sóng vuông cơ bản cho còi hú. Chúng ta vẫn cần một interrupt mỗi khi muốn thay đổi tần số, nhưng con số này có lẽ chỉ là 10 interrupt mỗi giây thay vì 1000.</p>
+    <p>Cách thực hiện còi hú ở phần trước được viết theo cách nó sẽ cần hai interrupt cho mỗi chu kỳ output của speaker. Đó là khoảng 1000 interrupt mỗi giây. Trên một processor như nRF52833 của chúng ta, điều này hoạt động tốt.</p>
 
-    <p>Tôi không sử dụng PWM trong giải pháp của mình vì muốn tập trung vào phần interrupt. Một lý do quan trọng khác là đơn vị PWM của nRF52833 khá phức tạp và khó hiểu. Làm cho một thứ gì đó hoạt động theo cách đơn giản trong môi trường bare-metal hạn chế luôn là một lựa chọn hấp dẫn.</p>
+    <p>Tuy nhiên, nRF52833 có một peripheral trên board có thể giảm đáng kể tần suất interrupt của còi hú. Đơn vị Pulse-Width Modulation (PWM) có thể, trong số nhiều thứ khác, tạo ra các chu kỳ trên speaker pin với tốc độ được kiểm soát bởi một PWM register. Điều này có thể được dùng để tạo sóng vuông cơ bản dùng cho còi hú. Chúng ta vẫn cần một interrupt mỗi khi muốn thay đổi tần số, nhưng con số này có thể là khoảng 10 interrupt mỗi giây thay vì 1000.</p>
 
-    <p>Nếu bạn sẵn sàng chấp nhận thử thách, tôi khuyến khích bạn thử sử dụng đơn vị PWM cho chiếc còi hú của mình!</p>
+    <p>Tôi không sử dụng đơn vị PWM trong giải pháp của mình. Một phần là vì tôi muốn tập trung vào phần interrupt. Một lý do lớn khác, tuy nhiên, là đơn vị PWM của nRF52833 khá phức tạp và khó hiểu. Làm cho một thứ gì đó hoạt động theo cách đơn giản trong môi trường bare-metal hạn chế luôn là một lựa chọn hấp dẫn.</p>
+
+    <p>Nếu bạn sẵn sàng chấp nhận thử thách, tôi khuyến khích bạn thử sử dụng đơn vị PWM cho chiếc còi hú của mình.</p>
 
     <div class="nav-buttons">
       <a href="14-punch-o-meter.html" class="nav-btn">← Punch-o-meter</a>

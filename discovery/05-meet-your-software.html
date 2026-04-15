@@ -61,47 +61,78 @@
 
     <h1>Làm quen phần mềm</h1>
 
-    <p>Được rồi, hãy bắt đầu bằng cách xây dựng ứng dụng sau đây. Mục tiêu là làm cho một vòng LED chạy vòng quanh ma trận 5×5:</p>
+    <p>Trong chương này chúng ta sẽ học cách build, run và debug một số chương trình <em>rất</em> đơn giản. Mục tiêu ở đây không phải là đi sâu vào chi tiết của Rust programming trên MB2 (chưa), mà chỉ để làm quen với cơ chế của quá trình đó.</p>
 
-    <p>Tôi sẽ cung cấp cho bạn một API bậc cao (high level) để implement ứng dụng này nhưng đừng lo, chúng ta sẽ làm những thứ bậc thấp (low level) sau. Mục tiêu chính của chương này là làm quen với quá trình flash và debug.</p>
+    <p>Trước tiên, một lưu ý nhanh về các quy ước dùng trong phần còn lại của cuốn sách này. Chúng ta muốn bạn lấy một bản sao toàn bộ cuốn sách với</p>
 
-    <p>Code khởi đầu nằm trong thư mục <code>src</code> của repository sách. Bên trong thư mục đó có nhiều thư mục khác được đặt tên theo từng chương của cuốn sách này. Hầu hết các thư mục đó là những project Cargo khởi đầu.</p>
+    <pre><code class="language-bash">git clone http://github.com/rust-embedded/discovery-mb2
+</code></pre>
 
-    <h2>Embedded Setup</h2>
+    <p>"Source code" của cuốn sách nằm trong <code>discovery-mb2/mdbook/src</code>. Bạn nên vào đó trong bản sao của mình và xem xét một chút. Mỗi thư mục chương có cả văn bản Markdown nguồn <em>lẫn</em> source code đầy đủ cho tất cả các chương trình trong chương đó. Khi chúng ta đề cập đến một đường dẫn như <code>src/main.rs</code>, chúng ta có nghĩa là vị trí đó bắt đầu từ chương bạn đang làm việc. Ví dụ, <code>discovery-mb2</code> của bạn có một file có tên là <code>mdbook/src/05-meet-your-software/examples/init.rs</code>. Chúng ta sẽ gọi file đó chỉ là <code>examples/init.rs</code> trong chương này.</p>
 
-    <p>Bây giờ, hãy vào thư mục <code>src/05-led-roulette</code>. Kiểm tra file <code>src/main.rs</code>:</p>
+    <p>Có hai loại cơ bản của Rust code: chương trình thực thi "binary", và code "library". Code library sẽ không đóng vai trò lớn trong cuốn sách này. Source code của chương trình binary có thể nằm ở một trong nhiều nơi:</p>
 
+    <ul>
+      <li><p>Một chương trình trong <code>src/main.rs</code> sẽ được tự động biên dịch và chạy bởi <code>cargo embed</code> hoặc <code>cargo run</code>. Không cần flags đặc biệt.</p></li>
+      <li><p>Một chương trình trong <code>examples/foo.rs</code> có thể được biên dịch và chạy bằng <code>cargo embed --example foo</code> hoặc <code>cargo run --example foo</code>.</p></li>
+      <li><p>Một chương trình trong <code>src/bin/bar.rs</code> có thể được biên dịch và chạy bằng <code>cargo embed --bin bar</code> hoặc <code>cargo run --bin bar</code>.</p></li>
+    </ul>
+
+    <p>Điều này có vẻ phức tạp, nhưng đây là quy ước chuẩn của Cargo.</p>
+    <p>Bây giờ hãy tiến lên và làm việc với tất cả những điều này.</p>
+
+    <h1>Embedded Setup</h1>
+
+    <p>Hãy xem chương trình đầu tiên cần biên dịch. Kiểm tra file <code>examples/init.rs</code>:</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
 
+use cortex_m::asm;
 use cortex_m_rt::entry;
-use panic_halt as _;
 use microbit as _;
+use panic_halt as _;
 
 #[entry]
 fn main() -&gt; ! {
+    #[allow(clippy::needless_late_init)]
     let _y;
     let x = 42;
     _y = x;
 
     // vòng lặp vô hạn; chỉ để chúng ta không rời khỏi stack frame này
-    loop {}
+    loop {
+        asm::nop();
+    }
 }</code></pre>
 
     <p>Các chương trình microcontroller khác với các chương trình chuẩn ở hai điểm: <code>#![no_std]</code> và <code>#![no_main]</code>.</p>
 
     <p>Thuộc tính <code>no_std</code> nói rằng chương trình này sẽ không dùng crate <code>std</code>, vốn giả định có một OS bên dưới; thay vào đó chương trình sẽ dùng crate <code>core</code>, một tập con của <code>std</code> có thể chạy trên các hệ thống bare metal (nghĩa là hệ thống không có các abstraction của OS như file và socket).</p>
 
-    <p>Thuộc tính <code>no_main</code> nói rằng chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt">cortex-m-rt</a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là "main", nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể trả về (return) – điều này có nghĩa là chương trình không bao giờ kết thúc.</p>
+    <p>Thuộc tính <code>no_main</code> nói rằng chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là <code>main</code>, nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể return. Điều này có nghĩa là chương trình không bao giờ kết thúc bằng cách return từ <code>main</code>: nếu compiler phát hiện điều này có thể xảy ra, nó sẽ từ chối biên dịch chương trình của bạn.</p>
 
-    <p>Nếu để ý kỹ, bạn cũng sẽ thấy có một thư mục <code>.cargo</code> trong project Cargo. Thư mục này chứa file cấu hình Cargo (<code>.cargo/config</code>) tinh chỉnh quá trình link để điều chỉnh bố cục bộ nhớ của chương trình theo yêu cầu của thiết bị đích. Quá trình link được sửa đổi này là yêu cầu của crate <code>cortex-m-rt</code>.</p>
+    <p>Nếu bạn để ý kỹ, bạn cũng sẽ thấy có một thư mục <code>.cargo</code> có thể ẩn trong Cargo project. Thư mục này chứa file cấu hình Cargo <code>.cargo/config.toml</code>.</p>
 
-    <p>Hơn nữa, còn có file <code>Embed.toml</code>:</p>
+    <div class="code-header"><span class="code-lang">toml</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-toml">[build]
+target = "thumbv7em-none-eabihf"
 
+[target.thumbv7em-none-eabihf]
+runner = "probe-rs run --chip nRF52833_xxAA"
+rustflags = [
+  "-C", "linker=rust-lld",
+]</code></pre>
+
+    <p>File này tinh chỉnh quá trình linking để điều chỉnh bố cục bộ nhớ của chương trình theo yêu cầu của thiết bị đích. Quá trình linking được sửa đổi này là yêu cầu của crate <code>cortex-m-rt</code>. File <code>.cargo/config.toml</code> cũng báo cho Cargo cách build và run code trên MB2 của chúng ta.</p>
+
+    <p>Ngoài ra còn có file <code>Embed.toml</code> ở đây:</p>
+
+    <div class="code-header"><span class="code-lang">toml</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-toml">[default.general]
-# chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2
-# chip = "nrf51822_xxAA" # uncomment this line for micro:bit V1
+chip = "nrf52833_xxAA"
 
 [default.reset]
 halt_afterwards = true
@@ -114,146 +145,287 @@ enabled = true</code></pre>
 
     <p>File này báo cho <code>cargo-embed</code> biết rằng:</p>
     <ul>
-      <li>chúng ta đang làm việc với nrf52833 hoặc nrf51822, bạn sẽ lại phải bỏ comment cho chip bạn đang dùng, giống như đã làm ở chương 3.</li>
-      <li>chúng ta muốn dừng (halt) chip sau khi flash xong để chương trình không nhảy ngay vào vòng lặp</li>
-      <li>chúng ta muốn tắt RTT. RTT là giao thức cho phép chip gửi text tới debugger. Thực tế bạn đã thấy RTT hoạt động, nó là giao thức gửi "Hello World" ở chương 3.</li>
-      <li>chúng ta muốn bật GDB, điều này sẽ cần thiết cho quy trình debug</li>
+      <li>Chúng ta đang làm việc với NRF52833.</li>
+      <li>Chúng ta muốn dừng (halt) chip sau khi flash để chương trình dừng trước <code>main</code>.</li>
+      <li>Chúng ta muốn tắt RTT. RTT là giao thức cho phép chip gửi text tới debugger. Bạn đã thấy RTT hoạt động: đó là giao thức đã gửi "Hello World" ở chương 3.</li>
+      <li>Chúng ta muốn bật GDB. Điều này sẽ cần thiết cho quy trình debug.</li>
     </ul>
 
-    <p>Được rồi, hãy bắt đầu bằng cách build chương trình này.</p>
+    <p>Bây giờ chúng ta đã hiểu mọi thứ, hãy bắt đầu bằng cách build chương trình này.</p>
 
-    <h2>Build it</h2>
+    <h1>Build it</h1>
 
-    <p>Bước đầu tiên là build (biên dịch) binary crate mà chúng ta sẽ sớm flash vào microcontroller.</p>
+    <p>Bước đầu tiên là build "binary" crate của chúng ta. Vì microcontroller có kiến trúc khác với máy tính của bạn, chúng ta sẽ phải cross compile. Cross compiling trong Rust đơn giản như việc truyền thêm flag <code>--target</code> vào <code>rustc</code> hoặc Cargo. Phần phức tạp là tìm ra argument của flag đó: <em>tên</em> của target.</p>
 
-    <p>Trong thư mục <code>src/05-led-roulette</code> hãy chạy lệnh <code>cargo build</code>:</p>
+    <p>Như chúng ta đã biết, microcontroller trên micro:bit v2 có processor Cortex-M4F. <code>rustc</code> biết cách cross-compile sang kiến trúc Cortex-M và cung cấp nhiều target khác nhau bao gồm các họ processor khác nhau trong kiến trúc đó:</p>
 
-    <pre><code class="language-bash">$ cargo build
+    <ul>
+      <li><code>thumbv6m-none-eabi</code>, cho các processor Cortex-M0 và Cortex-M1</li>
+      <li><code>thumbv7m-none-eabi</code>, cho processor Cortex-M3</li>
+      <li><code>thumbv7em-none-eabi</code>, cho các processor Cortex-M4 và Cortex-M7</li>
+      <li><code>thumbv7em-none-eabihf</code>, cho các processor Cortex-M4<strong>F</strong> và Cortex-M7<strong>F</strong></li>
+      <li><code>thumbv8m.main-none-eabi</code>, cho các processor Cortex-M33 và Cortex-M35P</li>
+      <li><code>thumbv8m.main-none-eabihf</code>, cho các processor Cortex-M33<strong>F</strong> và Cortex-M35P<strong>F</strong></li>
+    </ul>
+
+    <p>"Thumb" ở đây đề cập đến một phiên bản của instruction set Arm có các instruction nhỏ hơn để giảm kích thước code (đó là một cách chơi chữ). Phần <code>hf</code>/<code>F</code> có tăng tốc phần cứng floating point. Điều này sẽ làm cho các tính toán số học liên quan đến phân số (floating decimal point) nhanh hơn nhiều.</p>
+
+    <p>Đối với micro:bit v2, chúng ta sẽ muốn target <code>thumbv7em-none-eabihf</code>.</p>
+
+    <p>Trước khi cross-compile, bạn phải tải xuống phiên bản pre-compiled của thư viện chuẩn (thực ra là phiên bản rút gọn của nó) cho target của bạn. Điều đó được thực hiện bằng <code>rustup</code>:</p>
+
+    <pre><code class="language-bash">$ rustup target add thumbv7em-none-eabihf</code></pre>
+
+    <p>Bạn chỉ cần thực hiện bước trên một lần; <code>rustup</code> sau đó sẽ cập nhật target này (cài lại component <code>rust-std</code> mới chứa thư viện <code>core</code> mà chúng ta dùng) bất cứ khi nào bạn cập nhật toolchain. Do đó bạn có thể bỏ qua bước này nếu bạn đã thêm target cần thiết khi xác minh thiết lập.</p>
+
+    <p>Với component <code>rust-std</code> đã có, bây giờ bạn có thể cross compile chương trình bằng Cargo. Hãy đảm bảo bạn đang ở trong thư mục <code>mdbook/src/05-meet-your-software</code> trong Git repo, sau đó build. Code khởi đầu này là một example, vì vậy chúng ta biên dịch nó như vậy.</p>
+
+    <pre><code class="language-bash">$ cargo build --example init
    Compiling semver-parser v0.7.0
    Compiling proc-macro2 v1.0.86
    ...
+
     Finished dev [unoptimized + debuginfo] target(s) in 33.67s</code></pre>
 
-    <p>Hãy chắn chắn biên dịch crate này <em>không có tối ưu hóa</em>. File <code>Cargo.toml</code> được cung cấp và lệnh <code>build</code> trên đây sẽ đảm bảo bạn tắt tối ưu hóa, miễn là bạn không truyền flag <code>--release</code> cho cargo.</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Hãy chắc chắn biên dịch crate này <em>không có tối ưu hóa</em>. File <code>Cargo.toml</code> được cung cấp và lệnh build ở trên sẽ đảm bảo tối ưu hóa được tắt miễn là bạn <em>không</em> truyền flag <code>--release</code> cho cargo.</p>
+    </blockquote>
 
-    <h2>Flash it</h2>
+    <p>Được rồi, bây giờ chúng ta đã tạo ra một executable. Executable này sẽ không nhấp nháy bất kỳ LED nào: đây chỉ là một phiên bản đơn giản hóa mà chúng ta sẽ xây dựng dựa trên đó sau trong chương. Để kiểm tra, hãy xác minh rằng executable được tạo ra thực sự là một Arm binary. (Lệnh dưới đây tương đương với</p>
 
-    <p>Flashing là quá trình đưa chương trình của chúng ta vào bộ nhớ (thường là Flash ROM) của microcontroller. Sau khi flash, microcontroller sẽ chạy chương trình đã được nạp mỗi khi bật nguồn.</p>
+    <pre><code class="language-bash">readelf -h ../../../target/thumbv7em-none-eabihf/debug/examples/init</code></pre>
 
-    <p>Lệnh thực thi:</p>
+    <p>trên các hệ thống có <code>readelf</code>.)</p>
 
-    <pre><code class="language-bash">$ cargo embed
-   (...)
-      Erasing sectors ✔ [00:00:00] [####################]  2.00KiB/ 2.00KiB @  4.21KiB/s (eta 0s )
-  Programming pages   ✔ [00:00:00] [####################]  2.00KiB/ 2.00KiB @  2.71KiB/s (eta 0s )
-     Finished flashing in 0.608s</code></pre>
+    <pre><code class="language-bash">$ cargo readobj --example init -- --file-headers
+    Finished dev [unoptimized + debuginfo] target(s) in 0.01s
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Arm
+  Version:                           0x1
+  Entry point address:               0x117
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          793112 (bytes into file)
+  Flags:                             0x5000400
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         21
+  Section header string table index: 19</code></pre>
 
-    <p><strong>LƯU Ý:</strong> <code>cargo embed</code> tự động build project trước khi flash. Bạn không cần chạy <code>cargo build</code> riêng — <code>cargo embed</code> một mình là đủ.</p>
+    <p>Nếu các con số của bạn không khớp chính xác với những con số này, đừng lo lắng: rất nhiều trong số này khá phụ thuộc vào môi trường build hiện tại.</p>
 
-    <p>Bây giờ bạn sẽ thấy công cụ cargo-embed block sau khi in những dòng trên, đó là vì cargo-embed đã mở một GDB stub và bắt đầu chờ kết nối, phần debug của chúng ta có thể bắt đầu.</p>
+    <p>Tiếp theo, chúng ta sẽ flash chương trình vào microcontroller của mình.</p>
 
-    <h2>Debug it</h2>
+    <h1>Flash it</h1>
 
-    <h3>Thứ này hoạt động như thế nào?</h3>
+    <p>Flashing là quá trình đưa chương trình của chúng ta vào bộ nhớ persistent của microcontroller. Sau khi flash, microcontroller sẽ thực thi chương trình đã được flash mỗi khi bật nguồn.</p>
 
-    <p>Trước khi debug, hãy hiểu chuyện gì đang xảy ra. Tùy chọn <code>default.gdb.enabled = true</code> trong <code>Embed.toml</code> khiến <code>cargo-embed</code> mở ra một "GDB stub" sau khi flash. Đây là một server để GDB kết nối tới và gửi các lệnh như "đặt breakpoint tại địa chỉ X". GDB stub của <code>cargo-embed</code> sẽ chuyển lệnh đến debug probe trên mạch thông qua USB, và probe đó sẽ thực chất giao tiếp với MCU cho chúng ta.</p>
+    <p>Chương trình của chúng ta sẽ là <em>chương trình duy nhất</em> trong bộ nhớ microcontroller. Ý tôi là không có gì khác chạy trên microcontroller: không có OS, không có "daemon", không có gì cả. Chương trình của chúng ta có toàn quyền kiểm soát thiết bị.</p>
 
-    <h3>Let's debug!</h3>
+    <p>Flashing binary thực sự khá đơn giản, nhờ <code>cargo embed</code>.</p>
 
-    <p>Vì cargo-embed đang block shell hiện tại, hãy mở một terminal mới và cd lại vào thư mục project. Sau đó, mở binary bằng gdb:</p>
+    <p>Trước khi thực thi lệnh đó, hãy xem xét những gì nó thực sự làm. Nếu bạn nhìn vào cạnh của micro:bit với đầu nối USB quay lên trên, bạn sẽ thấy thực ra có ba hình vuông đen ở đó. Cái lớn nhất là speaker. Cái khác là MCU của chúng ta mà chúng ta đã nói đến... nhưng cái còn lại có mục đích gì? Chip này là <em>một</em> MCU khác, một NRF52820 gần mạnh bằng NRF52833 mà chúng ta sẽ lập trình! Chip này có ba mục đích chính:</p>
 
-    <pre><code class="language-bash"># Cho micro:bit v2
-$ gdb target/thumbv7em-none-eabihf/debug/led-roulette
-# Cho micro:bit v1
-$ gdb target/thumbv6m-none-eabi/debug/led-roulette</code></pre>
+    <ol>
+      <li>Cho phép kiểm soát nguồn điện và reset của MCU NRF52833 từ đầu nối USB.</li>
+      <li>Cung cấp cầu nối serial to USB cho MCU của chúng ta.</li>
+      <li>Cung cấp interface để lập trình và debug NRF52833 của chúng ta (đây là mục đích liên quan đến hiện tại).</li>
+    </ol>
 
-    <p><strong>LƯU Ý:</strong> Tùy thuộc vào GDB bạn cài, bạn có thể phải dùng lệnh khác để khởi chạy (ví dụ <code>arm-none-eabi-gdb</code>). Hãy xem lại chương 3 nếu bạn quên. Nếu bị lỗi <code>No such file or directory</code>, thử thêm <code>../../</code> vào đường dẫn (vì đây là một cargo workspace).</p>
+    <p>Chip này hoạt động như một cầu nối giữa máy tính của chúng ta (được kết nối với nó qua USB) và MCU (được kết nối với nó qua các dây dẫn và giao tiếp bằng giao thức SWD). Cầu nối này cho phép chúng ta flash binary mới vào MCU, kiểm tra trạng thái chương trình qua debugger và thực hiện các thứ hữu ích khác.</p>
 
-    <p>Kết nối tới GDB stub (chạy ở localhost:1337):</p>
+    <p>Vậy hãy flash nó!</p>
+
+    <pre><code class="language-bash">$ cargo embed --example init
+  (...)
+     Erasing sectors ✔ [00:00:00] [####################################################################################################################################################]  2.00KiB/ 2.00KiB @  4.21KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [####################################################################################################################################################]  2.00KiB/ 2.00KiB @  2.71KiB/s (eta 0s )
+    Finished flashing in 0.608s</code></pre>
+
+    <p>Bạn sẽ thấy <code>cargo-embed</code> không thoát sau khi in dòng cuối cùng. Điều này là có chủ ý: bạn không nên đóng <code>cargo-embed</code>, vì chúng ta cần nó ở trạng thái này cho bước tiếp theo — debug nó! Hơn nữa, bạn sẽ nhận thấy rằng <code>cargo build</code> và <code>cargo embed</code> thực sự được truyền các flags giống nhau. Đó là vì <code>cargo embed</code> thực sự thực thi build và sau đó flash binary kết quả lên chip. Điều này có nghĩa là bạn có thể bỏ qua bước <code>cargo build</code> trong tương lai nếu bạn muốn flash code ngay lập tức.</p>
+
+    <h1>Debug it</h1>
+
+    <p>Hãy tìm hiểu cách debug chương trình nhỏ của chúng ta. Thực ra nó chưa có bất kỳ lỗi thú vị nào, nhưng đó là loại chương trình tốt nhất để học debug.</p>
+
+    <h2>Thứ này hoạt động như thế nào?</h2>
+
+    <p>Trước khi debug chương trình, hãy dành một chút thời gian để nhanh chóng hiểu những gì thực sự đang xảy ra. Trong chương trước, chúng ta đã thảo luận về mục đích của chip thứ hai trên board, cũng như cách nó giao tiếp với máy tính của chúng ta, nhưng làm thế nào chúng ta thực sự có thể sử dụng nó?</p>
+
+    <p>Tùy chọn nhỏ <code>default.gdb.enabled = true</code> trong <code>Embed.toml</code> khiến <code>cargo embed</code> mở một "GDB stub" sau khi flash. Đây là một server để GDB của chúng ta kết nối tới và gửi các lệnh như "đặt breakpoint tại địa chỉ X". Server sau đó có thể quyết định theo cách riêng của nó cách xử lý lệnh này. Trong trường hợp của GDB stub của <code>cargo embed</code>, nó sẽ chuyển lệnh qua USB đến "debugging probe" trên chip thứ hai. Chip này làm việc giao tiếp với MCU cho chúng ta.</p>
+
+    <h2>Let's debug!</h2>
+
+    <p><code>cargo-embed</code> đang chạy trong shell hiện tại của chúng ta. Chúng ta có thể mở một shell mới và quay lại thư mục project. Khi đã ở đó, trước tiên chúng ta phải mở binary trong gdb như thế này:</p>
+
+    <pre><code class="language-bash">$ gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init</code></pre>
+
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Tùy thuộc vào GDB bạn cài, bạn sẽ phải dùng lệnh khác để khởi chạy. Xem lại <a href="03-setup.html">chương 3</a> nếu bạn quên lệnh đó là gì.</p>
+    </blockquote>
+
+    <p><code>../../..</code> trong lệnh này là cần thiết, vì mỗi example project nằm trong một "workspace" chứa toàn bộ cuốn sách. Workspace có một thư mục <code>target</code> dùng chung. Xem thêm <a href="https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html#creating-a-workspace">Workspaces chapter trong Rust Book</a>.</p>
+
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Nếu <code>cargo-embed</code> in ra nhiều warnings ở đây đừng lo lắng. Hiện tại nó chưa triển khai đầy đủ giao thức GDB, và vì vậy có thể không nhận ra tất cả các lệnh mà GDB của bạn đang gửi. Miễn là GDB không crash, bạn ổn.</p>
+    </blockquote>
+
+    <p>Tiếp theo chúng ta sẽ phải kết nối với GDB stub. Nó chạy trên <code>localhost:1337</code> theo mặc định, vì vậy để kết nối với nó hãy chạy lệnh sau:</p>
 
     <pre><code class="language-gdb">(gdb) target remote :1337
 Remote debugging using :1337
-...</code></pre>
+0x00000116 in nrf52833_pac::{{impl}}::fmt (self=0xd472e165, f=0x3c195ff7) at /home/nix/.cargo/registry/src/github.com-1ecc6299db9ec823/nrf52833-pac-0.9.0/src/lib.rs:157
+157     #[derive(Copy, Clone, Debug)]</code></pre>
 
-    <p>Tiếp theo, để nhảy đến hàm main của chương trình, chúng ta đặt một breakpoint và chạy (continue):</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Ví dụ trong repository cho chương này có thể thay đổi theo thời gian. Số dòng và các chi tiết source khác vì vậy có thể khác với những gì được hiển thị ở đây và bên dưới.</p>
+      <p>Nếu chương trình không dừng (halt) sau khi khởi động và bạn đặt chân vào một chỗ sâu hơn trong chương trình như sau, hãy thử chạy <code>monitor reset halt</code> để reset. Điều này là do <a href="https://github.com/probe-rs/probe-rs/issues/3438">một bug</a> trong <code>probe-rs</code>, xem <a href="https://github.com/rust-embedded/discovery-mb2/issues/27">issue #27</a> để biết thêm chi tiết.</p>
+      <pre><code class="language-gdb">(gdb) target remote :1337
+Remote debugging using :1337
+init::__cortex_m_rt_main () at mdbook/src/05-meet-your-software/examples/init.rs:19
+19              asm::nop();
+(gdb) monitor reset halt
+Resetting and halting target
+Target halted</code></pre>
+    </blockquote>
+
+    <p>Tiếp theo, chúng ta muốn đến hàm <code>main</code> của chương trình. Chúng ta sẽ làm điều này bằng cách đặt breakpoint ở đó trước rồi tiếp tục thực thi chương trình cho đến khi chạm breakpoint:</p>
 
     <pre><code class="language-gdb">(gdb) break main
-Breakpoint 1 at 0x104: file src/05-led-roulette/src/main.rs, line 9.
+Breakpoint 1 at 0x104: file src/05-meet-your-software/examples/init.rs, line 9.
+Note: automatically using hardware breakpoints for read-only addresses.
 (gdb) continue
 Continuing.
-Breakpoint 1, led_roulette::__cortex_m_rt_main_trampoline () at src/05-led-roulette/src/main.rs:9
+
+Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-software/examples/init.rs:9
 9       #[entry]</code></pre>
 
-    <p>Để có trải nghiệm debug tốt hơn, chúng ta dùng giao diện TUI của GDB:</p>
+    <p>Breakpoints có thể được dùng để dừng luồng thực thi bình thường của chương trình. Lệnh <code>continue</code> sẽ để chương trình chạy tự do <em>cho đến khi</em> nó chạm đến breakpoint. Trong trường hợp này, cho đến khi nó chạm đến hàm <code>main</code> vì có breakpoint ở đó.</p>
+
+    <p>Lưu ý GDB output nói "Breakpoint 1". Hãy nhớ rằng processor của chúng ta chỉ có thể dùng một số lượng hạn chế các breakpoint này, vì vậy nên chú ý đến các thông báo này. Nếu hết breakpoint, bạn có thể liệt kê tất cả các breakpoint hiện tại bằng <code>info break</code> và xóa breakpoint mong muốn bằng <code>delete &lt;breakpoint-num&gt;</code>.</p>
+
+    <p>Để có trải nghiệm debug tốt hơn, chúng ta sẽ dùng Text User Interface (TUI) của GDB. Để vào chế độ đó, trên shell GDB nhập lệnh sau:</p>
 
     <pre><code class="language-gdb">(gdb) layout src</code></pre>
 
-    <p><strong>LƯU Ý:</strong> Người dùng Windows xin lỗi vì GNU ARM Embedded Toolchain trên Windows không hỗ trợ chế độ TUI này.</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Xin lỗi người dùng Windows. GDB đi kèm với GNU Arm Embedded Toolchain không hỗ trợ chế độ TUI này <code>:-(</code>.</p>
+    </blockquote>
 
-    <p>Lệnh <code>break</code> không chỉ dùng với tên hàm, mà còn có thể ngắt theo số dòng. Nếu muốn ngắt ở dòng 13:</p>
+    <p><img src="assets/gdb-layout-src.png" title="GDB TUI" alt="GDB session" /></p>
+
+    <p>Lệnh <code>break</code> của GDB không chỉ hoạt động với tên hàm: nó cũng có thể ngắt tại các số dòng nhất định. Nếu chúng ta muốn ngắt ở dòng 13, chúng ta có thể đơn giản làm:</p>
 
     <pre><code class="language-gdb">(gdb) break 13
-(gdb) continue</code></pre>
+Breakpoint 2 at 0x110: file src/05-meet-your-software/examples/init.rs, line 13.
+(gdb) continue
+Continuing.
 
-    <p>Bạn đang dừng tại câu lệnh <code>_y = x</code>. Hãy xem các biến này:</p>
+Breakpoint 2, init::__cortex_m_rt_main () at src/05-meet-your-software/examples/init.rs:13
+(gdb)</code></pre>
+
+    <p>Bất cứ lúc nào bạn có thể thoát khỏi chế độ TUI bằng lệnh sau:</p>
+
+    <pre><code class="language-gdb">(gdb) tui disable</code></pre>
+
+    <p>Bây giờ chúng ta đang "ở" câu lệnh <code>_y = x</code>; câu lệnh đó chưa được thực thi. Điều này có nghĩa là <code>x</code> đã được khởi tạo nhưng <code>_y</code> có thể chứa bất cứ thứ gì. Hãy kiểm tra <code>x</code> bằng lệnh <code>print</code>:</p>
 
     <pre><code class="language-gdb">(gdb) print x
 $1 = 42
 (gdb) print &amp;x
-$2 = (*mut i32) 0x20003fe8</code></pre>
+$2 = (*mut i32) 0x20003fe8
+(gdb)</code></pre>
 
-    <p>Dùng lệnh <code>next</code> để chạy câu lệnh tiếp theo, sau đó in ra biến <code>_y</code>:</p>
+    <p>Như mong đợi, <code>x</code> chứa giá trị <code>42</code>. Lệnh <code>print &amp;x</code> in địa chỉ của biến <code>x</code>. Điểm thú vị ở đây là GDB output hiển thị kiểu của reference: <code>*mut i32</code>, một pointer đến giá trị <code>i32</code> có thể thay đổi.</p>
+
+    <p>Nếu chúng ta muốn tiếp tục thực thi chương trình từng dòng một, chúng ta có thể làm điều đó bằng lệnh <code>next</code>. Hãy tiến đến câu lệnh <code>loop {}</code>:</p>
 
     <pre><code class="language-gdb">(gdb) next
-16          loop {}
-(gdb) print _y
+16          loop {}</code></pre>
+
+    <p>Và <code>_y</code> bây giờ nên được khởi tạo.</p>
+
+    <pre><code class="language-gdb">(gdb) print _y
 $5 = 42</code></pre>
 
-    <p>Lệnh <code>info locals</code> cho thấy tất cả biến cục bộ trong frame hiện tại:</p>
+    <p>Thay vì in các biến cục bộ từng cái một, bạn cũng có thể dùng lệnh <code>info locals</code>:</p>
 
     <pre><code class="language-gdb">(gdb) info locals
 x = 42
-_y = 42</code></pre>
+_y = 42
+(gdb)</code></pre>
 
-    <p>Nếu bạn tò mò về những gì xảy ra ở cấp độ máy, lệnh <code>disassemble /m</code> hiển thị assembly code xen kẽ với source code. Dấu <code>=&gt;</code> chỉ ra instruction hiện tại đang được thực thi:</p>
+    <p>Nếu chúng ta dùng <code>next</code> một lần nữa ở trên câu lệnh <code>loop {}</code>, chúng ta sẽ bị kẹt vì chương trình sẽ không bao giờ vượt qua câu lệnh đó. Thay vào đó, chúng ta sẽ chuyển sang chế độ xem disassemble bằng lệnh <code>layout asm</code> và tiến từng instruction một bằng <code>stepi</code>. Bạn luôn có thể chuyển lại chế độ xem Rust source code sau bằng cách dùng lại lệnh <code>layout src</code>.</p>
+
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Nếu bạn dùng lệnh <code>next</code> hoặc <code>continue</code> nhầm và GDB bị kẹt, bạn có thể thoát khỏi bằng cách nhấn <code>Ctrl+C</code>.</p>
+    </blockquote>
+
+    <pre><code class="language-gdb">(gdb) layout asm</code></pre>
+
+    <p><img src="assets/gdb-layout-asm.png" title="GDB disassemble" alt="GDB session" /></p>
+
+    <p>Nếu bạn không ở trong chế độ TUI, bạn có thể dùng lệnh <code>disassemble /m</code> để disassemble chương trình xung quanh dòng bạn đang ở hiện tại.</p>
 
     <pre><code class="language-gdb">(gdb) disassemble /m
-Dump of assembler code for function led_roulette::__cortex_m_rt_main:
-8       fn main() -&gt; ! {
-   0x00000100 &lt;+0&gt;:     sub     sp, #8
-   0x00000102 &lt;+2&gt;:     movs    r0, #42 ; 0x2a
+Dump of assembler code for function _ZN12init18__cortex_m_rt_main17h3e25e3afbec4e196E:
+10      fn main() -&gt; ! {
+   0x0000010a &lt;+0&gt;:     sub     sp, #8
+   0x0000010c &lt;+2&gt;:     movs    r0, #42 ; 0x2a
 
-9           let _y;
-10          let x = 42;
-   0x00000104 &lt;+4&gt;:     str     r0, [sp, #4]
+11          let _y;
+12          let x = 42;
+   0x0000010e &lt;+4&gt;:     str     r0, [sp, #0]
 
-11          _y = x;
-   0x00000106 &lt;+6&gt;:     str     r0, [sp, #0]
+13          _y = x;
+   0x00000110 &lt;+6&gt;:     str     r0, [sp, #4]
 
-12
-13          // vòng lặp vô hạn; chỉ để chúng ta không rời khỏi stack frame này
-14          loop {}
-=&gt; 0x00000108 &lt;+8&gt;:     b.n     0x108 &lt;led_roulette::__cortex_m_rt_main+8&gt;
+14
+15          // infinite loop; just so we don't leave this stack frame
+16          loop {}
+=&gt; 0x00000112 &lt;+8&gt;:     b.n     0x114 &lt;_ZN12init18__cortex_m_rt_main17h3e25e3afbec4e196E+10&gt;
+   0x00000114 &lt;+10&gt;:    b.n     0x114 &lt;_ZN12init18__cortex_m_rt_main17h3e25e3afbec4e196E+10&gt;
 
 End of assembler dump.</code></pre>
 
-    <p>Bạn cũng có thể dùng lệnh <code>stepi</code> để tiến từng machine instruction một (thay vì từng dòng source code):</p>
+    <p>Thấy mũi tên béo <code>=&gt;</code> ở bên trái không? Nó cho thấy instruction mà processor sẽ thực thi tiếp theo.</p>
+
+    <p>Nếu không ở trong chế độ TUI, trên mỗi lệnh <code>stepi</code>, GDB sẽ in câu lệnh và số dòng của instruction mà processor sẽ thực thi tiếp theo.</p>
 
     <pre><code class="language-gdb">(gdb) stepi
-0x00000102 in led_roulette::__cortex_m_rt_main () at src/05-led-roulette/src/main.rs:10
-10          let x = 42;</code></pre>
+16          loop {}
+(gdb) stepi
+16          loop {}</code></pre>
 
-    <p>Khi muốn reset board về trạng thái ban đầu mà không cần flash lại, dùng lệnh <code>monitor reset halt</code>:</p>
+    <p>Một mẹo cuối trước khi chúng ta chuyển sang thứ thú vị hơn. Nhập các lệnh sau vào GDB:</p>
 
-    <pre><code class="language-gdb">(gdb) monitor reset halt
-target halted due to debug-request, current mode: Thread
-xPSR: 0x01000000 pc: 0x00000100 msp: 0x20004000</code></pre>
+    <pre><code class="language-gdb">(gdb) monitor reset
+(gdb) c
+Continuing.
+
+Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-software/src/main.rs:9
+9       #[entry]
+(gdb)</code></pre>
+
+    <p>Bây giờ chúng ta đã quay lại đầu <code>main</code>!</p>
+
+    <p><code>monitor reset</code> sẽ reset microcontroller và dừng nó ngay tại entry point của chương trình. Lệnh <code>continue</code> tiếp theo sẽ để chương trình chạy tự do cho đến khi nó chạm đến hàm <code>main</code> có breakpoint trên đó.</p>
+
+    <p>Combo này tiện dụng khi bạn, do nhầm lẫn, bỏ qua một phần của chương trình mà bạn muốn kiểm tra. Bạn có thể dễ dàng khôi phục trạng thái chương trình về đầu.</p>
 
     <blockquote>
-      <p><strong>LƯU Ý:</strong> <code>monitor reset</code> <em>không</em> xóa RAM. Nghĩa là các biến cục bộ (như <code>x</code> và <code>_y</code>) vẫn còn trong RAM cho đến khi bị ghi đè. Nếu bạn đọc một biến ngay sau khi reset (trước khi chương trình chạy đến dòng gán), bạn có thể thấy giá trị từ lần chạy trước.</p>
+      <p><strong>Lưu ý kỹ:</strong> Lệnh <code>reset</code> này không xóa hay chạm đến RAM. Bộ nhớ đó sẽ giữ các giá trị từ lần chạy trước. Tuy nhiên điều đó sẽ không thành vấn đề, trừ khi hành vi chương trình của bạn phụ thuộc vào giá trị của các biến <em>chưa được khởi tạo</em> — nhưng đó chính là định nghĩa của Undefined Behavior (UB).</p>
     </blockquote>
 
-    <p>Khi xong phiên debug, dùng lệnh <code>quit</code> để thoát GDB. Nếu được hỏi "A debugging session is active ... Quit anyway? (y or n)", nhập <code>y</code>:</p>
+    <p>Chúng ta đã xong với phiên debug này. Bạn có thể kết thúc nó bằng lệnh <code>quit</code>.</p>
 
     <pre><code class="language-gdb">(gdb) quit
 A debugging session is active.
@@ -261,17 +433,33 @@ A debugging session is active.
         Inferior 1 [Remote target] will be detached.
 
 Quit anyway? (y or n) y
-Detaching from program: target/thumbv7em-none-eabihf/debug/led-roulette, Remote target
-Ending remote debugging.</code></pre>
+Detaching from program: $PWD/target/thumbv7em-none-eabihf/debug/meet-your-software, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]</code></pre>
 
-    <h2>Light it up</h2>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Nếu GDB CLI mặc định không phù hợp với ý thích của bạn, hãy xem <a href="https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard">gdb-dashboard</a>. Nó dùng Python để biến GDB CLI mặc định thành một dashboard hiển thị các register, chế độ xem source, chế độ xem assembly và các thứ khác.</p>
+    </blockquote>
 
-    <p>Bây giờ bạn đã biết cách debug, hãy thực sự làm một điều gì đó thú vị với board. Hãy bật một LED!</p>
+    <p>Nếu bạn muốn tìm hiểu thêm về những gì GDB có thể làm, hãy xem phần <a href="appendix-gdb.html">Cách dùng GDB</a>.</p>
 
-    <p>Ma trận LED 5×5 trên mặt sau micro:bit không dùng 25 chân riêng biệt để điều khiển 25 LED. Thay vào đó, nó dùng kiến trúc hàng-cột (row-column): chỉ cần 10 chân (5 hàng + 5 cột) để điều khiển toàn bộ ma trận. Mỗi LED nằm tại giao điểm của một hàng và một cột. Để bật LED đó, chúng ta kéo chân hàng lên HIGH và chân cột xuống LOW.</p>
+    <p>Tiếp theo là gì? API bậc cao mà tôi đã hứa.</p>
 
-    <p>Để làm điều này, chúng ta dùng trait <code>OutputPin</code> từ crate <code>embedded-hal</code>:</p>
+    <h1>Light it up</h1>
 
+    <p>Chúng ta sẽ kết thúc chương này bằng cách làm một trong nhiều LED trên MB2 sáng lên. Để hoàn thành nhiệm vụ này, chúng ta sẽ dùng một trong các trait được cung cấp bởi <code>embedded-hal</code>, cụ thể là trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/digital/v2/trait.OutputPin.html"><code>OutputPin</code></a> cho phép chúng ta bật hoặc tắt một pin.</p>
+
+    <h2>LED của micro:bit</h2>
+
+    <p>Ở mặt sau của micro:bit, bạn có thể thấy một hình vuông 5x5 của các LED, thường gọi là LED matrix. Thiết kế matrix này được sử dụng để thay vì phải dùng 25 chân riêng biệt để điều khiển từng LED một, chúng ta chỉ cần dùng 10 (5+5) chân để kiểm soát cột và hàng nào của ma trận sáng lên.</p>
+
+    <p>Hiện tại chúng ta sẽ dùng crate <code>microbit-v2</code> để thao tác các LED. Trong <a href="06-hello-world.html">chương tiếp theo</a> chúng ta sẽ đi qua chi tiết tất cả các tùy chọn có sẵn.</p>
+
+    <h2>Thực sự bật sáng!</h2>
+
+    <p>Code cần thiết để bật LED trong ma trận thực ra khá đơn giản nhưng cần một chút thiết lập. Trước tiên hãy xem <code>src/main.rs</code>; sau đó chúng ta có thể đi qua từng bước.</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
 #![no_std]
@@ -282,7 +470,7 @@ use microbit::board::Board;
 use panic_halt as _;
 
 #[entry]
-fn main() -> ! {
+fn main() -&gt; ! {
     let mut board = Board::take().unwrap();
 
     board.display_pins.col1.set_low().unwrap();
@@ -293,9 +481,34 @@ fn main() -> ! {
     }
 }</code></pre>
 
-    <p>Ở đây, <code>Board::take()</code> lấy quyền sở hữu toàn bộ peripherals của board từ PAC crate bên dưới. Pattern <code>take()</code> đảm bảo chỉ có một owner — nếu bạn gọi nó lần thứ hai trong cùng chương trình, nó sẽ panic. Đây là cách Rust đảm bảo không ai khác có thể can thiệp vào hardware khi bạn đang dùng.</p>
+    <p>Vài dòng đầu cho đến hàm <code>main</code> chỉ thực hiện một số import và setup cơ bản mà chúng ta đã xem xét hầu hết. Tuy nhiên, hàm <code>main</code> trông khá khác so với những gì chúng ta đã thấy cho đến nay.</p>
 
-    <p>Nạp firmware lên board bằng <code>cargo embed</code> rồi kết nối GDB và gõ <code>continue</code> — LED ở góc trên-trái của ma trận sẽ sáng lên.</p>
+    <p>Dòng đầu tiên liên quan đến cách hầu hết các HAL được viết bằng Rust hoạt động bên trong. Như đã thảo luận trước đây, chúng được xây dựng trên các PAC crate sở hữu (theo nghĩa Rust) tất cả các peripheral của chip. Khi chúng ta nói</p>
+
+    <pre><code class="language-rust">let mut board = Board::take().unwrap();</code></pre>
+
+    <p>Chúng ta lấy tất cả các peripheral này từ PAC và bind chúng vào một biến. Trong trường hợp cụ thể này, chúng ta không chỉ làm việc với HAL mà với toàn bộ BSP, vì vậy điều này cũng lấy quyền sở hữu Rust representation của các chip khác trên board.</p>
+
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Nếu bạn thắc mắc tại sao chúng ta phải gọi <code>unwrap()</code> ở đây, về lý thuyết <code>take()</code> có thể được gọi nhiều hơn một lần. Điều này sẽ dẫn đến việc các peripheral được đại diện bởi hai biến riêng biệt và do đó có nhiều hành vi khó hiểu vì hai biến thay đổi cùng một resource. Để tránh điều này, PAC được triển khai theo cách sẽ panic nếu bạn cố lấy peripheral hai lần.</p>
+    </blockquote>
+
+    <p>(Một lần nữa, nếu bạn bị nhầm lẫn bởi tất cả những điều này, <a href="06-hello-world.html">chương tiếp theo</a> sẽ đi qua tất cả một lần nữa với nhiều chi tiết hơn.)</p>
+
+    <p>Bây giờ chúng ta có thể bật LED được kết nối với <code>row1</code>, <code>col1</code> bằng cách đặt pin <code>row1</code> ở mức cao (tức là bật nó lên). Lý do chúng ta có thể để <code>col1</code> ở mức thấp là do cách mạch LED matrix hoạt động. Hơn nữa, <code>embedded-hal</code> được thiết kế theo cách mà mọi thao tác trên phần cứng đều có thể return lỗi, kể cả chỉ toggle pin on hoặc off. Vì điều đó khó có thể xảy ra trong trường hợp của chúng ta, chúng ta có thể <code>unwrap()</code> kết quả.</p>
+
+    <h2>Kiểm tra</h2>
+
+    <p>Kiểm tra chương trình nhỏ của chúng ta khá đơn giản. Chúng ta chạy <code>cargo embed</code> và để nó flash như trước. Sau đó mở GDB và kết nối với GDB stub.</p>
+
+    <pre><code class="language-gdb">$ gdb ../../../target/thumbv7em-none-eabihf/debug/meet-your-software
+(gdb) target remote :1337
+Remote debugging using :1337
+cortex_m_rt::Reset () at /home/nix/.cargo/registry/src/github.com-1ecc6299db9ec823/cortex-m-rt-0.6.12/src/lib.rs:489
+489     pub unsafe extern "C" fn Reset() -&gt; ! {
+(gdb)</code></pre>
+
+    <p>Bây giờ chúng ta để chương trình chạy qua lệnh <code>continue</code> của GDB: một trong các LED ở mặt trước của micro:bit sẽ sáng lên.</p>
 
     <div class="nav-buttons">
       <a href="04-meet-your-hardware.html" class="nav-btn">← Phần cứng</a>

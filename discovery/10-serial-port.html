@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serial Communication - Discovery MB2 Tiếng Việt</title>
+<title>Serial Port - Discovery MB2 Tiếng Việt</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
@@ -55,173 +55,125 @@
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Serial Communication</span>
+    <span class="current">Serial Port</span>
   </div>
   <main id="main">
 
-    <h1>Serial Communication</h1>
+    <h1>Serial Port</h1>
 
-    <p align="center">
-      <a href="https://en.wikipedia.org/wiki/File:Serial_port.jpg">
-        <img title="Standard serial port connector DE-9" src="assets/Serial_port.jpg" height="240">
-      </a>
-    </p>
+    <p>Thứ gần nhất với một chuẩn I/O phổ quát cho các board embedded hiện đại là "serial port". Hầu hết mọi microcontroller đều có cách để một vài pin của nó hoạt động như một serial port, và hầu hết mọi board microcontroller đều làm cho các pin này dễ dàng truy cập. MB2 cũng không ngoại lệ.</p>
 
-    <p>Đây là thứ chúng ta sẽ dùng. Hy vọng máy tính của bạn có một cái!</p>
+    <p>Trong chương này, chúng ta sẽ mô tả serial port là gì. Sau đó chúng ta sẽ chỉ bạn cách cài đặt máy tính với "virtual serial port" qua USB và dùng virtual port đó với "terminal software" để nói chuyện với serial port trên MB2.</p>
 
-    <p>Đùa thôi, đừng lo. Đầu nối này, DE-9, đã lỗi thời trên PC từ khá lâu rồi; nó đã bị thay thế bởi Universal Serial Bus (USB). Chúng ta sẽ không làm việc với bản thân đầu nối DE-9 mà là với giao thức truyền thông mà cáp này thường được dùng.</p>
+    <p>Vậy <a href="https://en.wikipedia.org/wiki/Serial_port">serial port</a> là gì? Đó là nơi hai thiết bị trao đổi dữ liệu từng bit một (<em>serially</em>) sử dụng một đường dữ liệu theo mỗi hướng (<em>full-duplex</em>) cộng thêm đường ground chung. Serial port xuất phát từ "RS-232": xem phần lịch sử ở phần sau của chương này để biết chi tiết. Tuy nhiên, giao thức được dùng trên các đường transmit và receive không có tên chính thức — nó chỉ được gọi là "serial" hoặc có thể là "async serial" hoặc "UART serial".</p>
 
-    <p>Vậy <a href="https://en.wikipedia.org/wiki/Asynchronous_serial_communication">serial communication</a> là gì? Đó là một giao thức truyền thông bất đồng bộ (asynchronous) trong đó hai thiết bị trao đổi dữ liệu theo kiểu nối tiếp (serial), tức là từng bit một, sử dụng hai đường dữ liệu (cộng thêm đường ground chung). Giao thức này bất đồng bộ theo nghĩa là không có đường nào trong các đường chia sẻ mang tín hiệu clock. Thay vào đó, cả hai bên phải thỏa thuận trước về tốc độ gửi dữ liệu trên đường dây trước khi giao tiếp diễn ra. Một thiết bị (UART) gửi các bit ở tốc độ được chỉ định trên đường truyền (output) của nó, và đợi bit bắt đầu (start bit) trên đường nhận (input) của nó.</p>
+    <p>Để rõ ràng: hầu hết các kênh giao tiếp trong máy tính hiện đại đều là serial. USB ("Universal Serial Bus") là một kênh serial; I2C (mà chúng ta sẽ nói đến sau) là một kênh serial. Chương này và chương tiếp theo <em>không</em> nói về khái niệm chung của serial communication: các chương này nói về một thứ cụ thể được gọi là "serial port" có implementation và lịch sử riêng của nó.</p>
+
+    <p>Serial port communication là <em>asynchronous</em> theo nghĩa là không có đường chia sẻ nào mang tín hiệu clock. Thay vào đó, cả hai bên phải đồng ý trước về tốc độ gửi dữ liệu trên dây <em>trước khi</em> giao tiếp xảy ra. Một peripheral gọi là Universal Asynchronous Receiver/Transmitter (UART) gửi các bit ở tốc độ được chỉ định trên dây output, và theo dõi sự bắt đầu của các bit trên dây input.</p>
 
     <p align="center">
       <img class="white_bg" height="100" title="Serial Protocol" src="assets/serial-proto.svg" />
     </p>
 
-    <p>Giao thức này cho phép truyền thông song công (duplex) vì dữ liệu có thể được gửi từ A sang B và từ B sang A đồng thời.</p>
+    <p>Giao thức serial-port hoạt động với các frame, mỗi frame mang một byte dữ liệu. Mỗi frame có một <em>start</em> bit, 5 đến 9 bit payload (gửi theo thứ tự lsb-to-msb; các ứng dụng hiện đại hiếm khi gửi byte 9-bit; 7 hoặc ít hơn bit trong một frame sẽ được left-padded thành byte 8-bit với zero) và 1 đến 2 <em>stop bit</em>. Trong sơ đồ trên, ký tự ASCII 'E' được gửi dùng 8 data bits và 1 stop bit.</p>
 
-    <p>Chúng ta sẽ dùng giao thức này để trao đổi dữ liệu giữa microcontroller và máy tính của bạn. Bây giờ bạn có thể tự hỏi tại sao chúng ta không dùng RTT cho việc này như trước. RTT là giao thức được thiết kế chỉ dành cho debugging. Bạn gần như chắc chắn sẽ không tìm thấy thiết bị nào thực sự dùng RTT để giao tiếp với thiết bị khác trong sản xuất. Tuy nhiên, serial communication được dùng khá thường xuyên. Ví dụ, một số GPS receiver gửi thông tin định vị mà chúng nhận được thông qua serial communication. Hơn nữa, RTT, giống như nhiều giao thức debugging khác, khá chậm so với tốc độ truyền tải của serial.</p>
+    <p>Tốc độ của giao thức được gọi là <em>baud rate</em> và được tính bằng bits per second (bps). Các baud rate phổ biến trong lịch sử cho UART serial là 9600bps, 19200bps và 115200bps, nhưng trong thế giới hiện đại không hiếm khi gửi dữ liệu ở 921,600bps.</p>
+
+    <p>Với cấu hình "thông thường" gồm 1 start bit, 8 bit dữ liệu, 1 stop bit và bit rate 921.6K bps, chúng ta có thể gửi và nhận 92.16K byte mỗi giây — đủ nhanh để truyền âm thanh CD đơn kênh không nén. Ở bit rate 115,200 bps mà chúng ta sẽ dùng, chúng ta có thể gửi và nhận 11.52K byte mỗi giây. Điều này là đủ cho hầu hết các mục đích.</p>
+
+    <p>Chúng ta sẽ dùng serial port (gián tiếp) để trao đổi dữ liệu giữa MB2 và máy tính của bạn. Bây giờ bạn có thể tự hỏi: tại sao chúng ta không dùng RTT cho việc này như trước? RTT là giao thức được thiết kế chỉ dành cho debugging. Bạn sẽ không tìm thấy thiết bị dùng RTT để giao tiếp với thiết bị khác. Tuy nhiên, serial communication được dùng khá thường xuyên. Ví dụ, một số GPS receiver gửi thông tin định vị qua serial. Ngoài ra RTT, giống như nhiều giao thức debugging, khá chậm so với tốc độ truyền serial.</p>
 
     <p align="center">
       <img class="white_bg" height="500" title="Serial" src="assets/serial.svg" />
     </p>
 
-    <p>Câu hỏi thực tế tiếp theo bạn có lẽ muốn hỏi là: Chúng ta có thể gửi dữ liệu qua giao thức này nhanh đến mức nào?</p>
+    <p>Máy tính ngày nay thường không có serial port, và ngay cả khi có, mức điện áp chúng dùng (+5V trên serial port hiện đại, ±12V trên RS-232 cổ) nằm ngoài giới hạn chịu đựng của phần cứng MB2 và có thể gây hỏng hóc. <em>Bạn không thể kết nối trực tiếp máy tính với microcontroller.</em></p>
 
-    <p>Giao thức này hoạt động với các frame. Mỗi frame có một start bit, 5 đến 9 bit payload (dữ liệu) và 1 đến 2 stop bit. Tốc độ của giao thức được gọi là baud rate và được đo bằng bits per second (bps). Các baud rate phổ biến là: 9600, 19200, 38400, 57600 và 115200 bps.</p>
-
-    <table>
-      <caption>Cấu trúc một frame UART (cấu hình 8N1 phổ biến nhất)</caption>
-      <thead>
-        <tr><th>Phần</th><th>Số bit</th><th>Mô tả</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Start bit</td><td>1</td><td>Luôn là logic 0 — báo hiệu bắt đầu frame</td></tr>
-        <tr><td>Data bits</td><td>5–9 (thường là 8)</td><td>Dữ liệu, gửi theo thứ tự LSB trước</td></tr>
-        <tr><td>Parity bit</td><td>0 hoặc 1 (tùy chọn)</td><td>Kiểm tra lỗi (thường bỏ qua — "N")</td></tr>
-        <tr><td>Stop bit(s)</td><td>1 hoặc 2</td><td>Luôn là logic 1 — báo hiệu kết thúc frame</td></tr>
-      </tbody>
-    </table>
-
-    <p>Để thực sự trả lời câu hỏi: Với cấu hình phổ biến gồm 1 start bit, 8 bit dữ liệu, 1 stop bit và baud rate 115200 bps, về lý thuyết có thể gửi 11.520 frame mỗi giây. Vì mỗi frame mang một byte dữ liệu, kết quả là tốc độ dữ liệu 11.52 KB/s. Trong thực tế, tốc độ dữ liệu có thể sẽ thấp hơn do thời gian xử lý ở phía chậm hơn của giao tiếp (microcontroller).</p>
-
-    <table>
-      <caption>Baud rate phổ biến và thông lượng tương ứng (8N1)</caption>
-      <thead>
-        <tr><th>Baud rate (bps)</th><th>Thông lượng lý thuyết</th><th>Ứng dụng điển hình</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>9600</td><td>~960 B/s</td><td>GPS, cảm biến cũ</td></tr>
-        <tr><td>19200</td><td>~1.9 KB/s</td><td>Cảm biến công nghiệp</td></tr>
-        <tr><td>38400</td><td>~3.8 KB/s</td><td>–</td></tr>
-        <tr><td>57600</td><td>~5.6 KB/s</td><td>–</td></tr>
-        <tr><td>115200</td><td>~11.5 KB/s</td><td>Debug console, module Bluetooth</td></tr>
-      </tbody>
-    </table>
-
-    <p>Máy tính ngày nay thường không có cổng serial, và ngay cả khi có, mức điện áp chúng dùng (+5V trên cổng serial hiện đại, ±12V trên cổng RS-232 cổ) nằm ngoài giới hạn chịu đựng của phần cứng MB2 và có thể gây hỏng hóc. <em>Vì vậy bạn không thể kết nối trực tiếp máy tính với microcontroller.</em></p>
-
-    <p align="center">
-      <a href="https://en.wikipedia.org/wiki/File:UART_to_USB_adapter.jpg">
+    <a href="https://en.wikipedia.org/wiki/File:UART_to_USB_adapter.jpg">
+      <p align="center">
         <img height="240" title="UART To USB Adapter" src="assets/UART_to_USB_adapter.jpg" />
-      </a>
-    </p>
+      </p>
+    </a>
 
-    <p>May mắn cho chúng ta, debug probe trên micro:bit có một bộ chuyển đổi gọi là USB-to-serial converter. Điều này có nghĩa là bộ chuyển đổi sẽ nằm giữa hai thiết bị và cung cấp giao diện serial cho microcontroller và giao diện USB cho máy tính. Microcontroller sẽ thấy máy tính của bạn như một thiết bị serial khác và máy tính sẽ thấy microcontroller như một thiết bị serial ảo.</p>
+    <p>Bạn <em>có thể</em> mua bộ chuyển đổi USB↔serial rẻ (thường dưới 5 USD) hỗ trợ các đầu vào +3.3V của hầu hết các board microcontroller hiện đại. Board hiển thị ở trên là một loại phổ biến tôi dùng thường xuyên. Chúng ta sẽ nói chuyện với serial port của MB2 qua cổng USB tích hợp của MB2. Tuy nhiên, nếu bạn muốn kết nối trực tiếp với hardware serial port, trên MB2 hay board khác, bộ chuyển đổi serial là cách để làm.</p>
 
-    <p>Bây giờ, hãy làm quen với serial module và các công cụ serial communication mà hệ điều hành của bạn cung cấp. Chọn đường đi phù hợp:</p>
+    <p>Một kênh USB riêng trên cổng USB của MB2 có thể được dùng để nói chuyện với bộ chuyển đổi USB↔serial tích hợp của MB2. (Đây là đường bên phải trong hình trên.) Sự chuyển đổi USB↔serial này được implement bằng "communications microcontroller" của MB2: communications microcontroller cung cấp giao diện serial cho microcontroller và giao diện USB serial ảo cho máy tính. Máy tính hiển thị virtual serial interface qua lớp thiết bị USB CDC-ACM ("Communications Device Class - Abstract Control Model"). Microcontroller của MB2 sẽ thấy máy tính như một thiết bị kết nối với hardware serial port của nó; máy tính sẽ thấy serial port của MB2 như một virtual serial device.</p>
 
-    <h2>Công cụ trên *nix (Linux/macOS)</h2>
-
-    <h3>Kết nối board micro:bit</h3>
-    <p>Nếu bạn kết nối board micro:bit vào máy tính, bạn sẽ thấy một thiết bị TTY mới xuất hiện trong <code>/dev</code>.</p>
-
-    <pre><code class="language-bash">$ # Linux
-$ dmesg | grep -i tty
-[63712.446286] cdc_acm 1-1.7:1.1: ttyACM0: USB ACM device</code></pre>
-
-    <p>Đây là thiết bị USB ↔ Serial. Trên Linux, nó có tên <code>tty*</code> (thường là <code>ttyACM*</code> hoặc <code>ttyUSB*</code>). Trên Mac OS, <code>ls /dev/cu.usbmodem*</code> sẽ hiển thị thiết bị serial.</p>
-
-    <p>Nhưng chính xác <code>ttyACM0</code> là gì? Tất nhiên là một file! Mọi thứ đều là file trong *nix:</p>
-
-    <pre><code class="language-bash">$ ls -l /dev/ttyACM0
-crw-rw----. 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0</code></pre>
-
-    <p>Group của file là <code>plugdev</code>. Để truy cập thiết bị serial mà không cần <code>sudo</code>, bạn cần thêm mình vào group <code>plugdev</code> (trên các distro Debian/Ubuntu) hoặc <code>dialout</code> (trên Fedora/RHEL):</p>
-
-    <pre><code class="language-bash">$ # Debian/Ubuntu
-$ sudo usermod -aG plugdev $USER
-
-$ # Fedora/RHEL
-$ sudo usermod -aG dialout $USER</code></pre>
-
-    <p><strong>LƯU Ý:</strong> Bạn cần đăng xuất và đăng nhập lại để thay đổi group có hiệu lực.</p>
-
-    <p>Bạn có thể gửi dữ liệu bằng cách đơn giản ghi vào file này:</p>
-
-    <pre><code class="language-bash">$ echo 'Hello, world!' > /dev/ttyACM0</code></pre>
-
-    <p>Bạn sẽ thấy LED màu cam trên micro:bit, ngay cạnh cổng USB, nhấp nháy một chút mỗi khi bạn nhập lệnh này.</p>
-
-    <h3>minicom</h3>
-
-    <p>Chúng ta sẽ dùng chương trình <code>minicom</code> để tương tác với thiết bị serial bằng bàn phím.</p>
-
-    <p>Chúng ta cần cấu hình minicom trước khi dùng. Có khá nhiều cách để làm điều đó nhưng chúng ta sẽ dùng file <code>.minirc.dfl</code> trong thư mục home. Tạo file <code>~/.minirc.dfl</code> với nội dung sau:</p>
-
-    <pre><code class="language-text">$ cat ~/.minirc.dfl
-pu baudrate 115200
-pu bits 8
-pu parity N
-pu stopbits 1
-pu rtscts No
-pu xonxoff No</code></pre>
-
-    <p><strong>LƯU Ý:</strong> Đảm bảo file này kết thúc bằng dòng mới (newline)! Nếu không, minicom sẽ không đọc được nó.</p>
-
-    <p>File đó khá dễ hiểu (trừ hai dòng cuối), nhưng hãy đi qua từng dòng:</p>
+    <p>Bây giờ, hãy làm quen với giao diện USB serial port mà OS của bạn cung cấp. Chọn đường đi phù hợp:</p>
     <ul>
-      <li><code>pu baudrate 115200</code>. Đặt baud rate thành 115200 bps.</li>
-      <li><code>pu bits 8</code>. 8 bit mỗi frame.</li>
-      <li><code>pu parity N</code>. Không kiểm tra parity.</li>
-      <li><code>pu stopbits 1</code>. 1 stop bit.</li>
-      <li><code>pu rtscts No</code>. Không dùng hardware control flow.</li>
-      <li><code>pu xonxoff No</code>. Không dùng software control flow.</li>
+      <li><a href="#linux">Linux/UNIX</a></li>
+      <li><a href="#windows">Windows</a></li>
     </ul>
+    <p>Đối với MacOS, hãy xem tài liệu Linux, mặc dù trải nghiệm của bạn có thể hơi khác.</p>
 
-    <p>Khi đã sẵn sàng, chúng ta có thể khởi động minicom.</p>
+    <h1 id="linux">Linux USB↔serial tooling</h1>
 
-    <pre><code class="language-bash">$ # LƯU Ý: bạn có thể cần dùng thiết bị khác ở đây
-$ minicom -D /dev/ttyACM0 -b 115200</code></pre>
+    <p>Virtual serial device của MB2 qua USB sẽ xuất hiện trên Linux khi bạn kết nối MB2 vào cổng USB Linux.</p>
 
-    <p>Lệnh này nói cho minicom mở thiết bị serial tại <code>/dev/ttyACM0</code> và đặt baud rate thành 115200. Một giao diện người dùng dạng văn bản (TUI) sẽ xuất hiện.</p>
+    <h2>Kết nối board MB2</h2>
+
+    <p>Nếu bạn kết nối board MB2 vào máy tính, bạn sẽ thấy một thiết bị TTY mới xuất hiện trong <code>/dev</code>.</p>
+
+    <pre><code class="language-console">$ sudo dmesg -T | tail | grep -i tty
+[63712.446286] cdc_acm 1-1.7:1.1: ttyACM0: USB ACM device
+</code></pre>
+
+    <p>Đây là thiết bị USB↔serial. Trên Linux, nó có tên <code>tty</code> (viết tắt của "TeleTYpe"). Nó sẽ xuất hiện là <code>ttyACM0</code>, hoặc có thể <code>ttyUSB0</code>. Nếu có các thiết bị "ACM" khác đang cắm vào, số sẽ cao hơn. (Trên Mac OS, <code>ls /dev/cu.usbmodem*</code> sẽ hiển thị thiết bị serial.)</p>
+
+    <p>Nhưng chính xác <code>ttyACM0</code> là gì? Tất nhiên là một file! Mọi thứ đều là file trong Unix:</p>
+
+    <pre><code class="language-console">$ ls -l /dev/ttyACM0
+crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
+</code></pre>
+
+    <p>Lưu ý rằng bạn cần phải chạy với quyền <code>root</code> (không khuyến khích) hoặc là thành viên của group xuất hiện trong output của <code>ls</code> (thường là <code>plugdev</code> hoặc <code>dialout</code>) để đọc và ghi thiết bị này. Sau đó bạn có thể gửi dữ liệu đơn giản bằng cách ghi vào file này:</p>
+
+    <pre><code class="language-console">$ echo 'Hello, world!' &gt; /dev/ttyACM0
+</code></pre>
+
+    <p>Bạn sẽ thấy LED màu cam trên MB2, ngay cạnh cổng USB, nhấp nháy một chút mỗi khi bạn nhập lệnh này. Baud rate và các thông số serial khác có thể chưa được cài đúng cho serial port của MB2, nhưng MB2 có thể nhận biết được rằng nó đang được gửi serial.</p>
+
+    <h2>minicom</h2>
+
+    <p>Chúng ta sẽ dùng chương trình <code>minicom</code> để tương tác với thiết bị serial bằng bàn phím. Chúng ta sẽ dùng các cài đặt mặc định của <code>minicom</code> hiện đại: 115200 bps, 8 data bits, 1 stop bit, không parity bits, không flow control. (115200 bps là tốc độ hoạt động với MB2.)</p>
+
+    <pre><code class="language-console">$ minicom -D /dev/ttyACM0
+</code></pre>
+
+    <p>Lệnh này nói cho <code>minicom</code> mở thiết bị serial tại <code>/dev/ttyACM0</code>. Một giao diện người dùng dạng văn bản (TUI) sẽ xuất hiện.</p>
 
     <p align="center">
       <img title="minicom" src="assets/minicom.png" style="max-width:100%">
     </p>
 
-    <p>Bây giờ bạn có thể gửi dữ liệu bằng bàn phím! Hãy thử gõ gì đó. Lưu ý rằng giao diện sẽ không hiển thị lại (echo) những gì bạn gõ. Tuy nhiên, nếu bạn chú ý đến LED vàng phía trên micro:bit, bạn sẽ thấy nó nhấp nháy mỗi khi bạn gõ.</p>
+    <p>Bây giờ bạn có thể gửi dữ liệu bằng bàn phím! Hãy thử gõ gì đó. Lưu ý rằng TUI sẽ <em>không</em> echo lại những gì bạn gõ. Tuy nhiên, nếu bạn chú ý đến LED vàng phía trên MB2, bạn sẽ thấy nó nhấp nháy mỗi khi bạn gõ.</p>
 
-    <h4>Các lệnh minicom</h4>
-    <p><code>minicom</code> cung cấp các lệnh thông qua phím tắt. Trên Linux, các phím tắt bắt đầu bằng <code>Ctrl+A</code>. Trên Mac, các phím tắt bắt đầu bằng phím <code>Meta</code>. Một số lệnh hữu ích:</p>
+    <h2>Các lệnh minicom</h2>
+
+    <p><code>minicom</code> cung cấp các lệnh thông qua phím tắt. Trên Linux, các phím tắt bắt đầu bằng <code>Ctrl+A</code>. (Trên Mac, các phím tắt bắt đầu bằng phím <code>Meta</code>.) Một số lệnh hữu ích:</p>
     <ul>
-      <li><code>Ctrl+A</code> + <code>Z</code>: Tóm tắt các lệnh Minicom</li>
-      <li><code>Ctrl+A</code> + <code>C</code>: Xóa màn hình</li>
-      <li><code>Ctrl+A</code> + <code>X</code>: Thoát và reset</li>
-      <li><code>Ctrl+A</code> + <code>Q</code>: Thoát mà không reset</li>
+      <li><code>Ctrl+A</code> + <code>Z</code>. Tóm tắt lệnh Minicom</li>
+      <li><code>Ctrl+A</code> + <code>C</code>. Xóa màn hình</li>
+      <li><code>Ctrl+A</code> + <code>X</code>. Thoát và reset</li>
+      <li><code>Ctrl+A</code> + <code>Q</code>. Thoát mà không reset</li>
     </ul>
-    <p><strong>LƯU Ý</strong> cho người dùng Mac: Trong các lệnh trên, thay <code>Ctrl+A</code> bằng <code>Meta</code>.</p>
 
-    <h2>Công cụ trên Windows</h2>
+    <blockquote>
+      <p><strong>LƯU Ý</strong> cho người dùng Mac: Trong các lệnh trên, thay <code>Ctrl+A</code> bằng <code>Meta</code>.</p>
+    </blockquote>
+
+    <h1 id="windows">Windows tooling</h1>
 
     <p>Bắt đầu bằng cách rút micro:bit ra.</p>
 
     <p>Trước khi cắm micro:bit, chạy lệnh sau trên terminal:</p>
 
-    <pre><code class="language-bash">$ mode</code></pre>
+    <pre><code class="language-console">$ mode
+</code></pre>
 
-    <p>Nó sẽ in ra danh sách các thiết bị đang kết nối với máy tính. Những thiết bị có tên bắt đầu bằng <code>COM</code> là thiết bị serial. Đây là loại thiết bị chúng ta sẽ làm việc. Ghi lại tất cả các cổng COM mà <code>mode</code> hiển thị trước khi cắm serial module.</p>
+    <p>Nó sẽ in ra danh sách các thiết bị đang kết nối với máy tính. Những thiết bị có tên bắt đầu bằng <code>COM</code> là thiết bị serial. Đây là loại thiết bị chúng ta sẽ làm việc. Ghi lại tất cả các cổng <code>COM</code> mà <code>mode</code> hiển thị <em>trước khi</em> cắm serial module.</p>
 
-    <p>Bây giờ, cắm micro:bit vào và chạy lệnh <code>mode</code> lần nữa. Nếu bạn thấy một cổng <code>COM</code> mới xuất hiện trong danh sách, thì đó là cổng COM được gán cho chức năng serial trên micro:bit.</p>
+    <p>Bây giờ, cắm micro:bit vào và chạy lệnh <code>mode</code> lần nữa. Nếu bạn thấy một cổng <code>COM</code> mới xuất hiện trong danh sách, thì đó là cổng COM được gán cho chức năng serial trên MB2.</p>
 
     <p>Bây giờ khởi động <code>putty</code>. Một giao diện đồ họa sẽ xuất hiện.</p>
 
@@ -246,25 +198,37 @@ $ minicom -D /dev/ttyACM0 -b 115200</code></pre>
       <img title="PuTTY console" src="assets/putty-console.png" style="max-width:100%">
     </p>
 
-    <p>Nếu bạn gõ trên console này, LED vàng phía trên micro:bit sẽ nhấp nháy. Mỗi phím bấm sẽ làm LED nhấp nháy một lần. Lưu ý rằng console sẽ không hiển thị lại những gì bạn gõ nên màn hình sẽ vẫn trống.</p>
+    <p>Nếu bạn gõ trên console này, LED vàng phía trên MB2 sẽ nhấp nháy. Mỗi phím bấm sẽ làm LED nhấp nháy một lần. Lưu ý rằng console sẽ không hiển thị lại những gì bạn gõ nên màn hình sẽ vẫn trống.</p>
 
-    <h2>RS-232 — Lịch sử (tùy chọn)</h2>
+    <h1>RS-232</h1>
 
-    <p>Đây là phần tùy chọn, nhưng sẽ hữu ích khi bạn nói chuyện với người khác về serial communication.</p>
+    <h2>RS-232</h2>
 
-    <p>RS-232 (Revised Standard 232) ra đời khoảng năm 1960, là chuẩn serial port lâu đời nhất. Nó được thiết kế để kết nối modem (Data Communications Equipment — DCE) với terminal (Data Terminal Equipment — DTE), mỗi chiều một dây.</p>
+    <p>Đây chắc chắn là phần tùy chọn, nhưng bạn có thể thấy hữu ích khi biết những điều này khi nói chuyện với người khác về serial trong tương lai.</p>
 
-    <p>RS-232 ban đầu dùng đầu nối 25 chân với mức điện áp kỳ lạ: <strong>-12V cho logic cao, +12V cho logic thấp</strong> — tiêu chuẩn của ngành điện thoại cũ. Tốc độ truyền ban đầu từ 300 đến 9600 bps, phù hợp với modem thời đó.</p>
+    <p>Các cổng serial chuẩn sớm nhất tôi biết là vào khoảng năm 1960, khi một chuẩn gọi là <a href="https://en.wikipedia.org/wiki/RS-232">RS-232</a> ra đời (Revised Standard 232; dường như không có phiên bản "chưa được sửa đổi" của chuẩn này). RS-232 là cách để kết nối Data Communications Equipment (DCE; một MODEM) với Data Terminal Equipment (DTE; một terminal) sử dụng một dây để gửi dữ liệu theo mỗi hướng. Các tốc độ dữ liệu có thể điều chỉnh: thường dùng tốc độ của MODEM khi có kết nối, vì vậy tốc độ RS-232 "chuẩn" cũng là tốc độ MODEM "chuẩn" — 300bps, 600bps, 1200bps, 2400bps, 9600bps, v.v.</p>
 
-    <p align="center">
-      <a href="https://en.wikipedia.org/wiki/File:DB-25_male.jpg">
-        <img height="240" title="DB-25 male connector" src="assets/DB-25_male.jpg" />
-      </a>
-    </p>
+    <p>RS-232 cũng hỗ trợ một số dây khác để thực hiện "handshaking" phần cứng (mỗi đầu có thể báo hiệu rằng nó không nhận dữ liệu ngay bây giờ vì đang bận) và các chức năng điện thoại. RS-232 dùng đầu nối "D" 25 chân; điện áp tín hiệu là -12V cho high và +12V cho low, chuẩn điện thoại cũ.</p>
 
-    <p>Qua nhiều năm, chuẩn được đơn giản hóa: IBM PC AT đưa vào dùng đầu nối 9 chân (DE-9), điện áp giảm về 0V/+5V và 0V/+3.3V, và cuối cùng chỉ còn 3 dây cần thiết: TX (transmit), RX (receive), và GND.</p>
+    <a href="https://commons.wikimedia.org/wiki/File:DB-25_male.jpg">
+      <p align="center">
+        <img height="240" title="Standard serial port connector DB-25" src="assets/DB-25_male.jpg" />
+      </p>
+    </a>
 
-    <p>USB cuối cùng thay thế RS-232 trên máy tính tiêu dùng. Để dễ dàng chuyển đổi, Microsoft thiết kế lớp thiết bị USB CDC-ACM (Communications Device Class - Abstract Control Model) để tương thích ngược với modem RS-232. Đó là lý do tại sao khi bạn cắm micro:bit vào máy tính, nó hiện ra như một thiết bị <code>ttyACM*</code> hoặc <code>COM*</code> — một cổng serial ảo qua USB.</p>
+    <p>Khi máy tính tham gia, RS-232 trở nên bất tiện. Máy tính lớn thường được nối như DCE để nói chuyện với terminal, máy tính nhỏ thường được nối DTE để nói chuyện với modem.</p>
+
+    <p>IBM-PC AT phổ biến hóa phiên bản đầu nối 9 chân nhỏ hơn (DE-9, thường được gọi là DB-9) của cổng RS-232.</p>
+
+    <a href="https://commons.wikimedia.org/wiki/File:Serial_port.jpg">
+      <p align="center">
+        <img height="240" title="Standard serial port connector DE-9" src="assets/Serial_port.jpg" />
+      </p>
+    </a>
+
+    <p>Cuối cùng, người ta thường bỏ hầu hết hoặc tất cả các dây out-of-band trên serial port, thu gọn chúng thành giao diện 3 dây (transmit-receive-ground). Cũng trở nên phổ biến là dùng 0V/+5V và sau đó 0V/+3.3V làm mức tín hiệu, để tránh các điện áp "kỳ lạ" và vấn đề giao diện.</p>
+
+    <p>Microsoft cố tình thiết kế USB như một chuẩn để thay thế RS-232; với dây bừa bộn, các đầu nối khác nhau, điện áp và tốc độ truyền khác nhau, nó quá khó cho người dùng phổ thông nhất để kết nối thiết bị với PC. Vì hầu hết MODEM vẫn là RS-232 khi USB ra đời, Microsoft thiết kế một "device class" USB, CDC-ACM, đặc biệt để nói chuyện với các bộ chuyển đổi RS-232 dùng với các MODEM này.</p>
 
     <div class="nav-buttons">
       <a href="09-registers.html" class="nav-btn">← Registers</a>

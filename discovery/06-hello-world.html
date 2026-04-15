@@ -61,19 +61,54 @@
 
     <h1>Hello World</h1>
 
-    <p>Trong phần trước, bạn đã viết một dạng chương trình "Hello World". Nhưng với lập trình viên embedded, "Hello World thực sự" là nhấp nháy một chiếc LED — bật tắt một lần mỗi giây.</p>
+    <p>Ở phần trước, bạn đã viết một dạng chương trình "Hello World". Nhưng với lập trình viên embedded, "Hello World thực sự" là nhấp nháy một chiếc LED — bất kỳ chiếc LED nào — bật và tắt một lần mỗi giây. Chương trình như vậy thường được gọi là <em>"blinky"</em>.</p>
 
-    <p>Chương trình như vậy thường được gọi là <em>"blinky"</em>.</p>
+    <p>Tại sao blinky? Vì điều này chứng minh bạn đã có đủ khả năng kiểm soát board mà bạn đang làm việc để thực hiện tác vụ đơn giản này. Bạn có thể nạp và chạy chương trình lên thiết bị, tìm đúng pin trên MCU và bật nó, tạo được delay trong một khoảng thời gian cố định. Khi bạn đã có khả năng kiểm soát đó, các tác vụ khác sẽ trở nên đơn giản hơn nhiều.</p>
 
-    <p>Bởi vì điều này chứng minh bạn đã có đủ khả năng kiểm soát board mà bạn đang làm việc để thực hiện tác vụ đơn giản này. Bạn có thể nạp và chạy chương trình lên thiết bị, tìm đúng pin trên MCU và bật nó, tạo được delay trong một khoảng thời gian cố định.</p>
+    <p>Ở các chương trước, bạn đã biết nhiều cách nạp chương trình lên MB2. Bây giờ chỉ còn câu hỏi là bạn bật/tắt chân nào và delay bao lâu giữa các lần đó.</p>
 
-    <p>Chúng ta sẽ làm việc với LED ở góc trên-trái của màn hình hiển thị. Truy ngược các dây <code>ROW1</code> và <code>COL1</code> mà LED này được kết nối đến qua schematics, chúng ta thấy chúng đi đến các chân trên nRF52833 có nhãn <code>AC17</code>/<code>P0.21</code> và <code>B11</code>/<code>AIN4</code>/<code>P0.28</code>.</p>
+    <p>Hãy bắt đầu bằng cách tìm hiểu cách làm việc với các chân cần thiết. Nếu bạn biết đọc sơ đồ mạch điện tử (schematic), bạn có thể theo dõi các dây của LED mà bạn muốn bật/tắt và tìm các chân GPIO nào trên nRF52833 được kết nối với LED đó. (MB2 hơi đặc biệt: thường một LED chỉ nối với một chân để bật/tắt, còn màn hình LED của MB2 được nối theo cách phức tạp hơn để cho phép bật/tắt nhiều tổ hợp LED cùng lúc — tính năng mà chúng ta sẽ sớm dùng đến.)</p>
 
-    <p>Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (chấp nhận điện áp) thì LED sẽ sáng lên.</p>
+    <p>Chúng ta sẽ làm việc với LED ở góc trên-trái của màn hình MB2. Truy ngược các dây <code>ROW1</code> và <code>COL1</code> mà LED này được kết nối đến, chúng ta thấy chúng đi đến các chân trên nRF52833 có nhãn <code>AC17</code>/<code>P0.21</code> và <code>B11</code>/<code>AIN4</code>/<code>P0.28</code>. Tìm hiểu kỹ hơn qua tài liệu, <code>AC17</code> và <code>B11</code> chỉ là chỉ số hàng và cột của chân vật lý (thực chất là solder ball) ở mặt dưới chip — không hữu ích với chúng ta. <code>AIN4</code> chỉ nghĩa là chân này có thể hoạt động như "Analog Input" — cũng không cần thiết lúc này.</p>
+
+    <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (chấp nhận điện áp) thì LED sẽ sáng lên.</p>
+
+    <p>Nhưng về mặt phần mềm, chúng ta làm gì để điều đó xảy ra? Chúng ta sẽ làm việc ở mức crate <code>nrf52833-hal</code>. Hardware Abstraction Layer (HAL) là phần mềm được thiết kế để làm cho một vi điều khiển cụ thể dễ làm việc hơn. Đúng như tên gọi, chúng ta có một HAL cho vi điều khiển trên MB2, và nó chứa mọi thứ cần thiết để bật LED đó.</p>
+
+    <h2>Light it up</h2>
+
+    <p>Hãy xem file <code>examples/light-up.rs</code> trong thư mục của chương này, rồi thử chạy nó. Bạn có thể dùng cách phức tạp như trước, nhưng chúng ta đã thiết lập sẵn để:</p>
+
+    <pre><code class="language-bash">cargo run --example light-up
+</code></pre>
+
+    <p>sẽ nạp và chạy chương trình. Chiếc LED đó sẽ sáng rực!</p>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use nrf52833_hal::{gpio, pac};
+use panic_halt as _;
+
+#[entry]
+fn main() -&gt; ! {
+    let peripherals = pac::Peripherals::take().unwrap();
+    let p0 = gpio::p0::Parts::new(peripherals.P0);
+    let _row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
+    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
+
+    #[allow(clippy::empty_loop)]
+    loop {}
+}</code></pre>
+
+    <p>Lưu ý rằng chúng ta truy cập Peripheral Access Crate (PAC) cho chip này thông qua crate HAL. Cần có một số bước phức tạp để có quyền truy cập các chân. Cuối cùng, vì chúng ta có thể khởi tạo các chân với mức đúng ngay từ đầu, không cần phải set lại. Việc thay đổi mức chân là chủ đề của phần tiếp theo.</p>
 
     <h2>Toggle it</h2>
 
-    <p>Bây giờ hãy làm cho LED nhấp nháy bằng cách bật và tắt nó liên tục. Đây là chương trình đơn giản nhất để làm điều đó:</p>
+    <p>Hãy bật và tắt LED liên tục. Đó là cách làm nó nhấp nháy, phải không?</p>
+
+    <p>Trong <code>examples/fast-blink.rs</code> bạn sẽ tìm thấy phiên bản blinky tiếp theo của chúng ta. Tôi đã quyết định làm nhấp nháy chiếc LED kế tiếp, trong khi giữ LED gốc sáng. Đó là một thay đổi dễ dàng.</p>
 
     <pre><code class="language-rust">#![no_main]
 #![no_std]
@@ -97,138 +132,243 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Bạn sẽ thấy điều lạ khi chạy chương trình này: LED thứ hai trông mờ hơn LED thứ nhất, nhưng cả hai đều sáng liên tục, không nhấp nháy. Lý do là MB2 thực thi 64 triệu instructions mỗi giây — việc bật/tắt xảy ra hàng trăm nghìn, thậm chí hàng triệu lần mỗi giây. Mắt người không thể nhận ra sự nhấp nháy nhanh đến vậy.</p>
+    <p>Crate <code>embedded-hal</code> được dùng ở đây để cung cấp các Rust trait cần thiết để set và unset LED. Điều này có nghĩa là phần code này có thể portable sang bất kỳ Rust HAL nào triển khai các trait <code>embedded-hal</code> như HAL của chúng ta.</p>
 
-    <p>Để tạo hiệu ứng nhấp nháy thực sự, chúng ta cần thêm một khoảng delay giữa hai lần toggle.</p>
+    <p>Nhưng đợi đã: không có LED nào nhấp nháy cả! Cái thứ hai trông mờ hơn cái đầu tiên, nhưng cả hai đều sáng liên tục… hay là chúng đang nhấp nháy? MB2 thực thi 64 <em>triệu</em> instruction mỗi giây. Giả sử cần vài chục instruction để bật hoặc tắt LED (có thể nhiều đến vậy khi biên dịch debug mode, nhưng ít hơn nhiều trong release mode; mặc dù các chân mất một lúc để đổi trạng thái — tôi không chắc). Dù sao, chiếc LED thứ hai thực sự đang bật và tắt hàng trăm nghìn lần — có thể hàng triệu lần — mỗi giây. Mắt bạn không thể theo kịp.</p>
+
+    <p>Chúng ta cần chờ một lúc giữa các lần toggle. Hóa ra việc chờ mới là phần khó nhất.</p>
 
     <h2>Spin wait</h2>
 
-    <p>Cách đơn giản nhất (nhưng không hiệu quả) để tạo delay là chạy một vòng lặp vô ích nhiều lần:</p>
+    <p>Để nhấp nháy LED, chúng ta cần chờ khoảng nửa giây giữa mỗi lần thay đổi. Làm thế nào để làm điều đó?</p>
 
-    <pre><code class="language-rust">fn wait() {
+    <p>Đây là cách ngớ ngẩn. Không tốt, nhưng là một khởi đầu. Hãy xem <code>examples/spin-wait.rs</code>.</p>
+
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m::asm::nop;
+use cortex_m_rt::entry;
+use embedded_hal::digital::OutputPin;
+use nrf52833_hal::{gpio, pac};
+use panic_halt as _;
+
+fn wait() {
     for _ in 0..4_000_000 {
         nop();
     }
-}</code></pre>
-
-    <p>Hàm này lặp 4 triệu lần, mỗi lần thực thi một instruction <code>nop</code> (no operation), tạo ra khoảng delay ~500ms.</p>
-
-    <p>Một vài điều cần lưu ý:</p>
-    <ul>
-      <li>Rust cho phép dùng dấu gạch dưới <code>_</code> trong số nguyên để dễ đọc. <code>4_000_000</code> và <code>4000000</code> là như nhau.</li>
-      <li>Tại sao chỉ cần 4 triệu lần thay vì 64 triệu (bằng tần số clock 64 MHz)? Vì mỗi vòng lặp thực thi nhiều hơn một instruction (có bước đếm, so sánh, nhảy).</li>
-      <li><strong>Quan trọng:</strong> Phải biên dịch với flag <code>--release</code>. Không có tối ưu hóa, code chạy chậm hơn nhiều và delay sẽ kéo dài hàng giây thay vì 500ms.</li>
-    </ul>
-
-    <p>Tuy nhiên, phương pháp spin-wait có ba vấn đề lớn:</p>
-    <ol>
-      <li><strong>Không chính xác</strong> — rất khó điều chỉnh để đạt đúng thời gian mong muốn</li>
-      <li><strong>Không ổn định</strong> — thay đổi phần cứng hoặc cài đặt biên dịch có thể thay đổi timing</li>
-      <li><strong>Lãng phí điện năng</strong> — CPU chạy liên tục thay vì ngủ (sleep), tiêu thụ pin không cần thiết</li>
-    </ol>
-
-    <h2>Nop</h2>
-
-    <p>Tại sao hàm <code>wait()</code> cần gọi <code>nop()</code>? Nếu bạn bỏ <code>nop()</code> đi, vòng lặp sẽ trống rỗng và compiler optimizer sẽ xóa hoàn toàn hàm <code>wait()</code> — kết quả là delay biến mất và LED lại nhấp nháy quá nhanh.</p>
-
-    <p><code>nop()</code> chèn một instruction ARM <code>NOP</code> (No Operation) vào chương trình — instruction này không làm gì cả, nhưng nó ngăn compiler xóa vòng lặp. Hàm này được implement bằng inline assembly:</p>
-
-    <pre><code class="language-rust">asm!("nop", options(nomem, nostack, preserves_flags));</code></pre>
-
-    <p>Điều này minh họa một tính năng quan trọng của Rust embedded: directive <code>asm!()</code> cho phép chèn trực tiếp assembly instructions khi cần — rất hữu ích khi compiler không hỗ trợ một instruction CPU cụ thể nào đó.</p>
-
-    <h2>Timers</h2>
-
-    <p>Cách tốt hơn để tạo delay là dùng Timer peripheral. nRF52833 có bốn timer peripheral cung cấp khả năng kiểm soát thời gian chính xác.</p>
-
-    <p>Thay vì spin-wait, chúng ta dùng HAL's <code>Timer</code> wrapper và trait <code>embedded_hal::Delay</code>:</p>
-
-    <pre><code class="language-rust">#![deny(unsafe_code)]
-#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use embedded_hal::delay::DelayNs;
-use microbit::{board::Board, hal::Timer};
-use panic_halt as _;
+}
 
 #[entry]
 fn main() -&gt; ! {
-    let mut board = Board::take().unwrap();
-    let mut timer = Timer::new(board.TIMER0);
+    let peripherals = pac::Peripherals::take().unwrap();
+    let p0 = gpio::p0::Parts::new(peripherals.P0);
+    let mut row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
+    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
 
     loop {
-        board.display_pins.col1.set_low().unwrap();
-        board.display_pins.row1.set_high().unwrap();
-        timer.delay_ms(500_u32);
-
-        board.display_pins.row1.set_low().unwrap();
-        timer.delay_ms(500_u32);
+        wait();
+        row1.set_high().unwrap();
+        wait();
+        row1.set_low().unwrap();
     }
 }</code></pre>
 
-    <p>Timer peripheral quản lý thời gian ở phần cứng, cho phép MCU (trong tương lai) ngủ trong khi chờ — tiết kiệm điện hơn nhiều so với spin-wait. Kết quả là blinky chính xác với chu kỳ 1 giây.</p>
+    <p>Chạy lệnh này với <code>cargo run --release --example spin-wait</code> — flag <code>--release</code> thực sự rất quan trọng ở đây — và bạn sẽ thấy LED trên MB2 nhấp nháy bật/tắt <em>khoảng</em> một lần mỗi giây.</p>
 
-    <h2>Portability</h2>
+    <p>Những điều bạn có thể thắc mắc:</p>
+    <ul>
+      <li>
+        <p><strong>Các ký tự <code>_</code> trong số đó là gì?</strong> Rust cho phép dùng những ký tự này trong số và bỏ qua chúng. Rất tiện để làm số lớn dễ đọc hơn. Ở đây chúng ta dùng chúng như dấu phẩy (hay bất cứ dấu phân cách nào cho nhóm ba chữ số ở đất nước bạn).</p>
+      </li>
+      <li>
+        <p><strong>Nếu nRF52833 chạy ở 64MHz, tại sao vòng lặp wait chỉ lặp 4 triệu lần? Chẳng phải phải là 32 triệu sao?</strong> Vòng lặp wait thực thi nhiều instruction mỗi lần: <code>nop</code> (xem phần tiếp theo), một số bookkeeping, và một nhánh quay lại đầu vòng lặp. Code được tạo ra trông giống thế này cho lần gọi <code>wait()</code> đầu tiên:</p>
+        <pre><code class="language-asm">.LBB1_4:
+    adds r3, #1
+    nop
+    cmp  r3, r2
+    bne  .LBB1_4
+</code></pre>
+        <p>và như thế này cho lần thứ hai:</p>
+        <pre><code class="language-asm">.LBB1_6:
+    subs	r3, #1
+    nop
+    bne	.LBB1_6
+</code></pre>
+        <p>Chỉ có ba hoặc bốn instruction, nhưng nhánh ngược có thể tốn thêm một chút. Lưu ý rằng hai vòng lặp <em>không giống nhau:</em> compiler chọn emit các instruction khác nhau cho vòng lặp wait thứ nhất và thứ hai. Xem "nó thay đổi tùy thuộc" bên dưới.</p>
+        <p>Dù sao, chúng ta đang thực thi khoảng 4 instruction mỗi lần lặp. Điều này có nghĩa là trên CPU 64MHz, một spin nửa giây cần 64M/2/4 = 8M lần lặp để hoàn thành. Vậy thì có gì đó đang làm chậm chúng ta đi một hệ số 2. Là gì? Tôi không biết. Cả việc này đều kinh khủng.</p>
+      </li>
+      <li>
+        <p><strong>Tại sao <code>--release</code> lại quan trọng đến vậy?</strong> Thử không dùng nó xem. Bạn sẽ thấy LED vẫn nhấp nháy, nhưng với chu kỳ <em>nhiều</em> giây. Vòng lặp wait giờ không được tối ưu và tốn nhiều instruction hơn mỗi lần chạy qua.</p>
+      </li>
+      <li>
+        <p><strong>Lời gọi <code>nop()</code> đó là gì và tại sao nó ở đó?</strong> Chúng ta sẽ trả lời điều này ở phần tiếp theo.</p>
+      </li>
+      <li>
+        <p><strong>Tại sao bạn gọi đây là "cách ngớ ngẩn"?</strong></p>
+        <ul>
+          <li><p><strong>Không chính xác.</strong> Cố gắng điều chỉnh vòng lặp đó để đáng tin cậy đạt đúng 0.5 giây là… không thực tế.</p></li>
+          <li><p><strong>Nó thay đổi tùy thuộc.</strong> CPU khác nhau? Compilation flags khác nhau? Bất cứ thứ gì khác nhau thực sự? Thì timing đã thay đổi.</p></li>
+          <li><p><strong>Tốn điện.</strong> CPU đang chạy instruction nhanh nhất có thể, chỉ để đứng yên tại chỗ. Nếu không có gì khác để làm, nó nên lặng lẽ ngủ cho đến khi được cần đến. Điều này không quan trọng nhiều nếu bạn có nguồn USB. Nhưng nếu bạn kết nối MB2 với pin, bạn sẽ thực sự cảm nhận điều này.</p></li>
+        </ul>
+      </li>
+    </ul>
 
-    <p>Một trong những ưu điểm lớn nhất của hệ sinh thái Rust embedded là tính portable. Nhờ <code>embedded-hal</code>, cùng một logic chương trình có thể chạy trên các board hoàn toàn khác nhau.</p>
+    <p>Ở phần tiếp theo, chúng ta sẽ thảo luận về <code>nop()</code>. Sau đó, chúng ta sẽ nói thêm về những điều khác cần cải thiện trong blinky.</p>
 
-    <p>Ví dụ, vòng lặp blinky cho MB2:</p>
+    <p>Với một chương trình đơn giản như vậy, đây lại là một chương trình khá phức tạp. Đó là lý do tại sao chúng ta bắt đầu với blinky.</p>
 
-    <pre><code class="language-rust">loop {
-    led.set_high().unwrap();
-    timer.delay_ms(500_u32);
-    led.set_low().unwrap();
-    timer.delay_ms(500_u32);
-}</code></pre>
+    <h2>NOP</h2>
 
-    <p>...giống hệt vòng lặp blinky cho Sipeed Longan Nano — một board giá $5 dùng kiến trúc RISC-V hoàn toàn khác. Phần setup khác nhau vì phần cứng khác nhau, nhưng <em>"blinky is just blinky"</em> — logic cốt lõi là như nhau trên mọi nền tảng nhờ các abstraction layer của Rust.</p>
+    <p>Bạn có thể thắc mắc lời gọi <code>nop()</code> đó đang làm gì trong vòng lặp <code>wait()</code> trong <code>src/bin/spin-wait.rs</code>.</p>
 
-    <h2>Board support crate</h2>
+    <p>Câu trả lời là nó thực sự không làm gì cả. Hàm <code>nop()</code> khiến compiler đặt một instruction machine Arm <code>NOP</code> tại điểm đó trong chương trình. <code>NOP</code> là một instruction đặc biệt khiến CPU bỏ qua nó. Để phớt lờ nó. Thực sự không làm gì cả với nó (do đó có cái tên đó).</p>
 
-    <p>Làm việc trực tiếp với các chân <code>P0.21</code> và <code>P0.28</code> như vậy yêu cầu bạn phải tra cứu schematics mỗi lần. Crate <code>microbit-v2</code> (Board Support Package — BSP) giải quyết vấn đề này bằng cách đặt tên có ý nghĩa cho các chân đó: thay vì <code>P0.21</code> và <code>P0.28</code>, bạn dùng <code>row1</code> và <code>col1</code>.</p>
+    <p>Vậy hãy bỏ dòng đó đi và biên dịch lại chương trình. Đừng quên chế độ <code>--release</code>. Sau đó chạy nó.</p>
 
-    <p>Đây là chương trình bật sáng LED đó dùng BSP crate:</p>
+    <p>Chúng ta lại quay về một LED sáng liên tục hơi tối hơn. Với thân vòng lặp trống rỗng, optimizer của compiler đã quyết định rằng hàm <code>wait()</code> không làm gì cả. Vì vậy nó đã xóa nó cho bạn lúc compile time. Cảm ơn optimizer. Bạn đã làm vòng lặp wait của tôi nhanh vô hạn.</p>
 
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![deny(unsafe_code)]
-#![no_main]
+    <p>Làm thế nào <code>nop()</code> thực hiện công việc của nó? Nếu bạn nhìn vào implementation của <code>nop()</code>, bạn sẽ thấy (sau một số tìm kiếm) rằng nó được implement như thế này:</p>
+
+    <pre><code class="language-rust">asm!("nop", options(nomem, nostack, preserves_flags));</code></pre>
+
+    <p>Hàm <code>nop()</code> được "inline", vì vậy khi bạn "gọi" nó, một instruction assembly Arm <code>NOP</code> thực sự được chèn vào code của chương trình tại điểm đó. Vì các chi tiết kỹ thuật, <code>NOP</code> này sẽ không bị xóa hay di chuyển bởi compiler: nó sẽ ở ngay đó nơi bạn đặt nó.</p>
+
+    <p>Khả năng chèn assembly code vào chương trình khi cần đôi khi rất quan trọng trong lập trình embedded. Đôi khi một CPU có các instruction mà compiler không biết, nhưng bạn vẫn cần để sử dụng CPU hiệu quả. Directive <code>asm!()</code> của Rust cho bạn một cách để làm điều đó.</p>
+
+    <p>Spin-wait của chúng ta vẫn còn kinh khủng. Hãy nói về cách làm tốt hơn.</p>
+
+    <h2>Timers</h2>
+
+    <p>Một trong những ưu điểm lớn của hệ thống embedded "bare-metal" là bạn kiểm soát mọi thứ xảy ra trên máy. Điều này cho phép bạn có khả năng kiểm soát thời gian rất chính xác: không có gì làm chậm bạn trừ khi bạn cho phép.</p>
+
+    <p>Tuy nhiên, chúng ta đã thấy rằng nếu thực sự muốn làm đúng thời gian, chúng ta có thể cần trợ giúp. Các MCU embedded như nRF52833 đều cung cấp loại trợ giúp này dưới dạng "timer". Timer là một peripheral mà, như tên gọi, hoạt động như một chiếc đồng hồ nhỏ theo dõi thời gian rất chính xác.</p>
+
+    <p>nRF52833 có bốn timer. Nếu bạn xem tài liệu của chip, bạn sẽ thấy chúng khá phức tạp để thiết lập và sử dụng. May mắn thay, HAL cung cấp một wrapper xung quanh timer giúp các cách dùng phổ biến trở nên dễ dàng. Cách dùng phổ biến nhất của timer là delay một khoảng thời gian chính xác: đúng là điều hàm <code>wait()</code> của các phần trước đang cố gắng làm.</p>
+
+    <p>Hãy xem <code>examples/timer-blinky.rs</code>. Code này thiết lập một timer và dùng nó để delay 500ms (0.5s) giữa mỗi lần toggle.</p>
+
+    <pre><code class="language-rust">#![no_main]
 #![no_std]
 
 use cortex_m_rt::entry;
+use embedded_hal::{delay::DelayNs, digital::OutputPin};
+use nrf52833_hal::{gpio, pac, timer};
 use panic_halt as _;
-use microbit::board::Board;
-use microbit::hal::prelude::*;
 
 #[entry]
 fn main() -&gt; ! {
-    let mut board = Board::take().unwrap();
+    let peripherals = pac::Peripherals::take().unwrap();
 
-    board.display_pins.col1.set_low().unwrap();
-    board.display_pins.row1.set_high().unwrap();
+    let p0 = gpio::p0::Parts::new(peripherals.P0);
+    let mut row1 = p0.p0_21.into_push_pull_output(gpio::Level::High);
+    let _col1 = p0.p0_28.into_push_pull_output(gpio::Level::Low);
 
-    loop {}
+    let mut timer0 = timer::Timer::new(peripherals.TIMER0);
+
+    loop {
+        timer0.delay_ms(500);
+        row1.set_high().unwrap();
+        timer0.delay_ms(500);
+        row1.set_low().unwrap();
+    }
 }</code></pre>
 
-    <blockquote>
-      <p><strong>LƯU Ý</strong> Nếu bạn thắc mắc tại sao chúng ta phải gọi <code>unwrap()</code> ở đây — về lý thuyết, <code>take()</code> có thể được gọi nhiều hơn một lần. Vì board support crate chỉ nên đại diện cho board vật lý một lần duy nhất, <code>take()</code> trả về <code>None</code> từ lần gọi thứ hai trở đi — đây là PAC singleton pattern.</p>
-    </blockquote>
+    <p>Chạy code này với <code>cargo run --release --example timer-blinky</code> và đo bằng đồng hồ bấm giây. Bạn sẽ thấy mỗi chu kỳ bật-tắt chính xác là một giây.</p>
 
-    <p>Nạp firmware lên board:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ cargo embed</code></pre>
+    <p>Những điều bạn có thể chú ý:</p>
+    <ul>
+      <li><p>Chúng ta cần dùng trait <code>embedded_hal::Delay</code> để có method <code>delay_ms()</code> mà chúng ta đang dùng.</p></li>
+      <li><p>Như trước, chúng ta lấy peripheral từ struct PAC peripherals và đưa cho HAL.</p></li>
+    </ul>
 
-    <p>Nếu mọi thứ hoạt động đúng, LED ở góc trên-trái của ma trận 5×5 sẽ sáng lên.</p>
+    <p>Bây giờ chúng ta có một blinky chất lượng sản xuất. Hãy nói một chút về ý nghĩa của tất cả những điều này.</p>
 
-    <p>Bạn cũng có thể kiểm tra bằng GDB — mở terminal thứ hai và chạy:</p>
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ gdb target/thumbv7em-none-eabihf/debug/led-roulette</code></pre>
+    <h2>Portability</h2>
 
-    <div class="code-header"><span class="code-lang">gdb</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-gdb">(gdb) target remote :1337
-(gdb) continue</code></pre>
+    <p>(Phần này là tùy chọn. Hãy thoải mái bỏ qua đến <a href="#board-support-crate">phần tiếp theo</a>, nơi chúng ta dọn dẹp code một chút và kết thúc.)</p>
 
-    <p>LED sẽ sáng lên khi GDB tiếp tục chạy chương trình.</p>
+    <p>Bạn có thể tự hỏi liệu tất cả hệ sinh thái fancy này có xứng đáng không. Setup cho blinky của chúng ta khá cầu kỳ, và sử dụng nhiều Rust crate và tính năng cho một công việc đơn giản như vậy.</p>
+
+    <p>Tuy nhiên, một ưu điểm thú vị là code của chúng ta trở nên thực sự portable. Trên một board khác, setup có thể khác nhau, nhưng vòng lặp blinky thực sự lại giống hệt nhau!</p>
+
+    <p>Hãy xem một blinky cho Sipeed Longan Nano. Đây là một board giá $5 mà, giống như MB2, là một board embedded với MCU. Ngoài ra, nó hoàn toàn khác biệt: processor khác (GD32VF103, với bộ instruction RISC-V hoàn toàn khác với bộ instruction Arm chúng ta đang dùng), peripheral khác, board khác. Nhưng nó có một LED gắn với một GPIO pin, vì vậy chúng ta có thể blinky nó.</p>
+
+    <pre><code class="language-rust">#![no_std]
+#![no_main]
+
+use panic_halt as _;
+use riscv_rt::entry;
+use gd32vf103xx_hal::{pac, prelude::*, delay::McycleDelay};
+use embedded_hal::{blocking::delay::DelayMs, digital::v2::OutputPin};
+
+#[entry]
+fn main() -&gt; ! {
+    let dp = pac::Peripherals::take().unwrap();
+
+    let mut rcu = dp.RCU.configure().ext_hf_clock(8.mhz()).sysclk(108.mhz()).freeze();
+
+    let gpioc = dp.GPIOC.split(&amp;mut rcu);
+    let mut led = gpioc.pc13.into_push_pull_output();
+    let mut delay = McycleDelay::new(&amp;rcu.clocks);
+
+    loop {
+        delay.delay_ms(500);
+        led.set_high().unwrap();
+        delay.delay_ms(500);
+        led.set_low().unwrap();
+    }
+}</code></pre>
+
+    <p>Sự khác biệt trong setup một phần là do phần cứng khác nhau, một phần là vì code này dùng crate HAL cũ hơn chưa được cập nhật cho <code>embedded-hal</code> 1.0. Vậy mà vòng lặp chính lại giống hệt như đã hứa, và phần còn lại của code khá quen thuộc. Nhờ tính portable được cung cấp bởi cross-compilation dễ dàng của Rust và hệ sinh thái Rust embedded, blinky chỉ là blinky.</p>
+
+    <p>Bạn có thể tìm một ví dụ <a href="https://github.com/pdx-cs-rust/nanoblinky">nanoblinky</a> hoàn chỉnh đang hoạt động trên GitHub, nếu bạn muốn xem tất cả chi tiết hoặc thậm chí mua board riêng và tự thử.</p>
+
+    <h2 id="board-support-crate">Board support crate</h2>
+
+    <p>Làm việc trực tiếp với PAC và HAL thực sự thú vị. Hầu hết Arm MCU và nhiều MCU khác mà Rust có thể biên dịch đều có crate PAC. Nếu bạn làm việc với một MCU không có, việc viết crate PAC có thể tẻ nhạt nhưng khá đơn giản. Nhiều MCU có crate PAC cũng có crate HAL — một lần nữa, chủ yếu là công việc tẻ nhạt để xây dựng nếu nó còn thiếu. Code viết ở mức PAC và HAL cho phép truy cập vào các chi tiết tinh tế của MCU.</p>
+
+    <p>Tuy nhiên, như chúng ta đã thấy, việc theo dõi những gì đang xảy ra ở interface giữa nRF52833 và phần còn lại của MB2 trở nên khá phiền phức. Chúng ta phải đọc schematics và các thứ để biết cách dùng phần cứng ngoài board.</p>
+
+    <p>Một "board support crate" — được biết đến trong cộng đồng embedded non-Rust là Board Support Package (BSP) — là một crate được xây dựng trên HAL và PAC cho một board để trừu tượng hóa các chi tiết và cung cấp tiện ích. Board support crate mà chúng ta đã làm việc cùng là crate <code>microbit-v2</code>.</p>
+
+    <p>Hãy dùng <code>microbit-v2</code> để có một blinky cuối cùng, được dọn dẹp sạch sẽ (<code>src/main.rs</code>).</p>
+
+    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
+    <pre><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use embedded_hal::{delay::DelayNs, digital::OutputPin};
+use microbit::hal::{gpio, timer};
+use panic_halt as _;
+
+#[entry]
+fn main() -&gt; ! {
+    let board = microbit::Board::take().unwrap();
+
+    let mut row1 = board
+        .display_pins
+        .row1
+        .into_push_pull_output(gpio::Level::High);
+    let _col1 = board
+        .display_pins
+        .col1
+        .into_push_pull_output(gpio::Level::Low);
+
+    let mut timer0 = timer::Timer::new(board.TIMER0);
+
+    loop {
+        timer0.delay_ms(500);
+        row1.set_high().unwrap();
+        timer0.delay_ms(500);
+        row1.set_low().unwrap();
+    }
+}</code></pre>
+
+    <p>Trong trường hợp này, chúng ta không thay đổi nhiều. Board support crate đã che giấu PAC (hiện tại). Quan trọng hơn, nó đã làm điều đó bằng cách cho phép chúng ta chỉ cần dùng tên hợp lý cho các chân GPIO hàng và cột của LED.</p>
+
+    <p>Crate <code>microbit-v2</code> còn cung cấp hỗ trợ fancy hơn cho những LED "display" đó. Chúng ta sẽ sớm thấy hỗ trợ này được dùng để làm những thứ thú vị hơn blinky.</p>
 
     <div class="nav-buttons">
       <a href="05-meet-your-software.html" class="nav-btn">← Làm quen phần mềm</a>

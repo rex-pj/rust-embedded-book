@@ -75,32 +75,17 @@
 
     <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu accelerometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Bạn có quan sát thấy điều gì thú vị ngay cả khi giữ board song song với sàn nhà với mặt LED hướng xuống?</p>
 
-    <p>Bạn sẽ thấy rằng cả giá trị X và Y đều khá gần 0, trong khi giá trị Z ở khoảng 1000. Điều này lạ vì board không di chuyển mà gia tốc của nó lại khác không. Chuyện gì đang xảy ra? Chắc phải liên quan đến trọng lực, đúng không? Vì gia tốc trọng trường là 1 g (aha, <code>1 g</code> = 1000 từ accelerometer). Nhưng trọng lực kéo vật thể xuống nên gia tốc theo trục Z phải là âm, không phải dương.</p>
+    <p>Bạn sẽ thấy rằng cả giá trị X và Y đều khá gần 0, trong khi giá trị Z ở khoảng 1000. Điều này lạ vì board không di chuyển mà gia tốc của nó lại khác không. Chuyện gì đang xảy ra? Chắc phải liên quan đến trọng lực, đúng không? Vì gia tốc trọng trường là 1 g (aha, <code>1 g</code> = -1000 từ accelerometer). Nhưng trọng lực kéo vật thể xuống nên gia tốc theo trục Z phải là dương, không phải âm.</p>
 
     <p>Chương trình có lấy ngược trục Z không? Không, bạn có thể thử xoay board để canh chỉnh trọng lực theo trục X hoặc Y nhưng gia tốc đo bởi accelerometer luôn chỉ lên trên.</p>
 
-    <p>Điều xảy ra ở đây là accelerometer đo <em>gia tốc riêng</em> (proper acceleration) của board, không phải gia tốc mà bạn đang quan sát. Gia tốc riêng này là gia tốc của board nhìn từ một người quan sát đang rơi tự do. Một người quan sát đang rơi tự do di chuyển về phía tâm Trái Đất với gia tốc <code>1g</code>; từ góc nhìn của họ, board thực sự đang di chuyển lên trên (xa khỏi tâm Trái Đất) với gia tốc <code>1g</code>. Và đó là lý do tại sao gia tốc riêng chỉ lên trên. Điều này cũng có nghĩa là nếu board đang rơi tự do, accelerometer sẽ báo cáo gia tốc riêng bằng không. Xin đừng thử ở nhà.</p>
-
-    <table>
-      <caption>Gia tốc riêng (proper acceleration) đo bởi LSM303AGR trong các tư thế khác nhau</caption>
-      <thead>
-        <tr><th>Tư thế board</th><th>Trục X (mg)</th><th>Trục Y (mg)</th><th>Trục Z (mg)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Nằm phẳng, mặt LED lên trên</td><td>≈ 0</td><td>≈ 0</td><td>≈ +1000</td></tr>
-        <tr><td>Nằm phẳng, mặt LED xuống dưới</td><td>≈ 0</td><td>≈ 0</td><td>≈ −1000</td></tr>
-        <tr><td>Nghiêng cạnh X lên trên</td><td>≈ +1000</td><td>≈ 0</td><td>≈ 0</td></tr>
-        <tr><td>Rơi tự do</td><td>≈ 0</td><td>≈ 0</td><td>≈ 0</td></tr>
-      </tbody>
-    </table>
+    <p>Điều xảy ra ở đây là accelerometer đo <em>gia tốc riêng</em> (proper acceleration) của board, không phải gia tốc mà bạn đang quan sát. Gia tốc riêng này là gia tốc của board nhìn từ một người quan sát đang rơi tự do. Một người quan sát đang rơi tự do di chuyển về phía tâm Trái Đất với gia tốc <code>1g</code>; từ góc nhìn của họ, board thực sự đang di chuyển lên trên (xa khỏi tâm Trái Đất) với gia tốc <code>1g</code>. Và đó là lý do tại sao gia tốc riêng chỉ lên trên. Điều này cũng có nghĩa là nếu board đang rơi tự do, accelerometer sẽ báo cáo gia tốc riêng bằng không. Xin đừng thử ở nhà. Hoặc thử nếu bạn sẵn sàng đánh rơi MB2 của mình.</p>
 
     <p>Vâng, vật lý rất khó. Hãy tiếp tục.</p>
 
     <h2>Thử thách</h2>
 
-    <p>Để giữ mọi thứ đơn giản, chúng ta sẽ chỉ đo gia tốc theo trục X trong khi board giữ nằm ngang. Bằng cách đó chúng ta sẽ không phải trừ đi <code>1g</code> ảo mà chúng ta quan sát trước đó — điều này sẽ rất khó vì <code>1g</code> đó có thể có các thành phần X Y Z tùy thuộc vào cách board được đặt.</p>
-
-    <p>Giữ board theo hướng <strong>nằm ngang</strong> với mặt LED hướng xuống dưới và cổng USB hướng về phía bạn. Hướng đấm sẽ là trục X dương — nhìn từ trên xuống, hướng này đi về phía bên phải của board.</p>
+    <p>Để đơn giản hóa phần mềm, chúng ta sẽ giả định rằng bạn đấm với board song song với mặt đất. Để đo độ mạnh của cú đấm, bạn cần tính đến cả gia tốc X và Y (bỏ qua Z vì nó chỉ phản ánh trọng lực). Để đơn giản hơn nữa, chúng ta sẽ giả định rằng bạn cầm board với nút B gần bạn và nút A ở phía xa hơn, rồi đấm về phía trước (ra xa bạn). Điều này có nghĩa là bạn đang đấm theo hướng X dương.</p>
 
     <p align="center">
       <img src="assets/mb2-punch-axis.svg" title="Punch Axis" class="white_bg" />
@@ -116,9 +101,13 @@
 
     <p>Hãy thử và cho tôi biết bạn có thể đấm mạnh đến mức nào ;-)</p>
 
-    <p><strong>LƯU Ý:</strong> Có hai API bổ sung hữu ích cho nhiệm vụ này mà chúng ta chưa thảo luận. Đầu tiên là <a href="https://docs.rs/lsm303agr/0.2.2/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale">set_accel_scale</a> — bạn cần nó để đo giá trị g cao. Thứ hai là trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/timer/trait.CountDown.html">Countdown</a> từ <code>embedded_hal</code>. Nếu bạn quyết định dùng nó để giữ khoảng thời gian đo, bạn sẽ phải pattern match trên kiểu <a href="https://docs.rs/nb/1.0.0/nb/type.Result.html">nb::Result</a> thay vì dùng macro <code>block!</code> như trong các chương trước.</p>
+    <blockquote>
+      <p><strong>LƯU Ý:</strong> Có một API bổ sung hữu ích cho nhiệm vụ này mà chúng ta chưa thảo luận: <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale">set_accel_scale</a> — bạn cần nó để đo giá trị g cao.</p>
+    </blockquote>
 
     <h2>Lời giải của tôi</h2>
+
+    <p>Đây là lời giải của tôi (<code>src/main.rs</code>). Lưu ý rằng bạn có thể đạt giá trị G khá cao bằng cách gõ cạnh MB2 vào bàn. Lưu ý rằng điều này có thể làm hỏng accelerometer, vì vậy có lẽ đừng làm vậy?</p>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
@@ -152,33 +141,41 @@ fn main() -&gt; ! {
     sensor
         .set_accel_mode_and_odr(&amp;mut delay, AccelMode::Normal, AccelOutputDataRate::Hz400)
         .unwrap();
-    // Cho phép đo đến 16G vì cú đấm của người thực sự rất nhanh
+    // Allow the sensor to measure up to 16 G since human punches
+    // can actually be quite fast
     sensor.set_accel_scale(AccelScale::G16).unwrap();
 
     let mut max_g = 0.;
-    let mut countdown_ticks: Option&lt;u32&gt; = None;
+    let mut countdown_ticks = None;
 
     loop {
         while !sensor.accel_status().unwrap().xyz_new_data() {
             nop();
         }
+        // x acceleration in g
         let (x, _, _) = sensor.acceleration().unwrap().xyz_mg();
         let g_x = x as f32 / 1000.0;
 
         if let Some(ticks) = countdown_ticks {
             if ticks &gt; 0 {
+                // countdown isn't done yet
                 if g_x &gt; max_g {
                     max_g = g_x;
                 }
                 countdown_ticks = Some(ticks - 1);
             } else {
+                // Countdown is done: report max value
                 rprintln!("Max acceleration: {}g", max_g);
+
+                // Reset
                 max_g = 0.;
                 countdown_ticks = None;
             }
         } else {
+            // If acceleration goes above a threshold, we start measuring
             if g_x &gt; THRESHOLD {
                 rprintln!("START!");
+
                 max_g = g_x;
                 countdown_ticks = Some(TICKS_PER_SEC);
             }
