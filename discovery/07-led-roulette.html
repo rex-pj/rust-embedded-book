@@ -61,138 +61,22 @@
 
     <h1>LED Roulette</h1>
 
-    <p>Được rồi, hãy bắt đầu bằng cách xây dựng ứng dụng sau. Mục tiêu chính là làm quen với quy trình <em>nạp firmware</em> và debug.</p>
+    <p>Được rồi, hãy xây dựng một ứng dụng "thực sự". Mục tiêu là đạt được màn hình ánh đèn quay vòng này:</p>
 
     <p align="center">
       <video src="assets/roulette_fast.mp4" width="500" loop autoplay muted playsinline></video>
     </p>
 
-    <p>Code khởi đầu nằm trong thư mục <code>src/05-led-roulette</code> của repository. File <code>src/main.rs</code> ban đầu có nội dung rất đơn giản:</p>
+    <p>Vì làm việc trực tiếp với các LED pin riêng lẻ khá phiền phức (đặc biệt khi bạn phải dùng gần như tất cả chúng như ở đây), bạn có thể dùng crate BSP <code>microbit-v2</code> đã được thảo luận trước đó để làm việc với "display" LED của MB2. Nó hoạt động như thế này (<code>examples/light-it-all.rs</code>):</p>
 
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![deny(unsafe_code)]
-#![no_main]
+    <pre><code class="language-rust">#![no_main]
 #![no_std]
 
 use cortex_m_rt::entry;
-use panic_halt as _;
-use microbit as _;
-
-#[entry]
-fn main() -&gt; ! {
-    let _y;
-    let x = 42;
-    _y = x;
-
-    loop {}
-}</code></pre>
-
-    <p>Thuộc tính <code>#![no_std]</code> có nghĩa là chương trình này sẽ không dùng crate <code>std</code> (vốn yêu cầu một hệ điều hành bên dưới); thay vào đó chương trình sẽ dùng crate <code>core</code>.</p>
-
-    <p>Thuộc tính <code>#![no_main]</code> có nghĩa là chương trình này sẽ không dùng interface <code>main</code> chuẩn, vốn được thiết kế cho các ứng dụng command line. Thay vào đó, entry point do crate <code>cortex-m-rt</code> cung cấp.</p>
-
-    <p>File <code>.cargo/config</code> điều chỉnh quá trình linking để điều chỉnh layout bộ nhớ của chương trình theo yêu cầu của thiết bị mục tiêu.</p>
-
-    <p>File <code>Embed.toml</code> cấu hình chip (nrf52833), dừng chip sau khi nạp firmware để chương trình không nhảy ngay vào vòng lặp, vô hiệu hóa RTT và bật GDB để debug.</p>
-
-    <h2>Flash &amp; Debug</h2>
-
-    <p>Chạy lệnh sau để nạp firmware và mở GDB stub:</p>
-
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ cargo embed</code></pre>
-
-    <h3>Cơ chế hoạt động</h3>
-
-    <p>Khi cài đặt <code>default.gdb.enabled = true</code> trong <code>Embed.toml</code>, <code>cargo-embed</code> sẽ mở một "GDB stub" sau khi nạp firmware. Đây là một server cho phép GDB kết nối và gửi các lệnh debugging được chuyển tiếp tới MCU qua USB.</p>
-
-    <h3>Hãy debug!</h3>
-
-    <p>Mở một terminal mới và khởi chạy GDB với binary đã build:</p>
-
-    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-bash">$ gdb target/thumbv7em-none-eabihf/debug/led-roulette</code></pre>
-
-    <p>Trong GDB, kết nối tới GDB stub:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) target remote :1337</code></pre>
-
-    <p>Đặt breakpoint tại hàm <code>main</code> và chạy chương trình:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) break main
-(gdb) continue</code></pre>
-
-    <p>Bật chế độ Text User Interface (TUI) để xem source code trong khi debug. Lưu ý: tính năng này không hoạt động trên Windows.</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) layout src</code></pre>
-
-    <p align="center">
-      <img title="GDB TUI" alt="GDB session" src="assets/gdb-layout-src.png" style="max-width:100%">
-    </p>
-
-    <p>Bạn có thể kiểm tra giá trị các biến và bước qua từng dòng lệnh:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) print x
-(gdb) print &amp;x
-(gdb) info locals</code></pre>
-
-    <p>Khi chương trình rơi vào vòng lặp vô hạn, bạn có thể chuyển sang chế độ xem assembly để bước qua từng instruction:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) layout asm</code></pre>
-
-    <p align="center">
-      <img title="GDB disassemble" alt="GDB session" src="assets/gdb-layout-asm.png" style="max-width:100%">
-    </p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) stepi</code></pre>
-
-    <p>Để reset vi điều khiển về điểm bắt đầu và chạy lại:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) monitor reset
-(gdb) c</code></pre>
-
-    <p>Thoát TUI và kết thúc phiên debug:</p>
-
-    <div class="code-header"><span class="code-lang">text</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-text">(gdb) tui disable
-(gdb) quit</code></pre>
-
-    <h2>Thử thách</h2>
-
-    <p>Bây giờ bạn đã được trang bị đầy đủ để đối mặt với một thử thách! Nhiệm vụ của bạn là triển khai ứng dụng đã được trình bày ở đầu chương này — hiệu ứng đèn LED quay vòng.</p>
-
-    <p align="center">
-      <video src="assets/roulette_fast.mp4" width="500" loop autoplay muted playsinline></video>
-    </p>
-
-    <p>Nếu bạn chưa nhìn rõ chính xác hiệu ứng này, dưới đây là phiên bản chậm hơn nhiều:</p>
-
-    <p align="center">
-      <video src="assets/roulette_slow.mp4" width="500" loop autoplay muted playsinline></video>
-    </p>
-
-    <p>Làm việc trực tiếp với các LED pin riêng lẻ khá phiền phức (đặc biệt khi bạn phải dùng gần như tất cả chúng như ở đây), vì vậy bạn có thể sử dụng display API được cung cấp bởi BSP. API hoạt động như sau:</p>
-
-    <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
-    <pre><code class="language-rust">#![deny(unsafe_code)]
-#![no_main]
-#![no_std]
-
-use cortex_m_rt::entry;
-use rtt_target::rtt_init_print;
+use embedded_hal::delay::DelayNs;
+use microbit::{board::Board, display::blocking::Display, hal::Timer};
 use panic_rtt_target as _;
-use microbit::{
-    board::Board,
-    display::blocking::Display,
-    hal::{prelude::*, Timer},
-};
+use rtt_target::rtt_init_print;
 
 #[entry]
 fn main() -&gt; ! {
@@ -210,17 +94,35 @@ fn main() -&gt; ! {
     ];
 
     loop {
+        // Show light_it_all for 1000ms
         display.show(&amp;mut timer, light_it_all, 1000);
+        // clear the display again
         display.clear();
         timer.delay_ms(1000_u32);
     }
 }</code></pre>
 
-    <p>Mảng Rust <code>light_it_all</code> trong ví dụ chứa <code>1</code> ở những vị trí LED bật và <code>0</code> ở những vị trí LED tắt. Lời gọi <code>show()</code> nhận vào một timer (để BSP display code dùng tạo delay), một bản sao của mảng ảnh, và thời gian hiển thị tính bằng millisecond.</p>
+    <p>Mảng Rust <code>light_it_all</code> trong ví dụ chứa <code>1</code> ở những vị trí LED bật và <code>0</code> ở những vị trí LED tắt. Lời gọi <code>show()</code> nhận vào một timer (để BSP display code dùng tạo delay), một <em>bản sao</em> của mảng, và thời gian hiển thị tính bằng millisecond trước khi trả về.</p>
 
-    <p>Được trang bị API này, nhiệm vụ của bạn về cơ bản chỉ là tính toán ma trận ảnh phù hợp và truyền nó vào BSP.</p>
+    <h2>🏆 Thử thách</h2>
 
-    <h2>Giải pháp của tôi</h2>
+    <p>Bây giờ bạn đã được trang bị đầy đủ để đối mặt với thử thách! Một lần nữa, ứng dụng của bạn sẽ trông như thế này:</p>
+
+    <p align="center">
+      <video src="assets/roulette_fast.mp4" width="500" loop autoplay muted playsinline></video>
+    </p>
+
+    <p>Nếu bạn không nhìn rõ chính xác những gì đang xảy ra, đây là phiên bản chậm hơn nhiều:</p>
+
+    <p align="center">
+      <video src="assets/roulette_slow.mp4" width="500" loop autoplay muted playsinline></video>
+    </p>
+
+    <p>Nếu bạn cần gợi ý, <code>templates/solution.rs</code> cung cấp một đoạn code đã được điền gần hoàn chỉnh để bạn hoàn thiện. Tuy nhiên, tôi gợi ý bạn hãy tự thử trước — đến lúc này thì nên làm được rồi…</p>
+
+    <p>Làm xong chưa?</p>
+
+    <h2>💡 Giải pháp của tôi</h2>
 
     <p>Bạn đã nghĩ ra giải pháp gì?</p>
 
@@ -284,19 +186,21 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h2>Build cho bản release</h2>
+    <h2>➕ Thêm một điều nữa!</h2>
 
-    <p>Thêm một điều nữa! Hãy kiểm tra xem giải pháp của bạn có hoạt động khi compile ở chế độ "release" không:</p>
+    <p>Hãy kiểm tra xem giải pháp của bạn có hoạt động khi compile ở chế độ "release" không:</p>
 
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">$ cargo embed --release</code></pre>
 
-    <p>Nếu bạn muốn debug binary ở chế độ release, hãy dùng lệnh GDB sau. Lưu ý rằng GDB sẽ gặp khó khăn hơn trong việc hiểu chuyện gì đang xảy ra vì compiler đã tối ưu hóa code đáng kể:</p>
+    <p>Nếu bạn muốn debug binary ở chế độ "release", hãy dùng lệnh GDB khác:</p>
 
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">$ gdb ../../../target/thumbv7em-none-eabihf/release/led-roulette</code></pre>
 
-    <p>Kích thước binary là điều chúng ta nên luôn để mắt tới! Giải pháp của bạn có kích thước bao nhiêu? Bạn có thể kiểm tra bằng lệnh <code>cargo size</code> trên binary release:</p>
+    <p>Rust compiler chỉnh sửa các machine instruction được tạo ra trong một release build (đôi khi rất nhiều) nhằm cố gắng làm cho code nhanh hơn hoặc nhỏ hơn. Thật không may, GDB gặp khó khăn khi cố gắng hiểu những gì đang xảy ra sau quá trình này. Kết quả là debug release build với GDB có thể khó khăn.</p>
+
+    <p>Kích thước binary là điều chúng ta nên luôn để mắt tới! Giải pháp của bạn có kích thước bao nhiêu? Bạn có thể kiểm tra bằng lệnh <code>size</code> trên binary release:</p>
 
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">$ cargo size --release -- -A</code></pre>
@@ -324,9 +228,9 @@ section              size        addr
 .comment              109         0x0
 Total              283715</code></pre>
 
-    <p>Section <code>.text</code> chứa các lệnh của chương trình (program instructions). Section <code>.rodata</code> chứa dữ liệu read-only (hằng số được lưu trong flash). Các section <code>.data</code> và <code>.bss</code> chứa các biến được cấp phát tĩnh trong RAM (biến <code>static</code>).</p>
+    <p>Kết quả của bạn có thể khác đôi chút tùy thuộc vào cách code của bạn được build: điều đó bình thường.</p>
 
-    <p>Phần lớn kích thước binary thực ra là các section liên quan đến debug (<code>.debug_loc</code>, <code>.debug_abbrev</code>, <code>.debug_info</code>, v.v.). Tuy nhiên, các section này <strong>không được nạp lên vi điều khiển</strong> ở bất kỳ thời điểm nào — xét cho cùng, chúng không liên quan đến việc thực thi chương trình.</p>
+    <p>Biết cách đọc kết quả này không? Section <code>text</code> chứa các lệnh của chương trình (program instructions). Section <code>rodata</code> chứa dữ liệu read-only được lưu cùng với các program instruction. Section <code>data</code> và <code>bss</code> chứa các biến được cấp phát tĩnh trong RAM (biến <code>static</code>). Nếu bạn nhớ thông số kỹ thuật của vi điều khiển trên micro:bit, bạn sẽ nhận thấy flash memory của nó nhỏ hơn gấp đôi kích thước của binary cực kỳ đơn giản này: điều này có đúng không? Như chúng ta có thể thấy từ số liệu kích thước, phần lớn binary thực ra là các section liên quan đến debug. Tuy nhiên, những section đó <strong>không được nạp lên vi điều khiển</strong> ở bất kỳ thời điểm nào — xét cho cùng, chúng không liên quan đến việc thực thi chương trình.</p>
 
     <blockquote>
       <p><strong>LƯU Ý</strong> Cargo project đã được cấu hình sẵn để build binary release sử dụng LTO (Link-Time Optimization).</p>

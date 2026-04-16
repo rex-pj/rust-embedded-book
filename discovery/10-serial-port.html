@@ -106,11 +106,11 @@
     </ul>
     <p>Đối với MacOS, hãy xem tài liệu Linux, mặc dù trải nghiệm của bạn có thể hơi khác.</p>
 
-    <h1 id="linux">Linux USB↔serial tooling</h1>
+    <h1 id="linux">🐧 Linux USB↔serial tooling</h1>
 
     <p>Virtual serial device của MB2 qua USB sẽ xuất hiện trên Linux khi bạn kết nối MB2 vào cổng USB Linux.</p>
 
-    <h2>Kết nối board MB2</h2>
+    <h2>🔌 Kết nối board MB2</h2>
 
     <p>Nếu bạn kết nối board MB2 vào máy tính, bạn sẽ thấy một thiết bị TTY mới xuất hiện trong <code>/dev</code>.</p>
 
@@ -133,7 +133,7 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 
     <p>Bạn sẽ thấy LED màu cam trên MB2, ngay cạnh cổng USB, nhấp nháy một chút mỗi khi bạn nhập lệnh này. Baud rate và các thông số serial khác có thể chưa được cài đúng cho serial port của MB2, nhưng MB2 có thể nhận biết được rằng nó đang được gửi serial.</p>
 
-    <h2>minicom</h2>
+    <h2>📡 minicom</h2>
 
     <p>Chúng ta sẽ dùng chương trình <code>minicom</code> để tương tác với thiết bị serial bằng bàn phím. Chúng ta sẽ dùng các cài đặt mặc định của <code>minicom</code> hiện đại: 115200 bps, 8 data bits, 1 stop bit, không parity bits, không flow control. (115200 bps là tốc độ hoạt động với MB2.)</p>
 
@@ -148,7 +148,7 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 
     <p>Bây giờ bạn có thể gửi dữ liệu bằng bàn phím! Hãy thử gõ gì đó. Lưu ý rằng TUI sẽ <em>không</em> echo lại những gì bạn gõ. Tuy nhiên, nếu bạn chú ý đến LED vàng phía trên MB2, bạn sẽ thấy nó nhấp nháy mỗi khi bạn gõ.</p>
 
-    <h2>Các lệnh minicom</h2>
+    <h2>⌨️ Các lệnh minicom</h2>
 
     <p><code>minicom</code> cung cấp các lệnh thông qua phím tắt. Trên Linux, các phím tắt bắt đầu bằng <code>Ctrl+A</code>. (Trên Mac, các phím tắt bắt đầu bằng phím <code>Meta</code>.) Một số lệnh hữu ích:</p>
     <ul>
@@ -162,7 +162,7 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
       <p><strong>LƯU Ý</strong> cho người dùng Mac: Trong các lệnh trên, thay <code>Ctrl+A</code> bằng <code>Meta</code>.</p>
     </blockquote>
 
-    <h1 id="windows">Windows tooling</h1>
+    <h1 id="windows">🪟 Windows tooling</h1>
 
     <p>Bắt đầu bằng cách rút micro:bit ra.</p>
 
@@ -200,9 +200,7 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 
     <p>Nếu bạn gõ trên console này, LED vàng phía trên MB2 sẽ nhấp nháy. Mỗi phím bấm sẽ làm LED nhấp nháy một lần. Lưu ý rằng console sẽ không hiển thị lại những gì bạn gõ nên màn hình sẽ vẫn trống.</p>
 
-    <h1>RS-232</h1>
-
-    <h2>RS-232</h2>
+    <h1>📖 RS-232</h1>
 
     <p>Đây chắc chắn là phần tùy chọn, nhưng bạn có thể thấy hữu ích khi biết những điều này khi nói chuyện với người khác về serial trong tương lai.</p>
 

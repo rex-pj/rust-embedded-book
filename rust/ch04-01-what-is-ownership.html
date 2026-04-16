@@ -1,487 +1,1407 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ownership là gì? — The Rust Book (Tiếng Việt)</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="progress"></div>
-<button id="hamburger">☰</button>
-<nav id="sidebar">
-  <div id="sidebar-header">
-    <a href="index.html" class="logo">
-      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
-      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
-    </a>
-  </div>
-  <nav>
-    <div class="nav-group">
-      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
-      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
-      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
-      <a href="ch01-00-getting-started.html">Tổng quan</a>
-      <a href="ch01-01-installation.html">Cài đặt</a>
-      <a href="ch01-02-hello-world.html">Hello, World!</a>
-      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
-      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
-      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
-      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
-      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
-      <a href="ch03-03-how-functions-work.html">Hàm</a>
-      <a href="ch03-04-comments.html">Comments</a>
-      <a href="ch03-05-control-flow.html">Control Flow</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 4 — Ownership</div>
-      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
-      <a href="ch04-01-what-is-ownership.html" class="active">Ownership là gì?</a>
-      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
-      <a href="ch04-03-slices.html">Slices</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 5 — Struct</div>
-      <a href="ch05-00-structs.html">Tổng quan</a>
-      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
-      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
-      <a href="ch05-03-method-syntax.html">Method Syntax</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
-      <a href="ch06-00-enums.html">Tổng quan</a>
-      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
-      <a href="ch06-02-match.html">match</a>
-      <a href="ch06-03-if-let.html">if let</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
-      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
-      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
-      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
-      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
-      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
-      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 8 — Collections</div>
-      <a href="ch08-00-common-collections.html">Tổng quan</a>
-      <a href="ch08-01-vectors.html">Vector</a>
-      <a href="ch08-02-strings.html">String</a>
-      <a href="ch08-03-hash-maps.html">Hash Map</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
-      <a href="ch09-00-error-handling.html">Tổng quan</a>
-      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
-      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
-      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
-      <a href="ch10-00-generics.html">Tổng quan</a>
-      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
-      <a href="ch10-02-traits.html">Trait</a>
-      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 11 — Testing</div>
-      <a href="ch11-00-testing.html">Tổng quan</a>
-      <a href="ch11-01-writing-tests.html">Viết test</a>
-      <a href="ch11-02-running-tests.html">Chạy test</a>
-      <a href="ch11-03-test-organization.html">Tổ chức test</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
-      <a href="ch12-00-an-io-project.html">Tổng quan</a>
-      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
-      <a href="ch12-02-reading-a-file.html">Đọc file</a>
-      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
-      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
-      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
-      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 13 — Functional Features</div>
-      <a href="ch13-00-functional-features.html">Tổng quan</a>
-      <a href="ch13-01-closures.html">Closure</a>
-      <a href="ch13-02-iterators.html">Iterator</a>
-      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
-      <a href="ch13-04-performance.html">Hiệu suất</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
-      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
-      <a href="ch14-01-release-profiles.html">Release Profiles</a>
-      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
-      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
-      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
-      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
-      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
-      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
-      <a href="ch15-02-deref.html">Deref Trait</a>
-      <a href="ch15-03-drop.html">Drop Trait</a>
-      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
-      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
-      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
-      <a href="ch16-00-concurrency.html">Tổng quan</a>
-      <a href="ch16-01-threads.html">Threads</a>
-      <a href="ch16-02-message-passing.html">Message Passing</a>
-      <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 17 — Async/Await</div>
-      <a href="ch17-00-async-await.html">Tổng quan</a>
-      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
-      <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
-      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 18 — OOP</div>
-      <a href="ch18-00-oop.html">Tổng quan</a>
-      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
-      <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
-      <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
-      <a href="ch19-02-refutability.html">Refutability</a>
-      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 20 — Advanced Features</div>
-      <a href="ch20-00-advanced-features.html">Tổng quan</a>
-      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
-      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
-      <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
-      <a href="ch20-05-macros.html">Macros</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
-      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
-      <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
-      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Phụ lục</div>
-      <a href="appendix-00.html">Tá»•ng quan</a>
-      <a href="appendix-01-keywords.html">A â€” Keywords</a>
-      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
-      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
-      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
-      <a href="appendix-05-editions.html">E â€” Editions</a>
-      <a href="appendix-06-translation.html">F â€” Translations</a>
-      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
-    </div>
-  </nav>
-</nav>
-<main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — The Rust Book</span></div>
-  <div id="main">
-  <div class="page-nav"><a href="ch04-00-understanding-ownership.html">← Trước</a><a href="ch04-02-references-and-borrowing.html">Tiếp →</a></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ownership là gì? — The Rust Book (Tiếng Việt)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button id="hamburger">☰</button>
+    <nav id="sidebar">
+      <div id="sidebar-header">
+        <a href="index.html" class="logo">
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect width="32" height="32" rx="6" fill="#CE422B" />
+            <text
+              x="16"
+              y="22"
+              text-anchor="middle"
+              fill="white"
+              font-size="18"
+              font-weight="bold"
+              font-family="serif"
+            >
+              R
+            </text>
+          </svg>
+          <div>
+            <h1>The Rust Book</h1>
+            <p>Tiếng Việt</p>
+          </div>
+        </a>
+      </div>
+      <nav>
+        <div class="nav-group">
+          <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+          <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+          <a href="ch00-00-introduction.html" class="chapter-link"
+            >🎯 Giới thiệu</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+          <a href="ch01-00-getting-started.html">Tổng quan</a>
+          <a href="ch01-01-installation.html">Cài đặt</a>
+          <a href="ch01-02-hello-world.html">Hello, World!</a>
+          <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+          <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+          <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+          <a href="ch03-01-variables-and-mutability.html"
+            >Biến &amp; Mutability</a
+          >
+          <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+          <a href="ch03-03-how-functions-work.html">Hàm</a>
+          <a href="ch03-04-comments.html">Comments</a>
+          <a href="ch03-05-control-flow.html">Control Flow</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 4 — Ownership</div>
+          <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+          <a href="ch04-01-what-is-ownership.html" class="active"
+            >Ownership là gì?</a
+          >
+          <a href="ch04-02-references-and-borrowing.html"
+            >References &amp; Borrowing</a
+          >
+          <a href="ch04-03-slices.html">Slices</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 5 — Struct</div>
+          <a href="ch05-00-structs.html">Tổng quan</a>
+          <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+          <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+          <a href="ch05-03-method-syntax.html">Method Syntax</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 6 — Enum &amp; Pattern Matching
+          </div>
+          <a href="ch06-00-enums.html">Tổng quan</a>
+          <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+          <a href="ch06-02-match.html">match</a>
+          <a href="ch06-03-if-let.html">if let</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+          <a
+            href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"
+            >Tổng quan</a
+          >
+          <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+          <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"
+            >Modules</a
+          >
+          <a
+            href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"
+            >Paths</a
+          >
+          <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"
+            >use</a
+          >
+          <a href="ch07-05-separating-modules-into-different-files.html"
+            >Tách module ra file</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 8 — Collections</div>
+          <a href="ch08-00-common-collections.html">Tổng quan</a>
+          <a href="ch08-01-vectors.html">Vector</a>
+          <a href="ch08-02-strings.html">String</a>
+          <a href="ch08-03-hash-maps.html">Hash Map</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+          <a href="ch09-00-error-handling.html">Tổng quan</a>
+          <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+          <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+          <a href="ch09-03-to-panic-or-not-to-panic.html"
+            >Khi nào dùng panic?</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 10 — Generics, Trait, Lifetime
+          </div>
+          <a href="ch10-00-generics.html">Tổng quan</a>
+          <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+          <a href="ch10-02-traits.html">Trait</a>
+          <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 11 — Testing</div>
+          <a href="ch11-00-testing.html">Tổng quan</a>
+          <a href="ch11-01-writing-tests.html">Viết test</a>
+          <a href="ch11-02-running-tests.html">Chạy test</a>
+          <a href="ch11-03-test-organization.html">Tổ chức test</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+          <a href="ch12-00-an-io-project.html">Tổng quan</a>
+          <a href="ch12-01-accepting-command-line-arguments.html"
+            >Đọc tham số CLI</a
+          >
+          <a href="ch12-02-reading-a-file.html">Đọc file</a>
+          <a href="ch12-03-improving-error-handling-and-modularity.html"
+            >Cải thiện xử lý lỗi</a
+          >
+          <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+          <a href="ch12-05-working-with-environment-variables.html"
+            >Biến môi trường</a
+          >
+          <a href="ch12-06-writing-to-stderr-instead-of-stdout.html"
+            >stderr vs stdout</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 13 — Functional Features</div>
+          <a href="ch13-00-functional-features.html">Tổng quan</a>
+          <a href="ch13-01-closures.html">Closure</a>
+          <a href="ch13-02-iterators.html">Iterator</a>
+          <a href="ch13-03-improving-our-io-project.html"
+            >Cải thiện dự án I/O</a
+          >
+          <a href="ch13-04-performance.html">Hiệu suất</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+          <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+          <a href="ch14-01-release-profiles.html">Release Profiles</a>
+          <a href="ch14-02-publishing-to-crates-io.html"
+            >Xuất bản lên crates.io</a
+          >
+          <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+          <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+          <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+          <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+          <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+          <a href="ch15-02-deref.html">Deref Trait</a>
+          <a href="ch15-03-drop.html">Drop Trait</a>
+          <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+          <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+          <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+          <a href="ch16-00-concurrency.html">Tổng quan</a>
+          <a href="ch16-01-threads.html">Threads</a>
+          <a href="ch16-02-message-passing.html">Message Passing</a>
+          <a href="ch16-03-shared-state.html">Shared State</a>
+          <a href="ch16-04-extensible-concurrency-sync-and-send.html"
+            >Sync &amp; Send</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 17 — Async/Await</div>
+          <a href="ch17-00-async-await.html">Tổng quan</a>
+          <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+          <a href="ch17-02-concurrency-with-async.html"
+            >Concurrency với async</a
+          >
+          <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+          <a href="ch17-04-streams.html">Streams</a>
+          <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+          <a href="ch17-06-futures-tasks-threads.html"
+            >Futures, Tasks, Threads</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 18 — OOP</div>
+          <a href="ch18-00-oop.html">Tổng quan</a>
+          <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+          <a href="ch18-02-trait-objects.html">Trait Objects</a>
+          <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+          <a href="ch19-00-patterns.html">Tổng quan</a>
+          <a href="ch19-01-all-the-places-for-patterns.html"
+            >Nơi dùng Pattern</a
+          >
+          <a href="ch19-02-refutability.html">Refutability</a>
+          <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 20 — Advanced Features</div>
+          <a href="ch20-00-advanced-features.html">Tổng quan</a>
+          <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+          <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+          <a href="ch20-03-advanced-types.html">Advanced Types</a>
+          <a href="ch20-04-advanced-functions-and-closures.html"
+            >Advanced Functions &amp; Closures</a
+          >
+          <a href="ch20-05-macros.html">Macros</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+          <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+          <a href="ch21-01-single-threaded.html">Single-threaded</a>
+          <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+          <a href="ch21-03-graceful-shutdown-and-cleanup.html"
+            >Graceful Shutdown</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Phụ lục</div>
+          <a href="appendix-00.html">Tổng quan</a>
+          <a href="appendix-01-keywords.html">A — Keywords</a>
+          <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+          <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+          <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+          <a href="appendix-05-editions.html">E — Editions</a>
+          <a href="appendix-06-translation.html">F — Translations</a>
+          <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+        </div>
+      </nav>
+    </nav>
+    <main id="content">
+      <div id="topbar">
+        <a href="index.html">The Rust Book</a><span class="sep">›</span
+        ><span class="current">Chương 4 — The Rust Book</span>
+      </div>
+      <div id="main">
+        <div class="page-nav">
+          <a href="ch04-00-understanding-ownership.html">← Trước</a
+          ><a href="ch04-02-references-and-borrowing.html">Tiếp →</a>
+        </div>
 
-  <h1>🔑 Ownership là gì?</h1>
+        <h1>🔑 Ownership là gì?</h1>
 
-  <p>Ownership là tính năng quan trọng nhất của Rust, ảnh hưởng sâu sắc đến toàn bộ ngôn ngữ. Nó cho phép Rust đảm bảo an toàn bộ nhớ mà không cần garbage collector. Do đó, việc hiểu cách ownership hoạt động là vô cùng quan trọng.</p>
+        <p>
+          Ownership là tính năng quan trọng nhất của Rust, ảnh hưởng sâu sắc đến
+          toàn bộ ngôn ngữ. Nó cho phép Rust đảm bảo an toàn bộ nhớ mà không cần
+          garbage collector. Do đó, việc hiểu cách ownership hoạt động là vô
+          cùng quan trọng.
+        </p>
 
-  <p>Trong chương này, chúng ta sẽ tìm hiểu về ownership thông qua một số ví dụ tập trung vào cấu trúc dữ liệu rất phổ biến: <strong>string</strong>.</p>
+        <p>
+          Trong chương này, chúng ta sẽ tìm hiểu về ownership thông qua một số
+          ví dụ tập trung vào cấu trúc dữ liệu rất phổ biến:
+          <strong>string</strong>.
+        </p>
 
-  <h2>📚 Stack và Heap</h2>
+        <h2>📚 Stack và Heap</h2>
 
-  <p>Trong nhiều ngôn ngữ lập trình, bạn không cần phải suy nghĩ nhiều về stack và heap. Nhưng với Rust, việc một giá trị nằm trên stack hay heap ảnh hưởng đến cách ngôn ngữ hoạt động và lý do tại sao bạn phải đưa ra các quyết định nhất định.</p>
+        <p>
+          Trong nhiều ngôn ngữ lập trình, bạn không cần phải suy nghĩ nhiều về
+          stack và heap. Nhưng với Rust, việc một giá trị nằm trên stack hay
+          heap ảnh hưởng đến cách ngôn ngữ hoạt động và lý do tại sao bạn phải
+          đưa ra các quyết định nhất định.
+        </p>
 
-  <p>Cả stack và heap đều là các vùng bộ nhớ dành cho chương trình của bạn sử dụng lúc runtime, nhưng chúng được tổ chức theo những cách khác nhau.</p>
+        <p>
+          Cả stack và heap đều là các vùng bộ nhớ dành cho chương trình của bạn
+          sử dụng lúc runtime, nhưng chúng được tổ chức theo những cách khác
+          nhau.
+        </p>
 
-  <!-- SVG Diagram: Stack vs Heap -->
-  <div class="diagram-container">
-    <svg width="680" height="320" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:2rem auto;max-width:100%">
-      <defs>
-        <linearGradient id="stackGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#bfdbfe"/>
-        </linearGradient>
-        <linearGradient id="heapGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dcfce7"/>
-          <stop offset="100%" stop-color="#bbf7d0"/>
-        </linearGradient>
-      </defs>
-      <!-- Stack panel -->
-      <rect x="20" y="10" width="280" height="290" rx="12" fill="url(#stackGrad)" stroke="#3b82f6" stroke-width="2"/>
-      <text x="160" y="38" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e40af">STACK</text>
-      <text x="160" y="56" text-anchor="middle" font-size="11" fill="#3b82f6">Kích thước cố định · LIFO</text>
-      <!-- Stack frames -->
-      <rect x="40" y="68" width="240" height="36" rx="6" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="160" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">x: i32 = 5</text>
-      <text x="160" y="97" text-anchor="middle" font-size="10" fill="#1e40af">địa chỉ: 0xFFFC</text>
-      <rect x="40" y="112" width="240" height="36" rx="6" fill="#60a5fa" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="160" y="126" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">s1: ptr | len | cap</text>
-      <text x="160" y="141" text-anchor="middle" font-size="10" fill="#1e40af">ptr→heap | 5 | 5</text>
-      <rect x="40" y="156" width="240" height="36" rx="6" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="160" y="170" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">y: i32 = x  (copy)</text>
-      <text x="160" y="185" text-anchor="middle" font-size="10" fill="#1e40af">địa chỉ: 0xFFF8</text>
-      <!-- Stack pointer arrow -->
-      <text x="160" y="220" text-anchor="middle" font-size="11" fill="#1e40af">↑ Stack pointer</text>
-      <text x="160" y="236" text-anchor="middle" font-size="10" fill="#1e40af">Push/Pop O(1)</text>
-      <text x="160" y="260" text-anchor="middle" font-size="11" fill="#6b7280">Cấp phát/giải phóng</text>
-      <text x="160" y="276" text-anchor="middle" font-size="11" fill="#6b7280">tự động khi ra khỏi scope</text>
-      <!-- Heap panel -->
-      <rect x="380" y="10" width="280" height="290" rx="12" fill="url(#heapGrad)" stroke="#22c55e" stroke-width="2"/>
-      <text x="520" y="38" text-anchor="middle" font-size="16" font-weight="bold" fill="#15803d">HEAP</text>
-      <text x="520" y="56" text-anchor="middle" font-size="11" fill="#22c55e">Kích thước động · Tự do</text>
-      <!-- Heap data for s1 -->
-      <rect x="400" y="68" width="240" height="100" rx="8" fill="#86efac" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="520" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#14532d">String "hello"</text>
-      <rect x="415" y="100" width="32" height="28" rx="3" fill="#4ade80" stroke="#22c55e"/>
-      <text x="431" y="119" text-anchor="middle" font-size="14" fill="#14532d">'h'</text>
-      <rect x="452" y="100" width="32" height="28" rx="3" fill="#4ade80" stroke="#22c55e"/>
-      <text x="468" y="119" text-anchor="middle" font-size="14" fill="#14532d">'e'</text>
-      <rect x="489" y="100" width="32" height="28" rx="3" fill="#4ade80" stroke="#22c55e"/>
-      <text x="505" y="119" text-anchor="middle" font-size="14" fill="#14532d">'l'</text>
-      <rect x="526" y="100" width="32" height="28" rx="3" fill="#4ade80" stroke="#22c55e"/>
-      <text x="542" y="119" text-anchor="middle" font-size="14" fill="#14532d">'l'</text>
-      <rect x="563" y="100" width="32" height="28" rx="3" fill="#4ade80" stroke="#22c55e"/>
-      <text x="579" y="119" text-anchor="middle" font-size="14" fill="#14532d">'o'</text>
-      <text x="520" y="155" text-anchor="middle" font-size="10" fill="#15803d">0x0040 ... 0x0044</text>
-      <text x="520" y="220" text-anchor="middle" font-size="11" fill="#6b7280">Cấp phát runtime</text>
-      <text x="520" y="236" text-anchor="middle" font-size="11" fill="#6b7280">Trả về khi drop()</text>
-      <text x="520" y="260" text-anchor="middle" font-size="11" fill="#6b7280">Allocator quản lý</text>
-      <text x="520" y="276" text-anchor="middle" font-size="11" fill="#6b7280">vị trí &amp; kích thước</text>
-      <!-- Arrow from stack ptr to heap -->
-      <defs>
-        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="#6b7280"/>
-        </marker>
-      </defs>
-      <line x1="280" y1="130" x2="398" y2="118" stroke="#6b7280" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
-      <text x="335" y="120" text-anchor="middle" font-size="10" fill="#6b7280">ptr</text>
-    </svg>
-    <p class="diagram-caption" style="text-align:center;font-size:0.85rem;color:#6b7280;margin-top:0.5rem">Stack lưu trữ dữ liệu kích thước cố định; Heap lưu dữ liệu động. Con trỏ (ptr) trên stack trỏ đến dữ liệu thực trên heap.</p>
-  </div>
+        <!-- SVG Diagram: Stack vs Heap -->
+        <div class="diagram-container">
+          <svg
+            width="680"
+            height="320"
+            viewBox="0 0 680 320"
+            xmlns="http://www.w3.org/2000/svg"
+            style="display: block; margin: 2rem auto; max-width: 100%"
+          >
+            <defs>
+              <linearGradient id="stackGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#dbeafe" />
+                <stop offset="100%" stop-color="#bfdbfe" />
+              </linearGradient>
+              <linearGradient id="heapGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#dcfce7" />
+                <stop offset="100%" stop-color="#bbf7d0" />
+              </linearGradient>
+            </defs>
+            <!-- Stack panel -->
+            <rect
+              x="20"
+              y="10"
+              width="280"
+              height="290"
+              rx="12"
+              fill="url(#stackGrad)"
+              stroke="#3b82f6"
+              stroke-width="2"
+            />
+            <text
+              x="160"
+              y="38"
+              text-anchor="middle"
+              font-size="16"
+              font-weight="bold"
+              fill="#1e40af"
+            >
+              STACK
+            </text>
+            <text
+              x="160"
+              y="56"
+              text-anchor="middle"
+              font-size="11"
+              fill="#3b82f6"
+            >
+              Kích thước cố định · LIFO
+            </text>
+            <!-- Stack frames -->
+            <rect
+              x="40"
+              y="68"
+              width="240"
+              height="36"
+              rx="6"
+              fill="#93c5fd"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+            />
+            <text
+              x="160"
+              y="82"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#1e3a8a"
+            >
+              x: i32 = 5
+            </text>
+            <text
+              x="160"
+              y="97"
+              text-anchor="middle"
+              font-size="10"
+              fill="#1e40af"
+            >
+              địa chỉ: 0xFFFC
+            </text>
+            <rect
+              x="40"
+              y="112"
+              width="240"
+              height="36"
+              rx="6"
+              fill="#60a5fa"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+            />
+            <text
+              x="160"
+              y="126"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#1e3a8a"
+            >
+              s1: ptr | len | cap
+            </text>
+            <text
+              x="160"
+              y="141"
+              text-anchor="middle"
+              font-size="10"
+              fill="#1e40af"
+            >
+              ptr→heap | 5 | 5
+            </text>
+            <rect
+              x="40"
+              y="156"
+              width="240"
+              height="36"
+              rx="6"
+              fill="#93c5fd"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+            />
+            <text
+              x="160"
+              y="170"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#1e3a8a"
+            >
+              y: i32 = x (copy)
+            </text>
+            <text
+              x="160"
+              y="185"
+              text-anchor="middle"
+              font-size="10"
+              fill="#1e40af"
+            >
+              địa chỉ: 0xFFF8
+            </text>
+            <!-- Stack pointer arrow -->
+            <text
+              x="160"
+              y="220"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              ↑ Stack pointer
+            </text>
+            <text
+              x="160"
+              y="236"
+              text-anchor="middle"
+              font-size="10"
+              fill="#1e40af"
+            >
+              Push/Pop O(1)
+            </text>
+            <text
+              x="160"
+              y="260"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              Cấp phát/giải phóng
+            </text>
+            <text
+              x="160"
+              y="276"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              tự động khi ra khỏi scope
+            </text>
+            <!-- Heap panel -->
+            <rect
+              x="380"
+              y="10"
+              width="280"
+              height="290"
+              rx="12"
+              fill="url(#heapGrad)"
+              stroke="#22c55e"
+              stroke-width="2"
+            />
+            <text
+              x="520"
+              y="38"
+              text-anchor="middle"
+              font-size="16"
+              font-weight="bold"
+              fill="#15803d"
+            >
+              HEAP
+            </text>
+            <text
+              x="520"
+              y="56"
+              text-anchor="middle"
+              font-size="11"
+              fill="#22c55e"
+            >
+              Kích thước động · Tự do
+            </text>
+            <!-- Heap data for s1 -->
+            <rect
+              x="400"
+              y="68"
+              width="240"
+              height="100"
+              rx="8"
+              fill="#86efac"
+              stroke="#22c55e"
+              stroke-width="1.5"
+            />
+            <text
+              x="520"
+              y="90"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#14532d"
+            >
+              String "hello"
+            </text>
+            <rect
+              x="415"
+              y="100"
+              width="32"
+              height="28"
+              rx="3"
+              fill="#4ade80"
+              stroke="#22c55e"
+            />
+            <text
+              x="431"
+              y="119"
+              text-anchor="middle"
+              font-size="14"
+              fill="#14532d"
+            >
+              'h'
+            </text>
+            <rect
+              x="452"
+              y="100"
+              width="32"
+              height="28"
+              rx="3"
+              fill="#4ade80"
+              stroke="#22c55e"
+            />
+            <text
+              x="468"
+              y="119"
+              text-anchor="middle"
+              font-size="14"
+              fill="#14532d"
+            >
+              'e'
+            </text>
+            <rect
+              x="489"
+              y="100"
+              width="32"
+              height="28"
+              rx="3"
+              fill="#4ade80"
+              stroke="#22c55e"
+            />
+            <text
+              x="505"
+              y="119"
+              text-anchor="middle"
+              font-size="14"
+              fill="#14532d"
+            >
+              'l'
+            </text>
+            <rect
+              x="526"
+              y="100"
+              width="32"
+              height="28"
+              rx="3"
+              fill="#4ade80"
+              stroke="#22c55e"
+            />
+            <text
+              x="542"
+              y="119"
+              text-anchor="middle"
+              font-size="14"
+              fill="#14532d"
+            >
+              'l'
+            </text>
+            <rect
+              x="563"
+              y="100"
+              width="32"
+              height="28"
+              rx="3"
+              fill="#4ade80"
+              stroke="#22c55e"
+            />
+            <text
+              x="579"
+              y="119"
+              text-anchor="middle"
+              font-size="14"
+              fill="#14532d"
+            >
+              'o'
+            </text>
+            <text
+              x="520"
+              y="155"
+              text-anchor="middle"
+              font-size="10"
+              fill="#15803d"
+            >
+              0x0040 ... 0x0044
+            </text>
+            <text
+              x="520"
+              y="220"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              Cấp phát runtime
+            </text>
+            <text
+              x="520"
+              y="236"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              Trả về khi drop()
+            </text>
+            <text
+              x="520"
+              y="260"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              Allocator quản lý
+            </text>
+            <text
+              x="520"
+              y="276"
+              text-anchor="middle"
+              font-size="11"
+              fill="#6b7280"
+            >
+              vị trí &amp; kích thước
+            </text>
+            <!-- Arrow from stack ptr to heap -->
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="8"
+                markerHeight="6"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <polygon points="0 0, 8 3, 0 6" fill="#6b7280" />
+              </marker>
+            </defs>
+            <line
+              x1="280"
+              y1="130"
+              x2="398"
+              y2="118"
+              stroke="#6b7280"
+              stroke-width="2"
+              stroke-dasharray="5,3"
+              marker-end="url(#arrowhead)"
+            />
+            <text
+              x="335"
+              y="120"
+              text-anchor="middle"
+              font-size="10"
+              fill="#6b7280"
+            >
+              ptr
+            </text>
+          </svg>
+          <p
+            class="diagram-caption"
+            style="
+              text-align: center;
+              font-size: 0.85rem;
+              color: #6b7280;
+              margin-top: 0.5rem;
+            "
+          >
+            Stack lưu trữ dữ liệu kích thước cố định; Heap lưu dữ liệu động. Con
+            trỏ (ptr) trên stack trỏ đến dữ liệu thực trên heap.
+          </p>
+        </div>
 
-  <p>Stack lưu trữ các giá trị theo thứ tự nhận được và xóa chúng theo thứ tự ngược lại. Nguyên tắc này được gọi là <em>last in, first out</em> (vào sau, ra trước). Hãy nghĩ đến một chồng đĩa: khi bạn thêm đĩa, bạn đặt lên đỉnh, và khi cần lấy đĩa, bạn lấy từ đỉnh xuống. Thêm hoặc bớt đĩa từ giữa hoặc đáy sẽ rất kém hiệu quả!</p>
+        <p>
+          Stack lưu trữ các giá trị theo thứ tự nhận được và xóa chúng theo thứ
+          tự ngược lại. Nguyên tắc này được gọi là
+          <em>last in, first out</em> (vào sau, ra trước). Hãy nghĩ đến một
+          chồng đĩa: khi bạn thêm đĩa, bạn đặt lên đỉnh, và khi cần lấy đĩa, bạn
+          lấy từ đỉnh xuống. Thêm hoặc bớt đĩa từ giữa hoặc đáy sẽ rất kém hiệu
+          quả!
+        </p>
 
-  <p>Tất cả dữ liệu trên stack phải có kích thước cố định đã biết tại thời điểm compile. Dữ liệu có kích thước không xác định tại compile time hoặc có thể thay đổi kích thước phải được lưu trên heap.</p>
+        <p>
+          Tất cả dữ liệu trên stack phải có kích thước cố định đã biết tại thời
+          điểm compile. Dữ liệu có kích thước không xác định tại compile time
+          hoặc có thể thay đổi kích thước phải được lưu trên heap.
+        </p>
 
-  <p>Heap ít có tổ chức hơn: khi bạn đưa dữ liệu lên heap, bạn yêu cầu một lượng không gian nhất định. Bộ cấp phát bộ nhớ (memory allocator) tìm một vị trí trống đủ lớn trên heap, đánh dấu nó là đang dùng, và trả về một <em>con trỏ</em> (pointer), tức là địa chỉ của vị trí đó. Quá trình này được gọi là <em>cấp phát trên heap</em> (allocating on the heap).</p>
+        <p>
+          Heap ít có tổ chức hơn: khi bạn đưa dữ liệu lên heap, bạn yêu cầu một
+          lượng không gian nhất định. Bộ cấp phát bộ nhớ (memory allocator) tìm
+          một vị trí trống đủ lớn trên heap, đánh dấu nó là đang dùng, và trả về
+          một <em>con trỏ</em> (pointer), tức là địa chỉ của vị trí đó. Quá
+          trình này được gọi là <em>cấp phát trên heap</em> (allocating on the
+          heap).
+        </p>
 
-  <p>Việc push lên stack nhanh hơn cấp phát trên heap vì allocator không cần tìm kiếm vị trí để lưu dữ liệu mới — vị trí đó luôn là đỉnh của stack. Truy cập dữ liệu trên heap cũng chậm hơn vì bạn phải đi theo con trỏ để đến đó.</p>
+        <p>
+          Việc push lên stack nhanh hơn cấp phát trên heap vì allocator không
+          cần tìm kiếm vị trí để lưu dữ liệu mới — vị trí đó luôn là đỉnh của
+          stack. Truy cập dữ liệu trên heap cũng chậm hơn vì bạn phải đi theo
+          con trỏ để đến đó.
+        </p>
 
-  <h2>📜 Các quy tắc Ownership</h2>
+        <h2>📜 Các quy tắc Ownership</h2>
 
-  <p>Trước tiên, hãy ghi nhớ các quy tắc ownership. Chúng ta sẽ minh họa chúng qua các ví dụ sau:</p>
+        <p>
+          Trước tiên, hãy ghi nhớ các quy tắc ownership. Chúng ta sẽ minh họa
+          chúng qua các ví dụ sau:
+        </p>
 
-  <ul>
-    <li>Mỗi giá trị trong Rust có một <em>owner</em>.</li>
-    <li>Chỉ có thể có một owner tại một thời điểm.</li>
-    <li>Khi owner ra khỏi scope, giá trị sẽ bị xóa.</li>
-  </ul>
+        <ul>
+          <li>Mỗi giá trị trong Rust có một <em>owner</em>.</li>
+          <li>Chỉ có thể có một owner tại một thời điểm.</li>
+          <li>Khi owner ra khỏi scope, giá trị sẽ bị xóa.</li>
+        </ul>
 
-  <h2>🔤 Phạm vi biến (Variable Scope)</h2>
+        <h2>🔤 Phạm vi biến (Variable Scope)</h2>
 
-  <p>Giờ chúng ta đã qua cú pháp Rust cơ bản, hãy xem xét khái niệm <em>scope</em>. Scope là phạm vi trong chương trình mà một item có hiệu lực:</p>
+        <p>
+          Giờ chúng ta đã qua cú pháp Rust cơ bản, hãy xem xét khái niệm
+          <em>scope</em>. Scope là phạm vi trong chương trình mà một item có
+          hiệu lực:
+        </p>
 
-  <pre><code>fn main() {
+        <pre><code>fn main() {
     {                      // s chưa hợp lệ ở đây, chưa được khai báo
         let s = "hello";   // s hợp lệ từ điểm này trở đi
         // làm gì đó với s
     }                      // scope kết thúc, s không còn hợp lệ
 }</code></pre>
 
-  <p>Nói cách khác, có hai thời điểm quan trọng:</p>
-  <ul>
-    <li>Khi <code>s</code> đi vào scope, nó trở nên hợp lệ.</li>
-    <li>Nó vẫn hợp lệ cho đến khi ra khỏi scope.</li>
-  </ul>
+        <p>Nói cách khác, có hai thời điểm quan trọng:</p>
+        <ul>
+          <li>Khi <code>s</code> đi vào scope, nó trở nên hợp lệ.</li>
+          <li>Nó vẫn hợp lệ cho đến khi ra khỏi scope.</li>
+        </ul>
 
-  <h2>📦 Kiểu String</h2>
+        <h2>📦 Kiểu String</h2>
 
-  <p>Để minh họa các quy tắc ownership, chúng ta cần một kiểu dữ liệu phức tạp hơn những gì đã được trình bày trong Chương 3. Các kiểu đã đề cập đều có kích thước cố định, được lưu trên stack và pop ra khỏi stack khi scope kết thúc. Chúng ta cần dữ liệu lưu trên heap để xem cách Rust biết khi nào cần dọn sạch dữ liệu đó.</p>
+        <p>
+          Để minh họa các quy tắc ownership, chúng ta cần một kiểu dữ liệu phức
+          tạp hơn những gì đã được trình bày trong Chương 3. Các kiểu đã đề cập
+          đều có kích thước cố định, được lưu trên stack và pop ra khỏi stack
+          khi scope kết thúc. Chúng ta cần dữ liệu lưu trên heap để xem cách
+          Rust biết khi nào cần dọn sạch dữ liệu đó.
+        </p>
 
-  <p>Chúng ta sẽ dùng <code>String</code> làm ví dụ và tập trung vào các phần của <code>String</code> liên quan đến ownership. Những khía cạnh này cũng áp dụng cho các kiểu dữ liệu phức tạp khác.</p>
+        <p>
+          Chúng ta sẽ dùng <code>String</code> làm ví dụ và tập trung vào các
+          phần của <code>String</code> liên quan đến ownership. Những khía cạnh
+          này cũng áp dụng cho các kiểu dữ liệu phức tạp khác.
+        </p>
 
-  <p>String literals (chuỗi ký tự dạng <code>&amp;str</code>) rất tiện lợi nhưng không phù hợp cho mọi tình huống khi chúng ta muốn dùng văn bản. Một lý do là chúng bất biến (immutable). Một lý do khác là không phải mọi giá trị chuỗi đều biết khi viết code — ví dụ, nếu ta muốn lấy input từ người dùng và lưu lại thì sao?</p>
+        <p>
+          String literals (chuỗi ký tự dạng <code>&amp;str</code>) rất tiện lợi
+          nhưng không phù hợp cho mọi tình huống khi chúng ta muốn dùng văn bản.
+          Một lý do là chúng bất biến (immutable). Một lý do khác là không phải
+          mọi giá trị chuỗi đều biết khi viết code — ví dụ, nếu ta muốn lấy
+          input từ người dùng và lưu lại thì sao?
+        </p>
 
-  <p>Rust có kiểu dữ liệu thứ hai cho string: <code>String</code>. Kiểu này quản lý dữ liệu được cấp phát trên heap và có thể lưu trữ lượng văn bản không biết trước tại compile time. Bạn có thể tạo <code>String</code> từ string literal bằng hàm <code>from</code>:</p>
+        <p>
+          Rust có kiểu dữ liệu thứ hai cho string: <code>String</code>. Kiểu này
+          quản lý dữ liệu được cấp phát trên heap và có thể lưu trữ lượng văn
+          bản không biết trước tại compile time. Bạn có thể tạo
+          <code>String</code> từ string literal bằng hàm <code>from</code>:
+        </p>
 
-  <pre><code>let s = String::from("hello");</code></pre>
+        <pre><code>let s = String::from("hello");</code></pre>
 
-  <p>Kiểu <code>String</code> này có thể thay đổi (mutable):</p>
+        <p>Kiểu <code>String</code> này có thể thay đổi (mutable):</p>
 
-  <pre><code>let mut s = String::from("hello");
+        <pre><code>let mut s = String::from("hello");
 s.push_str(", world!"); // push_str() thêm một literal vào String
 println!("{s}"); // Sẽ in `hello, world!`</code></pre>
 
-  <p>Vậy tại sao <code>String</code> có thể thay đổi nhưng literals thì không? Sự khác biệt nằm ở cách hai kiểu này xử lý bộ nhớ.</p>
+        <p>
+          Vậy tại sao <code>String</code> có thể thay đổi nhưng literals thì
+          không? Sự khác biệt nằm ở cách hai kiểu này xử lý bộ nhớ.
+        </p>
 
-  <h2>🧠 Bộ nhớ và Cấp phát</h2>
+        <h2>🧠 Bộ nhớ và Cấp phát</h2>
 
-  <p>Với string literal, nội dung được biết lúc compile time, nên văn bản được nhúng trực tiếp vào file thực thi cuối cùng. Đó là lý do tại sao string literals nhanh và hiệu quả. Nhưng những đặc tính này chỉ đến từ việc string literal là bất biến.</p>
+        <p>
+          Với string literal, nội dung được biết lúc compile time, nên văn bản
+          được nhúng trực tiếp vào file thực thi cuối cùng. Đó là lý do tại sao
+          string literals nhanh và hiệu quả. Nhưng những đặc tính này chỉ đến từ
+          việc string literal là bất biến.
+        </p>
 
-  <p>Với kiểu <code>String</code>, để hỗ trợ một đoạn văn bản có thể thay đổi và phát triển, chúng ta cần cấp phát một lượng bộ nhớ trên heap, chưa biết lúc compile time, để giữ nội dung. Điều này có nghĩa là:</p>
+        <p>
+          Với kiểu <code>String</code>, để hỗ trợ một đoạn văn bản có thể thay
+          đổi và phát triển, chúng ta cần cấp phát một lượng bộ nhớ trên heap,
+          chưa biết lúc compile time, để giữ nội dung. Điều này có nghĩa là:
+        </p>
 
-  <ul>
-    <li>Bộ nhớ phải được yêu cầu từ memory allocator lúc runtime.</li>
-    <li>Chúng ta cần trả bộ nhớ này về cho allocator khi không dùng <code>String</code> nữa.</li>
-  </ul>
+        <ul>
+          <li>Bộ nhớ phải được yêu cầu từ memory allocator lúc runtime.</li>
+          <li>
+            Chúng ta cần trả bộ nhớ này về cho allocator khi không dùng
+            <code>String</code> nữa.
+          </li>
+        </ul>
 
-  <p>Phần đầu được chúng ta thực hiện: khi gọi <code>String::from</code>, implementation của nó yêu cầu bộ nhớ cần thiết. Phần này khá phổ biến trong các ngôn ngữ lập trình.</p>
+        <p>
+          Phần đầu được chúng ta thực hiện: khi gọi <code>String::from</code>,
+          implementation của nó yêu cầu bộ nhớ cần thiết. Phần này khá phổ biến
+          trong các ngôn ngữ lập trình.
+        </p>
 
-  <p>Tuy nhiên phần thứ hai khác nhau ở mỗi ngôn ngữ. Trong các ngôn ngữ có <em>garbage collector (GC)</em>, GC theo dõi và dọn sạch bộ nhớ không còn được dùng nữa, và chúng ta không cần lo lắng về điều đó. Trong hầu hết các ngôn ngữ không có GC, chúng ta phải tự xác định khi nào bộ nhớ không còn được dùng và gọi code để giải phóng nó — đây là vấn đề lịch sử nan giải.</p>
+        <p>
+          Tuy nhiên phần thứ hai khác nhau ở mỗi ngôn ngữ. Trong các ngôn ngữ có
+          <em>garbage collector (GC)</em>, GC theo dõi và dọn sạch bộ nhớ không
+          còn được dùng nữa, và chúng ta không cần lo lắng về điều đó. Trong hầu
+          hết các ngôn ngữ không có GC, chúng ta phải tự xác định khi nào bộ nhớ
+          không còn được dùng và gọi code để giải phóng nó — đây là vấn đề lịch
+          sử nan giải.
+        </p>
 
-  <p>Rust đi theo con đường khác: bộ nhớ được tự động trả về khi biến sở hữu nó ra khỏi scope. Đây là một ví dụ:</p>
+        <p>
+          Rust đi theo con đường khác: bộ nhớ được tự động trả về khi biến sở
+          hữu nó ra khỏi scope. Đây là một ví dụ:
+        </p>
 
-  <pre><code>{
+        <pre><code>{
     let s = String::from("hello"); // s hợp lệ từ đây
     // làm gì đó với s
 }                                  // scope kết thúc, s không hợp lệ
                                    // Rust gọi drop() tự động</code></pre>
 
-  <p>Khi một biến ra khỏi scope, Rust tự động gọi hàm đặc biệt có tên <code>drop</code>. Đây là nơi tác giả của <code>String</code> có thể đặt code để trả lại bộ nhớ. Rust gọi <code>drop</code> tự động tại dấu ngoặc nhọn đóng.</p>
+        <p>
+          Khi một biến ra khỏi scope, Rust tự động gọi hàm đặc biệt có tên
+          <code>drop</code>. Đây là nơi tác giả của <code>String</code> có thể
+          đặt code để trả lại bộ nhớ. Rust gọi <code>drop</code> tự động tại dấu
+          ngoặc nhọn đóng.
+        </p>
 
-  <h2>🔀 Biến và Dữ liệu tương tác: Move</h2>
+        <h2>🔀 Biến và Dữ liệu tương tác: Move</h2>
 
-  <p>Nhiều biến có thể tương tác với cùng một dữ liệu theo nhiều cách khác nhau trong Rust. Hãy xem ví dụ với <code>i32</code>:</p>
+        <p>
+          Nhiều biến có thể tương tác với cùng một dữ liệu theo nhiều cách khác
+          nhau trong Rust. Hãy xem ví dụ với <code>i32</code>:
+        </p>
 
-  <pre><code>let x = 5;
+        <pre><code>let x = 5;
 let y = x;</code></pre>
 
-  <p>Chúng ta có thể đoán được điều này đang làm gì: "gán giá trị <code>5</code> cho <code>x</code>; sau đó tạo một bản sao của giá trị trong <code>x</code> và gán cho <code>y</code>." Bây giờ chúng ta có hai biến, <code>x</code> và <code>y</code>, cả hai đều bằng <code>5</code>. Thật vậy, đó là điều đang xảy ra vì số nguyên là các giá trị đơn giản với kích thước cố định đã biết, và hai giá trị <code>5</code> này được push lên stack.</p>
+        <p>
+          Chúng ta có thể đoán được điều này đang làm gì: "gán giá trị
+          <code>5</code> cho <code>x</code>; sau đó tạo một bản sao của giá trị
+          trong <code>x</code> và gán cho <code>y</code>." Bây giờ chúng ta có
+          hai biến, <code>x</code> và <code>y</code>, cả hai đều bằng
+          <code>5</code>. Thật vậy, đó là điều đang xảy ra vì số nguyên là các
+          giá trị đơn giản với kích thước cố định đã biết, và hai giá trị
+          <code>5</code> này được push lên stack.
+        </p>
 
-  <p>Bây giờ xem phiên bản <code>String</code>:</p>
+        <p>Bây giờ xem phiên bản <code>String</code>:</p>
 
-  <pre><code>let s1 = String::from("hello");
+        <pre><code>let s1 = String::from("hello");
 let s2 = s1;</code></pre>
 
-  <!-- SVG Diagram: Move semantics -->
-  <div class="diagram-container">
-    <svg width="680" height="340" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:2rem auto;max-width:100%">
-      <defs>
-        <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
-        </marker>
-        <marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
-        </marker>
-      </defs>
-      <!-- Before move -->
-      <text x="170" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">Trước khi move</text>
-      <!-- s1 stack -->
-      <rect x="20" y="35" width="160" height="100" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="100" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e40af">s1 (stack)</text>
-      <text x="100" y="75" text-anchor="middle" font-size="11" fill="#1e40af">ptr: →</text>
-      <text x="100" y="93" text-anchor="middle" font-size="11" fill="#1e40af">len: 5</text>
-      <text x="100" y="111" text-anchor="middle" font-size="11" fill="#1e40af">cap: 5</text>
-      <!-- heap for s1 -->
-      <rect x="230" y="35" width="120" height="100" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="290" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#15803d">heap</text>
-      <text x="290" y="78" text-anchor="middle" font-size="20" fill="#15803d">"hello"</text>
-      <text x="290" y="120" text-anchor="middle" font-size="10" fill="#6b7280">0x0040</text>
-      <line x1="180" y1="75" x2="228" y2="75" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr3)"/>
-      <!-- After move -->
-      <text x="510" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">Sau khi <tspan font-family="monospace" font-weight="normal">let s2 = s1</tspan></text>
-      <!-- s1 stack (invalid) -->
-      <rect x="380" y="35" width="160" height="100" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,3"/>
-      <text x="460" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">s1 (đã moved)</text>
-      <text x="460" y="78" text-anchor="middle" font-size="11" fill="#ef4444">✗ không hợp lệ</text>
-      <text x="460" y="98" text-anchor="middle" font-size="11" fill="#ef4444">không thể dùng s1</text>
-      <!-- s2 stack -->
-      <rect x="380" y="155" width="160" height="100" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="460" y="175" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e40af">s2 (stack)</text>
-      <text x="460" y="195" text-anchor="middle" font-size="11" fill="#1e40af">ptr: →</text>
-      <text x="460" y="213" text-anchor="middle" font-size="11" fill="#1e40af">len: 5</text>
-      <text x="460" y="231" text-anchor="middle" font-size="11" fill="#1e40af">cap: 5</text>
-      <!-- heap (same) -->
-      <rect x="570" y="155" width="100" height="100" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="620" y="175" text-anchor="middle" font-size="11" font-weight="bold" fill="#15803d">heap</text>
-      <text x="620" y="200" text-anchor="middle" font-size="16" fill="#15803d">"hello"</text>
-      <text x="620" y="240" text-anchor="middle" font-size="10" fill="#6b7280">0x0040</text>
-      <line x1="540" y1="195" x2="568" y2="195" stroke="#22c55e" stroke-width="2" marker-end="url(#arr3)"/>
-      <!-- Move arrow -->
-      <text x="460" y="140" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">↓ ownership moved to s2</text>
-      <!-- Note -->
-      <rect x="20" y="165" width="340" height="60" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
-      <text x="190" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">Rust KHÔNG sao chép heap data</text>
-      <text x="190" y="203" text-anchor="middle" font-size="11" fill="#92400e">Chỉ copy metadata trên stack,</text>
-      <text x="190" y="218" text-anchor="middle" font-size="11" fill="#92400e">đồng thời vô hiệu hóa s1 (move)</text>
-      <!-- Compile error box -->
-      <rect x="20" y="245" width="340" height="80" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
-      <text x="190" y="265" text-anchor="middle" font-size="12" font-weight="bold" fill="#9d174d">Lỗi compile nếu dùng s1 sau move:</text>
-      <text x="40" y="285" font-size="11" font-family="monospace" fill="#7c3aed">println!("{s1}"); // ✗ ERROR</text>
-      <text x="40" y="303" font-size="11" fill="#9d174d">// value borrowed after move</text>
-    </svg>
-    <p class="diagram-caption" style="text-align:center;font-size:0.85rem;color:#6b7280;margin-top:0.5rem">Move semantics: ownership được chuyển từ s1 sang s2. Rust vô hiệu hóa s1 để tránh double-free.</p>
-  </div>
+        <!-- SVG Diagram: Move semantics -->
+        <div class="diagram-container">
+          <svg
+            width="680"
+            height="340"
+            viewBox="0 0 680 340"
+            xmlns="http://www.w3.org/2000/svg"
+            style="display: block; margin: 2rem auto; max-width: 100%"
+          >
+            <defs>
+              <marker
+                id="arr2"
+                markerWidth="8"
+                markerHeight="6"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <polygon points="0 0, 8 3, 0 6" fill="#ef4444" />
+              </marker>
+              <marker
+                id="arr3"
+                markerWidth="8"
+                markerHeight="6"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <polygon points="0 0, 8 3, 0 6" fill="#22c55e" />
+              </marker>
+            </defs>
+            <!-- Before move -->
+            <text
+              x="170"
+              y="22"
+              text-anchor="middle"
+              font-size="13"
+              font-weight="bold"
+              fill="#374151"
+            >
+              Trước khi move
+            </text>
+            <!-- s1 stack -->
+            <rect
+              x="20"
+              y="35"
+              width="160"
+              height="100"
+              rx="8"
+              fill="#dbeafe"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+            />
+            <text
+              x="100"
+              y="55"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#1e40af"
+            >
+              s1 (stack)
+            </text>
+            <text
+              x="100"
+              y="75"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              ptr: →
+            </text>
+            <text
+              x="100"
+              y="93"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              len: 5
+            </text>
+            <text
+              x="100"
+              y="111"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              cap: 5
+            </text>
+            <!-- heap for s1 -->
+            <rect
+              x="230"
+              y="35"
+              width="120"
+              height="100"
+              rx="8"
+              fill="#dcfce7"
+              stroke="#22c55e"
+              stroke-width="1.5"
+            />
+            <text
+              x="290"
+              y="55"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#15803d"
+            >
+              heap
+            </text>
+            <text
+              x="290"
+              y="78"
+              text-anchor="middle"
+              font-size="20"
+              fill="#15803d"
+            >
+              "hello"
+            </text>
+            <text
+              x="290"
+              y="120"
+              text-anchor="middle"
+              font-size="10"
+              fill="#6b7280"
+            >
+              0x0040
+            </text>
+            <line
+              x1="180"
+              y1="75"
+              x2="228"
+              y2="75"
+              stroke="#3b82f6"
+              stroke-width="2"
+              marker-end="url(#arr3)"
+            />
+            <!-- After move -->
+            <text
+              x="510"
+              y="22"
+              text-anchor="middle"
+              font-size="13"
+              font-weight="bold"
+              fill="#374151"
+            >
+              Sau khi
+              <tspan font-family="monospace" font-weight="normal">
+                let s2 = s1
+              </tspan>
+            </text>
+            <!-- s1 stack (invalid) -->
+            <rect
+              x="380"
+              y="35"
+              width="160"
+              height="100"
+              rx="8"
+              fill="#fee2e2"
+              stroke="#ef4444"
+              stroke-width="2"
+              stroke-dasharray="6,3"
+            />
+            <text
+              x="460"
+              y="55"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#991b1b"
+            >
+              s1 (đã moved)
+            </text>
+            <text
+              x="460"
+              y="78"
+              text-anchor="middle"
+              font-size="11"
+              fill="#ef4444"
+            >
+              ✗ không hợp lệ
+            </text>
+            <text
+              x="460"
+              y="98"
+              text-anchor="middle"
+              font-size="11"
+              fill="#ef4444"
+            >
+              không thể dùng s1
+            </text>
+            <!-- s2 stack -->
+            <rect
+              x="380"
+              y="155"
+              width="160"
+              height="100"
+              rx="8"
+              fill="#dbeafe"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+            />
+            <text
+              x="460"
+              y="175"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#1e40af"
+            >
+              s2 (stack)
+            </text>
+            <text
+              x="460"
+              y="195"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              ptr: →
+            </text>
+            <text
+              x="460"
+              y="213"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              len: 5
+            </text>
+            <text
+              x="460"
+              y="231"
+              text-anchor="middle"
+              font-size="11"
+              fill="#1e40af"
+            >
+              cap: 5
+            </text>
+            <!-- heap (same) -->
+            <rect
+              x="570"
+              y="155"
+              width="100"
+              height="100"
+              rx="8"
+              fill="#dcfce7"
+              stroke="#22c55e"
+              stroke-width="1.5"
+            />
+            <text
+              x="620"
+              y="175"
+              text-anchor="middle"
+              font-size="11"
+              font-weight="bold"
+              fill="#15803d"
+            >
+              heap
+            </text>
+            <text
+              x="620"
+              y="200"
+              text-anchor="middle"
+              font-size="16"
+              fill="#15803d"
+            >
+              "hello"
+            </text>
+            <text
+              x="620"
+              y="240"
+              text-anchor="middle"
+              font-size="10"
+              fill="#6b7280"
+            >
+              0x0040
+            </text>
+            <line
+              x1="540"
+              y1="195"
+              x2="568"
+              y2="195"
+              stroke="#22c55e"
+              stroke-width="2"
+              marker-end="url(#arr3)"
+            />
+            <!-- Move arrow -->
+            <text
+              x="460"
+              y="140"
+              text-anchor="middle"
+              font-size="11"
+              fill="#7c3aed"
+              font-weight="bold"
+            >
+              ↓ ownership moved to s2
+            </text>
+            <!-- Note -->
+            <rect
+              x="20"
+              y="165"
+              width="340"
+              height="60"
+              rx="8"
+              fill="#fef3c7"
+              stroke="#f59e0b"
+              stroke-width="1.5"
+            />
+            <text
+              x="190"
+              y="185"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#92400e"
+            >
+              Rust KHÔNG sao chép heap data
+            </text>
+            <text
+              x="190"
+              y="203"
+              text-anchor="middle"
+              font-size="11"
+              fill="#92400e"
+            >
+              Chỉ copy metadata trên stack,
+            </text>
+            <text
+              x="190"
+              y="218"
+              text-anchor="middle"
+              font-size="11"
+              fill="#92400e"
+            >
+              đồng thời vô hiệu hóa s1 (move)
+            </text>
+            <!-- Compile error box -->
+            <rect
+              x="20"
+              y="245"
+              width="340"
+              height="80"
+              rx="8"
+              fill="#fce7f3"
+              stroke="#ec4899"
+              stroke-width="1.5"
+            />
+            <text
+              x="190"
+              y="265"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="bold"
+              fill="#9d174d"
+            >
+              Lỗi compile nếu dùng s1 sau move:
+            </text>
+            <text
+              x="40"
+              y="285"
+              font-size="11"
+              font-family="monospace"
+              fill="#7c3aed"
+            >
+              println!("{s1}"); // ✗ ERROR
+            </text>
+            <text x="40" y="303" font-size="11" fill="#9d174d">
+              // value borrowed after move
+            </text>
+          </svg>
+          <p
+            class="diagram-caption"
+            style="
+              text-align: center;
+              font-size: 0.85rem;
+              color: #6b7280;
+              margin-top: 0.5rem;
+            "
+          >
+            Move semantics: ownership được chuyển từ s1 sang s2. Rust vô hiệu
+            hóa s1 để tránh double-free.
+          </p>
+        </div>
 
-  <p>Khi chúng ta gán <code>s1</code> cho <code>s2</code>, dữ liệu <code>String</code> được sao chép, nghĩa là chúng ta sao chép con trỏ (pointer), độ dài (length) và dung lượng (capacity) nằm trên stack. Chúng ta không sao chép dữ liệu trên heap mà con trỏ đang chỉ đến.</p>
+        <p>
+          Khi chúng ta gán <code>s1</code> cho <code>s2</code>, dữ liệu
+          <code>String</code> được sao chép, nghĩa là chúng ta sao chép con trỏ
+          (pointer), độ dài (length) và dung lượng (capacity) nằm trên stack.
+          Chúng ta không sao chép dữ liệu trên heap mà con trỏ đang chỉ đến.
+        </p>
 
-  <p>Nếu Rust sao chép cả heap data, thao tác <code>s2 = s1</code> sẽ rất tốn kém về hiệu năng runtime nếu dữ liệu trên heap lớn. Vì thế Rust không làm vậy. Thay vào đó, Rust coi <code>s1</code> là không còn hợp lệ và không cần giải phóng gì khi <code>s1</code> ra khỏi scope.</p>
+        <p>
+          Nếu Rust sao chép cả heap data, thao tác <code>s2 = s1</code> sẽ rất
+          tốn kém về hiệu năng runtime nếu dữ liệu trên heap lớn. Vì thế Rust
+          không làm vậy. Thay vào đó, Rust coi <code>s1</code> là không còn hợp
+          lệ và không cần giải phóng gì khi <code>s1</code> ra khỏi scope.
+        </p>
 
-  <p>Nếu bạn đã nghe đến thuật ngữ <em>shallow copy</em> và <em>deep copy</em> khi làm việc với các ngôn ngữ khác, khái niệm sao chép con trỏ, độ dài và dung lượng mà không sao chép dữ liệu nghe giống shallow copy. Nhưng vì Rust cũng vô hiệu hóa biến đầu tiên, thay vì được gọi là shallow copy, nó được gọi là <strong>move</strong>. Ở đây, chúng ta nói rằng <code>s1</code> đã bị <em>moved</em> vào <code>s2</code>.</p>
+        <p>
+          Nếu bạn đã nghe đến thuật ngữ <em>shallow copy</em> và
+          <em>deep copy</em> khi làm việc với các ngôn ngữ khác, khái niệm sao
+          chép con trỏ, độ dài và dung lượng mà không sao chép dữ liệu nghe
+          giống shallow copy. Nhưng vì Rust cũng vô hiệu hóa biến đầu tiên, thay
+          vì được gọi là shallow copy, nó được gọi là <strong>move</strong>. Ở
+          đây, chúng ta nói rằng <code>s1</code> đã bị <em>moved</em> vào
+          <code>s2</code>.
+        </p>
 
-  <h2>🔢 Clone và Copy</h2>
+        <h2>🔢 Clone và Copy</h2>
 
-  <p>Nếu chúng ta <em>muốn</em> sao chép sâu (deep copy) dữ liệu heap của <code>String</code>, không chỉ stack data, có thể dùng phương thức <code>clone</code>:</p>
+        <p>
+          Nếu chúng ta <em>muốn</em> sao chép sâu (deep copy) dữ liệu heap của
+          <code>String</code>, không chỉ stack data, có thể dùng phương thức
+          <code>clone</code>:
+        </p>
 
-  <pre><code>let s1 = String::from("hello");
+        <pre><code>let s1 = String::from("hello");
 let s2 = s1.clone();
 println!("s1 = {s1}, s2 = {s2}"); // cả hai đều hợp lệ</code></pre>
 
-  <p>Khi bạn thấy lời gọi <code>clone</code>, bạn biết rằng một số code tùy ý đang được thực thi và code đó có thể tốn kém. Đó là chỉ báo trực quan rằng có điều gì đó khác thường đang xảy ra.</p>
+        <p>
+          Khi bạn thấy lời gọi <code>clone</code>, bạn biết rằng một số code tùy
+          ý đang được thực thi và code đó có thể tốn kém. Đó là chỉ báo trực
+          quan rằng có điều gì đó khác thường đang xảy ra.
+        </p>
 
-  <h3>Dữ liệu chỉ trên Stack: Copy</h3>
+        <h3>Dữ liệu chỉ trên Stack: Copy</h3>
 
-  <p>Có một chi tiết khác chúng ta chưa nói đến. Đoạn code này với số nguyên hoạt động và hợp lệ:</p>
+        <p>
+          Có một chi tiết khác chúng ta chưa nói đến. Đoạn code này với số
+          nguyên hoạt động và hợp lệ:
+        </p>
 
-  <pre><code>let x = 5;
+        <pre><code>let x = 5;
 let y = x;
 println!("x = {x}, y = {y}"); // cả hai đều hợp lệ</code></pre>
 
-  <p>Nhưng code này có vẻ mâu thuẫn với những gì chúng ta vừa học: chúng ta không có lời gọi <code>clone</code>, nhưng <code>x</code> vẫn hợp lệ và không bị moved vào <code>y</code>.</p>
+        <p>
+          Nhưng code này có vẻ mâu thuẫn với những gì chúng ta vừa học: chúng ta
+          không có lời gọi <code>clone</code>, nhưng <code>x</code> vẫn hợp lệ
+          và không bị moved vào <code>y</code>.
+        </p>
 
-  <p>Lý do là các kiểu như số nguyên có kích thước đã biết tại compile time được lưu hoàn toàn trên stack, vì vậy việc sao chép các giá trị thực sự rất nhanh. Điều đó có nghĩa là không có lý do gì để chúng ta muốn ngăn <code>x</code> hợp lệ sau khi tạo biến <code>y</code>. Không có sự khác biệt giữa deep và shallow copy ở đây.</p>
+        <p>
+          Lý do là các kiểu như số nguyên có kích thước đã biết tại compile time
+          được lưu hoàn toàn trên stack, vì vậy việc sao chép các giá trị thực
+          sự rất nhanh. Điều đó có nghĩa là không có lý do gì để chúng ta muốn
+          ngăn <code>x</code> hợp lệ sau khi tạo biến <code>y</code>. Không có
+          sự khác biệt giữa deep và shallow copy ở đây.
+        </p>
 
-  <p>Rust có một annotation đặc biệt gọi là <code>Copy</code> trait mà chúng ta có thể đặt trên các kiểu được lưu trên stack. Nếu một kiểu implement <code>Copy</code> trait, các biến sử dụng nó sẽ không bị moved mà được sao chép một cách trivially, khiến chúng vẫn hợp lệ sau khi gán cho một biến khác.</p>
+        <p>
+          Rust có một annotation đặc biệt gọi là <code>Copy</code> trait mà
+          chúng ta có thể đặt trên các kiểu được lưu trên stack. Nếu một kiểu
+          implement <code>Copy</code> trait, các biến sử dụng nó sẽ không bị
+          moved mà được sao chép một cách trivially, khiến chúng vẫn hợp lệ sau
+          khi gán cho một biến khác.
+        </p>
 
-  <p>Rust sẽ không cho phép chúng ta annotate một kiểu với <code>Copy</code> nếu kiểu đó, hoặc bất kỳ phần nào của nó, implement <code>Drop</code> trait. Nếu kiểu cần thứ gì đó đặc biệt xảy ra khi giá trị ra khỏi scope và chúng ta thêm <code>Copy</code> annotation vào kiểu đó, chúng ta sẽ nhận được lỗi compile time.</p>
+        <p>
+          Rust sẽ không cho phép chúng ta annotate một kiểu với
+          <code>Copy</code> nếu kiểu đó, hoặc bất kỳ phần nào của nó, implement
+          <code>Drop</code> trait. Nếu kiểu cần thứ gì đó đặc biệt xảy ra khi
+          giá trị ra khỏi scope và chúng ta thêm <code>Copy</code> annotation
+          vào kiểu đó, chúng ta sẽ nhận được lỗi compile time.
+        </p>
 
-  <p>Vậy kiểu nào implement <code>Copy</code>? Bạn có thể kiểm tra tài liệu của kiểu đó, nhưng quy tắc chung là: bất kỳ nhóm các kiểu scalar đơn giản nào đều có thể implement <code>Copy</code>, và không có gì yêu cầu cấp phát hoặc là một dạng resource có thể implement <code>Copy</code>. Các kiểu implement <code>Copy</code> bao gồm:</p>
+        <p>
+          Vậy kiểu nào implement <code>Copy</code>? Bạn có thể kiểm tra tài liệu
+          của kiểu đó, nhưng quy tắc chung là: bất kỳ nhóm các kiểu scalar đơn
+          giản nào đều có thể implement <code>Copy</code>, và không có gì yêu
+          cầu cấp phát hoặc là một dạng resource có thể implement
+          <code>Copy</code>. Các kiểu implement <code>Copy</code> bao gồm:
+        </p>
 
-  <ul>
-    <li>Tất cả các kiểu số nguyên, như <code>u32</code>.</li>
-    <li>Kiểu Boolean, <code>bool</code>, với các giá trị <code>true</code> và <code>false</code>.</li>
-    <li>Tất cả các kiểu dấu phẩy động, như <code>f64</code>.</li>
-    <li>Kiểu ký tự, <code>char</code>.</li>
-    <li>Tuples, nếu chúng chỉ chứa các kiểu cũng implement <code>Copy</code>. Ví dụ, <code>(i32, i32)</code> implement <code>Copy</code>, nhưng <code>(i32, String)</code> thì không.</li>
-  </ul>
+        <ul>
+          <li>Tất cả các kiểu số nguyên, như <code>u32</code>.</li>
+          <li>
+            Kiểu Boolean, <code>bool</code>, với các giá trị
+            <code>true</code> và <code>false</code>.
+          </li>
+          <li>Tất cả các kiểu dấu phẩy động, như <code>f64</code>.</li>
+          <li>Kiểu ký tự, <code>char</code>.</li>
+          <li>
+            Tuples, nếu chúng chỉ chứa các kiểu cũng implement
+            <code>Copy</code>. Ví dụ, <code>(i32, i32)</code> implement
+            <code>Copy</code>, nhưng <code>(i32, String)</code> thì không.
+          </li>
+        </ul>
 
-  <h2>🏃 Ownership và Hàm</h2>
+        <h2>🏃 Ownership và Hàm</h2>
 
-  <p>Cơ chế truyền giá trị cho hàm tương tự như khi gán giá trị cho biến. Truyền biến cho hàm sẽ move hoặc copy, giống như phép gán:</p>
+        <p>
+          Cơ chế truyền giá trị cho hàm tương tự như khi gán giá trị cho biến.
+          Truyền biến cho hàm sẽ move hoặc copy, giống như phép gán:
+        </p>
 
-  <pre><code>fn main() {
+        <pre><code>fn main() {
     let s = String::from("hello");  // s vào scope
 
     takes_ownership(s);             // giá trị của s moves vào hàm...
@@ -503,11 +1423,11 @@ fn makes_copy(some_integer: i32) { // some_integer vào scope
     println!("{some_integer}");
 } // Ở đây, some_integer ra khỏi scope. Không có gì đặc biệt xảy ra.</code></pre>
 
-  <h2>↩️ Giá trị Trả về và Scope</h2>
+        <h2>↩️ Giá trị Trả về và Scope</h2>
 
-  <p>Trả về giá trị cũng có thể chuyển ownership:</p>
+        <p>Trả về giá trị cũng có thể chuyển ownership:</p>
 
-  <pre><code>fn main() {
+        <pre><code>fn main() {
     let s1 = gives_ownership();         // gives_ownership chuyển giá trị trả về
                                         // của nó vào s1
 
@@ -529,13 +1449,25 @@ fn takes_and_gives_back(a_string: String) -> String { // a_string vào scope
     a_string  // a_string được trả về và moved ra ngoài cho hàm gọi
 }</code></pre>
 
-  <p>Ownership của một biến luôn tuân theo cùng một quy luật: gán giá trị cho một biến khác sẽ move nó. Khi một biến bao gồm dữ liệu trên heap ra khỏi scope, giá trị sẽ bị dọn sạch bởi <code>drop</code> trừ khi ownership của dữ liệu đã được chuyển sang biến khác.</p>
+        <p>
+          Ownership của một biến luôn tuân theo cùng một quy luật: gán giá trị
+          cho một biến khác sẽ move nó. Khi một biến bao gồm dữ liệu trên heap
+          ra khỏi scope, giá trị sẽ bị dọn sạch bởi <code>drop</code> trừ khi
+          ownership của dữ liệu đã được chuyển sang biến khác.
+        </p>
 
-  <p>Mặc dù điều này hoạt động, nhưng việc lấy ownership rồi trả lại ownership với mỗi hàm là hơi tẻ nhạt. Điều gì sẽ xảy ra nếu chúng ta muốn cho một hàm sử dụng một giá trị nhưng không lấy ownership? Thật khó chịu khi bất cứ thứ gì chúng ta truyền vào cũng cần được truyền lại nếu chúng ta muốn dùng lại, ngoài bất kỳ dữ liệu nào từ thân hàm mà chúng ta cũng có thể muốn trả về.</p>
+        <p>
+          Mặc dù điều này hoạt động, nhưng việc lấy ownership rồi trả lại
+          ownership với mỗi hàm là hơi tẻ nhạt. Điều gì sẽ xảy ra nếu chúng ta
+          muốn cho một hàm sử dụng một giá trị nhưng không lấy ownership? Thật
+          khó chịu khi bất cứ thứ gì chúng ta truyền vào cũng cần được truyền
+          lại nếu chúng ta muốn dùng lại, ngoài bất kỳ dữ liệu nào từ thân hàm
+          mà chúng ta cũng có thể muốn trả về.
+        </p>
 
-  <p>Rust cho phép chúng ta trả về nhiều giá trị bằng tuple:</p>
+        <p>Rust cho phép chúng ta trả về nhiều giá trị bằng tuple:</p>
 
-  <pre><code>fn main() {
+        <pre><code>fn main() {
     let s1 = String::from("hello");
     let (s2, len) = calculate_length(s1);
     println!("Độ dài của '{s2}' là {len}.");
@@ -546,11 +1478,19 @@ fn calculate_length(s: String) -> (String, usize) {
     (s, length)
 }</code></pre>
 
-  <p>Nhưng đây là quá nhiều boilerplate cho một khái niệm đáng lẽ phổ biến. May mắn thay, Rust có một tính năng để sử dụng giá trị mà không chuyển ownership, được gọi là <strong>references</strong>. Chúng ta sẽ tìm hiểu trong phần tiếp theo.</p>
+        <p>
+          Nhưng đây là quá nhiều boilerplate cho một khái niệm đáng lẽ phổ biến.
+          May mắn thay, Rust có một tính năng để sử dụng giá trị mà không chuyển
+          ownership, được gọi là <strong>references</strong>. Chúng ta sẽ tìm
+          hiểu trong phần tiếp theo.
+        </p>
 
-  <div class="page-nav bottom"><a href="ch04-00-understanding-ownership.html">← Trước</a><a href="ch04-02-references-and-borrowing.html">Tiếp →</a></div>
-  </div>
-</main>
-<script src="nav.js"></script>
-</body>
+        <div class="page-nav bottom">
+          <a href="ch04-00-understanding-ownership.html">← Trước</a
+          ><a href="ch04-02-references-and-borrowing.html">Tiếp →</a>
+        </div>
+      </div>
+    </main>
+    <script src="nav.js"></script>
+  </body>
 </html>

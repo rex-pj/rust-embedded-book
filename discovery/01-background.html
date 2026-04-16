@@ -67,36 +67,36 @@
 
     <h1>Background</h1>
 
-    <h2>Microcontroller là gì?</h2>
+    <h2>⚙️ Microcontroller là gì?</h2>
 
     <p>Một microcontroller là một <em>hệ thống</em> trên một chip. Trong khi máy tính của bạn được tạo thành từ nhiều linh kiện rời: một processor, RAM, bộ nhớ lưu trữ, cổng Ethernet, v.v.; một microcontroller tích hợp tất cả những loại linh kiện đó vào một "chip" hoặc gói duy nhất.</p>
 
-    <h2>Microcontroller có thể làm gì?</h2>
+    <h2>⚡ Microcontroller có thể làm gì?</h2>
 
     <p>Microcontroller là thành phần trung tâm của những gì được gọi là các hệ thống <em>embedded</em> (nhúng). Chúng điều khiển các máy móc giặt quần áo, in tài liệu và nấu thức ăn của bạn. Các hệ thống embedded duy trì nhiệt độ thoải mái trong những tòa nhà bạn sinh sống và làm việc, đồng thời điều khiển các bộ phận khiến các phương tiện bạn di chuyển dừng lại và chạy tiếp.</p>
 
     <p>Những hệ thống này thường hoạt động tự động — chúng sử dụng sensor để phát hiện trạng thái của môi trường và actuator để thực hiện các thay đổi vật lý. Ví dụ điển hình là hệ thống điều hòa không khí trong tòa nhà, sử dụng sensor nhiệt độ/độ ẩm và actuator là quạt/bộ sưởi để duy trì nhiệt độ mong muốn.</p>
 
-    <h2>Khi nào nên dùng microcontroller?</h2>
+    <h2>✅ Khi nào nên dùng microcontroller?</h2>
 
     <p>Có một số lý do để chọn microcontroller thay vì máy tính đa năng:</p>
 
     <ul>
-      <li><p><strong>Chi phí.</strong> Một microcontroller rẻ hơn nhiều so với máy tính đa năng và yêu cầu ít linh kiện ngoài hơn. Điều này giúp bo mạch in (PCB) nhỏ hơn, rẻ hơn để thiết kế và sản xuất.</p></li>
-      <li><p><strong>Điện năng tiêu thụ.</strong> Hầu hết các microcontroller tiêu thụ một phần nhỏ điện năng so với một processor đầy đủ. Điều này rất quan trọng nếu thiết bị của bạn chạy bằng pin.</p></li>
-      <li><p><strong>Khả năng phản hồi.</strong> Để hoàn thành mục đích của mình, một số hệ thống embedded phải luôn phản hồi trong một khoảng thời gian giới hạn (ví dụ: hệ thống phanh ABS của ô tô). Nếu hệ thống bỏ lỡ loại <em>deadline</em> này, có thể xảy ra thất bại thảm khốc. Một deadline như vậy được gọi là yêu cầu "hard real time". Một máy tính đa năng và hệ điều hành thường có nhiều thành phần phần mềm chia sẻ tài nguyên xử lý của máy tính. Điều này khiến việc đảm bảo thực thi chương trình trong các ràng buộc thời gian chặt chẽ trở nên khó khăn hơn.</p></li>
-      <li><p><strong>Độ tin cậy.</strong> Trong các hệ thống có ít linh kiện hơn (cả phần cứng lẫn phần mềm), có ít thứ hơn có thể xảy ra sự cố!</p></li>
+      <li><p><strong>💰 Chi phí.</strong> Một microcontroller rẻ hơn nhiều so với máy tính đa năng và yêu cầu ít linh kiện ngoài hơn. Điều này giúp bo mạch in (PCB) nhỏ hơn, rẻ hơn để thiết kế và sản xuất.</p></li>
+      <li><p><strong>🔋 Điện năng tiêu thụ.</strong> Hầu hết các microcontroller tiêu thụ một phần nhỏ điện năng so với một processor đầy đủ. Điều này rất quan trọng nếu thiết bị của bạn chạy bằng pin.</p></li>
+      <li><p><strong>⏱️ Khả năng phản hồi.</strong> Để hoàn thành mục đích của mình, một số hệ thống embedded phải luôn phản hồi trong một khoảng thời gian giới hạn (ví dụ: hệ thống phanh ABS của ô tô). Nếu hệ thống bỏ lỡ loại <em>deadline</em> này, có thể xảy ra thất bại thảm khốc. Một deadline như vậy được gọi là yêu cầu "hard real time". Một máy tính đa năng và hệ điều hành thường có nhiều thành phần phần mềm chia sẻ tài nguyên xử lý của máy tính. Điều này khiến việc đảm bảo thực thi chương trình trong các ràng buộc thời gian chặt chẽ trở nên khó khăn hơn.</p></li>
+      <li><p><strong>🛡️ Độ tin cậy.</strong> Trong các hệ thống có ít linh kiện hơn (cả phần cứng lẫn phần mềm), có ít thứ hơn có thể xảy ra sự cố!</p></li>
     </ul>
 
-    <h2>Khi nào <em>không</em> nên dùng microcontroller?</h2>
+    <h2>❌ Khi nào <em>không</em> nên dùng microcontroller?</h2>
 
     <p>Khi liên quan đến các tính toán nặng. Để giữ mức tiêu thụ điện năng thấp, microcontroller có rất ít tài nguyên tính toán. Ví dụ, một số microcontroller thậm chí không có hỗ trợ phần cứng cho các phép tính dấu phẩy động. Trên những thiết bị đó, thực hiện một phép cộng đơn giản các số dấu phẩy động đơn có thể tốn hàng trăm chu kỳ CPU.</p>
 
-    <h2>Tại sao dùng Rust thay vì C?</h2>
+    <h2>🦀 Tại sao dùng Rust thay vì C?</h2>
 
     <p>C thiếu một giải pháp quản lý gói chính thức, được chấp nhận rộng rãi trong khi Rust có Cargo. Điều này giúp việc phát triển <em>dễ dàng hơn nhiều</em> vì tái sử dụng code trở nên đơn giản hơn — bạn không cần phải tự xây dựng tất cả mọi thứ từ đầu.</p>
 
-    <h2>Tại sao <em>không</em> nên dùng Rust?</h2>
+    <h2>⚖️ Tại sao <em>không</em> nên dùng Rust?</h2>
 
     <p>Hay tại sao nên dùng C thay vì Rust?</p>
 

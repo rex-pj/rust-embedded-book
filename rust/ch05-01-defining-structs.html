@@ -1,220 +1,305 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Định nghĩa và Khởi tạo Struct — The Rust Book (Tiếng Việt)</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="progress"></div>
-<button id="hamburger">☰</button>
-<nav id="sidebar">
-  <div id="sidebar-header">
-    <a href="index.html" class="logo">
-      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
-      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
-    </a>
-  </div>
-  <nav>
-    <div class="nav-group">
-      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
-      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
-      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
-      <a href="ch01-00-getting-started.html">Tổng quan</a>
-      <a href="ch01-01-installation.html">Cài đặt</a>
-      <a href="ch01-02-hello-world.html">Hello, World!</a>
-      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
-      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
-      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
-      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
-      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
-      <a href="ch03-03-how-functions-work.html">Hàm</a>
-      <a href="ch03-04-comments.html">Comments</a>
-      <a href="ch03-05-control-flow.html">Control Flow</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 4 — Ownership</div>
-      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
-      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
-      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
-      <a href="ch04-03-slices.html">Slices</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 5 — Struct</div>
-      <a href="ch05-00-structs.html">Tổng quan</a>
-      <a href="ch05-01-defining-structs.html" class="active">Định nghĩa Struct</a>
-      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
-      <a href="ch05-03-method-syntax.html">Method Syntax</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
-      <a href="ch06-00-enums.html">Tổng quan</a>
-      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
-      <a href="ch06-02-match.html">match</a>
-      <a href="ch06-03-if-let.html">if let</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
-      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
-      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
-      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
-      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
-      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
-      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 8 — Collections</div>
-      <a href="ch08-00-common-collections.html">Tổng quan</a>
-      <a href="ch08-01-vectors.html">Vector</a>
-      <a href="ch08-02-strings.html">String</a>
-      <a href="ch08-03-hash-maps.html">Hash Map</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
-      <a href="ch09-00-error-handling.html">Tổng quan</a>
-      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
-      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
-      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
-      <a href="ch10-00-generics.html">Tổng quan</a>
-      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
-      <a href="ch10-02-traits.html">Trait</a>
-      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 11 — Testing</div>
-      <a href="ch11-00-testing.html">Tổng quan</a>
-      <a href="ch11-01-writing-tests.html">Viết test</a>
-      <a href="ch11-02-running-tests.html">Chạy test</a>
-      <a href="ch11-03-test-organization.html">Tổ chức test</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
-      <a href="ch12-00-an-io-project.html">Tổng quan</a>
-      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
-      <a href="ch12-02-reading-a-file.html">Đọc file</a>
-      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
-      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
-      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
-      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 13 — Functional Features</div>
-      <a href="ch13-00-functional-features.html">Tổng quan</a>
-      <a href="ch13-01-closures.html">Closure</a>
-      <a href="ch13-02-iterators.html">Iterator</a>
-      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
-      <a href="ch13-04-performance.html">Hiệu suất</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
-      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
-      <a href="ch14-01-release-profiles.html">Release Profiles</a>
-      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
-      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
-      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
-      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
-      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
-      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
-      <a href="ch15-02-deref.html">Deref Trait</a>
-      <a href="ch15-03-drop.html">Drop Trait</a>
-      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
-      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
-      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
-      <a href="ch16-00-concurrency.html">Tổng quan</a>
-      <a href="ch16-01-threads.html">Threads</a>
-      <a href="ch16-02-message-passing.html">Message Passing</a>
-      <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 17 — Async/Await</div>
-      <a href="ch17-00-async-await.html">Tổng quan</a>
-      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
-      <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
-      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 18 — OOP</div>
-      <a href="ch18-00-oop.html">Tổng quan</a>
-      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
-      <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
-      <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
-      <a href="ch19-02-refutability.html">Refutability</a>
-      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 20 — Advanced Features</div>
-      <a href="ch20-00-advanced-features.html">Tổng quan</a>
-      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
-      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
-      <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
-      <a href="ch20-05-macros.html">Macros</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
-      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
-      <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
-      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Phụ lục</div>
-      <a href="appendix-00.html">Tá»•ng quan</a>
-      <a href="appendix-01-keywords.html">A â€” Keywords</a>
-      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
-      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
-      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
-      <a href="appendix-05-editions.html">E â€” Editions</a>
-      <a href="appendix-06-translation.html">F â€” Translations</a>
-      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
-    </div>
-  </nav>
-</nav>
-<main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — The Rust Book</span></div>
-  <div id="main">
-  <div class="page-nav">
-    <a href="ch05-00-structs.html">← Trước</a>
-    <a href="ch05-02-example-structs.html">Tiếp →</a>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Định nghĩa và Khởi tạo Struct — The Rust Book (Tiếng Việt)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button id="hamburger">☰</button>
+    <nav id="sidebar">
+      <div id="sidebar-header">
+        <a href="index.html" class="logo">
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect width="32" height="32" rx="6" fill="#CE422B" />
+            <text
+              x="16"
+              y="22"
+              text-anchor="middle"
+              fill="white"
+              font-size="18"
+              font-weight="bold"
+              font-family="serif"
+            >
+              R
+            </text>
+          </svg>
+          <div>
+            <h1>The Rust Book</h1>
+            <p>Tiếng Việt</p>
+          </div>
+        </a>
+      </div>
+      <nav>
+        <div class="nav-group">
+          <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+          <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+          <a href="ch00-00-introduction.html" class="chapter-link"
+            >🎯 Giới thiệu</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+          <a href="ch01-00-getting-started.html">Tổng quan</a>
+          <a href="ch01-01-installation.html">Cài đặt</a>
+          <a href="ch01-02-hello-world.html">Hello, World!</a>
+          <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+          <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+          <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+          <a href="ch03-01-variables-and-mutability.html"
+            >Biến &amp; Mutability</a
+          >
+          <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+          <a href="ch03-03-how-functions-work.html">Hàm</a>
+          <a href="ch03-04-comments.html">Comments</a>
+          <a href="ch03-05-control-flow.html">Control Flow</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 4 — Ownership</div>
+          <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+          <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+          <a href="ch04-02-references-and-borrowing.html"
+            >References &amp; Borrowing</a
+          >
+          <a href="ch04-03-slices.html">Slices</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 5 — Struct</div>
+          <a href="ch05-00-structs.html">Tổng quan</a>
+          <a href="ch05-01-defining-structs.html" class="active"
+            >Định nghĩa Struct</a
+          >
+          <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+          <a href="ch05-03-method-syntax.html">Method Syntax</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 6 — Enum &amp; Pattern Matching
+          </div>
+          <a href="ch06-00-enums.html">Tổng quan</a>
+          <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+          <a href="ch06-02-match.html">match</a>
+          <a href="ch06-03-if-let.html">if let</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+          <a
+            href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"
+            >Tổng quan</a
+          >
+          <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+          <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"
+            >Modules</a
+          >
+          <a
+            href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"
+            >Paths</a
+          >
+          <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"
+            >use</a
+          >
+          <a href="ch07-05-separating-modules-into-different-files.html"
+            >Tách module ra file</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 8 — Collections</div>
+          <a href="ch08-00-common-collections.html">Tổng quan</a>
+          <a href="ch08-01-vectors.html">Vector</a>
+          <a href="ch08-02-strings.html">String</a>
+          <a href="ch08-03-hash-maps.html">Hash Map</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+          <a href="ch09-00-error-handling.html">Tổng quan</a>
+          <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+          <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+          <a href="ch09-03-to-panic-or-not-to-panic.html"
+            >Khi nào dùng panic?</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 10 — Generics, Trait, Lifetime
+          </div>
+          <a href="ch10-00-generics.html">Tổng quan</a>
+          <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+          <a href="ch10-02-traits.html">Trait</a>
+          <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 11 — Testing</div>
+          <a href="ch11-00-testing.html">Tổng quan</a>
+          <a href="ch11-01-writing-tests.html">Viết test</a>
+          <a href="ch11-02-running-tests.html">Chạy test</a>
+          <a href="ch11-03-test-organization.html">Tổ chức test</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+          <a href="ch12-00-an-io-project.html">Tổng quan</a>
+          <a href="ch12-01-accepting-command-line-arguments.html"
+            >Đọc tham số CLI</a
+          >
+          <a href="ch12-02-reading-a-file.html">Đọc file</a>
+          <a href="ch12-03-improving-error-handling-and-modularity.html"
+            >Cải thiện xử lý lỗi</a
+          >
+          <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+          <a href="ch12-05-working-with-environment-variables.html"
+            >Biến môi trường</a
+          >
+          <a href="ch12-06-writing-to-stderr-instead-of-stdout.html"
+            >stderr vs stdout</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 13 — Functional Features</div>
+          <a href="ch13-00-functional-features.html">Tổng quan</a>
+          <a href="ch13-01-closures.html">Closure</a>
+          <a href="ch13-02-iterators.html">Iterator</a>
+          <a href="ch13-03-improving-our-io-project.html"
+            >Cải thiện dự án I/O</a
+          >
+          <a href="ch13-04-performance.html">Hiệu suất</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+          <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+          <a href="ch14-01-release-profiles.html">Release Profiles</a>
+          <a href="ch14-02-publishing-to-crates-io.html"
+            >Xuất bản lên crates.io</a
+          >
+          <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+          <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+          <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+          <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+          <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+          <a href="ch15-02-deref.html">Deref Trait</a>
+          <a href="ch15-03-drop.html">Drop Trait</a>
+          <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+          <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+          <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+          <a href="ch16-00-concurrency.html">Tổng quan</a>
+          <a href="ch16-01-threads.html">Threads</a>
+          <a href="ch16-02-message-passing.html">Message Passing</a>
+          <a href="ch16-03-shared-state.html">Shared State</a>
+          <a href="ch16-04-extensible-concurrency-sync-and-send.html"
+            >Sync &amp; Send</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 17 — Async/Await</div>
+          <a href="ch17-00-async-await.html">Tổng quan</a>
+          <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+          <a href="ch17-02-concurrency-with-async.html"
+            >Concurrency với async</a
+          >
+          <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+          <a href="ch17-04-streams.html">Streams</a>
+          <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+          <a href="ch17-06-futures-tasks-threads.html"
+            >Futures, Tasks, Threads</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 18 — OOP</div>
+          <a href="ch18-00-oop.html">Tổng quan</a>
+          <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+          <a href="ch18-02-trait-objects.html">Trait Objects</a>
+          <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+          <a href="ch19-00-patterns.html">Tổng quan</a>
+          <a href="ch19-01-all-the-places-for-patterns.html"
+            >Nơi dùng Pattern</a
+          >
+          <a href="ch19-02-refutability.html">Refutability</a>
+          <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 20 — Advanced Features</div>
+          <a href="ch20-00-advanced-features.html">Tổng quan</a>
+          <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+          <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+          <a href="ch20-03-advanced-types.html">Advanced Types</a>
+          <a href="ch20-04-advanced-functions-and-closures.html"
+            >Advanced Functions &amp; Closures</a
+          >
+          <a href="ch20-05-macros.html">Macros</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+          <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+          <a href="ch21-01-single-threaded.html">Single-threaded</a>
+          <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+          <a href="ch21-03-graceful-shutdown-and-cleanup.html"
+            >Graceful Shutdown</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Phụ lục</div>
+          <a href="appendix-00.html">Tổng quan</a>
+          <a href="appendix-01-keywords.html">A — Keywords</a>
+          <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+          <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+          <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+          <a href="appendix-05-editions.html">E — Editions</a>
+          <a href="appendix-06-translation.html">F — Translations</a>
+          <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+        </div>
+      </nav>
+    </nav>
+    <main id="content">
+      <div id="topbar">
+        <a href="index.html">The Rust Book</a><span class="sep">›</span
+        ><span class="current">Chương 5 — The Rust Book</span>
+      </div>
+      <div id="main">
+        <div class="page-nav">
+          <a href="ch05-00-structs.html">← Trước</a>
+          <a href="ch05-02-example-structs.html">Tiếp →</a>
+        </div>
 
-  <h2>📐 Định nghĩa và Khởi tạo Struct</h2>
+        <h2>📐 Định nghĩa và Khởi tạo Struct</h2>
 
-  <p>Struct tương tự như tuple, được thảo luận trong mục <a href="ch03-02-data-types.html#the-tuple-type">"Kiểu Tuple"</a>, ở chỗ cả hai đều chứa nhiều giá trị liên quan. Giống tuple, các thành phần của struct có thể có các kiểu khác nhau. Khác với tuple, trong struct bạn đặt tên cho từng phần dữ liệu, nhờ đó rõ ràng hơn về ý nghĩa của từng giá trị. Việc đặt tên này khiến struct linh hoạt hơn tuple: Bạn không cần phụ thuộc vào thứ tự dữ liệu để xác định hoặc truy cập các giá trị của instance.</p>
+        <p>
+          Struct tương tự như tuple, được thảo luận trong mục
+          <a href="ch03-02-data-types.html#the-tuple-type">"Kiểu Tuple"</a>, ở
+          chỗ cả hai đều chứa nhiều giá trị liên quan. Giống tuple, các thành
+          phần của struct có thể có các kiểu khác nhau. Khác với tuple, trong
+          struct bạn đặt tên cho từng phần dữ liệu, nhờ đó rõ ràng hơn về ý
+          nghĩa của từng giá trị. Việc đặt tên này khiến struct linh hoạt hơn
+          tuple: Bạn không cần phụ thuộc vào thứ tự dữ liệu để xác định hoặc
+          truy cập các giá trị của instance.
+        </p>
 
-  <p>Để định nghĩa struct, ta dùng từ khóa <code>struct</code> và đặt tên cho toàn bộ struct. Tên của struct nên mô tả ý nghĩa của nhóm dữ liệu được gộp lại. Sau đó, bên trong dấu ngoặc nhọn, chúng ta định nghĩa tên và kiểu của từng phần dữ liệu, gọi là các <em>field</em>. Ví dụ, Listing 5-1 cho thấy một struct lưu trữ thông tin về tài khoản người dùng.</p>
+        <p>
+          Để định nghĩa struct, ta dùng từ khóa <code>struct</code> và đặt tên
+          cho toàn bộ struct. Tên của struct nên mô tả ý nghĩa của nhóm dữ liệu
+          được gộp lại. Sau đó, bên trong dấu ngoặc nhọn, chúng ta định nghĩa
+          tên và kiểu của từng phần dữ liệu, gọi là các <em>field</em>. Ví dụ,
+          Listing 5-1 cho thấy một struct lưu trữ thông tin về tài khoản người
+          dùng.
+        </p>
 
-  <figure class="listing" id="listing-5-1">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">struct User {
+        <figure class="listing" id="listing-5-1">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">struct User {
     active: bool,
     username: String,
     email: String,
@@ -222,14 +307,27 @@
 }
 
 fn main() {}</code></pre>
-  <figcaption><a href="#listing-5-1">Listing 5-1</a>: Định nghĩa struct <code>User</code></figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-1">Listing 5-1</a>: Định nghĩa struct
+            <code>User</code>
+          </figcaption>
+        </figure>
 
-  <p>Để sử dụng struct sau khi đã định nghĩa, ta tạo một <em>instance</em> (thể hiện) của struct đó bằng cách chỉ định các giá trị cụ thể cho từng field. Ta tạo instance bằng cách ghi tên struct rồi thêm dấu ngoặc nhọn chứa các cặp <em><code>key: value</code></em>, trong đó key là tên field và value là dữ liệu ta muốn lưu. Ta không cần chỉ định các field theo đúng thứ tự khai báo trong struct. Nói cách khác, định nghĩa struct giống như một template chung cho kiểu, còn các instance lấp đầy template đó với dữ liệu cụ thể. Ví dụ, ta có thể khai báo một người dùng cụ thể như trong Listing 5-2.</p>
+        <p>
+          Để sử dụng struct sau khi đã định nghĩa, ta tạo một
+          <em>instance</em> (thể hiện) của struct đó bằng cách chỉ định các giá
+          trị cụ thể cho từng field. Ta tạo instance bằng cách ghi tên struct
+          rồi thêm dấu ngoặc nhọn chứa các cặp <em><code>key: value</code></em
+          >, trong đó key là tên field và value là dữ liệu ta muốn lưu. Ta không
+          cần chỉ định các field theo đúng thứ tự khai báo trong struct. Nói
+          cách khác, định nghĩa struct giống như một template chung cho kiểu,
+          còn các instance lấp đầy template đó với dữ liệu cụ thể. Ví dụ, ta có
+          thể khai báo một người dùng cụ thể như trong Listing 5-2.
+        </p>
 
-  <figure class="listing" id="listing-5-2">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn main() {
+        <figure class="listing" id="listing-5-2">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn main() {
     let user1 = User {
         active: true,
         username: String::from("someusername123"),
@@ -237,14 +335,24 @@ fn main() {}</code></pre>
         sign_in_count: 1,
     };
 }</code></pre>
-  <figcaption><a href="#listing-5-2">Listing 5-2</a>: Tạo một instance của struct <code>User</code></figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-2">Listing 5-2</a>: Tạo một instance của struct
+            <code>User</code>
+          </figcaption>
+        </figure>
 
-  <p>Để lấy một giá trị cụ thể từ struct, ta dùng ký hiệu chấm. Ví dụ, để truy cập địa chỉ email của người dùng này, ta dùng <code>user1.email</code>. Nếu instance là mutable, ta có thể thay đổi giá trị bằng cách dùng ký hiệu chấm và gán vào một field cụ thể. Listing 5-3 cho thấy cách thay đổi giá trị trong field <code>email</code> của một instance <code>User</code> mutable.</p>
+        <p>
+          Để lấy một giá trị cụ thể từ struct, ta dùng ký hiệu chấm. Ví dụ, để
+          truy cập địa chỉ email của người dùng này, ta dùng
+          <code>user1.email</code>. Nếu instance là mutable, ta có thể thay đổi
+          giá trị bằng cách dùng ký hiệu chấm và gán vào một field cụ thể.
+          Listing 5-3 cho thấy cách thay đổi giá trị trong field
+          <code>email</code> của một instance <code>User</code> mutable.
+        </p>
 
-  <figure class="listing" id="listing-5-3">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn main() {
+        <figure class="listing" id="listing-5-3">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn main() {
     let mut user1 = User {
         active: true,
         username: String::from("someusername123"),
@@ -254,16 +362,29 @@ fn main() {}</code></pre>
 
     user1.email = String::from("anotheremail@example.com");
 }</code></pre>
-  <figcaption><a href="#listing-5-3">Listing 5-3</a>: Thay đổi giá trị field <code>email</code> của một instance <code>User</code></figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-3">Listing 5-3</a>: Thay đổi giá trị field
+            <code>email</code> của một instance <code>User</code>
+          </figcaption>
+        </figure>
 
-  <p>Lưu ý rằng toàn bộ instance phải là mutable; Rust không cho phép chỉ đánh dấu một số field nhất định là mutable. Cũng như mọi biểu thức, ta có thể xây dựng một instance mới của struct ở biểu thức cuối cùng trong thân hàm để ngầm định trả về instance mới đó.</p>
+        <p>
+          Lưu ý rằng toàn bộ instance phải là mutable; Rust không cho phép chỉ
+          đánh dấu một số field nhất định là mutable. Cũng như mọi biểu thức, ta
+          có thể xây dựng một instance mới của struct ở biểu thức cuối cùng
+          trong thân hàm để ngầm định trả về instance mới đó.
+        </p>
 
-  <p>Listing 5-4 cho thấy hàm <code>build_user</code> trả về một instance <code>User</code> với email và username đã cho. Field <code>active</code> nhận giá trị <code>true</code>, và <code>sign_in_count</code> nhận giá trị <code>1</code>.</p>
+        <p>
+          Listing 5-4 cho thấy hàm <code>build_user</code> trả về một instance
+          <code>User</code> với email và username đã cho. Field
+          <code>active</code> nhận giá trị <code>true</code>, và
+          <code>sign_in_count</code> nhận giá trị <code>1</code>.
+        </p>
 
-  <figure class="listing" id="listing-5-4">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn build_user(email: String, username: String) -&gt; User {
+        <figure class="listing" id="listing-5-4">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn build_user(email: String, username: String) -&gt; User {
     User {
         active: true,
         username: username,
@@ -271,18 +392,34 @@ fn main() {}</code></pre>
         sign_in_count: 1,
     }
 }</code></pre>
-  <figcaption><a href="#listing-5-4">Listing 5-4</a>: Hàm <code>build_user</code> nhận email và username rồi trả về instance <code>User</code></figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-4">Listing 5-4</a>: Hàm
+            <code>build_user</code> nhận email và username rồi trả về instance
+            <code>User</code>
+          </figcaption>
+        </figure>
 
-  <p>Việc đặt tên tham số hàm trùng với tên field của struct là hợp lý, nhưng phải lặp lại tên field <code>email</code> và <code>username</code> cùng với biến thì hơi rườm rà. Nếu struct có nhiều field hơn, việc lặp lại từng tên sẽ càng phiền hơn. May mắn thay, có một cú pháp viết tắt tiện lợi!</p>
+        <p>
+          Việc đặt tên tham số hàm trùng với tên field của struct là hợp lý,
+          nhưng phải lặp lại tên field <code>email</code> và
+          <code>username</code> cùng với biến thì hơi rườm rà. Nếu struct có
+          nhiều field hơn, việc lặp lại từng tên sẽ càng phiền hơn. May mắn
+          thay, có một cú pháp viết tắt tiện lợi!
+        </p>
 
-  <h3>✂️ Sử dụng Field Init Shorthand</h3>
+        <h3>✂️ Sử dụng Field Init Shorthand</h3>
 
-  <p>Vì tên tham số và tên field của struct trong Listing 5-4 hoàn toàn giống nhau, ta có thể dùng cú pháp <em>field init shorthand</em> (khởi tạo field viết tắt) để viết lại <code>build_user</code> với hành vi y hệt nhưng không cần lặp lại <code>username</code> và <code>email</code>, như trong Listing 5-5.</p>
+        <p>
+          Vì tên tham số và tên field của struct trong Listing 5-4 hoàn toàn
+          giống nhau, ta có thể dùng cú pháp <em>field init shorthand</em> (khởi
+          tạo field viết tắt) để viết lại <code>build_user</code> với hành vi y
+          hệt nhưng không cần lặp lại <code>username</code> và
+          <code>email</code>, như trong Listing 5-5.
+        </p>
 
-  <figure class="listing" id="listing-5-5">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn build_user(email: String, username: String) -&gt; User {
+        <figure class="listing" id="listing-5-5">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn build_user(email: String, username: String) -&gt; User {
     User {
         active: true,
         username,
@@ -290,20 +427,41 @@ fn main() {}</code></pre>
         sign_in_count: 1,
     }
 }</code></pre>
-  <figcaption><a href="#listing-5-5">Listing 5-5</a>: Hàm <code>build_user</code> dùng field init shorthand vì tham số <code>username</code> và <code>email</code> trùng tên với field</figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-5">Listing 5-5</a>: Hàm
+            <code>build_user</code> dùng field init shorthand vì tham số
+            <code>username</code> và <code>email</code> trùng tên với field
+          </figcaption>
+        </figure>
 
-  <p>Ở đây, ta đang tạo một instance mới của struct <code>User</code> với field tên <code>email</code>. Ta muốn gán giá trị của field <code>email</code> bằng giá trị trong tham số <code>email</code> của hàm <code>build_user</code>. Vì field <code>email</code> và tham số <code>email</code> cùng tên, ta chỉ cần viết <code>email</code> thay vì <code>email: email</code>.</p>
+        <p>
+          Ở đây, ta đang tạo một instance mới của struct <code>User</code> với
+          field tên <code>email</code>. Ta muốn gán giá trị của field
+          <code>email</code> bằng giá trị trong tham số <code>email</code> của
+          hàm <code>build_user</code>. Vì field <code>email</code> và tham số
+          <code>email</code> cùng tên, ta chỉ cần viết <code>email</code> thay
+          vì <code>email: email</code>.
+        </p>
 
-  <h3>🔄 Tạo Instance bằng Struct Update Syntax</h3>
+        <h3>🔄 Tạo Instance bằng Struct Update Syntax</h3>
 
-  <p>Thường rất hữu ích khi tạo một instance mới của struct bao gồm hầu hết các giá trị từ một instance khác cùng kiểu, nhưng thay đổi một số giá trị. Bạn có thể làm điều này bằng struct update syntax.</p>
+        <p>
+          Thường rất hữu ích khi tạo một instance mới của struct bao gồm hầu hết
+          các giá trị từ một instance khác cùng kiểu, nhưng thay đổi một số giá
+          trị. Bạn có thể làm điều này bằng struct update syntax.
+        </p>
 
-  <p>Trước tiên, Listing 5-6 cho thấy cách tạo instance <code>User</code> mới trong <code>user2</code> theo cách thông thường, không dùng update syntax. Ta đặt giá trị mới cho <code>email</code> nhưng dùng các giá trị còn lại từ <code>user1</code> đã tạo ở Listing 5-2.</p>
+        <p>
+          Trước tiên, Listing 5-6 cho thấy cách tạo instance
+          <code>User</code> mới trong <code>user2</code> theo cách thông thường,
+          không dùng update syntax. Ta đặt giá trị mới cho
+          <code>email</code> nhưng dùng các giá trị còn lại từ
+          <code>user1</code> đã tạo ở Listing 5-2.
+        </p>
 
-  <figure class="listing" id="listing-5-6">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn main() {
+        <figure class="listing" id="listing-5-6">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn main() {
     // --snip--
 
     let user2 = User {
@@ -313,14 +471,23 @@ fn main() {}</code></pre>
         sign_in_count: user1.sign_in_count,
     };
 }</code></pre>
-  <figcaption><a href="#listing-5-6">Listing 5-6</a>: Tạo instance <code>User</code> mới sử dụng tất cả các giá trị từ <code>user1</code> trừ một giá trị</figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-6">Listing 5-6</a>: Tạo instance
+            <code>User</code> mới sử dụng tất cả các giá trị từ
+            <code>user1</code> trừ một giá trị
+          </figcaption>
+        </figure>
 
-  <p>Dùng struct update syntax, ta có thể đạt hiệu quả tương tự với ít code hơn, như trong Listing 5-7. Cú pháp <code>..</code> chỉ định rằng các field còn lại chưa được thiết lập rõ ràng sẽ có cùng giá trị với các field trong instance đã cho.</p>
+        <p>
+          Dùng struct update syntax, ta có thể đạt hiệu quả tương tự với ít code
+          hơn, như trong Listing 5-7. Cú pháp <code>..</code> chỉ định rằng các
+          field còn lại chưa được thiết lập rõ ràng sẽ có cùng giá trị với các
+          field trong instance đã cho.
+        </p>
 
-  <figure class="listing" id="listing-5-7">
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">fn main() {
+        <figure class="listing" id="listing-5-7">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn main() {
     // --snip--
 
     let user2 = User {
@@ -328,21 +495,68 @@ fn main() {}</code></pre>
         ..user1
     };
 }</code></pre>
-  <figcaption><a href="#listing-5-7">Listing 5-7</a>: Dùng struct update syntax để đặt giá trị <code>email</code> mới cho instance <code>User</code> nhưng dùng các giá trị còn lại từ <code>user1</code></figcaption>
-  </figure>
+          <figcaption>
+            <a href="#listing-5-7">Listing 5-7</a>: Dùng struct update syntax để
+            đặt giá trị <code>email</code> mới cho instance
+            <code>User</code> nhưng dùng các giá trị còn lại từ
+            <code>user1</code>
+          </figcaption>
+        </figure>
 
-  <p>Code trong Listing 5-7 cũng tạo ra instance trong <code>user2</code> có giá trị khác cho <code>email</code> nhưng các giá trị <code>username</code>, <code>active</code>, và <code>sign_in_count</code> giống với <code>user1</code>. <code>..user1</code> phải đặt ở cuối để chỉ định rằng bất kỳ field còn lại nào đều lấy giá trị từ các field tương ứng trong <code>user1</code>, nhưng ta có thể chỉ định giá trị cho bao nhiêu field tùy ý theo bất kỳ thứ tự nào.</p>
+        <p>
+          Code trong Listing 5-7 cũng tạo ra instance trong
+          <code>user2</code> có giá trị khác cho <code>email</code> nhưng các
+          giá trị <code>username</code>, <code>active</code>, và
+          <code>sign_in_count</code> giống với <code>user1</code>.
+          <code>..user1</code> phải đặt ở cuối để chỉ định rằng bất kỳ field còn
+          lại nào đều lấy giá trị từ các field tương ứng trong
+          <code>user1</code>, nhưng ta có thể chỉ định giá trị cho bao nhiêu
+          field tùy ý theo bất kỳ thứ tự nào.
+        </p>
 
-  <p>Lưu ý rằng struct update syntax dùng <code>=</code> như phép gán; đó là vì nó <em>move</em> dữ liệu, giống như chúng ta đã thấy trong mục <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move">"Biến và Dữ liệu tương tác với Move"</a>. Trong ví dụ này, ta không thể dùng <code>user1</code> sau khi tạo <code>user2</code> vì <code>String</code> trong field <code>username</code> của <code>user1</code> đã được move vào <code>user2</code>. Nếu ta đã đặt giá trị <code>String</code> mới cho cả <code>email</code> lẫn <code>username</code> của <code>user2</code>, và do đó chỉ dùng các giá trị <code>active</code> và <code>sign_in_count</code> từ <code>user1</code>, thì <code>user1</code> vẫn hợp lệ sau khi tạo <code>user2</code>. Cả <code>active</code> và <code>sign_in_count</code> đều là các kiểu triển khai trait <code>Copy</code>, nên hành vi trong mục <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">"Dữ liệu chỉ trên Stack: Copy"</a> sẽ áp dụng. Ta cũng vẫn có thể dùng <code>user1.email</code> trong ví dụ này vì giá trị của nó không bị move ra khỏi <code>user1</code>.</p>
+        <p>
+          Lưu ý rằng struct update syntax dùng <code>=</code> như phép gán; đó
+          là vì nó <em>move</em> dữ liệu, giống như chúng ta đã thấy trong mục
+          <a
+            href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move"
+            >"Biến và Dữ liệu tương tác với Move"</a
+          >. Trong ví dụ này, ta không thể dùng <code>user1</code> sau khi tạo
+          <code>user2</code> vì <code>String</code> trong field
+          <code>username</code> của <code>user1</code> đã được move vào
+          <code>user2</code>. Nếu ta đã đặt giá trị <code>String</code> mới cho
+          cả <code>email</code> lẫn <code>username</code> của
+          <code>user2</code>, và do đó chỉ dùng các giá trị
+          <code>active</code> và <code>sign_in_count</code> từ
+          <code>user1</code>, thì <code>user1</code> vẫn hợp lệ sau khi tạo
+          <code>user2</code>. Cả <code>active</code> và
+          <code>sign_in_count</code> đều là các kiểu triển khai trait
+          <code>Copy</code>, nên hành vi trong mục
+          <a href="ch04-01-what-is-ownership.html#stack-only-data-copy"
+            >"Dữ liệu chỉ trên Stack: Copy"</a
+          >
+          sẽ áp dụng. Ta cũng vẫn có thể dùng <code>user1.email</code> trong ví
+          dụ này vì giá trị của nó không bị move ra khỏi <code>user1</code>.
+        </p>
 
-  <h3>📦 Tạo Kiểu Khác nhau bằng Tuple Struct</h3>
+        <h3>📦 Tạo Kiểu Khác nhau bằng Tuple Struct</h3>
 
-  <p>Rust cũng hỗ trợ các struct trông giống tuple, gọi là <em>tuple struct</em>. Tuple struct có thêm ý nghĩa từ tên struct nhưng các field không có tên; chúng chỉ có kiểu của các field. Tuple struct hữu ích khi bạn muốn đặt tên cho toàn bộ tuple và làm cho tuple đó trở thành một kiểu khác với các tuple khác, khi mà đặt tên từng field như trong struct thông thường sẽ dài dòng hoặc thừa.</p>
+        <p>
+          Rust cũng hỗ trợ các struct trông giống tuple, gọi là
+          <em>tuple struct</em>. Tuple struct có thêm ý nghĩa từ tên struct
+          nhưng các field không có tên; chúng chỉ có kiểu của các field. Tuple
+          struct hữu ích khi bạn muốn đặt tên cho toàn bộ tuple và làm cho tuple
+          đó trở thành một kiểu khác với các tuple khác, khi mà đặt tên từng
+          field như trong struct thông thường sẽ dài dòng hoặc thừa.
+        </p>
 
-  <p>Để định nghĩa tuple struct, bắt đầu với từ khóa <code>struct</code> và tên struct, tiếp theo là các kiểu trong tuple. Ví dụ, ta định nghĩa và sử dụng hai tuple struct tên <code>Color</code> và <code>Point</code>:</p>
+        <p>
+          Để định nghĩa tuple struct, bắt đầu với từ khóa <code>struct</code> và
+          tên struct, tiếp theo là các kiểu trong tuple. Ví dụ, ta định nghĩa và
+          sử dụng hai tuple struct tên <code>Color</code> và <code>Point</code>:
+        </p>
 
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">struct Color(i32, i32, i32);
+        <span class="file-name">Tên file: src/main.rs</span>
+        <pre><code class="language-rust">struct Color(i32, i32, i32);
 struct Point(i32, i32, i32);
 
 fn main() {
@@ -350,30 +564,80 @@ fn main() {
     let origin = Point(0, 0, 0);
 }</code></pre>
 
-  <p>Lưu ý rằng <code>black</code> và <code>origin</code> là các kiểu khác nhau vì chúng là các instance của các tuple struct khác nhau. Mỗi struct bạn định nghĩa là kiểu riêng của nó, dù các field bên trong struct có thể có cùng kiểu. Ví dụ, hàm nhận tham số kiểu <code>Color</code> không thể nhận <code>Point</code> làm đối số, dù cả hai kiểu đều được tạo từ ba giá trị <code>i32</code>. Ngoài ra, instance của tuple struct tương tự tuple ở chỗ bạn có thể destructure chúng thành các phần riêng lẻ, và bạn có thể dùng dấu <code>.</code> theo sau bởi chỉ số để truy cập từng giá trị. Khác với tuple, tuple struct yêu cầu bạn đặt tên kiểu của struct khi destructure. Ví dụ, ta viết <code>let Point(x, y, z) = origin;</code> để destructure các giá trị trong điểm <code>origin</code> thành các biến <code>x</code>, <code>y</code>, và <code>z</code>.</p>
+        <p>
+          Lưu ý rằng <code>black</code> và <code>origin</code> là các kiểu khác
+          nhau vì chúng là các instance của các tuple struct khác nhau. Mỗi
+          struct bạn định nghĩa là kiểu riêng của nó, dù các field bên trong
+          struct có thể có cùng kiểu. Ví dụ, hàm nhận tham số kiểu
+          <code>Color</code> không thể nhận <code>Point</code> làm đối số, dù cả
+          hai kiểu đều được tạo từ ba giá trị <code>i32</code>. Ngoài ra,
+          instance của tuple struct tương tự tuple ở chỗ bạn có thể destructure
+          chúng thành các phần riêng lẻ, và bạn có thể dùng dấu
+          <code>.</code> theo sau bởi chỉ số để truy cập từng giá trị. Khác với
+          tuple, tuple struct yêu cầu bạn đặt tên kiểu của struct khi
+          destructure. Ví dụ, ta viết
+          <code>let Point(x, y, z) = origin;</code> để destructure các giá trị
+          trong điểm <code>origin</code> thành các biến <code>x</code>,
+          <code>y</code>, và <code>z</code>.
+        </p>
 
-  <h3>🔲 Định nghĩa Unit-Like Struct</h3>
+        <h3>🔲 Định nghĩa Unit-Like Struct</h3>
 
-  <p>Bạn cũng có thể định nghĩa các struct không có field nào! Chúng được gọi là <em>unit-like struct</em> vì chúng hoạt động tương tự <code>()</code>, kiểu unit mà chúng ta đã đề cập trong mục <a href="ch03-02-data-types.html#the-tuple-type">"Kiểu Tuple"</a>. Unit-like struct hữu ích khi bạn cần triển khai một trait trên một kiểu nào đó nhưng không có dữ liệu nào muốn lưu trong bản thân kiểu đó. Chúng ta sẽ thảo luận về trait trong Chương 10. Đây là ví dụ về khai báo và khởi tạo một unit struct tên <code>AlwaysEqual</code>:</p>
+        <p>
+          Bạn cũng có thể định nghĩa các struct không có field nào! Chúng được
+          gọi là <em>unit-like struct</em> vì chúng hoạt động tương tự
+          <code>()</code>, kiểu unit mà chúng ta đã đề cập trong mục
+          <a href="ch03-02-data-types.html#the-tuple-type">"Kiểu Tuple"</a>.
+          Unit-like struct hữu ích khi bạn cần triển khai một trait trên một
+          kiểu nào đó nhưng không có dữ liệu nào muốn lưu trong bản thân kiểu
+          đó. Chúng ta sẽ thảo luận về trait trong Chương 10. Đây là ví dụ về
+          khai báo và khởi tạo một unit struct tên <code>AlwaysEqual</code>:
+        </p>
 
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">struct AlwaysEqual;
+        <span class="file-name">Tên file: src/main.rs</span>
+        <pre><code class="language-rust">struct AlwaysEqual;
 
 fn main() {
     let subject = AlwaysEqual;
 }</code></pre>
 
-  <p>Để định nghĩa <code>AlwaysEqual</code>, ta dùng từ khóa <code>struct</code>, tên muốn đặt, rồi dấu chấm phẩy. Không cần dấu ngoặc nhọn hay dấu ngoặc đơn! Sau đó, ta có thể tạo instance của <code>AlwaysEqual</code> trong biến <code>subject</code> theo cách tương tự: dùng tên đã định nghĩa, không có dấu ngoặc nhọn hay dấu ngoặc đơn. Hãy tưởng tượng sau này ta sẽ triển khai hành vi cho kiểu này sao cho mọi instance của <code>AlwaysEqual</code> luôn bằng với mọi instance của bất kỳ kiểu nào khác, có thể để có kết quả biết trước khi test. Ta sẽ không cần bất kỳ dữ liệu nào để triển khai hành vi đó! Bạn sẽ thấy trong Chương 10 cách định nghĩa trait và triển khai chúng trên bất kỳ kiểu nào, bao gồm unit-like struct.</p>
+        <p>
+          Để định nghĩa <code>AlwaysEqual</code>, ta dùng từ khóa
+          <code>struct</code>, tên muốn đặt, rồi dấu chấm phẩy. Không cần dấu
+          ngoặc nhọn hay dấu ngoặc đơn! Sau đó, ta có thể tạo instance của
+          <code>AlwaysEqual</code> trong biến <code>subject</code> theo cách
+          tương tự: dùng tên đã định nghĩa, không có dấu ngoặc nhọn hay dấu
+          ngoặc đơn. Hãy tưởng tượng sau này ta sẽ triển khai hành vi cho kiểu
+          này sao cho mọi instance của <code>AlwaysEqual</code> luôn bằng với
+          mọi instance của bất kỳ kiểu nào khác, có thể để có kết quả biết trước
+          khi test. Ta sẽ không cần bất kỳ dữ liệu nào để triển khai hành vi đó!
+          Bạn sẽ thấy trong Chương 10 cách định nghĩa trait và triển khai chúng
+          trên bất kỳ kiểu nào, bao gồm unit-like struct.
+        </p>
 
-  <section class="note">
-  <h3>🔐 Ownership của Dữ liệu Struct</h3>
+        <section class="note">
+          <h3>🔐 Ownership của Dữ liệu Struct</h3>
 
-  <p>Trong định nghĩa struct <code>User</code> ở Listing 5-1, chúng ta đã dùng kiểu <code>String</code> (owned) thay vì kiểu string slice <code>&amp;str</code>. Đây là lựa chọn có chủ ý vì chúng ta muốn mỗi instance của struct này sở hữu toàn bộ dữ liệu của nó, và dữ liệu đó hợp lệ miễn là toàn bộ struct còn hợp lệ.</p>
+          <p>
+            Trong định nghĩa struct <code>User</code> ở Listing 5-1, chúng ta đã
+            dùng kiểu <code>String</code> (owned) thay vì kiểu string slice
+            <code>&amp;str</code>. Đây là lựa chọn có chủ ý vì chúng ta muốn mỗi
+            instance của struct này sở hữu toàn bộ dữ liệu của nó, và dữ liệu đó
+            hợp lệ miễn là toàn bộ struct còn hợp lệ.
+          </p>
 
-  <p>Các struct cũng có thể lưu trữ tham chiếu đến dữ liệu do ai đó khác sở hữu, nhưng để làm vậy cần sử dụng <em>lifetime</em>, một tính năng của Rust mà chúng ta sẽ thảo luận trong Chương 10. Lifetime đảm bảo rằng dữ liệu được tham chiếu bởi struct hợp lệ miễn là struct còn tồn tại. Giả sử bạn cố lưu trữ tham chiếu trong struct mà không chỉ định lifetime, như sau trong <em>src/main.rs</em>; điều này sẽ không hoạt động:</p>
+          <p>
+            Các struct cũng có thể lưu trữ tham chiếu đến dữ liệu do ai đó khác
+            sở hữu, nhưng để làm vậy cần sử dụng <em>lifetime</em>, một tính
+            năng của Rust mà chúng ta sẽ thảo luận trong Chương 10. Lifetime đảm
+            bảo rằng dữ liệu được tham chiếu bởi struct hợp lệ miễn là struct
+            còn tồn tại. Giả sử bạn cố lưu trữ tham chiếu trong struct mà không
+            chỉ định lifetime, như sau trong <em>src/main.rs</em>; điều này sẽ
+            không hoạt động:
+          </p>
 
-  <span class="file-name">Tên file: src/main.rs</span>
-  <pre><code class="language-rust">struct User {
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">struct User {
     active: bool,
     username: &amp;str,
     email: &amp;str,
@@ -389,9 +653,9 @@ fn main() {
     };
 }</code></pre>
 
-  <p>Compiler sẽ báo lỗi rằng nó cần chỉ định lifetime:</p>
+          <p>Compiler sẽ báo lỗi rằng nó cần chỉ định lifetime:</p>
 
-  <pre><code class="language-console">$ cargo run
+          <pre><code class="language-console">$ cargo run
    Compiling structs v0.1.0 (file:///projects/structs)
 error[E0106]: missing lifetime specifier
  --&gt; src/main.rs:3:15
@@ -415,12 +679,20 @@ error[E0106]: missing lifetime specifier
 For more information about this error, try `rustc --explain E0106`.
 error: could not compile `structs` due to 2 previous errors</code></pre>
 
-  <p>Trong Chương 10, chúng ta sẽ thảo luận cách sửa các lỗi này để có thể lưu trữ tham chiếu trong struct, nhưng hiện tại, chúng ta sẽ sửa những lỗi như thế này bằng cách dùng các kiểu sở hữu như <code>String</code> thay vì tham chiếu như <code>&amp;str</code>.</p>
-  </section>
+          <p>
+            Trong Chương 10, chúng ta sẽ thảo luận cách sửa các lỗi này để có
+            thể lưu trữ tham chiếu trong struct, nhưng hiện tại, chúng ta sẽ sửa
+            những lỗi như thế này bằng cách dùng các kiểu sở hữu như
+            <code>String</code> thay vì tham chiếu như <code>&amp;str</code>.
+          </p>
+        </section>
 
-  <div class="page-nav bottom"><a href="ch05-00-structs.html">← Trước</a><a href="ch05-02-example-structs.html">Tiếp →</a></div>
-  </div>
-</main>
-<script src="nav.js"></script>
-</body>
+        <div class="page-nav bottom">
+          <a href="ch05-00-structs.html">← Trước</a
+          ><a href="ch05-02-example-structs.html">Tiếp →</a>
+        </div>
+      </div>
+    </main>
+    <script src="nav.js"></script>
+  </body>
 </html>

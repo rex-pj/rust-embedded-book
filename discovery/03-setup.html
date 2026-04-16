@@ -63,14 +63,14 @@
 
     <p>Làm việc với microcontroller đòi hỏi một bộ công cụ đặc biệt vì chúng ta sẽ làm việc với một kiến trúc khác với máy tính của bạn, và cần phải chạy cũng như debug chương trình trên một thiết bị "remote".</p>
 
-    <h2>Tài liệu tham khảo</h2>
+    <h2>📚 Tài liệu tham khảo</h2>
     <p>Tuy nhiên công cụ không phải là tất cả. Nếu không có tài liệu, việc làm việc với microcontroller gần như là bất khả thi. Chúng ta sẽ tham khảo tất cả những tài liệu này xuyên suốt cuốn sách:</p>
     <ul>
       <li>Tài liệu kỹ thuật MB2 chính thức tại <a href="https://tech.microbit.org">https://tech.microbit.org</a></li>
       <li><a href="https://www.st.com/resource/en/datasheet/lsm303agr.pdf">LSM303AGR</a></li>
     </ul>
 
-    <h2>Công cụ cần thiết</h2>
+    <h2>🛠️ Công cụ cần thiết</h2>
 
     <p>Chúng ta sẽ dùng tất cả các công cụ được liệt kê bên dưới. Nếu không chỉ định phiên bản tối thiểu, bất kỳ phiên bản gần đây nào cũng sẽ hoạt động, nhưng chúng tôi đã liệt kê phiên bản đã được thử nghiệm.</p>
 
@@ -109,7 +109,7 @@ rustc 1.79.0 (129f3b996 2024-06-10)</code></pre>
     <h3>cargo-binutils</h3>
 
     <pre><code class="language-bash">$ rustup component add llvm-tools
-$ cargo install cargo-binutils --vers 0.3.6
+$ cargo install cargo-binutils --vers '^0.3'
 $ cargo size --version
 cargo-size 0.3.6</code></pre>
 
@@ -136,11 +136,11 @@ cargo-embed 0.24.0 (git commit: crates.io)</code></pre>
 
     <p>Vì cuốn sách này cũng chứa một số code base Rust nhỏ được dùng trong các chương khác nhau, bạn cũng sẽ cần tải mã nguồn của nó. Bạn có thể làm điều này bằng một trong các cách sau:</p>
     <ul>
-      <li>Truy cập <a href="https://github.com/rust-embedded/discovery/">repository</a>, nhấn nút "Code" màu xanh rồi nhấn "Download Zip"</li>
+      <li>Truy cập <a href="https://github.com/rust-embedded/discovery-mb2/">repository</a>, nhấn nút "Code" màu xanh rồi nhấn "Download Zip"</li>
       <li>Clone bằng git (nếu bạn biết git thì chắc đã cài rồi) từ cùng repository đã nêu trên</li>
     </ul>
 
-    <h2>Hướng dẫn theo hệ điều hành</h2>
+    <h2>💻 Hướng dẫn theo hệ điều hành</h2>
 
     <p>Bây giờ hãy làm theo hướng dẫn dành riêng cho hệ điều hành bạn đang dùng:</p>
 
@@ -210,7 +210,7 @@ $ brew install minicom
 $ # lsusb (liệt kê thiết bị USB kết nối)
 $ brew install lsusb</code></pre>
 
-    <h2>Xác nhận cài đặt</h2>
+    <h2>✅ Xác nhận cài đặt</h2>
 
     <p>Hãy xác nhận rằng tất cả các công cụ đã được cài đặt đúng cách.</p>
 
@@ -291,7 +291,7 @@ $ cargo embed --target thumbv7em-none-eabihf</code></pre>
     <p>(Nếu không hoạt động, hãy xem hướng dẫn <a href="https://docs.rust-embedded.org/discovery/microbit/appendix/1-general-troubleshooting/index.html">khắc phục sự cố chung</a>.)</p>
     <p>Output này đến từ chương trình Rust nhỏ mà bạn vừa flash lên micro:bit. Mọi thứ đang hoạt động đúng và bạn có thể tiếp tục với các chương tiếp theo!</p>
 
-    <h2>Cài đặt IDE (tùy chọn)</h2>
+    <h2>🖥️ Cài đặt IDE (tùy chọn)</h2>
 
     <p>Tài liệu này giả định bạn dùng terminal để build và chạy code, không yêu cầu editor cụ thể nào. Tuy nhiên nếu bạn muốn tích hợp tốt hơn với IDE, phần này hướng dẫn cấu hình.</p>
 

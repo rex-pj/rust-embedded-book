@@ -1,287 +1,479 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cài đặt — The Rust Book (Tiếng Việt)</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="progress"></div>
-<button id="hamburger">☰</button>
-<nav id="sidebar">
-  <div id="sidebar-header">
-    <a href="index.html" class="logo">
-      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#CE422B"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="serif">R</text></svg>
-      <div><h1>The Rust Book</h1><p>Tiếng Việt</p></div>
-    </a>
-  </div>
-  <nav>
-    <div class="nav-group">
-      <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
-      <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
-      <a href="ch00-00-introduction.html" class="chapter-link">🎯 Giới thiệu</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 1 — Bắt đầu</div>
-      <a href="ch01-00-getting-started.html">Tổng quan</a>
-      <a href="ch01-01-installation.html" class="active">Cài đặt</a>
-      <a href="ch01-02-hello-world.html">Hello, World!</a>
-      <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
-      <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
-      <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
-      <a href="ch03-01-variables-and-mutability.html">Biến &amp; Mutability</a>
-      <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
-      <a href="ch03-03-how-functions-work.html">Hàm</a>
-      <a href="ch03-04-comments.html">Comments</a>
-      <a href="ch03-05-control-flow.html">Control Flow</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 4 — Ownership</div>
-      <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
-      <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
-      <a href="ch04-02-references-and-borrowing.html">References &amp; Borrowing</a>
-      <a href="ch04-03-slices.html">Slices</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 5 — Struct</div>
-      <a href="ch05-00-structs.html">Tổng quan</a>
-      <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
-      <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
-      <a href="ch05-03-method-syntax.html">Method Syntax</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 6 — Enum &amp; Pattern Matching</div>
-      <a href="ch06-00-enums.html">Tổng quan</a>
-      <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
-      <a href="ch06-02-match.html">match</a>
-      <a href="ch06-03-if-let.html">if let</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
-      <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tổng quan</a>
-      <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
-      <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Modules</a>
-      <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">Paths</a>
-      <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">use</a>
-      <a href="ch07-05-separating-modules-into-different-files.html">Tách module ra file</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 8 — Collections</div>
-      <a href="ch08-00-common-collections.html">Tổng quan</a>
-      <a href="ch08-01-vectors.html">Vector</a>
-      <a href="ch08-02-strings.html">String</a>
-      <a href="ch08-03-hash-maps.html">Hash Map</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
-      <a href="ch09-00-error-handling.html">Tổng quan</a>
-      <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
-      <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
-      <a href="ch09-03-to-panic-or-not-to-panic.html">Khi nào dùng panic?</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 10 — Generics, Trait, Lifetime</div>
-      <a href="ch10-00-generics.html">Tổng quan</a>
-      <a href="ch10-01-syntax.html">Cú pháp Generics</a>
-      <a href="ch10-02-traits.html">Trait</a>
-      <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 11 — Testing</div>
-      <a href="ch11-00-testing.html">Tổng quan</a>
-      <a href="ch11-01-writing-tests.html">Viết test</a>
-      <a href="ch11-02-running-tests.html">Chạy test</a>
-      <a href="ch11-03-test-organization.html">Tổ chức test</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 12 — Dự án I/O</div>
-      <a href="ch12-00-an-io-project.html">Tổng quan</a>
-      <a href="ch12-01-accepting-command-line-arguments.html">Đọc tham số CLI</a>
-      <a href="ch12-02-reading-a-file.html">Đọc file</a>
-      <a href="ch12-03-improving-error-handling-and-modularity.html">Cải thiện xử lý lỗi</a>
-      <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
-      <a href="ch12-05-working-with-environment-variables.html">Biến môi trường</a>
-      <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">stderr vs stdout</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 13 — Functional Features</div>
-      <a href="ch13-00-functional-features.html">Tổng quan</a>
-      <a href="ch13-01-closures.html">Closure</a>
-      <a href="ch13-02-iterators.html">Iterator</a>
-      <a href="ch13-03-improving-our-io-project.html">Cải thiện dự án I/O</a>
-      <a href="ch13-04-performance.html">Hiệu suất</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
-      <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
-      <a href="ch14-01-release-profiles.html">Release Profiles</a>
-      <a href="ch14-02-publishing-to-crates-io.html">Xuất bản lên crates.io</a>
-      <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
-      <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
-      <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 15 — Smart Pointers</div>
-      <a href="ch15-00-smart-pointers.html">Tổng quan</a>
-      <a href="ch15-01-box.html">Box&lt;T&gt;</a>
-      <a href="ch15-02-deref.html">Deref Trait</a>
-      <a href="ch15-03-drop.html">Drop Trait</a>
-      <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
-      <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
-      <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
-      <a href="ch16-00-concurrency.html">Tổng quan</a>
-      <a href="ch16-01-threads.html">Threads</a>
-      <a href="ch16-02-message-passing.html">Message Passing</a>
-      <a href="ch16-03-shared-state.html">Shared State</a>
-      <a href="ch16-04-extensible-concurrency-sync-and-send.html">Sync &amp; Send</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 17 — Async/Await</div>
-      <a href="ch17-00-async-await.html">Tổng quan</a>
-      <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
-      <a href="ch17-02-concurrency-with-async.html">Concurrency với async</a>
-      <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
-      <a href="ch17-04-streams.html">Streams</a>
-      <a href="ch17-05-traits-for-async.html">Traits cho async</a>
-      <a href="ch17-06-futures-tasks-threads.html">Futures, Tasks, Threads</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 18 — OOP</div>
-      <a href="ch18-00-oop.html">Tổng quan</a>
-      <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
-      <a href="ch18-02-trait-objects.html">Trait Objects</a>
-      <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
-      <a href="ch19-00-patterns.html">Tổng quan</a>
-      <a href="ch19-01-all-the-places-for-patterns.html">Nơi dùng Pattern</a>
-      <a href="ch19-02-refutability.html">Refutability</a>
-      <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 20 — Advanced Features</div>
-      <a href="ch20-00-advanced-features.html">Tổng quan</a>
-      <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
-      <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
-      <a href="ch20-03-advanced-types.html">Advanced Types</a>
-      <a href="ch20-04-advanced-functions-and-closures.html">Advanced Functions &amp; Closures</a>
-      <a href="ch20-05-macros.html">Macros</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
-      <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
-      <a href="ch21-01-single-threaded.html">Single-threaded</a>
-      <a href="ch21-02-multithreaded.html">Multi-threaded</a>
-      <a href="ch21-03-graceful-shutdown-and-cleanup.html">Graceful Shutdown</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Phụ lục</div>
-      <a href="appendix-00.html">Tá»•ng quan</a>
-      <a href="appendix-01-keywords.html">A â€” Keywords</a>
-      <a href="appendix-02-operators.html">B â€” Operators &amp; Symbols</a>
-      <a href="appendix-03-derivable-traits.html">C â€” Derivable Traits</a>
-      <a href="appendix-04-useful-development-tools.html">D â€” Dev Tools</a>
-      <a href="appendix-05-editions.html">E â€” Editions</a>
-      <a href="appendix-06-translation.html">F â€” Translations</a>
-      <a href="appendix-07-nightly-rust.html">G â€” Nightly Rust</a>
-    </div>
-  </nav>
-</nav>
-<main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 1 — The Rust Book</span></div>
-  <div id="main">
-  <div class="page-nav">
-    <a href="ch01-00-getting-started.html">← Trước</a>
-    <a href="ch01-02-hello-world.html">Tiếp →</a>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cài đặt — The Rust Book (Tiếng Việt)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button id="hamburger">☰</button>
+    <nav id="sidebar">
+      <div id="sidebar-header">
+        <a href="index.html" class="logo">
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect width="32" height="32" rx="6" fill="#CE422B" />
+            <text
+              x="16"
+              y="22"
+              text-anchor="middle"
+              fill="white"
+              font-size="18"
+              font-weight="bold"
+              font-family="serif"
+            >
+              R
+            </text>
+          </svg>
+          <div>
+            <h1>The Rust Book</h1>
+            <p>Tiếng Việt</p>
+          </div>
+        </a>
+      </div>
+      <nav>
+        <div class="nav-group">
+          <a href="title-page.html" class="chapter-link">📖 Trang tiêu đề</a>
+          <a href="foreword.html" class="chapter-link">✍️ Lời tựa</a>
+          <a href="ch00-00-introduction.html" class="chapter-link"
+            >🎯 Giới thiệu</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 1 — Bắt đầu</div>
+          <a href="ch01-00-getting-started.html">Tổng quan</a>
+          <a href="ch01-01-installation.html" class="active">Cài đặt</a>
+          <a href="ch01-02-hello-world.html">Hello, World!</a>
+          <a href="ch01-03-hello-cargo.html">Hello, Cargo!</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 2 — Trò chơi đoán số</div>
+          <a href="ch02-00-guessing-game-tutorial.html">Hướng dẫn</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 3 — Khái niệm cơ bản</div>
+          <a href="ch03-00-common-programming-concepts.html">Tổng quan</a>
+          <a href="ch03-01-variables-and-mutability.html"
+            >Biến &amp; Mutability</a
+          >
+          <a href="ch03-02-data-types.html">Kiểu dữ liệu</a>
+          <a href="ch03-03-how-functions-work.html">Hàm</a>
+          <a href="ch03-04-comments.html">Comments</a>
+          <a href="ch03-05-control-flow.html">Control Flow</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 4 — Ownership</div>
+          <a href="ch04-00-understanding-ownership.html">Tổng quan</a>
+          <a href="ch04-01-what-is-ownership.html">Ownership là gì?</a>
+          <a href="ch04-02-references-and-borrowing.html"
+            >References &amp; Borrowing</a
+          >
+          <a href="ch04-03-slices.html">Slices</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 5 — Struct</div>
+          <a href="ch05-00-structs.html">Tổng quan</a>
+          <a href="ch05-01-defining-structs.html">Định nghĩa Struct</a>
+          <a href="ch05-02-example-structs.html">Ví dụ với Struct</a>
+          <a href="ch05-03-method-syntax.html">Method Syntax</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 6 — Enum &amp; Pattern Matching
+          </div>
+          <a href="ch06-00-enums.html">Tổng quan</a>
+          <a href="ch06-01-defining-an-enum.html">Định nghĩa Enum</a>
+          <a href="ch06-02-match.html">match</a>
+          <a href="ch06-03-if-let.html">if let</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 7 — Package, Crate, Module</div>
+          <a
+            href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"
+            >Tổng quan</a
+          >
+          <a href="ch07-01-packages-and-crates.html">Package &amp; Crate</a>
+          <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"
+            >Modules</a
+          >
+          <a
+            href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"
+            >Paths</a
+          >
+          <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"
+            >use</a
+          >
+          <a href="ch07-05-separating-modules-into-different-files.html"
+            >Tách module ra file</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 8 — Collections</div>
+          <a href="ch08-00-common-collections.html">Tổng quan</a>
+          <a href="ch08-01-vectors.html">Vector</a>
+          <a href="ch08-02-strings.html">String</a>
+          <a href="ch08-03-hash-maps.html">Hash Map</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 9 — Xử lý lỗi</div>
+          <a href="ch09-00-error-handling.html">Tổng quan</a>
+          <a href="ch09-01-unrecoverable-errors-with-panic.html">panic!</a>
+          <a href="ch09-02-recoverable-errors-with-result.html">Result</a>
+          <a href="ch09-03-to-panic-or-not-to-panic.html"
+            >Khi nào dùng panic?</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">
+            Chương 10 — Generics, Trait, Lifetime
+          </div>
+          <a href="ch10-00-generics.html">Tổng quan</a>
+          <a href="ch10-01-syntax.html">Cú pháp Generics</a>
+          <a href="ch10-02-traits.html">Trait</a>
+          <a href="ch10-03-lifetime-syntax.html">Lifetime</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 11 — Testing</div>
+          <a href="ch11-00-testing.html">Tổng quan</a>
+          <a href="ch11-01-writing-tests.html">Viết test</a>
+          <a href="ch11-02-running-tests.html">Chạy test</a>
+          <a href="ch11-03-test-organization.html">Tổ chức test</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 12 — Dự án I/O</div>
+          <a href="ch12-00-an-io-project.html">Tổng quan</a>
+          <a href="ch12-01-accepting-command-line-arguments.html"
+            >Đọc tham số CLI</a
+          >
+          <a href="ch12-02-reading-a-file.html">Đọc file</a>
+          <a href="ch12-03-improving-error-handling-and-modularity.html"
+            >Cải thiện xử lý lỗi</a
+          >
+          <a href="ch12-04-testing-the-librarys-functionality.html">Kiểm thử</a>
+          <a href="ch12-05-working-with-environment-variables.html"
+            >Biến môi trường</a
+          >
+          <a href="ch12-06-writing-to-stderr-instead-of-stdout.html"
+            >stderr vs stdout</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 13 — Functional Features</div>
+          <a href="ch13-00-functional-features.html">Tổng quan</a>
+          <a href="ch13-01-closures.html">Closure</a>
+          <a href="ch13-02-iterators.html">Iterator</a>
+          <a href="ch13-03-improving-our-io-project.html"
+            >Cải thiện dự án I/O</a
+          >
+          <a href="ch13-04-performance.html">Hiệu suất</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 14 — Cargo nâng cao</div>
+          <a href="ch14-00-more-about-cargo.html">Tổng quan</a>
+          <a href="ch14-01-release-profiles.html">Release Profiles</a>
+          <a href="ch14-02-publishing-to-crates-io.html"
+            >Xuất bản lên crates.io</a
+          >
+          <a href="ch14-03-cargo-workspaces.html">Cargo Workspaces</a>
+          <a href="ch14-04-installing-binaries.html">Cài đặt binary</a>
+          <a href="ch14-05-extending-cargo.html">Mở rộng Cargo</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 15 — Smart Pointers</div>
+          <a href="ch15-00-smart-pointers.html">Tổng quan</a>
+          <a href="ch15-01-box.html">Box&lt;T&gt;</a>
+          <a href="ch15-02-deref.html">Deref Trait</a>
+          <a href="ch15-03-drop.html">Drop Trait</a>
+          <a href="ch15-04-rc.html">Rc&lt;T&gt;</a>
+          <a href="ch15-05-interior-mutability.html">Interior Mutability</a>
+          <a href="ch15-06-reference-cycles.html">Reference Cycles</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 16 — Fearless Concurrency</div>
+          <a href="ch16-00-concurrency.html">Tổng quan</a>
+          <a href="ch16-01-threads.html">Threads</a>
+          <a href="ch16-02-message-passing.html">Message Passing</a>
+          <a href="ch16-03-shared-state.html">Shared State</a>
+          <a href="ch16-04-extensible-concurrency-sync-and-send.html"
+            >Sync &amp; Send</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 17 — Async/Await</div>
+          <a href="ch17-00-async-await.html">Tổng quan</a>
+          <a href="ch17-01-futures-and-syntax.html">Futures &amp; Syntax</a>
+          <a href="ch17-02-concurrency-with-async.html"
+            >Concurrency với async</a
+          >
+          <a href="ch17-03-more-futures.html">Nhiều futures hơn</a>
+          <a href="ch17-04-streams.html">Streams</a>
+          <a href="ch17-05-traits-for-async.html">Traits cho async</a>
+          <a href="ch17-06-futures-tasks-threads.html"
+            >Futures, Tasks, Threads</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 18 — OOP</div>
+          <a href="ch18-00-oop.html">Tổng quan</a>
+          <a href="ch18-01-what-is-oo.html">OOP là gì?</a>
+          <a href="ch18-02-trait-objects.html">Trait Objects</a>
+          <a href="ch18-03-oo-design-patterns.html">OOP Design Patterns</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 19 — Patterns &amp; Matching</div>
+          <a href="ch19-00-patterns.html">Tổng quan</a>
+          <a href="ch19-01-all-the-places-for-patterns.html"
+            >Nơi dùng Pattern</a
+          >
+          <a href="ch19-02-refutability.html">Refutability</a>
+          <a href="ch19-03-pattern-syntax.html">Cú pháp Pattern</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 20 — Advanced Features</div>
+          <a href="ch20-00-advanced-features.html">Tổng quan</a>
+          <a href="ch20-01-unsafe-rust.html">Unsafe Rust</a>
+          <a href="ch20-02-advanced-traits.html">Advanced Traits</a>
+          <a href="ch20-03-advanced-types.html">Advanced Types</a>
+          <a href="ch20-04-advanced-functions-and-closures.html"
+            >Advanced Functions &amp; Closures</a
+          >
+          <a href="ch20-05-macros.html">Macros</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Chương 21 — Dự án: Web Server</div>
+          <a href="ch21-00-final-project-a-web-server.html">Tổng quan</a>
+          <a href="ch21-01-single-threaded.html">Single-threaded</a>
+          <a href="ch21-02-multithreaded.html">Multi-threaded</a>
+          <a href="ch21-03-graceful-shutdown-and-cleanup.html"
+            >Graceful Shutdown</a
+          >
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Phụ lục</div>
+          <a href="appendix-00.html">Tổng quan</a>
+          <a href="appendix-01-keywords.html">A — Keywords</a>
+          <a href="appendix-02-operators.html">B — Operators &amp; Symbols</a>
+          <a href="appendix-03-derivable-traits.html">C — Derivable Traits</a>
+          <a href="appendix-04-useful-development-tools.html">D — Dev Tools</a>
+          <a href="appendix-05-editions.html">E — Editions</a>
+          <a href="appendix-06-translation.html">F — Translations</a>
+          <a href="appendix-07-nightly-rust.html">G — Nightly Rust</a>
+        </div>
+      </nav>
+    </nav>
+    <main id="content">
+      <div id="topbar">
+        <a href="index.html">The Rust Book</a><span class="sep">›</span
+        ><span class="current">Chương 1 — The Rust Book</span>
+      </div>
+      <div id="main">
+        <div class="page-nav">
+          <a href="ch01-00-getting-started.html">← Trước</a>
+          <a href="ch01-02-hello-world.html">Tiếp →</a>
+        </div>
 
-  <h2 id="installation">⚙️ Cài đặt</h2>
-  <p>Bước đầu tiên là cài đặt Rust. Chúng ta sẽ tải Rust thông qua <code>rustup</code> — một công cụ dòng lệnh dùng để quản lý các phiên bản Rust và các công cụ liên quan. Bạn cần có kết nối internet để tải về.</p>
+        <h2 id="installation">⚙️ Cài đặt</h2>
+        <p>
+          Bước đầu tiên là cài đặt Rust. Chúng ta sẽ tải Rust thông qua
+          <code>rustup</code> — một công cụ dòng lệnh dùng để quản lý các phiên
+          bản Rust và các công cụ liên quan. Bạn cần có kết nối internet để tải
+          về.
+        </p>
 
-  <section class="note" aria-role="note">
-    <p>Lưu ý: Nếu vì lý do nào đó bạn không muốn dùng <code>rustup</code>, hãy xem trang <a href="https://forge.rust-lang.org/infra/other-installation-methods.html">Các phương pháp cài đặt Rust khác</a> để biết thêm tùy chọn.</p>
-  </section>
+        <section class="note" aria-role="note">
+          <p>
+            Lưu ý: Nếu vì lý do nào đó bạn không muốn dùng <code>rustup</code>,
+            hãy xem trang
+            <a
+              href="https://forge.rust-lang.org/infra/other-installation-methods.html"
+              >Các phương pháp cài đặt Rust khác</a
+            >
+            để biết thêm tùy chọn.
+          </p>
+        </section>
 
-  <p>Các bước dưới đây sẽ cài đặt phiên bản stable mới nhất của trình biên dịch Rust. Cam kết về tính ổn định của Rust đảm bảo rằng tất cả các ví dụ trong sách này hiện biên dịch được sẽ tiếp tục biên dịch được với các phiên bản Rust mới hơn. Kết quả đầu ra có thể hơi khác nhau giữa các phiên bản vì Rust thường xuyên cải thiện thông báo lỗi và cảnh báo. Nói cách khác, mọi phiên bản Rust stable mới hơn được cài bằng các bước này đều sẽ hoạt động đúng với nội dung trong sách.</p>
+        <p>
+          Các bước dưới đây sẽ cài đặt phiên bản stable mới nhất của trình biên
+          dịch Rust. Cam kết về tính ổn định của Rust đảm bảo rằng tất cả các ví
+          dụ trong sách này hiện biên dịch được sẽ tiếp tục biên dịch được với
+          các phiên bản Rust mới hơn. Kết quả đầu ra có thể hơi khác nhau giữa
+          các phiên bản vì Rust thường xuyên cải thiện thông báo lỗi và cảnh
+          báo. Nói cách khác, mọi phiên bản Rust stable mới hơn được cài bằng
+          các bước này đều sẽ hoạt động đúng với nội dung trong sách.
+        </p>
 
-  <section class="note" aria-role="note">
-    <h3 id="command-line-notation">📋 Ký hiệu dòng lệnh</h3>
-    <p>Trong chương này và xuyên suốt cuốn sách, chúng tôi sẽ hiển thị một số lệnh dùng trong terminal. Các dòng bạn cần nhập vào terminal đều bắt đầu bằng <code>$</code>. Bạn không cần gõ ký tự <code>$</code>; đó chỉ là dấu nhắc dòng lệnh cho biết đây là đầu mỗi lệnh. Các dòng không bắt đầu bằng <code>$</code> thường là kết quả đầu ra của lệnh trước đó. Ngoài ra, các ví dụ dành riêng cho PowerShell sẽ dùng <code>&gt;</code> thay vì <code>$</code>.</p>
-  </section>
+        <section class="note" aria-role="note">
+          <h3 id="command-line-notation">📋 Ký hiệu dòng lệnh</h3>
+          <p>
+            Trong chương này và xuyên suốt cuốn sách, chúng tôi sẽ hiển thị một
+            số lệnh dùng trong terminal. Các dòng bạn cần nhập vào terminal đều
+            bắt đầu bằng <code>$</code>. Bạn không cần gõ ký tự <code>$</code>;
+            đó chỉ là dấu nhắc dòng lệnh cho biết đây là đầu mỗi lệnh. Các dòng
+            không bắt đầu bằng <code>$</code> thường là kết quả đầu ra của lệnh
+            trước đó. Ngoài ra, các ví dụ dành riêng cho PowerShell sẽ dùng
+            <code>&gt;</code> thay vì <code>$</code>.
+          </p>
+        </section>
 
-  <h3 id="installing-rustup-on-linux-or-macos">🐧 Cài đặt <code>rustup</code> trên Linux hoặc macOS</h3>
-  <p>Nếu bạn đang dùng Linux hoặc macOS, hãy mở terminal và nhập lệnh sau:</p>
-  <pre><code class="language-console">$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+        <h3 id="installing-rustup-on-linux-or-macos">
+          🐧 Cài đặt <code>rustup</code> trên Linux hoặc macOS
+        </h3>
+        <p>
+          Nếu bạn đang dùng Linux hoặc macOS, hãy mở terminal và nhập lệnh sau:
+        </p>
+        <pre><code class="language-console">$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 </code></pre>
-  <p>Lệnh này sẽ tải về một script và bắt đầu cài đặt công cụ <code>rustup</code>, từ đó cài phiên bản Rust stable mới nhất. Bạn có thể được yêu cầu nhập mật khẩu. Nếu cài đặt thành công, dòng sau sẽ xuất hiện:</p>
-  <pre><code class="language-text">Rust is installed now. Great!
+        <p>
+          Lệnh này sẽ tải về một script và bắt đầu cài đặt công cụ
+          <code>rustup</code>, từ đó cài phiên bản Rust stable mới nhất. Bạn có
+          thể được yêu cầu nhập mật khẩu. Nếu cài đặt thành công, dòng sau sẽ
+          xuất hiện:
+        </p>
+        <pre><code class="language-text">Rust is installed now. Great!
 </code></pre>
-  <p>Bạn cũng sẽ cần một <em>linker</em> — chương trình mà Rust dùng để ghép các file đầu ra biên dịch thành một file duy nhất. Rất có thể bạn đã có sẵn. Nếu gặp lỗi linker, bạn nên cài một trình biên dịch C, vì thường đi kèm với linker. Trình biên dịch C cũng hữu ích vì một số gói Rust phổ biến phụ thuộc vào mã C và cần có trình biên dịch C.</p>
-  <p>Trên macOS, bạn có thể lấy trình biên dịch C bằng cách chạy:</p>
-  <pre><code class="language-console">$ xcode-select --install
+        <p>
+          Bạn cũng sẽ cần một <em>linker</em> — chương trình mà Rust dùng để
+          ghép các file đầu ra biên dịch thành một file duy nhất. Rất có thể bạn
+          đã có sẵn. Nếu gặp lỗi linker, bạn nên cài một trình biên dịch C, vì
+          thường đi kèm với linker. Trình biên dịch C cũng hữu ích vì một số gói
+          Rust phổ biến phụ thuộc vào mã C và cần có trình biên dịch C.
+        </p>
+        <p>Trên macOS, bạn có thể lấy trình biên dịch C bằng cách chạy:</p>
+        <pre><code class="language-console">$ xcode-select --install
 </code></pre>
-  <p>Người dùng Linux nên cài GCC hoặc Clang theo tài liệu của bản phân phối họ đang dùng. Ví dụ, nếu dùng Ubuntu, bạn có thể cài gói <code>build-essential</code>.</p>
+        <p>
+          Người dùng Linux nên cài GCC hoặc Clang theo tài liệu của bản phân
+          phối họ đang dùng. Ví dụ, nếu dùng Ubuntu, bạn có thể cài gói
+          <code>build-essential</code>.
+        </p>
 
-  <h3 id="installing-rustup-on-windows">🪟 Cài đặt <code>rustup</code> trên Windows</h3>
-  <p>Trên Windows, hãy truy cập <a href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install</a> và làm theo hướng dẫn để cài Rust. Ở một bước nào đó trong quá trình cài đặt, bạn sẽ được nhắc cài Visual Studio. Đây là để lấy linker và các thư viện gốc cần thiết để biên dịch chương trình. Nếu cần trợ giúp thêm, xem <a href="https://rust-lang.github.io/rustup/installation/windows-msvc.html">https://rust-lang.github.io/rustup/installation/windows-msvc.html</a>.</p>
-  <p>Phần còn lại của sách dùng các lệnh hoạt động trên cả <em>cmd.exe</em> và PowerShell. Nếu có sự khác biệt cụ thể, chúng tôi sẽ giải thích nên dùng cái nào.</p>
+        <h3 id="installing-rustup-on-windows">
+          🪟 Cài đặt <code>rustup</code> trên Windows
+        </h3>
+        <p>
+          Trên Windows, hãy truy cập
+          <a href="https://www.rust-lang.org/tools/install"
+            >https://www.rust-lang.org/tools/install</a
+          >
+          và làm theo hướng dẫn để cài Rust. Ở một bước nào đó trong quá trình
+          cài đặt, bạn sẽ được nhắc cài Visual Studio. Đây là để lấy linker và
+          các thư viện gốc cần thiết để biên dịch chương trình. Nếu cần trợ giúp
+          thêm, xem
+          <a
+            href="https://rust-lang.github.io/rustup/installation/windows-msvc.html"
+            >https://rust-lang.github.io/rustup/installation/windows-msvc.html</a
+          >.
+        </p>
+        <p>
+          Phần còn lại của sách dùng các lệnh hoạt động trên cả
+          <em>cmd.exe</em> và PowerShell. Nếu có sự khác biệt cụ thể, chúng tôi
+          sẽ giải thích nên dùng cái nào.
+        </p>
 
-  <h3 id="troubleshooting">🔍 Kiểm tra và xử lý sự cố</h3>
-  <p>Để kiểm tra xem Rust đã được cài đặt đúng chưa, hãy mở một shell và nhập dòng lệnh sau:</p>
-  <pre><code class="language-console">$ rustc --version
+        <h3 id="troubleshooting">🔍 Kiểm tra và xử lý sự cố</h3>
+        <p>
+          Để kiểm tra xem Rust đã được cài đặt đúng chưa, hãy mở một shell và
+          nhập dòng lệnh sau:
+        </p>
+        <pre><code class="language-console">$ rustc --version
 </code></pre>
-  <p>Bạn sẽ thấy số phiên bản, hash commit và ngày commit của phiên bản stable mới nhất đã được phát hành, theo định dạng sau:</p>
-  <pre><code class="language-text">rustc x.y.z (abcabcabc yyyy-mm-dd)
+        <p>
+          Bạn sẽ thấy số phiên bản, hash commit và ngày commit của phiên bản
+          stable mới nhất đã được phát hành, theo định dạng sau:
+        </p>
+        <pre><code class="language-text">rustc x.y.z (abcabcabc yyyy-mm-dd)
 </code></pre>
-  <p>Nếu bạn thấy thông tin này, bạn đã cài Rust thành công! Nếu không, hãy kiểm tra xem Rust có trong biến hệ thống <code>%PATH%</code> không như sau.</p>
-  <p>Trong Windows CMD, dùng:</p>
-  <pre><code class="language-console">&gt; echo %PATH%
+        <p>
+          Nếu bạn thấy thông tin này, bạn đã cài Rust thành công! Nếu không, hãy
+          kiểm tra xem Rust có trong biến hệ thống <code>%PATH%</code> không như
+          sau.
+        </p>
+        <p>Trong Windows CMD, dùng:</p>
+        <pre><code class="language-console">&gt; echo %PATH%
 </code></pre>
-  <p>Trong PowerShell, dùng:</p>
-  <pre><code class="language-powershell">&gt; echo $env:Path
+        <p>Trong PowerShell, dùng:</p>
+        <pre><code class="language-powershell">&gt; echo $env:Path
 </code></pre>
-  <p>Trong Linux và macOS, dùng:</p>
-  <pre><code class="language-console">$ echo $PATH
+        <p>Trong Linux và macOS, dùng:</p>
+        <pre><code class="language-console">$ echo $PATH
 </code></pre>
-  <p>Nếu tất cả đều đúng mà Rust vẫn không hoạt động, có nhiều nơi bạn có thể tìm trợ giúp. Hãy xem cách liên hệ với các Rustacean khác (biệt danh vui mà chúng tôi tự gọi nhau) tại <a href="https://www.rust-lang.org/community">trang cộng đồng</a>.</p>
+        <p>
+          Nếu tất cả đều đúng mà Rust vẫn không hoạt động, có nhiều nơi bạn có
+          thể tìm trợ giúp. Hãy xem cách liên hệ với các Rustacean khác (biệt
+          danh vui mà chúng tôi tự gọi nhau) tại
+          <a href="https://www.rust-lang.org/community">trang cộng đồng</a>.
+        </p>
 
-  <h3 id="updating-and-uninstalling">🔄 Cập nhật và gỡ cài đặt</h3>
-  <p>Sau khi đã cài Rust qua <code>rustup</code>, việc cập nhật lên phiên bản mới phát hành rất đơn giản. Từ shell của bạn, chạy lệnh cập nhật sau:</p>
-  <pre><code class="language-console">$ rustup update
+        <h3 id="updating-and-uninstalling">🔄 Cập nhật và gỡ cài đặt</h3>
+        <p>
+          Sau khi đã cài Rust qua <code>rustup</code>, việc cập nhật lên phiên
+          bản mới phát hành rất đơn giản. Từ shell của bạn, chạy lệnh cập nhật
+          sau:
+        </p>
+        <pre><code class="language-console">$ rustup update
 </code></pre>
-  <p>Để gỡ cài đặt Rust và <code>rustup</code>, chạy lệnh gỡ cài đặt sau từ shell:</p>
-  <pre><code class="language-console">$ rustup self uninstall
+        <p>
+          Để gỡ cài đặt Rust và <code>rustup</code>, chạy lệnh gỡ cài đặt sau từ
+          shell:
+        </p>
+        <pre><code class="language-console">$ rustup self uninstall
 </code></pre>
 
-  <h3 id="reading-the-local-documentation">📚 Đọc tài liệu cục bộ</h3>
-  <p>Bản cài đặt Rust cũng bao gồm một bản sao tài liệu cục bộ để bạn có thể đọc ngoại tuyến. Chạy <code>rustup doc</code> để mở tài liệu cục bộ trong trình duyệt của bạn.</p>
-  <p>Bất cứ khi nào một kiểu dữ liệu hoặc hàm nào đó được cung cấp bởi thư viện chuẩn mà bạn không chắc nó làm gì hoặc cách dùng nó, hãy sử dụng tài liệu API (Application Programming Interface) để tìm hiểu!</p>
+        <h3 id="reading-the-local-documentation">📚 Đọc tài liệu cục bộ</h3>
+        <p>
+          Bản cài đặt Rust cũng bao gồm một bản sao tài liệu cục bộ để bạn có
+          thể đọc ngoại tuyến. Chạy <code>rustup doc</code> để mở tài liệu cục
+          bộ trong trình duyệt của bạn.
+        </p>
+        <p>
+          Bất cứ khi nào một kiểu dữ liệu hoặc hàm nào đó được cung cấp bởi thư
+          viện chuẩn mà bạn không chắc nó làm gì hoặc cách dùng nó, hãy sử dụng
+          tài liệu API (Application Programming Interface) để tìm hiểu!
+        </p>
 
-  <h3 id="using-text-editors-and-ides">🖊️ Sử dụng trình soạn thảo và IDE</h3>
-  <p>Cuốn sách này không yêu cầu bạn dùng công cụ nào cụ thể để viết mã Rust. Hầu hết các trình soạn thảo văn bản đều đủ để làm việc! Tuy nhiên, nhiều trình soạn thảo và môi trường phát triển tích hợp (IDE) có hỗ trợ Rust sẵn. Bạn luôn có thể tìm danh sách khá đầy đủ các trình soạn thảo và IDE tại <a href="https://www.rust-lang.org/tools">trang công cụ</a> trên trang web Rust.</p>
+        <h3 id="using-text-editors-and-ides">
+          🖊️ Sử dụng trình soạn thảo và IDE
+        </h3>
+        <p>
+          Cuốn sách này không yêu cầu bạn dùng công cụ nào cụ thể để viết mã
+          Rust. Hầu hết các trình soạn thảo văn bản đều đủ để làm việc! Tuy
+          nhiên, nhiều trình soạn thảo và môi trường phát triển tích hợp (IDE)
+          có hỗ trợ Rust sẵn. Bạn luôn có thể tìm danh sách khá đầy đủ các trình
+          soạn thảo và IDE tại
+          <a href="https://www.rust-lang.org/tools">trang công cụ</a> trên trang
+          web Rust.
+        </p>
 
-  <h3 id="working-offline-with-this-book">📴 Làm việc ngoại tuyến với cuốn sách này</h3>
-  <p>Trong một số ví dụ, chúng tôi sẽ dùng các gói Rust ngoài thư viện chuẩn. Để thực hành những ví dụ đó, bạn sẽ cần kết nối internet hoặc tải sẵn các dependency trước. Để tải dependency trước, bạn có thể chạy các lệnh sau. (Chúng tôi sẽ giải thích <code>cargo</code> là gì và từng lệnh làm gì chi tiết hơn ở sau.)</p>
-  <pre><code class="language-console">$ cargo new get-dependencies
+        <h3 id="working-offline-with-this-book">
+          📴 Làm việc ngoại tuyến với cuốn sách này
+        </h3>
+        <p>
+          Trong một số ví dụ, chúng tôi sẽ dùng các gói Rust ngoài thư viện
+          chuẩn. Để thực hành những ví dụ đó, bạn sẽ cần kết nối internet hoặc
+          tải sẵn các dependency trước. Để tải dependency trước, bạn có thể chạy
+          các lệnh sau. (Chúng tôi sẽ giải thích <code>cargo</code> là gì và
+          từng lệnh làm gì chi tiết hơn ở sau.)
+        </p>
+        <pre><code class="language-console">$ cargo new get-dependencies
 $ cd get-dependencies
 $ cargo add rand@0.8.5 trpl@0.2.0
 </code></pre>
-  <p>Điều này sẽ lưu cache các tải về cho các gói này để bạn không cần tải lại sau. Sau khi đã chạy lệnh này, bạn không cần giữ lại thư mục <code>get-dependencies</code>. Nếu bạn đã chạy lệnh này, bạn có thể dùng cờ <code>--offline</code> với tất cả các lệnh <code>cargo</code> trong phần còn lại của sách để sử dụng các phiên bản đã cache thay vì cố truy cập mạng.</p>
+        <p>
+          Điều này sẽ lưu cache các tải về cho các gói này để bạn không cần tải
+          lại sau. Sau khi đã chạy lệnh này, bạn không cần giữ lại thư mục
+          <code>get-dependencies</code>. Nếu bạn đã chạy lệnh này, bạn có thể
+          dùng cờ <code>--offline</code> với tất cả các lệnh
+          <code>cargo</code> trong phần còn lại của sách để sử dụng các phiên
+          bản đã cache thay vì cố truy cập mạng.
+        </p>
 
-  <div class="page-nav bottom"><a href="ch01-00-getting-started.html">← Trước</a><a href="ch01-02-hello-world.html">Tiếp →</a></div>
-  </div>
-</main>
-<script src="nav.js"></script>
-</body>
+        <div class="page-nav bottom">
+          <a href="ch01-00-getting-started.html">← Trước</a
+          ><a href="ch01-02-hello-world.html">Tiếp →</a>
+        </div>
+      </div>
+    </main>
+    <script src="nav.js"></script>
+  </body>
 </html>
