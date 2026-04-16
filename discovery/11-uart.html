@@ -124,13 +124,34 @@ fn main() -> ! {
 
     <p>Cụ thể, chúng ta lấy ownership của peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào chúng khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình: baudrate và parity. Parity là cách để kiểm tra dữ liệu có bị hỏng trong quá trình truyền không — chúng ta không dùng nó ở đây nên loại trừ nó. Cuối cùng, wrap UARTE trong kiểu <code>UartePort</code>.</p>
 
-    <p>Sau khởi tạo, chúng ta gửi <code>X</code> (giá trị byte ASCII là 88) qua instance uart mới tạo. Các hàm serial này là "blocking": chúng chờ cho đến khi dữ liệu được gửi trước khi trả về. Đây không phải lúc nào cũng là điều mong muốn: microcontroller có thể làm rất nhiều việc trong khi đợi byte đi ra trên dây. Tuy nhiên, trong trường hợp của chúng ta, nó tiện lợi và chúng ta không có việc khác để làm.</p>
+    <p>Sau khởi tạo, chúng ta gửi <code>X</code> (giá trị byte ASCII là 88) qua instance uart mới tạo.</p>
 
-    <p>Cuối cùng, chúng ta <code>flush()</code> serial port. Điều này là do UARTE có thể quyết định buffer output cho đến khi nó nhận được một số lượng byte nhất định để gửi. Gọi <code>flush()</code> buộc nó viết các byte mà nó hiện có ngay lập tức thay vì chờ thêm.</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Các hàm serial là "blocking"</div>
+        <p>Các hàm <code>write()</code> và <code>read()</code> chờ cho đến khi dữ liệu được gửi/nhận xong trước khi trả về. Microcontroller sẽ <em>bị kẹt</em> ở đó và không làm gì khác trong thời gian chờ. Đây không phải lúc nào cũng là điều mong muốn, nhưng trong trường hợp của chúng ta nó tiện lợi.</p>
+      </div>
+    </div>
+
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Tại sao cần gọi <code>flush()</code>?</div>
+        <p>UARTE có thể buffer output cho đến khi nhận đủ một số byte nhất định rồi mới gửi cùng lúc. Gọi <code>flush()</code> buộc nó gửi ngay các byte đang có thay vì chờ thêm — tránh tình trạng byte "mắc kẹt" trong buffer.</p>
+      </div>
+    </div>
 
     <h2>Kiểm tra</h2>
 
-    <p>Trước khi flash, bạn nên đảm bảo đã khởi động minicom/PuTTY vì dữ liệu nhận qua serial communication không được lưu trữ hay gì cả — chúng ta phải xem trực tiếp. Khi serial monitor đã chạy, bạn có thể flash chương trình:</p>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Khởi động minicom/PuTTY trước khi flash</div>
+        <p>Dữ liệu nhận qua serial communication <strong>không được lưu trữ</strong> — chúng ta phải xem trực tiếp. Nếu bạn flash trước rồi mới mở terminal, bạn sẽ bỏ lỡ ký tự được gửi. Hãy đảm bảo serial monitor đã chạy trước khi flash.</p>
+      </div>
+    </div>
+    <p>Khi serial monitor đã chạy, bạn có thể flash chương trình:</p>
 
     <pre><code class="language-bash">$ cargo embed --example send-byte</code></pre>
 

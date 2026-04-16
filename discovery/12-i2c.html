@@ -141,7 +141,13 @@
 
     <h2>Đọc một thanh ghi đơn</h2>
 
-    <p><strong>LƯU Ý:</strong> Chip nRF thực ra không có peripheral I2C thực sự. Thay vào đó, chúng có TWI (Two Wire Interface) và TWIM — các giao diện tương thích I2C. Điều này không ảnh hưởng đến cách bạn dùng HAL.</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">nRF dùng TWI, không phải I2C thực sự</div>
+        <p>Chip nRF thực ra không có peripheral I2C thực sự. Thay vào đó, chúng có <strong>TWI</strong> (Two Wire Interface) và <strong>TWIM</strong> — các giao diện tương thích I2C về mặt điện và giao thức. Điều này không ảnh hưởng đến cách bạn dùng HAL: bạn vẫn import từ <code>embedded_hal::i2c</code> như bình thường.</p>
+      </div>
+    </div>
 
     <p>Chương trình dưới đây đọc thanh ghi WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động:</p>
 

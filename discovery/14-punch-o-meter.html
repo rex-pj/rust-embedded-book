@@ -101,13 +101,24 @@
 
     <p>Hãy thử và cho tôi biết bạn có thể đấm mạnh đến mức nào ;-)</p>
 
-    <blockquote>
-      <p><strong>LƯU Ý:</strong> Có một API bổ sung hữu ích cho nhiệm vụ này mà chúng ta chưa thảo luận: <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale">set_accel_scale</a> — bạn cần nó để đo giá trị g cao.</p>
-    </blockquote>
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">API cần biết: <code>set_accel_scale</code></div>
+        <p>Có một API bổ sung hữu ích cho nhiệm vụ này mà chúng ta chưa thảo luận: <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale"><code>set_accel_scale</code></a> — bạn cần nó để đo được giá trị g cao (mặc định chỉ đo đến ±2g).</p>
+      </div>
+    </div>
 
     <h2>Lời giải của tôi</h2>
 
-    <p>Đây là lời giải của tôi (<code>src/main.rs</code>). Lưu ý rằng bạn có thể đạt giá trị G khá cao bằng cách gõ cạnh MB2 vào bàn. Lưu ý rằng điều này có thể làm hỏng accelerometer, vì vậy có lẽ đừng làm vậy?</p>
+    <p>Đây là lời giải của tôi (<code>src/main.rs</code>).</p>
+    <div class="callout danger">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-body">
+        <div class="callout-title">Cẩn thận với gia tốc cao — có thể làm hỏng accelerometer</div>
+        <p>Bạn có thể đạt giá trị G khá cao bằng cách gõ cạnh MB2 vào bàn, nhưng <strong>điều này có thể làm hỏng accelerometer vĩnh viễn</strong>. Hãy thực hiện cú đấm nhẹ nhàng vào không khí thay vì đập board vào vật cứng.</p>
+      </div>
+    </div>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
@@ -183,8 +194,12 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <div class="callout callout-warning">
-      <strong>Lưu ý:</strong> Giữ board đúng hướng khi thử. Chắc chắn rằng không có gì (người, đồ vật) ở xung quanh bạn trước khi thực hiện "cú đấm". Hãy cẩn thận để không làm rơi hoặc làm hỏng board!
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">An toàn khi thử nghiệm</div>
+        <p>Giữ board đúng hướng khi thử. Chắc chắn rằng không có gì (người, đồ vật) ở xung quanh bạn trước khi thực hiện "cú đấm". Hãy cẩn thận để không làm rơi hoặc làm hỏng board!</p>
+      </div>
     </div>
 
     <div class="nav-buttons">

@@ -75,15 +75,23 @@
 
     <p>Bây giờ hãy xoay board 90 độ trong khi giữ nó song song với mặt đất. Bạn thấy giá trị X, Y và Z gì lần này? Sau đó xoay thêm 90 độ nữa. Bạn thấy giá trị gì?</p>
 
-    <blockquote>
-      <p><strong>LƯU Ý</strong> Trong số hai chiếc MB2 tôi có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Nhà sản xuất có quy trình tự test để phát hiện điều này và quy trình hiệu chỉnh để giảm thiểu loại lỗi "hard iron" này, thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó. Tuy nhiên, crate <code>lsm303agr</code> hiện chưa hỗ trợ một trong hai quy trình này, và có vẻ là quá nhiều cho một hướng dẫn giới thiệu về hệ thống embedded. Nếu bạn chỉ có một MB2 và nó có vẻ không hoạt động, bạn có thể muốn bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>. Phần cứng rẻ tiền: biết làm sao được?</p>
-    </blockquote>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Magnetometer có thể bị hỏng một phần</div>
+        <p>Trong số hai chiếc MB2 tác giả có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Đây thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó ("hard iron error"). Crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình tự test hay hiệu chỉnh của nhà sản xuất. <strong>Nếu MB2 của bạn có vẻ không hoạt động, hãy bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>.</strong></p>
+      </div>
+    </div>
 
     <p>Từ trường Bắc của Trái Đất là thứ phức tạp: nó khác so với Bắc thực sự ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). Máy tính <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">NOAA của Mỹ</a> này có thể được truy cập trên thiết bị di động của bạn để có ước tính tốt về Bắc thực sự cũng như Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">máy tính</a> UK BGS này để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (sự khác biệt giữa Bắc thực và Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
 
-    <blockquote>
-      <p><strong>LƯU Ý</strong> Magnetometer LSM303AGR không phải là thiết bị đặc biệt chính xác out-of-the-box. Nhà sản xuất đề xuất một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đo magnetometer. Bạn có thể tìm thêm thông tin, một bản implement hiệu chỉnh mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>: vì chúng ta đang làm điều khá cơ bản với magnetometer nên chúng ta sẽ không lo lắng về điều đó trong chương này.</p>
-    </blockquote>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Magnetometer LSM303AGR không chính xác out-of-the-box</div>
+        <p>Nhà sản xuất đề xuất một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản implement hiệu chỉnh mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
+      </div>
+    </div>
 
     <!-- ============================================================ -->
     <h2>Magnitude (Cường độ từ trường)</h2>

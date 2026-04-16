@@ -158,9 +158,22 @@ fn main() -&gt; ! {
 
     <p>Có hai bước để cấu hình interrupt. Thứ nhất, GPIOTE phải được cấu hình để tạo ra interrupt khi pin kết nối với Button A chuyển từ điện áp cao xuống thấp. Thứ hai, NVIC phải được cấu hình để cho phép interrupt đó. Thứ tự quan trọng: làm theo "thứ tự sai" có thể tạo ra interrupt trước khi bạn sẵn sàng xử lý nó.</p>
 
-    <p><strong>Lưu ý:</strong> Cũng như hầu hết các microcontroller, có rất nhiều linh hoạt trong việc GPIOTE có thể tạo ra interrupt khi nào. Interrupt có thể được tạo ra khi pin chuyển từ thấp lên cao, từ cao xuống thấp (như ở đây), bất kỳ thay đổi nào ("edge"), khi ở mức thấp, hoặc khi ở mức cao. Trên nRF52833, interrupt tạo ra một event phải được xóa thủ công trong ISR để đảm bảo ISR không được gọi lần thứ hai cho cùng một interrupt. Các microcontroller khác có thể hoạt động hơi khác — bạn nên đọc tài liệu Rust crate và microcontroller để hiểu chi tiết trên một board khác.</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">GPIOTE có thể cấu hình nhiều kiểu trigger</div>
+        <p>Cũng như hầu hết các microcontroller, có rất nhiều linh hoạt trong việc GPIOTE có thể tạo ra interrupt khi nào. Interrupt có thể được tạo ra khi pin chuyển từ thấp lên cao, từ cao xuống thấp (như ở đây), bất kỳ thay đổi nào ("edge"), khi ở mức thấp, hoặc khi ở mức cao. Trên nRF52833, event phải được <strong>xóa thủ công trong ISR</strong> để đảm bảo ISR không được gọi lần thứ hai cho cùng một interrupt. Các microcontroller khác có thể hoạt động hơi khác — hãy đọc tài liệu crate và microcontroller khi dùng board khác.</p>
+      </div>
+    </div>
 
-    <p>Khi bạn nhấn Button A, bạn sẽ thấy một thông báo "ouch" và sau đó là một panic. Tại sao interrupt handler lại gọi <code>panic!()</code>? Hãy thử comment dòng <code>panic!()</code> ra và xem điều gì xảy ra khi bạn nhấn nút. Bạn sẽ thấy các thông báo "ouch" cuộn qua liên tục. NVIC ghi lại khi nào một interrupt đã được phát ra: "event" đó được giữ cho đến khi chương trình đang chạy xóa nó đi một cách rõ ràng. Nếu không có <code>panic!()</code>, khi interrupt handler return, NVIC sẽ (trong trường hợp này) re-enable interrupt, nhận thấy vẫn còn event pending, và chạy handler lại. Điều này sẽ tiếp tục mãi mãi: mỗi lần interrupt handler return, nó sẽ được gọi lại. Như chúng ta sẽ thấy trong một lúc, chỉ thị interrupt có thể được xóa từ bên trong interrupt handler bằng phương thức <code>reset_event()</code> của peripheral.</p>
+    <p>Khi bạn nhấn Button A, bạn sẽ thấy một thông báo "ouch" và sau đó là một panic. Tại sao interrupt handler lại gọi <code>panic!()</code>?</p>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Không xóa event → interrupt handler chạy vô tận</div>
+        <p>Hãy thử comment dòng <code>panic!()</code> ra và nhấn nút — bạn sẽ thấy các thông báo "ouch" cuộn qua liên tục. NVIC giữ "event pending" cho đến khi code <strong>xóa nó đi rõ ràng</strong>. Khi interrupt handler return mà không xóa event, NVIC re-enable interrupt, nhận thấy event vẫn còn pending, và gọi lại handler ngay. Vòng lặp này tiếp tục mãi mãi. Giải pháp: gọi <code>reset_event()</code> trong ISR để xóa event trước khi return.</p>
+      </div>
+    </div>
 
     <p>Bạn có thể định nghĩa ISR cho nhiều nguồn interrupt khác nhau: khi I2C sẵn sàng, khi timer hết hạn, và nhiều tình huống khác. Bên trong ISR bạn có thể làm hầu hết mọi thứ, nhưng thực hành tốt là giữ cho các interrupt handler ngắn gọn và nhanh chóng.</p>
 
@@ -514,11 +527,22 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <blockquote>
-      <p><strong>LƯU Ý:</strong> Luôn luôn là ý hay khi biên dịch các ví dụ liên quan đến interrupt handling với <code>--release</code>. Interrupt handler dài có thể gây ra nhiều nhầm lẫn.</p>
-    </blockquote>
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Luôn dùng <code>--release</code> với interrupt handling</div>
+        <p>Luôn biên dịch các ví dụ liên quan đến interrupt handling với <code>--release</code>. Interrupt handler chạy chậm (do build debug không tối ưu) sẽ gây ra nhiều nhầm lẫn và hành vi khó đoán, đặc biệt khi đo thời gian.</p>
+      </div>
+    </div>
 
-    <p>Thực ra, <code>rprintln!()</code> trong interrupt handler là thực hành không tốt: trong khi interrupt handler đang chạy code in, không gì khác có thể tiến triển. Hãy chuyển việc báo cáo ra main loop, ngay sau <code>wfi()</code> "wait for interrupt". Count sẽ được báo cáo mỗi khi interrupt handler kết thúc (<code>examples/count-bounce.rs</code>).</p>
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Tránh <code>rprintln!()</code> bên trong interrupt handler</div>
+        <p><code>rprintln!()</code> trong ISR là thực hành không tốt: trong khi handler đang chạy code in, <strong>không gì khác có thể tiến triển</strong> — kể cả các interrupt khác. Hãy chuyển việc báo cáo ra main loop, ngay sau <code>wfi()</code>. Count sẽ được báo cáo mỗi khi interrupt handler kết thúc.</p>
+      </div>
+    </div>
+    <p>Xem ví dụ <code>examples/count-bounce.rs</code>:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -677,7 +701,13 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p><strong>LƯU Ý:</strong> Các nút trên MB2 hơi khó nhấn — khá dễ nhấn đủ để cảm thấy tiếng "click" nhưng không đủ để tạo tiếp xúc với công tắc. Khuyến nghị dùng móng tay để nhấn nút khi kiểm tra.</p>
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Nút MB2 hơi khó nhấn</div>
+        <p>Các nút trên MB2 hơi khó nhấn — khá dễ nhấn đủ để cảm thấy tiếng "click" nhưng không đủ để tạo tiếp xúc với công tắc. Khuyến nghị <strong>dùng móng tay</strong> để nhấn nút khi kiểm tra.</p>
+      </div>
+    </div>
 
     <h2>Waiting to be interrupted — wfi()</h2>
 

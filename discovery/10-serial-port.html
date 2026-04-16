@@ -87,7 +87,13 @@
       <img class="white_bg" height="500" title="Serial" src="assets/serial.svg" />
     </p>
 
-    <p>Máy tính ngày nay thường không có serial port, và ngay cả khi có, mức điện áp chúng dùng (+5V trên serial port hiện đại, ±12V trên RS-232 cổ) nằm ngoài giới hạn chịu đựng của phần cứng MB2 và có thể gây hỏng hóc. <em>Bạn không thể kết nối trực tiếp máy tính với microcontroller.</em></p>
+    <div class="callout danger">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-body">
+        <div class="callout-title">Điện áp không tương thích — không thể kết nối trực tiếp</div>
+        <p>Máy tính ngày nay thường không có serial port, và ngay cả khi có, mức điện áp chúng dùng (+5V trên serial port hiện đại, ±12V trên RS-232 cổ) nằm ngoài giới hạn chịu đựng của phần cứng MB2 và <strong>có thể gây hỏng hóc vĩnh viễn</strong>. Bạn không thể kết nối trực tiếp máy tính với microcontroller.</p>
+      </div>
+    </div>
 
     <a href="https://en.wikipedia.org/wiki/File:UART_to_USB_adapter.jpg">
       <p align="center">
@@ -126,7 +132,14 @@
 crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 </code></pre>
 
-    <p>Lưu ý rằng bạn cần phải chạy với quyền <code>root</code> (không khuyến khích) hoặc là thành viên của group xuất hiện trong output của <code>ls</code> (thường là <code>plugdev</code> hoặc <code>dialout</code>) để đọc và ghi thiết bị này. Sau đó bạn có thể gửi dữ liệu đơn giản bằng cách ghi vào file này:</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Cần quyền truy cập vào thiết bị serial</div>
+        <p>Bạn cần phải chạy với quyền <code>root</code> (không khuyến khích) hoặc là thành viên của group xuất hiện trong output của <code>ls</code> (thường là <code>plugdev</code> hoặc <code>dialout</code>) để đọc và ghi thiết bị này. Thêm user của bạn vào group: <code>sudo usermod -aG plugdev $USER</code>, sau đó đăng xuất và đăng nhập lại.</p>
+      </div>
+    </div>
+    <p>Sau đó bạn có thể gửi dữ liệu đơn giản bằng cách ghi vào file này:</p>
 
     <pre><code class="language-console">$ echo 'Hello, world!' &gt; /dev/ttyACM0
 </code></pre>
@@ -158,9 +171,13 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
       <li><code>Ctrl+A</code> + <code>Q</code>. Thoát mà không reset</li>
     </ul>
 
-    <blockquote>
-      <p><strong>LƯU Ý</strong> cho người dùng Mac: Trong các lệnh trên, thay <code>Ctrl+A</code> bằng <code>Meta</code>.</p>
-    </blockquote>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Người dùng Mac</div>
+        <p>Trong các lệnh trên, thay <code>Ctrl+A</code> bằng phím <code>Meta</code>.</p>
+      </div>
+    </div>
 
     <h1 id="windows">🪟 Windows tooling</h1>
 

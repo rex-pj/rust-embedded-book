@@ -134,9 +134,14 @@ fn main() -&gt; ! {
 
     <p>Crate <code>embedded-hal</code> được dùng ở đây để cung cấp các Rust trait cần thiết để set và unset LED. Điều này có nghĩa là phần code này có thể portable sang bất kỳ Rust HAL nào triển khai các trait <code>embedded-hal</code> như HAL của chúng ta.</p>
 
-    <p>Nhưng đợi đã: không có LED nào nhấp nháy cả! Cái thứ hai trông mờ hơn cái đầu tiên, nhưng cả hai đều sáng liên tục… hay là chúng đang nhấp nháy? MB2 thực thi 64 <em>triệu</em> instruction mỗi giây. Giả sử cần vài chục instruction để bật hoặc tắt LED (có thể nhiều đến vậy khi biên dịch debug mode, nhưng ít hơn nhiều trong release mode; mặc dù các chân mất một lúc để đổi trạng thái — tôi không chắc). Dù sao, chiếc LED thứ hai thực sự đang bật và tắt hàng trăm nghìn lần — có thể hàng triệu lần — mỗi giây. Mắt bạn không thể theo kịp.</p>
-
-    <p>Chúng ta cần chờ một lúc giữa các lần toggle. Hóa ra việc chờ mới là phần khó nhất.</p>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Nhưng đợi đã — không có LED nào nhấp nháy cả!</div>
+        <p>Cái thứ hai trông mờ hơn cái đầu tiên, nhưng cả hai đều sáng liên tục… hay là chúng đang nhấp nháy? MB2 thực thi 64 <em>triệu</em> instruction mỗi giây. Dù sao, chiếc LED thứ hai thực sự đang bật và tắt hàng trăm nghìn lần — có thể hàng triệu lần — mỗi giây. Mắt bạn không thể theo kịp.</p>
+        <p>Chúng ta cần chờ một lúc giữa các lần toggle. Hóa ra việc chờ mới là phần khó nhất.</p>
+      </div>
+    </div>
 
     <h2>Spin wait</h2>
 
@@ -174,7 +179,15 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Chạy lệnh này với <code>cargo run --release --example spin-wait</code> — flag <code>--release</code> thực sự rất quan trọng ở đây — và bạn sẽ thấy LED trên MB2 nhấp nháy bật/tắt <em>khoảng</em> một lần mỗi giây.</p>
+    <p>Chạy lệnh này và bạn sẽ thấy LED trên MB2 nhấp nháy bật/tắt <em>khoảng</em> một lần mỗi giây.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Flag <code>--release</code> rất quan trọng</div>
+        <p><code>cargo run --release --example spin-wait</code> — Thử bỏ <code>--release</code> xem: LED vẫn nhấp nháy, nhưng với chu kỳ <em>nhiều</em> giây vì vòng lặp wait không được tối ưu, tốn nhiều instruction hơn mỗi lần chạy qua.</p>
+      </div>
+    </div>
 
     <p>Những điều bạn có thể thắc mắc:</p>
     <ul>
@@ -199,20 +212,21 @@ fn main() -&gt; ! {
         <p>Dù sao, chúng ta đang thực thi khoảng 4 instruction mỗi lần lặp. Điều này có nghĩa là trên CPU 64MHz, một spin nửa giây cần 64M/2/4 = 8M lần lặp để hoàn thành. Vậy thì có gì đó đang làm chậm chúng ta đi một hệ số 2. Là gì? Tôi không biết. Cả việc này đều kinh khủng.</p>
       </li>
       <li>
-        <p><strong>Tại sao <code>--release</code> lại quan trọng đến vậy?</strong> Thử không dùng nó xem. Bạn sẽ thấy LED vẫn nhấp nháy, nhưng với chu kỳ <em>nhiều</em> giây. Vòng lặp wait giờ không được tối ưu và tốn nhiều instruction hơn mỗi lần chạy qua.</p>
-      </li>
-      <li>
         <p><strong>Lời gọi <code>nop()</code> đó là gì và tại sao nó ở đó?</strong> Chúng ta sẽ trả lời điều này ở phần tiếp theo.</p>
       </li>
-      <li>
-        <p><strong>Tại sao bạn gọi đây là "cách ngớ ngẩn"?</strong></p>
-        <ul>
-          <li><p><strong>Không chính xác.</strong> Cố gắng điều chỉnh vòng lặp đó để đáng tin cậy đạt đúng 0.5 giây là… không thực tế.</p></li>
-          <li><p><strong>Nó thay đổi tùy thuộc.</strong> CPU khác nhau? Compilation flags khác nhau? Bất cứ thứ gì khác nhau thực sự? Thì timing đã thay đổi.</p></li>
-          <li><p><strong>Tốn điện.</strong> CPU đang chạy instruction nhanh nhất có thể, chỉ để đứng yên tại chỗ. Nếu không có gì khác để làm, nó nên lặng lẽ ngủ cho đến khi được cần đến. Điều này không quan trọng nhiều nếu bạn có nguồn USB. Nhưng nếu bạn kết nối MB2 với pin, bạn sẽ thực sự cảm nhận điều này.</p></li>
-        </ul>
-      </li>
     </ul>
+
+    <div class="callout danger">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-body">
+        <div class="callout-title">Tại sao spin-wait là "cách ngớ ngẩn"?</div>
+        <ul>
+          <li><strong>Không chính xác.</strong> Cố gắng điều chỉnh vòng lặp đó để đáng tin cậy đạt đúng 0.5 giây là… không thực tế.</li>
+          <li><strong>Thay đổi tùy hoàn cảnh.</strong> CPU khác? Compilation flags khác? Bất cứ thứ gì thay đổi thì timing cũng thay đổi theo.</li>
+          <li><strong>Tốn điện.</strong> CPU chạy hết tốc lực chỉ để đứng yên tại chỗ. Nếu kết nối MB2 với pin thay vì USB, bạn sẽ cảm nhận rõ điều này.</li>
+        </ul>
+      </div>
+    </div>
 
     <p>Ở phần tiếp theo, chúng ta sẽ thảo luận về <code>nop()</code>. Sau đó, chúng ta sẽ nói thêm về những điều khác cần cải thiện trong blinky.</p>
 
@@ -226,7 +240,13 @@ fn main() -&gt; ! {
 
     <p>Vậy hãy bỏ dòng đó đi và biên dịch lại chương trình. Đừng quên chế độ <code>--release</code>. Sau đó chạy nó.</p>
 
-    <p>Chúng ta lại quay về một LED sáng liên tục hơi tối hơn. Với thân vòng lặp trống rỗng, optimizer của compiler đã quyết định rằng hàm <code>wait()</code> không làm gì cả. Vì vậy nó đã xóa nó cho bạn lúc compile time. Cảm ơn optimizer. Bạn đã làm vòng lặp wait của tôi nhanh vô hạn.</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Ghi chú: Compiler tối ưu quá mức</div>
+        <p>Chúng ta lại quay về một LED sáng liên tục hơi tối hơn. Với thân vòng lặp trống rỗng, optimizer của compiler đã quyết định rằng hàm <code>wait()</code> không làm gì cả — vì vậy nó đã <strong>xóa toàn bộ hàm</strong> lúc compile time. <code>nop()</code> là cách ngăn compiler làm điều đó: vì nó là inline assembly, compiler không được phép xóa hay di chuyển nó.</p>
+      </div>
+    </div>
 
     <p>Làm thế nào <code>nop()</code> thực hiện công việc của nó? Nếu bạn nhìn vào implementation của <code>nop()</code>, bạn sẽ thấy (sau một số tìm kiếm) rằng nó được implement như thế này:</p>
 

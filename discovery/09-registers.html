@@ -281,7 +281,13 @@ Program received signal SIGINT, Interrupt.
 
     <p>Các thao tác đọc/ghi vào register khá đặc biệt. Tôi thậm chí có thể nói rằng chúng là hiện thân của side effect. Trong ví dụ trước chúng ta ghi bốn giá trị khác nhau vào cùng một register. Nếu bạn không biết địa chỉ đó là một register, bạn có thể đã đơn giản hóa logic để chỉ ghi giá trị cuối cùng <code>0x00000000</code> vào register.</p>
 
-    <p>Thực ra, LLVM, backend/optimizer của compiler, không biết chúng ta đang làm việc với register và sẽ hợp nhất các lần ghi, từ đó thay đổi hành vi của chương trình. Hãy kiểm tra điều đó nhanh.</p>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">LLVM không biết bạn đang ghi vào register phần cứng</div>
+        <p>LLVM, backend/optimizer của compiler, sẽ hợp nhất các lần ghi vào cùng một địa chỉ, từ đó <strong>thay đổi hoàn toàn hành vi của chương trình</strong>. Cần dùng <code>volatile</code> để ngăn điều này — xem phần tiếp theo.</p>
+      </div>
+    </div>
 
     <p>Trước tiên, chúng ta sẽ dùng cargo objdump để lấy assembly của các build artifact từ cả build tối ưu hóa và không tối ưu hóa.</p>
 
@@ -445,7 +451,13 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Địa chỉ này gần với địa chỉ <code>OUT</code> mà chúng ta dùng trước đó nhưng địa chỉ này là <em>không hợp lệ</em>, theo nghĩa là không có register nào tại địa chỉ này.</p>
+    <div class="callout danger">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-body">
+        <div class="callout-title">Địa chỉ không hợp lệ — không có register nào tại đây</div>
+        <p>Địa chỉ <code>0x5000_A784</code> gần với địa chỉ <code>OUT</code> mà chúng ta dùng trước đó, nhưng địa chỉ này là <em>không hợp lệ</em> — không có register nào tại địa chỉ này. Truy cập vào nó sẽ gây ra <strong>HardFault exception</strong> và làm chương trình bị ngắt.</p>
+      </div>
+    </div>
 
     <p>Hãy thử nó.</p>
 
@@ -603,7 +615,13 @@ fn main() -&gt; ! {
       <p>6.8.2.4 IN - Pages 145 and 146</p>
     </blockquote>
 
-    <p>Lưu ý rằng trong cột 'Access' của bảng, chỉ có 'R' được ghi cho register này. Chúng ta không được ghi vào register này, nếu không điều xấu có thể xảy ra.</p>
+    <div class="callout note">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Register IN là read-only</div>
+        <p>Trong cột 'Access' của bảng, chỉ có 'R' được ghi cho register này. Chúng ta <strong>không được ghi vào register này</strong> — nếu không điều xấu có thể xảy ra. API type-safe (PAC) sẽ chỉ expose method <code>read</code> cho register này, ngăn bạn vô tình ghi vào nó lúc compile time.</p>
+      </div>
+    </div>
 
     <p>Các register có quyền đọc/ghi khác nhau. Một số chỉ write-only, một số khác có thể đọc và ghi, và một số khác là read-only.</p>
 
