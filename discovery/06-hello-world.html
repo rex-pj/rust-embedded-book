@@ -71,7 +71,7 @@
 
     <p>Chúng ta sẽ làm việc với LED ở góc trên-trái của màn hình MB2. Truy ngược các dây <code>ROW1</code> và <code>COL1</code> mà LED này được kết nối đến, chúng ta thấy chúng đi đến các chân trên nRF52833 có nhãn <code>AC17</code>/<code>P0.21</code> và <code>B11</code>/<code>AIN4</code>/<code>P0.28</code>. Tìm hiểu kỹ hơn qua tài liệu, <code>AC17</code> và <code>B11</code> chỉ là chỉ số hàng và cột của chân vật lý (thực chất là solder ball) ở mặt dưới chip — không hữu ích với chúng ta. <code>AIN4</code> chỉ nghĩa là chân này có thể hoạt động như "Analog Input" — cũng không cần thiết lúc này.</p>
 
-    <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (chấp nhận điện áp) thì LED sẽ sáng lên.</p>
+    <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (nhận dòng về, đóng vai trò cực âm) thì LED sẽ sáng lên.</p>
 
     <p>Nhưng về mặt phần mềm, chúng ta làm gì để điều đó xảy ra? Chúng ta sẽ làm việc ở mức crate <code>nrf52833-hal</code>. Hardware Abstraction Layer (HAL) là phần mềm được thiết kế để làm cho một vi điều khiển cụ thể dễ làm việc hơn. Đúng như tên gọi, chúng ta có một HAL cho vi điều khiển trên MB2, và nó chứa mọi thứ cần thiết để bật LED đó.</p>
 
@@ -208,8 +208,8 @@ fn main() -&gt; ! {
     nop
     bne	.LBB1_6
 </code></pre>
-        <p>Chỉ có ba hoặc bốn instruction, nhưng nhánh ngược có thể tốn thêm một chút. Lưu ý rằng hai vòng lặp <em>không giống nhau:</em> compiler chọn emit các instruction khác nhau cho vòng lặp wait thứ nhất và thứ hai. Xem "nó thay đổi tùy thuộc" bên dưới.</p>
-        <p>Dù sao, chúng ta đang thực thi khoảng 4 instruction mỗi lần lặp. Điều này có nghĩa là trên CPU 64MHz, một spin nửa giây cần 64M/2/4 = 8M lần lặp để hoàn thành. Vậy thì có gì đó đang làm chậm chúng ta đi một hệ số 2. Là gì? Tôi không biết. Cả việc này đều kinh khủng.</p>
+        <p>Chỉ có ba hoặc bốn instruction, nhưng nhánh ngược có thể tốn thêm một chút. Lưu ý rằng hai vòng lặp <em>không giống nhau:</em> compiler chọn emit các instruction khác nhau cho vòng lặp wait thứ nhất và thứ hai. Xem mục "Thay đổi tùy hoàn cảnh" bên dưới.</p>
+        <p>Dù sao, chúng ta đang thực thi khoảng 4 instruction mỗi lần lặp. Điều này có nghĩa là trên CPU 64MHz, một spin nửa giây cần 64M/2/4 = 8M lần lặp để hoàn thành. Vậy thì có gì đó đang làm chậm chúng ta đi một hệ số 2. Là gì? Tôi cũng không biết. Nói chung cách làm này rất tệ.</p>
       </li>
       <li>
         <p><strong>Lời gọi <code>nop()</code> đó là gì và tại sao nó ở đó?</strong> Chúng ta sẽ trả lời điều này ở phần tiếp theo.</p>
@@ -236,7 +236,7 @@ fn main() -&gt; ! {
 
     <p>Bạn có thể thắc mắc lời gọi <code>nop()</code> đó đang làm gì trong vòng lặp <code>wait()</code> trong <code>src/bin/spin-wait.rs</code>.</p>
 
-    <p>Câu trả lời là nó thực sự không làm gì cả. Hàm <code>nop()</code> khiến compiler đặt một instruction machine Arm <code>NOP</code> tại điểm đó trong chương trình. <code>NOP</code> là một instruction đặc biệt khiến CPU bỏ qua nó. Để phớt lờ nó. Thực sự không làm gì cả với nó (do đó có cái tên đó).</p>
+    <p>Câu trả lời là nó thực sự không làm gì cả. Hàm <code>nop()</code> khiến compiler chèn một machine instruction <code>NOP</code> của Arm tại điểm đó trong chương trình. <code>NOP</code> là một instruction đặc biệt khiến CPU bỏ qua nó. Để phớt lờ nó. Thực sự không làm gì cả với nó (do đó có cái tên đó).</p>
 
     <p>Vậy hãy bỏ dòng đó đi và biên dịch lại chương trình. Đừng quên chế độ <code>--release</code>. Sau đó chạy nó.</p>
 
@@ -252,7 +252,7 @@ fn main() -&gt; ! {
 
     <pre><code class="language-rust">asm!("nop", options(nomem, nostack, preserves_flags));</code></pre>
 
-    <p>Hàm <code>nop()</code> được "inline", vì vậy khi bạn "gọi" nó, một instruction assembly Arm <code>NOP</code> thực sự được chèn vào code của chương trình tại điểm đó. Vì các chi tiết kỹ thuật, <code>NOP</code> này sẽ không bị xóa hay di chuyển bởi compiler: nó sẽ ở ngay đó nơi bạn đặt nó.</p>
+    <p>Hàm <code>nop()</code> được "inline", vì vậy khi bạn "gọi" nó, một assembly instruction <code>NOP</code> của Arm thực sự được chèn vào code của chương trình tại điểm đó. Vì một số lý do kỹ thuật, compiler sẽ không xóa hay di chuyển <code>NOP</code> này: nó sẽ ở ngay đó nơi bạn đặt nó.</p>
 
     <p>Khả năng chèn assembly code vào chương trình khi cần đôi khi rất quan trọng trong lập trình embedded. Đôi khi một CPU có các instruction mà compiler không biết, nhưng bạn vẫn cần để sử dụng CPU hiệu quả. Directive <code>asm!()</code> của Rust cho bạn một cách để làm điều đó.</p>
 
@@ -302,13 +302,13 @@ fn main() -&gt; ! {
       <li><p>Như trước, chúng ta lấy peripheral từ struct PAC peripherals và đưa cho HAL.</p></li>
     </ul>
 
-    <p>Bây giờ chúng ta có một blinky chất lượng sản xuất. Hãy nói một chút về ý nghĩa của tất cả những điều này.</p>
+    <p>Bây giờ chúng ta đã có một blinky đạt chất lượng dùng được trong sản phẩm thật. Hãy nói một chút về ý nghĩa của tất cả những điều này.</p>
 
     <h2>Portability</h2>
 
     <p>(Phần này là tùy chọn. Hãy thoải mái bỏ qua đến <a href="#board-support-crate">phần tiếp theo</a>, nơi chúng ta dọn dẹp code một chút và kết thúc.)</p>
 
-    <p>Bạn có thể tự hỏi liệu tất cả hệ sinh thái fancy này có xứng đáng không. Setup cho blinky của chúng ta khá cầu kỳ, và sử dụng nhiều Rust crate và tính năng cho một công việc đơn giản như vậy.</p>
+    <p>Bạn có thể tự hỏi liệu tất cả hệ sinh thái cầu kỳ này có đáng công hay không. Setup cho blinky của chúng ta khá cầu kỳ, và sử dụng nhiều Rust crate và tính năng cho một công việc đơn giản như vậy.</p>
 
     <p>Tuy nhiên, một ưu điểm thú vị là code của chúng ta trở nên thực sự portable. Trên một board khác, setup có thể khác nhau, nhưng vòng lặp blinky thực sự lại giống hệt nhau!</p>
 
@@ -346,7 +346,7 @@ fn main() -&gt; ! {
 
     <h2 id="board-support-crate">Board support crate</h2>
 
-    <p>Làm việc trực tiếp với PAC và HAL thực sự thú vị. Hầu hết Arm MCU và nhiều MCU khác mà Rust có thể biên dịch đều có crate PAC. Nếu bạn làm việc với một MCU không có, việc viết crate PAC có thể tẻ nhạt nhưng khá đơn giản. Nhiều MCU có crate PAC cũng có crate HAL — một lần nữa, chủ yếu là công việc tẻ nhạt để xây dựng nếu nó còn thiếu. Code viết ở mức PAC và HAL cho phép truy cập vào các chi tiết tinh tế của MCU.</p>
+    <p>Làm việc trực tiếp với PAC và HAL cũng khá ổn. Hầu hết Arm MCU và nhiều MCU khác mà Rust có thể biên dịch đều có crate PAC. Nếu bạn làm việc với một MCU không có, việc viết crate PAC có thể tẻ nhạt nhưng khá đơn giản. Nhiều MCU có crate PAC cũng có crate HAL — một lần nữa, chủ yếu là công việc tẻ nhạt để xây dựng nếu nó còn thiếu. Code viết ở mức PAC và HAL cho phép truy cập vào các chi tiết tinh tế của MCU.</p>
 
     <p>Tuy nhiên, như chúng ta đã thấy, việc theo dõi những gì đang xảy ra ở interface giữa nRF52833 và phần còn lại của MB2 trở nên khá phiền phức. Chúng ta phải đọc schematics và các thứ để biết cách dùng phần cứng ngoài board.</p>
 
@@ -388,7 +388,7 @@ fn main() -&gt; ! {
 
     <p>Trong trường hợp này, chúng ta không thay đổi nhiều. Board support crate đã che giấu PAC (hiện tại). Quan trọng hơn, nó đã làm điều đó bằng cách cho phép chúng ta chỉ cần dùng tên hợp lý cho các chân GPIO hàng và cột của LED.</p>
 
-    <p>Crate <code>microbit-v2</code> còn cung cấp hỗ trợ fancy hơn cho những LED "display" đó. Chúng ta sẽ sớm thấy hỗ trợ này được dùng để làm những thứ thú vị hơn blinky.</p>
+    <p>Crate <code>microbit-v2</code> còn cung cấp hỗ trợ xịn hơn nữa cho những LED "display" đó. Chúng ta sẽ sớm thấy hỗ trợ này được dùng để làm những thứ thú vị hơn blinky.</p>
 
     <div class="nav-buttons">
       <a href="05-meet-your-software.html" class="nav-btn">← Làm quen phần mềm</a>

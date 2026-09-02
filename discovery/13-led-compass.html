@@ -63,7 +63,7 @@
 
     <p>Trong phần này, chúng ta sẽ implement một la bàn sử dụng LED trên micro:bit. Giống như la bàn thật, la bàn LED của chúng ta phải chỉ về hướng Bắc. Nó sẽ làm điều đó bằng cách bật một trong các LED ở vòng ngoài cùng — LED được bật nên chỉ về hướng Bắc.</p>
 
-    <p>Từ trường có cả cường độ (magnitude), đo bằng Gauss hoặc Tesla, và hướng (direction). Magnetometer trên micro:bit đo cả cường độ lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo sự phân rã (decomposition) của từ trường đó dọc theo các trục của nó.</p>
+    <p>Từ trường có cả cường độ (magnitude), đo bằng Gauss hoặc Tesla, và hướng (direction). Magnetometer trên micro:bit đo cả cường độ lẫn hướng của từ trường bên ngoài, nhưng nó báo cáo từ trường đó đã được phân tách (decomposition) theo từng trục của nó.</p>
 
     <p>Magnetometer có ba trục liên kết với nó. Khi board được giữ phẳng với các LED hướng lên trên và logo hướng về phía trước, trục X và Y trải trên mặt phẳng sàn nhà. Trục X chỉ về cạnh trái của board. Trục Y chỉ về cạnh dưới (cạnh card connector) của board. Trục Z chỉ "vào trong sàn nhà", tức là hướng xuống dưới: "ngược chiều" vì chip được gắn ở mặt sau. Đây là hệ tọa độ "tay phải". Tất cả hơi rối rắm vì các giá trị cường độ từ trường được báo cáo là các thành phần của vector từ trường.</p>
 
@@ -83,12 +83,12 @@
       </div>
     </div>
 
-    <p>Từ trường Bắc của Trái Đất là thứ phức tạp: nó khác so với Bắc thực sự ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). Máy tính <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">NOAA của Mỹ</a> này có thể được truy cập trên thiết bị di động của bạn để có ước tính tốt về Bắc thực sự cũng như Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">máy tính</a> UK BGS này để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (sự khác biệt giữa Bắc thực và Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
+    <p>Cực Bắc từ của Trái Đất là thứ rất đỏng đảnh: nó lệch so với cực Bắc thực ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">Công cụ tính này của NOAA (Mỹ)</a> có thể mở trên thiết bị di động của bạn để có ước tính tốt về cực Bắc thực cũng như cực Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">công cụ tính của UK BGS</a> để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (chênh lệch giữa cực Bắc thực và cực Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <div class="callout-title">Magnetometer LSM303AGR không chính xác out-of-the-box</div>
+        <div class="callout-title">Magnetometer LSM303AGR chưa chính xác ngay khi xuất xưởng</div>
         <p>Nhà sản xuất đề xuất một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản implement hiệu chỉnh mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
       </div>
     </div>
@@ -156,7 +156,7 @@ fn main() -&gt; ! {
     <p>Một số câu hỏi:</p>
     <ul>
       <li><p>Khi không di chuyển board, bạn thấy giá trị gì? Bạn có luôn thấy cùng một giá trị không?</p></li>
-      <li><p>Nếu bạn xoay board, cường độ có thay đổi không? Lý thuyết nó có nên thay đổi không?</p></li>
+      <li><p>Nếu bạn xoay board, cường độ có thay đổi không? Về lý thuyết thì nó có nên thay đổi không?</p></li>
     </ul>
 
     <!-- ============================================================ -->
@@ -247,7 +247,7 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Suggestions/tips:</p>
+    <p>Gợi ý:</p>
     <ul>
       <li>Một vòng tròn = 360 độ.</li>
       <li><code>PI</code> radian tương đương với 180 độ.</li>

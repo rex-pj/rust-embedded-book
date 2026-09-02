@@ -68,10 +68,6 @@
       <img title="micro:bit" src="assets/microbit-v2.jpg">
     </p>
 
-    <blockquote>
-      <p><strong>Lưu ý:</strong> Đây là ảnh của micro:bit v2. Mặt trước của v1 trông hơi khác một chút.</p>
-    </blockquote>
-
     <p>Dưới đây là một số thành phần nổi bật trên board:</p>
 
     <ul>
@@ -86,11 +82,11 @@
 
     <p>Nếu bạn muốn tìm hiểu thêm về board, có thể truy cập <a href="https://microbit.org" target="_blank">trang web chính thức của micro:bit</a> để đọc mô tả chi tiết hơn.</p>
 
-    <p>Vì MCU quan trọng như vậy, hãy cùng tìm hiểu kỹ hơn về con chip đang có mặt trên board của chúng ta. Lưu ý rằng chỉ một trong hai phần tiếp theo áp dụng cho board của bạn, tùy thuộc vào việc bạn đang dùng micro:bit v2 hay v1.</p>
+    <p>Vì MCU quan trọng như vậy, hãy cùng tìm hiểu kỹ hơn về con chip đang có mặt trên board của chúng ta.</p>
 
     <h2>Nordic nRF52833 (hay còn gọi là "nRF52", dành cho micro:bit v2)</h2>
 
-    <p>Micro:bit v2 được trang bị một MCU của Nordic Semiconductor với 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này kết nối với các đường dẫn trên mạch in, cho phép MCU điều khiển luồng điện để vận hành các thành phần như LED.</p>
+    <p>Micro:bit v2 được trang bị một MCU của Nordic Semiconductor với 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này nối tới các <em>đường mạch</em> (trace) — những "con đường" nhỏ đóng vai trò dây dẫn nối các linh kiện trên board — nhờ đó MCU có thể điều khiển dòng điện để vận hành các thành phần như LED.</p>
 
     <p>Nordic Semiconductor mô tả nRF52833 là một <strong>"Bluetooth Low Energy and 2.4 GHz SoC"</strong> (System on a Chip — hệ thống trên một chip). Chữ <strong>RF</strong> trong tên sản phẩm là viết tắt của <em>radio frequency</em> (tần số vô tuyến), phản ánh khả năng truyền thông không dây tích hợp trong chip.</p>
 
@@ -126,21 +122,21 @@
       <div class="stack-diagram">
         <div class="stack-layer layer-bsp">🎛️ Board Support Crate (BSP)<span class="layer-badge">micro:bit crate</span></div>
         <div class="stack-arrow">↑ dùng</div>
-        <div class="stack-layer layer-hal">⚙️ Hardware Abstraction Layer (HAL)<span class="layer-badge">nrf52-hal / nrf51-hal</span></div>
+        <div class="stack-layer layer-hal">⚙️ Hardware Abstraction Layer (HAL)<span class="layer-badge">nrf52833-hal</span></div>
         <div class="stack-arrow">↑ dùng</div>
-        <div class="stack-layer layer-pac">📋 Peripheral Access Crate (PAC)<span class="layer-badge">nrf52833-pac / nrf51-pac</span></div>
+        <div class="stack-layer layer-pac">📋 Peripheral Access Crate (PAC)<span class="layer-badge">nrf52833-pac</span></div>
         <div class="stack-arrow">↑ wrap</div>
-        <div class="stack-layer layer-hw">🔧 Phần cứng thực tế (Hardware)<span class="layer-badge">nRF52833 / nRF51 chip</span></div>
+        <div class="stack-layer layer-hw">🔧 Phần cứng thực tế (Hardware)<span class="layer-badge">chip nRF52833</span></div>
       </div>
     </div>
 
     <h4>Peripheral Access Crate (PAC)</h4>
 
-    <p>Nhiệm vụ của PAC là "cung cấp giao diện trực tiếp (tương đối) an toàn đến các peripheral của chip, cho phép bạn cấu hình từng bit theo ý muốn." Các lập trình viên thường dùng PAC khi các lớp cấp cao hơn không đáp ứng được nhu cầu, hoặc khi đang xây dựng code ở tầng cao hơn. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-pac" target="_blank">nRF52 PAC</a>; nếu bạn dùng micro:bit v1, hãy tham khảo <a href="https://crates.io/crates/nrf51-pac" target="_blank">nRF51 PAC</a>.</p>
+    <p>Nhiệm vụ của PAC là "cung cấp giao diện trực tiếp, tạm gọi là an toàn, tới các peripheral của chip, cho phép bạn cấu hình tới từng bit theo ý muốn (tất nhiên, kể cả theo cách sai)." Các lập trình viên thường dùng PAC khi các lớp cấp cao hơn không đáp ứng được nhu cầu, hoặc khi đang xây dựng code ở tầng cao hơn. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-pac" target="_blank">nRF52 PAC</a>.</p>
 
     <h4>Hardware Abstraction Layer (HAL)</h4>
 
-    <p>Xây dựng trên nền PAC, HAL "cung cấp một lớp abstraction thực sự dễ dùng cho người không cần biết về mọi hành vi đặc biệt của chip." HAL đơn giản hóa các peripheral thành các struct dễ dùng cho các thao tác phổ biến như truyền dữ liệu. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-hal" target="_blank">nrf52-hal</a>; nếu bạn dùng micro:bit v1, hãy tham khảo <a href="https://crates.io/crates/nrf51-hal" target="_blank">nrf51-hal</a>.</p>
+    <p>Xây dựng trên nền PAC, HAL "cung cấp một lớp abstraction thực sự dễ dùng cho người không cần biết về mọi hành vi đặc biệt của chip." HAL đơn giản hóa các peripheral thành các struct dễ dùng cho các thao tác phổ biến như truyền dữ liệu. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-hal" target="_blank">nrf52-hal</a>.</p>
 
     <h4>Board Support Crate (BSP)</h4>
 
@@ -148,7 +144,7 @@
 
     <h3>Kết nối các lớp với nhau</h3>
 
-    <p>Crate <a href="https://crates.io/crates/embedded-hal" target="_blank"><code>embedded-hal</code></a> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các cài đặt của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng (<em>platform agnostic</em>), tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip miễn là chúng triển khai các trait chuẩn.</p>
+    <p>Crate <a href="https://crates.io/crates/embedded-hal" target="_blank"><code>embedded-hal</code></a> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các bản triển khai (implementation) của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng (<em>platform agnostic</em>), tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip miễn là chúng triển khai các trait chuẩn.</p>
 
     <h3>Tài liệu tham khảo thêm</h3>
 

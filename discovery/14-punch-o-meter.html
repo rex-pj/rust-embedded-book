@@ -67,13 +67,13 @@
 
     <p>Như chúng ta đã biết từ các chương trước, accelerometer được tích hợp bên trong package LSM303AGR. Và giống như magnetometer, nó có thể truy cập thông qua bus I2C. Nó cũng có cùng hệ tọa độ như magnetometer.</p>
 
-    <h2>Gravity is up?</h2>
+    <h2>Trọng lực hướng lên?</h2>
 
     <p>Chúng ta sẽ làm gì đầu tiên?</p>
 
     <p>Thực hiện một sanity check!</p>
 
-    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu accelerometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Bạn có quan sát thấy điều gì thú vị ngay cả khi giữ board song song với sàn nhà với mặt LED hướng xuống?</p>
+    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu accelerometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Bạn có quan sát thấy điều gì thú vị ngay cả khi giữ board song song với sàn nhà với mặt LED hướng xuống? (Nhớ rằng accelerometer nằm ở mặt sau board, nên cầm úp như vậy sẽ khiến trục Z hướng lên.)</p>
 
     <p>Bạn sẽ thấy rằng cả giá trị X và Y đều khá gần 0, trong khi giá trị Z ở khoảng 1000. Điều này lạ vì board không di chuyển mà gia tốc của nó lại khác không. Chuyện gì đang xảy ra? Chắc phải liên quan đến trọng lực, đúng không? Vì gia tốc trọng trường là 1 g (aha, <code>1 g</code> = -1000 từ accelerometer). Nhưng trọng lực kéo vật thể xuống nên gia tốc theo trục Z phải là dương, không phải âm.</p>
 

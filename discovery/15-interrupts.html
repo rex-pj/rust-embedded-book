@@ -61,8 +61,6 @@
 
     <h1>Interrupts</h1>
 
-    <h2>Interrupts</h2>
-
     <p>Cho đến nay, chúng ta đã tương tác với nhiều phần cứng trên MB2. Chúng ta đã đọc nút bấm, chờ timer, thực hiện serial communication, và nói chuyện với các thiết bị qua I2C. Mỗi việc đó đều liên quan đến việc chờ một hoặc nhiều peripheral sẵn sàng. Cho đến giờ, cách chờ của chúng ta là "polling": liên tục hỏi peripheral xem nó đã xong chưa, cho đến khi xong.</p>
 
     <p>Vì microcontroller của chúng ta chỉ có một CPU core, nó không thể làm gì khác trong khi chờ đợi. Hơn nữa, một CPU core liên tục polling một peripheral sẽ lãng phí điện năng, và trong nhiều ứng dụng, chúng ta không thể để điều đó xảy ra. Liệu chúng ta có thể làm tốt hơn không?</p>
@@ -389,7 +387,7 @@ hello | thread was here! |
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">unsafe { COUNTER += 1 };</code></pre>
 
-    <p>Sự unsafe ở đây có lý do: hãy tưởng tượng rằng ở giữa quá trình cập nhật <code>COUNTER</code>, một interrupt handler chạy và cũng cố cập nhật <code>COUNTER</code>. Sự hỗn loạn thông thường sẽ xảy ra. Rõ ràng là cần có một số loại locking.</p>
+    <p>Sự unsafe ở đây có lý do: hãy tưởng tượng rằng ở giữa quá trình cập nhật <code>COUNTER</code>, một interrupt handler chạy và cũng cố cập nhật <code>COUNTER</code>. Và thế là hỗn loạn như thường lệ. Rõ ràng là cần có một số loại locking.</p>
 
     <p>Crate <code>critical-section</code> cung cấp một loại <code>Mutex</code> với API bất thường và các thao tác bất thường. Khi xem xét <code>Cargo.toml</code> cho chương này, bạn sẽ thấy tính năng <code>critical-section-single-core</code> trên crate <code>cortex-m</code> được bật. Tính năng này khẳng định rằng chỉ có một processor core trong hệ thống này, và do đó đồng bộ hóa có thể được thực hiện bằng cách đơn giản là <em>vô hiệu hóa interrupts</em> trên toàn bộ critical section. Nếu không ở trong interrupt, điều này sẽ đảm bảo rằng chỉ chương trình chính có quyền truy cập vào global. Nếu đang ở trong interrupt, điều này sẽ đảm bảo rằng chương trình chính không thể truy cập vào global (điều khiển chương trình đang ở trong interrupt handler) và không có interrupt handler có priority cao hơn nào có thể kích hoạt.</p>
 
@@ -609,13 +607,13 @@ fn main() -&gt; ! {
 
     <p>Trong ví dụ này, count tăng lên 1 mỗi lần nhấn nút A của MB2. Có thể thôi. Đặc biệt nếu MB2 của bạn đã cũ (!), bạn có thể thấy một lần nhấn tăng counter lên vài đơn vị. <em>Đây không phải là lỗi phần mềm.</em> Phần lớn vậy. Trong phần tiếp theo, tôi sẽ nói về điều gì có thể đang xảy ra và cách chúng ta nên xử lý nó.</p>
 
-    <h2>Debouncing — Chống nảy phím</h2>
+    <h2>Debouncing — Chống rung nút</h2>
 
     <p>Như đã đề cập ở phần trước, phần cứng đôi khi hơi... đặc biệt. Điều này chắc chắn đúng với các button trên MB2, và thực sự với hầu hết mọi pushbutton hoặc công tắc trong hầu hết mọi hệ thống. Nếu bạn thấy nhiều interrupt cho một lần nhấn phím duy nhất, đó có thể là kết quả của hiện tượng "switch bouncing" (nảy phím): khi các tiếp điểm điện của công tắc chạm vào nhau, chúng có thể nảy ra và chạm lại vài lần cực nhanh trước khi tạo kết nối ổn định. Thật không may, processor của chúng ta <em>rất nhanh</em> theo tiêu chuẩn cơ khí: mỗi lần nảy tạo ra một interrupt mới.</p>
 
     <p>Để "debounce" công tắc, bạn cần <em>không</em> xử lý interrupt nhấn nút trong một khoảng thời gian ngắn sau khi bạn nhận được interrupt đầu tiên. 50–100ms thường là khoảng debounce tốt. Thời gian debounce có vẻ khó: bạn chắc chắn không muốn spin trong một interrupt handler, nhưng sẽ khó xử lý điều này trong chương trình chính.</p>
 
-    <p>Giải pháp đến thông qua một dạng concurrency phần cứng khác: peripheral <code>TIMER</code> mà chúng ta đã dùng nhiều lần rồi. Bạn có thể thiết lập timer khi nhận được interrupt nút bấm "tốt", và không phản hồi các interrupt tiếp theo cho nút bấm đó cho đến khi peripheral timer đã đếm đủ thời gian. Các timer trong <code>nrf-hal</code> đến với giá trị đếm 32-bit và "tick rate" là 1 MHz: một triệu tick mỗi giây. Để debounce 100ms, chỉ cần để timer đếm 100,000 tick. Bất cứ khi nào button interrupt handler thấy timer đang chạy, nó có thể chỉ làm gì không cả.</p>
+    <p>Giải pháp đến thông qua một dạng concurrency phần cứng khác: peripheral <code>TIMER</code> mà chúng ta đã dùng nhiều lần rồi. Bạn có thể thiết lập timer khi nhận được interrupt nút bấm "tốt", và không phản hồi các interrupt tiếp theo cho nút bấm đó cho đến khi peripheral timer đã đếm đủ thời gian. Các timer trong <code>nrf-hal</code> được cấu hình sẵn với bộ đếm 32-bit và "tick rate" là 1 MHz: một triệu tick mỗi giây. Để debounce 100ms, chỉ cần để timer đếm 100,000 tick. Bất cứ khi nào button interrupt handler thấy timer đang chạy, thì nó chỉ việc không làm gì cả.</p>
 
     <p>Việc triển khai tất cả điều này có thể thấy trong ví dụ tiếp theo (<code>examples/count-debounce.rs</code>). Khi bạn chạy ví dụ bạn sẽ thấy mỗi lần nhấn nút chỉ đếm đúng một lần.</p>
 
@@ -709,7 +707,7 @@ fn main() -&gt; ! {
       </div>
     </div>
 
-    <h2>Waiting to be interrupted — wfi()</h2>
+    <h2>Chờ được ngắt — wfi()</h2>
 
     <p>Bạn có thể thắc mắc tại sao chúng ta sử dụng <code>asm::wfi()</code> (wait for interrupt) trong vòng lặp chính thay vì một cái gì đó như <code>asm::nop()</code>.</p>
 
@@ -733,7 +731,7 @@ fn main() -&gt; ! {
 
     <p>Với phần cứng phù hợp điều khiển nó, speaker cone này thực sự có thể được di chuyển đến bất kỳ vị trí nào trong phạm vi của nó với một dòng điện thích hợp. Điều này sẽ cho phép tái tạo khá tốt bất kỳ âm thanh nào, giống như một speaker "bình thường". Thật không may, những hạn chế trong phần cứng MB2 điều khiển speaker có nghĩa là chỉ có vị trí vào hoàn toàn và ra hoàn toàn mới dễ dàng sử dụng được.</p>
 
-    <p>Hãy đẩy speaker cone ra ngoài rồi vào trong 220 lần mỗi giây. Điều này sẽ tạo ra sóng áp suất hình vuông 220 chu kỳ mỗi giây. Đơn vị "chu kỳ mỗi giây" là Hertz; chúng ta sẽ tạo ra âm 220Hz (âm nhạc "A3"), nghe không đến nỗi tệ trên chiếc loa nhỏ có âm thanh sắc bén này.</p>
+    <p>Hãy đẩy speaker cone ra ngoài rồi vào trong 220 lần mỗi giây. Điều này sẽ tạo ra sóng áp suất hình vuông 220 chu kỳ mỗi giây. Đơn vị "chu kỳ mỗi giây" là Hertz; chúng ta sẽ tạo ra âm 220Hz (nốt La quãng 3, "A3"), nghe cũng không đến nỗi nào trên chiếc loa nhỏ chói tai này.</p>
 
     <p>Chúng ta sẽ để âm thanh phát trong năm giây rồi dừng. Điều quan trọng cần nhớ là chương trình của chúng ta sống trong flash trên MB2 — âm thanh sẽ bắt đầu lại mỗi lần chúng ta reset hoặc thậm chí cấp nguồn cho MB2. Nếu chúng ta để âm thanh chạy mãi mãi, hành vi này có thể nhanh chóng trở nên khá khó chịu.</p>
 
@@ -787,7 +785,7 @@ fn main() -&gt; ! {
 
     <p>Làm cho còi hú của bạn quét âm từ 440Hz đến 660Hz và ngược lại trong một chu kỳ một giây. Chương trình chính nên bắt đầu còi hú, sau đó in đếm ngược mười giây từ 10 đến 1, rồi dừng còi hú và in "launch!". Chương trình chính không nên can thiệp vào còi hú trong thời gian đếm ngược — nó chỉ nên được điều khiển bởi interrupt.</p>
 
-    <p><em>Gợi ý:</em> Tôi thấy dễ nhất là sử dụng một struct <code>Siren</code> global được khóa sở hữu trạng thái của còi hú và các peripheral cần thiết để hoạt động.</p>
+    <p><em>Gợi ý:</em> Tôi thấy dễ nhất là dùng một struct <code>Siren</code> toàn cục, có khóa, nắm giữ trạng thái của còi hú và các peripheral mà nó cần để hoạt động.</p>
 
     <p>Đây là một chương trình phức tạp, giới thiệu nhiều ý tưởng mới. Đừng ngạc nhiên nếu bạn cần một chút thời gian để tìm ra nó.</p>
 
@@ -960,15 +958,15 @@ fn main() -&gt; ! {
 
     <p>Một lưu ý cuối cùng trước khi chúng ta tiếp tục.</p>
 
-    <p>Việc sử dụng interrupt đôi khi khá "đắt đỏ" về mặt tài nguyên. Processor phải hoàn tất hoặc hủy bỏ lệnh đang chạy hiện tại, sau đó lưu đủ trạng thái để khởi động lại việc thực thi, rồi gọi interrupt handler. Tất cả điều này tiêu tốn vài chu kỳ CPU quý giá của runtime.</p>
+    <p>Việc sử dụng interrupt đôi khi khá "đắt đỏ" về mặt tài nguyên. Processor phải hoàn tất hoặc hủy bỏ lệnh đang chạy hiện tại, sau đó lưu đủ trạng thái để khởi động lại việc thực thi, rồi gọi interrupt handler. Tất cả những việc đó ngốn mất vài chu kỳ CPU trong quỹ thời gian chạy vốn rất quý giá.</p>
 
     <p>Cách thực hiện còi hú ở phần trước được viết theo cách nó sẽ cần hai interrupt cho mỗi chu kỳ output của speaker. Đó là khoảng 1000 interrupt mỗi giây. Trên một processor như nRF52833 của chúng ta, điều này hoạt động tốt.</p>
 
-    <p>Tuy nhiên, nRF52833 có một peripheral trên board có thể giảm đáng kể tần suất interrupt của còi hú. Đơn vị Pulse-Width Modulation (PWM) có thể, trong số nhiều thứ khác, tạo ra các chu kỳ trên speaker pin với tốc độ được kiểm soát bởi một PWM register. Điều này có thể được dùng để tạo sóng vuông cơ bản dùng cho còi hú. Chúng ta vẫn cần một interrupt mỗi khi muốn thay đổi tần số, nhưng con số này có thể là khoảng 10 interrupt mỗi giây thay vì 1000.</p>
+    <p>Tuy nhiên, nRF52833 có một peripheral trên board có thể giảm đáng kể tần suất interrupt của còi hú. Khối Pulse-Width Modulation (PWM) có thể, trong số nhiều thứ khác, tạo ra các chu kỳ trên speaker pin với tốc độ được kiểm soát bởi một PWM register. Điều này có thể được dùng để tạo sóng vuông cơ bản dùng cho còi hú. Chúng ta vẫn cần một interrupt mỗi khi muốn thay đổi tần số, nhưng con số này có thể là khoảng 10 interrupt mỗi giây thay vì 1000.</p>
 
-    <p>Tôi không sử dụng đơn vị PWM trong giải pháp của mình. Một phần là vì tôi muốn tập trung vào phần interrupt. Một lý do lớn khác, tuy nhiên, là đơn vị PWM của nRF52833 khá phức tạp và khó hiểu. Làm cho một thứ gì đó hoạt động theo cách đơn giản trong môi trường bare-metal hạn chế luôn là một lựa chọn hấp dẫn.</p>
+    <p>Tôi không sử dụng khối PWM trong giải pháp của mình. Một phần là vì tôi muốn tập trung vào phần interrupt. Một lý do lớn khác, tuy nhiên, là khối PWM của nRF52833 khá phức tạp và khó hiểu. Làm cho một thứ gì đó hoạt động theo cách đơn giản trong môi trường bare-metal hạn chế luôn là một lựa chọn hấp dẫn.</p>
 
-    <p>Nếu bạn sẵn sàng chấp nhận thử thách, tôi khuyến khích bạn thử sử dụng đơn vị PWM cho chiếc còi hú của mình.</p>
+    <p>Nếu bạn sẵn sàng chấp nhận thử thách, tôi khuyến khích bạn thử sử dụng khối PWM cho chiếc còi hú của mình.</p>
 
     <div class="nav-buttons">
       <a href="14-punch-o-meter.html" class="nav-btn">← Punch-o-meter</a>

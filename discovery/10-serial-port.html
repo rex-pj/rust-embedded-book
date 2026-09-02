@@ -63,7 +63,7 @@
 
     <p>Thứ gần nhất với một chuẩn I/O phổ quát cho các board embedded hiện đại là "serial port". Hầu hết mọi microcontroller đều có cách để một vài pin của nó hoạt động như một serial port, và hầu hết mọi board microcontroller đều làm cho các pin này dễ dàng truy cập. MB2 cũng không ngoại lệ.</p>
 
-    <p>Trong chương này, chúng ta sẽ mô tả serial port là gì. Sau đó chúng ta sẽ chỉ bạn cách cài đặt máy tính với "virtual serial port" qua USB và dùng virtual port đó với "terminal software" để nói chuyện với serial port trên MB2.</p>
+    <p>Trong chương này, chúng ta sẽ mô tả serial port là gì. Sau đó chúng ta sẽ chỉ bạn cách thiết lập trên máy tính một "virtual serial port" thông qua USB và dùng virtual port đó với "terminal software" để nói chuyện với serial port trên MB2.</p>
 
     <p>Vậy <a href="https://en.wikipedia.org/wiki/Serial_port">serial port</a> là gì? Đó là nơi hai thiết bị trao đổi dữ liệu từng bit một (<em>serially</em>) sử dụng một đường dữ liệu theo mỗi hướng (<em>full-duplex</em>) cộng thêm đường ground chung. Serial port xuất phát từ "RS-232": xem phần lịch sử ở phần sau của chương này để biết chi tiết. Tuy nhiên, giao thức được dùng trên các đường transmit và receive không có tên chính thức — nó chỉ được gọi là "serial" hoặc có thể là "async serial" hoặc "UART serial".</p>
 
@@ -243,7 +243,7 @@ crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 
     <p>Cuối cùng, người ta thường bỏ hầu hết hoặc tất cả các dây out-of-band trên serial port, thu gọn chúng thành giao diện 3 dây (transmit-receive-ground). Cũng trở nên phổ biến là dùng 0V/+5V và sau đó 0V/+3.3V làm mức tín hiệu, để tránh các điện áp "kỳ lạ" và vấn đề giao diện.</p>
 
-    <p>Microsoft cố tình thiết kế USB như một chuẩn để thay thế RS-232; với dây bừa bộn, các đầu nối khác nhau, điện áp và tốc độ truyền khác nhau, nó quá khó cho người dùng phổ thông nhất để kết nối thiết bị với PC. Vì hầu hết MODEM vẫn là RS-232 khi USB ra đời, Microsoft thiết kế một "device class" USB, CDC-ACM, đặc biệt để nói chuyện với các bộ chuyển đổi RS-232 dùng với các MODEM này.</p>
+    <p>Microsoft chủ đích thiết kế USB để thay thế RS-232: với dây nhợ lôi thôi, đủ loại đầu nối, đủ loại điện áp và tốc độ truyền, RS-232 quá khó dùng đối với người dùng phổ thông khi muốn kết nối thiết bị vào PC. Vì hầu hết MODEM vẫn là RS-232 khi USB ra đời, Microsoft thiết kế một "device class" USB, CDC-ACM, đặc biệt để nói chuyện với các bộ chuyển đổi RS-232 dùng với các MODEM này.</p>
 
     <div class="nav-buttons">
       <a href="09-registers.html" class="nav-btn">← Registers</a>

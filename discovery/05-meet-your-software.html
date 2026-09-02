@@ -70,7 +70,7 @@
 
     <p>"Source code" của cuốn sách nằm trong <code>discovery-mb2/mdbook/src</code>. Bạn nên vào đó trong bản sao của mình và xem xét một chút. Mỗi thư mục chương có cả văn bản Markdown nguồn <em>lẫn</em> source code đầy đủ cho tất cả các chương trình trong chương đó. Khi chúng ta đề cập đến một đường dẫn như <code>src/main.rs</code>, chúng ta có nghĩa là vị trí đó bắt đầu từ chương bạn đang làm việc. Ví dụ, <code>discovery-mb2</code> của bạn có một file có tên là <code>mdbook/src/05-meet-your-software/examples/init.rs</code>. Chúng ta sẽ gọi file đó chỉ là <code>examples/init.rs</code> trong chương này.</p>
 
-    <p>Có hai loại cơ bản của Rust code: chương trình thực thi "binary", và code "library". Code library sẽ không đóng vai trò lớn trong cuốn sách này. Source code của chương trình binary có thể nằm ở một trong nhiều nơi:</p>
+    <p>Code Rust có hai loại cơ bản: chương trình thực thi dạng "binary" và code dạng "library". Code library sẽ không đóng vai trò lớn trong cuốn sách này. Source code của chương trình binary có thể nằm ở một trong nhiều nơi:</p>
 
     <ul>
       <li><p>Một chương trình trong <code>src/main.rs</code> sẽ được tự động biên dịch và chạy bởi <code>cargo embed</code> hoặc <code>cargo run</code>. Không cần flags đặc biệt.</p></li>
@@ -110,9 +110,9 @@ fn main() -&gt; ! {
 
     <p>Các chương trình microcontroller khác với các chương trình chuẩn ở hai điểm: <code>#![no_std]</code> và <code>#![no_main]</code>.</p>
 
-    <p>Thuộc tính <code>no_std</code> nói rằng chương trình này sẽ không dùng crate <code>std</code>, vốn giả định có một OS bên dưới; thay vào đó chương trình sẽ dùng crate <code>core</code>, một tập con của <code>std</code> có thể chạy trên các hệ thống bare metal (nghĩa là hệ thống không có các abstraction của OS như file và socket).</p>
+    <p>Thuộc tính <code>no_std</code> cho biết chương trình này sẽ không dùng crate <code>std</code>, vốn giả định có một OS bên dưới; thay vào đó chương trình sẽ dùng crate <code>core</code>, một tập con của <code>std</code> có thể chạy trên các hệ thống bare metal (nghĩa là hệ thống không có các abstraction của OS như file và socket).</p>
 
-    <p>Thuộc tính <code>no_main</code> nói rằng chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là <code>main</code>, nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể return. Điều này có nghĩa là chương trình không bao giờ kết thúc bằng cách return từ <code>main</code>: nếu compiler phát hiện điều này có thể xảy ra, nó sẽ từ chối biên dịch chương trình của bạn.</p>
+    <p>Thuộc tính <code>no_main</code> cho biết chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là <code>main</code>, nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể return. Điều này có nghĩa là chương trình không bao giờ kết thúc bằng cách return từ <code>main</code>: nếu compiler phát hiện điều này có thể xảy ra, nó sẽ từ chối biên dịch chương trình của bạn.</p>
 
     <p>Nếu bạn để ý kỹ, bạn cũng sẽ thấy có một thư mục <code>.cargo</code> có thể ẩn trong Cargo project. Thư mục này chứa file cấu hình Cargo <code>.cargo/config.toml</code>.</p>
 
@@ -168,7 +168,7 @@ enabled = true</code></pre>
       <li><code>thumbv8m.main-none-eabihf</code>, cho các processor Cortex-M33<strong>F</strong> và Cortex-M35P<strong>F</strong></li>
     </ul>
 
-    <p>"Thumb" ở đây đề cập đến một phiên bản của instruction set Arm có các instruction nhỏ hơn để giảm kích thước code (đó là một cách chơi chữ). Phần <code>hf</code>/<code>F</code> có tăng tốc phần cứng floating point. Điều này sẽ làm cho các tính toán số học liên quan đến phân số (floating decimal point) nhanh hơn nhiều.</p>
+    <p>"Thumb" ở đây đề cập đến một phiên bản của instruction set Arm có các instruction nhỏ hơn để giảm kích thước code (đó là một cách chơi chữ). Các target có hậu tố <code>hf</code>/<code>F</code> có tăng tốc phần cứng cho phép tính dấu phẩy động. Điều này giúp các phép tính liên quan đến số thập phân ("dấu phẩy động") nhanh hơn nhiều.</p>
 
     <p>Đối với micro:bit v2, chúng ta sẽ muốn target <code>thumbv7em-none-eabihf</code>.</p>
 
@@ -226,7 +226,7 @@ ELF Header:
 
     <h1>Flash it</h1>
 
-    <p>Flashing là quá trình đưa chương trình của chúng ta vào bộ nhớ persistent của microcontroller. Sau khi flash, microcontroller sẽ thực thi chương trình đã được flash mỗi khi bật nguồn.</p>
+    <p>Flashing là quá trình đưa chương trình của chúng ta vào bộ nhớ không mất dữ liệu khi tắt nguồn (bộ nhớ flash) của microcontroller. Sau khi flash, microcontroller sẽ thực thi chương trình đã được flash mỗi khi bật nguồn.</p>
 
     <p>Chương trình của chúng ta sẽ là <em>chương trình duy nhất</em> trong bộ nhớ microcontroller. Ý tôi là không có gì khác chạy trên microcontroller: không có OS, không có "daemon", không có gì cả. Chương trình của chúng ta có toàn quyền kiểm soát thiết bị.</p>
 
@@ -262,7 +262,7 @@ ELF Header:
 
     <p>Tùy chọn nhỏ <code>default.gdb.enabled = true</code> trong <code>Embed.toml</code> khiến <code>cargo embed</code> mở một "GDB stub" sau khi flash. Đây là một server để GDB của chúng ta kết nối tới và gửi các lệnh như "đặt breakpoint tại địa chỉ X". Server sau đó có thể quyết định theo cách riêng của nó cách xử lý lệnh này. Trong trường hợp của GDB stub của <code>cargo embed</code>, nó sẽ chuyển lệnh qua USB đến "debugging probe" trên chip thứ hai. Chip này làm việc giao tiếp với MCU cho chúng ta.</p>
 
-    <h2>Let's debug!</h2>
+    <h2>Bắt đầu debug thôi!</h2>
 
     <p><code>cargo-embed</code> đang chạy trong shell hiện tại của chúng ta. Chúng ta có thể mở một shell mới và quay lại thư mục project. Khi đã ở đó, trước tiên chúng ta phải mở binary trong gdb như thế này:</p>
 
@@ -287,7 +287,7 @@ Remote debugging using :1337
 
     <blockquote>
       <p><strong>LƯU Ý:</strong> Ví dụ trong repository cho chương này có thể thay đổi theo thời gian. Số dòng và các chi tiết source khác vì vậy có thể khác với những gì được hiển thị ở đây và bên dưới.</p>
-      <p>Nếu chương trình không dừng (halt) sau khi khởi động và bạn đặt chân vào một chỗ sâu hơn trong chương trình như sau, hãy thử chạy <code>monitor reset halt</code> để reset. Điều này là do <a href="https://github.com/probe-rs/probe-rs/issues/3438">một bug</a> trong <code>probe-rs</code>, xem <a href="https://github.com/rust-embedded/discovery-mb2/issues/27">issue #27</a> để biết thêm chi tiết.</p>
+      <p>Nếu chương trình không dừng (halt) sau khi khởi động và bạn thấy mình đang dừng ở đâu đó sâu bên trong chương trình như dưới đây, hãy thử chạy <code>monitor reset halt</code> để reset. Điều này là do <a href="https://github.com/probe-rs/probe-rs/issues/3438">một bug</a> trong <code>probe-rs</code>, xem <a href="https://github.com/rust-embedded/discovery-mb2/issues/27">issue #27</a> để biết thêm chi tiết.</p>
       <pre><code class="language-gdb">(gdb) target remote :1337
 Remote debugging using :1337
 init::__cortex_m_rt_main () at mdbook/src/05-meet-your-software/examples/init.rs:19
@@ -396,7 +396,7 @@ Dump of assembler code for function _ZN12init18__cortex_m_rt_main17h3e25e3afbec4
 
 End of assembler dump.</code></pre>
 
-    <p>Thấy mũi tên béo <code>=&gt;</code> ở bên trái không? Nó cho thấy instruction mà processor sẽ thực thi tiếp theo.</p>
+    <p>Thấy mũi tên đậm <code>=&gt;</code> ở bên trái không? Nó cho thấy instruction mà processor sẽ thực thi tiếp theo.</p>
 
     <p>Nếu không ở trong chế độ TUI, trên mỗi lệnh <code>stepi</code>, GDB sẽ in câu lệnh và số dòng của instruction mà processor sẽ thực thi tiếp theo.</p>
 
@@ -451,7 +451,7 @@ Ending remote debugging.
 
     <h2>LED của micro:bit</h2>
 
-    <p>Ở mặt sau của micro:bit, bạn có thể thấy một hình vuông 5x5 của các LED, thường gọi là LED matrix. Thiết kế matrix này được sử dụng để thay vì phải dùng 25 chân riêng biệt để điều khiển từng LED một, chúng ta chỉ cần dùng 10 (5+5) chân để kiểm soát cột và hàng nào của ma trận sáng lên.</p>
+    <p>Ở mặt sau của micro:bit, bạn có thể thấy một hình vuông 5x5 của các LED, thường gọi là LED matrix. Nhờ cách bố trí ma trận này, thay vì phải dùng 25 chân riêng biệt để điều khiển từng LED, chúng ta chỉ cần 10 chân (5 hàng + 5 cột) để chọn hàng nào và cột nào của ma trận sáng lên.</p>
 
     <p>Hiện tại chúng ta sẽ dùng crate <code>microbit-v2</code> để thao tác các LED. Trong <a href="06-hello-world.html">chương tiếp theo</a> chúng ta sẽ đi qua chi tiết tất cả các tùy chọn có sẵn.</p>
 

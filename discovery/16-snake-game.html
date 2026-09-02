@@ -67,7 +67,7 @@
 
     <p>Code ở đây được module hóa chi tiết hơn mức có lẽ cần thiết. Cách module hóa chi tiết này cho phép chúng ta xem code từng chút một. Chúng ta sẽ xây dựng code từ dưới lên: chúng ta đầu tiên sẽ xây dựng ba module — <code>game</code>, <code>controls</code> và <code>display</code>, rồi kết hợp chúng để tạo ra chương trình cuối cùng. Mỗi module sẽ có một file code top-level và một hoặc nhiều file code được include: ví dụ, module <code>game</code> sẽ bao gồm <code>src/game.rs</code>, <code>src/game/coords.rs</code>, <code>src/game/movement.rs</code>, v.v. Câu lệnh Rust <code>mod</code> được dùng để kết hợp các thành phần khác nhau của module. <em>The Rust Programming Language</em> có một <a href="https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html">mô tả tốt</a> về hệ thống module của Rust.</p>
 
-    <h1 id="game-logic">Game logic</h1>
+    <h1 id="game-logic">Logic của game</h1>
 
     <p>Module đầu tiên chúng ta sẽ xây dựng là game logic. Bạn có lẽ đã quen với trò chơi <a href="https://en.wikipedia.org/wiki/Snake_%28video_game_genre%29">snake</a>, nhưng nếu chưa, ý tưởng cơ bản là người chơi dẫn dắt một con rắn trên một lưới 2D. Tại bất kỳ thời điểm nào, có một "thức ăn" tại một vị trí ngẫu nhiên trên lưới và mục tiêu của trò chơi là đưa con rắn đến "ăn" càng nhiều thức ăn càng tốt. Mỗi lần snake ăn thức ăn nó sẽ dài thêm. Người chơi thua nếu snake va vào đuôi của chính nó.</p>
 
@@ -199,7 +199,7 @@ pub enum StepOutcome {
     Move(Coords),
 }</code></pre>
 
-    <h3>Một con rắn (<em>Một Rắn!</em>)</h3>
+    <h3>Một con rắn (<em>Rắnnnn kìa!</em>)</h3>
 
     <p>Tiếp theo chúng ta định nghĩa struct <code>Snake</code>, theo dõi các tọa độ bị snake chiếm và hướng di chuyển của nó. Chúng ta dùng một queue (<code>heapless::spsc::Queue</code>) để theo dõi thứ tự tọa độ và một hash set (<code>heapless::FnvIndexSet</code>) để phát hiện va chạm nhanh chóng. <code>Snake</code> có các method để di chuyển. <code>src/game/snake.rs</code> chứa phần này.</p>
 
@@ -607,7 +607,7 @@ pub fn get_turn(reset: bool) -&gt; Turn {
 
     <h1 id="using-the-non-blocking-display">Dùng display non-blocking</h1>
 
-    <p>Tiếp theo chúng ta sẽ hiển thị snake và thức ăn trên các LED của màn hình MB2. Cho đến nay, chúng ta đã dùng interface blocking, cung cấp cho các LED có thể sáng tối đa hoặc tắt. Với điều này, một game snake cơ bản đang hoạt động sẽ là có thể. Nhưng bạn có thể thấy rằng khi snake dài hơn một chút, sẽ khó phân biệt snake với thức ăn, và xác định hướng snake đang đi. Hãy tìm cách cho phép độ sáng LED thay đổi: chúng ta có thể làm cho thân snake hơi tối hơn, điều này sẽ giúp giải quyết sự lộn xộn.</p>
+    <p>Tiếp theo chúng ta sẽ hiển thị snake và thức ăn trên các LED của màn hình MB2. Cho đến nay, chúng ta đã dùng interface blocking, vốn chỉ cho phép LED sáng hết mức hoặc tắt hẳn. Với điều này, một game snake cơ bản đang hoạt động sẽ là có thể. Nhưng bạn có thể thấy rằng khi snake dài hơn một chút, sẽ khó phân biệt snake với thức ăn, và xác định hướng snake đang đi. Hãy tìm cách cho phép độ sáng LED thay đổi: chúng ta có thể làm cho thân snake hơi tối hơn, điều này sẽ giúp giải quyết sự lộn xộn.</p>
 
     <p>Thư viện <code>microbit</code> cung cấp hai interface khác nhau đến ma trận LED. Có interface blocking chúng ta đã thấy trong các chương trước. Cũng có một interface non-blocking cho phép bạn tùy chỉnh độ sáng của từng LED. Ở cấp độ phần cứng, mỗi LED chỉ "bật" hoặc "tắt", nhưng module <code>microbit::display::nonblocking</code> mô phỏng mười mức độ sáng cho mỗi LED bằng cách nhanh chóng chuyển đổi LED bật và tắt.</p>
 
@@ -676,7 +676,7 @@ pub fn clear_display() {
 
     <h2>Xử lý interrupt cho Display</h2>
 
-    <p>Cuối cùng, chúng ta dùng macro <code>interrupt</code> để định nghĩa một handler cho interrupt <code>TIMER1</code>. Interrupt này kích hoạt nhiều lần trong một giây, và đây là điều cho phép <code>Display</code> nhanh chóng chu kỳ các LED khác nhau bật và tắt để tạo ra ảo giác về các mức độ sáng khác nhau. Tất cả code handler của chúng ta làm là gọi method <code>Display::handle_display_event</code>, xử lý điều này (<code>src/display/interrupt.rs</code>).</p>
+    <p>Cuối cùng, chúng ta dùng macro <code>interrupt</code> để định nghĩa một handler cho interrupt <code>TIMER1</code>. Interrupt này kích hoạt nhiều lần trong một giây, và đây là điều cho phép <code>Display</code> luân phiên bật/tắt các LED thật nhanh để tạo ra ảo giác về các mức độ sáng khác nhau. Tất cả code handler của chúng ta làm là gọi method <code>Display::handle_display_event</code>, xử lý điều này (<code>src/display/interrupt.rs</code>).</p>
 
     <pre><code class="language-rust">use super::DISPLAY;
 
@@ -762,7 +762,7 @@ fn main() -&gt; ! {
 
     <ol>
       <li>
-        <p>Lấy một mảng 5×5 bytes biểu diễn lưới. Method <code>Game::get_matrix</code> nhận ba đối số nguyên (nên từ 0 đến 9, bao gồm) để biểu diễn cuối cùng độ sáng của đầu, đuôi và thức ăn.</p>
+        <p>Lấy một mảng 5×5 bytes biểu diễn lưới. Method <code>Game::get_matrix</code> nhận ba đối số nguyên (nên nằm trong khoảng 0–9) mà về sau sẽ biểu thị độ sáng của đầu rắn, đuôi rắn và thức ăn.</p>
       </li>
       <li>
         <p>Hiển thị ma trận, trong một khoảng thời gian được xác định bởi method <code>Game::step_len_ms</code>. Như hiện tại được implement, method này cơ bản cung cấp 1 giây giữa các bước, giảm 200ms mỗi khi người chơi ghi được 5 điểm (ăn 1 thức ăn = 1 điểm), với mức tối thiểu là 200ms.</p>

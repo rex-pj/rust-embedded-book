@@ -157,11 +157,11 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <p>Phương thức kiểm tra input liên tục trong vòng lặp này được gọi là polling. Khi chúng ta kiểm tra trạng thái của một input nào đó, chúng ta nói rằng chúng ta đang <em>poll</em> input đó. Trong trường hợp này, chúng ta đang poll cả Nút A lẫn Nút B.</p>
+    <p>Cách kiểm tra input liên tục trong vòng lặp này được gọi là polling. Khi chúng ta kiểm tra trạng thái của một input nào đó, chúng ta nói rằng chúng ta đang <em>poll</em> input đó. Trong trường hợp này, chúng ta đang poll cả Nút A lẫn Nút B.</p>
 
     <p>Polling đơn giản nhưng cho phép chúng ta làm những thứ thú vị dựa vào thế giới bên ngoài. Với tất cả input của thiết bị, chúng ta có thể "poll" chúng trong vòng lặp, và phản hồi kết quả theo một cách nào đó, từng cái một. Kiểu phương thức này rất đơn giản về mặt khái niệm và là điểm khởi đầu tốt cho nhiều dự án. Chúng ta sẽ sớm thấy tại sao polling không phải là phương thức tốt nhất cho mọi trường hợp, nhưng hãy thử trước đã.</p>
 
-    <p><strong>Lưu ý</strong> "Polling" thường được dùng ở hai mức độ chi tiết. Ở một mức, "polling" dùng để chỉ việc hỏi (một lần) trạng thái của một input là gì. Ở mức cao hơn, "polling", hay "polling trong vòng lặp", dùng để chỉ việc hỏi (liên tục) trạng thái của một input trong một luồng điều khiển đơn giản như chúng ta dùng ở trên. Cách dùng từ để chỉ luồng điều khiển này chỉ được dùng trong các chương trình đơn giản nhất, và ít khi dùng trong production (không thực tế như chúng ta sẽ sớm thấy), nên nhìn chung khi kỹ sư embedded nói về polling, họ có nghĩa là cái trước, tức là hỏi (một lần) trạng thái của một input là gì.</p>
+    <p><strong>Lưu ý</strong> "Polling" thường được dùng ở hai mức độ chi tiết. Ở một mức, "polling" dùng để chỉ việc hỏi (một lần) trạng thái của một input là gì. Ở mức cao hơn, "polling", hay "polling trong vòng lặp", dùng để chỉ việc hỏi (liên tục) trạng thái của một input trong một luồng điều khiển đơn giản như chúng ta dùng ở trên. Cách dùng từ để chỉ luồng điều khiển này chỉ được dùng trong các chương trình đơn giản nhất, và ít khi dùng trong production (không thực tế như chúng ta sẽ sớm thấy), nên nhìn chung khi kỹ sư embedded nói về polling, họ thường muốn nói tới nghĩa thứ nhất, tức là hỏi (một lần) trạng thái của một input là gì.</p>
 
     <h1>Thử thách</h1>
 
@@ -183,7 +183,7 @@ fn main() -&gt; ! {
 
     <h1>Lời giải của tôi</h1>
 
-    <p>Đây là lời giải của tôi (trong <code>src/main.rs</code>). Hy vọng đó khá dễ. Bạn sẽ sớm thấy rằng polling đơn giản như vậy không thực tế lắm.</p>
+    <p>Đây là lời giải của tôi (trong <code>src/main.rs</code>). Hy vọng bài này với bạn khá dễ. Bạn sẽ sớm thấy rằng polling đơn giản như vậy không thực tế lắm.</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -288,17 +288,17 @@ fn main() -&gt; ! {
     <p>Chúng ta cũng có ba trạng thái cho màn hình:</p>
     <ol>
       <li>Không có LED nào sáng</li>
-      <li>Chúng ta đang ở trạng thái blink tích cực (các LED đang sáng)</li>
-      <li>Chúng ta đang ở trạng thái blink không tích cực (các LED tắt và đang chờ để bật khi hết chu kỳ blink)</li>
+      <li>Chúng ta đang ở pha bật của nhịp nhấp nháy (các LED đang sáng)</li>
+      <li>Chúng ta đang ở pha tắt của nhịp nhấp nháy (các LED tắt và đang chờ để bật khi hết chu kỳ blink)</li>
     </ol>
 
     <p>Vì chúng ta cần đảm bảo khả năng phản hồi, chúng ta phải kết hợp các trạng thái khác nhau này. Để biểu diễn đầy đủ tất cả trạng thái của chương trình, chúng ta sẽ có:</p>
     <ol>
       <li>Không có nút nào được nhấn</li>
-      <li>Nút A được nhấn, và chúng ta đang ở trạng thái blink tích cực (mũi tên trái đang hiển thị)</li>
-      <li>Nút A được nhấn, và chúng ta đang ở trạng thái blink không tích cực (không có gì hiển thị)</li>
-      <li>Nút B được nhấn, và chúng ta đang ở trạng thái blink tích cực (mũi tên phải đang hiển thị)</li>
-      <li>Nút B được nhấn, và chúng ta đang ở trạng thái blink không tích cực (không có gì hiển thị)</li>
+      <li>Nút A được nhấn, và chúng ta đang ở pha bật của nhịp nhấp nháy (mũi tên trái đang hiển thị)</li>
+      <li>Nút A được nhấn, và chúng ta đang ở pha tắt của nhịp nhấp nháy (không có gì hiển thị)</li>
+      <li>Nút B được nhấn, và chúng ta đang ở pha bật của nhịp nhấp nháy (mũi tên phải đang hiển thị)</li>
+      <li>Nút B được nhấn, và chúng ta đang ở pha tắt của nhịp nhấp nháy (không có gì hiển thị)</li>
     </ol>
 
     <p>Khi một trong hai nút được nhấn lần đầu, và chúng ta chuyển từ trạng thái (1) sang trạng thái (2) hoặc (4), chúng ta sẽ khởi tạo một bộ đếm timer bắt đầu đếm từ thời điểm nhấn nút. Khi timer đạt một ngưỡng nào đó (như nửa giây) và các nút vẫn đang được nhấn, chúng ta sẽ chuyển sang trạng thái (3) hoặc (5) tương ứng, và khởi tạo lại bộ đếm. Khi timer lại đạt ngưỡng, chúng ta sẽ chuyển lại về trạng thái (2) hoặc (4). Nếu bất cứ lúc nào trong trạng thái (2), (3), (4) hoặc (5) chúng ta thấy nút không còn được nhấn nữa, chúng ta chuyển về trạng thái (1).</p>

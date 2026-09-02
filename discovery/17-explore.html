@@ -61,7 +61,7 @@
 
     <h1>Còn gì để bạn khám phá</h1>
 
-    <p>Chúng ta mới chỉ cào bề mặt! Còn rất nhiều thứ để bạn khám phá.</p>
+    <p>Chúng ta mới chỉ chạm tới phần bề nổi thôi! Còn rất nhiều thứ để bạn khám phá.</p>
 
     <blockquote>
       <p><strong>LƯU Ý:</strong> Nếu bạn đang đọc phần này và muốn giúp thêm ví dụ hoặc bài tập vào cuốn sách Discovery cho bất kỳ mục nào bên dưới, hoặc bất kỳ chủ đề embedded nào khác có liên quan, chúng tôi rất muốn nhận sự giúp đỡ của bạn!</p>
@@ -94,7 +94,7 @@
 
     <p>Ngoài kia có rất nhiều cảm biến kỹ thuật số. Bạn có thể dùng giao thức như I2C và SPI để đọc chúng. Nhưng cảm biến analog cũng tồn tại! Các cảm biến này chỉ output giá trị điện áp mà chúng đang cảm nhận tại pin ADC input của CPU.</p>
 
-    <p>Peripheral ADC có thể được dùng để đo mức điện áp "analog" đó — ví dụ <code>1.25</code> Volt — thành một số "digital" — ví dụ <code>24824</code> — mà processor có thể dùng trong tính toán.</p>
+    <p>Peripheral ADC có thể được dùng để đo một mức điện áp "analog" — ví dụ <code>1.25</code> Volt — rồi biểu diễn nó thành một số "digital" — ví dụ <code>24824</code> — mà processor có thể dùng trong tính toán.</p>
 
     <p>Đã từng có generic ADC trait trong <code>embedded-hal</code>, nhưng chúng đã bị xóa cho <code>embedded-hal</code> 1.0: xem <a href="https://github.com/rust-embedded/embedded-hal/issues/377">issue #377</a>. Crate <code>nrf52833-hal</code> cung cấp interface tiện dụng đến ADC cụ thể được tích hợp trong nRF52833.</p>
 
@@ -102,13 +102,13 @@
 
     <p>Như bạn có thể đoán, DAC chính xác là ngược lại của ADC. Bạn có thể ghi một số digital vào một register để tạo ra điện áp cụ thể trên pin analog output. Khi pin analog output này được kết nối với electronics phù hợp và register được ghi nhanh với các giá trị đúng, bạn có thể tạo ra âm thanh hoặc nhạc.</p>
 
-    <p>Không phải nRF52833 cũng không phải board MB2 có DAC chuyên dụng. Thông thường người ta đạt được hiệu ứng DAC bằng cách output PWM và dùng một chút electronics trên output (bộ lọc RC) để "làm mịn" dạng sóng PWM.</p>
+    <p>Cả nRF52833 lẫn board MB2 đều không có DAC chuyên dụng. Thông thường người ta đạt được hiệu ứng DAC bằng cách output PWM và dùng thêm một chút mạch điện tử ở ngõ ra (bộ lọc RC) để "làm mịn" dạng sóng PWM.</p>
 
     <h2>Real Time Clock</h2>
 
     <p>Peripheral Real-Time Clock theo dõi thời gian dưới nguồn điện riêng của nó, thường theo "định dạng con người": giây, phút, giờ, ngày, tháng và năm. Một số Real-Time Clock thậm chí xử lý năm nhuận và Daylight Saving Time tự động.</p>
 
-    <p>Không phải nRF52833 cũng không phải board MB2 có Real-Time Clock. nRF52833 có "Real-Time Counter" (RTC) — một đồng hồ tần số thấp được hỗ trợ bởi <code>nrf52833-hal</code>. Counter này có thể được dành riêng để phục vụ như một real-time clock tổng hợp. Yêu cầu chính, tất nhiên, là giữ peripheral RTC được cấp nguồn ngay cả khi MB2 không sử dụng. Trong khi MB2 không có pin on-board, RTC có thể chạy lâu (có thể nhiều năm) với pin cắm vào cổng pin trên MB2 (ví dụ, bộ pin đi kèm với kit micro::bit Go).</p>
+    <p>Cả nRF52833 lẫn board MB2 đều không có Real-Time Clock. nRF52833 có "Real-Time Counter" (RTC) — một đồng hồ tần số thấp được hỗ trợ bởi <code>nrf52833-hal</code>. Counter này có thể được dành riêng để phục vụ như một real-time clock tổng hợp. Yêu cầu chính, tất nhiên, là giữ peripheral RTC được cấp nguồn ngay cả khi MB2 không sử dụng. Tuy MB2 không có pin gắn sẵn trên board, RTC vẫn có thể chạy rất lâu (có thể nhiều năm) với pin cắm vào cổng pin trên MB2 (ví dụ, bộ pin đi kèm với kit micro::bit Go).</p>
 
     <h2>Các giao thức truyền thông khác</h2>
 

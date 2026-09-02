@@ -122,7 +122,7 @@ fn main() -> ! {
     Baudrate::BAUD115200,
 );</code></pre>
 
-    <p>Cụ thể, chúng ta lấy ownership của peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào chúng khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình: baudrate và parity. Parity là cách để kiểm tra dữ liệu có bị hỏng trong quá trình truyền không — chúng ta không dùng nó ở đây nên loại trừ nó. Cuối cùng, wrap UARTE trong kiểu <code>UartePort</code>.</p>
+    <p>Cụ thể, chúng ta lấy ownership của peripheral UARTE trong Rust (<code>board.UARTE0</code>) và các pin TX/RX trên board (<code>board.uart.into()</code>) để không ai khác có thể can thiệp vào chúng khi đang dùng. Sau đó chúng ta truyền hai tùy chọn cấu hình: baudrate và parity. Parity là cách để kiểm tra dữ liệu có bị hỏng trong quá trình truyền không — ở đây chúng ta không dùng nên không bật parity. Cuối cùng, chúng ta bọc UARTE trong kiểu <code>UartePort</code>.</p>
 
     <p>Sau khởi tạo, chúng ta gửi <code>X</code> (giá trị byte ASCII là 88) qua instance uart mới tạo.</p>
 
@@ -167,11 +167,11 @@ fn main() -> ! {
 
     <p>Đến lượt bạn viết chương trình.</p>
 
-    <h1>Naive approach và <code>write!</code></h1>
+    <h1>Cách làm ngây thơ và <code>write!</code></h1>
 
     <p>Cách gửi chuỗi ở phần trước (duyệt từng byte) hoạt động được, nhưng thiếu đi sự tiện lợi của <code>print!</code> như formatting tham số. Có hai cách tiếp cận:</p>
 
-    <h2>Naive approach</h2>
+    <h2>Cách làm ngây thơ</h2>
 
     <p>Bạn có lẽ đã nghĩ ra một chương trình tương tự như sau (<code>examples/naive-send-string.rs</code>):</p>
 
@@ -306,7 +306,7 @@ fn main() -&gt; ! {
 
     <h1>Đảo ngược chuỗi</h1>
 
-    <p>Được rồi, tiếp theo hãy làm server thú vị hơn bằng cách cho nó phản hồi với client với chuỗi ngược của text mà chúng đã gửi. Server sẽ phản hồi với client mỗi khi họ nhấn phím ENTER. Mỗi phản hồi của server sẽ trên một dòng mới.</p>
+    <p>Được rồi, tiếp theo hãy làm server thú vị hơn bằng cách cho nó phản hồi lại client bằng chuỗi đảo ngược của đoạn text họ đã gửi. Server sẽ phản hồi mỗi khi client nhấn phím ENTER. Mỗi phản hồi của server sẽ trên một dòng mới.</p>
 
     <p>Lần này bạn cần một buffer; bạn có thể dùng <a href="https://docs.rs/heapless/latest/heapless/struct.Vec.html"><code>heapless::Vec</code></a>. Đây là code khởi đầu:</p>
 

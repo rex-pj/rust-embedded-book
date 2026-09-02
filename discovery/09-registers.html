@@ -110,7 +110,7 @@ fn main() -&gt; ! {
 
     <p>(Trên nRF52833 có hơn 32 GPIO, nhưng CPU là 32-bit. Vì vậy, các GPIO pin được tổ chức thành hai nhóm "P0" và "P1", mỗi nhóm có một bộ register để đọc, ghi và cấu hình. Địa chỉ trên là địa chỉ của output register cho các pin P0.)</p>
 
-    <h2>An aside: LEDs, digital outputs and voltage levels</h2>
+    <h2>Nói thêm: LED, digital output và các mức điện áp</h2>
 
     <p>Drive? Pin? Low? High?</p>
 
@@ -455,7 +455,7 @@ fn main() -&gt; ! {
       <div class="callout-icon">🚫</div>
       <div class="callout-body">
         <div class="callout-title">Địa chỉ không hợp lệ — không có register nào tại đây</div>
-        <p>Địa chỉ <code>0x5000_A784</code> gần với địa chỉ <code>OUT</code> mà chúng ta dùng trước đó, nhưng địa chỉ này là <em>không hợp lệ</em> — không có register nào tại địa chỉ này. Truy cập vào nó sẽ gây ra <strong>HardFault exception</strong> và làm chương trình bị ngắt.</p>
+        <p>Địa chỉ <code>0x5000_A784</code> gần với địa chỉ <code>OUT</code> mà chúng ta dùng trước đó, nhưng địa chỉ này là <em>không hợp lệ</em> — không có register nào tại địa chỉ này. Truy cập vào nó sẽ gây ra <strong>HardFault exception</strong> và làm gián đoạn chương trình.</p>
       </div>
     </div>
 
@@ -530,7 +530,7 @@ End of assembler dump.</code></pre>
 
     <p>Chúng ta có thể kiểm tra giá trị của register <code>r0</code> ngay tại thời điểm exception được ném ra không? Thực ra, chúng ta đã làm điều đó rồi! Field <code>r0</code> trong giá trị <code>ef</code> mà chúng ta in ra trước đó chính là giá trị mà register <code>r0</code> có khi exception được ném ra. <code>r0</code> chứa giá trị <code>0x5000_A784</code> — chính là địa chỉ không hợp lệ mà chúng ta đã gọi hàm <code>read_volatile</code> với nó.</p>
 
-    <h1>Spooky action at a distance</h1>
+    <h1>Tác động ma quái từ xa (Spooky action at a distance)</h1>
 
     <p><code>OUT</code> không phải là register duy nhất có thể điều khiển các pin của port <code>P0</code>. Register <code>OUTSET</code> cũng cho phép bạn thay đổi giá trị của các pin, cũng như <code>OUTCLR</code>. Tuy nhiên, <code>OUTSET</code> và <code>OUTCLR</code> không cho phép bạn lấy trạng thái output hiện tại của port <code>P0</code>.</p>
 
@@ -540,7 +540,7 @@ End of assembler dump.</code></pre>
       <p>Subsection 6.8.2.2. OUTSET - Page 145</p>
     </blockquote>
 
-    <p>Hãy nhìn vào chương trình dưới đây. Key của chương trình này là hàm <code>fn print_out</code>. Hàm này in giá trị hiện tại trong <code>OUT</code> ra console <code>RTT</code> (<code>examples/spooky.rs</code>):</p>
+    <p>Hãy nhìn vào chương trình dưới đây. Mấu chốt của chương trình này là hàm <code>fn print_out</code>. Hàm này in giá trị hiện tại trong <code>OUT</code> ra console <code>RTT</code> (<code>examples/spooky.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
@@ -627,13 +627,13 @@ fn main() -&gt; ! {
 
     <p>Làm việc trực tiếp với địa chỉ hex cũng rất dễ xảy ra lỗi. Bạn đã thấy rằng cố gắng truy cập địa chỉ bộ nhớ không hợp lệ gây ra exception làm gián đoạn việc thực thi chương trình của chúng ta.</p>
 
-    <p>Sẽ tuyệt vời nếu chúng ta có API để thao tác register theo cách "an toàn" không? Lý tưởng nhất, API nên mã hóa ba điểm tôi đã đề cập: không cần làm việc với địa chỉ thực, nên tôn trọng quyền đọc/ghi và nên ngăn việc sửa đổi các phần reserved của register.</p>
+    <p>Giá mà có một API cho phép thao tác register một cách "an toàn" thì tốt biết mấy, phải không? Lý tưởng nhất, API nên gói gọn được ba điểm tôi vừa nêu: không cần làm việc với địa chỉ thực, nên tôn trọng quyền đọc/ghi và nên ngăn việc sửa đổi các phần reserved của register.</p>
 
     <p>Thực ra, chúng ta có! <code>registers::init()</code> thực ra trả về một giá trị cung cấp API type-safe để thao tác các register của port <code>P0</code> và <code>P1</code>.</p>
 
-    <p>Như bạn có thể nhớ: một nhóm register liên kết với một peripheral được gọi là register block, và nó nằm trong một vùng bộ nhớ liên tiếp. Trong API type-safe này, mỗi register block được mô hình hóa như một <code>struct</code> trong đó mỗi field đại diện cho một register. Mỗi register field là một newtype khác nhau trên ví dụ <code>u32</code>, expose một kết hợp các method sau: <code>read</code>, <code>write</code> hoặc <code>modify</code> tùy theo quyền đọc/ghi của nó. Cuối cùng, các method này không nhận các giá trị primitive như <code>u32</code>, thay vào đó chúng nhận một newtype khác có thể được xây dựng bằng builder pattern và ngăn việc sửa đổi các phần reserved của register.</p>
+    <p>Như bạn có thể nhớ: một nhóm register liên kết với một peripheral được gọi là register block, và nó nằm trong một vùng bộ nhớ liên tiếp. Trong API type-safe này, mỗi register block được mô hình hóa như một <code>struct</code> trong đó mỗi field đại diện cho một register. Mỗi register field là một newtype riêng bọc quanh, chẳng hạn, <code>u32</code>, và cung cấp một tổ hợp các method sau: <code>read</code>, <code>write</code> hoặc <code>modify</code> tùy theo quyền đọc/ghi của nó. Cuối cùng, các method này không nhận các giá trị primitive như <code>u32</code>, thay vào đó chúng nhận một newtype khác có thể được xây dựng bằng builder pattern và ngăn việc sửa đổi các phần reserved của register.</p>
 
-    <p>Cách tốt nhất để làm quen với API này là port ví dụ đang chạy của chúng ta sang nó (<code>examples/type-safe.rs</code>).</p>
+    <p>Cách tốt nhất để làm quen với API này là chuyển ví dụ dùng xuyên suốt từ đầu chương sang API này (<code>examples/type-safe.rs</code>).</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![no_main]
