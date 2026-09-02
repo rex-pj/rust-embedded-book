@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -125,21 +125,21 @@
 
     <h2>Device Registers</h2>
 
-    <p>Nhiều thiết bị I2C tổ chức dữ liệu dưới dạng <em>device registers</em> — mỗi thanh ghi có một địa chỉ 8-bit và một nội dung. Để ghi vào một thanh ghi, controller gửi hai byte: byte đầu tiên là địa chỉ thanh ghi, byte thứ hai là giá trị mới.</p>
+    <p>Nhiều thiết bị I2C tổ chức dữ liệu dưới dạng <em>device registers</em> — mỗi register có một địa chỉ 8-bit và một nội dung. Để ghi vào một register, controller gửi hai byte: byte đầu tiên là địa chỉ register, byte thứ hai là giá trị mới.</p>
 
-    <p>Để đọc một thanh ghi, thường dùng một giao dịch kết hợp: ghi địa chỉ thanh ghi, ngay sau đó đọc lại nội dung. Một số thiết bị hỗ trợ <em>address auto-increment</em> — cho phép đọc/ghi nhiều thanh ghi liên tiếp mà không cần chỉ định lại địa chỉ mỗi lần.</p>
+    <p>Để đọc một register, thường dùng một giao dịch kết hợp: ghi địa chỉ register, ngay sau đó đọc lại nội dung. Một số thiết bị hỗ trợ <em>address auto-increment</em> — cho phép đọc/ghi nhiều register liên tiếp mà không cần chỉ định lại địa chỉ mỗi lần.</p>
 
     <h2>LSM303AGR</h2>
 
-    <p>Chip LSM303AGR trên micro:bit kết hợp hai cảm biến: accelerometer và magnetometer. Cả hai đều có thể truy cập qua bus I2C, mỗi cái có địa chỉ riêng. Các thanh ghi (registers) lưu dữ liệu đo được và có thể đọc/ghi qua I2C — tương tự như các peripheral trong MCU, nhưng phải truy cập qua bus thay vì ánh xạ bộ nhớ trực tiếp.</p>
+    <p>Chip LSM303AGR trên micro:bit kết hợp hai cảm biến: accelerometer và magnetometer. Cả hai đều có thể truy cập qua bus I2C, mỗi cái có địa chỉ riêng. Các register lưu dữ liệu đo được và có thể đọc/ghi qua I2C — tương tự như các peripheral trong MCU, nhưng phải truy cập qua bus thay vì ánh xạ bộ nhớ trực tiếp.</p>
 
-    <p>Để biết cách đọc thanh ghi, xem <strong>LSM303AGR Data Sheet</strong> (ST Microelectronics):</p>
+    <p>Để biết cách đọc register, xem <strong>LSM303AGR Data Sheet</strong> (ST Microelectronics):</p>
     <ul>
-      <li>Mục 6.1.1 (trang 38): "I2C Operation" — mô tả quy trình đọc thanh ghi</li>
-      <li>Mục 8 (trang 46): "Register description" — danh sách chi tiết các thanh ghi</li>
+      <li>Mục 6.1.1 (trang 38): "I2C Operation" — mô tả quy trình đọc register</li>
+      <li>Mục 8 (trang 46): "Register description" — danh sách chi tiết các register</li>
     </ul>
 
-    <h2>Đọc một thanh ghi đơn</h2>
+    <h2>Đọc một register đơn</h2>
 
     <div class="callout note">
       <div class="callout-icon">💡</div>
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <p>Chương trình dưới đây đọc thanh ghi WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động:</p>
+    <p>Chương trình dưới đây đọc register WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động (<code>examples/chip-id.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
@@ -180,8 +180,10 @@ fn main() -&gt; ! {
     let mut acc = [0u8];
     let mut mag = [0u8];
 
-    i2c.write_read(ACCELEROMETER_ADDR, &amp;[ACCELEROMETER_ID_REG], &amp;mut acc).unwrap();
-    i2c.write_read(MAGNETOMETER_ADDR, &amp;[MAGNETOMETER_ID_REG], &amp;mut mag).unwrap();
+    i2c.write_read(ACCELEROMETER_ADDR, &amp;[ACCELEROMETER_ID_REG], &amp;mut acc)
+        .unwrap();
+    i2c.write_read(MAGNETOMETER_ADDR, &amp;[MAGNETOMETER_ID_REG], &amp;mut mag)
+        .unwrap();
 
     rprintln!("The accelerometer chip's id is: {:#b}", acc[0]);
     rprintln!("The magnetometer chip's id is: {:#b}", mag[0]);

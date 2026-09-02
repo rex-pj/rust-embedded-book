@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -79,7 +79,7 @@
       <div class="callout-icon">💡</div>
       <div class="callout-body">
         <div class="callout-title">Magnetometer có thể bị hỏng một phần</div>
-        <p>Trong số hai chiếc MB2 tác giả có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Đây thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó ("hard iron error"). Crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình tự test hay hiệu chỉnh của nhà sản xuất. <strong>Nếu MB2 của bạn có vẻ không hoạt động, hãy bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>.</strong></p>
+        <p>Trong số hai chiếc MB2 tác giả có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Đây thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó ("hard iron error"). Crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình tự test hay hiệu chuẩn của nhà sản xuất. <strong>Nếu MB2 của bạn có vẻ không hoạt động, hãy bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>.</strong></p>
       </div>
     </div>
 
@@ -89,14 +89,14 @@
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
         <div class="callout-title">Magnetometer LSM303AGR chưa chính xác ngay khi xuất xưởng</div>
-        <p>Nhà sản xuất đề xuất một quy trình hiệu chỉnh phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản implement hiệu chỉnh mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
+        <p>Nhà sản xuất đề xuất một quy trình hiệu chuẩn phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản implement hiệu chuẩn mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
       </div>
     </div>
 
     <!-- ============================================================ -->
     <h2>Magnitude (Cường độ từ trường)</h2>
 
-    <p>Từ trường Trái Đất mạnh đến mức nào? Theo tài liệu về phương thức <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field"><code>magnetic_field()</code></a>, các giá trị <code>x</code>, <code>y</code>, <code>z</code> chúng ta nhận được tính bằng nanotesla. Điều đó có nghĩa là thứ duy nhất chúng ta phải tính để lấy cường độ của từ trường tính bằng nanotesla là độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả. Như bạn có thể nhớ từ trường học, đây đơn giản là:</p>
+    <p>Từ trường Trái Đất mạnh đến mức nào? Theo tài liệu về method <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field"><code>magnetic_field()</code></a>, các giá trị <code>x</code>, <code>y</code>, <code>z</code> chúng ta nhận được tính bằng nanotesla. Điều đó có nghĩa là thứ duy nhất chúng ta phải tính để lấy cường độ của từ trường tính bằng nanotesla là độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả. Như bạn có thể nhớ từ trường học, đây đơn giản là:</p>
 
     <pre><code class="language-rust">use libm::sqrtf;
 let magnitude = sqrtf(x * x + y * y + z * z);</code></pre>
@@ -134,7 +134,11 @@ fn main() -&gt; ! {
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
     sensor
-        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz10)
+        .set_mag_mode_and_odr(
+            &amp;mut timer0,
+            MagMode::HighResolution,
+            MagOutputDataRate::Hz10,
+        )
         .unwrap();
     let mut sensor = sensor.into_mag_continuous().ok().unwrap();
 
@@ -151,7 +155,7 @@ fn main() -&gt; ! {
 
     <p>Chạy với <code>cargo run --example magnitude</code>.</p>
 
-    <p>Chương trình này sẽ báo cáo cường độ (độ mạnh) của từ trường bằng nanotesla (<code>nT</code>) và milligauss (<code>mG</code>, trong đó 1 <code>mG</code> = 100 <code>nT</code>). Cường độ từ trường của Trái Đất nằm trong khoảng <code>250 mG</code> đến <code>650 mG</code> (cường độ thay đổi tùy theo vị trí địa lý) nên lý tưởng là bạn sẽ thấy giá trị gần đó. Giá trị của bạn có thể sai khá nhiều vì cảm biến chưa được hiệu chỉnh: xem <a href="appendix-mag-calibration.html">phụ lục 3</a> để hiệu chỉnh. Với hiệu chỉnh, tôi thấy cường độ khoảng <code>340 mG</code>.</p>
+    <p>Chương trình này sẽ báo cáo cường độ (độ mạnh) của từ trường bằng nanotesla (<code>nT</code>) và milligauss (<code>mG</code>, trong đó 1 <code>mG</code> = 100 <code>nT</code>). Cường độ từ trường của Trái Đất nằm trong khoảng <code>250 mG</code> đến <code>650 mG</code> (cường độ thay đổi tùy theo vị trí địa lý) nên lý tưởng là bạn sẽ thấy giá trị gần đó. Giá trị của bạn có thể sai khá nhiều vì cảm biến chưa được hiệu chuẩn: xem <a href="appendix-mag-calibration.html">phụ lục 3</a> để hiệu chuẩn. Với hiệu chuẩn, tôi thấy cường độ khoảng <code>340 mG</code>.</p>
 
     <p>Một số câu hỏi:</p>
     <ul>
@@ -174,7 +178,7 @@ fn main() -&gt; ! {
 
     <p>Mặc dù không được hiển thị rõ ràng, trong đồ thị này trục X chỉ về bên phải và trục Y chỉ lên trên. Lưu ý rằng hệ tọa độ của chúng ta bị xoay 180° so với đây.</p>
 
-    <p>Đây là starter code (trong <code>templates/compass.rs</code>). <code>theta</code>, tính bằng radian, đã được tính sẵn. Bạn cần chọn LED nào để bật dựa trên giá trị của <code>theta</code>.</p>
+    <p>Đây là code khởi đầu (trong <code>templates/compass.rs</code>). <code>theta</code>, tính bằng radian, đã được tính sẵn. Bạn cần chọn LED nào để bật dựa trên giá trị của <code>theta</code>.</p>
 
     <pre><code class="language-rust">#![deny(unsafe_code)]
 #![no_main]
@@ -293,27 +297,32 @@ fn main() -&gt; ! {
     let mut sensor = Lsm303agr::new_with_i2c(i2c);
     sensor.init().unwrap();
     sensor
-        .set_mag_mode_and_odr(&amp;mut timer0, MagMode::HighResolution, MagOutputDataRate::Hz10)
+        .set_mag_mode_and_odr(
+            &amp;mut timer0,
+            MagMode::HighResolution,
+            MagOutputDataRate::Hz10,
+        )
         .unwrap();
     let mut sensor = sensor.into_mag_continuous().ok().unwrap();
 
     let mut leds = [[0u8; 5]; 5];
 
     // 16 vị trí LED trên vòng ngoài, bắt đầu từ hướng Tây, đi theo chiều kim đồng hồ
+    #[rustfmt::skip]
     let indices = [
-        (2, 0), /* W  */
+        (2, 0), /* W */
         (3, 0), /* W-SW */
         (3, 1), /* SW */
         (4, 1), /* S-SW */
-        (4, 2), /* S  */
+        (4, 2), /* S */
         (4, 3), /* S-SE */
         (3, 3), /* SE */
         (3, 4), /* E-SE */
-        (2, 4), /* E  */
+        (2, 4), /* E */
         (1, 4), /* E-NE */
         (1, 3), /* NE */
         (0, 3), /* N-NE */
-        (0, 2), /* N  */
+        (0, 2), /* N */
         (0, 1), /* N-NW */
         (1, 1), /* NW */
         (1, 0), /* W-NW */

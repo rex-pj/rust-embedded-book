@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -159,7 +159,7 @@ fn main() -&gt; ! {
 
     <p>Cách kiểm tra input liên tục trong vòng lặp này được gọi là polling. Khi chúng ta kiểm tra trạng thái của một input nào đó, chúng ta nói rằng chúng ta đang <em>poll</em> input đó. Trong trường hợp này, chúng ta đang poll cả Nút A lẫn Nút B.</p>
 
-    <p>Polling đơn giản nhưng cho phép chúng ta làm những thứ thú vị dựa vào thế giới bên ngoài. Với tất cả input của thiết bị, chúng ta có thể "poll" chúng trong vòng lặp, và phản hồi kết quả theo một cách nào đó, từng cái một. Kiểu phương thức này rất đơn giản về mặt khái niệm và là điểm khởi đầu tốt cho nhiều dự án. Chúng ta sẽ sớm thấy tại sao polling không phải là phương thức tốt nhất cho mọi trường hợp, nhưng hãy thử trước đã.</p>
+    <p>Polling đơn giản nhưng cho phép chúng ta làm những thứ thú vị dựa vào thế giới bên ngoài. Với tất cả input của thiết bị, chúng ta có thể "poll" chúng trong vòng lặp, và phản hồi kết quả theo một cách nào đó, từng cái một. Cách tiếp cận này rất đơn giản về mặt khái niệm và là điểm khởi đầu tốt cho nhiều dự án. Chúng ta sẽ sớm thấy tại sao polling không phải là cách tốt nhất cho mọi trường hợp, nhưng hãy thử trước đã.</p>
 
     <p><strong>Lưu ý</strong> "Polling" thường được dùng ở hai mức độ chi tiết. Ở một mức, "polling" dùng để chỉ việc hỏi (một lần) trạng thái của một input là gì. Ở mức cao hơn, "polling", hay "polling trong vòng lặp", dùng để chỉ việc hỏi (liên tục) trạng thái của một input trong một luồng điều khiển đơn giản như chúng ta dùng ở trên. Cách dùng từ để chỉ luồng điều khiển này chỉ được dùng trong các chương trình đơn giản nhất, và ít khi dùng trong production (không thực tế như chúng ta sẽ sớm thấy), nên nhìn chung khi kỹ sư embedded nói về polling, họ thường muốn nói tới nghĩa thứ nhất, tức là hỏi (một lần) trạng thái của một input là gì.</p>
 
@@ -276,7 +276,7 @@ fn main() -&gt; ! {
 
     <h2>Superloops</h2>
 
-    <p>Thuật ngữ <em>superloop</em> trong hệ thống nhúng dùng để chỉ một vòng lặp điều khiển chính thực hiện nhiều việc theo thứ tự. Đó là phần mở rộng tự nhiên của luồng điều khiển đơn giản mà chúng ta đã dùng cho đến nay. Để xử lý logic có thể được cảm nhận như nhiều thứ xảy ra cùng lúc, chúng ta cần cấu trúc chương trình thông minh hơn để có thể phản hồi hợp lý với các sự kiện.</p>
+    <p>Thuật ngữ <em>superloop</em> trong hệ thống embedded dùng để chỉ một vòng lặp điều khiển chính thực hiện nhiều việc theo thứ tự. Đó là phần mở rộng tự nhiên của luồng điều khiển đơn giản mà chúng ta đã dùng cho đến nay. Để xử lý logic có thể được cảm nhận như nhiều thứ xảy ra cùng lúc, chúng ta cần cấu trúc chương trình thông minh hơn để có thể phản hồi hợp lý với các sự kiện.</p>
 
     <p>Trong trường hợp chương trình xi-nhan của chúng ta, nơi chúng ta muốn nhấp nháy LED khi nhấn nút, và nhanh chóng dừng nhấp nháy khi nhả nút, chúng ta có thể tạo một "state machine" để biểu diễn các trạng thái khác nhau của chương trình. Chúng ta có ba trạng thái cho nút:</p>
     <ol>
@@ -403,11 +403,11 @@ fn main() -&gt; ! {
 
     <p>Điều này vẫn hơi phức tạp. Delay vòng lặp 10ms là quá đủ để bắt các thay đổi nút.</p>
 
-    <p>Superloop hoạt động và thường được dùng trong hệ thống nhúng, nhưng lập trình viên phải cẩn thận để duy trì mức độ phản hồi cao với các sự kiện. Lưu ý cách chương trình superloop của chúng ta khác với ví dụ polling đơn giản trước đó. Bất kỳ bước chuyển trạng thái nào trong superloop như được viết ở trên nên mất một lượng thời gian khá nhỏ (ví dụ chúng ta không còn các delay có thể chặn processor trong thời gian dài và khiến chúng ta bỏ lỡ các sự kiện). Không phải lúc nào cũng dễ dàng chuyển đổi một chương trình polling đơn giản thành superloop nơi tất cả các chuyển trạng thái đều nhanh và tương đối không chặn, và trong những trường hợp này, chúng ta sẽ phải dựa vào các kỹ thuật thay thế để xử lý các sự kiện khác nhau được thực thi đồng thời.</p>
+    <p>Superloop hoạt động và thường được dùng trong hệ thống embedded, nhưng lập trình viên phải cẩn thận để duy trì mức độ phản hồi cao với các sự kiện. Lưu ý cách chương trình superloop của chúng ta khác với ví dụ polling đơn giản trước đó. Bất kỳ bước chuyển trạng thái nào trong superloop như được viết ở trên nên mất một lượng thời gian khá nhỏ (ví dụ chúng ta không còn các delay có thể chặn processor trong thời gian dài và khiến chúng ta bỏ lỡ các sự kiện). Không phải lúc nào cũng dễ dàng chuyển đổi một chương trình polling đơn giản thành superloop nơi tất cả các chuyển trạng thái đều nhanh và tương đối không chặn, và trong những trường hợp này, chúng ta sẽ phải dựa vào các kỹ thuật thay thế để xử lý các sự kiện khác nhau được thực thi đồng thời.</p>
 
     <h2>Concurrency</h2>
 
-    <p>Làm nhiều thứ cùng một lúc được gọi là lập trình <em>concurrent</em>. Concurrency xuất hiện ở nhiều nơi trong lập trình, nhưng đặc biệt quan trọng trong hệ thống nhúng. Có rất nhiều kỹ thuật để implement các hệ thống tương tác với peripheral trong khi duy trì mức độ phản hồi cao (ví dụ interrupt handling, cooperative multitasking, event queue, v.v.). Chúng ta sẽ khám phá một số kỹ thuật đó trong các chương sau.</p>
+    <p>Làm nhiều thứ cùng một lúc được gọi là lập trình <em>concurrent</em>. Concurrency xuất hiện ở nhiều nơi trong lập trình, nhưng đặc biệt quan trọng trong hệ thống embedded. Có rất nhiều kỹ thuật để implement các hệ thống tương tác với peripheral trong khi duy trì mức độ phản hồi cao (ví dụ interrupt handling, cooperative multitasking, event queue, v.v.). Chúng ta sẽ khám phá một số kỹ thuật đó trong các chương sau.</p>
 
     <p>Có một phần giới thiệu tốt về concurrency trong context embedded <a href="https://docs.rust-embedded.org/book/concurrency/index.html">ở đây</a> mà bạn có thể đọc qua trước khi tiếp tục.</p>
 

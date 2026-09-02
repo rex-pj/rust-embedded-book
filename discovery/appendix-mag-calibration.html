@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hiệu chỉnh từ kế - Discovery MB2 Tiếng Việt</title>
+<title>Hiệu chuẩn từ kế - Discovery MB2 Tiếng Việt</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html" class="active"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html" class="active"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -55,34 +55,34 @@
   <div id="topbar">
     <a href="index.html">🏠 Trang chủ</a>
     <span class="sep">›</span>
-    <span class="current">Hiệu chỉnh từ kế</span>
+    <span class="current">Hiệu chuẩn từ kế</span>
   </div>
   <main id="main">
 
-    <h1>Hiệu chỉnh từ kế (Magnetometer Calibration)</h1>
+    <h1>Hiệu chuẩn từ kế (Magnetometer Calibration)</h1>
 
-    <h2>Tại sao cần hiệu chỉnh?</h2>
+    <h2>Tại sao cần hiệu chuẩn?</h2>
 
-    <p>Trước khi sử dụng bất kỳ cảm biến nào và phát triển ứng dụng dựa trên nó, bước quan trọng đầu tiên là xác minh output của nó có thực sự chính xác không. Từ kế LSM303AGR trên MB2 có thể cho kết quả thiếu chính xác đáng kể trên một số thiết bị nếu chưa được hiệu chỉnh.</p>
+    <p>Trước khi sử dụng bất kỳ cảm biến nào và phát triển ứng dụng dựa trên nó, bước quan trọng đầu tiên là xác minh output của nó có thực sự chính xác không. Từ kế LSM303AGR trên MB2 có thể cho kết quả thiếu chính xác đáng kể trên một số thiết bị nếu chưa được hiệu chuẩn.</p>
 
-    <h2>Phương pháp hiệu chỉnh</h2>
+    <h2>Phương pháp hiệu chuẩn</h2>
 
-    <p>Quy trình hiệu chỉnh được nhà sản xuất STMicroelectronics chỉ định và liên quan đến các phép tính ma trận khá phức tạp. Thay vì giải thích toán học đầy đủ, tài liệu này giới thiệu implementation sẵn có.</p>
+    <p>Quy trình hiệu chuẩn được nhà sản xuất STMicroelectronics chỉ định và liên quan đến các phép tính ma trận khá phức tạp. Thay vì giải thích toán học đầy đủ, tài liệu này giới thiệu implementation sẵn có.</p>
 
-    <p>Nhóm CODAL đã implement cơ chế hiệu chỉnh theo đặc tả của nhà sản xuất bằng C++ và bản dịch Rust của nó đã được cung cấp trong repository của dự án (xem <code>src/lib.rs</code> và <code>src/main.rs</code>).</p>
+    <p>Nhóm CODAL đã implement cơ chế hiệu chuẩn theo đặc tả của nhà sản xuất bằng C++ và bản dịch Rust của nó đã được cung cấp trong repository của dự án (xem <code>src/lib.rs</code> và <code>src/main.rs</code>).</p>
 
-    <h2>Cách thực hiện hiệu chỉnh</h2>
+    <h2>Cách thực hiện hiệu chuẩn</h2>
 
-    <p>Quy trình hiệu chỉnh thực tế như sau:</p>
+    <p>Quy trình hiệu chuẩn thực tế như sau:</p>
     <ol>
-      <li>Chạy chương trình hiệu chỉnh trên MB2</li>
+      <li>Chạy chương trình hiệu chuẩn trên MB2</li>
       <li>Nghiêng MB2 theo mọi hướng cho đến khi tất cả các đèn LED trên ma trận bật sáng — theo dõi con trỏ nhấp nháy chỉ vị trí LED mục tiêu tiếp theo</li>
-      <li>Sau khi hoàn tất, ma trận hiệu chỉnh được tạo ra có thể được hard-code vào chương trình của bạn để tránh phải hiệu chỉnh lại mỗi lần chạy</li>
+      <li>Sau khi hoàn tất, ma trận hiệu chuẩn được tạo ra có thể được hard-code vào chương trình của bạn để tránh phải hiệu chuẩn lại mỗi lần chạy</li>
     </ol>
 
     <h2>Lưu ý về trục tọa độ</h2>
 
-    <p>Sau khi áp dụng các giá trị hiệu chỉnh, các trục được hoán đổi (flip) để đạt được hướng chuẩn: khi nhìn MB2 từ trên xuống với đầu nối USB hướng về phía trước, trục X hướng phải, Y hướng về phía trước, Z hướng lên trên.</p>
+    <p>Sau khi áp dụng các giá trị hiệu chuẩn, các trục được hoán đổi (flip) để đạt được hướng chuẩn: khi nhìn MB2 từ trên xuống với đầu nối USB hướng về phía trước, trục X hướng phải, Y hướng về phía trước, Z hướng lên trên.</p>
 
     <div class="nav-buttons">
       <a href="appendix-gdb.html" class="nav-btn">← Cách dùng GDB</a>

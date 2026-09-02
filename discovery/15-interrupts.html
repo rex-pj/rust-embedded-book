@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -75,7 +75,7 @@
 
     <p>Mọi thông tin về phép tính mà CPU đang chạy đều được lưu trong CPU registers. Nếu core sắp chuyển tác vụ, nó phải lưu nội dung các CPU registers vào đâu đó để tác vụ mới có thể dùng các register như bộ nhớ tạm của riêng mình. Khi tác vụ mới hoàn thành, CPU có thể khôi phục các giá trị register và tiếp tục tính toán cũ. Đúng vậy, đó chính xác là điều đầu tiên core làm khi nhận được interrupt request: nó dừng lại ngay lập tức và lưu nội dung các CPU registers lên stack.</p>
 
-    <p>Bước tiếp theo là nhảy đến code cần chạy để phản hồi interrupt. Một <strong>Interrupt Service Routine (ISR)</strong>, thường gọi là interrupt "handler", là một hàm đặc biệt trong code ứng dụng của bạn được core gọi để phản hồi interrupt. Một "interrupt table" trong bộ nhớ chứa một "interrupt vector" cho mỗi interrupt có thể xảy ra: interrupt vector chỉ ra ISR nào cần gọi khi một interrupt cụ thể được nhận. Chúng ta sẽ mô tả chi tiết về vectơ ISR trong phần <a href="#nvic-and-priority">NVIC và ưu tiên ngắt</a>.</p>
+    <p>Bước tiếp theo là nhảy đến code cần chạy để phản hồi interrupt. Một <strong>Interrupt Service Routine (ISR)</strong>, thường gọi là interrupt "handler", là một hàm đặc biệt trong code ứng dụng của bạn được core gọi để phản hồi interrupt. Một "interrupt table" trong bộ nhớ chứa một "interrupt vector" cho mỗi interrupt có thể xảy ra: interrupt vector chỉ ra ISR nào cần gọi khi một interrupt cụ thể được nhận. Chúng ta sẽ mô tả chi tiết về interrupt vector trong phần <a href="#nvic-and-priority">NVIC và Interrupt Priority</a>.</p>
 
     <p>Một hàm ISR "return" bằng một lệnh máy return-from-interrupt đặc biệt, khiến CPU khôi phục các CPU registers và nhảy trở về nơi nó đang ở trước khi ISR được gọi.</p>
 
@@ -181,11 +181,11 @@ fn main() -&gt; ! {
 
     <p>Chúng ta đã thấy rằng các <strong>interrupt</strong> khiến <strong>processor</strong> của chúng ta ngay lập tức nhảy đến một hàm khác trong mã nguồn, nhưng điều gì đang thực sự diễn ra đằng sau hậu trường để cho phép điều này xảy ra? Trong phần này chúng ta sẽ đề cập đến một số chi tiết kỹ thuật không bắt buộc, vì vậy hãy thoải mái bỏ qua nếu bạn không quan tâm.</p>
 
-    <h3>Bộ điều khiển ngắt (The Interrupt Controller)</h3>
+    <h3>Bộ điều khiển interrupt (The Interrupt Controller)</h3>
     <p>Interrupt cho phép processor phản hồi các sự kiện <strong>peripheral</strong> như <strong>pin</strong> đầu vào GPIO thay đổi trạng thái, một <strong>timer</strong> hoàn thành chu kỳ, hoặc một <strong>UART</strong> nhận được một byte mới. Peripheral chứa các mạch điện nhận biết sự kiện và thông báo cho một peripheral chuyên dụng xử lý interrupt. Trên các processor Arm, peripheral xử lý interrupt này được gọi là <strong>NVIC</strong> — Nested Vector Interrupt Controller (Bộ điều khiển ngắt vectơ lồng nhau).</p>
 
     <blockquote>
-        <p><strong>LƯU Ý:</strong> Trên các kiến trúc vi điều khiển khác như RISC-V, tên gọi và chi tiết sẽ khác nhau, nhưng các nguyên tắc cơ bản nhìn chung là rất giống nhau.</p>
+        <p><strong>LƯU Ý:</strong> Trên các kiến trúc microcontroller khác như RISC-V, tên gọi và chi tiết sẽ khác nhau, nhưng các nguyên tắc cơ bản nhìn chung là rất giống nhau.</p>
     </blockquote>
 
     <p>NVIC có thể nhận các yêu cầu kích hoạt interrupt từ nhiều peripheral. Thậm chí một peripheral thường có nhiều interrupt khả thi, ví dụ một cổng GPIO có một interrupt cho mỗi pin, hoặc một UART có cả interrupt "đã nhận dữ liệu" và interrupt "đã hoàn thành truyền dữ liệu". Công việc của NVIC là đặt <strong>priority</strong> cho các interrupt này, ghi nhớ những interrupt nào vẫn cần được xử lý (pending), và sau đó khiến processor chạy mã <strong>interrupt handler</strong> tương ứng.</p>
@@ -200,11 +200,11 @@ fn main() -&gt; ! {
 
     <p>Lưu ý rằng nếu các interrupt bị vô hiệu hóa hoàn toàn, tất cả các interrupt đến sẽ được pending. Các interrupt pending sẽ được xử lý khi các interrupt được bật lại (re-enabled).</p>
 
-    <p>Trong Rust nhúng, chúng ta có thể lập trình NVIC bằng cách sử dụng <strong>crate</strong> <a href="https://docs.rs/cortex-m/latest/cortex_m/peripheral/struct.NVIC.html"><code>cortex-m</code></a>, cung cấp các phương thức để bật và tắt (được gọi là <code>unmask</code> và <code>mask</code>) các interrupt, thiết lập interrupt priority và kích hoạt interrupt từ phần mềm. Các frameworks như <a href="https://rtic.rs/">RTIC</a> có thể xử lý cấu hình NVIC cho bạn, tận dụng tính linh hoạt của NVIC để cung cấp việc chia sẻ tài nguyên và quản lý tác vụ thuận tiện.</p>
+    <p>Trong Rust embedded, chúng ta có thể lập trình NVIC bằng cách sử dụng <strong>crate</strong> <a href="https://docs.rs/cortex-m/latest/cortex_m/peripheral/struct.NVIC.html"><code>cortex-m</code></a>, cung cấp các method để bật và tắt (được gọi là <code>unmask</code> và <code>mask</code>) các interrupt, thiết lập interrupt priority và kích hoạt interrupt từ phần mềm. Các frameworks như <a href="https://rtic.rs/">RTIC</a> có thể xử lý cấu hình NVIC cho bạn, tận dụng tính linh hoạt của NVIC để cung cấp việc chia sẻ tài nguyên và quản lý tác vụ thuận tiện.</p>
 
     <p>Bạn có thể đọc thêm thông tin về NVIC trong <a href="https://developer.arm.com/documentation/ddi0337/e/Nested-Vectored-Interrupt-Controller/About-the-NVIC">tài liệu của Arm</a>.</p>
 
-    <h3>Bảng vectơ (The vector table)</h3>
+    <h3>Vector table (bảng vector)</h3>
     <p>Khi mô tả NVIC, tôi đã nói rằng nó có thể "khiến processor chạy mã interrupt handler tương ứng". Nhưng điều đó thực sự hoạt động như thế nào?</p>
 
     <p>Đầu tiên, chúng ta cần một cách nào đó để processor biết mã nào cần chạy cho mỗi interrupt. Trên các processor Cortex-M, điều này liên quan đến một phần bộ nhớ được gọi là <strong>vector table</strong>. Nó thường nằm ở ngay đầu bộ nhớ flash chứa mã của chúng ta, và chứa một danh sách các địa chỉ – vị trí trong bộ nhớ của mỗi hàm ISR. Cách sắp xếp cụ thể của phần đầu bộ nhớ được Arm định nghĩa trong <a href="https://developer.arm.com/documentation/ddi0403/latest">Architecture Reference Manual</a>; đối với mục đích của chúng ta, phần quan trọng là các byte từ 64 đến 256 chứa địa chỉ của tất cả 48 <strong>interrupt handler</strong> cho processor nRF mà chúng ta sử dụng, mỗi địa chỉ 4 byte. Mỗi interrupt có một số hiệu, từ 0 đến 47. Ví dụ, <code>TIMER0</code> là interrupt số 8, và vì vậy các byte từ 96 đến 100 chứa địa chỉ 4 byte của <strong>ISR</strong> của nó. Khi NVIC báo cho processor xử lý interrupt số 8, CPU sẽ đọc địa chỉ được lưu trong các byte đó và nhảy đến thực thi tại đó.</p>
@@ -219,7 +219,7 @@ fn main() -&gt; ! {
       <p><strong>LƯU Ý:</strong> Nội dung này được lấy một phần (có sự cho phép) từ bài viết blog <em><a href="https://onevariable.com/blog/interrupts-is-threads">Interrupts Is Threads</a></em> của James Munns, chứa nhiều thảo luận hơn về chủ đề này.</p>
     </blockquote>
 
-    <p>ISR không nhận tham số và không trả về giá trị — vậy ISR tương tác với phần còn lại của chương trình bằng cách nào? Như đã đề cập trước đó, khi một interrupt xảy ra, chúng ta không nhận được bất kỳ đối số nào và không thể trả về bất kỳ kết quả nào. Điều này gây khó khăn cho chương trình trong việc tương tác với các <strong>peripheral</strong> và trạng thái chương trình chính khác. Trước khi lo lắng về vấn đề này trong hệ thống nhúng, hãy thử nghĩ về <strong>thread</strong> trong Rust "std" (thư viện chuẩn).</p>
+    <p>ISR không nhận tham số và không trả về giá trị — vậy ISR tương tác với phần còn lại của chương trình bằng cách nào? Như đã đề cập trước đó, khi một interrupt xảy ra, chúng ta không nhận được bất kỳ đối số nào và không thể trả về bất kỳ kết quả nào. Điều này gây khó khăn cho chương trình trong việc tương tác với các <strong>peripheral</strong> và trạng thái chương trình chính khác. Trước khi lo lắng về vấn đề này trong hệ thống embedded, hãy thử nghĩ về <strong>thread</strong> trong Rust "std" (thư viện chuẩn).</p>
 
     <h3>Trong "std" Rust: Chia sẻ dữ liệu với một Thread</h3>
     <p>Trong "std" Rust, chúng ta cũng phải nghĩ về việc chia sẻ dữ liệu khi thực hiện những việc như tạo một <strong>thread</strong> mới.</p>
@@ -235,7 +235,7 @@ std::thread::spawn(move || {
     println!("{data}");
 });</code></pre>
 
-    <p>Nếu bạn muốn <em>chia sẻ</em> một thứ gì đó và vẫn có quyền truy cập nó trong thread ban đầu, bạn thường không thể truyền một reference đến nó — trình biên dịch sẽ báo lỗi vì dữ liệu không sống đủ lâu:</p>
+    <p>Nếu bạn muốn <em>chia sẻ</em> một thứ gì đó và vẫn có quyền truy cập nó trong thread ban đầu, bạn thường không thể truyền một reference đến nó — compiler sẽ báo lỗi vì dữ liệu không sống đủ lâu:</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">use std::{thread::{sleep, spawn}, time::Duration};
@@ -357,16 +357,16 @@ hello | thread was here! |
     <p>Nếu Rust cho phép chúng ta truy cập dữ liệu có thể không tồn tại đủ lâu, như dữ liệu được mượn từ một thread sang một thread khác, mọi thứ có thể bị sai. Chúng ta có thể bị corrupt dữ liệu nếu thread gốc kết thúc hoặc panic và sau đó thread thứ hai cố truy cập vào dữ liệu hiện đã không còn hợp lệ. Nếu Rust cho phép hai đoạn mã cố gắng mutate cùng một dữ liệu cùng lúc, chúng ta có thể có một data race, hoặc dữ liệu có thể bị corrupt.</p>
 
     <h3>Trong Embedded Rust: Chia sẻ dữ liệu với một ISR</h3>
-    <p>Trong hệ thống nhúng Rust, chúng ta cũng quan tâm đến những điều tương tự khi chia sẻ dữ liệu với các <strong>ISR</strong>! Tương tự như threads, interrupt có thể xảy ra bất kỳ lúc nào, giống như một thread thức dậy và truy cập vào một số dữ liệu được chia sẻ. Điều này có nghĩa là dữ liệu chúng ta chia sẻ với interrupt phải tồn tại đủ lâu, và chúng ta phải cẩn thận để đảm bảo code chính của chúng ta không đang trong quá trình làm việc với dữ liệu được chia sẻ với một ISR khi ISR đó chạy và <em>cũng</em> cố gắng làm việc với dữ liệu!</p>
+    <p>Trong hệ thống embedded Rust, chúng ta cũng quan tâm đến những điều tương tự khi chia sẻ dữ liệu với các <strong>ISR</strong>! Tương tự như threads, interrupt có thể xảy ra bất kỳ lúc nào, giống như một thread thức dậy và truy cập vào một số dữ liệu được chia sẻ. Điều này có nghĩa là dữ liệu chúng ta chia sẻ với interrupt phải tồn tại đủ lâu, và chúng ta phải cẩn thận để đảm bảo code chính của chúng ta không đang trong quá trình làm việc với dữ liệu được chia sẻ với một ISR khi ISR đó chạy và <em>cũng</em> cố gắng làm việc với dữ liệu!</p>
 
-    <p>Trên thực tế, trong Rust nhúng, chúng ta mô hình hóa interrupts theo cách tương tự như chúng ta mô hình hóa threads trong Rust: các quy tắc tương tự áp dụng, vì những lý do tương tự. Tuy nhiên, trong Rust nhúng, chúng ta có một số khác biệt quan trọng:</p>
+    <p>Trên thực tế, trong Rust embedded, chúng ta mô hình hóa interrupts theo cách tương tự như chúng ta mô hình hóa threads trong Rust: các quy tắc tương tự áp dụng, vì những lý do tương tự. Tuy nhiên, trong Rust embedded, chúng ta có một số khác biệt quan trọng:</p>
 
     <ul>
       <li><p>Các interrupt không hoạt động hoàn toàn giống như các threads: chúng ta thiết lập chúng trước và chúng đợi cho đến khi một sự kiện xảy ra (như nút bấm được nhấn, hoặc timer hết hạn). Tại thời điểm đó chúng chạy, nhưng không có quyền truy cập vào bất kỳ context nào được truyền vào.</p></li>
       <li><p>Interrupt có thể được kích hoạt nhiều lần, mỗi lần cho mỗi sự kiện xảy ra.</p></li>
     </ul>
 
-    <p>Vì chúng ta không thể truyền context cho interrupts như tham số hàm, chúng ta cần tìm một nơi khác để lưu trữ dữ liệu đó. Trong Rust nhúng "bare metal", chúng ta không có heap allocation: do đó <code>Arc</code> và các kiểu tương tự là không khả thi.</p>
+    <p>Vì chúng ta không thể truyền context cho interrupts như tham số hàm, chúng ta cần tìm một nơi khác để lưu trữ dữ liệu đó. Trong Rust embedded "bare metal", chúng ta không có heap allocation: do đó <code>Arc</code> và các kiểu tương tự là không khả thi.</p>
 
     <p>Không có khả năng truyền theo giá trị, và không có heap để lưu trữ dữ liệu, điều đó để lại cho chúng ta một nơi duy nhất để đặt dữ liệu dùng chung mà ISR có thể truy cập: các biến <strong>static</strong> globals.</p>
 
@@ -391,7 +391,7 @@ hello | thread was here! |
 
     <p>Crate <code>critical-section</code> cung cấp một loại <code>Mutex</code> với API bất thường và các thao tác bất thường. Khi xem xét <code>Cargo.toml</code> cho chương này, bạn sẽ thấy tính năng <code>critical-section-single-core</code> trên crate <code>cortex-m</code> được bật. Tính năng này khẳng định rằng chỉ có một processor core trong hệ thống này, và do đó đồng bộ hóa có thể được thực hiện bằng cách đơn giản là <em>vô hiệu hóa interrupts</em> trên toàn bộ critical section. Nếu không ở trong interrupt, điều này sẽ đảm bảo rằng chỉ chương trình chính có quyền truy cập vào global. Nếu đang ở trong interrupt, điều này sẽ đảm bảo rằng chương trình chính không thể truy cập vào global (điều khiển chương trình đang ở trong interrupt handler) và không có interrupt handler có priority cao hơn nào có thể kích hoạt.</p>
 
-    <p><code>critical_section::Mutex</code> hơi kỳ lạ ở chỗ nó cung cấp sự loại trừ lẫn nhau nhưng bản thân nó không cung cấp khả năng thay đổi. Để dữ liệu có thể thay đổi, bạn sẽ cần bảo vệ một kiểu dữ liệu có inner mutability — thường là <code>RefCell</code> — với mutex. <code>Mutex</code> này cũng hơi kỳ lạ ở chỗ bạn không dùng <code>.lock()</code>. Thay vào đó, bạn khởi tạo một critical section với một closure nhận "critical section token" chứng nhận rằng việc thực thi chương trình khác bị ngăn chặn. Token này có thể được truyền vào phương thức <code>borrow()</code> của Mutex để cho phép truy cập.</p>
+    <p><code>critical_section::Mutex</code> hơi kỳ lạ ở chỗ nó cung cấp sự loại trừ lẫn nhau nhưng bản thân nó không cung cấp khả năng thay đổi. Để dữ liệu có thể thay đổi, bạn sẽ cần bảo vệ một kiểu dữ liệu có interior mutability — thường là <code>RefCell</code> — với mutex. <code>Mutex</code> này cũng hơi kỳ lạ ở chỗ bạn không dùng <code>.lock()</code>. Thay vào đó, bạn khởi tạo một critical section với một closure nhận "critical section token" chứng nhận rằng việc thực thi chương trình khác bị ngăn chặn. Token này có thể được truyền vào method <code>borrow()</code> của Mutex để cho phép truy cập.</p>
 
     <p>Kết hợp tất cả lại cho bạn khả năng chia sẻ trạng thái giữa ISR và chương trình chính (<code>examples/count-once.rs</code>).</p>
 
@@ -789,7 +789,7 @@ fn main() -&gt; ! {
 
     <p>Đây là một chương trình phức tạp, giới thiệu nhiều ý tưởng mới. Đừng ngạc nhiên nếu bạn cần một chút thời gian để tìm ra nó.</p>
 
-    <h2>Giải pháp — Còi hú (Siren)</h2>
+    <h2>Lời giải — Còi hú (Siren)</h2>
 
     <p>Tôi thấy hơi khó để tính toán khi nào interrupt handler nên xác định thời gian interrupt tiếp theo để giữ cho còi tiếp tục hoạt động. Cuối cùng tôi dùng một vài biến trạng thái để theo dõi xem speaker pin đang bật hay tắt (thực ra có thể kiểm tra phần cứng) và để theo dõi thời gian hiện tại của còi trong chu kỳ lên-xuống.</p>
 

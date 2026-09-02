@@ -46,7 +46,7 @@
     <div class="nav-group-title">Phụ lục</div>
     <a href="appendix-troubleshooting.html"><span class="nav-icon">🔧</span>Khắc phục sự cố</a>
     <a href="appendix-gdb.html"><span class="nav-icon">🐛</span>Cách dùng GDB</a>
-    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chỉnh từ kế</a>
+    <a href="appendix-mag-calibration.html"><span class="nav-icon">🧲</span>Hiệu chuẩn từ kế</a>
     <a href="appendix-licenses.html"><span class="nav-icon">📄</span>Giấy phép &amp; Tác quyền</a>
   </nav>
 </nav>
@@ -73,7 +73,7 @@
 
     <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (nhận dòng về, đóng vai trò cực âm) thì LED sẽ sáng lên.</p>
 
-    <p>Nhưng về mặt phần mềm, chúng ta làm gì để điều đó xảy ra? Chúng ta sẽ làm việc ở mức crate <code>nrf52833-hal</code>. Hardware Abstraction Layer (HAL) là phần mềm được thiết kế để làm cho một vi điều khiển cụ thể dễ làm việc hơn. Đúng như tên gọi, chúng ta có một HAL cho vi điều khiển trên MB2, và nó chứa mọi thứ cần thiết để bật LED đó.</p>
+    <p>Nhưng về mặt phần mềm, chúng ta làm gì để điều đó xảy ra? Chúng ta sẽ làm việc ở mức crate <code>nrf52833-hal</code>. Hardware Abstraction Layer (HAL) là phần mềm được thiết kế để làm cho một microcontroller cụ thể dễ làm việc hơn. Đúng như tên gọi, chúng ta có một HAL cho microcontroller trên MB2, và nó chứa mọi thứ cần thiết để bật LED đó.</p>
 
     <h2>Light it up</h2>
 
