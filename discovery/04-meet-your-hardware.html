@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -57,7 +57,6 @@
     <span class="current">Làm quen với Phần cứng</span>
   </div>
   <main id="main">
-
     <h1>Làm quen với Phần cứng</h1>
 
     <p>Hãy cùng làm quen với phần cứng mà chúng ta sẽ làm việc trong suốt cuốn sách này.</p>
@@ -71,51 +70,55 @@
     <p>Dưới đây là một số thành phần nổi bật trên board:</p>
 
     <ul>
-      <li>Một microcontroller</li>
+      <li>Một <a href="https://en.wikipedia.org/wiki/Microcontroller" target="_blank">microcontroller</a></li>
       <li>Nhiều LED, đặc biệt là LED matrix ở mặt sau board</li>
       <li>Hai nút bấm dành cho người dùng và một nút reset (nút nhỏ cạnh cổng USB)</li>
       <li>Một cổng USB</li>
-      <li>Một cảm biến kết hợp magnetometer và accelerometer</li>
+      <li>Một cảm biến vừa là <a href="https://en.wikipedia.org/wiki/Magnetometer" target="_blank">magnetometer</a> vừa là <a href="https://en.wikipedia.org/wiki/Accelerometer" target="_blank">accelerometer</a></li>
     </ul>
 
-    <p>Trong số các thành phần đó, quan trọng nhất là microcontroller (thường viết tắt là "MCU" — microcontroller unit). Đây là khối vuông đen lớn hơn trong hai khối đen nằm ở phía mặt có cổng USB. MCU là nơi code của bạn chạy trực tiếp. Đôi khi bạn sẽ nghe người ta nói "lập trình board", nhưng thực chất chúng ta đang lập trình cho MCU được gắn trên board đó.</p>
+    <p>Trong số các thành phần đó, quan trọng nhất là microcontroller (thường viết tắt là "MCU" — microcontroller unit). Đây là khối vuông đen lớn hơn trong hai khối đen nằm ở phía mặt có cổng USB. MCU là nơi code của bạn chạy. Đôi khi bạn sẽ nghe người ta nói "lập trình board", nhưng thực chất chúng ta đang lập trình cho MCU được gắn trên board đó.</p>
 
-    <p>Nếu bạn muốn tìm hiểu thêm về board, có thể truy cập <a href="https://microbit.org" target="_blank">trang web chính thức của micro:bit</a> để đọc mô tả chi tiết hơn.</p>
+    <p>Nếu bạn muốn đọc mô tả chi tiết hơn về board, có thể xem <a href="https://tech.microbit.org/hardware/" target="_blank">trang thông tin phần cứng của micro:bit</a>.</p>
 
     <p>Vì MCU quan trọng như vậy, hãy cùng tìm hiểu kỹ hơn về con chip đang có mặt trên board của chúng ta.</p>
 
     <h2>Nordic nRF52833 (hay còn gọi là "nRF52", dành cho micro:bit v2)</h2>
 
-    <p>Micro:bit v2 được trang bị một MCU của Nordic Semiconductor với 73 chân kim loại nhỏ xíu ở mặt dưới (dạng đóng gói aQFN73). Các chân này nối tới các <em>đường mạch</em> (trace) — những "con đường" nhỏ đóng vai trò dây dẫn nối các linh kiện trên board — nhờ đó MCU có thể điều khiển dòng điện để vận hành các thành phần như LED.</p>
-
-    <p>Nordic Semiconductor mô tả nRF52833 là một <strong>"Bluetooth Low Energy and 2.4 GHz SoC"</strong> (System on a Chip — hệ thống trên một chip). Chữ <strong>RF</strong> trong tên sản phẩm là viết tắt của <em>radio frequency</em> (tần số vô tuyến), phản ánh khả năng truyền thông không dây tích hợp trong chip.</p>
+    <p>MCU của chúng ta có 73 <strong>chân</strong> kim loại nhỏ xíu nằm ngay bên dưới nó (đây là loại chip gọi là <a href="https://en.wikipedia.org/wiki/Flat_no-leads_package" target="_blank">aQFN73</a>). Các chân này nối tới các <strong>đường mạch</strong> (trace) — những "con đường" nhỏ đóng vai trò dây dẫn nối các linh kiện với nhau trên board. MCU có thể thay đổi động các đặc tính điện của những chân đó. Cơ chế này giống như một cái công tắc đèn, làm thay đổi cách dòng điện chạy qua mạch. Bằng cách cho phép hoặc chặn dòng điện chạy qua một chân cụ thể, một LED nối vào chân đó (qua các đường mạch) sẽ được bật lên hoặc tắt đi.</p>
 
     <h3>Giải mã số hiệu linh kiện</h3>
 
-    <p>Số hiệu linh kiện đầy đủ <code>N52833 QIAAA0 2024AL</code> được phân tích như sau:</p>
+    <p>Mỗi nhà sản xuất dùng một cách đánh số hiệu linh kiện khác nhau, nhưng nhiều hãng cho phép bạn suy ra thông tin về một linh kiện chỉ bằng cách nhìn vào số hiệu của nó. Nhìn vào số hiệu trên MCU của chúng ta, ta thấy <code>N52833 QIAAA0 2024AL</code>: có lẽ bạn không nhìn thấy bằng mắt thường, nhưng nó có in trên chip. (Nếu bạn dùng bản MB2 ra sau, số hiệu có thể hơi khác. Điều đó không sao. Nhưng phần <code>N52833</code> thì vẫn phải có.) Chữ <code>N</code> ở đầu gợi ý rằng đây là linh kiện do <a href="https://www.nordicsemi.com/" target="_blank">Nordic Semiconductor</a> sản xuất. Tra số hiệu này trên trang web của họ, ta nhanh chóng tìm ra <a href="https://www.nordicsemi.com/products/nrf52833" target="_blank">trang sản phẩm</a>. Ở đó ta biết được điểm nhấn tiếp thị chính của con chip là nó là một "Bluetooth Low Energy and 2.4 GHz SoC" (SoC là viết tắt của "System on a Chip" — hệ thống trên một chip), và điều đó giải thích chữ RF trong tên sản phẩm, vì RF là viết tắt của radio frequency (tần số vô tuyến). Lần theo tài liệu của chip được liên kết trên <a href="https://www.nordicsemi.com/products/nrf52833" target="_blank">trang sản phẩm</a> một chút, ta tìm được <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf" target="_blank">tài liệu đặc tả sản phẩm</a>, trong đó có chương 10 "Ordering Information" dành riêng để giải thích cách đặt tên chip kỳ lạ này. Ở đây ta biết được rằng:</p>
 
     <ul>
-      <li><strong>N52</strong>: Dòng MCU, cho biết có các biến thể nRF52 khác cùng họ</li>
-      <li><strong>833</strong>: Mã linh kiện cụ thể (part code)</li>
-      <li><strong>QI</strong>: Mã đóng gói (package code), viết tắt của aQFN73</li>
-      <li><strong>AA</strong>: Mã biến thể (variant code), xác định 512 kilobyte flash và 128 kilobyte RAM</li>
-      <li><strong>A0</strong>: Mã build (build code), cho biết phiên bản phần cứng (A) và cấu hình sản phẩm (0)</li>
-      <li><strong>2024AL</strong>: Mã truy xuất nguồn gốc (tracking code), có thể khác nhau giữa các chip riêng lẻ</li>
+      <li><code>N52</code>: dòng MCU, cho biết còn có các MCU <code>nRF52</code> khác cùng họ</li>
+      <li><code>833</code>: mã linh kiện (part code)</li>
+      <li><code>QI</code>: mã kiểu vỏ chip (package code), viết tắt của <code>aQFN73</code></li>
+      <li><code>AA</code>: mã biến thể (variant code), cho biết MCU có bao nhiêu RAM và bộ nhớ flash — trong trường hợp của ta là 512 kilobyte flash và 128 kilobyte RAM</li>
+      <li><code>A0</code>: mã build (build code), cho biết phiên bản phần cứng (<code>A</code>) và cấu hình sản phẩm (<code>0</code>)</li>
+      <li><code>2024AL</code>: mã truy xuất nguồn gốc (tracking code), nên nó có thể khác trên chip của bạn</li>
     </ul>
 
-    <h3>Kiến trúc Arm Cortex-M4</h3>
+    <p>Dĩ nhiên <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf" target="_blank">tài liệu đặc tả sản phẩm</a> còn chứa rất nhiều thông tin hữu ích khác về con chip: chẳng hạn, chip này là một bộ xử lý Arm® Cortex™-M4 32-bit.</p>
 
-    <p>nRF52833 được xây dựng dựa trên "bộ xử lý Arm® Cortex™-M4 32-bit". Arm Holdings không tự sản xuất chip; thay vào đó, họ thiết kế lõi xử lý rồi cấp phép cho các nhà sản xuất như Nordic Semiconductor. Dòng Cortex-M được thiết kế chủ yếu để dùng làm lõi microcontroller. Cortex-M4 (lõi mà chip của chúng ta sử dụng) được thiết kế hướng tới chi phí thấp và tiêu thụ điện năng thấp, trong khi các dòng cao cấp hơn như Cortex-M7 cung cấp nhiều tính năng và hiệu năng hơn.</p>
+    <h3>Arm? Cortex-M4?</h3>
 
-    <p>Khi làm việc với nRF52833, bạn cũng sẽ gặp tài liệu và công cụ dành cho các chip Cortex-M nói chung do kiến trúc dùng chung này.</p>
+    <p>Nếu chip của chúng ta do Nordic sản xuất, vậy Arm là ai? Và nếu chip của chúng ta là nRF52833, thì Cortex-M4 là gì?</p>
+
+    <p>Có thể bạn sẽ ngạc nhiên khi biết rằng tuy các chip "nền Arm" khá phổ biến, công ty đứng sau thương hiệu "Arm" (<a href="https://www.arm.com/" target="_blank">Arm Holdings</a>) lại không hề sản xuất chip để bán. Thay vào đó, mô hình kinh doanh chính của họ chỉ là <em>thiết kế</em> các bộ phận của chip. Sau đó họ cấp phép những thiết kế ấy cho các nhà sản xuất, và các nhà sản xuất sẽ hiện thực hóa thiết kế (có thể kèm vài điều chỉnh riêng) thành phần cứng vật lý để đem bán. Chiến lược này của Arm khác với những công ty như Intel — vốn vừa thiết kế <em>vừa</em> sản xuất chip của mình.</p>
+
+    <p>Arm cấp phép nhiều thiết kế khác nhau. Họ thiết kế "Cortex-M" chủ yếu để dùng làm lõi (core) trong microcontroller. Ví dụ, Cortex-M4 (lõi mà chip của chúng ta dựa trên) được thiết kế hướng tới chi phí thấp và tiêu thụ điện năng thấp. Cortex-M7 thì đắt hơn, nhưng có nhiều tính năng và hiệu năng hơn.</p>
+
+    <p>May cho chúng ta, bạn không cần biết quá nhiều về các loại bộ xử lý hay các thiết kế Cortex khác nhau để đọc cuốn sách này. Tuy vậy, hy vọng giờ bạn đã hiểu hơn một chút về thuật ngữ của thiết bị mình đang dùng. Tuy bạn làm việc cụ thể với nRF52833, bạn sẽ có lúc thấy mình đang đọc tài liệu và dùng công cụ dành cho các chip nền Cortex-M, bởi nRF52833 được xây dựng trên một thiết kế Cortex-M.</p>
 
     <h2>Thuật ngữ trong Rust Embedded</h2>
 
-    <p>Trước khi lập trình cho micro:bit, cần hiểu rõ các thư viện và thuật ngữ thường gặp trong quá trình phát triển embedded Rust.</p>
+    <p>Trước khi bắt tay vào lập trình cho micro:bit, hãy điểm nhanh qua các thư viện và thuật ngữ sẽ quan trọng với mọi chương sau.</p>
 
     <h3>Các lớp abstraction</h3>
 
-    <p>Với các microcontroller và board được hỗ trợ đầy đủ, bạn sẽ gặp các lớp abstraction chính sau:</p>
+    <p>Với bất kỳ microcontroller nào — hoặc board có gắn microcontroller — được hỗ trợ đầy đủ, bạn sẽ thường nghe những thuật ngữ sau đây dùng để chỉ các mức abstraction của chúng:</p>
 
     <div class="diagram">
       <p class="diagram-title diagram-title--center" style="color:var(--text-muted);">Các lớp abstraction trong Rust Embedded</p>
@@ -125,30 +128,34 @@
         <div class="stack-layer layer-hal">⚙️ Hardware Abstraction Layer (HAL)<span class="layer-badge">nrf52833-hal</span></div>
         <div class="stack-arrow">↑ dùng</div>
         <div class="stack-layer layer-pac">📋 Peripheral Access Crate (PAC)<span class="layer-badge">nrf52833-pac</span></div>
-        <div class="stack-arrow">↑ wrap</div>
+        <div class="stack-arrow">↑ bọc</div>
         <div class="stack-layer layer-hw">🔧 Phần cứng thực tế (Hardware)<span class="layer-badge">chip nRF52833</span></div>
       </div>
     </div>
 
-    <h4>Peripheral Access Crate (PAC)</h4>
+    <h3>Peripheral Access Crate (PAC)</h3>
 
-    <p>Nhiệm vụ của PAC là "cung cấp giao diện trực tiếp, tạm gọi là an toàn, tới các peripheral của chip, cho phép bạn cấu hình tới từng bit theo ý muốn (tất nhiên, kể cả theo cách sai)." Các lập trình viên thường dùng PAC khi các lớp cấp cao hơn không đáp ứng được nhu cầu, hoặc khi đang xây dựng code ở tầng cao hơn. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-pac" target="_blank">nRF52 PAC</a>.</p>
+    <p>Nhiệm vụ của PAC là cung cấp một giao diện trực tiếp, tạm gọi là an toàn, tới các peripheral của chip, cho phép bạn cấu hình tới từng bit theo ý muốn (tất nhiên, kể cả theo cách sai). Thường thì bạn chỉ phải đụng tới PAC khi các lớp cao hơn không đáp ứng được nhu cầu, hoặc khi bạn đang phát triển mã ở tầng cao hơn cho chúng. Không có gì bất ngờ: PAC mà chúng ta sẽ dùng (phần lớn là dùng một cách ngầm định) là PAC cho <a href="https://crates.io/crates/nrf52833-pac" target="_blank">nRF52</a>.</p>
 
-    <h4>Hardware Abstraction Layer (HAL)</h4>
+    <h3>Hardware Abstraction Layer (HAL)</h3>
 
-    <p>Xây dựng trên nền PAC, HAL "cung cấp một lớp abstraction thực sự dễ dùng cho người không cần biết về mọi hành vi đặc biệt của chip." HAL đơn giản hóa các peripheral thành các struct dễ dùng cho các thao tác phổ biến như truyền dữ liệu. Dự án này sử dụng <a href="https://crates.io/crates/nrf52833-hal" target="_blank">nrf52-hal</a>.</p>
+    <p>Nhiệm vụ của HAL là xây dựng bên trên PAC của chip và cung cấp một lớp abstraction thực sự dùng được cho người không rành mọi hành vi đặc thù của con chip này. Thông thường, HAL gói trọn cả một peripheral vào một struct duy nhất — struct đó có thể dùng để, chẳng hạn, gửi dữ liệu qua peripheral ấy. Chúng ta sẽ dùng <a href="https://crates.io/crates/nrf52833-hal" target="_blank">nRF52-hal</a>.</p>
 
-    <h4>Board Support Crate (BSP)</h4>
+    <h3>Board Support Crate (BSP)</h3>
 
-    <p>BSP trừu tượng hóa toàn bộ một board (như micro:bit) cùng một lúc, cung cấp giao diện cho cả microcontroller lẫn các thành phần trên board như cảm biến và LED. micro:bit có <a href="https://crates.io/crates/microbit" target="_blank">BSP sẵn có</a>, rất tiện lợi cho dự án này.</p>
+    <p>(Ở những ngữ cảnh không phải Rust, thứ này thường được gọi là Board Support Package — vì vậy mới có chữ viết tắt như thế.)</p>
+
+    <p>Nhiệm vụ của BSP là gói trọn cả một board (chẳng hạn micro:bit) trong một lần. Nghĩa là nó phải cung cấp abstraction để dùng được cả microcontroller lẫn các cảm biến, LED, v.v. có thể có trên board. Khá thường xuyên — nhất là với những board tự chế — sẽ không có sẵn BSP dựng trước nào cả. Thay vào đó bạn sẽ làm việc với HAL của chip và tự viết driver cho các cảm biến, hoặc đi tìm chúng trên <code>crates.io</code>. May cho chúng ta, micro:bit thì <em>có</em> <a href="https://crates.io/crates/microbit-v2" target="_blank">BSP</a>, nên ta sẽ dùng nó đặt trên nền HAL luôn.</p>
 
     <h3>Kết nối các lớp với nhau</h3>
 
-    <p>Crate <a href="https://crates.io/crates/embedded-hal" target="_blank"><code>embedded-hal</code></a> đóng vai trò trung tâm trong phát triển Rust embedded. Nó "cung cấp một tập hợp các trait mô tả những hành vi thường được chia sẻ giữa tất cả các bản triển khai (implementation) của một peripheral cụ thể trong mọi HAL." Điều này cho phép viết các driver không phụ thuộc vào nền tảng (<em>platform agnostic</em>), tương thích với nhiều chip khác nhau — đó là lý do tại sao hầu hết các driver trên crates.io đều hoạt động được với nhiều loại chip miễn là chúng triển khai các trait chuẩn.</p>
+    <p>Tiếp theo, chúng ta sẽ xem xét một mảnh phần mềm rất trung tâm trong thế giới Rust embedded: <a href="https://crates.io/crates/embedded-hal" target="_blank"><code>embedded-hal</code></a>. Đúng như tên gọi, nó liên quan tới mức abstraction thứ hai mà ta vừa làm quen: các HAL. Ý tưởng đằng sau <code>embedded-hal</code> là cung cấp một tập trait mô tả những hành vi thường được chia sẻ giữa mọi bản triển khai của một peripheral cụ thể trong tất cả các HAL. Ví dụ, người ta luôn mong đợi có sẵn những hàm có khả năng bật hoặc tắt nguồn trên một chân: để bật tắt một LED trên board hay bất cứ thứ gì tương tự.</p>
+
+    <p><code>embedded-hal</code> cho phép chúng ta viết driver cho một phần cứng nào đó — chẳng hạn một cảm biến nhiệt độ — mà driver ấy dùng được trên bất kỳ chip nào có sẵn bản triển khai các trait của <code>embedded-hal</code>. Điều này đạt được bằng cách viết driver sao cho nó chỉ dựa vào các trait của <code>embedded-hal</code>. Những driver viết theo cách đó được gọi là <em>không phụ thuộc nền tảng</em> (platform-agnostic). May cho chúng ta, gần như toàn bộ driver mà ta sẽ lấy từ <code>crates.io</code> đều không phụ thuộc nền tảng.</p>
 
     <h3>Tài liệu tham khảo thêm</h3>
 
-    <p>Để hiểu sâu hơn về toàn bộ hệ sinh thái Rust embedded, hãy xem bài trình bày của Franz Skarman (TheZoq2) tại Oxidize 2020: <a href="https://www.youtube.com/watch?v=vLYit_HHPaY" target="_blank">"An Overview of the Embedded Rust Ecosystem"</a>.</p>
+    <p>Nếu bạn muốn tìm hiểu thêm về các mức abstraction này, Franz Skarman (còn gọi là <a href="https://github.com/TheZoq2/" target="_blank">TheZoq2</a>) đã có một bài trình bày về chủ đề này tại Oxidize 2020: <a href="https://www.youtube.com/watch?v=vLYit_HHPaY" target="_blank">An Overview of the Embedded Rust Ecosystem</a>.</p>
 
     <div class="nav-buttons">
       <a href="03-setup.html" class="nav-btn">← Cài đặt môi trường</a>

@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -67,15 +67,15 @@
 
     <p>Ở các chương trước, bạn đã biết nhiều cách nạp chương trình lên MB2. Bây giờ chỉ còn câu hỏi là bạn bật/tắt chân nào và delay bao lâu giữa các lần đó.</p>
 
-    <p>Hãy bắt đầu bằng cách tìm hiểu cách làm việc với các chân cần thiết. Nếu bạn biết đọc sơ đồ mạch điện tử (schematic), bạn có thể theo dõi các dây của LED mà bạn muốn bật/tắt và tìm các chân GPIO nào trên nRF52833 được kết nối với LED đó. (MB2 hơi đặc biệt: thường một LED chỉ nối với một chân để bật/tắt, còn màn hình LED của MB2 được nối theo cách phức tạp hơn để cho phép bật/tắt nhiều tổ hợp LED cùng lúc — tính năng mà chúng ta sẽ sớm dùng đến.)</p>
+    <p>Hãy bắt đầu bằng cách tìm hiểu cách làm việc với các chân cần thiết. Nếu bạn biết đọc sơ đồ mạch điện tử (schematic), bạn có thể tra <a href="https://github.com/microbit-foundation/microbit-v2-hardware/blob/main/V2.21/MicroBit_V2.2.1_nRF52820%20schematic.PDF" target="_blank">sơ đồ mạch MB2</a> rồi theo dõi các dây của LED mà bạn muốn bật/tắt và tìm các chân GPIO nào trên nRF52833 được kết nối với LED đó. (MB2 hơi đặc biệt: thường một LED chỉ nối với một chân để bật/tắt, còn màn hình LED của MB2 được nối theo cách phức tạp hơn để cho phép bật/tắt nhiều tổ hợp LED cùng lúc — tính năng mà chúng ta sẽ sớm dùng đến.)</p>
 
     <p>Chúng ta sẽ làm việc với LED ở góc trên-trái của màn hình MB2. Truy ngược các dây <code>ROW1</code> và <code>COL1</code> mà LED này được kết nối đến, chúng ta thấy chúng đi đến các chân trên nRF52833 có nhãn <code>AC17</code>/<code>P0.21</code> và <code>B11</code>/<code>AIN4</code>/<code>P0.28</code>. Tìm hiểu kỹ hơn qua tài liệu, <code>AC17</code> và <code>B11</code> chỉ là chỉ số hàng và cột của chân vật lý (thực chất là solder ball) ở mặt dưới chip — không hữu ích với chúng ta. <code>AIN4</code> chỉ nghĩa là chân này có thể hoạt động như "Analog Input" — cũng không cần thiết lúc này.</p>
 
-    <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do điện tử, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (nhận dòng về, đóng vai trò cực âm) thì LED sẽ sáng lên.</p>
+    <p>Còn lại là <code>P0.21</code> và <code>P0.28</code>. Các nhãn này tương ứng với các bit trong bộ nhớ của nRF52833 có thể được bật/tắt để làm LED sáng. Vì lý do liên quan tới mạch điện, nếu chân <code>P0.21</code> được bật (xuất ra 3.3V) và chân <code>P0.28</code> được tắt (nhận dòng về, đóng vai trò cực âm) thì LED sẽ sáng lên.</p>
 
     <p>Nhưng về mặt phần mềm, chúng ta làm gì để điều đó xảy ra? Chúng ta sẽ làm việc ở mức crate <code>nrf52833-hal</code>. Hardware Abstraction Layer (HAL) là phần mềm được thiết kế để làm cho một microcontroller cụ thể dễ làm việc hơn. Đúng như tên gọi, chúng ta có một HAL cho microcontroller trên MB2, và nó chứa mọi thứ cần thiết để bật LED đó.</p>
 
-    <h2>Light it up</h2>
+    <h2>Thắp sáng LED</h2>
 
     <p>Hãy xem file <code>examples/light-up.rs</code> trong thư mục của chương này, rồi thử chạy nó. Bạn có thể dùng cách phức tạp như trước, nhưng chúng ta đã thiết lập sẵn để:</p>
 
@@ -104,7 +104,7 @@ fn main() -&gt; ! {
 
     <p>Lưu ý rằng chúng ta truy cập Peripheral Access Crate (PAC) cho chip này thông qua crate HAL. Cần có một số bước phức tạp để có quyền truy cập các chân. Cuối cùng, vì chúng ta có thể khởi tạo các chân với mức đúng ngay từ đầu, không cần phải set lại. Việc thay đổi mức chân là chủ đề của phần tiếp theo.</p>
 
-    <h2>Toggle it</h2>
+    <h2>Bật tắt LED</h2>
 
     <p>Hãy bật và tắt LED liên tục. Đó là cách làm nó nhấp nháy, phải không?</p>
 
@@ -143,7 +143,7 @@ fn main() -&gt; ! {
       </div>
     </div>
 
-    <h2>Spin wait</h2>
+    <h2>Chờ bận (spin wait)</h2>
 
     <p>Để nhấp nháy LED, chúng ta cần chờ khoảng nửa giây giữa mỗi lần thay đổi. Làm thế nào để làm điều đó?</p>
 
@@ -208,7 +208,7 @@ fn main() -&gt; ! {
     nop
     bne	.LBB1_6
 </code></pre>
-        <p>Chỉ có ba hoặc bốn instruction, nhưng nhánh ngược có thể tốn thêm một chút. Lưu ý rằng hai vòng lặp <em>không giống nhau:</em> compiler chọn emit các instruction khác nhau cho vòng lặp wait thứ nhất và thứ hai. Xem mục "Thay đổi tùy hoàn cảnh" bên dưới.</p>
+        <p>Chỉ có ba hoặc bốn instruction, nhưng nhánh ngược có thể tốn thêm một chút. Lưu ý rằng hai vòng lặp <em>không giống nhau:</em> trình biên dịch chọn emit các instruction khác nhau cho vòng lặp wait thứ nhất và thứ hai. Xem mục "Thay đổi tùy hoàn cảnh" bên dưới.</p>
         <p>Dù sao, chúng ta đang thực thi khoảng 4 instruction mỗi lần lặp. Điều này có nghĩa là trên CPU 64MHz, một spin nửa giây cần 64M/2/4 = 8M lần lặp để hoàn thành. Vậy thì có gì đó đang làm chậm chúng ta đi một hệ số 2. Là gì? Tôi cũng không biết. Nói chung cách làm này rất tệ.</p>
       </li>
       <li>
@@ -236,15 +236,15 @@ fn main() -&gt; ! {
 
     <p>Bạn có thể thắc mắc lời gọi <code>nop()</code> đó đang làm gì trong vòng lặp <code>wait()</code> trong <code>src/bin/spin-wait.rs</code>.</p>
 
-    <p>Câu trả lời là nó thực sự không làm gì cả. Hàm <code>nop()</code> khiến compiler chèn một machine instruction <code>NOP</code> của Arm tại điểm đó trong chương trình. <code>NOP</code> là một instruction đặc biệt khiến CPU bỏ qua nó. Để phớt lờ nó. Thực sự không làm gì cả với nó (do đó có cái tên đó).</p>
+    <p>Câu trả lời là nó thực sự không làm gì cả. Hàm <code>nop()</code> khiến trình biên dịch chèn một machine instruction <code>NOP</code> của Arm tại điểm đó trong chương trình. <code>NOP</code> là một instruction đặc biệt khiến CPU bỏ qua nó. Để phớt lờ nó. Thực sự không làm gì cả với nó (do đó có cái tên đó).</p>
 
     <p>Vậy hãy bỏ dòng đó đi và biên dịch lại chương trình. Đừng quên chế độ <code>--release</code>. Sau đó chạy nó.</p>
 
     <div class="callout note">
       <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <div class="callout-title">Ghi chú: Compiler tối ưu quá mức</div>
-        <p>Chúng ta lại quay về một LED sáng liên tục hơi tối hơn. Với thân vòng lặp trống rỗng, optimizer của compiler đã quyết định rằng hàm <code>wait()</code> không làm gì cả — vì vậy nó đã <strong>xóa toàn bộ hàm</strong> lúc compile time. <code>nop()</code> là cách ngăn compiler làm điều đó: vì nó là inline assembly, compiler không được phép xóa hay di chuyển nó.</p>
+        <div class="callout-title">Ghi chú: Trình biên dịch tối ưu quá mức</div>
+        <p>Chúng ta lại quay về một LED sáng liên tục hơi tối hơn. Với thân vòng lặp trống rỗng, optimizer của trình biên dịch đã quyết định rằng hàm <code>wait()</code> không làm gì cả — vì vậy nó đã <strong>xóa toàn bộ hàm</strong> lúc compile time. <code>nop()</code> là cách ngăn trình biên dịch làm điều đó: vì một số lý do kỹ thuật, lệnh <code>NOP</code> này sẽ không bị trình biên dịch xóa đi hay di chuyển.</p>
       </div>
     </div>
 
@@ -252,9 +252,9 @@ fn main() -&gt; ! {
 
     <pre><code class="language-rust">asm!("nop", options(nomem, nostack, preserves_flags));</code></pre>
 
-    <p>Hàm <code>nop()</code> được "inline", vì vậy khi bạn "gọi" nó, một assembly instruction <code>NOP</code> của Arm thực sự được chèn vào code của chương trình tại điểm đó. Vì một số lý do kỹ thuật, compiler sẽ không xóa hay di chuyển <code>NOP</code> này: nó sẽ ở ngay đó nơi bạn đặt nó.</p>
+    <p>Hàm <code>nop()</code> được "inline", vì vậy khi bạn "gọi" nó, một assembly instruction <code>NOP</code> của Arm thực sự được chèn vào code của chương trình tại điểm đó. Vì một số lý do kỹ thuật, trình biên dịch sẽ không xóa hay di chuyển <code>NOP</code> này: nó sẽ ở ngay đó nơi bạn đặt nó.</p>
 
-    <p>Khả năng chèn assembly code vào chương trình khi cần đôi khi rất quan trọng trong lập trình embedded. Đôi khi một CPU có các instruction mà compiler không biết, nhưng bạn vẫn cần để sử dụng CPU hiệu quả. Directive <code>asm!()</code> của Rust cho bạn một cách để làm điều đó.</p>
+    <p>Khả năng chèn assembly code vào chương trình khi cần đôi khi rất quan trọng trong lập trình embedded. Đôi khi một CPU có các instruction mà trình biên dịch không biết, nhưng bạn vẫn cần để sử dụng CPU hiệu quả. Directive <code>asm!()</code> của Rust cho bạn một cách để làm điều đó.</p>
 
     <p>Spin-wait của chúng ta vẫn còn kinh khủng. Hãy nói về cách làm tốt hơn.</p>
 
@@ -304,7 +304,7 @@ fn main() -&gt; ! {
 
     <p>Bây giờ chúng ta đã có một blinky đạt chất lượng dùng được trong sản phẩm thật. Hãy nói một chút về ý nghĩa của tất cả những điều này.</p>
 
-    <h2>Portability</h2>
+    <h2>Tính khả chuyển</h2>
 
     <p>(Phần này là tùy chọn. Hãy thoải mái bỏ qua đến <a href="#board-support-crate">phần tiếp theo</a>, nơi chúng ta dọn dẹp code một chút và kết thúc.)</p>
 
@@ -346,9 +346,9 @@ fn main() -&gt; ! {
 
     <h2 id="board-support-crate">Board support crate</h2>
 
-    <p>Làm việc trực tiếp với PAC và HAL cũng khá ổn. Hầu hết Arm MCU và nhiều MCU khác mà Rust có thể biên dịch đều có crate PAC. Nếu bạn làm việc với một MCU không có, việc viết crate PAC có thể tẻ nhạt nhưng khá đơn giản. Nhiều MCU có crate PAC cũng có crate HAL — một lần nữa, chủ yếu là công việc tẻ nhạt để xây dựng nếu nó còn thiếu. Code viết ở mức PAC và HAL cho phép truy cập vào các chi tiết tinh tế của MCU.</p>
+    <p>Làm việc trực tiếp với PAC và HAL cũng khá ổn. Hầu hết Arm MCU và nhiều MCU khác mà Rust có thể biên dịch đều có crate PAC. Nếu bạn làm việc với một MCU không có, việc viết crate PAC có thể tẻ nhạt nhưng khá đơn giản. Nhiều MCU có crate PAC cũng có crate HAL — một lần nữa, chủ yếu là công việc tẻ nhạt để xây dựng nếu nó còn thiếu. Code viết ở mức PAC và HAL cho phép truy cập vào những chi tiết cặn kẽ nhất của MCU.</p>
 
-    <p>Tuy nhiên, như chúng ta đã thấy, việc theo dõi những gì đang xảy ra ở interface giữa nRF52833 và phần còn lại của MB2 trở nên khá phiền phức. Chúng ta phải đọc schematics và các thứ để biết cách dùng phần cứng ngoài board.</p>
+    <p>Tuy nhiên, như chúng ta đã thấy, việc theo dõi những gì đang xảy ra ở interface giữa nRF52833 và phần còn lại của MB2 trở nên khá phiền phức. Chúng ta phải đọc schematics và các thứ để biết cách dùng phần cứng nằm ngoài MCU.</p>
 
     <p>Một "board support crate" — được biết đến trong cộng đồng embedded non-Rust là Board Support Package (BSP) — là một crate được xây dựng trên HAL và PAC cho một board để trừu tượng hóa các chi tiết và cung cấp tiện ích. Board support crate mà chúng ta đã làm việc cùng là crate <code>microbit-v2</code>.</p>
 

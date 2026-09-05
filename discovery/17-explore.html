@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -131,7 +131,7 @@
 
     <p>Hầu hết phần cứng chúng ta sẽ thảo luận ở đây không có trên MB2 — nhưng phần lớn có thể dễ dàng được thêm vào bằng cách kết nối một phần cứng rẻ tiền vào đầu nối edge-card của MB2, điều khiển trực tiếp hoặc dùng SPI hay I2C để kiểm soát.</p>
 
-    <h3>Multitasking</h3>
+    <h3>Đa nhiệm (multitasking)</h3>
 
     <p>Hầu hết các chương trình của chúng ta thực thi một tác vụ duy nhất. Làm thế nào để đạt được multitasking trong hệ thống không có OS, và do đó không có thread? Có hai cách tiếp cận chính cho multitasking: preemptive multitasking và cooperative multitasking.</p>
 
@@ -139,7 +139,7 @@
 
     <p>Trong cooperative multitasking, tác vụ đang được thực thi sẽ chạy cho đến khi đạt tới <em>điểm tạm dừng</em> (suspension point). Khi processor đến điểm tạm dừng đó, nó sẽ ngừng thực thi tác vụ hiện tại và thay vào đó đi thực thi tác vụ khác. Tại một thời điểm nào đó tác vụ đầu tiên sẽ được tiếp tục. Sự khác biệt chính giữa hai cách tiếp cận multitasking là trong cooperative multitasking, tác vụ <em>nhường</em> quyền điều khiển thực thi tại các điểm tạm dừng <em>đã biết</em> thay vì bị ép preempt tại bất kỳ điểm nào của quá trình thực thi.</p>
 
-    <h3>Gyroscopes</h3>
+    <h3>Con quay hồi chuyển (gyroscope)</h3>
 
     <p>Trong bài tập Punch-o-meter, chúng ta đã dùng accelerometer để đo thay đổi gia tốc trong ba chiều. Nhưng còn có các cảm biến chuyển động khác như gyroscope, cho phép đo thay đổi "spin" trong ba chiều.</p>
 
@@ -151,7 +151,7 @@
 
     <p>Microcontroller có thể được dùng để điều khiển Servo hoặc Stepper motor, cho phép kiểm soát chính xác hơn số vòng quay của motor, hoặc thậm chí định vị motor ở một vị trí cụ thể, ví dụ nếu chúng ta muốn di chuyển kim đồng hồ về một hướng cụ thể.</p>
 
-    <h3>Sensor Fusion</h3>
+    <h3>Hợp nhất cảm biến (sensor fusion)</h3>
 
     <p>Micro:bit chứa hai cảm biến chuyển động: accelerometer và magnetometer. Riêng lẻ chúng đo: gia tốc (riêng) và từ trường (Trái Đất). Nhưng các đại lượng này có thể được "fuse" thành thứ hữu ích hơn: một phép đo "robust" hướng của board, với ít sai số đo lường hơn so với bất kỳ cảm biến đơn lẻ nào.</p>
 

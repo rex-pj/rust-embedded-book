@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -61,15 +61,17 @@
 
     <h1>I2C</h1>
 
-    <p>Chúng ta vừa thấy giao thức serial communication. Đó là một giao thức được dùng rộng rãi vì nó rất đơn giản và sự đơn giản này giúp nó dễ dàng implement trên các giao thức khác như Bluetooth và USB.</p>
+    <p>Chúng ta vừa tìm hiểu định dạng truyền thông serial UART. UART serial được dùng rộng rãi vì nó đơn giản và đã tồn tại gần như từ thuở sơ khai. (Nhớ chứ, thiết bị phía host được gọi là "tty", viết tắt của "TeleTYpe"? Đúng vậy đấy.) Chính sự phổ biến và đơn giản đó khiến nó thành lựa chọn ưa thích cho những giao tiếp đơn giản.</p>
 
-    <p>Tuy nhiên, sự đơn giản cũng là nhược điểm. Các trao đổi dữ liệu phức tạp hơn, như đọc cảm biến kỹ thuật số, sẽ đòi hỏi nhà cung cấp cảm biến phải tạo ra một giao thức khác bên trên serial.</p>
+    <p>Do những hạn chế phần cứng về độ dài đường truyền so với chất lượng tín hiệu, và do việc giải mã chính xác vốn khó, UART serial thường chỉ đạt tối đa khoảng 115200 baud trong điều kiện lý tưởng. Một cổng serial UART vừa có băng thông thấp (11,5KB/s) vừa có độ trễ cao (87µs mỗi byte).</p>
 
-    <p>(Không) May mắn cho chúng ta, có rất nhiều giao thức truyền thông khác trong lĩnh vực embedded. Một số trong đó được dùng rộng rãi trong cảm biến kỹ thuật số.</p>
+    <p>UART serial là kiểu điểm-tới-điểm: không có cách nào nối ba thiết bị trở lên vào cùng một sợi dây, và mỗi sợi dây đều cần một thiết bị phần cứng riêng ở mỗi đầu.</p>
 
-    <p>Board micro:bit mà chúng ta đang dùng có hai cảm biến chuyển động: accelerometer và magnetometer. Cả hai cảm biến này đều được đóng gói trong một component duy nhất và có thể truy cập qua bus I2C.</p>
+    <p>Tin tốt (mà cũng là tin xấu) là trong lĩnh vực embedded còn <em>rất nhiều</em> giao thức truyền thông serial khác có phần cứng hỗ trợ, và chúng khắc phục được những hạn chế trên. Một số trong đó được dùng rộng rãi ở các cảm biến số.</p>
 
-    <p>I2C phát âm là "EYE-SQUARED-CEE" và viết tắt của Inter-Integrated Circuit. I2C là một giao thức truyền thông serial <em>synchronous</em> dạng <em>bus</em>: nó dùng hai đường để trao đổi dữ liệu: đường dữ liệu (SDA) và đường clock (SCL). Đường clock được dùng để đồng bộ giao tiếp. Serial đồng bộ có thể chạy nhanh hơn và đáng tin cậy hơn serial bất đồng bộ. Các thiết bị I2C có <em>bus address</em>: việc implement phần cứng cho phép gửi byte đến một thiết bị cụ thể, trong khi các thiết bị khác kết nối vào cùng dây bỏ qua giao tiếp này.</p>
+    <p>Board micro:bit mà chúng ta đang dùng có hai cảm biến chuyển động: một accelerometer và một magnetometer. Cả hai cảm biến này đều được đặt chung trong một linh kiện duy nhất và truy cập được qua bus I2C.</p>
+
+    <p>I2C đọc là "EYE-SQUARED-CEE" và là viết tắt của Inter-Integrated Circuit. I2C là một giao thức truyền thông serial <em>đồng bộ</em> dạng <em>bus</em>: nó dùng hai đường để trao đổi dữ liệu — đường dữ liệu (SDA) và đường clock (SCL). Đường clock được dùng để đồng bộ hoá việc giao tiếp. Serial đồng bộ có thể chạy nhanh hơn và đáng tin cậy hơn serial bất đồng bộ. Các thiết bị I2C có <em>địa chỉ bus</em>: phần cứng được thiết kế sao cho có thể gửi byte tới một thiết bị cụ thể, còn các thiết bị khác nối vào cùng bộ dây đó sẽ bỏ qua cuộc giao tiếp này.</p>
 
     <a href="https://commons.wikimedia.org/wiki/File:I2C_controller-target.svg">
       <p align="center">
@@ -77,69 +79,102 @@
       </p>
     </a>
 
-    <p>I2C dùng mô hình <em>controller</em>/<em>target</em>: controller là thiết bị <em>khởi xướng</em> và điều khiển giao tiếp với thiết bị target. Nhiều thiết bị có thể được kết nối vào cùng một bus đồng thời, và có thể chọn hoạt động như controller hoặc target. Một thiết bị controller có thể giao tiếp với một thiết bị target cụ thể bằng cách đầu tiên broadcast địa chỉ target lên bus. Địa chỉ này có thể dài 7 bit hoặc 10 bit. Khi controller đã bắt đầu giao tiếp với target, không thiết bị nào khác ngoài controller và target được phép truyền trên bus cho đến khi controller kết thúc giao tiếp.</p>
+    <p>I2C dùng mô hình <em>controller</em>/<em>target</em>: controller là thiết bị <em>khởi xướng</em> và điều khiển cuộc giao tiếp với một thiết bị target. Nhiều thiết bị có thể cùng nối vào một bus tại cùng thời điểm, và có thể chọn đóng vai controller hoặc target. Một thiết bị controller giao tiếp được với một thiết bị target cụ thể bằng cách trước hết phát địa chỉ target lên bus. Địa chỉ này có thể dài 7 bit hoặc 10 bit. Một khi controller đã bắt đầu giao tiếp với một target, không thiết bị nào ngoài controller và target đó được phép truyền trên bus cho tới khi controller kết thúc cuộc giao tiếp.</p>
 
     <blockquote>
-      <p><strong>LƯU Ý</strong> "Controller/target" trước đây được gọi là "master/slave". Bạn vẫn có thể thấy thuật ngữ đó trong tài liệu hoặc nhãn trên board. Thuật ngữ này hiện đã lỗi thời trong cả các tiêu chuẩn chính thức và tài liệu mới hơn, nhưng vẫn được dùng trong tài liệu Nordic cho chip nRF52833 của chúng ta và trong một số tài liệu embedded Rust.</p>
+      <p><strong>LƯU Ý</strong> "Controller/target" trước đây được gọi là "master/slave". Bạn vẫn có thể thấy cách gọi đó trong tài liệu hoặc trên nhãn in trên board. Thuật ngữ này nay đã lỗi thời trong cả các tiêu chuẩn chính thức lẫn tài liệu mới hơn, nhưng vẫn còn được dùng trong tài liệu của Nordic cho chip nRF52833 của chúng ta và trong một số tài liệu embedded Rust.</p>
     </blockquote>
 
-    <p>Đường clock quyết định tốc độ trao đổi dữ liệu có thể nhanh đến mức nào. Giao diện I2C của MB2 có thể hoạt động ở tốc độ 100, 250 hoặc 400 Kbps. Với các thiết bị khác, các chế độ nhanh hơn vẫn có thể.</p>
+    <p>Đường clock quyết định dữ liệu trao đổi được nhanh tới đâu. Giao diện I2C của MB2 hoạt động được ở tốc độ 100, 250 hoặc 400 Kbps. Với các thiết bị khác, còn có thể có những chế độ nhanh hơn nữa.</p>
 
-    <h1>Tổng quan giao thức</h1>
+    <h2>Tổng quan giao thức</h2>
 
-    <p>Giao thức I2C phức tạp hơn giao thức serial communication vì nó hỗ trợ giao tiếp có cấu trúc giữa nhiều thiết bị. Hãy xem cách nó hoạt động:</p>
+    <p>Giao thức I2C phức tạp hơn giao thức truyền thông serial, vì nó hỗ trợ giao tiếp có cấu trúc giữa nhiều thiết bị. Hãy xem nó hoạt động thế nào:</p>
 
-    <h2>Controller → Target</h2>
+    <h3>Controller → Target</h3>
 
-    <p>Nếu Controller muốn gửi dữ liệu đến Target:</p>
+    <p>Nếu Controller muốn gửi dữ liệu tới Target:</p>
     <ol>
-      <li>C: Broadcast START</li>
-      <li>C: Broadcast địa chỉ target (7 bit) + bit R/W (bit 8) đặt thành WRITE</li>
-      <li>Target: Phản hồi ACK (ACKnowledgement)</li>
-      <li>C: Gửi một byte</li>
-      <li>T: Phản hồi ACK</li>
-      <li>Lặp lại bước 4 và 5 không hoặc nhiều lần</li>
-      <li>C: Broadcast STOP, hoặc bắt đầu giao dịch read mới</li>
+      <li>Controller: phát START</li>
+      <li>C: phát địa chỉ target (7 bit) + bit R/W (bit thứ 8) đặt thành WRITE</li>
+      <li>Target: phản hồi ACK (ACKnowledgement)</li>
+      <li>C: gửi một byte</li>
+      <li>T: phản hồi ACK</li>
+      <li>Lặp lại bước 4 và 5 không lần hoặc nhiều lần</li>
+      <li>C: phát STOP, hoặc bắt đầu một giao dịch read mới</li>
     </ol>
 
     <blockquote>
-      <p><strong>LƯU Ý</strong> Địa chỉ target có thể là 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
+      <p><strong>LƯU Ý</strong> Địa chỉ target có thể dài 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
     </blockquote>
 
-    <h2>Controller ← Target</h2>
+    <h3>Controller ← Target</h3>
 
     <p>Nếu controller muốn đọc dữ liệu từ target:</p>
     <ol>
-      <li>C: Broadcast START</li>
-      <li>C: Broadcast địa chỉ target (7 bit) + bit R/W (bit 8) đặt thành READ</li>
-      <li>T: Phản hồi với ACK</li>
-      <li>T: Gửi byte</li>
-      <li>C: Phản hồi với ACK</li>
-      <li>Lặp lại bước 4 và 5 không hoặc nhiều lần</li>
-      <li>C: Broadcast STOP, hoặc bắt đầu giao dịch write mới</li>
+      <li>C: phát START</li>
+      <li>C: phát địa chỉ target (7 bit) + bit R/W (bit thứ 8) đặt thành READ</li>
+      <li>T: phản hồi ACK</li>
+      <li>T: gửi một byte</li>
+      <li>C: phản hồi ACK</li>
+      <li>Lặp lại bước 4 và 5 không lần hoặc nhiều lần</li>
+      <li>C: phát STOP, hoặc bắt đầu một giao dịch write mới</li>
     </ol>
 
     <blockquote>
-      <p><strong>LƯU Ý</strong> Địa chỉ target có thể là 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
+      <p><strong>LƯU Ý</strong> Địa chỉ target có thể dài 10 bit thay vì 7 bit. Không có gì khác thay đổi.</p>
     </blockquote>
 
-    <h2>Device Registers</h2>
+    <h3>"Device Registers"</h3>
 
-    <p>Nhiều thiết bị I2C tổ chức dữ liệu dưới dạng <em>device registers</em> — mỗi register có một địa chỉ 8-bit và một nội dung. Để ghi vào một register, controller gửi hai byte: byte đầu tiên là địa chỉ register, byte thứ hai là giá trị mới.</p>
+    <p>Bên trong, nhiều target I2C được tổ chức theo kiểu có các "device register", mỗi register có một địa chỉ 8 bit và nội dung 8 bit. Thông thường, device register được ghi bằng một lệnh write hai byte: byte đầu là địa chỉ register, byte thứ hai là giá trị mới của register.</p>
 
-    <p>Để đọc một register, thường dùng một giao dịch kết hợp: ghi địa chỉ register, ngay sau đó đọc lại nội dung. Một số thiết bị hỗ trợ <em>address auto-increment</em> — cho phép đọc/ghi nhiều register liên tiếp mà không cần chỉ định lại địa chỉ mỗi lần.</p>
+    <p>Một giao dịch gọi là "kết hợp" (combined) hay "tách" (split) có thể gồm một lệnh write tới target rồi ngay sau đó là một lệnh read ngược lại từ target, như trong sơ đồ ở trên. Device register thường được đọc theo cách này: ghi địa chỉ device register rồi đọc ngay giá trị hiện tại của register đó.</p>
+
+    <p>Một số target I2C có thể đọc và ghi nhiều device register có địa chỉ liền kề nhau thông qua một dạng "tự tăng địa chỉ" (address auto-increment), cho phép chỉ gửi địa chỉ device register đầu tiên rồi để thiết bị tự tăng địa chỉ cho các lần đọc hoặc ghi tiếp theo.</p>
+
+    <p>I2C là một giao thức phức tạp, ngoài kia còn nhiều biến thể và tính năng đặc biệt. Hãy đọc kỹ tài liệu của target bạn dùng để biết cần làm gì mới nói chuyện được với nó.</p>
 
     <h2>LSM303AGR</h2>
 
-    <p>Chip LSM303AGR trên micro:bit kết hợp hai cảm biến: accelerometer và magnetometer. Cả hai đều có thể truy cập qua bus I2C, mỗi cái có địa chỉ riêng. Các register lưu dữ liệu đo được và có thể đọc/ghi qua I2C — tương tự như các peripheral trong MCU, nhưng phải truy cập qua bus thay vì ánh xạ bộ nhớ trực tiếp.</p>
+    <p>Cả hai cảm biến chuyển động trên micro:bit — magnetometer và accelerometer — đều nằm trong một linh kiện duy nhất: mạch tích hợp LSM303AGR. Hai cảm biến này truy cập được qua bus I2C. Mỗi cảm biến hành xử như một target I2C và có một địa chỉ <em>khác nhau</em>.</p>
 
-    <p>Để biết cách đọc register, xem <strong>LSM303AGR Data Sheet</strong> (ST Microelectronics):</p>
+    <p>Mỗi cảm biến có bộ nhớ riêng, nơi nó lưu kết quả cảm nhận môi trường xung quanh. Việc chúng ta tương tác với những cảm biến này chủ yếu là đọc bộ nhớ của chúng.</p>
+
+    <p>Bộ nhớ của các cảm biến này được mô hình hoá thành các register đánh địa chỉ theo byte. Các cảm biến này cũng cấu hình được; việc đó thực hiện bằng cách ghi vào register của chúng. Nên xét theo một nghĩa nào đó, những cảm biến này rất giống các peripheral nằm <em>bên trong</em> microcontroller. Khác biệt là register của chúng không được ánh xạ vào bộ nhớ của microcontroller. Thay vào đó, phải truy cập register của chúng qua bus I2C.</p>
+
+    <p>Nguồn thông tin chính về LSM303AGR là <a href="https://www.st.com/resource/en/datasheet/lsm303agr.pdf" target="_blank">Data Sheet</a> của nó. Hãy đọc qua để biết cách đọc register của các cảm biến. Phần đó nằm ở:</p>
+
+    <blockquote>
+      <p>Mục 6.1.1 I2C Operation — trang 38 — LSM303AGR Data Sheet</p>
+    </blockquote>
+
+    <p>Phần tài liệu còn lại có liên quan tới cuốn sách này là mô tả các register. Phần đó nằm ở:</p>
+
+    <blockquote>
+      <p>Mục 8 Register description — trang 46 — LSM303AGR Data Sheet</p>
+    </blockquote>
+
+    <h2 id="đọc-một-register-đơn">Đọc một register đơn</h2>
+
+    <p>Hãy đem toàn bộ lý thuyết đó ra thực hành!</p>
+
+    <p>Trước hết, ta cần biết địa chỉ target của cả accelerometer lẫn magnetometer bên trong chip. Chúng nằm ở trang 39 của datasheet LSM303AGR:</p>
+
     <ul>
-      <li>Mục 6.1.1 (trang 38): "I2C Operation" — mô tả quy trình đọc register</li>
-      <li>Mục 8 (trang 46): "Register description" — danh sách chi tiết các register</li>
+      <li><code>0011001</code> cho accelerometer</li>
+      <li><code>0011110</code> cho magnetometer</li>
     </ul>
 
-    <h2>Đọc một register đơn</h2>
+    <blockquote>
+      <p><strong>LƯU Ý</strong> Nhớ rằng đây mới chỉ là 7 bit đầu của địa chỉ; bit thứ 8 sẽ là bit quyết định ta đang thực hiện thao tác đọc hay ghi.</p>
+    </blockquote>
+
+    <p>Tiếp theo, ta cần một register để đọc. Rất nhiều chip I2C ngoài kia cung cấp một dạng register định danh thiết bị để controller của chúng đọc. Xét việc có tới hàng nghìn (thậm chí hàng triệu) chip I2C, rất có khả năng đến lúc nào đó sẽ có hai chip mang cùng một địa chỉ được chế tạo ra (dù sao thì địa chỉ cũng chỉ rộng "vỏn vẹn" 7 bit). Với register device ID này, một driver có thể chắc chắn rằng nó đang nói chuyện đúng với LSM303AGR chứ không phải một con chip nào khác tình cờ trùng địa chỉ. Như bạn đọc được trong datasheet của LSM303AGR (cụ thể ở trang 46 và 61), linh kiện này có hai register — <code>WHO_AM_I_A</code> ở địa chỉ <code>0x0f</code> và <code>WHO_AM_I_M</code> ở địa chỉ <code>0x4f</code> — chứa những mẫu bit riêng biệt của thiết bị. ("A" là Accelerometer, còn "M" là Magnetometer.)</p>
+
+    <p>Thứ duy nhất còn thiếu bây giờ là phần phần mềm: ta cần xác định nên dùng API nào của crate <code>microbit</code> hoặc của một crate HAL. Nếu đọc qua <a href="https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf" target="_blank">tài liệu đặc tả sản phẩm nRF52833</a>, bạn sẽ sớm nhận ra rằng nó thực ra không có peripheral chuyên cho I2C. Thay vào đó, nó có những peripheral tương thích I2C mang tính đa dụng hơn, gọi là TWI ("Two-Wire Interface"), TWIM ("Two-Wire Interface Master") và TWIS ("Two-Wire Interface Slave"). Thông thường ta sẽ hoạt động ở chế độ controller và sẽ dùng TWIM đời mới hơn — loại có hỗ trợ "Easy DMA"; TWI chủ yếu được giữ lại để tương thích ngược với các thiết bị cũ.</p>
+
+    <p>Giờ nếu ghép tài liệu của <a href="https://docs.rs/microbit-v2/0.11.0/microbit/hal/twim/index.html" target="_blank">module <code>twi(m)</code></a> trong crate <code>microbit</code> với mọi thông tin đã thu thập được tới đây, ta sẽ có đoạn mã sau để đọc ra và in hai device ID (<code>examples/chip-id.rs</code>):</p>
 
     <div class="callout note">
       <div class="callout-icon">💡</div>
@@ -149,7 +184,6 @@
       </div>
     </div>
 
-    <p>Chương trình dưới đây đọc register WHO_AM_I (định danh chip) từ cả accelerometer lẫn magnetometer để xác nhận giao tiếp I2C hoạt động (<code>examples/chip-id.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]
@@ -193,6 +227,9 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
+
+    <p>Ngoài phần khởi tạo ra, đoạn mã này hẳn khá dễ hiểu nếu bạn đã nắm được giao thức I2C mô tả ở trên. Phần khởi tạo ở đây hoạt động tương tự phần khởi tạo trong chương UART: ta truyền cho hàm khởi tạo cả peripheral lẫn các chân dùng để giao tiếp với chip, rồi tới tần số ta muốn bus hoạt động — ở đây là 100 kHz (<code>K100</code>, vì tên định danh không được bắt đầu bằng chữ số).</p>
+
     <h2>Kiểm tra</h2>
 
     <p>Như thường lệ</p>
@@ -209,7 +246,7 @@ fn main() -&gt; ! {
 
     <p>Hãy xem trang được liên kết để biết code mẫu Linux cho Raspberry Pi.</p>
 
-    <p>Vì chúng ta đã biết cách tạo một instance của object implement các trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/blocking/i2c/index.html"><code>embedded_hal::blocking::i2c</code></a> từ <a href="12-i2c.html#đọc-một-thanh-ghi-đơn">trang trước</a>, việc điều chỉnh code mẫu rất đơn giản (<code>examples/show-accel.rs</code>):</p>
+    <p>Vì chúng ta đã biết cách tạo một instance của object implement các trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/blocking/i2c/index.html"><code>embedded_hal::blocking::i2c</code></a> từ <a href="#đọc-một-register-đơn">trang trước</a>, việc điều chỉnh code mẫu rất đơn giản (<code>examples/show-accel.rs</code>):</p>
 
     <div class="code-header"><span class="code-lang">rust</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-rust">#![deny(unsafe_code)]

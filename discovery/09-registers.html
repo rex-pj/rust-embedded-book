@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -61,7 +61,7 @@
 
     <h1>Registers</h1>
 
-    <p>Chương này là một phần kỹ thuật chuyên sâu. Bạn có thể bỏ qua nó bây giờ và quay lại sau nếu muốn. Tuy nhiên, có rất nhiều nội dung hay ở đây, vì vậy tôi khuyến khích bạn nên đọc.</p>
+    <p>Chương này là một phần kỹ thuật chuyên sâu. Bạn có thể yên tâm <a href="10-serial-port.html">bỏ qua nó</a> bây giờ và quay lại sau nếu muốn. Tuy nhiên, có rất nhiều nội dung hay ở đây, vì vậy tôi khuyến khích bạn nên đọc.</p>
 
     <hr />
 
@@ -132,7 +132,7 @@ fn main() -&gt; ! {
 
     <p>Được rồi. Nhưng làm thế nào để biết register này làm gì? Đã đến lúc RTRM (Read the Reference Manual)!</p>
 
-    <h1>RTRM: Đọc Reference Manual</h1>
+    <h2>RTRM: Đọc Reference Manual</h2>
 
     <p>Chúng ta đã thấy các GPIO pin trên nRF52833. Trên chip này (và nhiều chip khác), các GPIO pin được nhóm thành các <em>port</em>. Có hai port, Port 0 và Port 1, viết tắt là <code>P0</code> và <code>P1</code>. Các pin trong mỗi port được đặt tên bắt đầu từ 0. Port 0 có 32 pin, đặt tên từ <code>P0.00</code> đến <code>P0.31</code>, Port 1 có 10 pin, từ <code>P1.00</code> đến <code>P1.09</code>.</p>
 
@@ -243,7 +243,9 @@ Breakpoint 3, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:2
 
     <p>Ở dòng 19, chúng ta đã set bit 19 của <code>OUT</code> lên 1, giữ nguyên bit 21. Kết quả là <code>0x00280000</code>, tức <code>2621440</code> ở decimal, hay <code>2^19 + 2^21</code>, nghĩa là cả bit 19 lẫn bit 21 đều là 1.</p>
 
-    <p>Các dòng tiếp theo tắt các hàng lại. Trước tiên là hàng trên, rồi hàng dưới. Lần này, chúng ta thực hiện phép AND bit kết hợp với NOT bit. Chúng ta tính <code>!(1 &lt;&lt; 21)</code>, tức tất cả bit là 1, trừ bit 21. Tiếp theo, chúng ta AND bitwise với giá trị hiện tại của <code>OUT</code>, đảm bảo chỉ bit 21 được đặt về 0, giữ nguyên giá trị của các bit còn lại.</p>
+    <p>Việc ghi <code>1 &lt;&lt; 19</code> (<code>OUT[19]= 1</code>) vào <code>OUT</code> đặt <code>P0.19</code> lên <em>cao</em>. Điều đó bật hàng LED dưới cùng. Vậy nên lúc này hàng dưới cùng đã phải sáng lên.</p>
+
+    <p>Các dòng tiếp theo tắt các hàng lại. Trước tiên là hàng trên, rồi hàng dưới. Lần này, chúng ta thực hiện phép bitwise AND kết hợp với bitwise NOT. Chúng ta tính <code>!(1 &lt;&lt; 21)</code>, tức tất cả bit là 1, trừ bit 21. Tiếp theo, chúng ta AND bitwise với giá trị hiện tại của <code>OUT</code>, đảm bảo chỉ bit 21 được đặt về 0, giữ nguyên giá trị của các bit còn lại.</p>
 
     <p>Tiếp tục thực thi và kiểm tra xem các giá trị được báo cáo của register <code>OUT</code> có khớp với những gì bạn mong đợi không. Bạn có thể nhấn <code>CTRL+C</code> để tạm dừng thực thi sau khi thiết bị vào vòng lặp vô tận ở cuối hàm <code>main</code>.</p>
 
@@ -277,7 +279,7 @@ Program received signal SIGINT, Interrupt.
 
     <p>Và tại đây tất cả LED đã tắt trở lại!</p>
 
-    <h1>(mis)Optimization — Vấn đề với compiler tối ưu hóa</h1>
+    <h2>(mis)Optimization — Vấn đề với trình biên dịch tối ưu hóa</h2>
 
     <p>Các thao tác đọc/ghi vào register khá đặc biệt. Tôi thậm chí có thể nói rằng chúng là hiện thân của side effect. Trong ví dụ trước chúng ta ghi bốn giá trị khác nhau vào cùng một register. Nếu bạn không biết địa chỉ đó là một register, bạn có thể đã đơn giản hóa logic để chỉ ghi giá trị cuối cùng <code>0x00000000</code> vào register.</p>
 
@@ -285,7 +287,7 @@ Program received signal SIGINT, Interrupt.
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
         <div class="callout-title">LLVM không biết bạn đang ghi vào register phần cứng</div>
-        <p>LLVM, backend/optimizer của compiler, sẽ hợp nhất các lần ghi vào cùng một địa chỉ, từ đó <strong>thay đổi hoàn toàn hành vi của chương trình</strong>. Cần dùng <code>volatile</code> để ngăn điều này — xem phần tiếp theo.</p>
+        <p>LLVM, backend/optimizer của trình biên dịch, sẽ hợp nhất các lần ghi vào cùng một địa chỉ, từ đó <strong>thay đổi hoàn toàn hành vi của chương trình</strong>. Cần dùng <code>volatile</code> để ngăn điều này — xem phần tiếp theo.</p>
       </div>
     </div>
 
@@ -425,7 +427,7 @@ fn main() -&gt; ! {
 
     <p>Xem đây! Bây giờ chúng ta đã có lại bốn chu kỳ load - thao tác - store. Hãy step through code một lần nữa bằng GDB để thấy các volatile operation trong thực tế!</p>
 
-    <h1>0xBAAAAAAD — Địa chỉ không hợp lệ</h1>
+    <h2>0xBAAAAAAD — Địa chỉ không hợp lệ</h2>
 
     <p>Không phải tất cả bộ nhớ peripheral đều có thể truy cập. Hãy nhìn vào chương trình này (<code>examples/bad.rs</code>).</p>
 
@@ -482,11 +484,11 @@ Continuing.
 Breakpoint 3, cortex_m_rt::HardFault_ (ef=0x2001ffb8) at src/lib.rs:1046
 1046	    loop {}</code></pre>
 
-    <p>Chúng ta đã thử thực hiện một thao tác không hợp lệ, đọc bộ nhớ không tồn tại, nên processor đã ném ra một <em>exception</em>: một <em>hardware exception</em>.</p>
+    <p>Chúng ta đã thử thực hiện một thao tác không hợp lệ, đọc bộ nhớ không tồn tại, nên processor đã phát sinh một <em>exception</em>: một <em>hardware exception</em>.</p>
 
-    <p>Trong hầu hết các trường hợp, exception được ném ra khi processor cố gắng thực hiện một thao tác không hợp lệ. Exception phá vỡ luồng bình thường của chương trình và buộc processor thực thi một <em>exception handler</em>, vốn chỉ là một hàm/subroutine.</p>
+    <p>Trong hầu hết các trường hợp, exception phát sinh khi processor cố gắng thực hiện một thao tác không hợp lệ. Exception phá vỡ luồng bình thường của chương trình và buộc processor thực thi một <em>exception handler</em>, vốn chỉ là một hàm/subroutine.</p>
 
-    <p>Có nhiều loại exception khác nhau. Mỗi loại exception được ném ra bởi các điều kiện khác nhau và mỗi loại được xử lý bởi một exception handler khác nhau.</p>
+    <p>Có nhiều loại exception khác nhau. Mỗi loại exception phát sinh bởi các điều kiện khác nhau và mỗi loại được xử lý bởi một exception handler khác nhau.</p>
 
     <p>Crate <code>registers</code> phụ thuộc vào crate <code>cortex-m-rt</code>, crate này định nghĩa một <em>hard fault</em> handler mặc định, tên là <code>HardFault_</code>, xử lý exception "invalid memory address". <code>embed.gdb</code> đặt breakpoint tại <code>HardFault</code>; đó là lý do tại sao debugger đã halt chương trình khi đang thực thi exception handler. Chúng ta có thể lấy thêm thông tin về exception từ debugger:</p>
 
@@ -528,9 +530,21 @@ End of assembler dump.</code></pre>
 
     <p>Exception được gây ra bởi instruction <code>ldr r0, [r0, #0]</code>, một instruction đọc. Instruction này cố gắng đọc bộ nhớ tại địa chỉ được chỉ ra bởi CPU register <code>r0</code>. Nhân tiện, một CPU (processor) register không phải là một memory-mapped register; nó không có địa chỉ liên kết như <code>OUT</code>.</p>
 
-    <p>Chúng ta có thể kiểm tra giá trị của register <code>r0</code> ngay tại thời điểm exception được ném ra không? Thực ra, chúng ta đã làm điều đó rồi! Field <code>r0</code> trong giá trị <code>ef</code> mà chúng ta in ra trước đó chính là giá trị mà register <code>r0</code> có khi exception được ném ra. <code>r0</code> chứa giá trị <code>0x5000_A784</code> — chính là địa chỉ không hợp lệ mà chúng ta đã gọi hàm <code>read_volatile</code> với nó.</p>
+    <p>Chúng ta có thể kiểm tra giá trị của register <code>r0</code> ngay tại thời điểm exception phát sinh không? Thực ra, chúng ta đã làm điều đó rồi! Field <code>r0</code> trong giá trị <code>ef</code> mà chúng ta in ra trước đó chính là giá trị mà register <code>r0</code> có khi exception phát sinh. <code>r0</code> chứa giá trị <code>0x5000_A784</code> — chính là địa chỉ không hợp lệ mà chúng ta đã gọi hàm <code>read_volatile</code> với nó. Đây, nó đây:</p>
 
-    <h1>Tác động ma quái từ xa (Spooky action at a distance)</h1>
+<pre><code class="language-gdb">(gdb) print/x *ef
+$1 = cortex_m_rt::ExceptionFrame {
+  r0: 0x5000a784,
+  r1: 0x3,
+  r2: 0x2001ff24,
+  r3: 0x0,
+  r12: 0x1,
+  lr: 0x4403,
+  pc: 0x43ea,
+  xpsr: 0x1000000
+}</code></pre>
+
+    <h2>Tác động ma quái từ xa (Spooky action at a distance)</h2>
 
     <p><code>OUT</code> không phải là register duy nhất có thể điều khiển các pin của port <code>P0</code>. Register <code>OUTSET</code> cũng cho phép bạn thay đổi giá trị của các pin, cũng như <code>OUTCLR</code>. Tuy nhiên, <code>OUTSET</code> và <code>OUTCLR</code> không cho phép bạn lấy trạng thái output hiện tại của port <code>P0</code>.</p>
 
@@ -607,7 +621,7 @@ fn main() -&gt; ! {
 
     <p>Side effect! Mặc dù chúng ta đọc cùng một địa chỉ nhiều lần mà không trực tiếp sửa đổi nó, chúng ta vẫn thấy giá trị của nó thay đổi mỗi khi <code>OUTSET</code> hoặc <code>OUTCLR</code> được ghi vào.</p>
 
-    <h1>Type safe manipulation — Thao tác an toàn kiểu</h1>
+    <h2>Type safe manipulation — Thao tác an toàn kiểu</h2>
 
     <p>Một trong các register của <code>P0</code>, register <code>IN</code>, được tài liệu mô tả là register read-only.</p>
 
@@ -731,7 +745,44 @@ $1 = nrf52833_pac::p0::RegisterBlock {
   [...]
 }</code></pre>
 
-    <p>Toàn bộ API này được tự động tạo ra — không ai viết tay. Vendor (Nordic) cung cấp file SVD mô tả tất cả registers và quyền truy cập; công cụ <code>svd2rust</code> chuyển nó thành Rust code.</p>
+    <p>Nghe tất cả những newtype và closure này, có vẻ chúng sẽ sinh ra chương trình lớn và cồng kềnh. Nhưng nếu bạn thực sự biên dịch chương trình ở chế độ release có bật <a href="https://en.wikipedia.org/wiki/Interprocedural_optimization" target="_blank">LTO</a>, bạn sẽ thấy <em>đúng y những lệnh</em> mà phiên bản "unsafe" dùng <code>write_volatile</code> và địa chỉ hexa đã sinh ra!</p>
+
+    <p>Dùng <code>cargo objdump</code> để lấy mã assembler ra file <code>release.type-safe.dump</code>:</p>
+
+<pre><code class="language-console">cargo objdump -q --release --example type-safe -- --disassemble --no-show-raw-insn  &gt; release.type-safe.dump
+</code></pre>
+
+    <p>Rồi tìm <code>main</code> trong <code>release.type-safe.dump</code>:</p>
+
+<pre><code>00000158 &lt;main&gt;:
+     158:      	push	{r7, lr}
+     15a:      	mov	r7, sp
+     15c:      	bl	0x160 &lt;registers::__cortex_m_rt_main::h0e9b57c6799332fd&gt; @ imm = #0x0
+
+00000160 &lt;registers::__cortex_m_rt_main::h0e9b57c6799332fd&gt;:
+     160:      	push	{r7, lr}
+     162:      	mov	r7, sp
+     164:      	bl	0x192 &lt;registers::init::hec71dddc40be11b5&gt; @ imm = #0x2a
+     168:      	movw	r0, #0x504
+     16c:      	movt	r0, #0x5000
+     170:      	ldr	r1, [r0]
+     172:      	orr	r1, r1, #0x200000
+     176:      	str	r1, [r0]
+     178:      	ldr	r1, [r0]
+     17a:      	orr	r1, r1, #0x80000
+     17e:      	str	r1, [r0]
+     180:      	ldr	r1, [r0]
+     182:      	bic	r1, r1, #0x200000
+     186:      	str	r1, [r0]
+     188:      	ldr	r1, [r0]
+     18a:      	bic	r1, r1, #0x80000
+     18e:      	str	r1, [r0]
+     190:      	b	0x190 &lt;registers::__cortex_m_rt_main::h0e9b57c6799332fd+0x30&gt; @ imm = #-0x4
+</code></pre>
+
+    <p>Bạn có thể tự kiểm chứng rằng cách này cho ra đúng cùng một file binary với phiên bản dùng <code>ptr::read_volatile</code> và <code>ptr::write_volatile</code>.</p>
+
+    <p>Điều tuyệt nhất trong tất cả những chuyện này là không ai phải viết lấy một dòng mã nào để tạo ra API GPIO cả. Toàn bộ mã được sinh tự động từ một file System View Description (SVD) bằng công cụ <a href="https://crates.io/crates/svd2rust" target="_blank">svd2rust</a>. File SVD thực chất là một file XML do nhà sản xuất microcontroller cung cấp, chứa bản đồ register của các microcontroller của họ. File này chứa bố cục của các khối register, các địa chỉ gốc, quyền đọc/ghi của từng register, bố cục của từng register, việc register có bit dự trữ hay không, cùng rất nhiều thông tin hữu ích khác.</p>
 
     <div class="nav-buttons">
       <a href="08-inputs-and-outputs.html" class="nav-btn">← Inputs &amp; Polling</a>

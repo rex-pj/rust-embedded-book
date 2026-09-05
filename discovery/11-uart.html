@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -61,7 +61,7 @@
 
     <h1>UART</h1>
 
-    <p>Microcontroller có một peripheral gọi là UART, viết tắt của Universal Asynchronous Receiver/Transmitter. Peripheral này có thể được cấu hình để hoạt động với nhiều giao thức truyền thông, bao gồm giao thức serial communication.</p>
+    <p>Microcontroller của chúng ta (cũng như hầu hết microcontroller khác) có các peripheral UART — viết tắt của “Universal Asynchronous Receiver/Transmitter”. MB2 có hai loại peripheral UART: <code>UART</code> đời cũ và <code>UARTE</code> đời mới (“UART with Easy DMA”). Chúng ta sẽ dùng peripheral <code>UARTE</code> để giao tiếp với cổng serial phần cứng.</p>
 
     <p>Xuyên suốt chương này, chúng ta sẽ dùng serial communication để trao đổi thông tin giữa microcontroller và máy tính của bạn.</p>
 
@@ -159,7 +159,7 @@ fn main() -> ! {
 
     <p>Nếu bạn bỏ lỡ, bạn có thể nhấn nút reset ở mặt sau của MB2. Điều này sẽ khiến chương trình bắt đầu lại từ đầu và gửi lại <code>X</code>.</p>
 
-    <h1>Gửi một chuỗi</h1>
+    <h2>Gửi một chuỗi</h2>
 
     <p>Nhiệm vụ tiếp theo sẽ là gửi toàn bộ chuỗi từ microcontroller đến máy tính của bạn.</p>
 
@@ -167,11 +167,11 @@ fn main() -> ! {
 
     <p>Đến lượt bạn viết chương trình.</p>
 
-    <h1>Cách làm ngây thơ và <code>write!</code></h1>
+    <h2>Cách làm thô sơ và <code>write!</code></h2>
 
     <p>Cách gửi chuỗi ở phần trước (duyệt từng byte) hoạt động được, nhưng thiếu đi sự tiện lợi của <code>print!</code> như formatting tham số. Có hai cách tiếp cận:</p>
 
-    <h2>Cách làm ngây thơ</h2>
+    <h3>Cách làm thô sơ</h3>
 
     <p>Bạn có lẽ đã nghĩ ra một chương trình tương tự như sau (<code>examples/naive-send-string.rs</code>):</p>
 
@@ -215,7 +215,7 @@ fn main() -&gt; ! {
 
     <p>Đây là một implementation hoàn toàn hợp lệ, nhưng tại một thời điểm nào đó bạn có thể muốn có tất cả những tính năng tiện lợi của <code>print!</code> như formatting đối số v.v. Nếu bạn đang tự hỏi cách làm, hãy đọc tiếp.</p>
 
-    <h2><code>write!</code> và <code>core::fmt::Write</code></h2>
+    <h3><code>write!</code> và <code>core::fmt::Write</code></h3>
 
     <p>Trait <code>core::fmt::Write</code> cho phép chúng ta dùng bất kỳ struct nào implement nó theo cách cơ bản giống như chúng ta dùng <code>print!</code> trong thế giới <code>std</code>. Trong trường hợp này, struct <code>Uart</code> từ HAL <code>nrf</code> có implement <code>core::fmt::Write</code>, vì vậy chúng ta có thể refactor chương trình trước thành này (<code>examples/send-string.rs</code>):</p>
 
@@ -258,7 +258,7 @@ fn main() -&gt; ! {
 
     <p>Nếu bạn flash chương trình này lên micro:bit, bạn sẽ thấy rằng nó tương đương về mặt chức năng với chương trình dựa trên iterator mà bạn đã nghĩ ra.</p>
 
-    <h1>Nhận một byte đơn</h1>
+    <h2>Nhận một byte đơn</h2>
 
     <p>Cho đến nay chúng ta có thể gửi dữ liệu từ microcontroller đến máy tính của bạn. Đã đến lúc thử chiều ngược lại: nhận dữ liệu từ máy tính (<code>examples/receive-byte.rs</code>).</p>
 
@@ -298,13 +298,13 @@ fn main() -&gt; ! {
 
     <p>Lưu ý rằng nếu bạn flash chương trình này và bắt đầu gõ ký tự trong <code>minicom</code> để gửi chúng đến microcontroller của bạn, bạn sẽ chỉ có thể thấy các con số trong RTT console vì chúng ta không chuyển đổi <code>u8</code> mà chúng ta nhận được thành <code>char</code> thực sự. Vì việc chuyển đổi từ <code>u8</code> sang <code>char</code> khá đơn giản, tôi sẽ để nhiệm vụ này cho bạn nếu bạn thực sự muốn thấy các ký tự trong RTT console.</p>
 
-    <h1>Echo server</h1>
+    <h2>Echo server</h2>
 
     <p>Hãy hợp nhất truyền và nhận vào một chương trình duy nhất và viết một echo server. Một echo server gửi lại cho client cùng text mà nó nhận được. Đối với ứng dụng này, microcontroller sẽ là server và bạn cùng máy tính của bạn sẽ là client.</p>
 
-    <p>Điều này sẽ đơn giản để implement. (gợi ý: làm từng byte một)</p>
+    <p>Việc này khá dễ triển khai. (gợi ý: làm từng byte một)</p>
 
-    <h1>Đảo ngược chuỗi</h1>
+    <h2>Đảo ngược chuỗi</h2>
 
     <p>Được rồi, tiếp theo hãy làm server thú vị hơn bằng cách cho nó phản hồi lại client bằng chuỗi đảo ngược của đoạn text họ đã gửi. Server sẽ phản hồi mỗi khi client nhấn phím ENTER. Mỗi phản hồi của server sẽ trên một dòng mới.</p>
 
@@ -350,13 +350,13 @@ fn main() -&gt; ! {
         buffer.clear();
 
         // TODO Nhận request từ user kết thúc bằng ENTER
-        // NOTE xử lý Result của buffer.push để tránh lỗi
+        // NOTE buffer.push trả về Result. Hãy xử lý lỗi bằng cách phản hồi một thông báo lỗi
 
         // TODO Gửi chuỗi đã đảo ngược
     }
 }</code></pre>
 
-    <h1>Lời giải của tôi</h1>
+    <h2>Lời giải của tôi</h2>
 
     <p>Bạn sẽ tìm thấy lời giải của tôi trong <code>src/main.rs</code>:</p>
 

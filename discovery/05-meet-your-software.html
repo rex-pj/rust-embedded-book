@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -81,7 +81,7 @@
     <p>Điều này có vẻ phức tạp, nhưng đây là quy ước chuẩn của Cargo.</p>
     <p>Bây giờ hãy tiến lên và làm việc với tất cả những điều này.</p>
 
-    <h1>Embedded Setup</h1>
+    <h2>Thiết lập cho embedded</h2>
 
     <p>Hãy xem chương trình đầu tiên cần biên dịch. Kiểm tra file <code>examples/init.rs</code>:</p>
 
@@ -112,7 +112,7 @@ fn main() -&gt; ! {
 
     <p>Thuộc tính <code>no_std</code> cho biết chương trình này sẽ không dùng crate <code>std</code>, vốn giả định có một OS bên dưới; thay vào đó chương trình sẽ dùng crate <code>core</code>, một tập con của <code>std</code> có thể chạy trên các hệ thống bare metal (nghĩa là hệ thống không có các abstraction của OS như file và socket).</p>
 
-    <p>Thuộc tính <code>no_main</code> cho biết chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là <code>main</code>, nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể return. Điều này có nghĩa là chương trình không bao giờ kết thúc bằng cách return từ <code>main</code>: nếu compiler phát hiện điều này có thể xảy ra, nó sẽ từ chối biên dịch chương trình của bạn.</p>
+    <p>Thuộc tính <code>no_main</code> cho biết chương trình này sẽ không dùng interface <code>main</code> tiêu chuẩn, vốn được thiết kế cho các ứng dụng command line nhận arguments. Thay vì <code>main</code> tiêu chuẩn, chúng ta sẽ dùng thuộc tính <code>entry</code> từ crate <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a> để định nghĩa một entry point tùy chỉnh. Trong chương trình này, chúng ta đã đặt tên entry point là <code>main</code>, nhưng có thể dùng bất kỳ tên nào khác. Hàm entry point phải có signature <code>fn() -&gt; !</code>; kiểu này chỉ ra rằng hàm không thể return. Điều này có nghĩa là chương trình không bao giờ kết thúc bằng cách return từ <code>main</code>: nếu trình biên dịch phát hiện điều này có thể xảy ra, nó sẽ từ chối biên dịch chương trình của bạn.</p>
 
     <p>Nếu bạn để ý kỹ, bạn cũng sẽ thấy có một thư mục <code>.cargo</code> có thể ẩn trong Cargo project. Thư mục này chứa file cấu hình Cargo <code>.cargo/config.toml</code>.</p>
 
@@ -153,7 +153,7 @@ enabled = true</code></pre>
 
     <p>Bây giờ chúng ta đã hiểu mọi thứ, hãy bắt đầu bằng cách build chương trình này.</p>
 
-    <h1>Build it</h1>
+    <h2>Biên dịch chương trình</h2>
 
     <p>Bước đầu tiên là build "binary" crate của chúng ta. Vì microcontroller có kiến trúc khác với máy tính của bạn, chúng ta sẽ phải cross compile. Cross compiling trong Rust đơn giản như việc truyền thêm flag <code>--target</code> vào <code>rustc</code> hoặc Cargo. Phần phức tạp là tìm ra argument của flag đó: <em>tên</em> của target.</p>
 
@@ -224,7 +224,7 @@ ELF Header:
 
     <p>Tiếp theo, chúng ta sẽ flash chương trình vào microcontroller của mình.</p>
 
-    <h1>Flash it</h1>
+    <h2>Nạp chương trình</h2>
 
     <p>Flashing là quá trình đưa chương trình của chúng ta vào bộ nhớ không mất dữ liệu khi tắt nguồn (bộ nhớ flash) của microcontroller. Sau khi flash, microcontroller sẽ thực thi chương trình đã được flash mỗi khi bật nguồn.</p>
 
@@ -252,17 +252,17 @@ ELF Header:
 
     <p>Bạn sẽ thấy <code>cargo-embed</code> không thoát sau khi in dòng cuối cùng. Điều này là có chủ ý: bạn không nên đóng <code>cargo-embed</code>, vì chúng ta cần nó ở trạng thái này cho bước tiếp theo — debug nó! Hơn nữa, bạn sẽ nhận thấy rằng <code>cargo build</code> và <code>cargo embed</code> thực sự được truyền các flags giống nhau. Đó là vì <code>cargo embed</code> thực sự thực thi build và sau đó flash binary kết quả lên chip. Điều này có nghĩa là bạn có thể bỏ qua bước <code>cargo build</code> trong tương lai nếu bạn muốn flash code ngay lập tức.</p>
 
-    <h1>Debug it</h1>
+    <h2>Gỡ lỗi chương trình</h2>
 
     <p>Hãy tìm hiểu cách debug chương trình nhỏ của chúng ta. Thực ra nó chưa có bất kỳ lỗi thú vị nào, nhưng đó là loại chương trình tốt nhất để học debug.</p>
 
-    <h2>Thứ này hoạt động như thế nào?</h2>
+    <h3>Thứ này hoạt động như thế nào?</h3>
 
     <p>Trước khi debug chương trình, hãy dành một chút thời gian để nhanh chóng hiểu những gì thực sự đang xảy ra. Trong chương trước, chúng ta đã thảo luận về mục đích của chip thứ hai trên board, cũng như cách nó giao tiếp với máy tính của chúng ta, nhưng làm thế nào chúng ta thực sự có thể sử dụng nó?</p>
 
     <p>Tùy chọn nhỏ <code>default.gdb.enabled = true</code> trong <code>Embed.toml</code> khiến <code>cargo embed</code> mở một "GDB stub" sau khi flash. Đây là một server để GDB của chúng ta kết nối tới và gửi các lệnh như "đặt breakpoint tại địa chỉ X". Server sau đó có thể quyết định theo cách riêng của nó cách xử lý lệnh này. Trong trường hợp của GDB stub của <code>cargo embed</code>, nó sẽ chuyển lệnh qua USB đến "debugging probe" trên chip thứ hai. Chip này làm việc giao tiếp với MCU cho chúng ta.</p>
 
-    <h2>Bắt đầu debug thôi!</h2>
+    <h3>Bắt đầu debug thôi!</h3>
 
     <p><code>cargo-embed</code> đang chạy trong shell hiện tại của chúng ta. Chúng ta có thể mở một shell mới và quay lại thư mục project. Khi đã ở đó, trước tiên chúng ta phải mở binary trong gdb như thế này:</p>
 
@@ -445,17 +445,17 @@ Ending remote debugging.
 
     <p>Tiếp theo là gì? API bậc cao mà tôi đã hứa.</p>
 
-    <h1>Light it up</h1>
+    <h2>Thắp sáng LED</h2>
 
     <p>Chúng ta sẽ kết thúc chương này bằng cách làm một trong nhiều LED trên MB2 sáng lên. Để hoàn thành nhiệm vụ này, chúng ta sẽ dùng một trong các trait được cung cấp bởi <code>embedded-hal</code>, cụ thể là trait <a href="https://docs.rs/embedded-hal/0.2.6/embedded_hal/digital/v2/trait.OutputPin.html"><code>OutputPin</code></a> cho phép chúng ta bật hoặc tắt một pin.</p>
 
-    <h2>LED của micro:bit</h2>
+    <h3>LED của micro:bit</h3>
 
     <p>Ở mặt sau của micro:bit, bạn có thể thấy một hình vuông 5x5 của các LED, thường gọi là LED matrix. Nhờ cách bố trí ma trận này, thay vì phải dùng 25 chân riêng biệt để điều khiển từng LED, chúng ta chỉ cần 10 chân (5 hàng + 5 cột) để chọn hàng nào và cột nào của ma trận sáng lên.</p>
 
     <p>Hiện tại chúng ta sẽ dùng crate <code>microbit-v2</code> để thao tác các LED. Trong <a href="06-hello-world.html">chương tiếp theo</a> chúng ta sẽ đi qua chi tiết tất cả các tùy chọn có sẵn.</p>
 
-    <h2>Thực sự bật sáng!</h2>
+    <h3>Thực sự bật sáng!</h3>
 
     <p>Code cần thiết để bật LED trong ma trận thực ra khá đơn giản nhưng cần một chút thiết lập. Trước tiên hãy xem <code>src/main.rs</code>; sau đó chúng ta có thể đi qua từng bước.</p>
 
@@ -497,7 +497,7 @@ fn main() -&gt; ! {
 
     <p>Bây giờ chúng ta có thể bật LED được kết nối với <code>row1</code>, <code>col1</code> bằng cách đặt pin <code>row1</code> ở mức cao (tức là bật nó lên). Lý do chúng ta có thể để <code>col1</code> ở mức thấp là do cách mạch LED matrix hoạt động. Hơn nữa, <code>embedded-hal</code> được thiết kế theo cách mà mọi thao tác trên phần cứng đều có thể return lỗi, kể cả chỉ toggle pin on hoặc off. Vì điều đó khó có thể xảy ra trong trường hợp của chúng ta, chúng ta có thể <code>unwrap()</code> kết quả.</p>
 
-    <h2>Kiểm tra</h2>
+    <h3>Kiểm tra</h3>
 
     <p>Kiểm tra chương trình nhỏ của chúng ta khá đơn giản. Chúng ta chạy <code>cargo embed</code> và để nó flash như trước. Sau đó mở GDB và kết nối với GDB stub.</p>
 

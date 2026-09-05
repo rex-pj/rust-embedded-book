@@ -216,7 +216,7 @@
 }</code></pre>
 <figcaption><a href="#listing-19-8">Listing 19-8</a>: Cố dùng refutable pattern với <code>let</code></figcaption>
 </figure>
-<p>Nếu <code>some_option_value</code> là <code>None</code>, nó sẽ không khớp với <code>Some(x)</code> — nghĩa là pattern này là refutable. Nhưng câu lệnh <code>let</code> chỉ chấp nhận irrefutable pattern vì không có gì hợp lệ để làm với giá trị <code>None</code>. Lúc compile, Rust sẽ "mắng" ngay:</p>
+<p>Nếu <code>some_option_value</code> là <code>None</code>, nó sẽ không khớp với <code>Some(x)</code> — nghĩa là pattern này là refutable. Nhưng câu lệnh <code>let</code> chỉ chấp nhận irrefutable pattern vì không có gì hợp lệ để làm với giá trị <code>None</code>. Tại thời điểm compile, Rust sẽ phàn nàn rằng ta đã dùng một refutable pattern ở nơi bắt buộc phải là irrefutable pattern:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
 error[E0005]: refutable pattern in local binding

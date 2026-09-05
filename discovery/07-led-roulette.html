@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -198,7 +198,7 @@ fn main() -&gt; ! {
     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">⎘ Copy</button></div>
     <pre><code class="language-bash">$ gdb ../../../target/thumbv7em-none-eabihf/release/led-roulette</code></pre>
 
-    <p>Rust compiler chỉnh sửa các machine instruction được tạo ra trong một release build (đôi khi rất nhiều) nhằm cố gắng làm cho code nhanh hơn hoặc nhỏ hơn. Thật không may, GDB gặp khó khăn khi cố gắng hiểu những gì đang xảy ra sau quá trình này. Kết quả là debug release build với GDB có thể khó khăn.</p>
+    <p>Trình biên dịch Rust chỉnh sửa các machine instruction được tạo ra trong một release build (đôi khi rất nhiều) nhằm cố gắng làm cho code nhanh hơn hoặc nhỏ hơn. Thật không may, GDB gặp khó khăn khi cố gắng hiểu những gì đang xảy ra sau quá trình này. Kết quả là debug release build với GDB có thể khó khăn.</p>
 
     <p>Kích thước binary là điều chúng ta nên luôn để mắt tới! Giải pháp của bạn có kích thước bao nhiêu? Bạn có thể kiểm tra bằng lệnh <code>size</code> trên binary release:</p>
 

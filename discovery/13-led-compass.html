@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -71,7 +71,7 @@
       <img class="white_bg" title="MB2 Axes" src="assets/mb2-axes.svg" width="500" />
     </p>
 
-    <p>Bạn đã có thể viết một chương trình liên tục in dữ liệu magnetometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Sau khi viết chương trình đó (<code>examples/show-mag.rs</code>), hãy xác định hướng Bắc ở vị trí hiện tại của bạn. Sau đó canh chỉnh MB2 theo hướng đó và quan sát xem các số đo X và Y của cảm biến trông như thế nào.</p>
+    <p>Đến đây bạn hẳn đã đủ khả năng viết một chương trình liên tục in dữ liệu magnetometer trên console RTT từ <a href="12-i2c.html">chương I2C</a>. Sau khi viết chương trình đó (<code>examples/show-mag.rs</code>), hãy xác định hướng Bắc ở vị trí hiện tại của bạn. Sau đó canh chỉnh MB2 theo hướng đó và quan sát xem các số đo X và Y của cảm biến trông như thế nào.</p>
 
     <p>Bây giờ hãy xoay board 90 độ trong khi giữ nó song song với mặt đất. Bạn thấy giá trị X, Y và Z gì lần này? Sau đó xoay thêm 90 độ nữa. Bạn thấy giá trị gì?</p>
 
@@ -79,24 +79,24 @@
       <div class="callout-icon">💡</div>
       <div class="callout-body">
         <div class="callout-title">Magnetometer có thể bị hỏng một phần</div>
-        <p>Trong số hai chiếc MB2 tác giả có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Đây thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó ("hard iron error"). Crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình tự test hay hiệu chuẩn của nhà sản xuất. <strong>Nếu MB2 của bạn có vẻ không hoạt động, hãy bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>.</strong></p>
+        <p>Trong số hai chiếc MB2 tác giả có lúc viết bài này, một chiếc dường như có magnetometer bị hỏng một phần: trục Z bị lệch đến mức không dùng được. Đây thường là kết quả của việc MB2 bị tiếp xúc với từ trường mạnh tại một thời điểm nào đó ("hard iron error"). Crate <code>lsm303agr</code> hiện chưa hỗ trợ quy trình tự kiểm tra (self-test) hay hiệu chuẩn của nhà sản xuất. <strong>Nếu MB2 của bạn có vẻ không hoạt động, hãy bỏ qua sang <a href="14-punch-o-meter.html">chương tiếp theo</a>.</strong></p>
       </div>
     </div>
 
-    <p>Cực Bắc từ của Trái Đất là thứ rất đỏng đảnh: nó lệch so với cực Bắc thực ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">Công cụ tính này của NOAA (Mỹ)</a> có thể mở trên thiết bị di động của bạn để có ước tính tốt về cực Bắc thực cũng như cực Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">công cụ tính của UK BGS</a> để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (chênh lệch giữa cực Bắc thực và cực Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
+    <p>Cực Bắc từ của Trái Đất là thứ rất thất thường: nó lệch so với cực Bắc thực ở hầu hết các nơi trên Trái Đất, đôi khi đáng kể. Nó có thể chỉ xuống mặt đất khá nhiều. Nó thay đổi theo thời gian. Nếu không tính đến tất cả những điều này, bạn sẽ không có được một chiếc la bàn rất chính xác ngay cả khi magnetometer MB2 của bạn hoàn hảo (nó không phải vậy). <a href="https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml">Công cụ tính này của NOAA (Mỹ)</a> có thể mở trên thiết bị di động của bạn để có ước tính tốt về cực Bắc thực cũng như cực Bắc từ; bạn có thể dùng <a href="http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html">công cụ tính của UK BGS</a> để nhập vĩ độ, kinh độ và độ cao của bạn để có được cả declination và inclination. Tại vị trí của tôi, "declination" (chênh lệch giữa cực Bắc thực và cực Bắc từ) là khoảng 15°; "inclination" là 67° đáng kinh ngạc xuống mặt đất.</p>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
         <div class="callout-title">Magnetometer LSM303AGR chưa chính xác ngay khi xuất xưởng</div>
-        <p>Nhà sản xuất đề xuất một quy trình hiệu chuẩn phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản implement hiệu chuẩn mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
+        <p>Nhà sản xuất đề xuất một quy trình hiệu chuẩn phức tạp để tìm các điều chỉnh cho số đo magnetometer. Vì vậy la bàn trong chương này sẽ không thực sự chính xác. Bạn có thể tìm thêm thông tin, một bản cài đặt hiệu chuẩn mẫu và một số đồ họa la bàn đẹp hơn trong <a href="appendix-mag-calibration.html">phụ lục 3</a>.</p>
       </div>
     </div>
 
     <!-- ============================================================ -->
     <h2>Magnitude (Cường độ từ trường)</h2>
 
-    <p>Từ trường Trái Đất mạnh đến mức nào? Theo tài liệu về method <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field"><code>magnetic_field()</code></a>, các giá trị <code>x</code>, <code>y</code>, <code>z</code> chúng ta nhận được tính bằng nanotesla. Điều đó có nghĩa là thứ duy nhất chúng ta phải tính để lấy cường độ của từ trường tính bằng nanotesla là độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả. Như bạn có thể nhớ từ trường học, đây đơn giản là:</p>
+    <p>Từ trường Trái Đất mạnh đến mức nào? Theo tài liệu về method <a href="https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field"><code>magnetic_field()</code></a>, các giá trị <code>x</code>, <code>y</code>, <code>z</code> chúng ta nhận được tính bằng nanotesla. Điều đó có nghĩa là thứ duy nhất chúng ta phải tính để lấy cường độ của từ trường tính bằng nanotesla là độ lớn của vector 3D mà các giá trị <code>x</code>, <code>y</code>, <code>z</code> mô tả. Như bạn hẳn còn nhớ từ hồi đi học, đây đơn giản là:</p>
 
     <pre><code class="language-rust">use libm::sqrtf;
 let magnitude = sqrtf(x * x + y * y + z * z);</code></pre>

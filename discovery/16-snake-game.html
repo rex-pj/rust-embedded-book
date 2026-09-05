@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -67,13 +67,13 @@
 
     <p>Code ở đây được module hóa chi tiết hơn mức có lẽ cần thiết. Cách module hóa chi tiết này cho phép chúng ta xem code từng chút một. Chúng ta sẽ xây dựng code từ dưới lên: chúng ta đầu tiên sẽ xây dựng ba module — <code>game</code>, <code>controls</code> và <code>display</code>, rồi kết hợp chúng để tạo ra chương trình cuối cùng. Mỗi module sẽ có một file code top-level và một hoặc nhiều file code được include: ví dụ, module <code>game</code> sẽ bao gồm <code>src/game.rs</code>, <code>src/game/coords.rs</code>, <code>src/game/movement.rs</code>, v.v. Câu lệnh Rust <code>mod</code> được dùng để kết hợp các thành phần khác nhau của module. <em>The Rust Programming Language</em> có một <a href="https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html">mô tả tốt</a> về hệ thống module của Rust.</p>
 
-    <h1 id="game-logic">Logic của game</h1>
+    <h2 id="game-logic">Logic của game</h2>
 
     <p>Module đầu tiên chúng ta sẽ xây dựng là game logic. Bạn có lẽ đã quen với trò chơi <a href="https://en.wikipedia.org/wiki/Snake_%28video_game_genre%29">snake</a>, nhưng nếu chưa, ý tưởng cơ bản là người chơi dẫn dắt một con rắn trên một lưới 2D. Tại bất kỳ thời điểm nào, có một "thức ăn" tại một vị trí ngẫu nhiên trên lưới và mục tiêu của trò chơi là đưa con rắn đến "ăn" càng nhiều thức ăn càng tốt. Mỗi lần snake ăn thức ăn nó sẽ dài thêm. Người chơi thua nếu snake va vào đuôi của chính nó.</p>
 
     <p>Trong một số biến thể của trò chơi, người chơi cũng thua nếu snake chạm vào rìa lưới, nhưng vì kích thước lưới của chúng ta nhỏ, chúng ta sẽ implement quy tắc "wraparound": nếu snake đi ra ngoài một cạnh của lưới, nó sẽ tiếp tục từ cạnh đối diện.</p>
 
-    <h2>Module <code>game</code></h2>
+    <h3>Module <code>game</code></h3>
 
     <p>Chúng ta sẽ xây dựng cơ chế game trong module <code>game</code>.</p>
 
@@ -117,7 +117,7 @@ impl Coords {
     }
 }</code></pre>
 
-    <p>Chúng ta dùng struct <code>Coords</code> để tham chiếu đến một vị trí trên lưới. Vì <code>Coords</code> chỉ chứa hai số nguyên, chúng ta yêu cầu compiler derive implementation của trait <code>Copy</code> cho nó, để chúng ta có thể truyền các struct <code>Coords</code> mà không cần lo về ownership.</p>
+    <p>Chúng ta dùng struct <code>Coords</code> để tham chiếu đến một vị trí trên lưới. Vì <code>Coords</code> chỉ chứa hai số nguyên, chúng ta yêu cầu trình biên dịch derive implementation của trait <code>Copy</code> cho nó, để chúng ta có thể truyền các struct <code>Coords</code> mà không cần lo về ownership.</p>
 
     <h3>Sinh số ngẫu nhiên</h3>
 
@@ -278,7 +278,7 @@ impl Snake {
     }
 }</code></pre>
 
-    <h3>Game Module Top-Level</h3>
+    <h3>Tầng trên cùng của module game</h3>
 
     <p>Struct <code>Game</code> theo dõi trạng thái game. Nó chứa một đối tượng <code>Snake</code>, tọa độ hiện tại của thức ăn, tốc độ của game (được dùng để xác định thời gian trôi qua giữa mỗi lần di chuyển của snake), trạng thái của game (game đang diễn ra hay người chơi đã thắng hoặc thua) và điểm số của người chơi.</p>
 
@@ -486,15 +486,15 @@ impl Game {
 
     <p>Tiếp theo chúng ta sẽ thêm khả năng điều khiển chuyển động của snake.</p>
 
-    <h1 id="controls">Controls</h1>
+    <h2 id="controls">Điều khiển</h2>
 
     <p>Nhân vật chính của chúng ta sẽ được điều khiển bởi hai nút bấm ở mặt trước của micro:bit. Nút A sẽ rẽ về bên trái của snake, và nút B sẽ rẽ về bên phải của snake.</p>
 
     <p>Chúng ta sẽ dùng macro <code>microbit::pac::interrupt</code> để xử lý các lần nhấn nút theo cách concurrent. Interrupt sẽ được sinh ra bởi peripheral GPIOTE (<strong>G</strong>eneral <strong>P</strong>urpose <strong>I</strong>nput/<strong>O</strong>utput <strong>T</strong>asks and <strong>E</strong>vents) của MB2.</p>
 
-    <h2>Module <code>controls</code></h2>
+    <h3>Module <code>controls</code></h3>
 
-    <p>Chúng ta cần theo dõi hai mảnh trạng thái global mutable riêng biệt: một tham chiếu đến peripheral <code>GPIOTE</code> và một bản ghi về hướng rẽ đã chọn tiếp theo.</p>
+    <p>Chúng ta cần theo dõi hai mảnh trạng thái toàn cục mutable riêng biệt: một tham chiếu đến peripheral <code>GPIOTE</code> và một bản ghi về hướng rẽ đã chọn tiếp theo.</p>
 
     <p>Dữ liệu được chia sẻ được bọc trong <code>RefCell</code> để cho phép interior mutability và locking. Bạn có thể tìm hiểu thêm về <code>RefCell</code> bằng cách đọc <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html">tài liệu RefCell</a> và <a href="https://doc.rust-lang.org/book/ch15-05-interior-mutability.html">chương interior mutability</a> của Rust Book. <code>RefCell</code> lần lượt được bọc trong <code>cortex_m::interrupt::Mutex</code> để cho phép truy cập an toàn. Mutex được cung cấp bởi crate <code>cortex_m</code> sử dụng khái niệm <a href="https://en.wikipedia.org/wiki/Critical_section">critical section</a>. Dữ liệu trong Mutex chỉ có thể được truy cập từ bên trong một function hoặc closure được truyền vào <code>cortex_m::interrupt::free</code> (được đặt lại tên ở đây thành <code>interrupt_free</code> cho rõ ràng), đảm bảo rằng code trong function hoặc closure đó không thể bị ngắt.</p>
 
@@ -605,7 +605,7 @@ pub fn get_turn(reset: bool) -&gt; Turn {
 
     <p>Tiếp theo chúng ta sẽ xây dựng hỗ trợ cho một màn hình game độ trung thực cao.</p>
 
-    <h1 id="using-the-non-blocking-display">Dùng display non-blocking</h1>
+    <h2 id="using-the-non-blocking-display">Dùng display non-blocking</h2>
 
     <p>Tiếp theo chúng ta sẽ hiển thị snake và thức ăn trên các LED của màn hình MB2. Cho đến nay, chúng ta đã dùng interface blocking, vốn chỉ cho phép LED sáng hết mức hoặc tắt hẳn. Với điều này, một game snake cơ bản đang hoạt động sẽ là có thể. Nhưng bạn có thể thấy rằng khi snake dài hơn một chút, sẽ khó phân biệt snake với thức ăn, và xác định hướng snake đang đi. Hãy tìm cách cho phép độ sáng LED thay đổi: chúng ta có thể làm cho thân snake hơi tối hơn, điều này sẽ giúp giải quyết sự lộn xộn.</p>
 
@@ -615,7 +615,7 @@ pub fn get_turn(reset: bool) -&gt; Turn {
 
     <p>Code để tương tác với interface non-blocking (<code>src/display.rs</code>) khá đơn giản và sẽ theo cấu trúc tương tự như code chúng ta đã dùng để tương tác với các nút bấm. Lần này chúng ta sẽ bắt đầu từ top level.</p>
 
-    <h2>Module Display</h2>
+    <h3>Module Display</h3>
 
     <pre><code class="language-rust">pub mod interrupt;
 pub mod show;
@@ -642,7 +642,7 @@ pub fn init_display(board_timer: TIMER1, board_display: DisplayPins) {
 
     <p>Đầu tiên, chúng ta khởi tạo một struct <code>microbit::display::nonblocking::Display</code> đại diện cho màn hình LED, truyền vào peripheral <code>TIMER1</code> và <code>DisplayPins</code> của board. Sau đó chúng ta lưu display trong một Mutex. Cuối cùng, chúng ta unmask interrupt <code>TIMER1</code>.</p>
 
-    <h2>Display API</h2>
+    <h3>Display API</h3>
 
     <p>Sau đó chúng ta định nghĩa một vài convenience function cho phép chúng ta dễ dàng set (hoặc unset) hình ảnh được hiển thị (<code>src/display/show.rs</code>).</p>
 
@@ -674,7 +674,7 @@ pub fn clear_display() {
 
     <p><code>clear_display</code> làm đúng như tên gọi của nó.</p>
 
-    <h2>Xử lý interrupt cho Display</h2>
+    <h3>Xử lý interrupt cho Display</h3>
 
     <p>Cuối cùng, chúng ta dùng macro <code>interrupt</code> để định nghĩa một handler cho interrupt <code>TIMER1</code>. Interrupt này kích hoạt nhiều lần trong một giây, và đây là điều cho phép <code>Display</code> luân phiên bật/tắt các LED thật nhanh để tạo ra ảo giác về các mức độ sáng khác nhau. Tất cả code handler của chúng ta làm là gọi method <code>Display::handle_display_event</code>, xử lý điều này (<code>src/display/interrupt.rs</code>).</p>
 
@@ -694,7 +694,7 @@ fn TIMER1() {
 
     <p>Bây giờ chúng ta có thể hiểu cách hàm <code>main</code> của chúng ta sẽ làm việc với display: chúng ta sẽ gọi <code>init_display</code> và dùng các function mới mà chúng ta đã định nghĩa để tương tác với nó.</p>
 
-    <h1 id="snake-game-final-assembly">Snake game: lắp ráp cuối cùng</h1>
+    <h2 id="snake-game-final-assembly">Snake game: lắp ráp cuối cùng</h2>
 
     <p>Code trong file <code>src/main.rs</code> của chúng ta kết hợp tất cả các cơ chế đã được thảo luận trước đó để tạo ra game cuối cùng.</p>
 

@@ -27,7 +27,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html" class="active"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -69,24 +69,30 @@
 
     <h2>🎓 Yêu cầu về kiến thức</h2>
 
-    <p>Yêu cầu kiến thức chính để đọc cuốn sách này là biết <em>một chút</em> Rust. Quen với những kiến thức cơ bản về generics và trait sẽ rất có ích. Bạn cần biết cách <em>dùng</em> closure, và cần quen với các idiom của Rust edition hiện tại.</p>
+    <p>Yêu cầu kiến thức chính để đọc cuốn sách này là biết <em>một chút</em> Rust. Thật khó để tôi định lượng thế nào là <em>một chút</em>. Quen với những kiến thức cơ bản về generic và trait sẽ khá hữu ích. Bạn cần biết cách <em>dùng</em> closure. Bạn cũng cần quen với các idiom của <a href="https://rust-lang-nursery.github.io/edition-guide/" target="_blank">edition</a> Rust hiện tại.</p>
 
     <h2>🔌 Yêu cầu phần cứng</h2>
 
-    <p>Ngoài ra, để theo dõi tài liệu này, bạn cần có các phần cứng sau:</p>
+    <p>Ngoài ra, để theo được tài liệu này, bạn sẽ cần:</p>
 
     <ul>
       <li>
-        <p>Một board <a href="https://tech.microbit.org/hardware/">micro:bit v2</a> (MB2). Cuốn sách này được viết cho phiên bản V2.00; mọi thứ sẽ hoạt động tốt với bất kỳ board V2 nào.</p>
+        <p>Một board <a href="https://tech.microbit.org/hardware/" target="_blank">micro:bit v2</a> (MB2).</p>
+        <p>Bạn mua được board này từ nhiều nhà cung cấp, trong đó có Amazon và Ali Baba. Bạn cũng có thể lấy <a href="https://microbit.org/buy/" target="_blank">danh sách nhà cung cấp</a> trực tiếp từ BBC — nhà sản xuất MB2.</p>
         <p align="center">
           <img title="micro:bit" src="assets/microbit-v2.jpg" style="max-width:480px;width:100%">
         </p>
+        <p>Có vài phiên bản board <code>V2</code> khác nhau đang được bán. Tài liệu này viết cho <code>V2.00</code>, nhưng mọi thứ sẽ chạy tốt với bất kỳ board <code>V2</code> nào.</p>
       </li>
       <li>
-        <p>Một cáp micro-B USB. Cáp này cần để cấp nguồn cho board micro:bit khi không dùng pin, và để giao tiếp với nó. Hãy đảm bảo cáp hỗ trợ truyền dữ liệu vì một số cáp chỉ hỗ trợ sạc thiết bị.</p>
+        <p>Một cáp micro-B USB (không có gì đặc biệt — có lẽ bạn đang có sẵn vài sợi). Cáp này cần để cấp nguồn cho board micro:bit khi không dùng pin, và để giao tiếp với nó. Hãy đảm bảo cáp có hỗ trợ truyền dữ liệu, vì một số cáp chỉ hỗ trợ sạc.</p>
         <p align="center">
           <img title="micro-B USB cable" src="assets/usb-cable.jpg" style="max-width:480px;width:100%">
         </p>
+        <blockquote>
+          <p><strong>LƯU Ý</strong> Một số bộ micro:bit có kèm sẵn loại cáp này. Cáp USB dùng cho các thiết bị di động khác cũng dùng được, miễn là đầu micro-B và có khả năng truyền dữ liệu.</p>
+        </blockquote>
+        <p>Bộ <code>micro:bit Go</code> chính hãng có sẵn cả cáp USB lẫn một hộp pin tiện lợi để cấp nguồn cho MB2 mà không cần USB.</p>
       </li>
     </ul>
 
@@ -94,18 +100,20 @@
 
     <h3>Ủa, tại sao tôi lại cần đúng phần cứng này?</h3>
 
-    <p>Nó giúp cuộc sống của tôi và của bạn dễ dàng hơn nhiều. Tài liệu dễ tiếp cận hơn rất, rất nhiều nếu chúng ta không phải lo lắng về sự khác biệt giữa các loại phần cứng. Hãy tin tôi điều này.</p>
+    <p>Nó giúp cuộc sống của tôi và của bạn dễ dàng hơn nhiều.</p>
 
-    <h3>Tôi có thể theo dõi tài liệu này với một board phát triển khác không?</h3>
+    <p>Tài liệu sẽ dễ tiếp cận hơn rất, rất nhiều nếu chúng ta không phải bận tâm về khác biệt giữa các loại phần cứng. Hãy tin tôi ở điểm này.</p>
 
-    <p>Có thể? Điều đó phụ thuộc chủ yếu vào hai thứ: kinh nghiệm trước đây của bạn với microcontroller và/hoặc liệu đã có sẵn một crate cấp cao, như <a href="https://github.com/nrf-rs/nrf-hal"><code>nrf52833-hal</code></a>, cho board phát triển của bạn ở đâu đó chưa. Bạn có thể tìm kiếm trong <a href="https://github.com/rust-embedded/awesome-embedded-rust#hal-implementation-crates">danh sách HAL của Awesome Embedded Rust</a> cho microcontroller của mình, nếu bạn định dùng một loại khác.</p>
+    <h3>Tôi có thể theo tài liệu này với một board phát triển khác không?</h3>
 
-    <p>Với một board phát triển khác, cuốn sách này sẽ mất đi hầu hết hoặc toàn bộ tính thân thiện với người mới và tính "dễ theo dõi", theo quan điểm của tôi.</p>
+    <p>Có thể? Điều đó phụ thuộc chủ yếu vào hai thứ: kinh nghiệm trước đây của bạn với microcontroller, và/hoặc việc đã có sẵn một crate cấp cao cho board phát triển của bạn ở đâu đó hay chưa. Ít nhất bạn sẽ cần một crate HAL, như <a href="https://docs.rs/nrf52833-hal" target="_blank"><code>nrf52833-hal</code></a> được dùng ở đây. Bạn có thể sẽ thích một board có sẵn Board Support crate hơn, như <a href="https://docs.rs/microbit-v2" target="_blank"><code>microbit-v2</code></a> được dùng ở đây. Nếu bạn định dùng một microcontroller khác, bạn có thể lần tìm trong <a href="https://github.com/rust-embedded/awesome-embedded-rust" target="_blank">Awesome Embedded Rust</a> hoặc đơn giản là tìm trên mạng để ra các crate được hỗ trợ.</p>
 
-    <p>Nếu bạn có một board phát triển khác và bạn không tự coi mình là người mới hoàn toàn, bạn có thể tìm kiếm <a href="https://github.com/rust-embedded/awesome-embedded-rust#board-support-crates">Board Support crates</a> cho board của mình, hoặc cân nhắc dùng template Cortex-M quickstart.</p>
+    <p>Với một board phát triển khác, theo ý tôi, tài liệu này sẽ mất đi phần lớn — nếu không muốn nói là toàn bộ — tính thân thiện với người mới và tính "dễ theo": bạn đã được cảnh báo rồi đấy.</p>
+
+    <p>Nếu bạn có một board phát triển nền Arm khác và không tự coi mình là người mới hoàn toàn, bạn có thể cân nhắc bắt đầu từ template dự án <a href="https://rust-embedded.github.io/cortex-m-quickstart/cortex_m_quickstart/" target="_blank">quickstart</a>.</p>
 
     <div class="nav-buttons">
-      <a href="01-background.html" class="nav-btn">← Background</a>
+      <a href="01-background.html" class="nav-btn">← Kiến thức nền</a>
       <a href="03-setup.html" class="nav-btn next">Cài đặt môi trường →</a>
     </div>
   </main>

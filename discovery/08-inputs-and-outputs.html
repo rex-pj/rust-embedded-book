@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -104,7 +104,7 @@ fn main() -&gt; ! {
 
     <p>Chúng ta liên tục theo dõi trạng thái nút, và báo cáo mỗi khi trạng thái đó thay đổi.</p>
 
-    <h1>Polling</h1>
+    <h2>Polling</h2>
 
     <p>Bây giờ chúng ta đã học cách đọc GPIO input, hãy xem xét cách dùng các lần đọc này trong thực tế. Giả sử chúng ta muốn chương trình bật LED khi nhấn Nút A và tắt LED khi nhấn Nút B. Chúng ta có thể làm điều này bằng cách polling trạng thái của cả hai nút trong một vòng lặp, và phản hồi khi đọc được nút đang được nhấn. Đây là cách chúng ta có thể viết chương trình này:</p>
 
@@ -163,7 +163,7 @@ fn main() -&gt; ! {
 
     <p><strong>Lưu ý</strong> "Polling" thường được dùng ở hai mức độ chi tiết. Ở một mức, "polling" dùng để chỉ việc hỏi (một lần) trạng thái của một input là gì. Ở mức cao hơn, "polling", hay "polling trong vòng lặp", dùng để chỉ việc hỏi (liên tục) trạng thái của một input trong một luồng điều khiển đơn giản như chúng ta dùng ở trên. Cách dùng từ để chỉ luồng điều khiển này chỉ được dùng trong các chương trình đơn giản nhất, và ít khi dùng trong production (không thực tế như chúng ta sẽ sớm thấy), nên nhìn chung khi kỹ sư embedded nói về polling, họ thường muốn nói tới nghĩa thứ nhất, tức là hỏi (một lần) trạng thái của một input là gì.</p>
 
-    <h1>Thử thách</h1>
+    <h2>Thử thách</h2>
 
     <p>Bây giờ là lúc bạn đưa polling vào thực hành. Nhiệm vụ của bạn là implement một chương trình đơn giản dùng button polling để hiển thị mũi tên chỉ hướng dựa trên input của người dùng:</p>
     <ul>
@@ -181,7 +181,7 @@ fn main() -&gt; ! {
 
     <p>Tôi mong bạn không mắc lỗi! <em>Thật sự</em> khó để cùng tham gia giao thông với những người không dùng xi-nhan đúng cách.</p>
 
-    <h1>Lời giải của tôi</h1>
+    <h2>Lời giải của tôi</h2>
 
     <p>Đây là lời giải của tôi (trong <code>src/main.rs</code>). Hy vọng bài này với bạn khá dễ. Bạn sẽ sớm thấy rằng polling đơn giản như vậy không thực tế lắm.</p>
 
@@ -241,7 +241,7 @@ fn main() -&gt; ! {
     }
 }</code></pre>
 
-    <h1>Polling có vấn đề</h1>
+    <h2>Polling có vấn đề</h2>
 
     <p>À đúng rồi, đèn xi-nhan thường nhấp nháy, đúng không? Làm thế nào chúng ta có thể mở rộng chương trình để nhấp nháy đèn xi-nhan LED khi nhấn nút. Chúng ta biết cách nhấp nháy LED từ chương trình Hello World; chúng ta bật LED, đợi một chút, rồi tắt nó. Nhưng làm thế nào để thực hiện điều này trong vòng lặp main trong khi vẫn kiểm tra xem nút có được nhấn không? Chúng ta có thể thử điều gì đó như sau:</p>
 
@@ -274,9 +274,9 @@ fn main() -&gt; ! {
 
     <p>Một chương trình "thông minh hơn" sẽ biết rằng processor thực ra không làm gì trong khi blink delay đang chạy. Chương trình hoàn toàn có thể làm những thứ khác trong khi chờ delay kết thúc — cụ thể là kiểm tra xem nút có được nhấn không.</p>
 
-    <h2>Superloops</h2>
+    <h3>Superloop</h3>
 
-    <p>Thuật ngữ <em>superloop</em> trong hệ thống embedded dùng để chỉ một vòng lặp điều khiển chính thực hiện nhiều việc theo thứ tự. Đó là phần mở rộng tự nhiên của luồng điều khiển đơn giản mà chúng ta đã dùng cho đến nay. Để xử lý logic có thể được cảm nhận như nhiều thứ xảy ra cùng lúc, chúng ta cần cấu trúc chương trình thông minh hơn để có thể phản hồi hợp lý với các sự kiện.</p>
+    <p>Thuật ngữ <em>superloop</em> trong hệ thống embedded dùng để chỉ một vòng lặp điều khiển chính thực hiện nhiều việc theo thứ tự. Đó là phần mở rộng tự nhiên của luồng điều khiển đơn giản mà chúng ta đã dùng cho đến nay. Để xử lý logic mà người dùng cảm nhận như là nhiều việc xảy ra cùng lúc, chúng ta cần cấu trúc chương trình thông minh hơn để có thể phản hồi hợp lý với các sự kiện.</p>
 
     <p>Trong trường hợp chương trình xi-nhan của chúng ta, nơi chúng ta muốn nhấp nháy LED khi nhấn nút, và nhanh chóng dừng nhấp nháy khi nhả nút, chúng ta có thể tạo một "state machine" để biểu diễn các trạng thái khác nhau của chương trình. Chúng ta có ba trạng thái cho nút:</p>
     <ol>
@@ -405,7 +405,7 @@ fn main() -&gt; ! {
 
     <p>Superloop hoạt động và thường được dùng trong hệ thống embedded, nhưng lập trình viên phải cẩn thận để duy trì mức độ phản hồi cao với các sự kiện. Lưu ý cách chương trình superloop của chúng ta khác với ví dụ polling đơn giản trước đó. Bất kỳ bước chuyển trạng thái nào trong superloop như được viết ở trên nên mất một lượng thời gian khá nhỏ (ví dụ chúng ta không còn các delay có thể chặn processor trong thời gian dài và khiến chúng ta bỏ lỡ các sự kiện). Không phải lúc nào cũng dễ dàng chuyển đổi một chương trình polling đơn giản thành superloop nơi tất cả các chuyển trạng thái đều nhanh và tương đối không chặn, và trong những trường hợp này, chúng ta sẽ phải dựa vào các kỹ thuật thay thế để xử lý các sự kiện khác nhau được thực thi đồng thời.</p>
 
-    <h2>Concurrency</h2>
+    <h3>Concurrency</h3>
 
     <p>Làm nhiều thứ cùng một lúc được gọi là lập trình <em>concurrent</em>. Concurrency xuất hiện ở nhiều nơi trong lập trình, nhưng đặc biệt quan trọng trong hệ thống embedded. Có rất nhiều kỹ thuật để implement các hệ thống tương tác với peripheral trong khi duy trì mức độ phản hồi cao (ví dụ interrupt handling, cooperative multitasking, event queue, v.v.). Chúng ta sẽ khám phá một số kỹ thuật đó trong các chương sau.</p>
 

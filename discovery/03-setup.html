@@ -21,7 +21,7 @@
   <nav id="sidebar-nav">
     <div class="nav-group-title">Bắt đầu</div>
     <a href="index.html"><span class="nav-icon">📖</span>Giới thiệu</a>
-    <a href="01-background.html"><span class="nav-icon">🔍</span>Background</a>
+    <a href="01-background.html"><span class="nav-icon">🔍</span>Kiến thức nền</a>
     <a href="02-requirements.html"><span class="nav-icon">📋</span>Yêu cầu</a>
     <a href="03-setup.html" class="active"><span class="nav-icon">⚙️</span>Cài đặt môi trường</a>
     <div class="nav-group-title">Làm quen</div>
@@ -177,7 +177,7 @@ $ tar xjf /path/to/downloaded/file/gcc-arm-none-eabi-9-2020-q2-update-x86_64-lin
     <p>Sau đó, dùng trình soạn thảo yêu thích để thêm vào PATH trong file init của shell phù hợp (ví dụ <code>~/.zshrc</code> hoặc <code>~/.bashrc</code>):</p>
     <pre><code class="language-bash">PATH=$PATH:$HOME/local/gcc-arm-none-eabi-9-2020-q2-update/bin</code></pre>
 
-    <h4>Cấu hình udev rules</h4>
+    <h4 id="cấu-hình-udev-rules">Cấu hình udev rules</h4>
     <p>Các rules này cho phép bạn dùng thiết bị USB như micro:bit mà không cần quyền root, tức là không cần <code>sudo</code>.</p>
     <p>Tạo file này trong <code>/etc/udev/rules.d</code> với nội dung bên dưới.</p>
     <pre><code class="language-bash">$ cat /etc/udev/rules.d/69-microbit.rules</code></pre>
@@ -244,7 +244,7 @@ $ sudo udevadm trigger</code></pre>
 
     <h4>Xác nhận cargo-embed</h4>
     <p>Đầu tiên, kết nối micro:bit với máy tính bằng cáp USB.</p>
-    <p>Ít nhất một đèn LED màu cam gần cổng USB của micro:bit sẽ sáng lên. Hơn nữa, nếu bạn chưa bao giờ flash chương trình nào khác lên micro:bit, chương trình mặc định đi kèm sẽ bắt đầu nhấp nháy các LED đỏ ở mặt sau — bạn có thể bỏ qua chúng.</p>
+    <p>Ít nhất một đèn LED màu cam gần cổng USB của micro:bit sẽ sáng lên. Hơn nữa, nếu bạn chưa bao giờ flash chương trình nào khác lên micro:bit, chương trình mặc định đi kèm sẽ bắt đầu nhấp nháy các LED đỏ ở mặt sau — bạn có thể bỏ qua chúng, hoặc nghịch thử ứng dụng demo đó.</p>
     <p>Bây giờ hãy xem probe-rs, và qua đó cargo-embed, có nhìn thấy micro:bit của bạn không. Bạn có thể làm điều này bằng cách chạy lệnh sau:</p>
     <pre><code class="language-bash">$ probe-rs list
 The following debug probes were found:
@@ -293,7 +293,7 @@ $ cargo embed --target thumbv7em-none-eabihf</code></pre>
 
     <h2>🖥️ Cài đặt IDE (tùy chọn)</h2>
 
-    <p>Tài liệu này giả định bạn dùng terminal để build và chạy code, không yêu cầu editor cụ thể nào. Tuy nhiên nếu bạn muốn tích hợp tốt hơn với IDE, phần này hướng dẫn cấu hình.</p>
+    <p>Tài liệu này giả định bạn dùng terminal để build và chạy code, không yêu cầu editor cụ thể nào. Tuy nhiên bạn có thể có IDE yêu thích của riêng mình, thứ cho bạn tự động hoàn thành mã, chú thích kiểu, phím tắt quen tay và nhiều tiện ích khác. Phần này hướng dẫn cách tận dụng IDE của bạn với mã nguồn lấy từ repository của cuốn sách. Nếu IDE của bạn chưa có trong danh sách dưới đây, hãy góp phần cải thiện cuốn sách bằng cách bổ sung một mục cho nó, để người đọc sau có trải nghiệm tốt nhất.</p>
 
     <h3>IntelliJ</h3>
 
