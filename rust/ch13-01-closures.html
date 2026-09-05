@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — Closures</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch13-00-functional-features.html">← Trước</a>
@@ -212,7 +212,7 @@
 <a id="closures-anonymous-functions-that-capture-their-environment"></a></p>
 <h2 id="closures">Closures</h2>
 
-<p>Closure trong Rust là những hàm vô danh (anonymous functions) mà bạn có thể cất vào biến hoặc truyền đi như tham số cho các hàm khác. Bạn có thể tạo ra một closure ở một chỗ rồi gọi nó ở một chỗ khác để thực thi trong một ngữ cảnh khác hoàn toàn. Không giống với hàm thông thường, closure có thể bắt giữ (capture) các giá trị từ phạm vi (scope) mà nó được định nghĩa. Chúng ta sẽ cùng xem những tính năng của closure cho phép tái sử dụng code và tùy biến hành vi như thế nào.</p>
+<p>Closure trong Rust là những hàm vô danh (anonymous functions) mà bạn có thể cất vào biến hoặc truyền đi như tham số cho các hàm khác. Bạn có thể tạo ra một closure ở một chỗ rồi gọi nó ở một chỗ khác để thực thi trong một ngữ cảnh khác hoàn toàn. Không giống với hàm thông thường, closure có thể bắt giữ (capture) các giá trị từ phạm vi (scope) mà nó được định nghĩa. Chúng ta sẽ cùng xem những tính năng của closure cho phép tái sử dụng mã và tùy biến hành vi như thế nào.</p>
 
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-an-abstraction-of-behavior-with-closures"></a>
@@ -283,11 +283,11 @@ fn main() {
 
 <p>Cái <code>store</code> được định nghĩa trong <code>main</code> còn lại hai áo xanh và một áo đỏ để phân phối cho chương trình phiên bản giới hạn này. Chúng ta gọi method <code>giveaway</code> cho một người có sở thích áo đỏ và một người không có sở thích gì cả.</p>
 
-<p>Một lần nữa, code này có thể được triển khai theo nhiều cách, và ở đây, để tập trung vào closure, chúng ta gắn bó với các khái niệm bạn đã học, ngoại trừ phần thân của method <code>giveaway</code> dùng một closure. Trong method <code>giveaway</code>, chúng ta nhận sở thích của người dùng dưới dạng tham số kiểu <code>Option&lt;ShirtColor&gt;</code> và gọi method <code>unwrap_or_else</code> trên <code>user_preference</code>. Method <a href="../std/option/enum.Option.html#method.unwrap_or_else"><code>unwrap_or_else</code> trên <code>Option&lt;T&gt;</code></a> được định nghĩa bởi thư viện chuẩn. Nó nhận một tham số: một closure không có tham số nào và trả về một giá trị kiểu <code>T</code> (cùng kiểu được lưu trong biến thể <code>Some</code> của <code>Option&lt;T&gt;</code>, trong trường hợp này là <code>ShirtColor</code>). Nếu <code>Option&lt;T&gt;</code> là biến thể <code>Some</code>, <code>unwrap_or_else</code> trả về giá trị bên trong <code>Some</code>. Nếu <code>Option&lt;T&gt;</code> là biến thể <code>None</code>, <code>unwrap_or_else</code> gọi closure và trả về giá trị mà closure trả về.</p>
+<p>Một lần nữa, mã này có thể được triển khai theo nhiều cách, và ở đây, để tập trung vào closure, chúng ta gắn bó với các khái niệm bạn đã học, ngoại trừ phần thân của method <code>giveaway</code> dùng một closure. Trong method <code>giveaway</code>, chúng ta nhận sở thích của người dùng dưới dạng tham số kiểu <code>Option&lt;ShirtColor&gt;</code> và gọi method <code>unwrap_or_else</code> trên <code>user_preference</code>. Method <a href="../std/option/enum.Option.html#method.unwrap_or_else"><code>unwrap_or_else</code> trên <code>Option&lt;T&gt;</code></a> được định nghĩa bởi thư viện chuẩn. Nó nhận một tham số: một closure không có tham số nào và trả về một giá trị kiểu <code>T</code> (cùng kiểu được lưu trong biến thể <code>Some</code> của <code>Option&lt;T&gt;</code>, trong trường hợp này là <code>ShirtColor</code>). Nếu <code>Option&lt;T&gt;</code> là biến thể <code>Some</code>, <code>unwrap_or_else</code> trả về giá trị bên trong <code>Some</code>. Nếu <code>Option&lt;T&gt;</code> là biến thể <code>None</code>, <code>unwrap_or_else</code> gọi closure và trả về giá trị mà closure trả về.</p>
 
 <p>Chúng ta chỉ định biểu thức closure <code>|| self.most_stocked()</code> làm tham số cho <code>unwrap_or_else</code>. Đây là closure không nhận tham số nào (nếu closure có tham số, chúng sẽ xuất hiện giữa hai dấu gạch đứng). Phần thân của closure gọi <code>self.most_stocked()</code>. Chúng ta đang định nghĩa closure ở đây, và việc triển khai <code>unwrap_or_else</code> sẽ thực thi closure sau nếu kết quả được cần đến.</p>
 
-<p>Chạy code này in ra:</p>
+<p>Chạy mã này in ra:</p>
 <pre><code class="language-console">$ cargo run
    Compiling shirt-company v0.1.0 (file:///projects/shirt-company)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
@@ -296,7 +296,7 @@ The user with preference Some(Red) gets Red
 The user with preference None gets Blue
 </code></pre>
 
-<p>Một điểm thú vị ở đây là chúng ta đã truyền một closure gọi <code>self.most_stocked()</code> trên instance <code>Inventory</code> hiện tại. Thư viện chuẩn không cần biết gì về kiểu <code>Inventory</code> hay <code>ShirtColor</code> mà chúng ta đã định nghĩa, hay logic chúng ta muốn dùng trong tình huống này. Closure bắt giữ một immutable reference đến instance <code>Inventory</code> là <code>self</code> và truyền nó cùng với code chúng ta chỉ định cho method <code>unwrap_or_else</code>. Còn hàm thông thường thì không thể bắt giữ môi trường của nó theo cách này.</p>
+<p>Một điểm thú vị ở đây là chúng ta đã truyền một closure gọi <code>self.most_stocked()</code> trên instance <code>Inventory</code> hiện tại. Thư viện chuẩn không cần biết gì về kiểu <code>Inventory</code> hay <code>ShirtColor</code> mà chúng ta đã định nghĩa, hay logic chúng ta muốn dùng trong tình huống này. Closure bắt giữ một immutable reference đến instance <code>Inventory</code> là <code>self</code> và truyền nó cùng với mã chúng ta chỉ định cho method <code>unwrap_or_else</code>. Còn hàm thông thường thì không thể bắt giữ môi trường của nó theo cách này.</p>
 
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="closure-type-inference-and-annotation"></a></p>
@@ -421,7 +421,7 @@ error: could not compile `closure-example` (bin "closure-example") due to 1 prev
 
 <p>Ví dụ này cũng minh họa rằng một biến có thể gắn với định nghĩa closure, và sau đó chúng ta có thể gọi closure bằng cách dùng tên biến và dấu ngoặc đơn như thể tên biến là tên hàm.</p>
 
-<p>Vì chúng ta có thể có nhiều immutable reference đến <code>list</code> cùng lúc, <code>list</code> vẫn có thể truy cập từ code trước định nghĩa closure, sau định nghĩa closure nhưng trước khi closure được gọi, và sau khi closure được gọi. Code này biên dịch, chạy, và in:</p>
+<p>Vì chúng ta có thể có nhiều immutable reference đến <code>list</code> cùng lúc, <code>list</code> vẫn có thể truy cập từ mã trước định nghĩa closure, sau định nghĩa closure nhưng trước khi closure được gọi, và sau khi closure được gọi. Mã này biên dịch, chạy, và in:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling closure-example v0.1.0 (file:///projects/closure-example)
@@ -449,7 +449,7 @@ After calling closure: [1, 2, 3]
 <figcaption><a href="#listing-13-5">Listing 13-5</a>: Định nghĩa và gọi một closure bắt giữ một mutable reference</figcaption>
 </figure>
 
-<p>Code này biên dịch, chạy, và in:</p>
+<p>Mã này biên dịch, chạy, và in:</p>
 <pre><code class="language-console">$ cargo run
    Compiling closure-example v0.1.0 (file:///projects/closure-example)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
@@ -487,7 +487,7 @@ fn main() {
 <a id="moving-captured-values-out-of-the-closure-and-the-fn-traits"></a>
 <a id="moving-captured-values-out-of-closures-and-the-fn-traits"></a></p>
 <h3 id="moving-captured-values-out-of-closures">Chuyển giá trị đã bắt giữ ra khỏi Closure</h3>
-<p>Khi một closure đã bắt giữ một reference hoặc đã lấy ownership của một giá trị từ môi trường nơi closure được định nghĩa (ảnh hưởng đến thứ gì, nếu có, được chuyển <em>vào</em> closure), code trong phần thân closure định nghĩa điều gì xảy ra với các reference hoặc giá trị khi closure được thực thi sau này (ảnh hưởng đến thứ gì, nếu có, được chuyển <em>ra khỏi</em> closure).</p>
+<p>Khi một closure đã bắt giữ một reference hoặc đã lấy ownership của một giá trị từ môi trường nơi closure được định nghĩa (ảnh hưởng đến thứ gì, nếu có, được chuyển <em>vào</em> closure), mã trong phần thân closure định nghĩa điều gì xảy ra với các reference hoặc giá trị khi closure được thực thi sau này (ảnh hưởng đến thứ gì, nếu có, được chuyển <em>ra khỏi</em> closure).</p>
 
 <p>Phần thân closure có thể làm bất kỳ điều nào sau đây: Chuyển một giá trị đã bắt giữ ra khỏi closure, biến đổi giá trị đã bắt giữ, không chuyển cũng không biến đổi giá trị, hoặc không bắt giữ gì từ môi trường ngay từ đầu.</p>
 
@@ -513,7 +513,7 @@ fn main() {
     }
 }</code></pre>
 
-<p>Nhớ rằng <code>T</code> là generic đại diện cho kiểu của giá trị trong biến thể <code>Some</code> của một <code>Option</code>. Kiểu <code>T</code> đó cũng là kiểu trả về của hàm <code>unwrap_or_else</code>: Code gọi <code>unwrap_or_else</code> trên một <code>Option&lt;String&gt;</code>, chẳng hạn, sẽ nhận được một <code>String</code>.</p>
+<p>Nhớ rằng <code>T</code> là generic đại diện cho kiểu của giá trị trong biến thể <code>Some</code> của một <code>Option</code>. Kiểu <code>T</code> đó cũng là kiểu trả về của hàm <code>unwrap_or_else</code>: Mã gọi <code>unwrap_or_else</code> trên một <code>Option&lt;String&gt;</code>, chẳng hạn, sẽ nhận được một <code>String</code>.</p>
 
 <p>Tiếp theo, hãy chú ý rằng hàm <code>unwrap_or_else</code> có thêm tham số generic <code>F</code>. Kiểu <code>F</code> là kiểu của tham số tên <code>f</code>, chính là closure chúng ta cung cấp khi gọi <code>unwrap_or_else</code>.</p>
 
@@ -546,7 +546,7 @@ fn main() {
 <figcaption><a href="#listing-13-7">Listing 13-7</a>: Dùng <code>sort_by_key</code> để sắp xếp hình chữ nhật theo chiều rộng</figcaption>
 </figure>
 
-<p>Code này in:</p>
+<p>Mã này in:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.41s
@@ -598,7 +598,7 @@ fn main() {
 <figcaption><a href="#listing-13-8">Listing 13-8</a>: Thử dùng một closure <code>FnOnce</code> với <code>sort_by_key</code></figcaption>
 </figure>
 
-<p>Đây là cách phức tạp, rắc rối (không hoạt động được) để thử đếm số lần <code>sort_by_key</code> gọi closure khi sắp xếp <code>list</code>. Code này thử đếm bằng cách push <code>value</code>—một <code>String</code> từ môi trường closure—vào vector <code>sort_operations</code>. Closure bắt giữ <code>value</code> rồi chuyển <code>value</code> ra khỏi closure bằng cách chuyển ownership của <code>value</code> cho vector <code>sort_operations</code>. Closure này chỉ có thể được gọi một lần; thử gọi lần thứ hai sẽ không hoạt động vì <code>value</code> sẽ không còn trong môi trường để push vào <code>sort_operations</code> nữa! Do đó, closure này chỉ triển khai <code>FnOnce</code>. Khi chúng ta thử biên dịch code này, chúng ta nhận được lỗi rằng <code>value</code> không thể được chuyển ra khỏi closure vì closure phải triển khai <code>FnMut</code>:</p>
+<p>Đây là cách phức tạp, rắc rối (không hoạt động được) để thử đếm số lần <code>sort_by_key</code> gọi closure khi sắp xếp <code>list</code>. Mã này thử đếm bằng cách push <code>value</code>—một <code>String</code> từ môi trường closure—vào vector <code>sort_operations</code>. Closure bắt giữ <code>value</code> rồi chuyển <code>value</code> ra khỏi closure bằng cách chuyển ownership của <code>value</code> cho vector <code>sort_operations</code>. Closure này chỉ có thể được gọi một lần; thử gọi lần thứ hai sẽ không hoạt động vì <code>value</code> sẽ không còn trong môi trường để push vào <code>sort_operations</code> nữa! Do đó, closure này chỉ triển khai <code>FnOnce</code>. Khi chúng ta thử biên dịch mã này, chúng ta nhận được lỗi rằng <code>value</code> không thể được chuyển ra khỏi closure vì closure phải triển khai <code>FnMut</code>:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)

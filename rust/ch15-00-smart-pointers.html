@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 15 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 15 — Smart Pointers</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch14-05-extending-cargo.html">← Trước</a>
@@ -215,7 +215,7 @@
 
 <p>Trong Rust, với khái niệm ownership và borrowing, có thêm một điểm khác biệt giữa reference và smart pointer: trong khi reference chỉ mượn dữ liệu, thì ở nhiều trường hợp smart pointer thực sự <em>sở hữu</em> dữ liệu mà chúng trỏ tới.</p>
 
-<p>Smart pointer thường được xây dựng bằng struct. Điểm phân biệt với struct thông thường là smart pointer implement cả hai trait <code>Deref</code> và <code>Drop</code>. Trait <code>Deref</code> cho phép một instance của smart pointer struct hành xử như một reference, để bạn có thể viết code dùng được cho cả hai. Trait <code>Drop</code> cho phép bạn tùy biến đoạn code sẽ chạy khi một instance của smart pointer bước ra khỏi scope. Trong chương này, chúng ta sẽ bàn về cả hai trait đó và giải thích tại sao chúng lại quan trọng đến thế với smart pointers.</p>
+<p>Smart pointer thường được xây dựng bằng struct. Điểm phân biệt với struct thông thường là smart pointer triển khai cả hai trait <code>Deref</code> và <code>Drop</code>. Trait <code>Deref</code> cho phép một instance của smart pointer struct hành xử như một reference, để bạn có thể viết mã dùng được cho cả hai. Trait <code>Drop</code> cho phép bạn tùy biến đoạn mã sẽ chạy khi một instance của smart pointer bước ra khỏi scope. Trong chương này, chúng ta sẽ bàn về cả hai trait đó và giải thích tại sao chúng lại quan trọng đến thế với smart pointers.</p>
 
 <p>Vì pattern smart pointer là một design pattern tổng quát được dùng rất nhiều trong Rust, chương này sẽ không bao quát hết toàn bộ smart pointers hiện có. Nhiều thư viện tự xây dựng smart pointer riêng, và bạn cũng hoàn toàn có thể tự viết. Chúng ta sẽ tập trung vào những smart pointer phổ biến nhất trong standard library:</p>
 

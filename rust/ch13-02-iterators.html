@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — Xử lý một loạt phần tử với Iterator</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch13-01-closures.html">← Trước</a>
@@ -209,7 +209,7 @@
 
 <h2 id="processing-a-series-of-items-with-iterators"><a class="header" href="#processing-a-series-of-items-with-iterators">Xử lý một loạt phần tử với Iterator</a></h2>
 <p>Iterator pattern cho phép bạn thực hiện một tác vụ nào đó lên từng phần tử trong một chuỗi theo thứ tự. Iterator chịu trách nhiệm về logic duyệt qua từng phần tử và biết khi nào thì chuỗi kết thúc. Khi dùng iterator, bạn không cần phải tự viết lại cái logic đó nữa.</p>
-<p>Trong Rust, iterator có tính chất <em>lazy</em> (lười biếng) — tức là chúng không làm gì cả cho đến khi bạn gọi các method tiêu thụ iterator để "vắt" hết dữ liệu ra. Ví dụ, đoạn code trong Listing 13-10 tạo một iterator trên các phần tử của vector <code>v1</code> bằng cách gọi method <code>iter</code> được định nghĩa trên <code>Vec&lt;T&gt;</code>. Đoạn code này một mình nó không làm gì hữu ích cả.</p>
+<p>Trong Rust, iterator có tính chất <em>lazy</em> (lười biếng) — tức là chúng không làm gì cả cho đến khi bạn gọi các method tiêu thụ iterator để "vắt" hết dữ liệu ra. Ví dụ, đoạn mã trong Listing 13-10 tạo một iterator trên các phần tử của vector <code>v1</code> bằng cách gọi method <code>iter</code> được định nghĩa trên <code>Vec&lt;T&gt;</code>. Đoạn mã này một mình nó không làm gì hữu ích cả.</p>
 <figure class="listing" id="listing-13-10">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -219,7 +219,7 @@
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-10">Listing 13-10</a>: Tạo một iterator</figcaption>
 </figure>
-<p>Iterator được lưu trong biến <code>v1_iter</code>. Sau khi tạo xong iterator, ta có thể dùng nó theo nhiều cách khác nhau. Ở Listing 3-5, chúng ta đã duyệt qua một mảng bằng vòng lặp <code>for</code> để chạy code trên từng phần tử. Bên dưới, điều đó ngầm tạo và rồi tiêu thụ một iterator, nhưng ta đã bỏ qua chưa giải thích chi tiết — đến giờ thì ta sẽ mổ xẻ nó.</p>
+<p>Iterator được lưu trong biến <code>v1_iter</code>. Sau khi tạo xong iterator, ta có thể dùng nó theo nhiều cách khác nhau. Ở Listing 3-5, chúng ta đã duyệt qua một mảng bằng vòng lặp <code>for</code> để chạy mã trên từng phần tử. Bên dưới, điều đó ngầm tạo và rồi tiêu thụ một iterator, nhưng ta đã bỏ qua chưa giải thích chi tiết — đến giờ thì ta sẽ mổ xẻ nó.</p>
 <p>Trong ví dụ ở Listing 13-11, chúng ta tách riêng việc tạo iterator và việc sử dụng nó trong vòng lặp <code>for</code>. Khi vòng lặp <code>for</code> được gọi với iterator trong <code>v1_iter</code>, mỗi phần tử trong iterator được dùng trong một lần lặp, in ra từng giá trị.</p>
 <figure class="listing" id="listing-13-11">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -235,9 +235,9 @@
 <figcaption><a href="#listing-13-11">Listing 13-11</a>: Dùng iterator trong vòng lặp <code>for</code></figcaption>
 </figure>
 <p>Ở những ngôn ngữ không có iterator trong thư viện chuẩn, bạn thường phải tự viết: khai báo biến index bắt đầu từ 0, dùng biến đó để truy cập vào từng vị trí trong vector, rồi tăng biến đó lên cho đến khi đạt tổng số phần tử.</p>
-<p>Iterator xử lý hết đống logic đó giúp bạn, cắt giảm code lặp đi lặp lại mà đôi khi bạn lại viết sai. Iterator còn cho bạn sự linh hoạt hơn để dùng cùng một logic trên nhiều loại chuỗi khác nhau, không chỉ những cấu trúc dữ liệu có thể đánh index như vector. Hãy xem cách iterator làm điều đó.</p>
+<p>Iterator xử lý hết đống logic đó giúp bạn, cắt giảm mã lặp đi lặp lại mà đôi khi bạn lại viết sai. Iterator còn cho bạn sự linh hoạt hơn để dùng cùng một logic trên nhiều loại chuỗi khác nhau, không chỉ những cấu trúc dữ liệu có thể đánh index như vector. Hãy xem cách iterator làm điều đó.</p>
 <h3 id="the-iterator-trait-and-the-next-method"><a class="header" href="#the-iterator-trait-and-the-next-method">Trait <code>Iterator</code> và method <code>next</code></a></h3>
-<p>Mọi iterator đều implement một trait có tên <code>Iterator</code> được định nghĩa trong thư viện chuẩn. Định nghĩa của trait trông như thế này:</p>
+<p>Mọi iterator đều triển khai một trait có tên <code>Iterator</code> được định nghĩa trong thư viện chuẩn. Định nghĩa của trait trông như thế này:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub trait Iterator {
@@ -248,7 +248,7 @@
     // các method có implementation mặc định đã được lược bỏ
 }
 <span class="boring">}</span></code></pre>
-<p>Chú ý rằng định nghĩa này dùng một số cú pháp mới: <code>type Item</code> và <code>Self::Item</code>, đây là cách định nghĩa một <em>associated type</em> với trait này. Chúng ta sẽ đào sâu về associated type trong Chương 20. Bây giờ, điều bạn cần biết là: code này nói rằng khi implement trait <code>Iterator</code>, bạn cũng phải định nghĩa kiểu <code>Item</code>, và kiểu <code>Item</code> này được dùng làm kiểu trả về của method <code>next</code>. Nói cách khác, <code>Item</code> chính là kiểu của từng phần tử mà iterator trả về.</p>
+<p>Chú ý rằng định nghĩa này dùng một số cú pháp mới: <code>type Item</code> và <code>Self::Item</code>, đây là cách định nghĩa một <em>associated type</em> với trait này. Chúng ta sẽ đào sâu về associated type trong Chương 20. Bây giờ, điều bạn cần biết là: mã này nói rằng khi triển khai trait <code>Iterator</code>, bạn cũng phải định nghĩa kiểu <code>Item</code>, và kiểu <code>Item</code> này được dùng làm kiểu trả về của method <code>next</code>. Nói cách khác, <code>Item</code> chính là kiểu của từng phần tử mà iterator trả về.</p>
 <p>Trait <code>Iterator</code> chỉ yêu cầu bạn định nghĩa một method duy nhất: method <code>next</code>, trả về từng phần tử của iterator một lúc, được bọc trong <code>Some</code>, và khi hết dữ liệu thì trả về <code>None</code>.</p>
 <p>Ta có thể gọi method <code>next</code> trực tiếp trên iterator; Listing 13-12 minh họa các giá trị được trả về khi gọi <code>next</code> nhiều lần liên tiếp trên iterator tạo từ vector.</p>
 <figure class="listing" id="listing-13-12">
@@ -269,10 +269,10 @@
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-12">Listing 13-12</a>: Gọi method <code>next</code> trực tiếp trên iterator</figcaption>
 </figure>
-<p>Lưu ý rằng chúng ta cần khai báo <code>v1_iter</code> là mutable: gọi method <code>next</code> trên iterator thay đổi trạng thái nội bộ mà iterator dùng để theo dõi vị trí hiện tại trong chuỗi. Nói cách khác, code này <em>tiêu thụ</em> (consume) iterator, hay "dùng hết" nó. Mỗi lần gọi <code>next</code> là "nhai" mất một phần tử khỏi iterator. Chúng ta không cần khai báo <code>v1_iter</code> là mutable khi dùng vòng lặp <code>for</code>, vì vòng lặp tự lấy ownership của <code>v1_iter</code> và ngầm làm nó mutable.</p>
-<p>Cũng lưu ý rằng các giá trị trả về từ <code>next</code> là các immutable reference đến các giá trị trong vector. Method <code>iter</code> tạo ra iterator trên các immutable reference. Nếu muốn tạo iterator lấy ownership của <code>v1</code> và trả về các owned value, ta gọi <code>into_iter</code> thay vì <code>iter</code>. Tương tự, nếu muốn duyệt qua các mutable reference, gọi <code>iter_mut</code> thay vì <code>iter</code>.</p>
+<p>Lưu ý rằng chúng ta cần khai báo <code>v1_iter</code> là mutable: gọi method <code>next</code> trên iterator thay đổi trạng thái nội bộ mà iterator dùng để theo dõi vị trí hiện tại trong chuỗi. Nói cách khác, mã này <em>tiêu thụ</em> (consume) iterator, hay "dùng hết" nó. Mỗi lần gọi <code>next</code> là "nhai" mất một phần tử khỏi iterator. Chúng ta không cần khai báo <code>v1_iter</code> là mutable khi dùng vòng lặp <code>for</code>, vì vòng lặp tự lấy ownership của <code>v1_iter</code> và ngầm làm nó mutable.</p>
+<p>Cũng lưu ý rằng các giá trị trả về từ <code>next</code> là các immutable reference đến các giá trị trong vector. Method <code>iter</code> tạo ra iterator trên các immutable reference. Nếu muốn tạo iterator lấy ownership của <code>v1</code> và trả về các owned giá trị, ta gọi <code>into_iter</code> thay vì <code>iter</code>. Tương tự, nếu muốn duyệt qua các mutable reference, gọi <code>iter_mut</code> thay vì <code>iter</code>.</p>
 <h3 id="methods-that-consume-the-iterator"><a class="header" href="#methods-that-consume-the-iterator">Các method tiêu thụ iterator</a></h3>
-<p>Trait <code>Iterator</code> có nhiều method khác nhau với implementation mặc định được cung cấp bởi thư viện chuẩn; bạn có thể tìm hiểu về các method này trong tài liệu API của thư viện chuẩn cho trait <code>Iterator</code>. Một số method trong đó gọi method <code>next</code> trong phần thân của chúng, đó là lý do tại sao bạn bắt buộc phải implement method <code>next</code> khi implement trait <code>Iterator</code>.</p>
+<p>Trait <code>Iterator</code> có nhiều method khác nhau với phần triển khai mặc định được cung cấp bởi thư viện chuẩn; bạn có thể tìm hiểu về các method này trong tài liệu API của thư viện chuẩn cho trait <code>Iterator</code>. Một số method trong đó gọi method <code>next</code> trong phần thân của chúng, đó là lý do tại sao bạn bắt buộc phải triển khai method <code>next</code> khi triển khai trait <code>Iterator</code>.</p>
 <p>Các method có gọi <code>next</code> được gọi là <em>consuming adapters</em> (bộ chuyển đổi tiêu thụ) vì gọi chúng sẽ dùng hết iterator. Một ví dụ là method <code>sum</code> — nó lấy ownership của iterator và lần lượt gọi <code>next</code> để duyệt qua các phần tử, từ đó tiêu thụ iterator. Trong quá trình duyệt, nó cộng dồn từng phần tử vào một tổng đang chạy và trả về tổng khi duyệt xong. Listing 13-13 có một test minh họa cách dùng method <code>sum</code>.</p>
 <figure class="listing" id="listing-13-13">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -361,7 +361,7 @@
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-14">Listing 13-14</a>: Gọi iterator adapter <code>map</code> để tạo iterator mới</figcaption>
 </figure>
-<p>Tuy nhiên, đoạn code này tạo ra một cảnh báo:</p>
+<p>Tuy nhiên, đoạn mã này tạo ra một cảnh báo:</p>
 <pre><code class="language-console">$ cargo run
    Compiling iterators v0.1.0 (file:///projects/iterators)
 warning: unused `Map` that must be used
@@ -381,7 +381,7 @@ warning: `iterators` (bin "iterators") generated 1 warning
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.47s
      Running `target/debug/iterators`
 </code></pre>
-<p>Đoạn code trong Listing 13-14 không làm gì cả; closure ta chỉ định chưa bao giờ được gọi. Cảnh báo nhắc nhở chúng ta tại sao: Iterator adapter có tính lazy, và ta cần tiêu thụ iterator ở đây.</p>
+<p>Đoạn mã trong Listing 13-14 không làm gì cả; closure ta chỉ định chưa bao giờ được gọi. Cảnh báo nhắc nhở chúng ta tại sao: Iterator adapter có tính lazy, và ta cần tiêu thụ iterator ở đây.</p>
 <p>Để khắc phục cảnh báo này và tiêu thụ iterator, ta sẽ dùng method <code>collect</code>, thứ ta đã dùng với <code>env::args</code> trong Listing 12-1. Method này tiêu thụ iterator và thu thập các giá trị kết quả vào một kiểu collection.</p>
 <p>Trong Listing 13-15, chúng ta thu thập kết quả của việc duyệt qua iterator được trả về từ lời gọi <code>map</code> vào một vector. Vector này sẽ chứa từng phần tử của vector ban đầu, mỗi phần tử tăng thêm 1.</p>
 <figure class="listing" id="listing-13-15">

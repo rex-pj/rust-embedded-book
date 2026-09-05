@@ -254,7 +254,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 17 — The Rust Book</span>
+        ><span class="current">Chương 17 — Nền tảng Lập trình Bất đồng bộ: Async, Await, Futures và Streams</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -277,19 +277,19 @@
           thể chỉ định các thao tác mà một chương trình cần thực hiện và các
           điểm mà tại đó một hàm có thể tạm dừng và cho phép phần khác của
           chương trình chạy thay, mà không cần chỉ định trước chính xác thứ tự
-          và cách thức mỗi đoạn code nên chạy.
+          và cách thức mỗi đoạn mã nên chạy.
           <em>Lập trình bất đồng bộ</em> (asynchronous programming) là một
-          abstraction cho phép chúng ta diễn đạt code theo các điểm tạm dừng
+          abstraction cho phép chúng ta diễn đạt mã theo các điểm tạm dừng
           tiềm năng và kết quả cuối cùng, và tự xử lý các chi tiết phối hợp cho
           chúng ta.
         </p>
         <p>
           Chương này xây dựng dựa trên cách dùng thread của Chương 16 cho
           parallelism và concurrency bằng cách giới thiệu một cách tiếp cận thay
-          thế để viết code: futures, streams của Rust, và cú pháp
+          thế để viết mã: futures, streams của Rust, và cú pháp
           <code>async</code> và <code>await</code> cho phép chúng ta diễn đạt
           cách các thao tác có thể là bất đồng bộ, cùng với các crate bên thứ ba
-          implement các asynchronous runtime: code quản lý và điều phối việc
+          triển khai các async runtime: mã quản lý và điều phối việc
           thực thi các thao tác bất đồng bộ.
         </p>
         <p>
@@ -322,7 +322,7 @@
           năng của máy tính trong CPU hoặc GPU, và bao nhiêu tốc độ đó có thể
           dành cho thao tác này. Việc tải xuống video là ví dụ về thao tác
           <em>I/O-bound</em>, vì nó bị giới hạn bởi tốc độ
-          <em>input và output</em> của máy tính; nó chỉ có thể nhanh bằng tốc độ
+          <em>đầu vào và kết quả</em> của máy tính; nó chỉ có thể nhanh bằng tốc độ
           dữ liệu có thể được gửi qua mạng.
         </p>
         <p>
@@ -339,7 +339,7 @@
           chúng ta nên có thể viết chương trình sao cho bắt đầu một lần tải
           xuống sẽ không làm khóa UI, và người dùng nên có thể bắt đầu nhiều lần
           tải xuống cùng lúc. Tuy nhiên, nhiều API hệ điều hành để tương tác với
-          mạng là <em>blocking</em>; tức là, chúng block tiến trình của chương
+          mạng là <em>blocking</em>; tức là, chúng khối tiến trình của chương
           trình cho đến khi dữ liệu chúng đang xử lý hoàn toàn sẵn sàng.
         </p>
         <section class="note" aria-role="note">
@@ -353,10 +353,10 @@
           </p>
         </section>
         <p>
-          Chúng ta có thể tránh block main thread bằng cách spawn một thread
+          Chúng ta có thể tránh khối main thread bằng cách spawn một thread
           chuyên dụng để tải xuống từng file. Tuy nhiên, chi phí của các tài
           nguyên hệ thống được dùng bởi các thread đó cuối cùng sẽ trở thành vấn
-          đề. Sẽ tốt hơn nếu lời gọi không block ngay từ đầu, và thay vào đó
+          đề. Sẽ tốt hơn nếu lời gọi không khối ngay từ đầu, và thay vào đó
           chúng ta có thể định nghĩa một số tác vụ mà chúng ta muốn chương trình
           hoàn thành và để runtime chọn thứ tự và cách tốt nhất để chạy chúng.
         </p>
@@ -400,7 +400,7 @@
         <p>
           Khi một cá nhân làm việc trên nhiều nhiệm vụ khác nhau trước khi bất
           kỳ nhiệm vụ nào trong số đó hoàn thành, đây là <em>concurrency</em>.
-          Một cách implement concurrency giống như việc có hai dự án khác nhau
+          Một cách triển khai concurrency giống như việc có hai dự án khác nhau
           được mở trên máy tính của bạn, và khi bạn chán hoặc bị mắc kẹt ở một
           dự án, bạn chuyển sang dự án kia. Bạn chỉ là một người, vì vậy bạn
           không thể tiến triển cả hai nhiệm vụ cùng lúc chính xác, nhưng bạn có
@@ -452,7 +452,7 @@
           />
           <figcaption>
             Hình 17-3: Một luồng công việc parallel một phần, nơi công việc diễn
-            ra trên Task A và Task B độc lập cho đến khi Task A3 bị block vì kết
+            ra trên Task A và Task B độc lập cho đến khi Task A3 bị khối vì kết
             quả của Task B3.
           </figcaption>
         </figure>
@@ -481,7 +481,7 @@
           đó thực sự xảy ra cùng lúc.
         </p>
         <p>
-          Chạy code async trong Rust thường xảy ra theo kiểu concurrent. Tùy
+          Chạy mã async trong Rust thường xảy ra theo kiểu concurrent. Tùy
           thuộc vào phần cứng, hệ điều hành, và async runtime chúng ta đang dùng
           (thêm về async runtime sắp tới), concurrency đó cũng có thể dùng
           parallelism dưới lớp vỏ.

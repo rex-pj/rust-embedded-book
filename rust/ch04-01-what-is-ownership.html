@@ -267,7 +267,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 4 — The Rust Book</span>
+        ><span class="current">Chương 4 — Ownership là gì?</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -275,36 +275,50 @@
           ><a href="ch04-02-references-and-borrowing.html">Tiếp →</a>
         </div>
 
-        <h1>🔑 Ownership là gì?</h1>
+        <h1 id="what-is-ownership">🔑 Ownership là gì?</h1>
 
         <p>
-          Ownership là tính năng quan trọng nhất của Rust, ảnh hưởng sâu sắc đến
-          toàn bộ ngôn ngữ. Nó cho phép Rust đảm bảo an toàn bộ nhớ mà không cần
-          garbage collector. Do đó, việc hiểu cách ownership hoạt động là vô
-          cùng quan trọng.
+          <em>Ownership</em> là tập hợp các quy tắc chi phối cách một chương
+          trình Rust quản lý bộ nhớ. Mọi chương trình đều phải quản lý cách nó
+          sử dụng bộ nhớ máy tính trong lúc chạy. Một số ngôn ngữ có garbage
+          collector, thường xuyên rà tìm những vùng bộ nhớ không còn được dùng
+          trong lúc chương trình chạy; ở những ngôn ngữ khác, lập trình viên
+          phải tự tay cấp phát và giải phóng bộ nhớ. Rust đi theo hướng thứ ba:
+          bộ nhớ được quản lý bằng một hệ thống ownership với một tập quy tắc mà
+          trình biên dịch kiểm tra. Nếu bất kỳ quy tắc nào bị vi phạm, chương
+          trình sẽ không biên dịch được. Và không một tính năng nào của ownership
+          làm chương trình của bạn chạy chậm đi lúc thực thi.
         </p>
 
         <p>
-          Trong chương này, chúng ta sẽ tìm hiểu về ownership thông qua một số
-          ví dụ tập trung vào cấu trúc dữ liệu rất phổ biến:
-          <strong>string</strong>.
-        </p>
-
-        <h2>📚 Stack và Heap</h2>
-
-        <p>
-          Trong nhiều ngôn ngữ lập trình, bạn không cần phải suy nghĩ nhiều về
-          stack và heap. Nhưng với Rust, việc một giá trị nằm trên stack hay
-          heap ảnh hưởng đến cách ngôn ngữ hoạt động và lý do tại sao bạn phải
-          đưa ra các quyết định nhất định.
+          Vì ownership là khái niệm mới với nhiều lập trình viên, phải mất một
+          thời gian mới quen được. Tin tốt là bạn càng có kinh nghiệm với Rust và
+          với các quy tắc của hệ thống ownership, bạn sẽ càng thấy dễ dàng viết
+          ra mã vừa an toàn vừa hiệu quả một cách tự nhiên. Cứ kiên trì nhé!
         </p>
 
         <p>
-          Cả stack và heap đều là các vùng bộ nhớ dành cho chương trình của bạn
-          sử dụng lúc runtime, nhưng chúng được tổ chức theo những cách khác
-          nhau.
+          Khi đã hiểu ownership, bạn sẽ có một nền tảng vững chắc để hiểu những
+          tính năng làm nên nét riêng của Rust. Trong chương này, bạn sẽ học
+          ownership qua một số ví dụ xoay quanh một cấu trúc dữ liệu rất phổ
+          biến: <strong>string</strong>.
         </p>
 
+        <h2 id="the-stack-and-the-heap">📚 Stack và Heap</h2>
+
+        <p>
+          Nhiều ngôn ngữ lập trình không bắt bạn phải nghĩ nhiều về stack và
+          heap. Nhưng với một ngôn ngữ lập trình hệ thống như Rust, việc một giá
+          trị nằm trên stack hay trên heap ảnh hưởng tới cách ngôn ngữ hoạt động
+          và tới lý do bạn phải đưa ra những quyết định nhất định. Phần sau của
+          chương sẽ mô tả ownership trong mối liên hệ với stack và heap, nên ở
+          đây xin giải thích ngắn gọn để chuẩn bị trước.
+        </p>
+
+        <p>
+          Cả stack lẫn heap đều là những phần bộ nhớ mà mã của bạn dùng được lúc
+          runtime, nhưng chúng được tổ chức theo những cách khác nhau.
+        </p>
         <!-- SVG Diagram: Stack vs Heap -->
         <div class="diagram-container">
           <svg
@@ -713,195 +727,442 @@
         </div>
 
         <p>
-          Stack lưu trữ các giá trị theo thứ tự nhận được và xóa chúng theo thứ
-          tự ngược lại. Nguyên tắc này được gọi là
-          <em>last in, first out</em> (vào sau, ra trước). Hãy nghĩ đến một
-          chồng đĩa: khi bạn thêm đĩa, bạn đặt lên đỉnh, và khi cần lấy đĩa, bạn
-          lấy từ đỉnh xuống. Thêm hoặc bớt đĩa từ giữa hoặc đáy sẽ rất kém hiệu
-          quả!
+          Stack lưu các giá trị theo đúng thứ tự nó nhận được và lấy chúng ra
+          theo thứ tự ngược lại. Nguyên tắc này gọi là
+          <em>last in, first out</em> (vào sau, ra trước — LIFO). Hãy nghĩ tới
+          một chồng đĩa: khi thêm đĩa, bạn đặt lên trên cùng, và khi cần một cái
+          đĩa, bạn lấy từ trên cùng xuống. Thêm hay bớt đĩa từ giữa hay từ đáy
+          chồng thì không tiện bằng! Việc thêm dữ liệu vào stack gọi là
+          <em>push lên stack</em>, còn việc lấy dữ liệu ra gọi là
+          <em>pop khỏi stack</em>. Mọi dữ liệu lưu trên stack đều phải có kích
+          thước cố định đã biết trước. Dữ liệu chưa biết kích thước tại compile
+          time, hoặc có kích thước có thể thay đổi, thì phải được lưu trên heap.
         </p>
 
         <p>
-          Tất cả dữ liệu trên stack phải có kích thước cố định đã biết tại thời
-          điểm compile. Dữ liệu có kích thước không xác định tại compile time
-          hoặc có thể thay đổi kích thước phải được lưu trên heap.
-        </p>
-
-        <p>
-          Heap ít có tổ chức hơn: khi bạn đưa dữ liệu lên heap, bạn yêu cầu một
+          Heap thì ít ngăn nắp hơn: khi bạn đưa dữ liệu lên heap, bạn yêu cầu một
           lượng không gian nhất định. Bộ cấp phát bộ nhớ (memory allocator) tìm
-          một vị trí trống đủ lớn trên heap, đánh dấu nó là đang dùng, và trả về
-          một <em>con trỏ</em> (pointer), tức là địa chỉ của vị trí đó. Quá
-          trình này được gọi là <em>cấp phát trên heap</em> (allocating on the
-          heap).
+          một chỗ trống đủ lớn trên heap, đánh dấu chỗ đó là đang dùng, rồi trả
+          về một <em>con trỏ</em> (pointer) — chính là địa chỉ của vị trí ấy. Quá
+          trình này gọi là <em>cấp phát trên heap</em>, đôi khi gọi tắt là
+          <em>cấp phát</em> (việc push giá trị lên stack không được coi là cấp
+          phát). Vì con trỏ tới heap có kích thước cố định đã biết, bạn có thể
+          lưu con trỏ đó trên stack; nhưng khi cần dữ liệu thật, bạn phải đi theo
+          con trỏ. Hãy hình dung việc được xếp chỗ trong một nhà hàng: khi vào
+          cửa, bạn cho biết nhóm mình có bao nhiêu người, nhân viên tiếp đón tìm
+          một bàn trống đủ chỗ cho cả nhóm rồi dẫn bạn tới đó. Nếu có người trong
+          nhóm tới muộn, họ chỉ cần hỏi xem nhóm bạn ngồi ở đâu là tìm được.
         </p>
 
         <p>
-          Việc push lên stack nhanh hơn cấp phát trên heap vì allocator không
-          cần tìm kiếm vị trí để lưu dữ liệu mới — vị trí đó luôn là đỉnh của
-          stack. Truy cập dữ liệu trên heap cũng chậm hơn vì bạn phải đi theo
-          con trỏ để đến đó.
+          Push lên stack nhanh hơn cấp phát trên heap, vì allocator không bao giờ
+          phải đi tìm chỗ để đặt dữ liệu mới — chỗ đó luôn nằm ở đỉnh stack.
+          Ngược lại, cấp phát chỗ trên heap tốn công hơn, vì allocator trước hết
+          phải tìm một khoảng đủ lớn để chứa dữ liệu, rồi ghi sổ sách để chuẩn bị
+          cho lần cấp phát tiếp theo.
         </p>
-
-        <h2>📜 Các quy tắc Ownership</h2>
 
         <p>
-          Trước tiên, hãy ghi nhớ các quy tắc ownership. Chúng ta sẽ minh họa
-          chúng qua các ví dụ sau:
+          Truy cập dữ liệu trên heap nhìn chung cũng chậm hơn truy cập dữ liệu
+          trên stack, vì bạn phải đi theo con trỏ mới tới nơi. Các processor hiện
+          đại chạy nhanh hơn khi ít phải nhảy qua nhảy lại trong bộ nhớ. Vẫn với
+          phép so sánh nhà hàng: hãy nghĩ tới một nhân viên phục vụ nhận gọi món
+          từ nhiều bàn. Hiệu quả nhất là nhận hết các món ở một bàn rồi mới sang
+          bàn kế tiếp. Nhận một món ở bàn A, rồi một món ở bàn B, rồi lại quay về
+          A, rồi lại sang B sẽ chậm hơn nhiều. Cũng vậy, processor thường làm
+          việc tốt hơn khi xử lý dữ liệu nằm gần những dữ liệu khác (như trên
+          stack) thay vì nằm rải rác xa nhau (như có thể xảy ra trên heap).
         </p>
 
+        <p>
+          Khi mã của bạn gọi một hàm, các giá trị truyền vào hàm (có thể bao gồm
+          cả con trỏ tới dữ liệu trên heap) cùng các biến cục bộ của hàm sẽ được
+          push lên stack. Khi hàm kết thúc, những giá trị đó được pop khỏi stack.
+        </p>
+
+        <p>
+          Theo dõi xem phần nào của mã đang dùng dữ liệu nào trên heap, giảm
+          thiểu lượng dữ liệu trùng lặp trên heap, và dọn dẹp dữ liệu không còn
+          dùng trên heap để khỏi hết chỗ — tất cả đều là những vấn đề mà ownership
+          giải quyết. Một khi đã hiểu ownership, bạn sẽ không cần nghĩ nhiều về
+          stack và heap nữa. Nhưng biết rằng mục đích chính của ownership là quản
+          lý dữ liệu trên heap sẽ giúp giải thích vì sao nó hoạt động theo cách
+          như vậy.
+        </p>
+
+        <h2 id="ownership-rules">📜 Các quy tắc Ownership</h2>
+
+        <p>
+          Trước hết, hãy xem qua các quy tắc ownership. Hãy ghi nhớ chúng khi
+          chúng ta đi qua những ví dụ minh họa:
+        </p>
         <ul>
-          <li>Mỗi giá trị trong Rust có một <em>owner</em>.</li>
-          <li>Chỉ có thể có một owner tại một thời điểm.</li>
-          <li>Khi owner ra khỏi scope, giá trị sẽ bị xóa.</li>
+          <li>Mỗi giá trị trong Rust có một <em>owner</em> (chủ sở hữu).</li>
+          <li>Tại mỗi thời điểm chỉ có thể có một owner duy nhất.</li>
+          <li>Khi owner ra khỏi scope, giá trị sẽ bị <code>drop</code> (hủy).</li>
         </ul>
 
-        <h2>🔤 Phạm vi biến (Variable Scope)</h2>
+        <h2 id="variable-scope">🔤 Phạm vi biến (Variable Scope)</h2>
 
         <p>
-          Giờ chúng ta đã qua cú pháp Rust cơ bản, hãy xem xét khái niệm
-          <em>scope</em>. Scope là phạm vi trong chương trình mà một item có
-          hiệu lực:
+          Giờ đã qua phần cú pháp Rust cơ bản, chúng ta sẽ không viết đầy đủ phần
+          <code>fn main() {</code> trong các ví dụ nữa; vì vậy nếu bạn làm theo,
+          hãy nhớ tự đặt các ví dụ sau vào bên trong một hàm <code>main</code>.
+          Nhờ vậy ví dụ sẽ ngắn gọn hơn, giúp ta tập trung vào chi tiết thật sự
+          thay vì phần mã khuôn mẫu.
         </p>
 
-        <pre><code>fn main() {
-    {                      // s chưa hợp lệ ở đây, chưa được khai báo
-        let s = "hello";   // s hợp lệ từ điểm này trở đi
-        // làm gì đó với s
-    }                      // scope kết thúc, s không còn hợp lệ
-}</code></pre>
+        <p>
+          Làm ví dụ đầu tiên về ownership, hãy xét scope của một vài biến.
+          <em>Scope</em> là phạm vi trong chương trình mà một item còn hợp lệ.
+          Xét biến sau:
+        </p>
 
-        <p>Nói cách khác, có hai thời điểm quan trọng:</p>
+        <pre><code>let s = "hello";</code></pre>
+
+        <p>
+          Biến <code>s</code> tham chiếu tới một string literal, tức là giá trị
+          của chuỗi được viết cứng vào phần văn bản của chương trình. Biến này
+          hợp lệ kể từ điểm nó được khai báo cho tới hết scope hiện tại. Listing
+          4-1 cho thấy một chương trình có chú thích đánh dấu những chỗ biến
+          <code>s</code> còn hợp lệ.
+        </p>
+
+        <figure class="listing" id="listing-4-1">
+<pre><code>{                      // s chưa hợp lệ ở đây, vì chưa được khai báo
+    let s = "hello";   // s hợp lệ từ điểm này trở đi
+
+    // làm gì đó với s
+}                      // scope kết thúc, s không còn hợp lệ</code></pre>
+          <figcaption>
+            <a href="#listing-4-1">Listing 4-1</a>: Một biến và scope mà nó còn
+            hợp lệ trong đó
+          </figcaption>
+        </figure>
+
+        <p>Nói cách khác, có hai thời điểm quan trọng ở đây:</p>
         <ul>
-          <li>Khi <code>s</code> đi vào scope, nó trở nên hợp lệ.</li>
-          <li>Nó vẫn hợp lệ cho đến khi ra khỏi scope.</li>
+          <li>Khi <code>s</code> đi <em>vào</em> scope, nó trở nên hợp lệ.</li>
+          <li>Nó vẫn hợp lệ cho tới khi <em>ra khỏi</em> scope.</li>
         </ul>
 
-        <h2>📦 Kiểu String</h2>
+        <p>
+          Đến đây, quan hệ giữa scope và thời điểm biến còn hợp lệ cũng tương tự
+          như ở các ngôn ngữ lập trình khác. Bây giờ chúng ta sẽ xây tiếp trên
+          hiểu biết đó bằng cách giới thiệu kiểu <code>String</code>.
+        </p>
+
+        <h2 id="the-string-type">📦 Kiểu String</h2>
 
         <p>
           Để minh họa các quy tắc ownership, chúng ta cần một kiểu dữ liệu phức
-          tạp hơn những gì đã được trình bày trong Chương 3. Các kiểu đã đề cập
-          đều có kích thước cố định, được lưu trên stack và pop ra khỏi stack
-          khi scope kết thúc. Chúng ta cần dữ liệu lưu trên heap để xem cách
-          Rust biết khi nào cần dọn sạch dữ liệu đó.
+          tạp hơn những kiểu đã trình bày ở mục
+          <a href="ch03-02-data-types.html#kieu-du-lieu">“Kiểu dữ liệu”</a> của
+          Chương 3. Các kiểu đã nói tới trước đây đều có kích thước đã biết, được
+          lưu trên stack và pop khỏi stack khi scope của chúng kết thúc, và có
+          thể được sao chép nhanh gọn để tạo ra một instance mới, độc lập, nếu
+          một phần mã khác cần dùng cùng giá trị đó trong một scope khác. Nhưng
+          chúng ta muốn xét dữ liệu lưu trên heap và tìm hiểu xem Rust làm sao
+          biết được khi nào cần dọn dẹp dữ liệu đó — và kiểu <code>String</code>
+          là một ví dụ rất tốt.
         </p>
 
         <p>
-          Chúng ta sẽ dùng <code>String</code> làm ví dụ và tập trung vào các
-          phần của <code>String</code> liên quan đến ownership. Những khía cạnh
-          này cũng áp dụng cho các kiểu dữ liệu phức tạp khác.
+          Chúng ta sẽ tập trung vào những phần của <code>String</code> liên quan
+          tới ownership. Những khía cạnh này cũng áp dụng cho các kiểu dữ liệu
+          phức tạp khác, bất kể chúng do thư viện chuẩn cung cấp hay do bạn tự
+          tạo. Chúng ta sẽ bàn về những khía cạnh không liên quan tới ownership
+          của <code>String</code> ở <a href="ch08-02-strings.html">Chương 8</a>.
         </p>
 
         <p>
-          String literals (chuỗi ký tự dạng <code>&amp;str</code>) rất tiện lợi
-          nhưng không phù hợp cho mọi tình huống khi chúng ta muốn dùng văn bản.
-          Một lý do là chúng bất biến (immutable). Một lý do khác là không phải
-          mọi giá trị chuỗi đều biết khi viết code — ví dụ, nếu ta muốn lấy
-          input từ người dùng và lưu lại thì sao?
-        </p>
-
-        <p>
-          Rust có kiểu dữ liệu thứ hai cho string: <code>String</code>. Kiểu này
-          quản lý dữ liệu được cấp phát trên heap và có thể lưu trữ lượng văn
-          bản không biết trước tại compile time. Bạn có thể tạo
-          <code>String</code> từ string literal bằng hàm <code>from</code>:
+          Chúng ta đã gặp string literal, nơi giá trị chuỗi được viết cứng vào
+          chương trình. String literal rất tiện, nhưng không phù hợp với mọi tình
+          huống mà ta muốn dùng văn bản. Một lý do là chúng bất biến (immutable).
+          Lý do khác là không phải giá trị chuỗi nào cũng biết được lúc ta viết
+          mã: chẳng hạn, nếu ta muốn nhận đầu vào từ người dùng rồi lưu lại thì
+          sao? Chính vì những tình huống đó mà Rust có kiểu <code>String</code>.
+          Kiểu này quản lý dữ liệu được cấp phát trên heap, nhờ vậy lưu được
+          lượng văn bản mà ta chưa biết trước tại compile time. Bạn có thể tạo
+          một <code>String</code> từ string literal bằng hàm <code>from</code>,
+          như sau:
         </p>
 
         <pre><code>let s = String::from("hello");</code></pre>
 
-        <p>Kiểu <code>String</code> này có thể thay đổi (mutable):</p>
+        <p>
+          Toán tử hai dấu hai chấm <code>::</code> cho phép ta đặt hàm
+          <code>from</code> này vào namespace của kiểu <code>String</code>, thay
+          vì phải dùng một cái tên kiểu như <code>string_from</code>. Chúng ta sẽ
+          bàn kỹ hơn về cú pháp này ở mục
+          <a href="ch05-03-method-syntax.html#methods">“Phương thức (Methods)”</a> của
+          Chương 5, và khi nói về namespace với module ở
+          <a
+            href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"
+            >“Path tham chiếu tới item trong module tree”</a
+          >
+          ở Chương 7.
+        </p>
+
+        <p>Kiểu string này <em>có thể</em> thay đổi được:</p>
 
         <pre><code>let mut s = String::from("hello");
+
 s.push_str(", world!"); // push_str() thêm một literal vào String
-println!("{s}"); // Sẽ in `hello, world!`</code></pre>
+
+println!("{s}"); // sẽ in ra `hello, world!`</code></pre>
 
         <p>
-          Vậy tại sao <code>String</code> có thể thay đổi nhưng literals thì
-          không? Sự khác biệt nằm ở cách hai kiểu này xử lý bộ nhớ.
+          Vậy khác biệt ở đây là gì? Tại sao <code>String</code> thay đổi được
+          còn literal thì không? Khác biệt nằm ở cách hai kiểu này xử lý bộ nhớ.
         </p>
 
-        <h2>🧠 Bộ nhớ và Cấp phát</h2>
+        <h2 id="memory-and-allocation">🧠 Bộ nhớ và Cấp phát</h2>
 
         <p>
-          Với string literal, nội dung được biết lúc compile time, nên văn bản
-          được nhúng trực tiếp vào file thực thi cuối cùng. Đó là lý do tại sao
-          string literals nhanh và hiệu quả. Nhưng những đặc tính này chỉ đến từ
-          việc string literal là bất biến.
+          Với string literal, ta biết nội dung ngay tại compile time, nên phần
+          văn bản được viết cứng thẳng vào file thực thi cuối cùng. Đó là lý do
+          string literal nhanh và hiệu quả. Nhưng những đặc tính đó chỉ có được
+          nhờ tính bất biến của string literal. Đáng tiếc là ta không thể nhét
+          vào file binary một khối bộ nhớ cho mỗi đoạn văn bản mà kích thước chưa
+          biết tại compile time và có thể thay đổi trong lúc chương trình chạy.
         </p>
 
         <p>
-          Với kiểu <code>String</code>, để hỗ trợ một đoạn văn bản có thể thay
-          đổi và phát triển, chúng ta cần cấp phát một lượng bộ nhớ trên heap,
-          chưa biết lúc compile time, để giữ nội dung. Điều này có nghĩa là:
+          Với kiểu <code>String</code>, để hỗ trợ một đoạn văn bản thay đổi được
+          và lớn dần lên, ta cần cấp phát một lượng bộ nhớ trên heap — chưa biết
+          tại compile time — để giữ nội dung. Điều này có nghĩa là:
         </p>
-
         <ul>
           <li>Bộ nhớ phải được yêu cầu từ memory allocator lúc runtime.</li>
           <li>
-            Chúng ta cần trả bộ nhớ này về cho allocator khi không dùng
-            <code>String</code> nữa.
+            Ta cần một cách để trả bộ nhớ này lại cho allocator khi đã dùng xong
+            <code>String</code>.
           </li>
         </ul>
 
         <p>
-          Phần đầu được chúng ta thực hiện: khi gọi <code>String::from</code>,
-          implementation của nó yêu cầu bộ nhớ cần thiết. Phần này khá phổ biến
-          trong các ngôn ngữ lập trình.
+          Phần thứ nhất do chính chúng ta làm: khi gọi <code>String::from</code>,
+          phần cài đặt của nó yêu cầu lượng bộ nhớ cần thiết. Điều này gần như
+          giống nhau ở mọi ngôn ngữ lập trình.
         </p>
 
         <p>
-          Tuy nhiên phần thứ hai khác nhau ở mỗi ngôn ngữ. Trong các ngôn ngữ có
-          <em>garbage collector (GC)</em>, GC theo dõi và dọn sạch bộ nhớ không
-          còn được dùng nữa, và chúng ta không cần lo lắng về điều đó. Trong hầu
-          hết các ngôn ngữ không có GC, chúng ta phải tự xác định khi nào bộ nhớ
-          không còn được dùng và gọi code để giải phóng nó — đây là vấn đề lịch
-          sử nan giải.
+          Tuy nhiên, phần thứ hai thì khác. Ở những ngôn ngữ có
+          <em>garbage collector (GC)</em>, GC theo dõi và dọn dẹp phần bộ nhớ
+          không còn được dùng nữa, và ta không phải bận tâm. Ở hầu hết ngôn ngữ
+          không có GC, chính ta có trách nhiệm nhận ra khi nào bộ nhớ không còn
+          được dùng và gọi mã để giải phóng nó một cách tường minh, đúng như khi
+          ta đã yêu cầu nó. Làm việc này cho đúng xưa nay vẫn là một bài toán khó
+          trong lập trình. Nếu ta quên, ta lãng phí bộ nhớ. Nếu ta làm quá sớm,
+          ta có một biến không hợp lệ. Nếu ta làm hai lần, đó cũng là một lỗi. Ta
+          cần ghép đúng một lần <code>allocate</code> với đúng một lần
+          <code>free</code>.
         </p>
 
         <p>
-          Rust đi theo con đường khác: bộ nhớ được tự động trả về khi biến sở
-          hữu nó ra khỏi scope. Đây là một ví dụ:
+          Rust đi theo một hướng khác: bộ nhớ được tự động trả lại ngay khi biến
+          sở hữu nó ra khỏi scope. Đây là ví dụ scope ở Listing 4-1, viết lại
+          bằng <code>String</code> thay cho string literal:
         </p>
 
         <pre><code>{
-    let s = String::from("hello"); // s hợp lệ từ đây
+    let s = String::from("hello"); // s hợp lệ từ điểm này trở đi
+
     // làm gì đó với s
-}                                  // scope kết thúc, s không hợp lệ
-                                   // Rust gọi drop() tự động</code></pre>
+}                                  // scope kết thúc, s không
+                                   // còn hợp lệ</code></pre>
 
         <p>
-          Khi một biến ra khỏi scope, Rust tự động gọi hàm đặc biệt có tên
-          <code>drop</code>. Đây là nơi tác giả của <code>String</code> có thể
-          đặt code để trả lại bộ nhớ. Rust gọi <code>drop</code> tự động tại dấu
+          Có một thời điểm tự nhiên để ta trả lại cho allocator phần bộ nhớ mà
+          <code>String</code> cần: khi <code>s</code> ra khỏi scope. Khi một biến
+          ra khỏi scope, Rust gọi giúp ta một hàm đặc biệt. Hàm đó tên là
+          <code>drop</code>, và đó chính là nơi tác giả của <code>String</code>
+          đặt mã để trả lại bộ nhớ. Rust gọi <code>drop</code> tự động tại dấu
           ngoặc nhọn đóng.
         </p>
 
-        <h2>🔀 Biến và Dữ liệu tương tác: Move</h2>
+        <section class="note" aria-role="note">
+          <p>
+            Ghi chú: Trong C++, mẫu hình giải phóng tài nguyên vào cuối vòng đời
+            của một item đôi khi được gọi là
+            <em>Resource Acquisition Is Initialization (RAII)</em>. Nếu bạn từng
+            dùng các mẫu hình RAII thì hàm <code>drop</code> của Rust sẽ rất quen
+            thuộc.
+          </p>
+        </section>
 
         <p>
-          Nhiều biến có thể tương tác với cùng một dữ liệu theo nhiều cách khác
-          nhau trong Rust. Hãy xem ví dụ với <code>i32</code>:
+          Mẫu hình này ảnh hưởng sâu sắc tới cách viết mã Rust. Lúc này nó có vẻ
+          đơn giản, nhưng hành vi của mã có thể trở nên bất ngờ trong những tình
+          huống phức tạp hơn, khi ta muốn nhiều biến cùng dùng dữ liệu đã cấp
+          phát trên heap. Hãy cùng xem qua vài tình huống như vậy.
         </p>
 
-        <pre><code>let x = 5;
+        <p><a id="ways-variables-and-data-interact-move"></a></p>
+
+        <h3 id="variables-and-data-interacting-with-move">🔀 Biến và Dữ liệu tương tác: Move</h3>
+
+        <p>
+          Nhiều biến có thể tương tác với cùng một dữ liệu theo những cách khác
+          nhau trong Rust. Listing 4-2 cho thấy một ví dụ dùng số nguyên.
+        </p>
+
+        <figure class="listing" id="listing-4-2">
+<pre><code>let x = 5;
 let y = x;</code></pre>
+          <figcaption>
+            <a href="#listing-4-2">Listing 4-2</a>: Gán giá trị số nguyên của
+            biến <code>x</code> cho <code>y</code>
+          </figcaption>
+        </figure>
 
         <p>
-          Chúng ta có thể đoán được điều này đang làm gì: "gán giá trị
-          <code>5</code> cho <code>x</code>; sau đó tạo một bản sao của giá trị
-          trong <code>x</code> và gán cho <code>y</code>." Bây giờ chúng ta có
-          hai biến, <code>x</code> và <code>y</code>, cả hai đều bằng
-          <code>5</code>. Thật vậy, đó là điều đang xảy ra vì số nguyên là các
-          giá trị đơn giản với kích thước cố định đã biết, và hai giá trị
-          <code>5</code> này được push lên stack.
+          Ta có thể đoán được đoạn này đang làm gì: “ràng buộc giá trị
+          <code>5</code> với <code>x</code>; rồi tạo một bản sao của giá trị trong
+          <code>x</code> và ràng buộc nó với <code>y</code>.” Giờ ta có hai biến,
+          <code>x</code> và <code>y</code>, cả hai đều bằng <code>5</code>. Đúng
+          là như vậy thật, vì số nguyên là những giá trị đơn giản có kích thước cố
+          định đã biết, và hai giá trị <code>5</code> này được push lên stack.
         </p>
 
-        <p>Bây giờ xem phiên bản <code>String</code>:</p>
+        <p>Bây giờ hãy xem phiên bản <code>String</code>:</p>
 
         <pre><code>let s1 = String::from("hello");
 let s2 = s1;</code></pre>
 
+        <p>
+          Trông rất giống, nên ta có thể tưởng rằng cách nó hoạt động cũng giống:
+          dòng thứ hai sẽ tạo một bản sao của giá trị trong <code>s1</code> rồi
+          ràng buộc với <code>s2</code>. Nhưng đó không hẳn là điều xảy ra.
+        </p>
+
+        <p>
+          Hãy xem Hình 4-1 để biết chuyện gì đang diễn ra bên dưới với
+          <code>String</code>. Một <code>String</code> gồm ba phần, thể hiện ở bên
+          trái: một con trỏ tới vùng nhớ giữ nội dung của chuỗi, một độ dài
+          (length), và một dung lượng (capacity). Nhóm dữ liệu này nằm trên stack.
+          Bên phải là vùng nhớ trên heap giữ nội dung.
+        </p>
+
+        <p>
+          <img
+            alt="Hai bảng: bảng thứ nhất là biểu diễn của s1 trên stack, gồm độ dài (5), dung lượng (5), và một con trỏ tới giá trị đầu tiên trong bảng thứ hai. Bảng thứ hai là biểu diễn dữ liệu chuỗi trên heap, từng byte một."
+            src="img/trpl04-01.svg"
+            class="center"
+            style="width: 50%"
+          />
+        </p>
+        <p>
+          <span class="caption"
+            >Hình 4-1: Biểu diễn trong bộ nhớ của một <code>String</code> giữ giá
+            trị <code>"hello"</code> gắn với <code>s1</code></span
+          >
+        </p>
+
+        <p>
+          Độ dài là lượng bộ nhớ, tính bằng byte, mà nội dung của
+          <code>String</code> đang dùng. Dung lượng là tổng lượng bộ nhớ, tính
+          bằng byte, mà <code>String</code> đã nhận được từ allocator. Khác biệt
+          giữa độ dài và dung lượng là có ý nghĩa, nhưng không phải trong ngữ cảnh
+          này, nên lúc này cứ bỏ qua dung lượng cũng được.
+        </p>
+
+        <p>
+          Khi ta gán <code>s1</code> cho <code>s2</code>, dữ liệu
+          <code>String</code> được sao chép, nghĩa là ta sao chép con trỏ, độ dài
+          và dung lượng đang nằm trên stack. Ta <em>không</em> sao chép phần dữ
+          liệu trên heap mà con trỏ trỏ tới. Nói cách khác, biểu diễn dữ liệu
+          trong bộ nhớ trông như Hình 4-2.
+        </p>
+
+        <p>
+          <img
+            alt="Ba bảng: bảng s1 và bảng s2 biểu diễn hai chuỗi đó trên stack, cả hai cùng trỏ tới một dữ liệu chuỗi duy nhất trên heap."
+            src="img/trpl04-02.svg"
+            class="center"
+            style="width: 50%"
+          />
+        </p>
+        <p>
+          <span class="caption"
+            >Hình 4-2: Biểu diễn trong bộ nhớ của biến <code>s2</code> đang giữ
+            một bản sao con trỏ, độ dài và dung lượng của <code>s1</code></span
+          >
+        </p>
+
+        <p>
+          Biểu diễn này <em>không</em> giống Hình 4-3 — đó mới là hình ảnh bộ nhớ
+          nếu Rust sao chép cả dữ liệu trên heap. Nếu Rust làm vậy, thao tác
+          <code>s2 = s1</code> có thể rất tốn kém về hiệu năng lúc runtime khi dữ
+          liệu trên heap lớn.
+        </p>
+
+        <p>
+          <img
+            alt="Bốn bảng: hai bảng biểu diễn dữ liệu stack của s1 và s2, mỗi bảng trỏ tới bản sao dữ liệu chuỗi của riêng nó trên heap."
+            src="img/trpl04-03.svg"
+            class="center"
+            style="width: 50%"
+          />
+        </p>
+        <p>
+          <span class="caption"
+            >Hình 4-3: Một khả năng khác cho <code>s2 = s1</code> nếu Rust cũng
+            sao chép cả dữ liệu trên heap</span
+          >
+        </p>
+
+        <p>
+          Trước đó ta đã nói rằng khi một biến ra khỏi scope, Rust tự động gọi hàm
+          <code>drop</code> và dọn dẹp phần bộ nhớ heap của biến đó. Nhưng Hình
+          4-2 cho thấy cả hai con trỏ dữ liệu cùng trỏ tới một vị trí. Đây là một
+          vấn đề: khi <code>s2</code> và <code>s1</code> ra khỏi scope, cả hai sẽ
+          cùng cố giải phóng chính vùng nhớ ấy. Đây gọi là lỗi
+          <em>double free</em>, và là một trong những lỗi an toàn bộ nhớ đã nhắc
+          tới trước đây. Giải phóng bộ nhớ hai lần có thể làm hỏng bộ nhớ, và từ
+          đó có thể dẫn tới lỗ hổng bảo mật.
+        </p>
+
+        <p>
+          Để bảo đảm an toàn bộ nhớ, sau dòng <code>let s2 = s1;</code>, Rust coi
+          <code>s1</code> là không còn hợp lệ nữa. Nhờ vậy Rust không cần giải
+          phóng gì khi <code>s1</code> ra khỏi scope. Hãy thử xem chuyện gì xảy ra
+          khi bạn dùng <code>s1</code> sau khi <code>s2</code> đã được tạo; nó sẽ
+          không chạy:
+        </p>
+
+        <pre><code>let s1 = String::from("hello");
+let s2 = s1;
+
+println!("{s1}, world!");</code></pre>
+
+        <p>
+          Bạn sẽ nhận được lỗi như dưới đây, vì Rust ngăn bạn dùng tham chiếu đã
+          bị vô hiệu hóa:
+        </p>
+
+        <pre><code>$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0382]: borrow of moved value: `s1`
+ --&gt; src/main.rs:5:16
+  |
+2 |     let s1 = String::from("hello");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+3 |     let s2 = s1;
+  |              -- value moved here
+4 |
+5 |     println!("{s1}, world!");
+  |                ^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider cloning the value if the performance cost is acceptable
+  |
+3 |     let s2 = s1.clone();
+  |                ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error</code></pre>
         <!-- SVG Diagram: Move semantics -->
         <div class="diagram-container">
           <svg
@@ -1289,202 +1550,322 @@ let s2 = s1;</code></pre>
         </div>
 
         <p>
-          Khi chúng ta gán <code>s1</code> cho <code>s2</code>, dữ liệu
-          <code>String</code> được sao chép, nghĩa là chúng ta sao chép con trỏ
-          (pointer), độ dài (length) và dung lượng (capacity) nằm trên stack.
-          Chúng ta không sao chép dữ liệu trên heap mà con trỏ đang chỉ đến.
+          Nếu bạn từng nghe tới thuật ngữ <em>shallow copy</em> (sao chép nông) và
+          <em>deep copy</em> (sao chép sâu) khi làm việc với các ngôn ngữ khác,
+          thì việc sao chép con trỏ, độ dài và dung lượng mà không sao chép dữ
+          liệu nghe có vẻ giống shallow copy. Nhưng vì Rust còn vô hiệu hóa luôn
+          biến đầu tiên, nên thay vì gọi là shallow copy, người ta gọi đó là
+          <em>move</em>. Ở ví dụ này, ta nói rằng <code>s1</code> đã được
+          <em>move</em> vào <code>s2</code>. Vậy điều thực sự xảy ra là như Hình
+          4-4.
         </p>
 
         <p>
-          Nếu Rust sao chép cả heap data, thao tác <code>s2 = s1</code> sẽ rất
-          tốn kém về hiệu năng runtime nếu dữ liệu trên heap lớn. Vì thế Rust
-          không làm vậy. Thay vào đó, Rust coi <code>s1</code> là không còn hợp
-          lệ và không cần giải phóng gì khi <code>s1</code> ra khỏi scope.
+          <img
+            alt="Ba bảng: bảng s1 và bảng s2 biểu diễn hai chuỗi đó trên stack, cả hai cùng trỏ tới một dữ liệu chuỗi trên heap. Bảng s1 bị làm mờ vì s1 không còn hợp lệ; chỉ s2 mới dùng được để truy cập dữ liệu trên heap."
+            src="img/trpl04-04.svg"
+            class="center"
+            style="width: 50%"
+          />
+        </p>
+        <p>
+          <span class="caption"
+            >Hình 4-4: Biểu diễn trong bộ nhớ sau khi <code>s1</code> đã bị vô
+            hiệu hóa</span
+          >
         </p>
 
         <p>
-          Nếu bạn đã nghe đến thuật ngữ <em>shallow copy</em> và
-          <em>deep copy</em> khi làm việc với các ngôn ngữ khác, khái niệm sao
-          chép con trỏ, độ dài và dung lượng mà không sao chép dữ liệu nghe
-          giống shallow copy. Nhưng vì Rust cũng vô hiệu hóa biến đầu tiên, thay
-          vì được gọi là shallow copy, nó được gọi là <strong>move</strong>. Ở
-          đây, chúng ta nói rằng <code>s1</code> đã bị <em>moved</em> vào
-          <code>s2</code>.
+          Vậy là vấn đề được giải quyết! Chỉ còn <code>s2</code> hợp lệ, nên khi
+          nó ra khỏi scope thì một mình nó giải phóng bộ nhớ, thế là xong.
         </p>
-
-        <h2>🔢 Clone và Copy</h2>
 
         <p>
-          Nếu chúng ta <em>muốn</em> sao chép sâu (deep copy) dữ liệu heap của
-          <code>String</code>, không chỉ stack data, có thể dùng phương thức
-          <code>clone</code>:
+          Ngoài ra, còn một lựa chọn thiết kế được ngầm định ở đây: Rust sẽ không
+          bao giờ tự động tạo bản sao “sâu” dữ liệu của bạn. Do đó, mọi thao tác
+          sao chép <em>tự động</em> đều có thể coi là rẻ về hiệu năng lúc runtime.
         </p>
+
+        <h3 id="scope-and-assignment">🔁 Scope và phép gán</h3>
+
+        <p>
+          Điều ngược lại cũng đúng với quan hệ giữa scope, ownership và việc bộ
+          nhớ được giải phóng qua hàm <code>drop</code>. Khi bạn gán một giá trị
+          hoàn toàn mới cho một biến đã có, Rust sẽ gọi <code>drop</code> và giải
+          phóng ngay lập tức bộ nhớ của giá trị cũ. Hãy xét đoạn mã sau:
+        </p>
+
+        <pre><code>let mut s = String::from("hello");
+s = String::from("ahoy");
+
+println!("{s}, world!");</code></pre>
+
+        <p>
+          Ban đầu ta khai báo biến <code>s</code> và ràng buộc nó với một
+          <code>String</code> mang giá trị <code>"hello"</code>. Rồi ngay sau đó
+          ta tạo một <code>String</code> mới mang giá trị <code>"ahoy"</code> và
+          gán cho <code>s</code>. Tại thời điểm này, không còn gì trỏ tới giá trị
+          gốc trên heap nữa. Hình 4-5 minh họa dữ liệu trên stack và heap lúc này:
+        </p>
+
+        <p>
+          <img
+            alt="Một bảng biểu diễn giá trị chuỗi trên stack, trỏ tới đoạn dữ liệu chuỗi thứ hai (ahoy) trên heap, còn dữ liệu chuỗi ban đầu (hello) bị làm mờ vì không truy cập được nữa."
+            src="img/trpl04-05.svg"
+            class="center"
+            style="width: 50%"
+          />
+        </p>
+        <p>
+          <span class="caption"
+            >Hình 4-5: Biểu diễn trong bộ nhớ sau khi giá trị ban đầu đã bị thay
+            thế hoàn toàn</span
+          >
+        </p>
+
+        <p>
+          Chuỗi ban đầu vì thế lập tức ra khỏi scope. Rust sẽ chạy hàm
+          <code>drop</code> trên nó và bộ nhớ của nó được giải phóng ngay. Khi ta
+          in giá trị ở cuối, kết quả sẽ là <code>"ahoy, world!"</code>.
+        </p>
+
+        <p><a id="ways-variables-and-data-interact-clone"></a></p>
+
+        <h3 id="variables-and-data-interacting-with-clone">🧬 Biến và Dữ liệu tương tác: Clone</h3>
+
+        <p>
+          Nếu ta <em>thực sự</em> muốn sao chép sâu phần dữ liệu heap của
+          <code>String</code>, chứ không chỉ phần dữ liệu trên stack, ta có thể
+          dùng một phương thức phổ biến tên là <code>clone</code>. Chúng ta sẽ bàn
+          về cú pháp phương thức ở Chương 5, nhưng vì phương thức là thứ quen
+          thuộc trong nhiều ngôn ngữ lập trình nên có lẽ bạn đã từng gặp rồi.
+        </p>
+
+        <p>Đây là ví dụ về phương thức <code>clone</code> khi hoạt động:</p>
 
         <pre><code>let s1 = String::from("hello");
 let s2 = s1.clone();
-println!("s1 = {s1}, s2 = {s2}"); // cả hai đều hợp lệ</code></pre>
+
+println!("s1 = {s1}, s2 = {s2}");</code></pre>
 
         <p>
-          Khi bạn thấy lời gọi <code>clone</code>, bạn biết rằng một số code tùy
-          ý đang được thực thi và code đó có thể tốn kém. Đó là chỉ báo trực
-          quan rằng có điều gì đó khác thường đang xảy ra.
+          Đoạn này chạy tốt và tạo ra đúng hành vi thể hiện ở Hình 4-3, nơi dữ
+          liệu trên heap <em>thật sự</em> được sao chép.
         </p>
 
-        <h3>Dữ liệu chỉ trên Stack: Copy</h3>
+        <p>
+          Khi bạn thấy một lời gọi <code>clone</code>, bạn biết rằng có một đoạn
+          mã nào đó đang được thực thi và đoạn mã đó có thể tốn kém. Đó là một dấu
+          hiệu trực quan cho thấy đang có điều gì khác thường diễn ra.
+        </p>
+
+        <h3 id="stack-only-data-copy">📋 Dữ liệu chỉ trên Stack: Copy</h3>
 
         <p>
-          Có một chi tiết khác chúng ta chưa nói đến. Đoạn code này với số
-          nguyên hoạt động và hợp lệ:
+          Còn một chi tiết nữa mà ta chưa nói tới. Đoạn mã dùng số nguyên sau đây
+          — một phần của nó đã xuất hiện ở Listing 4-2 — chạy được và hợp lệ:
         </p>
 
         <pre><code>let x = 5;
 let y = x;
-println!("x = {x}, y = {y}"); // cả hai đều hợp lệ</code></pre>
+
+println!("x = {x}, y = {y}");</code></pre>
 
         <p>
-          Nhưng code này có vẻ mâu thuẫn với những gì chúng ta vừa học: chúng ta
-          không có lời gọi <code>clone</code>, nhưng <code>x</code> vẫn hợp lệ
-          và không bị moved vào <code>y</code>.
+          Nhưng đoạn mã này có vẻ mâu thuẫn với điều ta vừa học: ta không hề gọi
+          <code>clone</code>, vậy mà <code>x</code> vẫn hợp lệ và không bị move
+          vào <code>y</code>.
         </p>
 
         <p>
-          Lý do là các kiểu như số nguyên có kích thước đã biết tại compile time
-          được lưu hoàn toàn trên stack, vì vậy việc sao chép các giá trị thực
-          sự rất nhanh. Điều đó có nghĩa là không có lý do gì để chúng ta muốn
-          ngăn <code>x</code> hợp lệ sau khi tạo biến <code>y</code>. Không có
-          sự khác biệt giữa deep và shallow copy ở đây.
+          Lý do là những kiểu như số nguyên, vốn có kích thước đã biết tại compile
+          time, được lưu hoàn toàn trên stack, nên việc sao chép chính giá trị đó
+          rất nhanh. Điều đó có nghĩa là không có lý do gì để ta muốn ngăn
+          <code>x</code> tiếp tục hợp lệ sau khi tạo biến <code>y</code>. Nói cách
+          khác, ở đây không có khác biệt giữa sao chép sâu và sao chép nông, nên
+          gọi <code>clone</code> cũng chẳng khác gì phép sao chép nông thông
+          thường, và ta có thể bỏ qua nó.
         </p>
 
         <p>
-          Rust có một annotation đặc biệt gọi là <code>Copy</code> trait mà
-          chúng ta có thể đặt trên các kiểu được lưu trên stack. Nếu một kiểu
-          implement <code>Copy</code> trait, các biến sử dụng nó sẽ không bị
-          moved mà được sao chép một cách trivially, khiến chúng vẫn hợp lệ sau
-          khi gán cho một biến khác.
+          Rust có một annotation đặc biệt gọi là trait <code>Copy</code> mà ta có
+          thể đặt lên những kiểu được lưu trên stack, như số nguyên (chúng ta sẽ
+          nói kỹ hơn về trait ở <a href="ch10-02-traits.html">Chương 10</a>). Nếu
+          một kiểu triển khai trait <code>Copy</code>, các biến dùng kiểu đó sẽ
+          không bị move mà được sao chép một cách đơn giản, nhờ vậy vẫn hợp lệ sau
+          khi được gán cho một biến khác.
         </p>
 
         <p>
-          Rust sẽ không cho phép chúng ta annotate một kiểu với
-          <code>Copy</code> nếu kiểu đó, hoặc bất kỳ phần nào của nó, implement
-          <code>Drop</code> trait. Nếu kiểu cần thứ gì đó đặc biệt xảy ra khi
-          giá trị ra khỏi scope và chúng ta thêm <code>Copy</code> annotation
-          vào kiểu đó, chúng ta sẽ nhận được lỗi compile time.
+          Rust sẽ không cho ta gắn annotation <code>Copy</code> lên một kiểu nếu
+          kiểu đó, hoặc bất kỳ phần nào của nó, đã triển khai trait
+          <code>Drop</code>. Nếu kiểu đó cần làm một việc đặc biệt khi giá trị ra
+          khỏi scope mà ta lại thêm annotation <code>Copy</code> vào, ta sẽ gặp
+          lỗi lúc compile. Để biết cách thêm annotation <code>Copy</code> vào kiểu
+          của bạn nhằm triển khai trait này, xem
+          <a href="appendix-03-derivable-traits.html">“Các trait dẫn xuất được”</a>
+          ở Phụ lục C.
         </p>
 
         <p>
-          Vậy kiểu nào implement <code>Copy</code>? Bạn có thể kiểm tra tài liệu
-          của kiểu đó, nhưng quy tắc chung là: bất kỳ nhóm các kiểu scalar đơn
-          giản nào đều có thể implement <code>Copy</code>, và không có gì yêu
-          cầu cấp phát hoặc là một dạng resource có thể implement
-          <code>Copy</code>. Các kiểu implement <code>Copy</code> bao gồm:
+          Vậy những kiểu nào triển khai trait <code>Copy</code>? Bạn có thể tra
+          tài liệu của kiểu đó cho chắc, nhưng theo quy tắc chung thì bất kỳ nhóm
+          giá trị vô hướng đơn giản nào cũng có thể triển khai <code>Copy</code>,
+          còn thứ gì cần cấp phát hoặc là một dạng tài nguyên thì không thể. Dưới
+          đây là một số kiểu có triển khai <code>Copy</code>:
         </p>
-
         <ul>
-          <li>Tất cả các kiểu số nguyên, như <code>u32</code>.</li>
+          <li>Tất cả các kiểu số nguyên, chẳng hạn <code>u32</code>.</li>
           <li>
-            Kiểu Boolean, <code>bool</code>, với các giá trị
-            <code>true</code> và <code>false</code>.
+            Kiểu Boolean, <code>bool</code>, với hai giá trị <code>true</code> và
+            <code>false</code>.
           </li>
-          <li>Tất cả các kiểu dấu phẩy động, như <code>f64</code>.</li>
+          <li>Tất cả các kiểu dấu phẩy động, chẳng hạn <code>f64</code>.</li>
           <li>Kiểu ký tự, <code>char</code>.</li>
           <li>
-            Tuples, nếu chúng chỉ chứa các kiểu cũng implement
-            <code>Copy</code>. Ví dụ, <code>(i32, i32)</code> implement
-            <code>Copy</code>, nhưng <code>(i32, String)</code> thì không.
+            Tuple, nếu chúng chỉ chứa những kiểu cũng triển khai
+            <code>Copy</code>. Ví dụ, <code>(i32, i32)</code> triển khai
+            <code>Copy</code>, còn <code>(i32, String)</code> thì không.
           </li>
         </ul>
 
-        <h2>🏃 Ownership và Hàm</h2>
+        <h2 id="ownership-and-functions">🏃 Ownership và Hàm</h2>
 
         <p>
-          Cơ chế truyền giá trị cho hàm tương tự như khi gán giá trị cho biến.
-          Truyền biến cho hàm sẽ move hoặc copy, giống như phép gán:
+          Cơ chế truyền một giá trị cho hàm cũng tương tự như khi gán một giá trị
+          cho biến. Truyền một biến cho hàm sẽ move hoặc copy, đúng như phép gán.
+          Listing 4-3 là một ví dụ có chú thích đánh dấu chỗ các biến đi vào và ra
+          khỏi scope.
         </p>
 
-        <pre><code>fn main() {
-    let s = String::from("hello");  // s vào scope
+        <figure class="listing" id="listing-4-3">
+          <span class="file-name">Tên file: src/main.rs</span>
+<pre><code>fn main() {
+    let s = String::from("hello");  // s đi vào scope
 
-    takes_ownership(s);             // giá trị của s moves vào hàm...
-                                    // ... và không còn hợp lệ ở đây
+    takes_ownership(s);             // giá trị của s được move vào hàm...
+                                    // ... nên từ đây s không còn hợp lệ
 
-    let x = 5;                      // x vào scope
+    let x = 5;                      // x đi vào scope
 
-    makes_copy(x);                  // x sẽ được copy vào hàm,
-                                    // vì vậy vẫn dùng x được sau đây
+    makes_copy(x);                  // Vì i32 triển khai trait Copy,
+                                    // x KHÔNG bị move vào hàm,
+                                    // nên sau đó vẫn dùng được x.
 
-} // Ở đây, x ra khỏi scope, sau đó s. Nhưng vì giá trị của s đã được moved,
+} // Ở đây, x ra khỏi scope, rồi tới s. Nhưng vì giá trị của s đã bị move,
   // không có gì đặc biệt xảy ra.
 
-fn takes_ownership(some_string: String) { // some_string vào scope
+fn takes_ownership(some_string: String) { // some_string đi vào scope
     println!("{some_string}");
-} // Ở đây, some_string ra khỏi scope và `drop` được gọi. Bộ nhớ được giải phóng.
+} // Ở đây, some_string ra khỏi scope và `drop` được gọi. Vùng nhớ phía sau
+  // được giải phóng.
 
-fn makes_copy(some_integer: i32) { // some_integer vào scope
+fn makes_copy(some_integer: i32) { // some_integer đi vào scope
     println!("{some_integer}");
 } // Ở đây, some_integer ra khỏi scope. Không có gì đặc biệt xảy ra.</code></pre>
+          <figcaption>
+            <a href="#listing-4-3">Listing 4-3</a>: Các hàm có chú thích về
+            ownership và scope
+          </figcaption>
+        </figure>
 
-        <h2>↩️ Giá trị Trả về và Scope</h2>
+        <p>
+          Nếu ta thử dùng <code>s</code> sau lời gọi <code>takes_ownership</code>,
+          Rust sẽ báo lỗi lúc compile. Những kiểm tra tĩnh này bảo vệ ta khỏi sai
+          sót. Hãy thử thêm mã vào <code>main</code> có dùng <code>s</code> và
+          <code>x</code> để xem chỗ nào dùng được và chỗ nào bị các quy tắc
+          ownership ngăn lại.
+        </p>
 
-        <p>Trả về giá trị cũng có thể chuyển ownership:</p>
+        <h2 id="return-values-and-scope">↩️ Giá trị Trả về và Scope</h2>
 
-        <pre><code>fn main() {
-    let s1 = gives_ownership();         // gives_ownership chuyển giá trị trả về
-                                        // của nó vào s1
+        <p>
+          Trả về giá trị cũng có thể chuyển ownership. Listing 4-4 là ví dụ một
+          hàm trả về giá trị, với chú thích tương tự Listing 4-3.
+        </p>
 
-    let s2 = String::from("hello");     // s2 vào scope
+        <figure class="listing" id="listing-4-4">
+          <span class="file-name">Tên file: src/main.rs</span>
+<pre><code>fn main() {
+    let s1 = gives_ownership();        // gives_ownership move giá trị trả về
+                                       // của nó vào s1
 
-    let s3 = takes_and_gives_back(s2);  // s2 được moved vào hàm,
-                                        // hàm cũng trả về giá trị và moved vào s3
-} // Ở đây, s3 ra khỏi scope và bị drop. s2 đã bị moved, nên không có gì xảy ra.
+    let s2 = String::from("hello");    // s2 đi vào scope
+
+    let s3 = takes_and_gives_back(s2); // s2 được move vào
+                                       // takes_and_gives_back, và hàm này
+                                       // cũng move giá trị trả về của nó vào s3
+} // Ở đây, s3 ra khỏi scope và bị drop. s2 đã bị move nên không có gì xảy ra.
   // s1 ra khỏi scope và bị drop.
 
-fn gives_ownership() -> String {             // gives_ownership sẽ move giá trị
-                                             // trả về của nó vào hàm gọi nó
-    let some_string = String::from("yours"); // some_string vào scope
-    some_string                              // some_string được trả về và moved
-                                             // ra ngoài cho hàm gọi
+fn gives_ownership() -&gt; String {       // gives_ownership sẽ move giá trị
+                                       // trả về của nó vào hàm
+                                       // đã gọi nó
+
+    let some_string = String::from("yours"); // some_string đi vào scope
+
+    some_string                        // some_string được trả về và
+                                       // move ra ngoài cho hàm
+                                       // đã gọi
 }
 
-fn takes_and_gives_back(a_string: String) -> String { // a_string vào scope
-    a_string  // a_string được trả về và moved ra ngoài cho hàm gọi
+// Hàm này nhận một String và trả về một String.
+fn takes_and_gives_back(a_string: String) -&gt; String {
+    // a_string đi vào
+    // scope
+
+    a_string  // a_string được trả về và move ra ngoài cho hàm đã gọi
 }</code></pre>
+          <figcaption>
+            <a href="#listing-4-4">Listing 4-4</a>: Chuyển ownership của giá trị
+            trả về
+          </figcaption>
+        </figure>
 
         <p>
-          Ownership của một biến luôn tuân theo cùng một quy luật: gán giá trị
-          cho một biến khác sẽ move nó. Khi một biến bao gồm dữ liệu trên heap
-          ra khỏi scope, giá trị sẽ bị dọn sạch bởi <code>drop</code> trừ khi
-          ownership của dữ liệu đã được chuyển sang biến khác.
+          Ownership của một biến luôn tuân theo cùng một mẫu hình: gán một giá trị
+          cho biến khác sẽ move nó. Khi một biến có chứa dữ liệu trên heap ra khỏi
+          scope, giá trị sẽ được <code>drop</code> dọn dẹp, trừ khi ownership của
+          dữ liệu đã được move sang biến khác.
         </p>
 
         <p>
-          Mặc dù điều này hoạt động, nhưng việc lấy ownership rồi trả lại
-          ownership với mỗi hàm là hơi tẻ nhạt. Điều gì sẽ xảy ra nếu chúng ta
-          muốn cho một hàm sử dụng một giá trị nhưng không lấy ownership? Thật
-          khó chịu khi bất cứ thứ gì chúng ta truyền vào cũng cần được truyền
-          lại nếu chúng ta muốn dùng lại, ngoài bất kỳ dữ liệu nào từ thân hàm
-          mà chúng ta cũng có thể muốn trả về.
+          Cách này chạy được, nhưng nhận ownership rồi lại trả ownership ở mọi hàm
+          thì hơi lích kích. Sẽ thế nào nếu ta muốn cho một hàm dùng một giá trị
+          mà không lấy ownership? Khá phiền khi bất cứ thứ gì ta truyền vào cũng
+          phải được truyền ngược ra nếu ta còn muốn dùng lại, chưa kể còn dữ liệu
+          sinh ra từ thân hàm mà ta cũng có thể muốn trả về.
         </p>
 
-        <p>Rust cho phép chúng ta trả về nhiều giá trị bằng tuple:</p>
+        <p>
+          Rust cho phép ta trả về nhiều giá trị bằng tuple, như ở Listing 4-5.
+        </p>
 
-        <pre><code>fn main() {
+        <figure class="listing" id="listing-4-5">
+          <span class="file-name">Tên file: src/main.rs</span>
+<pre><code>fn main() {
     let s1 = String::from("hello");
+
     let (s2, len) = calculate_length(s1);
+
     println!("Độ dài của '{s2}' là {len}.");
 }
 
-fn calculate_length(s: String) -> (String, usize) {
-    let length = s.len(); // len() trả về độ dài của String
+fn calculate_length(s: String) -&gt; (String, usize) {
+    let length = s.len(); // len() trả về độ dài của một String
+
     (s, length)
 }</code></pre>
+          <figcaption>
+            <a href="#listing-4-5">Listing 4-5</a>: Trả lại ownership của tham số
+          </figcaption>
+        </figure>
 
         <p>
-          Nhưng đây là quá nhiều boilerplate cho một khái niệm đáng lẽ phổ biến.
-          May mắn thay, Rust có một tính năng để sử dụng giá trị mà không chuyển
-          ownership, được gọi là <strong>references</strong>. Chúng ta sẽ tìm
-          hiểu trong phần tiếp theo.
+          Nhưng như vậy là quá rườm rà cho một khái niệm lẽ ra phải rất thông
+          thường. May cho chúng ta, Rust có sẵn một tính năng để dùng một giá trị
+          mà không cần chuyển ownership: <em>tham chiếu</em> (reference).
         </p>
-
         <div class="page-nav bottom">
           <a href="ch04-00-understanding-ownership.html">← Trước</a
           ><a href="ch04-02-references-and-borrowing.html">Tiếp →</a>

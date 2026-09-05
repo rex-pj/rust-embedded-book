@@ -265,7 +265,7 @@
       </nav>
     </nav>
 
-    <div id="content">
+    <main id="content">
       <div id="topbar">
         <button id="hamburger">☰</button>
         <a href="title-page.html">📖 The Rust Book</a>
@@ -851,8 +851,8 @@
         <h2 id="thiet-lap-du-an-moi">Thiết lập dự án mới</h2>
 
         <p>
-          Để tạo dự án mới, hãy vào thư mục <em>projects</em> bạn đã tạo ở
-          Chương 1, rồi dùng Cargo tạo project mới như sau:
+          Để tạo dự án mới, hãy vào thư mục <em>dự án</em> bạn đã tạo ở
+          Chương 1, rồi dùng Cargo tạo dự án mới như sau:
         </p>
 
         <pre><code class="language-console">$ cargo new guessing_game
@@ -905,7 +905,7 @@ Hello, world!
         </p>
 
         <p>
-          Mở lại file <em>src/main.rs</em>. Bạn sẽ viết toàn bộ code vào file
+          Mở lại file <em>src/main.rs</em>. Bạn sẽ viết toàn bộ mã vào file
           này.
         </p>
 
@@ -914,7 +914,7 @@ Hello, world!
         <p>
           Phần đầu tiên của trò chơi đoán số là yêu cầu người dùng nhập liệu, xử
           lý đầu vào đó và kiểm tra xem nó có đúng định dạng không. Để bắt đầu,
-          ta cho phép người chơi nhập một số đoán. Nhập đoạn code trong Listing
+          ta cho phép người chơi nhập một số đoán. Nhập đoạn mã trong Listing
           2-1 vào <em>src/main.rs</em>.
         </p>
 
@@ -936,13 +936,13 @@ fn main() {
     println!("You guessed: {guess}");
 }</code></pre>
           <figcaption>
-            <a href="#listing-2-1">Listing 2-1</a>: Code lấy số đoán từ người
+            <a href="#listing-2-1">Listing 2-1</a>: Mã lấy số đoán từ người
             dùng và in ra màn hình
           </figcaption>
         </figure>
 
         <p>
-          Đoạn code này chứa khá nhiều thứ, hãy đi từng dòng một. Để đọc đầu vào
+          Đoạn mã này chứa khá nhiều thứ, hãy đi từng dòng một. Để đọc đầu vào
           từ người dùng và in kết quả ra màn hình, ta cần đưa thư viện I/O
           <code>io</code> vào phạm vi sử dụng. Thư viện <code>io</code> đến từ
           thư viện chuẩn, hay còn gọi là <code>std</code>:
@@ -989,7 +989,7 @@ fn main() {
     println!("Please input your guess.");</code></pre>
 
         <p>
-          Đoạn code này in ra lời nhắc thông báo tên trò chơi và yêu cầu người
+          Đoạn mã này in ra lời nhắc thông báo tên trò chơi và yêu cầu người
           dùng nhập liệu.
         </p>
 
@@ -1087,7 +1087,7 @@ let mut bananas = 5; // mutable</code></pre>
           <code>stdin</code> trả về một instance của
           <a href="https://doc.rust-lang.org/std/io/struct.Stdin.html"
             ><code>std::io::Stdin</code></a
-          >, là kiểu đại diện cho handle của standard input của terminal bạn
+          >, là kiểu đại diện cho handle của đầu vào chuẩn của terminal bạn
           đang dùng.
         </p>
 
@@ -1097,18 +1097,18 @@ let mut bananas = 5; // mutable</code></pre>
             href="https://doc.rust-lang.org/std/io/struct.Stdin.html#method.read_line"
             ><code>read_line</code></a
           >
-          trên handle standard input để lấy đầu vào từ người dùng. Ta cũng
+          trên handle đầu vào chuẩn để lấy đầu vào từ người dùng. Ta cũng
           truyền <code>&amp;mut guess</code> làm đối số cho
           <code>read_line</code> để nói với nó rằng nên lưu đầu vào vào string
           nào. Nhiệm vụ của <code>read_line</code> là lấy bất cứ thứ gì người
-          dùng gõ vào standard input rồi thêm vào cuối string đó (không ghi đè
+          dùng gõ vào đầu vào chuẩn rồi thêm vào cuối string đó (không ghi đè
           nội dung cũ), vì vậy ta truyền string đó như một đối số. String
           argument cần là mutable để method có thể thay đổi nội dung của nó.
         </p>
 
         <p>
           Dấu <code>&amp;</code> cho biết đây là một <em>reference</em> — cho
-          phép nhiều phần của code cùng truy cập một dữ liệu mà không cần sao
+          phép nhiều phần của mã cùng truy cập một dữ liệu mà không cần sao
           chép nó vào bộ nhớ nhiều lần. Reference là một tính năng phức tạp, và
           một trong những điểm mạnh lớn nhất của Rust là cách nó làm cho việc
           dùng reference trở nên an toàn và dễ dàng. Bạn chưa cần biết quá nhiều
@@ -1122,11 +1122,11 @@ let mut bananas = 5; // mutable</code></pre>
           Xử lý lỗi tiềm năng với <code>Result</code>
         </h3>
 
-        <p>Ta vẫn đang phân tích dòng code này. Tiếp theo là method thứ ba:</p>
+        <p>Ta vẫn đang phân tích dòng mã này. Tiếp theo là method thứ ba:</p>
 
         <pre><code class="language-rust">        .expect("Failed to read line");</code></pre>
 
-        <p>Ta hoàn toàn có thể viết đoạn code trên trong một dòng duy nhất:</p>
+        <p>Ta hoàn toàn có thể viết đoạn mã trên trong một dòng duy nhất:</p>
 
         <pre><code class="language-rust">io::stdin().read_line(&amp;mut guess).expect("Failed to read line");</code></pre>
 
@@ -1134,7 +1134,7 @@ let mut bananas = 5; // mutable</code></pre>
           Tuy nhiên một dòng quá dài thì khó đọc, nên tốt nhất là ngắt dòng. Khi
           gọi method theo cú pháp <code>.method_name()</code>, xuống dòng và
           thêm khoảng trắng thích hợp để chia nhỏ những dòng dài là thói quen
-          tốt. Bây giờ hãy xem dòng code này làm gì.
+          tốt. Bây giờ hãy xem dòng mã này làm gì.
         </p>
 
         <p>
@@ -1211,7 +1211,7 @@ warning: `guessing_game` (bin "guessing_game") generated 1 warning
         </p>
 
         <p>
-          Cách đúng để loại bỏ cảnh báo là thực sự viết code xử lý lỗi, nhưng
+          Cách đúng để loại bỏ cảnh báo là thực sự viết mã xử lý lỗi, nhưng
           trong trường hợp này ta chỉ muốn crash chương trình khi có vấn đề, nên
           có thể dùng <code>expect</code>. Bạn sẽ học về cách phục hồi từ lỗi ở
           <a href="ch09-02-recoverable-errors-with-result.html">Chương 9</a>.
@@ -1222,7 +1222,7 @@ warning: `guessing_game` (bin "guessing_game") generated 1 warning
         </h3>
 
         <p>
-          Ngoài dấu đóng ngoặc nhọn, còn một dòng nữa cần bàn trong code hiện
+          Ngoài dấu đóng ngoặc nhọn, còn một dòng nữa cần bàn trong mã hiện
           tại:
         </p>
 
@@ -1244,7 +1244,7 @@ let y = 10;
 
 println!("x = {x} and y + 2 = {}", y + 2);</code></pre>
 
-        <p>Đoạn code này sẽ in ra <code>x = 5 and y + 2 = 12</code>.</p>
+        <p>Đoạn mã này sẽ in ra <code>x = 5 and y + 2 = 12</code>.</p>
 
         <h3 id="kiem-tra-phan-dau-tien">Kiểm tra phần đầu tiên</h3>
 
@@ -1283,9 +1283,9 @@ You guessed: 6
         <h3 id="mo-rong-tinh-nang-voi-crate">Mở rộng tính năng với Crate</h3>
 
         <p>
-          Nhớ lại rằng crate là tập hợp các file source code Rust. Dự án ta đang
+          Nhớ lại rằng crate là tập hợp các file mã nguồn Rust. Dự án ta đang
           xây dựng là <em>binary crate</em> — tức là file thực thi. Còn crate
-          <code>rand</code> là <em>library crate</em> — chứa code dùng cho các
+          <code>rand</code> là <em>library crate</em> — chứa mã dùng cho các
           chương trình khác, không chạy độc lập được.
         </p>
 
@@ -1306,10 +1306,10 @@ rand = "0.8.5"
 
         <p>
           Trong file <em>Cargo.toml</em>, mọi thứ đứng sau một header đều thuộc
-          về section đó cho đến khi section khác bắt đầu. Trong
+          về mục đó cho đến khi mục khác bắt đầu. Trong
           <code>[dependencies]</code>, bạn khai báo các external crate mà dự án
           phụ thuộc vào, cùng với phiên bản cần dùng. Ở đây ta khai báo crate
-          <code>rand</code> với specifier phiên bản semantic <code>0.8.5</code>.
+          <code>rand</code> với chỉ định phiên bản semantic <code>0.8.5</code>.
           Cargo hiểu <a href="http://semver.org">Semantic Versioning</a> (hay
           còn gọi là <em>SemVer</em>), một chuẩn để đánh số phiên bản. Specifier
           <code>0.8.5</code> thực chất là viết tắt của <code>^0.8.5</code>,
@@ -1319,7 +1319,7 @@ rand = "0.8.5"
         <p>
           Cargo coi những phiên bản này là tương thích về API công khai với
           phiên bản 0.8.5, và cách khai báo này đảm bảo bạn sẽ nhận được bản vá
-          mới nhất vẫn còn tương thích với code trong chương này. Bất kỳ phiên
+          mới nhất vẫn còn tương thích với mã trong chương này. Bất kỳ phiên
           bản 0.9.0 nào trở lên đều không được đảm bảo có cùng API với các ví dụ
           dưới đây.
         </p>
@@ -1359,7 +1359,7 @@ rand = "0.8.5"
 
         <p>
           Bạn có thể thấy số phiên bản khác nhau (nhưng tất cả đều tương thích
-          với code nhờ SemVer!) và các dòng khác nhau (tùy hệ điều hành), thứ tự
+          với mã nhờ SemVer!) và các dòng khác nhau (tùy hệ điều hành), thứ tự
           các dòng cũng có thể khác.
         </p>
 
@@ -1375,21 +1375,21 @@ rand = "0.8.5"
           <code>[dependencies]</code> và tải xuống những crate chưa có. Trong
           trường hợp này, mặc dù ta chỉ khai báo <code>rand</code>, Cargo cũng
           tải về các crate mà <code>rand</code> phụ thuộc vào. Sau khi tải xong,
-          Rust biên dịch chúng rồi biên dịch dự án với các dependencies sẵn có.
+          Rust biên dịch chúng rồi biên dịch dự án với các dependency sẵn có.
         </p>
 
         <p>
           Nếu ngay sau đó bạn chạy <code>cargo build</code> lại mà không thay
-          đổi gì, bạn sẽ không thấy output nào ngoài dòng <code>Finished</code>.
-          Cargo biết rằng nó đã tải và biên dịch các dependencies rồi, và bạn
+          đổi gì, bạn sẽ không thấy kết quả nào ngoài dòng <code>Finished</code>.
+          Cargo biết rằng nó đã tải và biên dịch các dependency rồi, và bạn
           cũng chưa thay đổi gì trong <em>Cargo.toml</em>. Cargo cũng biết bạn
-          chưa thay đổi code, nên không cần biên dịch lại. Không có gì phải làm,
+          chưa thay đổi mã, nên không cần biên dịch lại. Không có gì phải làm,
           nó đơn giản là thoát.
         </p>
 
         <p>
           Nếu bạn mở file <em>src/main.rs</em>, sửa một chút không đáng kể rồi
-          lưu và build lại, bạn chỉ thấy hai dòng output:
+          lưu và build lại, bạn chỉ thấy hai dòng kết quả:
         </p>
 
         <pre><code class="language-console">$ cargo build
@@ -1412,7 +1412,7 @@ rand = "0.8.5"
           mỗi lần: Cargo chỉ sử dụng các phiên bản dependencies mà bạn đã khai
           báo, trừ khi bạn chỉ định khác. Ví dụ, giả sử tuần tới crate
           <code>rand</code> phát hành phiên bản 0.8.6 với một bản vá lỗi quan
-          trọng, nhưng cũng chứa một regression làm hỏng code của bạn. Để xử lý
+          trọng, nhưng cũng chứa một regression làm hỏng mã của bạn. Để xử lý
           điều này, Rust tạo file <em>Cargo.lock</em> lần đầu tiên bạn chạy
           <code>cargo build</code>, nên bây giờ thư mục
           <em>guessing_game</em> đã có file này.
@@ -1427,7 +1427,7 @@ rand = "0.8.5"
           của bạn sẽ vẫn là phiên bản 0.8.5 cho đến khi bạn chủ động nâng cấp,
           nhờ file <em>Cargo.lock</em>. Vì file <em>Cargo.lock</em> rất quan
           trọng cho việc tái hiện build, nó thường được commit vào source
-          control cùng với code.
+          control cùng với mã.
         </p>
 
         <h4 id="cap-nhat-crate-len-phien-ban-moi">
@@ -1513,7 +1513,7 @@ fn main() {
     println!("You guessed: {guess}");
 }</code></pre>
           <figcaption>
-            <a href="#listing-2-3">Listing 2-3</a>: Thêm code để sinh số ngẫu
+            <a href="#listing-2-3">Listing 2-3</a>: Thêm mã để sinh số ngẫu
             nhiên
           </figcaption>
         </figure>
@@ -1595,7 +1595,7 @@ You guessed: 5
         <p>
           Bây giờ ta đã có đầu vào của người dùng và một số ngẫu nhiên, ta có
           thể so sánh chúng. Bước đó được trình bày trong Listing 2-4. Lưu ý
-          đoạn code này chưa biên dịch được, như ta sẽ giải thích.
+          đoạn mã này chưa biên dịch được, như ta sẽ giải thích.
         </p>
 
         <figure class="listing" id="listing-2-4">
@@ -1659,11 +1659,11 @@ fn main() {
 
         <p>
           Biểu thức <code>match</code> được tạo thành từ các <em>arm</em>. Một
-          arm gồm một <em>pattern</em> để khớp và đoạn code sẽ chạy nếu giá trị
+          arm gồm một <em>pattern</em> để khớp và đoạn mã sẽ chạy nếu giá trị
           truyền vào <code>match</code> khớp với pattern của arm đó. Rust lấy
           giá trị truyền vào <code>match</code> và kiểm tra lần lượt pattern của
           từng arm. Pattern và cấu trúc <code>match</code> là những tính năng
-          mạnh mẽ của Rust: cho phép bạn diễn đạt nhiều tình huống mà code có
+          mạnh mẽ của Rust: cho phép bạn diễn đạt nhiều tình huống mà mã có
           thể gặp phải và đảm bảo bạn xử lý hết chúng. Những tính năng này sẽ
           được đề cập chi tiết lần lượt ở Chương 6 và Chương 19.
         </p>
@@ -1674,22 +1674,22 @@ fn main() {
         </p>
 
         <p>
-          Khi code so sánh 50 với 38, method <code>cmp</code> trả về
+          Khi mã so sánh 50 với 38, method <code>cmp</code> trả về
           <code>Ordering::Greater</code> vì 50 lớn hơn 38. Biểu thức
           <code>match</code> nhận giá trị <code>Ordering::Greater</code> và bắt
           đầu kiểm tra pattern của từng arm. Nó xem pattern của arm đầu tiên,
           <code>Ordering::Less</code>, và thấy
           <code>Ordering::Greater</code> không khớp với
-          <code>Ordering::Less</code>, nên bỏ qua code trong arm đó và chuyển
+          <code>Ordering::Less</code>, nên bỏ qua mã trong arm đó và chuyển
           sang arm tiếp theo. Pattern của arm tiếp theo là
           <code>Ordering::Greater</code>, khớp với
-          <code>Ordering::Greater</code>! Code liên kết với arm đó sẽ thực thi
+          <code>Ordering::Greater</code>! Mã liên kết với arm đó sẽ thực thi
           và in <code>Too big!</code> ra màn hình. Biểu thức
           <code>match</code> kết thúc sau lần khớp đầu tiên thành công, không
           kiểm tra arm cuối trong trường hợp này.
         </p>
 
-        <p>Tuy nhiên, code trong Listing 2-4 chưa biên dịch được. Hãy thử:</p>
+        <p>Tuy nhiên, mã trong Listing 2-4 chưa biên dịch được. Hãy thử:</p>
 
         <pre><code class="language-console">$ cargo build
    Compiling libc v0.2.86
@@ -1785,7 +1785,7 @@ error: could not compile `guessing_game` (bin "guessing_game") due to 1 previous
           <kbd>5</kbd> rồi nhấn <kbd>Enter</kbd>, <code>guess</code> trông như
           thế này: <code>5\n</code>. <code>\n</code> đại diện cho "newline."
           (Trên Windows, nhấn <kbd>Enter</kbd> tạo ra carriage return và
-          newline, <code>\r\n</code>.) Method <code>trim</code> loại bỏ
+          newline, <code>\r\n</code>.) method <code>trim</code> loại bỏ
           <code>\n</code> hoặc <code>\r\n</code>, chỉ còn lại <code>5</code>.
         </p>
 
@@ -2026,7 +2026,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
           tiên, nhưng nó khớp với pattern <code>Err(_)</code> ở arm thứ hai. Dấu
           gạch dưới <code>_</code> là giá trị bắt tất cả; trong ví dụ này, ta
           muốn khớp với mọi giá trị <code>Err</code>, bất kể thông tin bên trong
-          là gì. Vì vậy chương trình thực thi code của arm thứ hai là
+          là gì. Vì vậy chương trình thực thi mã của arm thứ hai là
           <code>continue</code>, nói với chương trình đi đến vòng lặp tiếp theo
           của <code>loop</code> và yêu cầu đoán lại. Hiệu quả là chương trình bỏ
           qua mọi lỗi mà <code>parse</code> có thể gặp phải!
@@ -2062,7 +2062,7 @@ You win!
           Tuyệt vời! Chỉ một chỉnh sửa nhỏ cuối cùng là ta hoàn thành trò chơi
           đoán số. Nhớ lại rằng chương trình vẫn đang in ra số bí mật. Điều đó
           hữu ích khi kiểm thử, nhưng làm hỏng trò chơi. Hãy xóa dòng
-          <code>println!</code> in ra số bí mật đó. Listing 2-6 là code hoàn
+          <code>println!</code> in ra số bí mật đó. Listing 2-6 là mã hoàn
           chỉnh.
         </p>
 
@@ -2105,7 +2105,7 @@ fn main() {
     }
 }</code></pre>
           <figcaption>
-            <a href="#listing-2-6">Listing 2-6</a>: Code hoàn chỉnh của trò chơi
+            <a href="#listing-2-6">Listing 2-6</a>: Mã hoàn chỉnh của trò chơi
             đoán số
           </figcaption>
         </figure>
@@ -2139,7 +2139,7 @@ fn main() {
           </a>
         </nav>
       </div>
-    </div>
+    </main>
 
     <script src="nav.js"></script>
   </body>

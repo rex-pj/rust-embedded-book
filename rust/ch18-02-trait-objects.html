@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 18 — The Rust Book</span>
+        ><span class="current">Chương 18 — Dùng trait object để trừu tượng hóa hành vi chung</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -273,118 +273,128 @@
           ><a href="ch18-03-oo-design-patterns.html">Tiếp →</a>
         </div>
 
-        <h2>Dùng Trait Objects để trừu tượng hóa hành vi chung</h2>
+        <p><a id="using-trait-objects-that-allow-for-values-of-different-types"></a></p>
+
+        <h2 id="using-trait-objects-to-abstract-over-shared-behavior">Dùng trait object để trừu tượng hóa hành vi chung</h2>
 
         <p>
-          Trong Chương 8, chúng ta đã đề cập rằng một hạn chế của vector là
-          chúng chỉ có thể lưu trữ các phần tử cùng kiểu. Chúng ta đã tạo một
-          giải pháp thay thế trong Listing 8-9, nơi chúng ta định nghĩa một enum
-          <code>SpreadsheetCell</code> với các variant để chứa số nguyên, số
-          thực và chuỗi. Điều này có nghĩa là chúng ta có thể lưu trữ các kiểu
-          dữ liệu khác nhau trong mỗi ô và vẫn có một vector đại diện cho một
-          hàng ô. Đây là giải pháp hoàn toàn phù hợp khi các item có thể hoán
-          đổi cho nhau là một tập hợp cố định các kiểu mà chúng ta biết trước
-          lúc biên dịch.
+          Ở Chương 8, ta có nhắc rằng một hạn chế của vector là chúng chỉ lưu được
+          các phần tử cùng một kiểu. Ta đã tạo một cách khắc phục ở Listing 8-9,
+          nơi ta định nghĩa enum <code>SpreadsheetCell</code> với các variant chứa
+          số nguyên, số thực và văn bản. Nhờ vậy ta lưu được các kiểu dữ liệu khác
+          nhau trong từng ô mà vẫn có một vector đại diện cho một hàng ô. Đây là
+          giải pháp hoàn toàn tốt khi những item có thể hoán đổi cho nhau là một
+          tập kiểu cố định mà ta đã biết ngay lúc mã được biên dịch.
         </p>
 
         <p>
-          Tuy nhiên, đôi khi chúng ta muốn người dùng thư viện của mình có thể
-          mở rộng tập hợp các kiểu hợp lệ trong một tình huống cụ thể. Để minh
-          họa điều này, chúng ta sẽ tạo một công cụ giao diện đồ họa (GUI) mẫu,
-          lặp qua danh sách các item và gọi phương thức <code>draw</code> trên
-          mỗi item để vẽ nó lên màn hình — một kỹ thuật phổ biến với các công cụ
-          GUI. Chúng ta sẽ tạo một library crate tên <code>gui</code> chứa cấu
-          trúc của một thư viện GUI. Crate này có thể bao gồm một số kiểu để mọi
-          người sử dụng, chẳng hạn như <code>Button</code> hoặc
-          <code>TextField</code>. Ngoài ra, người dùng <code>gui</code> sẽ muốn
-          tạo các kiểu riêng có thể được vẽ: ví dụ, một lập trình viên có thể
-          thêm <code>Image</code>, người khác thêm <code>SelectBox</code>.
+          Tuy nhiên, đôi khi ta muốn người dùng thư viện của mình có thể mở rộng
+          tập các kiểu hợp lệ trong một tình huống cụ thể. Để minh họa cách làm
+          điều đó, ta sẽ tạo một công cụ giao diện đồ họa (GUI) làm ví dụ: nó duyệt
+          qua một danh sách item và gọi phương thức <code>draw</code> trên từng item
+          để vẽ item đó lên màn hình — một kỹ thuật phổ biến của các công cụ GUI.
+          Ta sẽ tạo một library crate tên <code>gui</code> chứa cấu trúc của một thư
+          viện GUI. Crate này có thể gồm sẵn vài kiểu cho mọi người dùng, chẳng hạn
+          <code>Button</code> hay <code>TextField</code>. Ngoài ra, người dùng
+          <code>gui</code> sẽ muốn tạo những kiểu của riêng họ cũng vẽ được: chẳng
+          hạn một lập trình viên có thể thêm <code>Image</code>, người khác thêm
+          <code>SelectBox</code>.
         </p>
 
         <p>
-          Tại thời điểm viết thư viện, chúng ta không thể biết và định nghĩa tất
-          cả các kiểu mà các lập trình viên khác có thể muốn tạo. Nhưng chúng ta
-          biết rằng <code>gui</code> cần theo dõi nhiều giá trị của các kiểu
-          khác nhau, và cần gọi phương thức <code>draw</code> trên từng giá trị
-          có kiểu khác nhau này. Nó không cần biết chính xác điều gì sẽ xảy ra
-          khi chúng ta gọi phương thức <code>draw</code>, chỉ cần biết giá trị
-          đó có phương thức đó để chúng ta gọi.
+          Tại thời điểm viết thư viện, ta không thể biết và định nghĩa hết mọi kiểu
+          mà những lập trình viên khác có thể muốn tạo. Nhưng ta biết rằng
+          <code>gui</code> cần theo dõi nhiều giá trị thuộc các kiểu khác nhau, và
+          cần gọi phương thức <code>draw</code> trên từng giá trị khác kiểu ấy. Nó
+          không cần biết chính xác điều gì sẽ xảy ra khi ta gọi phương thức
+          <code>draw</code>, chỉ cần biết rằng giá trị đó có sẵn phương thức ấy để ta
+          gọi.
         </p>
 
         <p>
-          Để thực hiện điều này trong một ngôn ngữ có tính kế thừa, chúng ta có
-          thể định nghĩa một class tên <code>Component</code> có phương thức
-          <code>draw</code>. Các class khác như <code>Button</code>,
-          <code>Image</code> và <code>SelectBox</code> sẽ kế thừa từ
-          <code>Component</code> và kế thừa phương thức <code>draw</code>. Nhưng
-          vì Rust không có tính kế thừa, chúng ta cần cách khác để cấu trúc thư
-          viện <code>gui</code>.
+          Để làm việc này trong một ngôn ngữ có kế thừa, ta có thể định nghĩa một
+          class tên <code>Component</code> có phương thức <code>draw</code>. Những
+          class khác như <code>Button</code>, <code>Image</code> và
+          <code>SelectBox</code> sẽ kế thừa từ <code>Component</code> và nhờ đó thừa
+          hưởng phương thức <code>draw</code>. Mỗi class có thể ghi đè phương thức
+          <code>draw</code> để định nghĩa hành vi riêng, nhưng framework vẫn coi tất
+          cả các kiểu như thể chúng là instance của <code>Component</code> và gọi
+          <code>draw</code> trên chúng. Nhưng vì Rust không có kế thừa, ta cần một
+          cách khác để tổ chức thư viện <code>gui</code> sao cho người dùng tạo được
+          những kiểu mới tương thích với thư viện.
         </p>
 
-        <h3>Định nghĩa Trait cho Hành vi Chung</h3>
+        <h3 id="defining-a-trait-for-common-behavior">Định nghĩa một trait cho hành vi chung</h3>
 
         <p>
-          Để triển khai hành vi chúng ta muốn <code>gui</code> có, chúng ta sẽ
-          định nghĩa một trait tên <code>Draw</code> với một phương thức tên
-          <code>draw</code>. Sau đó, chúng ta có thể định nghĩa một vector nhận
-          một <em>trait object</em>. Một <em>trait object</em> trỏ đến cả một
-          instance của kiểu triển khai trait được chỉ định và một bảng tra cứu
-          các phương thức trait trên kiểu đó ở runtime. Chúng ta tạo một trait
-          object bằng cách chỉ định một loại con trỏ nào đó, chẳng hạn như tham
-          chiếu hoặc smart pointer <code>Box&lt;T&gt;</code>, rồi từ khóa
-          <code>dyn</code>, rồi trait liên quan.
+          Để triển khai hành vi mà ta muốn <code>gui</code> có, ta sẽ định nghĩa một
+          trait tên <code>Draw</code> với một phương thức tên <code>draw</code>. Rồi
+          ta có thể định nghĩa một vector nhận một <em>trait object</em>. Một trait
+          object trỏ tới cả một instance của kiểu triển khai trait mà ta chỉ định,
+          lẫn một bảng dùng để tra cứu các phương thức trait trên kiểu đó lúc
+          runtime. Ta tạo một trait object bằng cách chỉ ra một loại con trỏ nào đó
+          — chẳng hạn một tham chiếu hoặc một smart pointer <code>Box&lt;T&gt;</code>
+          — rồi tới từ khóa <code>dyn</code>, rồi tới trait liên quan. (Ta sẽ nói về
+          lý do trait object bắt buộc phải dùng con trỏ ở mục
+          <a href="ch20-03-advanced-types.html#dynamically-sized-types-and-the-sized-trait"
+            >“Kiểu có kích thước động và trait <code>Sized</code>”</a
+          >
+          của Chương 20.) Ta có thể dùng trait object ở chỗ đáng lẽ dùng một kiểu
+          generic hay một kiểu cụ thể. Ở bất cứ đâu ta dùng trait object, hệ thống
+          kiểu của Rust sẽ đảm bảo ngay tại compile time rằng mọi giá trị dùng
+          trong ngữ cảnh đó đều triển khai trait của trait object ấy. Nhờ vậy, ta
+          không cần biết trước mọi kiểu có thể có tại compile time.
         </p>
 
         <p>
-          Chúng ta có thể dùng trait objects thay thế cho generic hoặc kiểu cụ
-          thể. Mọi nơi chúng ta dùng trait object, hệ thống kiểu của Rust sẽ đảm
-          bảo tại compile time rằng bất kỳ giá trị nào được dùng trong ngữ cảnh
-          đó sẽ triển khai trait của trait object. Do đó, chúng ta không cần
-          biết tất cả các kiểu có thể xảy ra tại compile time.
+          Ta đã nói rằng trong Rust, ta tránh gọi struct và enum là “object” để phân
+          biệt chúng với object của những ngôn ngữ khác. Trong một struct hay enum,
+          dữ liệu nằm ở các trường và hành vi nằm trong khối <code>impl</code> là
+          tách rời nhau; còn ở những ngôn ngữ khác, dữ liệu và hành vi gộp lại thành
+          một khái niệm thường được gọi là object. Trait object khác object của các
+          ngôn ngữ khác ở chỗ ta không thể thêm dữ liệu vào một trait object. Trait
+          object nhìn chung không đa dụng như object ở những ngôn ngữ khác: mục đích
+          riêng của chúng là cho phép trừu tượng hóa trên hành vi chung.
         </p>
 
         <p>
-          Listing 18-3 cho thấy cách định nghĩa một trait tên
-          <code>Draw</code> với một phương thức tên <code>draw</code>:
+          Listing 18-3 cho thấy cách định nghĩa một trait tên <code>Draw</code> với
+          một phương thức tên <code>draw</code>.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <figure class="listing" id="listing-18-3">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">pub trait Draw {
     fn draw(&amp;self);
 }</code></pre>
-          <figcaption>
-            Listing 18-3: Định nghĩa trait <code>Draw</code>
-          </figcaption>
+          <figcaption><a href="#listing-18-3">Listing 18-3</a>: Định nghĩa trait <code>Draw</code></figcaption>
         </figure>
 
         <p>
-          Tiếp theo là cú pháp mới: Listing 18-4 định nghĩa một struct tên
-          <code>Screen</code> chứa một vector tên <code>components</code>.
-          Vector này có kiểu <code>Box&lt;dyn Draw&gt;</code>, đây là một trait
-          object — nó đại diện cho bất kỳ kiểu nào bên trong
-          <code>Box</code> triển khai trait <code>Draw</code>.
+          Cú pháp này hẳn quen thuộc với bạn từ phần bàn về cách định nghĩa trait ở
+          Chương 10. Tiếp theo là một cú pháp mới: Listing 18-4 định nghĩa một struct
+          tên <code>Screen</code> chứa một vector tên <code>components</code>. Vector
+          này có kiểu <code>Box&lt;dyn Draw&gt;</code> — đó là một trait object; nó
+          đại diện cho bất kỳ kiểu nào nằm trong một <code>Box</code> mà triển khai
+          trait <code>Draw</code>.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <figure class="listing" id="listing-18-4">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">pub struct Screen {
     pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
 }</code></pre>
-          <figcaption>
-            Listing 18-4: Định nghĩa struct <code>Screen</code> với trường
-            <code>components</code> chứa vector trait objects
-          </figcaption>
+          <figcaption><a href="#listing-18-4">Listing 18-4</a>: Định nghĩa struct <code>Screen</code> với trường <code>components</code> chứa một vector các trait object triển khai trait <code>Draw</code></figcaption>
         </figure>
 
         <p>
-          Trên struct <code>Screen</code>, chúng ta định nghĩa phương thức
-          <code>run</code> gọi phương thức <code>draw</code> trên mỗi
-          <code>components</code>:
+          Trên struct <code>Screen</code>, ta sẽ định nghĩa một phương thức tên
+          <code>run</code> gọi phương thức <code>draw</code> trên từng phần tử của
+          <code>components</code>, như ở Listing 18-5.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <figure class="listing" id="listing-18-5">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">impl Screen {
     pub fn run(&amp;self) {
         for component in self.components.iter() {
@@ -392,23 +402,20 @@
         }
     }
 }</code></pre>
-          <figcaption>
-            Listing 18-5: Phương thức <code>run</code> trên
-            <code>Screen</code> gọi <code>draw</code> trên từng component
-          </figcaption>
+          <figcaption><a href="#listing-18-5">Listing 18-5</a>: Phương thức <code>run</code> trên <code>Screen</code> gọi phương thức <code>draw</code> trên từng component</figcaption>
         </figure>
 
         <p>
-          Cách này khác với việc định nghĩa struct dùng type parameter generic
-          với trait bounds. Một type parameter generic chỉ có thể được thay thế
-          bởi một kiểu cụ thể tại một thời điểm, trong khi trait objects cho
-          phép nhiều kiểu cụ thể lấp đầy cho trait object tại runtime. Ví dụ,
-          chúng ta có thể định nghĩa struct <code>Screen</code> dùng generic và
-          trait bound:
+          Cách này khác với việc định nghĩa một struct dùng tham số kiểu generic kèm
+          trait bound. Một tham số kiểu generic mỗi lúc chỉ thay thế được bằng đúng
+          một kiểu cụ thể, trong khi trait object cho phép nhiều kiểu cụ thể cùng
+          lấp vào chỗ của trait object lúc runtime. Chẳng hạn, ta đã có thể định
+          nghĩa struct <code>Screen</code> bằng một kiểu generic kèm trait bound, như
+          ở Listing 18-6.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <figure class="listing" id="listing-18-6">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">pub struct Screen&lt;T: Draw&gt; {
     pub components: Vec&lt;T&gt;,
 }
@@ -423,25 +430,22 @@ where
         }
     }
 }</code></pre>
-          <figcaption>
-            Listing 18-6: Triển khai thay thế của <code>Screen</code> dùng
-            generics và trait bounds
-          </figcaption>
+          <figcaption><a href="#listing-18-6">Listing 18-6</a>: Một bản triển khai thay thế của struct <code>Screen</code> và phương thức <code>run</code> của nó, dùng generic và trait bound</figcaption>
         </figure>
 
         <p>
-          Cách này giới hạn chúng ta ở một instance <code>Screen</code> có danh
-          sách các component đều cùng kiểu <code>Button</code> hoặc đều là
-          <code>TextField</code>. Nếu bạn chỉ bao giờ có các collection đồng
-          nhất, dùng generics và trait bounds là tốt hơn vì các định nghĩa sẽ
-          được monomorphize tại compile time để dùng các kiểu cụ thể.
+          Cách đó giới hạn ta ở một instance <code>Screen</code> có danh sách
+          component toàn kiểu <code>Button</code> hoặc toàn kiểu
+          <code>TextField</code>. Nếu bạn chỉ bao giờ dùng những collection đồng
+          nhất, thì dùng generic và trait bound sẽ tốt hơn, vì các định nghĩa sẽ được
+          monomorphize tại compile time để dùng đúng những kiểu cụ thể.
         </p>
 
         <p>
-          Mặt khác, với phương thức dùng trait objects, một instance
-          <code>Screen</code> có thể chứa một <code>Vec&lt;T&gt;</code> bao gồm
-          cả <code>Box&lt;Button&gt;</code> lẫn
-          <code>Box&lt;TextField&gt;</code>.
+          Ngược lại, với cách dùng trait object, một instance <code>Screen</code> có
+          thể chứa một <code>Vec&lt;T&gt;</code> gồm cả <code>Box&lt;Button&gt;</code>
+          lẫn <code>Box&lt;TextField&gt;</code>. Hãy xem cách này hoạt động ra sao,
+          rồi sau đó ta sẽ bàn tới hệ quả về hiệu năng lúc runtime.
         </p>
 
         <!-- SVG Diagram: Static vs Dynamic Dispatch -->
@@ -766,17 +770,21 @@ where
           </svg>
         </div>
 
-        <h3>Triển khai Trait</h3>
+
+        <h3 id="implementing-the-trait">Triển khai trait</h3>
 
         <p>
-          Bây giờ chúng ta sẽ thêm một số kiểu triển khai trait
-          <code>Draw</code>. Chúng ta sẽ cung cấp kiểu <code>Button</code>. Một
-          struct <code>Button</code> có thể có các trường cho
-          <code>width</code>, <code>height</code> và <code>label</code>:
+          Bây giờ ta sẽ thêm vài kiểu có triển khai trait <code>Draw</code>. Ta sẽ
+          cung cấp kiểu <code>Button</code>. Một lần nữa, việc triển khai một thư
+          viện GUI thực thụ nằm ngoài phạm vi cuốn sách, nên phần thân của phương
+          thức <code>draw</code> sẽ không có nội dung gì hữu ích. Để hình dung phần
+          triển khai có thể trông ra sao, một struct <code>Button</code> có thể có
+          các trường <code>width</code>, <code>height</code> và <code>label</code>,
+          như ở Listing 18-7.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <figure class="listing" id="listing-18-7">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">pub struct Button {
     pub width: u32,
     pub height: u32,
@@ -788,21 +796,32 @@ impl Draw for Button {
         // code thực sự vẽ button
     }
 }</code></pre>
-          <figcaption>
-            Listing 18-7: Struct <code>Button</code> triển khai trait
-            <code>Draw</code>
-          </figcaption>
+          <figcaption><a href="#listing-18-7">Listing 18-7</a>: Một struct <code>Button</code> triển khai trait <code>Draw</code></figcaption>
         </figure>
 
         <p>
-          Nếu ai đó dùng thư viện của chúng ta quyết định triển khai một struct
-          <code>SelectBox</code> có các trường <code>width</code>,
-          <code>height</code> và <code>options</code>, họ cũng triển khai trait
-          <code>Draw</code> trên kiểu <code>SelectBox</code>:
+          Các trường <code>width</code>, <code>height</code> và <code>label</code>
+          trên <code>Button</code> sẽ khác với các trường của những component khác;
+          ví dụ, một kiểu <code>TextField</code> có thể có đúng những trường đó cộng
+          thêm trường <code>placeholder</code>. Mỗi kiểu mà ta muốn vẽ lên màn hình
+          đều sẽ triển khai trait <code>Draw</code>, nhưng dùng mã khác nhau trong
+          phương thức <code>draw</code> để định nghĩa cách vẽ kiểu cụ thể đó — như
+          <code>Button</code> ở đây (không có phần mã GUI thật, như đã nói). Chẳng
+          hạn kiểu <code>Button</code> có thể có thêm một khối <code>impl</code> chứa
+          những phương thức liên quan tới việc gì xảy ra khi người dùng bấm nút.
+          Những phương thức kiểu đó sẽ không áp dụng cho các kiểu như
+          <code>TextField</code>.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/main.rs</span>
+        <p>
+          Nếu ai đó dùng thư viện của ta quyết định triển khai một struct
+          <code>SelectBox</code> có các trường <code>width</code>,
+          <code>height</code> và <code>options</code>, họ cũng sẽ triển khai trait
+          <code>Draw</code> trên kiểu <code>SelectBox</code>, như ở Listing 18-8.
+        </p>
+
+        <figure class="listing" id="listing-18-8">
+          <span class="file-name">Tên file: src/main.rs</span>
           <pre><code class="language-rust">use gui::Draw;
 
 struct SelectBox {
@@ -816,22 +835,21 @@ impl Draw for SelectBox {
         // code thực sự vẽ select box
     }
 }</code></pre>
-          <figcaption>
-            Listing 18-8: Crate khác dùng <code>gui</code> và triển khai trait
-            <code>Draw</code> trên struct <code>SelectBox</code>
-          </figcaption>
+          <figcaption><a href="#listing-18-8">Listing 18-8</a>: Một crate khác dùng <code>gui</code> và triển khai trait <code>Draw</code> trên struct <code>SelectBox</code></figcaption>
         </figure>
 
         <p>
-          Người dùng thư viện giờ có thể viết hàm <code>main</code> để tạo một
-          instance <code>Screen</code> và thêm <code>SelectBox</code> và
-          <code>Button</code> vào bằng cách bọc chúng trong
-          <code>Box&lt;T&gt;</code> để trở thành trait objects. Sau đó gọi
-          phương thức <code>run</code> trên instance <code>Screen</code>:
+          Người dùng thư viện của ta giờ có thể viết hàm <code>main</code> để tạo một
+          instance <code>Screen</code>. Vào instance <code>Screen</code> đó, họ thêm
+          được một <code>SelectBox</code> và một <code>Button</code> bằng cách đặt
+          mỗi cái vào một <code>Box&lt;T&gt;</code> để nó trở thành trait object. Rồi
+          họ gọi phương thức <code>run</code> trên instance <code>Screen</code>,
+          phương thức này sẽ gọi <code>draw</code> trên từng component. Listing 18-9
+          cho thấy phần triển khai đó.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/main.rs</span>
+        <figure class="listing" id="listing-18-9">
+          <span class="file-name">Tên file: src/main.rs</span>
           <pre><code class="language-rust">use gui::{Button, Screen};
 
 fn main() {
@@ -856,42 +874,47 @@ fn main() {
 
     screen.run();
 }</code></pre>
-          <figcaption>
-            Listing 18-9: Dùng trait objects để lưu trữ các giá trị kiểu khác
-            nhau đều triển khai cùng một trait
-          </figcaption>
+          <figcaption><a href="#listing-18-9">Listing 18-9</a>: Dùng trait object để lưu những giá trị thuộc các kiểu khác nhau nhưng cùng triển khai một trait</figcaption>
         </figure>
 
         <p>
-          Khi chúng ta viết thư viện, chúng ta không biết ai đó có thể thêm kiểu
-          <code>SelectBox</code>, nhưng triển khai <code>Screen</code> của chúng
-          ta có thể hoạt động trên kiểu mới và vẽ nó vì
-          <code>SelectBox</code> triển khai trait <code>Draw</code>.
+          Khi viết thư viện, ta không biết rằng sẽ có người thêm kiểu
+          <code>SelectBox</code>, nhưng phần triển khai <code>Screen</code> của ta
+          vẫn làm việc được với kiểu mới đó và vẽ được nó, bởi
+          <code>SelectBox</code> triển khai trait <code>Draw</code>, nghĩa là nó
+          triển khai phương thức <code>draw</code>.
         </p>
 
         <p>
-          Khái niệm này — chỉ quan tâm đến các thông điệp một giá trị phản hồi
-          chứ không phải kiểu cụ thể của giá trị — tương tự với khái niệm
-          <em>duck typing</em> trong các ngôn ngữ kiểu động: Nếu nó đi như vịt
-          và kêu như vịt, thì nó phải là vịt!
+          Khái niệm này — chỉ quan tâm tới những thông điệp mà một giá trị phản hồi,
+          chứ không quan tâm kiểu cụ thể của giá trị — tương tự khái niệm
+          <em>duck typing</em> trong các ngôn ngữ định kiểu động: nếu nó đi như vịt
+          và kêu như vịt thì hẳn nó là vịt! Trong phần triển khai <code>run</code>
+          trên <code>Screen</code> ở Listing 18-5, <code>run</code> không cần biết
+          kiểu cụ thể của từng component là gì. Nó không kiểm tra xem một component
+          có phải instance của <code>Button</code> hay <code>SelectBox</code> không,
+          nó chỉ gọi phương thức <code>draw</code> trên component đó. Bằng cách chỉ
+          định <code>Box&lt;dyn Draw&gt;</code> làm kiểu cho các giá trị trong vector
+          <code>components</code>, ta đã định nghĩa <code>Screen</code> là thứ cần
+          những giá trị mà ta gọi được phương thức <code>draw</code> trên chúng.
         </p>
 
         <p>
-          Ưu điểm của việc dùng trait objects và hệ thống kiểu của Rust là chúng
-          ta không bao giờ phải kiểm tra tại runtime liệu một giá trị có triển
-          khai phương thức cụ thể hay không, hay lo lắng về việc gặp lỗi nếu một
-          giá trị không triển khai phương thức mà chúng ta gọi. Rust sẽ không
-          biên dịch code của chúng ta nếu các giá trị không triển khai các trait
-          mà trait objects cần.
+          Ưu điểm của việc dùng trait object và hệ thống kiểu của Rust để viết mã
+          tương tự mã dùng duck typing là ta không bao giờ phải kiểm tra lúc runtime
+          xem một giá trị có triển khai một phương thức nào đó không, cũng không phải
+          lo gặp lỗi vì một giá trị không triển khai phương thức mà ta vẫn gọi. Rust
+          sẽ không biên dịch mã của ta nếu các giá trị không triển khai những trait
+          mà trait object cần.
         </p>
 
         <p>
-          Ví dụ, nếu chúng ta thử tạo một <code>Screen</code> với
-          <code>String</code> là component:
+          Chẳng hạn, Listing 18-10 cho thấy điều gì xảy ra nếu ta thử tạo một
+          <code>Screen</code> với một <code>String</code> làm component.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/main.rs</span>
+        <figure class="listing" id="listing-18-10">
+          <span class="file-name">Tên file: src/main.rs</span>
           <pre><code class="language-rust">use gui::Screen;
 
 fn main() {
@@ -901,14 +924,12 @@ fn main() {
 
     screen.run();
 }</code></pre>
-          <figcaption>
-            Listing 18-10: Cố dùng kiểu không triển khai trait của trait object
-          </figcaption>
+          <figcaption><a href="#listing-18-10">Listing 18-10</a>: Thử dùng một kiểu không triển khai trait của trait object</figcaption>
         </figure>
 
         <p>
-          Chúng ta sẽ nhận được lỗi vì <code>String</code> không triển khai
-          trait <code>Draw</code>:
+          Ta sẽ nhận lỗi sau, vì <code>String</code> không triển khai trait
+          <code>Draw</code>:
         </p>
 
         <pre><code class="language-console">error[E0277]: the trait bound `String: Draw` is not satisfied
@@ -917,36 +938,50 @@ fn main() {
 5 |         components: vec![Box::new(String::from("Hi"))],
   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Draw` is not implemented for `String`</code></pre>
 
-        <h3>Trait Objects và An toàn Kiểu (Object Safety)</h3>
-
         <p>
-          Chỉ những trait <em>object-safe</em> mới có thể được tạo thành trait
-          objects. Một trait là object-safe nếu tất cả các phương thức được định
-          nghĩa trong trait có các thuộc tính sau:
-        </p>
-        <ul>
-          <li>Kiểu trả về không phải là <code>Self</code>.</li>
-          <li>Không có type parameter generic.</li>
-        </ul>
-
-        <p>
-          Từ khóa <code>Self</code> là một tên đại diện cho kiểu mà chúng ta
-          đang triển khai trait hoặc phương thức. Trait objects phải là
-          object-safe vì một khi bạn đã dùng một trait object, Rust không còn
-          biết kiểu cụ thể đang triển khai trait đó là gì nữa. Nếu một phương
-          thức trait trả về kiểu <code>Self</code> cụ thể, nhưng một trait
-          object quên mất kiểu chính xác của <code>Self</code> là gì, thì không
-          có cách nào phương thức có thể dùng kiểu <code>Self</code> ban đầu.
-          Tương tự đối với type parameters generic được điền khi trait được
-          dùng: các kiểu cụ thể trở thành một phần của kiểu triển khai trait.
-          Khi kiểu bị quên mất qua việc dùng một trait object, không có cách nào
-          biết những kiểu nào để điền vào type parameters generic.
+          Lỗi này cho ta biết hoặc là ta đang truyền vào <code>Screen</code> thứ mà
+          ta không định truyền, và như vậy nên truyền một kiểu khác; hoặc là ta nên
+          triển khai <code>Draw</code> cho <code>String</code> để <code>Screen</code>
+          gọi được <code>draw</code> trên nó.
         </p>
 
+        <p><a id="trait-objects-perform-dynamic-dispatch"></a></p>
+
+        <h3 id="performing-dynamic-dispatch">Thực hiện dynamic dispatch</h3>
+
         <p>
-          Ví dụ nổi tiếng là trait <code>Clone</code> không phải object-safe vì
-          nó có phương thức trả về <code>Self</code>. Bạn không thể tạo
-          <code>Box&lt;dyn Clone&gt;</code>.
+          Nhớ lại ở mục
+          <a href="ch10-01-syntax.html#performance-of-code-using-generics"
+            >“Hiệu năng của mã dùng generic”</a
+          >
+          trong Chương 10, phần bàn về quá trình monomorphization mà trình biên dịch
+          thực hiện trên generic: trình biên dịch sinh ra những bản triển khai không
+          generic của hàm và phương thức cho từng kiểu cụ thể mà ta dùng thay cho
+          tham số kiểu generic. Mã sinh ra từ monomorphization thực hiện
+          <em>static dispatch</em> — tức là trình biên dịch biết ngay tại compile
+          time bạn đang gọi phương thức nào. Trái lại là <em>dynamic dispatch</em>,
+          khi trình biên dịch không thể biết tại compile time bạn đang gọi phương
+          thức nào. Trong những trường hợp dynamic dispatch, trình biên dịch sinh ra
+          mã mà lúc runtime mới biết cần gọi phương thức nào.
+        </p>
+
+        <p>
+          Khi ta dùng trait object, Rust buộc phải dùng dynamic dispatch. Trình biên
+          dịch không biết hết những kiểu có thể được dùng với đoạn mã đang dùng trait
+          object, nên nó không biết phải gọi phương thức nào được triển khai trên
+          kiểu nào. Thay vào đó, lúc runtime, Rust dùng các con trỏ bên trong trait
+          object để biết cần gọi phương thức nào. Việc tra cứu này phát sinh một chi
+          phí lúc runtime mà static dispatch không có. Dynamic dispatch cũng khiến
+          trình biên dịch không thể chọn inline phần mã của một phương thức, và điều
+          đó lại ngăn một số tối ưu hóa khác. Rust còn có một số quy tắc về chỗ nào
+          được và không được dùng dynamic dispatch, gọi là
+          <em>dyn compatibility</em>. Những quy tắc đó nằm ngoài phạm vi phần bàn luận
+          này, nhưng bạn có thể đọc thêm
+          <a href="https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility"
+            >trong tài liệu tham chiếu</a
+          >. Bù lại, ta có thêm sự linh hoạt trong đoạn mã đã viết ở Listing 18-5 và
+          hỗ trợ được trường hợp ở Listing 18-9 — nên đây là một đánh đổi đáng cân
+          nhắc.
         </p>
 
         <div class="page-nav bottom">

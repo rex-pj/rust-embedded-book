@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 3 — The Rust Book</span>
+        ><span class="current">Chương 3 — Biến và Mutability</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -273,13 +273,13 @@
           <a href="ch03-02-data-types.html">Tiếp →</a>
         </div>
 
-        <h1>📦 Biến và Mutability</h1>
+        <h1 id="variables-and-mutability">📦 Biến và Mutability</h1>
 
         <p>
           Như đã đề cập trong phần
           <a href="ch02-00-guessing-game-tutorial.html">Trò chơi đoán số</a>,
           mặc định các biến trong Rust là <strong>bất biến (immutable)</strong>.
-          Đây là một trong những cơ chế mà Rust khuyến khích bạn viết code theo
+          Đây là một trong những cơ chế mà Rust khuyến khích bạn viết mã theo
           hướng tận dụng lợi thế về tính an toàn và tính đồng thời dễ dàng mà
           Rust mang lại. Tuy nhiên, bạn vẫn có tùy chọn để làm cho biến trở nên
           có thể thay đổi (mutable). Hãy cùng khám phá tại sao Rust lại khuyến
@@ -290,12 +290,12 @@
           Khi một biến là bất biến, nghĩa là sau khi một giá trị được gán vào
           tên đó, bạn không thể thay đổi giá trị đó nữa. Để minh họa, hãy tạo
           một dự án mới tên <em>variables</em> trong thư mục
-          <em>projects</em> bằng lệnh <code>cargo new variables</code>.
+          <em>dự án</em> bằng lệnh <code>cargo new variables</code>.
         </p>
 
         <p>
           Sau đó, trong thư mục <em>variables</em> mới của bạn, mở
-          <em>src/main.rs</em> và thay thế code bằng đoạn sau — đoạn code này sẽ
+          <em>src/main.rs</em> và thay thế mã bằng đoạn sau — đoạn mã này sẽ
           chưa biên dịch được:
         </p>
 
@@ -309,7 +309,7 @@
 
         <p>
           Lưu và chạy chương trình bằng <code>cargo run</code>. Bạn sẽ nhận được
-          thông báo lỗi liên quan đến tính bất biến, như trong output sau:
+          thông báo lỗi liên quan đến tính bất biến, như trong kết quả sau:
         </p>
 
         <pre><code>$ cargo run
@@ -347,28 +347,28 @@ error: could not compile `variables` due to 1 previous error</code></pre>
         <p>
           Điều quan trọng là chúng ta nhận được lỗi thời điểm biên dịch khi cố
           thay đổi một giá trị được chỉ định là bất biến, vì tình huống này có
-          thể dẫn đến bug. Nếu một phần code của bạn hoạt động dựa trên giả định
-          rằng một giá trị sẽ không bao giờ thay đổi, và một phần code khác lại
-          thay đổi giá trị đó, thì phần code đầu tiên có thể sẽ không làm được
+          thể dẫn đến bug. Nếu một phần mã của bạn hoạt động dựa trên giả định
+          rằng một giá trị sẽ không bao giờ thay đổi, và một phần mã khác lại
+          thay đổi giá trị đó, thì phần mã đầu tiên có thể sẽ không làm được
           điều nó được thiết kế để làm. Loại bug này rất khó theo dõi, đặc biệt
-          khi phần code thứ hai chỉ thỉnh thoảng thay đổi giá trị đó.
+          khi phần mã thứ hai chỉ thỉnh thoảng thay đổi giá trị đó.
         </p>
 
         <p>
           Trong Rust, trình biên dịch đảm bảo rằng khi bạn khai báo một giá trị
           là không thay đổi, nó thực sự sẽ không thay đổi. Điều đó có nghĩa là
-          khi bạn đọc và viết code, bạn không phải theo dõi xem một giá trị có
-          thể thay đổi ở đâu và như thế nào. Code của bạn vì vậy sẽ dễ lý luận
+          khi bạn đọc và viết mã, bạn không phải theo dõi xem một giá trị có
+          thể thay đổi ở đâu và như thế nào. Mã của bạn vì vậy sẽ dễ lý luận
           hơn.
         </p>
 
         <p>
-          Nhưng mutability cũng rất hữu ích và có thể làm code dễ viết hơn. Mặc
+          Nhưng mutability cũng rất hữu ích và có thể làm mã dễ viết hơn. Mặc
           dù các biến là bất biến theo mặc định, bạn có thể làm cho chúng
           mutable bằng cách thêm <code>mut</code> trước tên biến như bạn đã làm
           trong <a href="ch02-00-guessing-game-tutorial.html">Chương 2</a>. Việc
-          thêm <code>mut</code> cũng truyền đạt ý định đến những người đọc code
-          trong tương lai bằng cách chỉ ra rằng các phần code khác sẽ thay đổi
+          thêm <code>mut</code> cũng truyền đạt ý định đến những người đọc mã
+          trong tương lai bằng cách chỉ ra rằng các phần mã khác sẽ thay đổi
           giá trị của biến này.
         </p>
 
@@ -398,7 +398,7 @@ Giá trị của x là: 6</code></pre>
           gì bạn nghĩ là rõ ràng nhất trong tình huống cụ thể đó.
         </p>
 
-        <h2>🔒 Hằng số (Constants)</h2>
+        <h2 id="declaring-constants">🔒 Hằng số (Constants)</h2>
 
         <p>
           Giống như các biến bất biến, <em>hằng số</em> là các giá trị được gán
@@ -421,7 +421,7 @@ Giá trị của x là: 6</code></pre>
         <p>
           Hằng số có thể được khai báo trong bất kỳ phạm vi nào, kể cả phạm vi
           toàn cục, điều này làm cho chúng hữu ích cho các giá trị mà nhiều phần
-          code cần biết.
+          mã cần biết.
         </p>
 
         <p>
@@ -456,12 +456,12 @@ Giá trị của x là: 6</code></pre>
         <p>
           Đặt tên cho các giá trị được mã hóa cứng được sử dụng khắp chương
           trình của bạn thành hằng số rất hữu ích để truyền đạt ý nghĩa của giá
-          trị đó cho những người bảo trì code trong tương lai. Nó cũng giúp ích
-          nếu chỉ có một nơi trong code của bạn mà bạn cần thay đổi nếu giá trị
+          trị đó cho những người bảo trì mã trong tương lai. Nó cũng giúp ích
+          nếu chỉ có một nơi trong mã của bạn mà bạn cần thay đổi nếu giá trị
           được mã hóa cứng cần được cập nhật trong tương lai.
         </p>
 
-        <h2>🌑 Shadowing (Che khuất biến)</h2>
+        <h2 id="shadowing">🌑 Shadowing (Che khuất biến)</h2>
 
         <p>
           Như bạn đã thấy trong hướng dẫn trò chơi đoán số trong

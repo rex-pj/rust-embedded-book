@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — Kiểu Dữ liệu Slice (Lát cắt)</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch04-02-references-and-borrowing.html">← Trước</a>
@@ -373,7 +373,7 @@ fn main() {}</code></pre>
 
 <pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 
-  <p>Bây giờ chúng ta có một API đơn giản hơn, khó bị dùng sai hơn vì trình biên dịch sẽ đảm bảo rằng các tham chiếu vào <code>String</code> vẫn hợp lệ. Hãy nhớ lại lỗi trong chương trình ở Listing 4-8, khi chúng ta lấy chỉ số đến cuối từ đầu tiên nhưng sau đó xóa chuỗi khiến chỉ số đó không hợp lệ? Code đó về mặt logic là sai nhưng không hiện ra lỗi ngay. Các vấn đề sẽ xuất hiện muộn hơn nếu chúng ta tiếp tục cố dùng chỉ số từ đầu tiên với một chuỗi rỗng. Slices làm cho lỗi này không thể xảy ra và cho chúng ta biết sớm hơn nhiều rằng chúng ta có vấn đề với code. Sử dụng phiên bản slice của <code>first_word</code> sẽ báo lỗi compile-time:</p>
+  <p>Bây giờ chúng ta có một API đơn giản hơn, khó bị dùng sai hơn vì trình biên dịch sẽ đảm bảo rằng các tham chiếu vào <code>String</code> vẫn hợp lệ. Hãy nhớ lại lỗi trong chương trình ở Listing 4-8, khi chúng ta lấy chỉ số đến cuối từ đầu tiên nhưng sau đó xóa chuỗi khiến chỉ số đó không hợp lệ? Mã đó về mặt logic là sai nhưng không hiện ra lỗi ngay. Các vấn đề sẽ xuất hiện muộn hơn nếu chúng ta tiếp tục cố dùng chỉ số từ đầu tiên với một chuỗi rỗng. Slices làm cho lỗi này không thể xảy ra và cho chúng ta biết sớm hơn nhiều rằng chúng ta có vấn đề với mã. Sử dụng phiên bản slice của <code>first_word</code> sẽ báo lỗi compile-time:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -536,7 +536,7 @@ fn main() {
   <p>Slice này có kiểu <code>&amp;[i32]</code>. Nó hoạt động theo cách tương tự như string slices, bằng cách lưu trữ tham chiếu đến phần tử đầu tiên và một độ dài. Bạn sẽ dùng kiểu slice này cho tất cả các loại collection khác. Chúng ta sẽ thảo luận chi tiết về các collection này khi nói về vectors trong Chương 8.</p>
 
   <h2 id="summary">📋 Tóm tắt</h2>
-  <p>Các khái niệm về ownership, borrowing, và slices đảm bảo an toàn bộ nhớ trong các chương trình Rust tại thời điểm biên dịch. Ngôn ngữ Rust cho phép bạn kiểm soát việc sử dụng bộ nhớ theo cách tương tự như các ngôn ngữ lập trình hệ thống khác. Nhưng việc owner của dữ liệu tự động dọn dẹp dữ liệu đó khi owner thoát ra khỏi phạm vi có nghĩa là bạn không phải viết và debug thêm code để có được khả năng kiểm soát này.</p>
+  <p>Các khái niệm về ownership, borrowing, và slices đảm bảo an toàn bộ nhớ trong các chương trình Rust tại thời điểm biên dịch. Ngôn ngữ Rust cho phép bạn kiểm soát việc sử dụng bộ nhớ theo cách tương tự như các ngôn ngữ lập trình hệ thống khác. Nhưng việc owner của dữ liệu tự động dọn dẹp dữ liệu đó khi owner thoát ra khỏi phạm vi có nghĩa là bạn không phải viết và debug thêm mã để có được khả năng kiểm soát này.</p>
 
   <p>Ownership ảnh hưởng đến cách nhiều phần khác của Rust hoạt động, vì vậy chúng ta sẽ nói về các khái niệm này xa hơn trong suốt phần còn lại của cuốn sách. Hãy chuyển sang Chương 5 và xem cách nhóm các mảnh dữ liệu lại với nhau trong một <code>struct</code>.</p>
 

@@ -200,14 +200,14 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — Dùng Threads để Chạy Mã Song Song</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch16-00-concurrency.html">← Trước</a>
     <a href="ch16-02-message-passing.html">Tiếp →</a>
   </div>
 
-<h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Dùng Threads để Chạy Code Song Song</a></h2>
+<h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Dùng Threads để Chạy Mã Song Song</a></h2>
 
 <figure style="margin: 24px 0; text-align: center;">
 <svg width="600" height="140" viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:8px;background:#1e1e2e;padding:16px">
@@ -244,22 +244,22 @@
 <figcaption style="margin-top:8px;font-size:0.9em;color:#6b7280;">Luồng chính (main thread) sinh ra luồng con (child thread) bằng <code>thread::spawn()</code>, chúng chạy song song, rồi main thread chờ con hoàn thành bằng <code>join()</code></figcaption>
 </figure>
 
-<p>Trong hầu hết các hệ điều hành hiện đại, code của một chương trình đang chạy được thực thi trong một <em>process</em>, và hệ điều hành sẽ quản lý nhiều process cùng một lúc. Bên trong một chương trình, bạn cũng có thể có các phần độc lập chạy đồng thời. Các tính năng chạy những phần độc lập này được gọi là <em>thread</em>. Ví dụ, một web server có thể có nhiều thread để có thể phản hồi nhiều hơn một request cùng một lúc.</p>
+<p>Trong hầu hết các hệ điều hành hiện đại, mã của một chương trình đang chạy được thực thi trong một <em>process</em>, và hệ điều hành sẽ quản lý nhiều tiến trình cùng một lúc. Bên trong một chương trình, bạn cũng có thể có các phần độc lập chạy đồng thời. Các tính năng chạy những phần độc lập này được gọi là <em>thread</em>. Ví dụ, một web server có thể có nhiều thread để có thể phản hồi nhiều hơn một request cùng một lúc.</p>
 
-<p>Chia tách tính toán trong chương trình thành nhiều thread để chạy nhiều task đồng thời có thể cải thiện hiệu suất, nhưng cũng thêm vào sự phức tạp. Bởi vì các thread có thể chạy đồng thời, không có gì đảm bảo thứ tự thực thi các phần code trên các thread khác nhau. Điều này có thể dẫn đến các vấn đề như:</p>
+<p>Chia tách tính toán trong chương trình thành nhiều thread để chạy nhiều task đồng thời có thể cải thiện hiệu suất, nhưng cũng thêm vào sự phức tạp. Bởi vì các thread có thể chạy đồng thời, không có gì đảm bảo thứ tự thực thi các phần mã trên các thread khác nhau. Điều này có thể dẫn đến các vấn đề như:</p>
 <ul>
 <li>Race condition, nơi các thread đang truy cập dữ liệu hoặc tài nguyên theo thứ tự không nhất quán</li>
 <li>Deadlock, nơi hai thread đang chờ nhau, ngăn cả hai thread tiếp tục</li>
 <li>Các bug chỉ xảy ra trong một số tình huống nhất định và khó tái tạo và sửa chữa một cách đáng tin cậy</li>
 </ul>
 
-<p>Rust giảm thiểu các rủi ro khi dùng thread, nhưng lập trình đa luồng vẫn đòi hỏi suy nghĩ cẩn thận và cấu trúc code khác so với chương trình đơn luồng.</p>
+<p>Rust giảm thiểu các rủi ro khi dùng thread, nhưng lập trình đa luồng vẫn đòi hỏi suy nghĩ cẩn thận và cấu trúc mã khác so với chương trình đơn luồng.</p>
 
 <p>Các ngôn ngữ lập trình triển khai thread theo một vài cách khác nhau, và nhiều hệ điều hành cung cấp API mà ngôn ngữ lập trình có thể gọi để tạo thread mới. Thư viện chuẩn của Rust dùng mô hình thread kiểu <em>1:1</em>, tức là một chương trình dùng một thread của hệ điều hành cho mỗi một thread của ngôn ngữ. Có những crate triển khai các mô hình thread khác với những đánh đổi khác so với mô hình 1:1. (Hệ thống async của Rust, mà chúng ta sẽ thấy ở chương tiếp theo, cũng cung cấp một cách tiếp cận khác với concurrency.)</p>
 
 <h3 id="creating-a-new-thread-with-spawn"><a class="header" href="#creating-a-new-thread-with-spawn">Tạo Thread Mới với <code>spawn</code></a></h3>
 
-<p>Để tạo một thread mới, chúng ta gọi hàm <code>thread::spawn</code> và truyền vào một closure (chúng ta đã nói về closure ở Chương 13) chứa code muốn chạy trong thread mới. Ví dụ ở Listing 16-1 in ra một vài đoạn text từ main thread và đoạn text khác từ thread mới.</p>
+<p>Để tạo một thread mới, chúng ta gọi hàm <code>thread::spawn</code> và truyền vào một closure (chúng ta đã nói về closure ở Chương 13) chứa mã muốn chạy trong thread mới. Ví dụ ở Listing 16-1 in ra một vài đoạn text từ main thread và đoạn text khác từ thread mới.</p>
 
 <figure class="listing" id="listing-16-1">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -282,7 +282,7 @@ fn main() {
 <figcaption><a href="#listing-16-1">Listing 16-1</a>: Tạo một thread mới để in một thứ trong khi main thread in thứ khác</figcaption>
 </figure>
 
-<p>Lưu ý rằng khi main thread của chương trình Rust kết thúc, tất cả các thread được spawn cũng bị dừng lại, dù chúng có chạy xong hay chưa. Output của chương trình này có thể hơi khác nhau mỗi lần, nhưng sẽ trông đại khái như thế này:</p>
+<p>Lưu ý rằng khi main thread của chương trình Rust kết thúc, tất cả các thread được spawn cũng bị dừng lại, dù chúng có chạy xong hay chưa. Kết quả của chương trình này có thể hơi khác nhau mỗi lần, nhưng sẽ trông đại khái như thế này:</p>
 
 <pre><code class="language-text">hi number 1 from the main thread!
 hi number 1 from the spawned thread!
@@ -295,14 +295,14 @@ hi number 4 from the spawned thread!
 hi number 5 from the spawned thread!
 </code></pre>
 
-<p>Các lời gọi <code>thread::sleep</code> buộc thread dừng thực thi trong một khoảng thời gian ngắn, cho phép thread khác chạy. Các thread có thể luân phiên nhau, nhưng điều đó không được đảm bảo: nó phụ thuộc vào cách hệ điều hành lên lịch cho các thread. Trong lần chạy này, main thread in trước, mặc dù lệnh print từ spawned thread xuất hiện đầu tiên trong code. Và dù chúng ta bảo spawned thread in cho đến khi <code>i</code> bằng <code>9</code>, nó chỉ chạy đến <code>5</code> trước khi main thread dừng lại.</p>
+<p>Các lời gọi <code>thread::sleep</code> buộc thread dừng thực thi trong một khoảng thời gian ngắn, cho phép thread khác chạy. Các thread có thể luân phiên nhau, nhưng điều đó không được đảm bảo: nó phụ thuộc vào cách hệ điều hành lên lịch cho các thread. Trong lần chạy này, main thread in trước, mặc dù lệnh print từ spawned thread xuất hiện đầu tiên trong mã. Và dù chúng ta bảo spawned thread in cho đến khi <code>i</code> bằng <code>9</code>, nó chỉ chạy đến <code>5</code> trước khi main thread dừng lại.</p>
 
-<p>Nếu bạn chạy code này và chỉ thấy output từ main thread, hoặc không thấy output xen kẽ nhau, hãy thử tăng các con số trong các khoảng range để tạo thêm cơ hội cho hệ điều hành chuyển đổi giữa các thread.</p>
+<p>Nếu bạn chạy mã này và chỉ thấy kết quả từ main thread, hoặc không thấy kết quả xen kẽ nhau, hãy thử tăng các con số trong các khoảng range để tạo thêm cơ hội cho hệ điều hành chuyển đổi giữa các thread.</p>
 
 <p><a id="waiting-for-all-threads-to-finish-using-join-handles"></a></p>
 <h3 id="waiting-for-all-threads-to-finish"><a class="header" href="#waiting-for-all-threads-to-finish">Chờ Tất Cả Thread Kết Thúc</a></h3>
 
-<p>Code trong Listing 16-1 không chỉ dừng spawned thread sớm hơn mức cần thiết do main thread kết thúc, mà còn vì không có gì đảm bảo thứ tự các thread chạy, chúng ta cũng không thể đảm bảo spawned thread sẽ được chạy chút nào!</p>
+<p>Mã trong Listing 16-1 không chỉ dừng spawned thread sớm hơn mức cần thiết do main thread kết thúc, mà còn vì không có gì đảm bảo thứ tự các thread chạy, chúng ta cũng không thể đảm bảo spawned thread sẽ được chạy chút nào!</p>
 
 <p>Chúng ta có thể sửa vấn đề spawned thread không chạy hoặc kết thúc sớm bằng cách lưu giá trị trả về của <code>thread::spawn</code> vào một biến. Kiểu trả về của <code>thread::spawn</code> là <code>JoinHandle&lt;T&gt;</code>. Một <code>JoinHandle&lt;T&gt;</code> là một giá trị có ownership mà khi chúng ta gọi phương thức <code>join</code> trên nó, sẽ đợi thread của nó kết thúc. Listing 16-2 cho thấy cách dùng <code>JoinHandle&lt;T&gt;</code> của thread chúng ta đã tạo trong Listing 16-1 và cách gọi <code>join</code> để đảm bảo spawned thread hoàn thành trước khi <code>main</code> thoát.</p>
 
@@ -329,7 +329,7 @@ fn main() {
 <figcaption><a href="#listing-16-2">Listing 16-2</a>: Lưu một <code>JoinHandle&lt;T&gt;</code> từ <code>thread::spawn</code> để đảm bảo thread chạy đến hoàn thành</figcaption>
 </figure>
 
-<p>Gọi <code>join</code> trên handle chặn thread đang chạy cho đến khi thread được đại diện bởi handle đó kết thúc. <em>Blocking</em> một thread nghĩa là thread đó bị ngăn không thực hiện công việc hay thoát ra. Vì chúng ta đã đặt lời gọi <code>join</code> sau vòng lặp <code>for</code> của main thread, chạy Listing 16-2 sẽ tạo ra output tương tự thế này:</p>
+<p>Gọi <code>join</code> trên handle chặn thread đang chạy cho đến khi thread được đại diện bởi handle đó kết thúc. <em>Blocking</em> một thread nghĩa là thread đó bị ngăn không thực hiện công việc hay thoát ra. Vì chúng ta đã đặt lời gọi <code>join</code> sau vòng lặp <code>for</code> của main thread, chạy Listing 16-2 sẽ tạo ra kết quả tương tự thế này:</p>
 
 <pre><code class="language-text">hi number 1 from the main thread!
 hi number 2 from the main thread!
@@ -372,7 +372,7 @@ fn main() {
 }</code></pre>
 </figure>
 
-<p>Main thread sẽ đợi spawned thread hoàn thành rồi mới chạy vòng lặp <code>for</code> của mình, vì vậy output sẽ không còn xen kẽ nữa, như thế này:</p>
+<p>Main thread sẽ đợi spawned thread hoàn thành rồi mới chạy vòng lặp <code>for</code> của mình, vì vậy kết quả sẽ không còn xen kẽ nữa, như thế này:</p>
 
 <pre><code class="language-text">hi number 1 from the spawned thread!
 hi number 2 from the spawned thread!
@@ -393,9 +393,9 @@ hi number 4 from the main thread!
 
 <h3 id="using-move-closures-with-threads"><a class="header" href="#using-move-closures-with-threads">Dùng Closure <code>move</code> với Threads</a></h3>
 
-<p>Chúng ta thường sử dụng từ khóa <code>move</code> với các closure truyền vào <code>thread::spawn</code> vì closure sẽ lấy ownership của các giá trị nó dùng từ môi trường, do đó chuyển ownership của các giá trị đó từ thread này sang thread khác. Trong phần <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">"Capturing References or Moving Ownership"</a><!-- ignore --> ở Chương 13, chúng ta đã thảo luận về <code>move</code> trong ngữ cảnh closure. Bây giờ chúng ta sẽ tập trung hơn vào sự tương tác giữa <code>move</code> và <code>thread::spawn</code>.</p>
+<p>Chúng ta thường sử dụng từ khóa <code>move</code> với các closure truyền vào <code>thread::spawn</code> vì closure sẽ lấy ownership của các giá trị nó dùng từ môi trường, do đó chuyển ownership của các giá trị đó từ thread này sang thread khác. Trong phần <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Bắt giữ References hoặc chuyển ownership”</a><!-- ignore --> ở Chương 13, chúng ta đã thảo luận về <code>move</code> trong ngữ cảnh closure. Bây giờ chúng ta sẽ tập trung hơn vào sự tương tác giữa <code>move</code> và <code>thread::spawn</code>.</p>
 
-<p>Hãy để ý trong Listing 16-1 rằng closure chúng ta truyền vào <code>thread::spawn</code> không có tham số nào: chúng ta không dùng bất kỳ dữ liệu nào từ main thread trong code của spawned thread. Để dùng dữ liệu từ main thread trong spawned thread, closure của spawned thread phải capture các giá trị mà nó cần. Listing 16-3 cho thấy một cố gắng tạo vector trong main thread và dùng nó trong spawned thread. Tuy nhiên, cái này chưa hoạt động, như bạn sẽ thấy ngay.</p>
+<p>Hãy để ý trong Listing 16-1 rằng closure chúng ta truyền vào <code>thread::spawn</code> không có tham số nào: chúng ta không dùng bất kỳ dữ liệu nào từ main thread trong mã của spawned thread. Để dùng dữ liệu từ main thread trong spawned thread, closure của spawned thread phải capture các giá trị mà nó cần. Listing 16-3 cho thấy một cố gắng tạo vector trong main thread và dùng nó trong spawned thread. Tuy nhiên, cái này chưa hoạt động, như bạn sẽ thấy ngay.</p>
 
 <figure class="listing" id="listing-16-3">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -464,7 +464,7 @@ fn main() {
 <figcaption><a href="#listing-16-4">Listing 16-4</a>: Một thread với closure cố capture reference đến <code>v</code> từ main thread đã drop <code>v</code></figcaption>
 </figure>
 
-<p>Nếu Rust cho phép chúng ta chạy code này, có khả năng spawned thread sẽ ngay lập tức được đưa vào background mà không chạy tí nào. Spawned thread có reference đến <code>v</code> bên trong, nhưng main thread ngay lập tức drop <code>v</code> bằng hàm <code>drop</code> chúng ta đã thảo luận ở Chương 15. Rồi khi spawned thread bắt đầu thực thi, <code>v</code> không còn hợp lệ nữa, vì vậy reference đến nó cũng không hợp lệ. Ôi không!</p>
+<p>Nếu Rust cho phép chúng ta chạy mã này, có khả năng spawned thread sẽ ngay lập tức được đưa vào background mà không chạy tí nào. Spawned thread có reference đến <code>v</code> bên trong, nhưng main thread ngay lập tức drop <code>v</code> bằng hàm <code>drop</code> chúng ta đã thảo luận ở Chương 15. Rồi khi spawned thread bắt đầu thực thi, <code>v</code> không còn hợp lệ nữa, vì vậy reference đến nó cũng không hợp lệ. Ôi không!</p>
 
 <p>Để sửa lỗi compiler ở Listing 16-3, chúng ta có thể làm theo lời khuyên của thông báo lỗi:</p>
 
@@ -492,7 +492,7 @@ fn main() {
 <figcaption><a href="#listing-16-5">Listing 16-5</a>: Dùng từ khóa <code>move</code> để buộc closure lấy ownership của các giá trị nó dùng</figcaption>
 </figure>
 
-<p>Chúng ta có thể bị cám dỗ thử cách tương tự để sửa code trong Listing 16-4 nơi main thread gọi <code>drop</code> bằng cách dùng closure <code>move</code>. Tuy nhiên, cách sửa này sẽ không hoạt động vì Listing 16-4 đang cố làm điều bị cấm vì lý do khác. Nếu chúng ta thêm <code>move</code> vào closure, chúng ta sẽ chuyển <code>v</code> vào môi trường closure, và chúng ta không thể gọi <code>drop</code> trên nó trong main thread nữa. Thay vào đó chúng ta sẽ gặp lỗi compiler này:</p>
+<p>Chúng ta có thể bị cám dỗ thử cách tương tự để sửa mã trong Listing 16-4 nơi main thread gọi <code>drop</code> bằng cách dùng closure <code>move</code>. Tuy nhiên, cách sửa này sẽ không hoạt động vì Listing 16-4 đang cố làm điều bị cấm vì lý do khác. Nếu chúng ta thêm <code>move</code> vào closure, chúng ta sẽ chuyển <code>v</code> vào môi trường closure, và chúng ta không thể gọi <code>drop</code> trên nó trong main thread nữa. Thay vào đó chúng ta sẽ gặp lỗi compiler này:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling threads v0.1.0 (file:///projects/threads)
@@ -521,7 +521,7 @@ For more information about this error, try `rustc --explain E0382`.
 error: could not compile `threads` (bin "threads") due to 1 previous error
 </code></pre>
 
-<p>Các quy tắc ownership của Rust lại một lần nữa cứu chúng ta! Chúng ta gặp lỗi từ code trong Listing 16-3 vì Rust đang thận trọng và chỉ borrow <code>v</code> cho thread, tức là main thread về lý thuyết có thể làm hỏng reference của spawned thread. Bằng cách bảo Rust chuyển ownership của <code>v</code> vào spawned thread, chúng ta đảm bảo với Rust rằng main thread sẽ không dùng <code>v</code> nữa. Nếu chúng ta thay đổi Listing 16-4 theo cách tương tự, chúng ta vi phạm các quy tắc ownership khi cố dùng <code>v</code> trong main thread. Từ khóa <code>move</code> override mặc định borrow thận trọng của Rust; nó không cho phép chúng ta vi phạm các quy tắc ownership.</p>
+<p>Các quy tắc ownership của Rust lại một lần nữa cứu chúng ta! Chúng ta gặp lỗi từ mã trong Listing 16-3 vì Rust đang thận trọng và chỉ borrow <code>v</code> cho thread, tức là main thread về lý thuyết có thể làm hỏng reference của spawned thread. Bằng cách bảo Rust chuyển ownership của <code>v</code> vào spawned thread, chúng ta đảm bảo với Rust rằng main thread sẽ không dùng <code>v</code> nữa. Nếu chúng ta thay đổi Listing 16-4 theo cách tương tự, chúng ta vi phạm các quy tắc ownership khi cố dùng <code>v</code> trong main thread. Từ khóa <code>move</code> override mặc định borrow thận trọng của Rust; nó không cho phép chúng ta vi phạm các quy tắc ownership.</p>
 
 <p>Giờ chúng ta đã hiểu thread là gì và các phương thức cung cấp bởi thread API, hãy nhìn vào một số tình huống mà chúng ta có thể dùng thread.</p>
 

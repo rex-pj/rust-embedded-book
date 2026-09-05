@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — Xử Lý Lỗi</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch08-03-hash-maps.html">← Trước</a>
@@ -208,7 +208,7 @@
   </div>
 
 <h1 id="error-handling"><a class="header" href="#error-handling">Xử Lý Lỗi</a></h1>
-<p>Lỗi là chuyện cơm bữa trong lập trình phần mềm, vậy nên Rust trang bị khá nhiều tính năng để đối phó với những tình huống "ôi thôi hỏng rồi" trong code. Trong phần lớn trường hợp, Rust bắt bạn phải thừa nhận khả năng xảy ra lỗi và có phương án xử lý trước khi code của bạn chịu compile. Cái yêu cầu khắt khe này lại khiến chương trình của bạn vững chắc hơn hẳn — bởi nó đảm bảo bạn phát hiện và xử lý lỗi đến nơi đến chốn, trước khi tung sản phẩm ra cho thiên hạ dùng!</p>
+<p>Lỗi là chuyện cơm bữa trong lập trình phần mềm, vậy nên Rust trang bị khá nhiều tính năng để đối phó với những tình huống "ôi thôi hỏng rồi" trong mã. Trong phần lớn trường hợp, Rust bắt bạn phải thừa nhận khả năng xảy ra lỗi và có phương án xử lý trước khi mã của bạn chịu compile. Cái yêu cầu khắt khe này lại khiến chương trình của bạn vững chắc hơn hẳn — bởi nó đảm bảo bạn phát hiện và xử lý lỗi đến nơi đến chốn, trước khi tung sản phẩm ra cho thiên hạ dùng!</p>
 <p>Rust phân loại lỗi thành hai nhóm chính: lỗi có thể phục hồi (recoverable) và lỗi không thể phục hồi (unrecoverable). Với <em>lỗi có thể phục hồi</em>, chẳng hạn kiểu lỗi <em>không tìm thấy file</em>, ta thường chỉ cần thông báo vấn đề cho người dùng rồi thử lại thao tác là xong. Còn <em>lỗi không thể phục hồi</em> thì luôn là triệu chứng của bug, ví dụ như cố tình truy cập vào vùng nhớ ngoài biên của một mảng — và khi đó ta chỉ muốn dừng chương trình lại ngay tức thì.</p>
 <p>Hầu hết các ngôn ngữ khác không phân biệt hai loại lỗi này, mà xử lý tất cả bằng một cơ chế duy nhất gọi là exceptions. Rust thì không có exceptions. Thay vào đó, nó có kiểu <code>Result&lt;T, E&gt;</code> cho lỗi có thể phục hồi, và macro <code>panic!</code> để dừng chương trình cái roẹt khi gặp lỗi không thể phục hồi. Chương này sẽ đi vào <code>panic!</code> trước, rồi sau đó mới nói về việc trả về giá trị <code>Result&lt;T, E&gt;</code>. Ngoài ra, chúng ta sẽ cùng thám hiểm những điều cần cân nhắc khi quyết định nên cố gắng phục hồi lỗi hay nên dừng chương trình hẳn.</p>
 

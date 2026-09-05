@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — Nhìn Kỹ Hơn Vào Các Trait Cho Async</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch17-04-streams.html">← Trước</a><a href="ch17-06-futures-tasks-threads.html">Tiếp →</a></div>
 
@@ -268,7 +268,7 @@ Future nào an toàn để poll lại sẽ nói rõ điều đó trong tài li�
 Điều này tương tự cách <code>Iterator::next</code> hoạt động.</p>
 </section>
 
-<p>Khi bạn thấy code dùng <code>await</code>, Rust biên dịch nó thành code gọi <code>poll</code> bên dưới.
+<p>Khi bạn thấy mã dùng <code>await</code>, Rust biên dịch nó thành mã gọi <code>poll</code> bên dưới.
 Nhìn lại Listing 17-4, nơi chúng ta in tiêu đề trang cho một URL khi nó resolve —
 Rust biên dịch nó thành đại loại như thế này (dù không chính xác hoàn toàn):</p>
 
@@ -307,7 +307,7 @@ rồi quay lại check future này sau.
 Như ta đã thấy, "thứ gì đó" đó chính là async runtime,
 và lên lịch cùng điều phối công việc là một trong những nhiệm vụ chính của nó.</p>
 
-<p>Trong phần <a href="ch17-02-concurrency-with-async.html#sending-data-between-two-tasks-using-message-passing">"Sending Data Between Two Tasks Using Message Passing"</a>,
+<p>Trong phần <a href="ch17-02-concurrency-with-async.html#sending-data-between-two-tasks-using-message-passing">“Gửi Dữ liệu Giữa Hai task bằng Message Passing”</a>,
 chúng ta mô tả việc chờ <code>rx.recv</code>. Lệnh gọi <code>recv</code> trả về một future,
 và await future đó thực ra là poll nó.
 Ta đã ghi chú rằng runtime sẽ tạm dừng future đó cho đến khi nó sẵn sàng
@@ -330,7 +330,7 @@ runtime <em>poll</em> từng future mà nó quản lý,
 <p>Quay lại Listing 17-13, ta dùng macro <code>trpl::join!</code> để await ba future.
 Tuy nhiên trong thực tế, thường gặp tình huống cần một collection — chẳng hạn vector —
 chứa một số future không biết trước cho đến runtime.
-Hãy sửa Listing 17-13 thành code ở Listing 17-23,
+Hãy sửa Listing 17-13 thành mã ở Listing 17-23,
 bỏ ba future vào một vector rồi gọi hàm <code>trpl::join_all</code> —
 đoạn này chưa compile được đâu.</p>
 
@@ -393,12 +393,12 @@ bỏ ba future vào một vector rồi gọi hàm <code>trpl::join_all</code> �
 giống như ta đã làm trong phần "Returning Errors from <code>run</code>" ở Chương 12.
 (Chúng ta sẽ đề cập trait object chi tiết ở Chương 18.)
 Dùng trait object cho phép ta xem mỗi future ẩn danh được tạo ra
-như là cùng một kiểu, vì tất cả chúng đều implement trait <code>Future</code>.</p>
+như là cùng một kiểu, vì tất cả chúng đều triển khai trait <code>Future</code>.</p>
 
-<p>Điều này có thể khiến bạn ngạc nhiên. Xét cho cùng, không async block nào
+<p>Điều này có thể khiến bạn ngạc nhiên. Xét cho cùng, không khối async nào
 trả về gì cả, nên mỗi cái đều tạo ra <code>Future&lt;Output = ()&gt;</code>.
 Nhưng nhớ rằng <code>Future</code> là một trait, và compiler tạo ra một enum duy nhất
-cho mỗi async block, kể cả khi chúng có cùng kiểu output.
+cho mỗi khối async, kể cả khi chúng có cùng kiểu kết quả.
 Giống như bạn không thể nhét hai struct khác nhau vào cùng một <code>Vec</code>,
 bạn không thể trộn các enum do compiler tạo ra.</p>
 
@@ -429,18 +429,18 @@ note: required by a bound in `futures_util::future::join_all::JoinAll`
 để <em>pin</em> các giá trị — nghĩa là bọc chúng trong kiểu <code>Pin</code>
 để đảm bảo các giá trị sẽ không bị di chuyển trong bộ nhớ.
 Thông báo lỗi nói rằng pinning là bắt buộc vì <code>dyn Future&lt;Output = ()&gt;</code>
-cần implement trait <code>Unpin</code> nhưng chưa có.</p>
+cần triển khai trait <code>Unpin</code> nhưng chưa có.</p>
 
 <p>Hàm <code>trpl::join_all</code> trả về một struct tên là <code>JoinAll</code>.
-Struct đó generic trên một kiểu <code>F</code>, với ràng buộc phải implement trait <code>Future</code>.
+Struct đó generic trên một kiểu <code>F</code>, với ràng buộc phải triển khai trait <code>Future</code>.
 Khi await trực tiếp một future bằng <code>await</code>, future đó sẽ được pin ngầm.
 Đó là lý do ta không cần dùng <code>pin!</code> ở mọi nơi ta muốn await future.</p>
 
 <p>Nhưng ở đây, ta không await trực tiếp một future. Thay vào đó, ta xây dựng
 một future mới — <code>JoinAll</code> — bằng cách truyền một collection futures vào hàm <code>join_all</code>.
 Signature của <code>join_all</code> yêu cầu kiểu của các phần tử trong collection
-phải implement trait <code>Future</code>, và <code>Box&lt;T&gt;</code> chỉ implement <code>Future</code>
-nếu <code>T</code> mà nó bọc là một future implement trait <code>Unpin</code>.</p>
+phải triển khai trait <code>Future</code>, và <code>Box&lt;T&gt;</code> chỉ triển khai <code>Future</code>
+nếu <code>T</code> mà nó bọc là một future triển khai trait <code>Unpin</code>.</p>
 
 <p>Khá nhiều thứ để tiêu hóa! Để thực sự hiểu, hãy đào sâu thêm một chút
 vào cách trait <code>Future</code> thực sự hoạt động, đặc biệt xung quanh pinning.
@@ -462,7 +462,7 @@ pub trait Future {
 <p>Tham số <code>cx</code> và kiểu <code>Context</code> của nó là chìa khóa để runtime thực sự biết
 khi nào cần check một future cụ thể trong khi vẫn duy trì tính lazy.
 Một lần nữa, chi tiết về cách đó hoạt động nằm ngoài phạm vi chương này,
-và bạn thường chỉ cần nghĩ đến điều này khi tự viết <code>Future</code> implementation.
+và bạn thường chỉ cần nghĩ đến điều này khi tự viết <code>Future</code> phần triển khai.
 Thay vào đó, hãy tập trung vào kiểu của <code>self</code> —
 đây là lần đầu tiên chúng ta thấy một phương thức có type annotation cho <code>self</code>.
 Type annotation cho <code>self</code> hoạt động giống như annotation cho các tham số hàm khác,
@@ -471,7 +471,7 @@ nhưng có hai điểm khác biệt quan trọng:</p>
 <ul>
 <li>Nó cho Rust biết kiểu <code>self</code> phải là gì để phương thức được gọi.</li>
 <li>Không phải kiểu tùy ý nào cũng được. Nó bị giới hạn ở kiểu mà phương thức
-được implement, một reference hay smart pointer đến kiểu đó,
+được triển khai, một reference hay smart pointer đến kiểu đó,
 hoặc một <code>Pin</code> bọc quanh một reference đến kiểu đó.</li>
 </ul>
 
@@ -481,14 +481,14 @@ Hiện tại, đủ để biết rằng nếu muốn poll một future để che
 đến kiểu đó.</p>
 
 <p><code>Pin</code> là một wrapper cho các kiểu giống pointer như <code>&amp;</code>, <code>&amp;mut</code>, <code>Box</code>, và <code>Rc</code>.
-(Về mặt kỹ thuật, <code>Pin</code> hoạt động với các kiểu implement trait <code>Deref</code> hoặc <code>DerefMut</code>,
+(Về mặt kỹ thuật, <code>Pin</code> hoạt động với các kiểu triển khai trait <code>Deref</code> hoặc <code>DerefMut</code>,
 nhưng thực tế điều này tương đương với chỉ làm việc với reference và smart pointer.)
 <code>Pin</code> không phải là pointer và không có hành vi riêng
 như <code>Rc</code> và <code>Arc</code> có với reference counting —
 nó đơn thuần là một công cụ để compiler có thể enforce các ràng buộc
 về cách sử dụng pointer.</p>
 
-<p>Nhớ lại rằng <code>await</code> được implement thông qua các lệnh gọi <code>poll</code>
+<p>Nhớ lại rằng <code>await</code> được triển khai thông qua các lệnh gọi <code>poll</code>
 bắt đầu giải thích thông báo lỗi ta thấy trước đó, nhưng thông báo đó
 nói về <code>Unpin</code>, không phải <code>Pin</code>.
 Vậy chính xác <code>Pin</code> liên quan đến <code>Unpin</code> như thế nào,
@@ -499,22 +499,22 @@ sẽ được biên dịch thành một state machine, và compiler đảm bảo
 state machine đó tuân thủ tất cả các quy tắc thông thường của Rust
 về safety, bao gồm borrowing và ownership.
 Để thực hiện điều đó, Rust nhìn vào dữ liệu nào cần thiết giữa
-một điểm await và điểm await tiếp theo hay cuối async block.
+một điểm await và điểm await tiếp theo hay cuối khối async.
 Sau đó nó tạo ra một variant tương ứng trong state machine được biên dịch.
 Mỗi variant nhận quyền truy cập vào dữ liệu sẽ được dùng
-trong phần đó của source code — hoặc bằng cách lấy ownership,
+trong phần đó của mã nguồn — hoặc bằng cách lấy ownership,
 hoặc bằng cách lấy mutable/immutable reference đến nó.</p>
 
-<p>Đến đây thì ổn: nếu ta làm sai về ownership hay reference trong một async block,
+<p>Đến đây thì ổn: nếu ta làm sai về ownership hay reference trong một khối async,
 borrow checker sẽ chỉ ra ngay. Nhưng khi ta muốn di chuyển future
-tương ứng với block đó — chẳng hạn đẩy nó vào <code>Vec</code> để truyền cho <code>join_all</code> —
+tương ứng với khối đó — chẳng hạn đẩy nó vào <code>Vec</code> để truyền cho <code>join_all</code> —
 mọi thứ trở nên phức tạp hơn.</p>
 
 <p>Khi ta di chuyển một future — dù bằng cách đẩy vào cấu trúc dữ liệu
 để dùng như iterator với <code>join_all</code>, hay bằng cách trả về nó từ hàm —
 thực ra ta đang di chuyển state machine mà Rust tạo ra cho ta.
 Và không giống hầu hết các kiểu khác trong Rust, các future mà Rust tạo ra
-cho async block có thể kết thúc với các reference đến chính nó
+cho khối async có thể kết thúc với các reference đến chính nó
 trong các trường của bất kỳ variant nào —
 như minh họa đơn giản hóa trong Figure 17-4.</p>
 
@@ -543,7 +543,7 @@ mỗi khi nó bị di chuyển, nhưng điều đó có thể tốn rất nhiề
 Nếu thay vào đó ta đảm bảo được rằng cấu trúc dữ liệu đó
 <em>không di chuyển trong bộ nhớ</em>, ta không cần cập nhật bất kỳ reference nào.
 Đây chính xác là điều Rust's borrow checker dùng để:
-trong safe code, nó ngăn bạn di chuyển bất kỳ phần tử nào
+trong mã safe, nó ngăn bạn di chuyển bất kỳ phần tử nào
 có reference đang hoạt động đến nó.</p>
 
 <p><code>Pin</code> xây dựng trên điều đó để cho ta chính xác sự đảm bảo ta cần.
@@ -587,38 +587,38 @@ những trường hợp như thế là ổn — và đó là lúc <code>Unpin</c
 <p><code>Unpin</code> là một marker trait, tương tự các trait <code>Send</code> và <code>Sync</code>
 ta đã thấy ở Chương 16, do đó không có chức năng riêng.
 Marker trait chỉ tồn tại để báo compiler rằng việc dùng kiểu
-implement một trait nhất định trong một ngữ cảnh cụ thể là an toàn.
+triển khai một trait nhất định trong một ngữ cảnh cụ thể là an toàn.
 <code>Unpin</code> thông báo với compiler rằng một kiểu nhất định <em>không</em> cần
 duy trì bất kỳ đảm bảo nào về việc giá trị đó có thể được di chuyển an toàn hay không.</p>
 
-<p>Cũng như với <code>Send</code> và <code>Sync</code>, compiler implement <code>Unpin</code> tự động
+<p>Cũng như với <code>Send</code> và <code>Sync</code>, compiler triển khai <code>Unpin</code> tự động
 cho tất cả các kiểu mà nó có thể chứng minh là an toàn.
 Trường hợp đặc biệt, một lần nữa tương tự <code>Send</code> và <code>Sync</code>,
-là khi <code>Unpin</code> <em>không</em> được implement cho một kiểu.
+là khi <code>Unpin</code> <em>không</em> được triển khai cho một kiểu.
 Ký hiệu cho điều này là <code>impl !Unpin for <em>SomeType</em></code>,
 trong đó <code><em>SomeType</em></code> là tên của một kiểu <em>thực sự</em> cần
 duy trì những đảm bảo đó để an toàn khi một pointer đến kiểu đó được dùng trong <code>Pin</code>.</p>
 
 <p>Nói cách khác, có hai điều cần nhớ về mối quan hệ giữa <code>Pin</code> và <code>Unpin</code>.
 Thứ nhất, <code>Unpin</code> là trường hợp "bình thường", còn <code>!Unpin</code> là trường hợp đặc biệt.
-Thứ hai, liệu một kiểu implement <code>Unpin</code> hay <code>!Unpin</code> <em>chỉ</em> quan trọng
+Thứ hai, liệu một kiểu triển khai <code>Unpin</code> hay <code>!Unpin</code> <em>chỉ</em> quan trọng
 khi bạn dùng một pinned pointer đến kiểu đó như <code>Pin&lt;&amp;mut <em>SomeType</em>&gt;</code>.</p>
 
 <p>Để cụ thể hóa, hãy nghĩ về <code>String</code>: nó có một độ dài và các ký tự Unicode cấu thành nó.
 Ta có thể bọc <code>String</code> trong <code>Pin</code>, như thấy trong Figure 17-8.
-Nhưng <code>String</code> tự động implement <code>Unpin</code>, cũng như hầu hết các kiểu khác trong Rust.</p>
+Nhưng <code>String</code> tự động triển khai <code>Unpin</code>, cũng như hầu hết các kiểu khác trong Rust.</p>
 
 <figure>
 <img alt="A box labeled 'Pin' on the left with an arrow going from it to a box labeled 'String' on the right. The 'String' box contains the data 5usize, representing the length of the string, and the letters 'h', 'e', 'l', 'l', and 'o' representing the characters of the string 'hello' stored in this String instance. A dotted rectangle surrounds the 'String' box and its label, but not the 'Pin' box." src="img/trpl17-08.svg" class="center" />
-<figcaption>Figure 17-8: Pinning một <code>String</code>; đường chấm chấm cho thấy <code>String</code> implement trait <code>Unpin</code> và do đó thực sự không bị pin</figcaption>
+<figcaption>Figure 17-8: Pinning một <code>String</code>; đường chấm chấm cho thấy <code>String</code> triển khai trait <code>Unpin</code> và do đó thực sự không bị pin</figcaption>
 </figure>
 
 <p>Kết quả là, ta có thể làm những điều mà sẽ bất hợp lệ nếu <code>String</code>
-implement <code>!Unpin</code> thay vào đó, như thay thế một string bằng string khác
+triển khai <code>!Unpin</code> thay vào đó, như thay thế một string bằng string khác
 tại đúng vị trí bộ nhớ đó như trong Figure 17-9.
 Điều này không vi phạm hợp đồng <code>Pin</code>, vì <code>String</code> không có
 internal reference nào khiến việc di chuyển không an toàn.
-Đó chính xác là lý do tại sao nó implement <code>Unpin</code> thay vì <code>!Unpin</code>.</p>
+Đó chính xác là lý do tại sao nó triển khai <code>Unpin</code> thay vì <code>!Unpin</code>.</p>
 
 <figure>
 <img alt="The same 'hello' string data from the previous example, now labeled 's1' and grayed out. The 'Pin' box from the previous example now points to a different String instance, one that is labeled 's2', is valid, has a length of 7usize, and contains the characters of the string 'goodbye'. s2 is surrounded by a dotted rectangle because it, too, implements the Unpin trait." src="img/trpl17-09.svg" class="center" />
@@ -627,12 +627,12 @@ internal reference nào khiến việc di chuyển không an toàn.
 
 <p>Giờ ta đã biết đủ để hiểu các lỗi được báo cáo cho lệnh gọi <code>join_all</code>
 từ Listing 17-23 ở trên. Ban đầu ta cố di chuyển các future tạo ra bởi
-async block vào <code>Vec&lt;Box&lt;dyn Future&lt;Output = ()&gt;&gt;&gt;</code>, nhưng như ta thấy,
+khối async vào <code>Vec&lt;Box&lt;dyn Future&lt;Output = ()&gt;&gt;&gt;</code>, nhưng như ta thấy,
 các future đó có thể có internal reference, nên chúng không tự động
-implement <code>Unpin</code>. Sau khi pin chúng, ta có thể truyền kiểu <code>Pin</code>
+triển khai <code>Unpin</code>. Sau khi pin chúng, ta có thể truyền kiểu <code>Pin</code>
 kết quả vào <code>Vec</code>, tự tin rằng dữ liệu nền trong các future
 sẽ <em>không</em> bị di chuyển.
-Listing 17-24 cho thấy cách sửa code bằng cách gọi macro <code>pin!</code>
+Listing 17-24 cho thấy cách sửa mã bằng cách gọi macro <code>pin!</code>
 ở chỗ mỗi trong ba future được định nghĩa và điều chỉnh kiểu trait object.</p>
 
 <figure class="listing" id="listing-17-24">
@@ -699,12 +699,12 @@ Listing 17-24 cho thấy cách sửa code bằng cách gọi macro <code>pin!</c
 khỏi vector lúc runtime rồi join tất cả chúng lại.</p>
 
 <p><code>Pin</code> và <code>Unpin</code> quan trọng nhất khi xây dựng thư viện cấp thấp
-hoặc khi bạn đang xây dựng runtime, thay vì trong code Rust hàng ngày.
+hoặc khi bạn đang xây dựng runtime, thay vì trong mã Rust hàng ngày.
 Khi gặp các trait này trong thông báo lỗi, giờ bạn đã có ý tưởng tốt hơn
-về cách sửa code!</p>
+về cách sửa mã!</p>
 
 <section class="note" aria-role="note">
-<p>Lưu ý: Sự kết hợp của <code>Pin</code> và <code>Unpin</code> cho phép implement an toàn
+<p>Lưu ý: Sự kết hợp của <code>Pin</code> và <code>Unpin</code> cho phép triển khai an toàn
 cả một lớp kiểu phức tạp trong Rust mà nếu không thì rất khó thực hiện
 vì chúng tự tham chiếu. Các kiểu yêu cầu <code>Pin</code> xuất hiện phổ biến nhất
 trong async Rust ngày nay, nhưng đôi khi bạn cũng có thể gặp chúng
@@ -769,7 +769,7 @@ thư viện chuẩn Rust. Trong thời gian chờ đợi, nó là một phần c
 của hầu hết runtime, vì vậy bạn có thể tin tưởng vào nó,
 và mọi thứ chúng ta đề cập tiếp theo thường sẽ áp dụng được!</p>
 
-<p>Tuy nhiên, trong các ví dụ ta thấy trong phần <a href="ch17-04-streams.html">"Streams: Futures in Sequence"</a>,
+<p>Tuy nhiên, trong các ví dụ ta thấy trong phần <a href="ch17-04-streams.html">“Streams: Futures Nối Tiếp Nhau”</a>,
 ta không dùng <code>poll_next</code> <em>hay</em> <code>Stream</code>, mà dùng <code>next</code> và <code>StreamExt</code>.
 Tất nhiên ta <em>có thể</em> làm việc trực tiếp theo API <code>poll_next</code>
 bằng cách tự viết các <code>Stream</code> state machine,
@@ -804,23 +804,23 @@ cung cấp phương thức <code>next</code> để ta làm đúng điều đó:<
 trông hơi khác một chút, vì nó hỗ trợ các phiên bản Rust chưa
 hỗ trợ dùng async function trong trait. Vì vậy, nó trông như thế này:</p>
 <pre><code class="language-rust ignore">fn next(&amp;mut self) -&gt; Next&lt;'_, Self&gt; where Self: Unpin;</code></pre>
-<p>Kiểu <code>Next</code> đó là một <code>struct</code> implement <code>Future</code> và cho phép ta đặt tên
+<p>Kiểu <code>Next</code> đó là một <code>struct</code> triển khai <code>Future</code> và cho phép ta đặt tên
 cho lifetime của reference đến <code>self</code> với <code>Next&lt;'_, Self&gt;</code>,
 để <code>await</code> có thể làm việc với phương thức này.</p>
 </section>
 
 <p>Trait <code>StreamExt</code> cũng là nơi chứa tất cả các method thú vị
-có thể dùng với stream. <code>StreamExt</code> được tự động implement cho mọi kiểu
-implement <code>Stream</code>, nhưng các trait này được định nghĩa riêng biệt
+có thể dùng với stream. <code>StreamExt</code> được tự động triển khai cho mọi kiểu
+triển khai <code>Stream</code>, nhưng các trait này được định nghĩa riêng biệt
 để cộng đồng có thể lặp trên các convenience API
 mà không ảnh hưởng đến foundational trait.</p>
 
 <p>Trong phiên bản <code>StreamExt</code> được dùng trong crate <code>trpl</code>,
 trait không chỉ định nghĩa phương thức <code>next</code> mà còn cung cấp
-một default implementation của <code>next</code> xử lý đúng đắn
+một mặc định phần triển khai của <code>next</code> xử lý đúng đắn
 chi tiết về cách gọi <code>Stream::poll_next</code>.
 Điều này có nghĩa là ngay cả khi bạn cần tự viết kiểu streaming data,
-bạn <em>chỉ</em> cần implement <code>Stream</code>,
+bạn <em>chỉ</em> cần triển khai <code>Stream</code>,
 và sau đó bất kỳ ai dùng kiểu dữ liệu của bạn
 đều có thể dùng <code>StreamExt</code> và các method của nó tự động.</p>
 

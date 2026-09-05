@@ -48,8 +48,8 @@
   <div class="page-nav"><a href="ch17-02-concurrency-with-async.html">← Trước</a><a href="ch17-04-streams.html">Tiếp →</a></div>
 
   <h3 id="yielding-control-to-the-runtime">Nhường Control cho Runtime</h3>
-  <p>Nhớ lại từ phần <a href="ch17-01-futures-and-syntax.html#our-first-async-program">"Chương trình Async đầu tiên"</a>: tại mỗi await point, Rust trao cho runtime cơ hội tạm dừng task và chuyển sang task khác nếu future đang được await chưa sẵn sàng. Điều ngược lại cũng đúng: Rust <em>chỉ</em> tạm dừng async blocks và trả control lại cho runtime tại một await point. Mọi thứ giữa các await points là đồng bộ.</p>
-  <p>Điều đó có nghĩa là nếu bạn làm nhiều công việc trong một async block mà không có await point nào, future đó sẽ chặn bất kỳ future nào khác tiến lên. Bạn đôi khi có thể nghe điều này được gọi là một future đang <em>bỏ đói</em> các futures khác. Trong một số trường hợp, đây không phải vấn đề lớn. Tuy nhiên, nếu bạn đang thực hiện một số thiết lập tốn kém, công việc chạy lâu, hoặc có một future liên tục thực hiện một tác vụ vô thời hạn, bạn cần suy nghĩ về thời điểm và nơi trả control lại cho runtime.</p>
+  <p>Nhớ lại từ phần <a href="ch17-01-futures-and-syntax.html#our-first-async-program">"Chương trình Async đầu tiên"</a>: tại mỗi await point, Rust trao cho runtime cơ hội tạm dừng task và chuyển sang task khác nếu future đang được await chưa sẵn sàng. Điều ngược lại cũng đúng: Rust <em>chỉ</em> tạm dừng khối async và trả control lại cho runtime tại một await point. Mọi thứ giữa các await points là đồng bộ.</p>
+  <p>Điều đó có nghĩa là nếu bạn làm nhiều công việc trong một khối async mà không có await point nào, future đó sẽ chặn bất kỳ future nào khác tiến lên. Bạn đôi khi có thể nghe điều này được gọi là một future đang <em>bỏ đói</em> các future khác. Trong một số trường hợp, đây không phải vấn đề lớn. Tuy nhiên, nếu bạn đang thực hiện một số thiết lập tốn kém, công việc chạy lâu, hoặc có một future liên tục thực hiện một tác vụ vô thời hạn, bạn cần suy nghĩ về thời điểm và nơi trả control lại cho runtime.</p>
   <p>Hãy mô phỏng một thao tác chạy lâu để minh họa vấn đề bỏ đói, rồi khám phá cách giải quyết. Listing 17-14 giới thiệu hàm <code>slow</code>.</p>
   <figure class="listing" id="listing-17-14">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -59,7 +59,7 @@
 }</code></pre>
   <figcaption><a href="#listing-17-14">Listing 17-14</a>: Dùng <code>thread::sleep</code> để mô phỏng thao tác chậm</figcaption>
   </figure>
-  <p>Code này dùng <code>std::thread::sleep</code> thay vì <code>trpl::sleep</code> để khi gọi <code>slow</code> sẽ block thread hiện tại trong một số milliseconds. Chúng ta có thể dùng <code>slow</code> thay thế cho các thao tác thực tế vừa chạy lâu vừa blocking.</p>
+  <p>Mã này dùng <code>std::thread::sleep</code> thay vì <code>trpl::sleep</code> để khi gọi <code>slow</code> sẽ khối thread hiện tại trong một số milliseconds. Chúng ta có thể dùng <code>slow</code> thay thế cho các thao tác thực tế vừa chạy lâu vừa blocking.</p>
   <p>Trong Listing 17-15, chúng ta dùng <code>slow</code> để giả lập công việc CPU-bound loại này trong một cặp futures.</p>
   <figure class="listing" id="listing-17-15">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -85,7 +85,7 @@
         trpl::select(a, b).await;</code></pre>
   <figcaption><a href="#listing-17-15">Listing 17-15</a>: Gọi hàm <code>slow</code> để mô phỏng thao tác chậm</figcaption>
   </figure>
-  <p>Mỗi future chỉ trả control lại cho runtime <em>sau</em> khi thực hiện hàng loạt thao tác chậm. Nếu chạy code này, bạn sẽ thấy output sau:</p>
+  <p>Mỗi future chỉ trả control lại cho runtime <em>sau</em> khi thực hiện hàng loạt thao tác chậm. Nếu chạy mã này, bạn sẽ thấy kết quả sau:</p>
   <pre><code class="language-text">'a' started.
 'a' ran for 30ms
 'a' ran for 10ms
@@ -97,7 +97,7 @@
 'b' ran for 350ms
 'a' finished.
 </code></pre>
-  <p>Cũng như Listing 17-5 khi dùng <code>trpl::select</code> để đua futures lấy hai URL, <code>select</code> vẫn hoàn thành ngay khi <code>a</code> xong. Không có sự xen kẽ giữa các lời gọi <code>slow</code> trong hai futures. Future <code>a</code> làm hết công việc của nó cho đến lời gọi <code>trpl::sleep</code> được await, rồi future <code>b</code> làm hết công việc của nó cho đến lời gọi <code>trpl::sleep</code> của nó được await, và cuối cùng future <code>a</code> hoàn thành. Để cả hai futures có thể tiến lên giữa các tác vụ chậm, chúng ta cần các await points để có thể trả control lại cho runtime. Điều đó có nghĩa là chúng ta cần thứ gì đó có thể await!</p>
+  <p>Cũng như Listing 17-5 khi dùng <code>trpl::select</code> để đua futures lấy hai URL, <code>select</code> vẫn hoàn thành ngay khi <code>a</code> xong. Không có sự xen kẽ giữa các lời gọi <code>slow</code> trong hai future. Future <code>a</code> làm hết công việc của nó cho đến lời gọi <code>trpl::sleep</code> được await, rồi future <code>b</code> làm hết công việc của nó cho đến lời gọi <code>trpl::sleep</code> của nó được await, và cuối cùng future <code>a</code> hoàn thành. Để cả hai future có thể tiến lên giữa các tác vụ chậm, chúng ta cần các await points để có thể trả control lại cho runtime. Điều đó có nghĩa là chúng ta cần thứ gì đó có thể await!</p>
   <p>Chúng ta đã có thể thấy loại bàn giao này xảy ra trong Listing 17-15: nếu bỏ <code>trpl::sleep</code> ở cuối future <code>a</code>, nó sẽ hoàn thành mà future <code>b</code> hoàn toàn không chạy. Hãy thử dùng hàm <code>trpl::sleep</code> làm điểm bắt đầu để cho phép các thao tác luân phiên tiến lên, như Listing 17-16.</p>
   <figure class="listing" id="listing-17-16">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -130,7 +130,7 @@
         trpl::select(a, b).await;</code></pre>
   <figcaption><a href="#listing-17-16">Listing 17-16</a>: Dùng <code>trpl::sleep</code> để các thao tác luân phiên tiến lên</figcaption>
   </figure>
-  <p>Chúng ta đã thêm lời gọi <code>trpl::sleep</code> với await points giữa mỗi lời gọi <code>slow</code>. Giờ công việc của hai futures được xen kẽ:</p>
+  <p>Chúng ta đã thêm lời gọi <code>trpl::sleep</code> với await points giữa mỗi lời gọi <code>slow</code>. Giờ công việc của hai future được xen kẽ:</p>
   <pre><code class="language-text">'a' started.
 'a' ran for 30ms
 'b' started.
@@ -141,7 +141,7 @@
 'b' ran for 15ms
 'a' finished.
 </code></pre>
-  <p>Future <code>a</code> vẫn chạy một lúc trước khi bàn giao control cho <code>b</code>, vì nó gọi <code>slow</code> trước khi gọi <code>trpl::sleep</code>, nhưng sau đó các futures đổi qua lại mỗi lần một trong chúng đến await point. Trong trường hợp này, chúng ta đã làm điều đó sau mỗi lời gọi <code>slow</code>, nhưng có thể chia nhỏ công việc theo bất kỳ cách nào có ý nghĩa nhất với chúng ta.</p>
+  <p>Future <code>a</code> vẫn chạy một lúc trước khi bàn giao control cho <code>b</code>, vì nó gọi <code>slow</code> trước khi gọi <code>trpl::sleep</code>, nhưng sau đó các future đổi qua lại mỗi lần một trong chúng đến await point. Trong trường hợp này, chúng ta đã làm điều đó sau mỗi lời gọi <code>slow</code>, nhưng có thể chia nhỏ công việc theo bất kỳ cách nào có ý nghĩa nhất với chúng ta.</p>
   <p>Thực ra chúng ta không thực sự muốn <em>ngủ</em> ở đây: chúng ta muốn tiến lên nhanh nhất có thể. Chúng ta chỉ cần trả control lại cho runtime. Có thể làm điều đó trực tiếp bằng hàm <code>trpl::yield_now</code>. Trong Listing 17-17, chúng ta thay thế tất cả lời gọi <code>trpl::sleep</code> bằng <code>trpl::yield_now</code>.</p>
   <figure class="listing" id="listing-17-17">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -172,12 +172,12 @@
         trpl::select(a, b).await;</code></pre>
   <figcaption><a href="#listing-17-17">Listing 17-17</a>: Dùng <code>yield_now</code> để các thao tác luân phiên tiến lên</figcaption>
   </figure>
-  <p>Code này vừa thể hiện rõ ràng ý định thực sự hơn vừa có thể nhanh hơn đáng kể so với dùng <code>sleep</code>, vì các timer như cái dùng bởi <code>sleep</code> thường có giới hạn về độ chính xác. Phiên bản <code>sleep</code> chúng ta đang dùng, ví dụ, sẽ luôn ngủ ít nhất một millisecond, dù chúng ta truyền vào <code>Duration</code> chỉ một nanosecond. Máy tính hiện đại <em>nhanh</em> thật: chúng làm được rất nhiều trong một millisecond!</p>
-  <p>Điều này có nghĩa là async có thể hữu ích ngay cả với các tác vụ compute-bound, tùy thuộc vào những gì khác chương trình của bạn đang làm, vì nó cung cấp công cụ hữu ích để cấu trúc mối quan hệ giữa các phần khác nhau của chương trình (nhưng với cái giá là overhead của async state machine). Đây là một dạng của <em>cooperative multitasking</em> (đa nhiệm hợp tác), nơi mỗi future có quyền xác định khi nào nó bàn giao control qua các await points. Mỗi future vì vậy cũng có trách nhiệm tránh block quá lâu. Trong một số hệ điều hành nhúng dựa trên Rust, đây là <em>loại duy nhất</em> của multitasking!</p>
-  <p>Trong code thực tế, tất nhiên bạn thường không xen kẽ lời gọi hàm với await points trên mỗi dòng. Dù nhường control theo cách này tương đối rẻ, nó không miễn phí. Trong nhiều trường hợp, cố gắng chia nhỏ tác vụ compute-bound có thể làm nó chậm hơn đáng kể, nên đôi khi tốt hơn cho hiệu năng <em>tổng thể</em> là để thao tác block trong thời gian ngắn. Luôn đo lường để xem điểm nghẽn cổ chai hiệu năng thực sự của code bạn. Tuy nhiên, cần nhớ rõ động lực cơ bản này, đặc biệt khi bạn thấy nhiều công việc xảy ra tuần tự mà bạn kỳ vọng sẽ xảy ra đồng thời!</p>
+  <p>Mã này vừa thể hiện rõ ràng ý định thực sự hơn vừa có thể nhanh hơn đáng kể so với dùng <code>sleep</code>, vì các timer như cái dùng bởi <code>sleep</code> thường có giới hạn về độ chính xác. Phiên bản <code>sleep</code> chúng ta đang dùng, ví dụ, sẽ luôn ngủ ít nhất một millisecond, dù chúng ta truyền vào <code>Duration</code> chỉ một nanosecond. Máy tính hiện đại <em>nhanh</em> thật: chúng làm được rất nhiều trong một millisecond!</p>
+  <p>Điều này có nghĩa là async có thể hữu ích ngay cả với các tác vụ compute-bound, tùy thuộc vào những gì khác chương trình của bạn đang làm, vì nó cung cấp công cụ hữu ích để cấu trúc mối quan hệ giữa các phần khác nhau của chương trình (nhưng với cái giá là overhead của async state machine). Đây là một dạng của <em>cooperative multitasking</em> (đa nhiệm hợp tác), nơi mỗi future có quyền xác định khi nào nó bàn giao control qua các await points. Mỗi future vì vậy cũng có trách nhiệm tránh khối quá lâu. Trong một số hệ điều hành nhúng dựa trên Rust, đây là <em>loại duy nhất</em> của multitasking!</p>
+  <p>Trong mã thực tế, tất nhiên bạn thường không xen kẽ lời gọi hàm với await points trên mỗi dòng. Dù nhường control theo cách này tương đối rẻ, nó không miễn phí. Trong nhiều trường hợp, cố gắng chia nhỏ tác vụ compute-bound có thể làm nó chậm hơn đáng kể, nên đôi khi tốt hơn cho hiệu năng <em>tổng thể</em> là để thao tác khối trong thời gian ngắn. Luôn đo lường để xem điểm nghẽn cổ chai hiệu năng thực sự của mã bạn. Tuy nhiên, cần nhớ rõ động lực cơ bản này, đặc biệt khi bạn thấy nhiều công việc xảy ra tuần tự mà bạn kỳ vọng sẽ xảy ra đồng thời!</p>
 
   <h3 id="building-our-own-async-abstractions">Xây dựng Abstraction Async của Riêng Bạn</h3>
-  <p>Chúng ta cũng có thể compose futures lại với nhau để tạo ra các pattern mới. Ví dụ, chúng ta có thể xây dựng hàm <code>timeout</code> với các building blocks async đã có. Khi xong, kết quả sẽ là một building block khác mà chúng ta có thể dùng để tạo thêm các abstraction async.</p>
+  <p>Chúng ta cũng có thể compose futures lại với nhau để tạo ra các pattern mới. Ví dụ, chúng ta có thể xây dựng hàm <code>timeout</code> với các khối xây dựng async đã có. Khi xong, kết quả sẽ là một khối xây dựng khác mà chúng ta có thể dùng để tạo thêm các abstraction async.</p>
   <p>Listing 17-18 cho thấy cách chúng ta kỳ vọng <code>timeout</code> này hoạt động với một future chậm.</p>
   <figure class="listing" id="listing-17-18">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -194,7 +194,7 @@
         }</code></pre>
   <figcaption><a href="#listing-17-18">Listing 17-18</a>: Dùng <code>timeout</code> tưởng tượng của chúng ta để chạy thao tác chậm với giới hạn thời gian</figcaption>
   </figure>
-  <p>Hãy implement nó! Để bắt đầu, hãy suy nghĩ về API cho <code>timeout</code>:</p>
+  <p>Hãy triển khai nó! Để bắt đầu, hãy suy nghĩ về API cho <code>timeout</code>:</p>
   <ul>
   <li>Nó cần là async function để có thể await nó.</li>
   <li>Tham số đầu tiên phải là future để chạy. Chúng ta có thể làm nó generic để hoạt động với bất kỳ future nào.</li>
@@ -213,7 +213,7 @@
   <figcaption><a href="#listing-17-19">Listing 17-19</a>: Định nghĩa signature của <code>timeout</code></figcaption>
   </figure>
   <p>Điều đó thỏa mãn các mục tiêu về kiểu. Giờ hãy suy nghĩ về <em>hành vi</em> chúng ta cần: chúng ta muốn đua future được truyền vào với duration. Có thể dùng <code>trpl::sleep</code> để tạo timer future từ duration, và dùng <code>trpl::select</code> để chạy timer đó với future mà caller truyền vào.</p>
-  <p>Trong Listing 17-20, chúng ta implement <code>timeout</code> bằng cách match trên kết quả của việc await <code>trpl::select</code>.</p>
+  <p>Trong Listing 17-20, chúng ta triển khai <code>timeout</code> bằng cách match trên kết quả của việc await <code>trpl::select</code>.</p>
   <figure class="listing" id="listing-17-20">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">use trpl::Either;
@@ -231,14 +231,14 @@ async fn timeout&lt;F: Future&gt;(
 }</code></pre>
   <figcaption><a href="#listing-17-20">Listing 17-20</a>: Định nghĩa <code>timeout</code> với <code>select</code> và <code>sleep</code></figcaption>
   </figure>
-  <p>Implementation của <code>trpl::select</code> không fair: nó luôn poll các tham số theo thứ tự chúng được truyền (các implementation <code>select</code> khác sẽ chọn ngẫu nhiên tham số nào poll trước). Vì vậy, chúng ta truyền <code>future_to_try</code> vào <code>select</code> trước để nó có cơ hội hoàn thành ngay cả khi <code>max_time</code> là duration rất ngắn. Nếu <code>future_to_try</code> hoàn thành trước, <code>select</code> sẽ trả về <code>Left</code> với output từ <code>future_to_try</code>. Nếu <code>timer</code> hoàn thành trước, <code>select</code> sẽ trả về <code>Right</code> với output của timer là <code>()</code>.</p>
+  <p>Phần triển khai của <code>trpl::select</code> không fair: nó luôn poll các tham số theo thứ tự chúng được truyền (các phần triển khai <code>select</code> khác sẽ chọn ngẫu nhiên tham số nào poll trước). Vì vậy, chúng ta truyền <code>future_to_try</code> vào <code>select</code> trước để nó có cơ hội hoàn thành ngay cả khi <code>max_time</code> là duration rất ngắn. Nếu <code>future_to_try</code> hoàn thành trước, <code>select</code> sẽ trả về <code>Left</code> với kết quả từ <code>future_to_try</code>. Nếu <code>timer</code> hoàn thành trước, <code>select</code> sẽ trả về <code>Right</code> với kết quả của timer là <code>()</code>.</p>
   <p>Nếu <code>future_to_try</code> thành công và chúng ta nhận <code>Left(output)</code>, chúng ta trả về <code>Ok(output)</code>. Nếu sleep timer hết và chúng ta nhận <code>Right(())</code>, chúng ta bỏ qua <code>()</code> với <code>_</code> và trả về <code>Err(max_time)</code>.</p>
-  <p>Vậy là chúng ta đã có <code>timeout</code> hoạt động, được xây dựng từ hai async helpers khác. Nếu chạy code, nó sẽ in failure mode sau khi timeout:</p>
+  <p>Vậy là chúng ta đã có <code>timeout</code> hoạt động, được xây dựng từ hai async helpers khác. Nếu chạy mã, nó sẽ in failure mode sau khi timeout:</p>
   <pre><code class="language-text">Failed after 2 seconds
 </code></pre>
-  <p>Vì futures compose được với nhau, bạn có thể xây dựng các công cụ thực sự mạnh mẽ bằng cách dùng các building blocks async nhỏ hơn. Ví dụ, bạn có thể dùng cách tiếp cận tương tự để kết hợp timeouts với retries, rồi dùng chúng với các thao tác như network calls (chẳng hạn những thao tác trong Listing 17-5).</p>
-  <p>Trong thực tế, bạn thường làm việc trực tiếp với <code>async</code> và <code>await</code>, và phụ thêm với các hàm như <code>select</code> và macro như macro <code>join!</code> để kiểm soát cách các futures ngoài cùng được thực thi.</p>
-  <p>Chúng ta đã thấy nhiều cách làm việc với nhiều futures cùng một lúc. Tiếp theo, chúng ta sẽ xem cách làm việc với nhiều futures theo trình tự thời gian bằng <em>streams</em>.</p>
+  <p>Vì futures compose được với nhau, bạn có thể xây dựng các công cụ thực sự mạnh mẽ bằng cách dùng các khối xây dựng async nhỏ hơn. Ví dụ, bạn có thể dùng cách tiếp cận tương tự để kết hợp timeouts với retries, rồi dùng chúng với các thao tác như network calls (chẳng hạn những thao tác trong Listing 17-5).</p>
+  <p>Trong thực tế, bạn thường làm việc trực tiếp với <code>async</code> và <code>await</code>, và phụ thêm với các hàm như <code>select</code> và macro như macro <code>join!</code> để kiểm soát cách các future ngoài cùng được thực thi.</p>
+  <p>Chúng ta đã thấy nhiều cách làm việc với nhiều future cùng một lúc. Tiếp theo, chúng ta sẽ xem cách làm việc với nhiều future theo trình tự thời gian bằng <em>streams</em>.</p>
 
   <div class="page-nav bottom"><a href="ch17-02-concurrency-with-async.html">← Trước</a><a href="ch17-04-streams.html">Tiếp →</a></div>
   </div>

@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Đọc File</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch12-01-accepting-command-line-arguments.html">← Trước</a>
@@ -208,7 +208,7 @@
   </div>
 
 <h2 id="reading-a-file">Đọc File</h2>
-<p>Bây giờ chúng ta sẽ thêm chức năng đọc file được chỉ định trong tham số <code>file_path</code>. Trước tiên, cần có một file mẫu để test: ta sẽ dùng một file với ít văn bản trải qua nhiều dòng, có vài từ lặp lại. Listing 12-3 có một bài thơ của Emily Dickinson rất phù hợp! Hãy tạo file tên <em>poem.txt</em> ở thư mục gốc của project và nhập bài thơ "I'm Nobody! Who are you?"</p>
+<p>Bây giờ chúng ta sẽ thêm chức năng đọc file được chỉ định trong tham số <code>file_path</code>. Trước tiên, cần có một file mẫu để test: ta sẽ dùng một file với ít văn bản trải qua nhiều dòng, có vài từ lặp lại. Listing 12-3 có một bài thơ của Emily Dickinson rất phù hợp! Hãy tạo file tên <em>poem.txt</em> ở thư mục gốc của dự án và nhập bài thơ "I'm Nobody! Who are you?"</p>
 <figure class="listing" id="listing-12-3">
 <span class="file-name">Tên file: poem.txt</span>
 <pre><code class="language-text">I'm nobody! Who are you?
@@ -223,7 +223,7 @@ To an admiring bog!
 </code></pre>
 <figcaption><a href="#listing-12-3">Listing 12-3</a>: Một bài thơ của Emily Dickinson — đúng là bộ test case hoàn hảo.</figcaption>
 </figure>
-<p>Với văn bản đã có, hãy chỉnh sửa <em>src/main.rs</em> và thêm code để đọc file, như được thể hiện ở Listing 12-4.</p>
+<p>Với văn bản đã có, hãy chỉnh sửa <em>src/main.rs</em> và thêm mã để đọc file, như được thể hiện ở Listing 12-4.</p>
 <figure class="listing" id="listing-12-4">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground">use std::env;
@@ -249,7 +249,7 @@ fn main() {
 <p>Đầu tiên, chúng ta đưa vào phần liên quan của thư viện chuẩn bằng câu lệnh <code>use</code>: chúng ta cần <code>std::fs</code> để xử lý file.</p>
 <p>Trong <code>main</code>, câu lệnh mới <code>fs::read_to_string</code> nhận vào <code>file_path</code>, mở file đó, và trả về một giá trị kiểu <code>std::io::Result&lt;String&gt;</code> chứa nội dung của file.</p>
 <p>Sau đó, chúng ta thêm một câu <code>println!</code> tạm thời để in giá trị của <code>contents</code> sau khi file được đọc, để kiểm tra chương trình đang chạy đúng cho đến đây.</p>
-<p>Hãy chạy code này với bất kỳ chuỗi nào làm tham số đầu tiên (vì chúng ta chưa triển khai phần tìm kiếm) và file <em>poem.txt</em> là tham số thứ hai:</p>
+<p>Hãy chạy mã này với bất kỳ chuỗi nào làm tham số đầu tiên (vì chúng ta chưa triển khai phần tìm kiếm) và file <em>poem.txt</em> là tham số thứ hai:</p>
 <pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
@@ -268,7 +268,7 @@ To tell your name the livelong day
 To an admiring bog!
 
 </code></pre>
-<p>Tuyệt! Code đã đọc xong và in ra nội dung file. Nhưng code còn vài điểm chưa hoàn thiện. Hiện tại, hàm <code>main</code> đang ôm quá nhiều trách nhiệm: nhìn chung, các hàm sẽ rõ ràng và dễ bảo trì hơn khi mỗi hàm chỉ chịu trách nhiệm cho một việc. Vấn đề khác là chúng ta chưa xử lý lỗi tốt như có thể. Chương trình còn nhỏ nên những điểm yếu này chưa gây ra vấn đề lớn, nhưng khi chương trình phình to ra, việc sửa chúng sẽ ngày càng khó hơn. Đây là lúc tốt để bắt đầu refactor sớm khi đang phát triển — refactor một lượng code nhỏ luôn dễ hơn nhiều. Chúng ta sẽ làm điều đó tiếp theo.</p>
+<p>Tuyệt! Mã đã đọc xong và in ra nội dung file. Nhưng mã còn vài điểm chưa hoàn thiện. Hiện tại, hàm <code>main</code> đang ôm quá nhiều trách nhiệm: nhìn chung, các hàm sẽ rõ ràng và dễ bảo trì hơn khi mỗi hàm chỉ chịu trách nhiệm cho một việc. Vấn đề khác là chúng ta chưa xử lý lỗi tốt như có thể. Chương trình còn nhỏ nên những điểm yếu này chưa gây ra vấn đề lớn, nhưng khi chương trình phình to ra, việc sửa chúng sẽ ngày càng khó hơn. Đây là lúc tốt để bắt đầu refactor sớm khi đang phát triển — refactor một lượng mã nhỏ luôn dễ hơn nhiều. Chúng ta sẽ làm điều đó tiếp theo.</p>
 
   <div class="page-nav bottom"><a href="ch12-01-accepting-command-line-arguments.html">← Trước</a><a href="ch12-03-improving-error-handling-and-modularity.html">Tiếp →</a></div>
   </div>

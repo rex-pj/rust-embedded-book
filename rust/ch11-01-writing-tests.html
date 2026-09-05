@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — Cách Viết Test</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch11-00-testing.html">← Trước</a>
@@ -207,20 +207,20 @@
   </div>
 
   <h2 id="how-to-write-tests"><a class="header" href="#how-to-write-tests">Cách Viết Test</a></h2>
-<p><em>Test</em> là những hàm Rust có nhiệm vụ xác minh rằng code không phải test đang vận hành đúng như kỳ vọng. Phần thân của các hàm test thường thực hiện ba việc sau:</p>
+<p><em>Test</em> là những hàm Rust có nhiệm vụ xác minh rằng mã không phải test đang vận hành đúng như kỳ vọng. Phần thân của các hàm test thường thực hiện ba việc sau:</p>
 <ul>
 <li>Thiết lập dữ liệu hoặc trạng thái cần thiết.</li>
-<li>Chạy đoạn code bạn muốn test.</li>
+<li>Chạy đoạn mã bạn muốn test.</li>
 <li>Khẳng định rằng kết quả đúng như bạn mong đợi.</li>
 </ul>
 <p>Hãy cùng nhìn qua các tính năng mà Rust cung cấp riêng cho việc viết test, bao gồm attribute <code>test</code>, một số macro, và attribute <code>should_panic</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="the-anatomy-of-a-test-function"></a></p>
 <h3 id="structuring-test-functions"><a class="header" href="#structuring-test-functions">Cấu Trúc Của Một Hàm Test</a></h3>
-<p>Đơn giản nhất, một test trong Rust là một hàm được đính kèm attribute <code>test</code>. Attribute là metadata gắn kèm với các đoạn code Rust; một ví dụ quen thuộc là attribute <code>derive</code> mà ta dùng với struct ở Chương 5. Để biến một hàm thành hàm test, hãy thêm <code>#[test]</code> vào dòng trước <code>fn</code>. Khi bạn chạy test bằng lệnh <code>cargo test</code>, Rust sẽ xây dựng một file binary test runner để chạy các hàm được đánh dấu đó và báo cáo xem từng hàm test có pass hay fail.</p>
-<p>Mỗi khi ta tạo project thư viện mới bằng Cargo, một module test với một hàm test mẫu sẽ tự động được sinh ra cho ta. Module này cung cấp sẵn một khung xương để viết test, giúp ta không phải tra cứu cấu trúc và cú pháp chính xác mỗi lần bắt đầu project mới. Bạn có thể thêm bao nhiêu hàm test và module test tùy thích!</p>
-<p>Ta sẽ khám phá một số khía cạnh về cách test hoạt động bằng cách thử nghiệm với hàm test mẫu trước khi thực sự test bất kỳ đoạn code nào. Sau đó, ta sẽ viết một số test thực tế gọi code mà ta đã viết và khẳng định hành vi của nó là đúng.</p>
-<p>Hãy tạo một project thư viện mới tên <code>adder</code> sẽ cộng hai số:</p>
+<p>Đơn giản nhất, một test trong Rust là một hàm được đính kèm attribute <code>test</code>. Attribute là metadata gắn kèm với các đoạn mã Rust; một ví dụ quen thuộc là attribute <code>derive</code> mà ta dùng với struct ở Chương 5. Để biến một hàm thành hàm test, hãy thêm <code>#[test]</code> vào dòng trước <code>fn</code>. Khi bạn chạy test bằng lệnh <code>cargo test</code>, Rust sẽ xây dựng một file binary test runner để chạy các hàm được đánh dấu đó và báo cáo xem từng hàm test có pass hay fail.</p>
+<p>Mỗi khi ta tạo dự án thư viện mới bằng Cargo, một module test với một hàm test mẫu sẽ tự động được sinh ra cho ta. Module này cung cấp sẵn một khung xương để viết test, giúp ta không phải tra cứu cấu trúc và cú pháp chính xác mỗi lần bắt đầu dự án mới. Bạn có thể thêm bao nhiêu hàm test và module test tùy thích!</p>
+<p>Ta sẽ khám phá một số khía cạnh về cách test hoạt động bằng cách thử nghiệm với hàm test mẫu trước khi thực sự test bất kỳ đoạn mã nào. Sau đó, ta sẽ viết một số test thực tế gọi mã mà ta đã viết và khẳng định hành vi của nó là đúng.</p>
+<p>Hãy tạo một dự án thư viện mới tên <code>adder</code> sẽ cộng hai số:</p>
 <pre><code class="language-console">$ cargo new adder --lib
      Created library `adder` project
 $ cd adder
@@ -242,12 +242,12 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-1">Listing 11-1</a>: Code được tự động sinh ra bởi <code>cargo new</code></figcaption>
+<figcaption><a href="#listing-11-1">Listing 11-1</a>: Mã được tự động sinh ra bởi <code>cargo new</code></figcaption>
 </figure>
 <p>File bắt đầu với một hàm <code>add</code> mẫu để ta có thứ gì đó để test.</p>
 <p>Trước mắt, hãy tập trung vào hàm <code>it_works</code>. Chú ý annotation <code>#[test]</code>: attribute này chỉ ra đây là một hàm test, nhờ đó test runner biết phải xử lý hàm này như một test. Ta cũng có thể có các hàm không phải test trong module <code>tests</code> để hỗ trợ thiết lập các kịch bản chung hay thực hiện các thao tác thông thường, nên ta luôn cần chỉ rõ hàm nào là test.</p>
 <p>Phần thân hàm mẫu dùng macro <code>assert_eq!</code> để khẳng định rằng <code>result</code> — chứa kết quả của <code>add(2, 2)</code> — bằng 4. Assertion này là ví dụ điển hình cho định dạng của một test thông thường. Hãy chạy thử để xem test này có pass không.</p>
-<p>Lệnh <code>cargo test</code> chạy tất cả các test trong project, như được hiển thị ở Listing 11-2.</p>
+<p>Lệnh <code>cargo test</code> chạy tất cả các test trong dự án, như được hiển thị ở Listing 11-2.</p>
 <figure class="listing" id="listing-11-2">
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -269,9 +269,9 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 <figcaption><a href="#listing-11-2">Listing 11-2</a>: Kết quả đầu ra từ lần chạy test được tự động sinh ra</figcaption>
 </figure>
 <p>Cargo biên dịch và chạy test. Ta thấy dòng <code>running 1 test</code>. Dòng tiếp theo hiển thị tên hàm test được sinh ra, gọi là <code>tests::it_works</code>, và kết quả của lần chạy test đó là <code>ok</code>. Dòng tổng kết <code>test result: ok.</code> có nghĩa là tất cả test đã pass, và phần <code>1 passed; 0 failed</code> tổng hợp số test đã pass hay fail.</p>
-<p>Ta có thể đánh dấu một test là ignored để nó không chạy trong một trường hợp nhất định; ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested">"Bỏ qua Test trừ Khi Được Yêu Cầu Rõ Ràng"</a> ở phần sau của chương này. Vì ta chưa làm điều đó ở đây, phần tổng kết hiển thị <code>0 ignored</code>. Ta cũng có thể truyền một đối số cho lệnh <code>cargo test</code> để chỉ chạy các test có tên khớp với một chuỗi ký tự; đây gọi là <em>filtering</em> (lọc), và ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#running-a-subset-of-tests-by-name">"Chạy Một Tập Hợp Con Các Test Theo Tên"</a>. Ở đây ta chưa lọc test nào, nên cuối phần tổng kết hiển thị <code>0 filtered out</code>.</p>
+<p>Ta có thể đánh dấu một test là ignored để nó không chạy trong một trường hợp nhất định; ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested">“Bỏ Qua Test Trừ Khi Được Yêu Cầu Rõ Ràng”</a> ở phần sau của chương này. Vì ta chưa làm điều đó ở đây, phần tổng kết hiển thị <code>0 ignored</code>. Ta cũng có thể truyền một đối số cho lệnh <code>cargo test</code> để chỉ chạy các test có tên khớp với một chuỗi ký tự; đây gọi là <em>filtering</em> (lọc), và ta sẽ tìm hiểu ở phần <a href="ch11-02-running-tests.html#running-a-subset-of-tests-by-name">"Chạy Một Tập Hợp Con Các Test Theo Tên"</a>. Ở đây ta chưa lọc test nào, nên cuối phần tổng kết hiển thị <code>0 filtered out</code>.</p>
 <p>Thống kê <code>0 measured</code> dành cho benchmark test đo lường hiệu suất. Benchmark test, tính đến thời điểm viết bài này, chỉ có trong Rust nightly. Xem <a href="../unstable-book/library-features/test.html">tài liệu về benchmark test</a> để tìm hiểu thêm.</p>
-<p>Phần tiếp theo của kết quả test bắt đầu từ <code>Doc-tests adder</code> là cho kết quả của các documentation test. Ta chưa có documentation test nào, nhưng Rust có thể biên dịch các ví dụ code xuất hiện trong tài liệu API của ta. Tính năng này giúp đồng bộ docs và code! Ta sẽ bàn về cách viết documentation test ở phần <a href="ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests">"Documentation Comments as Tests"</a> ở Chương 14. Hiện tại, ta sẽ bỏ qua phần output <code>Doc-tests</code>.</p>
+<p>Phần tiếp theo của kết quả test bắt đầu từ <code>Doc-tests adder</code> là cho kết quả của các documentation test. Ta chưa có documentation test nào, nhưng Rust có thể biên dịch các ví dụ mã xuất hiện trong tài liệu API của ta. Tính năng này giúp đồng bộ docs và mã! Ta sẽ bàn về cách viết documentation test ở phần <a href="ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests">“Documentation Comments như là Tests”</a> ở Chương 14. Hiện tại, ta sẽ bỏ qua phần kết quả <code>Doc-tests</code>.</p>
 <p>Hãy bắt đầu tùy chỉnh test theo nhu cầu của mình. Trước tiên, đổi tên hàm <code>it_works</code> thành tên khác, chẳng hạn <code>exploration</code>, như sau:</p>
 <p><span class="filename">Tên file: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
@@ -288,7 +288,7 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<p>Rồi chạy <code>cargo test</code> lại. Output lúc này hiển thị <code>exploration</code> thay vì <code>it_works</code>:</p>
+<p>Rồi chạy <code>cargo test</code> lại. Kết quả lúc này hiển thị <code>exploration</code> thay vì <code>it_works</code>:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
@@ -330,7 +330,7 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-3">Listing 11-3</a>: Thêm test thứ hai sẽ fail vì ta gọi macro <code>panic!</code></figcaption>
 </figure>
-<p>Chạy test lại bằng <code>cargo test</code>. Output trông như Listing 11-4, cho thấy test <code>exploration</code> pass còn <code>another</code> fail.</p>
+<p>Chạy test lại bằng <code>cargo test</code>. Kết quả trông như Listing 11-4, cho thấy test <code>exploration</code> pass còn <code>another</code> fail.</p>
 <figure class="listing" id="listing-11-4">
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -365,8 +365,8 @@ error: test failed, to rerun pass `--lib`
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="checking-results-with-the-assert-macro"></a></p>
 <h3 id="checking-results-with-assert"><a class="header" href="#checking-results-with-assert">Kiểm Tra Kết Quả Với <code>assert!</code></a></h3>
-<p>Macro <code>assert!</code>, được cung cấp bởi thư viện chuẩn, rất hữu ích khi bạn muốn đảm bảo rằng một điều kiện nào đó trong test cho kết quả là <code>true</code>. Ta truyền vào macro <code>assert!</code> một đối số mà khi tính toán cho ra giá trị Boolean. Nếu giá trị là <code>true</code>, không có gì xảy ra và test pass. Nếu giá trị là <code>false</code>, macro <code>assert!</code> sẽ gọi <code>panic!</code> để làm test fail. Sử dụng macro <code>assert!</code> giúp ta kiểm tra xem code có đang hoạt động đúng như ta muốn không.</p>
-<p>Ở Chương 5, Listing 5-15, ta đã dùng struct <code>Rectangle</code> và method <code>can_hold</code>, được nhắc lại ở Listing 11-5. Hãy đặt code này vào file <em>src/lib.rs</em>, rồi viết một số test cho nó dùng macro <code>assert!</code>.</p>
+<p>Macro <code>assert!</code>, được cung cấp bởi thư viện chuẩn, rất hữu ích khi bạn muốn đảm bảo rằng một điều kiện nào đó trong test cho kết quả là <code>true</code>. Ta truyền vào macro <code>assert!</code> một đối số mà khi tính toán cho ra giá trị Boolean. Nếu giá trị là <code>true</code>, không có gì xảy ra và test pass. Nếu giá trị là <code>false</code>, macro <code>assert!</code> sẽ gọi <code>panic!</code> để làm test fail. Sử dụng macro <code>assert!</code> giúp ta kiểm tra xem mã có đang hoạt động đúng như ta muốn không.</p>
+<p>Ở Chương 5, Listing 5-15, ta đã dùng struct <code>Rectangle</code> và method <code>can_hold</code>, được nhắc lại ở Listing 11-5. Hãy đặt mã này vào file <em>src/lib.rs</em>, rồi viết một số test cho nó dùng macro <code>assert!</code>.</p>
 <figure class="listing" id="listing-11-5">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">#[derive(Debug)]
@@ -417,7 +417,7 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-6">Listing 11-6</a>: Test cho <code>can_hold</code> kiểm tra xem hình chữ nhật lớn hơn có thực sự chứa được hình chữ nhật nhỏ hơn không</figcaption>
 </figure>
-<p>Chú ý dòng <code>use super::*;</code> bên trong module <code>tests</code>. Module <code>tests</code> là một module bình thường tuân theo các quy tắc visibility thông thường mà ta đã tìm hiểu ở Chương 7 trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Paths for Referring to an Item in the Module Tree"</a>. Vì module <code>tests</code> là module con, ta cần đưa code từ module cha vào scope của module con. Ta dùng glob ở đây để mọi thứ ta định nghĩa trong module cha đều có sẵn trong module <code>tests</code> này.</p>
+<p>Chú ý dòng <code>use super::*;</code> bên trong module <code>tests</code>. Module <code>tests</code> là một module bình thường tuân theo các quy tắc visibility thông thường mà ta đã tìm hiểu ở Chương 7 trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Path — đường dẫn tham chiếu tới một item trong module tree”</a>. Vì module <code>tests</code> là module con, ta cần đưa mã từ module cha vào scope của module con. Ta dùng glob ở đây để mọi thứ ta định nghĩa trong module cha đều có sẵn trong module <code>tests</code> này.</p>
 <p>Ta đặt tên test là <code>larger_can_hold_smaller</code>, và tạo hai instance <code>Rectangle</code> cần thiết. Rồi ta gọi macro <code>assert!</code> và truyền kết quả của <code>larger.can_hold(&amp;smaller)</code>. Biểu thức này được cho là trả về <code>true</code>, nên test của ta sẽ pass. Hãy xem thử!</p>
 <pre><code class="language-console">$ cargo test
    Compiling rectangle v0.1.0 (file:///projects/rectangle)
@@ -502,7 +502,7 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Hai test đều pass! Giờ hãy xem chuyện gì xảy ra với kết quả test khi ta cố tình nhét bug vào code. Ta sẽ sửa phần triển khai method <code>can_hold</code> bằng cách thay dấu lớn hơn (<code>&gt;</code>) bằng dấu nhỏ hơn (<code>&lt;</code>) khi so sánh chiều rộng:</p>
+<p>Hai test đều pass! Giờ hãy xem chuyện gì xảy ra với kết quả test khi ta cố tình nhét bug vào mã. Ta sẽ sửa phần triển khai method <code>can_hold</code> bằng cách thay dấu lớn hơn (<code>&gt;</code>) bằng dấu nhỏ hơn (<code>&lt;</code>) khi so sánh chiều rộng:</p>
 <pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">#[derive(Debug)]
 </span><span class="boring">struct Rectangle {
 </span><span class="boring">    width: u32,
@@ -578,7 +578,7 @@ error: test failed, to rerun pass `--lib`
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="testing-equality-with-the-assert_eq-and-assert_ne-macros"></a></p>
 <h3 id="testing-equality-with-assert_eq-and-assert_ne"><a class="header" href="#testing-equality-with-assert_eq-and-assert_ne">Kiểm Tra Tính Bằng Nhau Với <code>assert_eq!</code> và <code>assert_ne!</code></a></h3>
-<p>Một cách phổ biến để xác minh chức năng là kiểm tra sự bằng nhau giữa kết quả của code đang được test và giá trị bạn kỳ vọng code trả về. Bạn có thể làm điều đó dùng macro <code>assert!</code> với biểu thức sử dụng toán tử <code>==</code>. Tuy nhiên, đây là kiểu test phổ biến đến mức thư viện chuẩn cung cấp một cặp macro — <code>assert_eq!</code> và <code>assert_ne!</code> — để thực hiện test này thuận tiện hơn. Các macro này so sánh hai đối số xem có bằng nhau hay không bằng nhau, tương ứng. Chúng cũng sẽ in ra hai giá trị nếu assertion fail, giúp dễ dàng thấy <em>tại sao</em> test fail; ngược lại, macro <code>assert!</code> chỉ cho biết nó nhận được giá trị <code>false</code> cho biểu thức <code>==</code>, mà không in ra các giá trị dẫn đến kết quả <code>false</code> đó.</p>
+<p>Một cách phổ biến để xác minh chức năng là kiểm tra sự bằng nhau giữa kết quả của mã đang được test và giá trị bạn kỳ vọng mã trả về. Bạn có thể làm điều đó dùng macro <code>assert!</code> với biểu thức sử dụng toán tử <code>==</code>. Tuy nhiên, đây là kiểu test phổ biến đến mức thư viện chuẩn cung cấp một cặp macro — <code>assert_eq!</code> và <code>assert_ne!</code> — để thực hiện test này thuận tiện hơn. Các macro này so sánh hai đối số xem có bằng nhau hay không bằng nhau, tương ứng. Chúng cũng sẽ in ra hai giá trị nếu assertion fail, giúp dễ dàng thấy <em>tại sao</em> test fail; ngược lại, macro <code>assert!</code> chỉ cho biết nó nhận được giá trị <code>false</code> cho biểu thức <code>==</code>, mà không in ra các giá trị dẫn đến kết quả <code>false</code> đó.</p>
 <p>Ở Listing 11-7, ta viết một hàm tên <code>add_two</code> cộng thêm <code>2</code> vào tham số của nó, rồi test hàm này bằng macro <code>assert_eq!</code>.</p>
 <figure class="listing" id="listing-11-7">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -616,8 +616,8 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Ta tạo biến <code>result</code> chứa kết quả của <code>add_two(2)</code>. Rồi ta truyền <code>result</code> và <code>4</code> làm đối số cho macro <code>assert_eq!</code>. Dòng output cho test này là <code>test tests::it_adds_two ... ok</code>, và chữ <code>ok</code> cho biết test đã pass!</p>
-<p>Hãy nhét một bug vào code để xem <code>assert_eq!</code> trông thế nào khi fail. Đổi phần triển khai hàm <code>add_two</code> để cộng <code>3</code> thay vì:</p>
+<p>Ta tạo biến <code>result</code> chứa kết quả của <code>add_two(2)</code>. Rồi ta truyền <code>result</code> và <code>4</code> làm đối số cho macro <code>assert_eq!</code>. Dòng kết quả cho test này là <code>test tests::it_adds_two ... ok</code>, và chữ <code>ok</code> cho biết test đã pass!</p>
+<p>Hãy nhét một bug vào mã để xem <code>assert_eq!</code> trông thế nào khi fail. Đổi phần triển khai hàm <code>add_two</code> để cộng <code>3</code> thay vì:</p>
 <pre><code class="language-rust not_desired_behavior noplayground">pub fn add_two(a: u64) -&gt; u64 {
     a + 3
 }
@@ -660,12 +660,12 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>Test của ta đã bắt được bug! Test <code>tests::it_adds_two</code> fail, và thông báo cho ta biết assertion bị fail là <code>left == right</code> cùng với giá trị <code>left</code> và <code>right</code>. Thông báo này giúp ta bắt đầu debug: đối số <code>left</code> — nơi ta có kết quả của <code>add_two(2)</code> — là <code>5</code>, nhưng đối số <code>right</code> là <code>4</code>. Bạn có thể hình dung điều này sẽ đặc biệt hữu ích khi ta có nhiều test chạy cùng lúc.</p>
-<p>Lưu ý rằng trong một số ngôn ngữ và framework test, các tham số của hàm assertion bằng nhau được gọi là <code>expected</code> và <code>actual</code>, và thứ tự chỉ định đối số rất quan trọng. Tuy nhiên, trong Rust, chúng được gọi là <code>left</code> và <code>right</code>, và thứ tự chỉ định giá trị kỳ vọng và giá trị code tạo ra không quan trọng. Ta có thể viết assertion trong test này là <code>assert_eq!(4, result)</code>, kết quả fail sẽ hiển thị <code>assertion `left == right` failed</code> tương tự.</p>
-<p>Macro <code>assert_ne!</code> sẽ pass nếu hai giá trị ta truyền vào không bằng nhau và fail nếu chúng bằng nhau. Macro này hữu ích nhất khi ta không chắc giá trị <em>sẽ</em> là gì, nhưng biết chắc giá trị <em>không được phép</em> là gì. Ví dụ, nếu ta đang test một hàm được đảm bảo thay đổi đầu vào theo một cách nào đó, nhưng cách thay đổi phụ thuộc vào ngày trong tuần chạy test, điều tốt nhất để khẳng định có thể là output của hàm không bằng input.</p>
-<p>Về cốt lõi, macro <code>assert_eq!</code> và <code>assert_ne!</code> sử dụng các toán tử <code>==</code> và <code>!=</code> tương ứng. Khi assertion fail, các macro này in ra các đối số của chúng dùng định dạng debug, nghĩa là các giá trị được so sánh phải implement trait <code>PartialEq</code> và <code>Debug</code>. Tất cả các primitive type và hầu hết các type trong thư viện chuẩn đều implement các trait này. Với struct và enum tự định nghĩa, bạn sẽ cần implement <code>PartialEq</code> để khẳng định tính bằng nhau của các type đó. Bạn cũng cần implement <code>Debug</code> để in ra giá trị khi assertion fail. Vì cả hai trait đều là derivable trait, như đề cập ở Listing 5-12 Chương 5, điều này thường đơn giản như thêm annotation <code>#[derive(PartialEq, Debug)]</code> vào định nghĩa struct hoặc enum. Xem Phụ lục C, <a href="appendix-03-derivable-traits.html">"Derivable Traits,"</a> để biết thêm chi tiết về các trait này và các trait derivable khác.</p>
+<p>Lưu ý rằng trong một số ngôn ngữ và framework test, các tham số của hàm assertion bằng nhau được gọi là <code>expected</code> và <code>actual</code>, và thứ tự chỉ định đối số rất quan trọng. Tuy nhiên, trong Rust, chúng được gọi là <code>left</code> và <code>right</code>, và thứ tự chỉ định giá trị kỳ vọng và giá trị mã tạo ra không quan trọng. Ta có thể viết assertion trong test này là <code>assert_eq!(4, result)</code>, kết quả fail sẽ hiển thị <code>assertion `left == right` failed</code> tương tự.</p>
+<p>Macro <code>assert_ne!</code> sẽ pass nếu hai giá trị ta truyền vào không bằng nhau và fail nếu chúng bằng nhau. Macro này hữu ích nhất khi ta không chắc giá trị <em>sẽ</em> là gì, nhưng biết chắc giá trị <em>không được phép</em> là gì. Ví dụ, nếu ta đang test một hàm được đảm bảo thay đổi đầu vào theo một cách nào đó, nhưng cách thay đổi phụ thuộc vào ngày trong tuần chạy test, điều tốt nhất để khẳng định có thể là kết quả của hàm không bằng đầu vào.</p>
+<p>Về cốt lõi, macro <code>assert_eq!</code> và <code>assert_ne!</code> sử dụng các toán tử <code>==</code> và <code>!=</code> tương ứng. Khi assertion fail, các macro này in ra các đối số của chúng dùng định dạng debug, nghĩa là các giá trị được so sánh phải triển khai trait <code>PartialEq</code> và <code>Debug</code>. Tất cả các primitive type và hầu hết các type trong thư viện chuẩn đều triển khai các trait này. Với struct và enum tự định nghĩa, bạn sẽ cần triển khai <code>PartialEq</code> để khẳng định tính bằng nhau của các type đó. Bạn cũng cần triển khai <code>Debug</code> để in ra giá trị khi assertion fail. Vì cả hai trait đều là derivable trait, như đề cập ở Listing 5-12 Chương 5, điều này thường đơn giản như thêm annotation <code>#[derive(PartialEq, Debug)]</code> vào định nghĩa struct hoặc enum. Xem Phụ lục C, <a href="appendix-03-derivable-traits.html">"Derivable Traits,"</a> để biết thêm chi tiết về các trait này và các trait derivable khác.</p>
 <h3 id="adding-custom-failure-messages"><a class="header" href="#adding-custom-failure-messages">Thêm Thông Báo Fail Tùy Chỉnh</a></h3>
-<p>Bạn cũng có thể thêm thông báo tùy chỉnh để in kèm thông báo fail như các đối số tùy chọn cho macro <code>assert!</code>, <code>assert_eq!</code>, và <code>assert_ne!</code>. Bất kỳ đối số nào được chỉ định sau các đối số bắt buộc đều được chuyển tới macro <code>format!</code> (đã bàn ở phần <a href="ch08-02-strings.html#concatenating-with--or-format">"Nối chuỗi với <code>+</code> hoặc <code>format!</code>"</a> trong Chương 8), nên bạn có thể truyền một format string chứa placeholder <code>{}</code> và các giá trị để điền vào. Thông báo tùy chỉnh hữu ích để ghi lại ý nghĩa của assertion; khi test fail, bạn sẽ có ý tưởng tốt hơn về vấn đề với code là gì.</p>
-<p>Ví dụ, giả sử ta có một hàm chào người dùng theo tên và ta muốn test xem tên được truyền vào hàm có xuất hiện trong output không:</p>
+<p>Bạn cũng có thể thêm thông báo tùy chỉnh để in kèm thông báo fail như các đối số tùy chọn cho macro <code>assert!</code>, <code>assert_eq!</code>, và <code>assert_ne!</code>. Bất kỳ đối số nào được chỉ định sau các đối số bắt buộc đều được chuyển tới macro <code>format!</code> (đã bàn ở phần <a href="ch08-02-strings.html#concatenating-with--or-format">"Nối chuỗi với <code>+</code> hoặc <code>format!</code>"</a> trong Chương 8), nên bạn có thể truyền một format string chứa placeholder <code>{}</code> và các giá trị để điền vào. Thông báo tùy chỉnh hữu ích để ghi lại ý nghĩa của assertion; khi test fail, bạn sẽ có ý tưởng tốt hơn về vấn đề với mã là gì.</p>
+<p>Ví dụ, giả sử ta có một hàm chào người dùng theo tên và ta muốn test xem tên được truyền vào hàm có xuất hiện trong kết quả không:</p>
 <p><span class="filename">Tên file: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn greeting(name: &amp;str) -&gt; String {
     format!("Hello {name}!")
@@ -681,8 +681,8 @@ mod tests {
         assert!(result.contains("Carol"));
     }
 }</code></pre>
-<p>Các yêu cầu cho chương trình này vẫn chưa được thống nhất, và ta khá chắc phần chữ <code>Hello</code> ở đầu lời chào sẽ thay đổi. Ta quyết định không muốn phải cập nhật test khi yêu cầu thay đổi, nên thay vì kiểm tra tính bằng nhau chính xác với giá trị trả về từ hàm <code>greeting</code>, ta chỉ khẳng định rằng output chứa văn bản của tham số đầu vào.</p>
-<p>Bây giờ hãy nhét bug vào code bằng cách đổi <code>greeting</code> để không bao gồm <code>name</code>, để xem thông báo fail mặc định trông thế nào:</p>
+<p>Các yêu cầu cho chương trình này vẫn chưa được thống nhất, và ta khá chắc phần chữ <code>Hello</code> ở đầu lời chào sẽ thay đổi. Ta quyết định không muốn phải cập nhật test khi yêu cầu thay đổi, nên thay vì kiểm tra tính bằng nhau chính xác với giá trị trả về từ hàm <code>greeting</code>, ta chỉ khẳng định rằng kết quả chứa văn bản của tham số đầu vào.</p>
+<p>Bây giờ hãy nhét bug vào mã bằng cách đổi <code>greeting</code> để không bao gồm <code>name</code>, để xem thông báo fail mặc định trông thế nào:</p>
 <pre><code class="language-rust not_desired_behavior noplayground">pub fn greeting(name: &amp;str) -&gt; String {
     String::from("Hello!")
 }
@@ -767,8 +767,8 @@ error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>Ta thấy giá trị thực tế nhận được trong kết quả test, điều này giúp ta debug xem chuyện gì đã xảy ra thay vì điều ta kỳ vọng.</p>
 <h3 id="checking-for-panics-with-should_panic"><a class="header" href="#checking-for-panics-with-should_panic">Kiểm Tra Panic Với <code>should_panic</code></a></h3>
-<p>Ngoài việc kiểm tra giá trị trả về, điều quan trọng là phải kiểm tra rằng code của ta xử lý các điều kiện lỗi đúng như ta kỳ vọng. Ví dụ, hãy xét kiểu <code>Guess</code> mà ta đã tạo ở Chương 9, Listing 9-13. Code khác sử dụng <code>Guess</code> phụ thuộc vào đảm bảo rằng các instance <code>Guess</code> sẽ chỉ chứa các giá trị từ 1 đến 100. Ta có thể viết một test đảm bảo rằng cố gắng tạo instance <code>Guess</code> với giá trị ngoài khoảng đó sẽ gây panic.</p>
-<p>Ta làm điều này bằng cách thêm attribute <code>should_panic</code> vào hàm test. Test pass nếu code bên trong hàm gây panic; test fail nếu code bên trong không gây panic.</p>
+<p>Ngoài việc kiểm tra giá trị trả về, điều quan trọng là phải kiểm tra rằng mã của ta xử lý các điều kiện lỗi đúng như ta kỳ vọng. Ví dụ, hãy xét kiểu <code>Guess</code> mà ta đã tạo ở Chương 9, Listing 9-13. Mã khác sử dụng <code>Guess</code> phụ thuộc vào đảm bảo rằng các instance <code>Guess</code> sẽ chỉ chứa các giá trị từ 1 đến 100. Ta có thể viết một test đảm bảo rằng cố gắng tạo instance <code>Guess</code> với giá trị ngoài khoảng đó sẽ gây panic.</p>
+<p>Ta làm điều này bằng cách thêm attribute <code>should_panic</code> vào hàm test. Test pass nếu mã bên trong hàm gây panic; test fail nếu mã bên trong không gây panic.</p>
 <p>Listing 11-8 cho thấy một test kiểm tra rằng các điều kiện lỗi của <code>Guess::new</code> xảy ra khi ta kỳ vọng.</p>
 <figure class="listing" id="listing-11-8">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -816,7 +816,7 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Trông ổn! Giờ hãy nhét bug vào code bằng cách bỏ điều kiện khiến hàm <code>new</code> panic nếu giá trị lớn hơn 100:</p>
+<p>Trông ổn! Giờ hãy nhét bug vào mã bằng cách bỏ điều kiện khiến hàm <code>new</code> panic nếu giá trị lớn hơn 100:</p>
 <pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">pub struct Guess {
 </span><span class="boring">    value: i32,
 </span><span class="boring">}
@@ -863,8 +863,8 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Ta không nhận được thông báo hữu ích lắm trong trường hợp này, nhưng khi nhìn vào hàm test, ta thấy nó được đánh dấu bằng <code>#[should_panic]</code>. Việc fail có nghĩa là code trong hàm test đã không gây panic.</p>
-<p>Test dùng <code>should_panic</code> có thể không chính xác. Test <code>should_panic</code> sẽ pass ngay cả khi test panic vì lý do khác với lý do ta kỳ vọng. Để làm test <code>should_panic</code> chính xác hơn, ta có thể thêm tham số <code>expected</code> tùy chọn cho attribute <code>should_panic</code>. Test harness sẽ đảm bảo thông báo fail chứa đoạn text được cung cấp. Ví dụ, hãy xét code sửa đổi cho <code>Guess</code> ở Listing 11-9, nơi hàm <code>new</code> panic với các thông báo khác nhau tùy thuộc vào giá trị quá nhỏ hay quá lớn.</p>
+<p>Ta không nhận được thông báo hữu ích lắm trong trường hợp này, nhưng khi nhìn vào hàm test, ta thấy nó được đánh dấu bằng <code>#[should_panic]</code>. Việc fail có nghĩa là mã trong hàm test đã không gây panic.</p>
+<p>Test dùng <code>should_panic</code> có thể không chính xác. Test <code>should_panic</code> sẽ pass ngay cả khi test panic vì lý do khác với lý do ta kỳ vọng. Để làm test <code>should_panic</code> chính xác hơn, ta có thể thêm tham số <code>expected</code> tùy chọn cho attribute <code>should_panic</code>. Test harness sẽ đảm bảo thông báo fail chứa đoạn text được cung cấp. Ví dụ, hãy xét mã sửa đổi cho <code>Guess</code> ở Listing 11-9, nơi hàm <code>new</code> panic với các thông báo khác nhau tùy thuộc vào giá trị quá nhỏ hay quá lớn.</p>
 <figure class="listing" id="listing-11-9">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">pub struct Guess {
@@ -901,8 +901,8 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-9">Listing 11-9</a>: Test cho <code>panic!</code> với thông báo panic chứa một chuỗi con được chỉ định</figcaption>
 </figure>
-<p>Test này sẽ pass vì giá trị ta đặt vào tham số <code>expected</code> của attribute <code>should_panic</code> là chuỗi con của thông báo panic từ hàm <code>Guess::new</code>. Ta có thể chỉ định toàn bộ thông báo panic mà ta kỳ vọng, trong trường hợp này là <code>Guess value must be less than or equal to 100, got 200</code>. Tùy thuộc vào mức độ riêng biệt hay động của thông báo panic và mức độ chính xác bạn muốn test của mình. Trong trường hợp này, chuỗi con của thông báo panic là đủ để đảm bảo code trong hàm test thực thi nhánh <code>else if value &gt; 100</code>.</p>
-<p>Để xem chuyện gì xảy ra khi test <code>should_panic</code> với thông báo <code>expected</code> fail, hãy lại nhét bug vào code bằng cách đổi thân của khối <code>if value &lt; 1</code> và <code>else if value &gt; 100</code>:</p>
+<p>Test này sẽ pass vì giá trị ta đặt vào tham số <code>expected</code> của attribute <code>should_panic</code> là chuỗi con của thông báo panic từ hàm <code>Guess::new</code>. Ta có thể chỉ định toàn bộ thông báo panic mà ta kỳ vọng, trong trường hợp này là <code>Guess value must be less than or equal to 100, got 200</code>. Tùy thuộc vào mức độ riêng biệt hay động của thông báo panic và mức độ chính xác bạn muốn test của mình. Trong trường hợp này, chuỗi con của thông báo panic là đủ để đảm bảo mã trong hàm test thực thi nhánh <code>else if value &gt; 100</code>.</p>
+<p>Để xem chuyện gì xảy ra khi test <code>should_panic</code> với thông báo <code>expected</code> fail, hãy lại nhét bug vào mã bằng cách đổi thân của khối <code>if value &lt; 1</code> và <code>else if value &gt; 100</code>:</p>
 <pre><code class="language-rust ignore not_desired_behavior"><span class="boring">pub struct Guess {
 </span><span class="boring">    value: i32,
 </span><span class="boring">}

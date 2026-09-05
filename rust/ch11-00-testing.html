@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — Viết Test Tự Động</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch10-03-lifetime-syntax.html">← Trước</a>
@@ -208,9 +208,9 @@
 
   <h1 id="writing-automated-tests"><a class="header" href="#writing-automated-tests">Viết Test Tự Động</a></h1>
 <p>Trong bài luận năm 1972 mang tên "The Humble Programmer" (Người Lập Trình Khiêm Tốn), Edsger W. Dijkstra từng phán rằng: "kiểm thử phần mềm có thể là cách rất hiệu quả để chỉ ra sự hiện diện của bug, nhưng lại hoàn toàn bất lực trong việc chứng minh sự vắng mặt của chúng." Nhưng thôi, điều đó không có nghĩa là mình nên bỏ bê việc test — cứ test hết sức có thể thì thôi!</p>
-<p><em>Tính đúng đắn</em> (correctness) trong phần mềm là mức độ mà code của ta thực sự làm đúng điều ta muốn nó làm. Rust được thiết kế với sự quan tâm đặc biệt tới tính đúng đắn của chương trình, nhưng đúng đắn là thứ phức tạp và không dễ dàng chứng minh chút nào. Hệ thống type của Rust gánh vác một phần lớn công việc đó, nhưng type system cũng không thể bắt hết mọi thứ được. Chính vì vậy, Rust tích hợp sẵn hỗ trợ để viết test phần mềm tự động.</p>
+<p><em>Tính đúng đắn</em> (correctness) trong phần mềm là mức độ mà mã của ta thực sự làm đúng điều ta muốn nó làm. Rust được thiết kế với sự quan tâm đặc biệt tới tính đúng đắn của chương trình, nhưng đúng đắn là thứ phức tạp và không dễ dàng chứng minh chút nào. Hệ thống type của Rust gánh vác một phần lớn công việc đó, nhưng type system cũng không thể bắt hết mọi thứ được. Chính vì vậy, Rust tích hợp sẵn hỗ trợ để viết test phần mềm tự động.</p>
 <p>Giả sử ta viết một hàm <code>add_two</code> có nhiệm vụ cộng thêm 2 vào bất kỳ số nào được truyền vào. Signature của hàm nhận một số nguyên làm tham số và trả về một số nguyên. Khi ta triển khai và biên dịch hàm đó, Rust sẽ làm tất cả các bước kiểm tra type và borrow checking mà bạn đã học cho đến giờ — để đảm bảo rằng, chẳng hạn, ta không vô tình truyền một giá trị <code>String</code> hay một reference không hợp lệ vào hàm này. Nhưng Rust <em>không thể</em> kiểm tra xem hàm này có thực sự làm đúng ý ta không — tức là trả về tham số cộng 2 thay vì, say, tham số cộng 10 hay trừ 50! Đó là lúc test nhảy vào sân khấu.</p>
-<p>Ta có thể viết những test khẳng định rằng, ví dụ, khi ta truyền <code>3</code> vào hàm <code>add_two</code>, giá trị trả về phải là <code>5</code>. Ta có thể chạy những test này bất cứ lúc nào khi thay đổi code, để chắc chắn rằng các hành vi đúng đắn trước đó vẫn còn nguyên vẹn.</p>
+<p>Ta có thể viết những test khẳng định rằng, ví dụ, khi ta truyền <code>3</code> vào hàm <code>add_two</code>, giá trị trả về phải là <code>5</code>. Ta có thể chạy những test này bất cứ lúc nào khi thay đổi mã, để chắc chắn rằng các hành vi đúng đắn trước đó vẫn còn nguyên vẹn.</p>
 <p>Testing là một kỹ năng phức tạp: Dù không thể gói gọn trong một chương tất cả chi tiết về cách viết test tốt, chương này sẽ bàn về cơ chế của các tính năng testing trong Rust. Ta sẽ nói về các annotation và macro sẵn có khi viết test, về hành vi mặc định và các tùy chọn khi chạy test, và cách tổ chức test thành unit test và integration test.</p>
 
   <div class="page-nav bottom"><a href="ch10-03-lifetime-syntax.html">← Trước</a><a href="ch11-01-writing-tests.html">Tiếp →</a></div>

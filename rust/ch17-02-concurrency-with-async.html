@@ -43,7 +43,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — Áp dụng Concurrency với Async</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch17-01-futures-and-syntax.html">← Trước</a><a href="ch17-03-more-futures.html">Tiếp →</a></div>
 
@@ -105,7 +105,7 @@
   <p>Trong nhiều trường hợp, các API làm việc với concurrency dùng async rất giống với API dùng threads. Trong các trường hợp khác, chúng lại khá khác nhau. Ngay cả khi các API <em>trông</em> giống nhau giữa threads và async, chúng thường có hành vi khác nhau — và hầu như luôn có đặc tính hiệu năng khác nhau.</p>
 
   <h3 id="creating-a-new-task-with-spawn_task">Tạo Task mới với <code>spawn_task</code></h3>
-  <p>Thao tác đầu tiên chúng ta giải quyết trong phần <a href="ch16-01-threads.html#creating-a-new-thread-with-spawn">"Tạo Thread mới với <code>spawn</code>"</a> ở Chương 16 là đếm trên hai thread riêng biệt. Hãy làm điều tương tự bằng async. Crate <code>trpl</code> cung cấp hàm <code>spawn_task</code> trông rất giống API <code>thread::spawn</code>, và hàm <code>sleep</code> là phiên bản async của <code>thread::sleep</code>. Chúng ta có thể dùng chúng cùng nhau để hiện thực hóa ví dụ đếm như Listing 17-6.</p>
+  <p>Thao tác đầu tiên chúng ta giải quyết trong phần <a href="ch16-01-threads.html#creating-a-new-thread-with-spawn">"Tạo thread mới với <code>spawn</code>"</a> ở Chương 16 là đếm trên hai thread riêng biệt. Hãy làm điều tương tự bằng async. Crate <code>trpl</code> cung cấp hàm <code>spawn_task</code> trông rất giống API <code>thread::spawn</code>, và hàm <code>sleep</code> là phiên bản async của <code>thread::sleep</code>. Chúng ta có thể dùng chúng cùng nhau để hiện thực hóa ví dụ đếm như Listing 17-6.</p>
   <figure class="listing" id="listing-17-6">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">use std::time::Duration;
@@ -127,12 +127,12 @@ fn main() {
 }</code></pre>
   <figcaption><a href="#listing-17-6">Listing 17-6</a>: Tạo task mới để in một thứ trong khi task chính in thứ khác</figcaption>
   </figure>
-  <p>Làm điểm khởi đầu, chúng ta thiết lập hàm <code>main</code> với <code>trpl::block_on</code> để top-level function có thể là async.</p>
+  <p>Làm điểm khởi đầu, chúng ta thiết lập hàm <code>main</code> với <code>trpl::block_on</code> để top-cấp function có thể là async.</p>
   <section class="note" aria-role="note">
-  <p>Lưu ý: Từ điểm này trở đi trong chương, mọi ví dụ đều bao gồm đúng cùng một đoạn code bọc với <code>trpl::block_on</code> trong <code>main</code>, nên chúng ta thường bỏ qua nó giống như bỏ qua <code>main</code>. Nhớ thêm nó vào code của bạn!</p>
+  <p>Lưu ý: Từ điểm này trở đi trong chương, mọi ví dụ đều bao gồm đúng cùng một đoạn mã bọc với <code>trpl::block_on</code> trong <code>main</code>, nên chúng ta thường bỏ qua nó giống như bỏ qua <code>main</code>. Nhớ thêm nó vào mã của bạn!</p>
   </section>
-  <p>Sau đó, chúng ta viết hai vòng lặp bên trong block đó, mỗi vòng có một lời gọi <code>trpl::sleep</code> chờ nửa giây (500 milliseconds) trước khi gửi thông báo tiếp theo. Chúng ta đặt một vòng trong body của <code>trpl::spawn_task</code> và vòng kia trong vòng <code>for</code> top-level. Chúng ta cũng thêm <code>await</code> sau lời gọi <code>sleep</code>.</p>
-  <p>Code này hoạt động tương tự hiện thực dùng thread — kể cả việc bạn có thể thấy các thông báo xuất hiện theo thứ tự khác nhau trong terminal khi chạy:</p>
+  <p>Sau đó, chúng ta viết hai vòng lặp bên trong khối đó, mỗi vòng có một lời gọi <code>trpl::sleep</code> chờ nửa giây (500 milliseconds) trước khi gửi thông báo tiếp theo. Chúng ta đặt một vòng trong body của <code>trpl::spawn_task</code> và vòng kia trong vòng <code>for</code> top-cấp. Chúng ta cũng thêm <code>await</code> sau lời gọi <code>sleep</code>.</p>
+  <p>Mã này hoạt động tương tự hiện thực dùng thread — kể cả việc bạn có thể thấy các thông báo xuất hiện theo thứ tự khác nhau trong terminal khi chạy:</p>
   <pre><code class="language-text">hi number 1 from the second task!
 hi number 1 from the first task!
 hi number 2 from the first task!
@@ -143,7 +143,7 @@ hi number 4 from the first task!
 hi number 4 from the second task!
 hi number 5 from the first task!
 </code></pre>
-  <p>Phiên bản này dừng lại ngay khi vòng <code>for</code> trong body của async block chính hoàn thành, vì task được spawn bởi <code>spawn_task</code> bị tắt khi hàm <code>main</code> kết thúc. Nếu bạn muốn nó chạy hết đến khi task hoàn thành, cần dùng join handle để đợi task đầu tiên hoàn thành. Với threads, chúng ta dùng method <code>join</code> để "block" cho đến khi thread xong. Trong Listing 17-7, chúng ta có thể dùng <code>await</code> để làm điều tương tự, vì task handle bản thân nó là một future. Kiểu <code>Output</code> của nó là <code>Result</code>, nên chúng ta cũng unwrap sau khi await.</p>
+  <p>Phiên bản này dừng lại ngay khi vòng <code>for</code> trong body của khối async chính hoàn thành, vì task được spawn bởi <code>spawn_task</code> bị tắt khi hàm <code>main</code> kết thúc. Nếu bạn muốn nó chạy hết đến khi task hoàn thành, cần dùng join handle để đợi task đầu tiên hoàn thành. Với threads, chúng ta dùng method <code>join</code> để "khối" cho đến khi thread xong. Trong Listing 17-7, chúng ta có thể dùng <code>await</code> để làm điều tương tự, vì task handle bản thân nó là một future. Kiểu <code>Output</code> của nó là <code>Result</code>, nên chúng ta cũng unwrap sau khi await.</p>
   <figure class="listing" id="listing-17-7">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">        let handle = trpl::spawn_task(async {
@@ -177,8 +177,8 @@ hi number 8 from the first task!
 hi number 9 from the first task!
 </code></pre>
   <p>Cho đến giờ, async và threads có vẻ cho kết quả tương tự, chỉ khác cú pháp: dùng <code>await</code> thay vì gọi <code>join</code> trên join handle, và await các lời gọi <code>sleep</code>.</p>
-  <p>Điểm khác biệt lớn hơn là chúng ta không cần spawn thêm OS thread để làm điều này. Thực ra, chúng ta thậm chí không cần spawn task. Vì async blocks biên dịch thành anonymous futures, chúng ta có thể đặt mỗi vòng lặp trong một async block và để runtime chạy cả hai đến completion bằng hàm <code>trpl::join</code>.</p>
-  <p>Ở phần <a href="ch16-01-threads.html#waiting-for-all-threads-to-finish">"Chờ Tất Cả Threads Hoàn Thành"</a> trong Chương 16, chúng ta đã thấy cách dùng method <code>join</code> trên kiểu <code>JoinHandle</code> trả về khi gọi <code>std::thread::spawn</code>. Hàm <code>trpl::join</code> tương tự, nhưng cho futures. Khi bạn truyền vào hai futures, nó tạo ra một future mới duy nhất có output là một tuple chứa output của mỗi future sau khi <em>cả hai</em> hoàn thành. Vì vậy, trong Listing 17-8, chúng ta dùng <code>trpl::join</code> để đợi cả <code>fut1</code> và <code>fut2</code> xong. Chúng ta <em>không</em> await <code>fut1</code> hay <code>fut2</code> riêng lẻ, mà await future mới được tạo bởi <code>trpl::join</code>. Chúng ta bỏ qua output vì nó chỉ là tuple chứa hai giá trị unit.</p>
+  <p>Điểm khác biệt lớn hơn là chúng ta không cần spawn thêm OS thread để làm điều này. Thực ra, chúng ta thậm chí không cần spawn task. Vì khối async biên dịch thành anonymous futures, chúng ta có thể đặt mỗi vòng lặp trong một khối async và để runtime chạy cả hai đến completion bằng hàm <code>trpl::join</code>.</p>
+  <p>Ở phần <a href="ch16-01-threads.html#waiting-for-all-threads-to-finish">“Chờ Tất Cả thread Kết Thúc”</a> trong Chương 16, chúng ta đã thấy cách dùng method <code>join</code> trên kiểu <code>JoinHandle</code> trả về khi gọi <code>std::thread::spawn</code>. Hàm <code>trpl::join</code> tương tự, nhưng cho futures. Khi bạn truyền vào hai future, nó tạo ra một future mới duy nhất có kết quả là một tuple chứa kết quả của mỗi future sau khi <em>cả hai</em> hoàn thành. Vì vậy, trong Listing 17-8, chúng ta dùng <code>trpl::join</code> để đợi cả <code>fut1</code> và <code>fut2</code> xong. Chúng ta <em>không</em> await <code>fut1</code> hay <code>fut2</code> riêng lẻ, mà await future mới được tạo bởi <code>trpl::join</code>. Chúng ta bỏ qua kết quả vì nó chỉ là tuple chứa hai giá trị unit.</p>
   <figure class="listing" id="listing-17-8">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">        let fut1 = async {
@@ -196,9 +196,9 @@ hi number 9 from the first task!
         };
 
         trpl::join(fut1, fut2).await;</code></pre>
-  <figcaption><a href="#listing-17-8">Listing 17-8</a>: Dùng <code>trpl::join</code> để await hai anonymous futures</figcaption>
+  <figcaption><a href="#listing-17-8">Listing 17-8</a>: Dùng <code>trpl::join</code> để await hai future ẩn danh</figcaption>
   </figure>
-  <p>Khi chạy code này, chúng ta thấy cả hai futures chạy đến completion:</p>
+  <p>Khi chạy mã này, chúng ta thấy cả hai future chạy đến completion:</p>
   <pre><code class="language-text">hi number 1 from the first task!
 hi number 1 from the second task!
 hi number 2 from the first task!
@@ -216,13 +216,13 @@ hi number 9 from the first task!
   <p>Giờ bạn sẽ thấy đúng cùng một thứ tự mỗi lần, rất khác so với những gì chúng ta thấy với threads và với <code>trpl::spawn_task</code> ở Listing 17-7. Đó là vì hàm <code>trpl::join</code> là <em>fair</em> (công bằng), nghĩa là nó kiểm tra mỗi future với tần suất ngang nhau, xen kẽ giữa chúng, không bao giờ để cái này bứt tốc nếu cái kia đang sẵn sàng. Với threads, hệ điều hành quyết định thread nào kiểm tra và chạy bao lâu. Với async Rust, runtime quyết định task nào kiểm tra. (Trên thực tế, chi tiết có phức tạp hơn vì async runtime có thể dùng OS threads bên dưới như một phần quản lý concurrency, nên đảm bảo fairness có thể đòi hỏi nhiều công hơn với runtime — nhưng vẫn có thể làm được!) Runtimes không cần phải đảm bảo fairness cho bất kỳ thao tác nào, và chúng thường cung cấp các API khác nhau để bạn chọn muốn hay không muốn fairness.</p>
   <p>Hãy thử một số biến thể sau về cách await futures và xem chúng làm gì:</p>
   <ul>
-  <li>Bỏ async block xung quanh một hoặc cả hai vòng lặp.</li>
-  <li>Await ngay mỗi async block ngay sau khi định nghĩa nó.</li>
-  <li>Chỉ bọc vòng lặp đầu tiên trong async block, và await future kết quả sau body của vòng lặp thứ hai.</li>
+  <li>Bỏ khối async xung quanh một hoặc cả hai vòng lặp.</li>
+  <li>Await ngay mỗi khối async ngay sau khi định nghĩa nó.</li>
+  <li>Chỉ bọc vòng lặp đầu tiên trong khối async, và await future kết quả sau body của vòng lặp thứ hai.</li>
   </ul>
-  <p>Thêm một thử thách: hãy cố đoán output sẽ là gì trong mỗi trường hợp <em>trước khi</em> chạy code!</p>
+  <p>Thêm một thử thách: hãy cố đoán kết quả sẽ là gì trong mỗi trường hợp <em>trước khi</em> chạy mã!</p>
 
-  <h3 id="sending-data-between-two-tasks-using-message-passing">Gửi Dữ liệu Giữa Hai Tasks bằng Message Passing</h3>
+  <h3 id="sending-data-between-two-tasks-using-message-passing">Gửi Dữ liệu Giữa Hai task bằng Message Passing</h3>
 
   <figure style="margin:24px 0;text-align:center">
     <svg width="580" viewBox="0 0 580 160" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:10px;background:#1e1e2e;padding:20px 16px">
@@ -262,7 +262,7 @@ hi number 9 from the first task!
     <figcaption>Async channel: <code>tx.send()</code> chuyển ownership qua channel, <code>rx.next().await</code> nhận từng message bất đồng bộ</figcaption>
   </figure>
 
-  <p>Chia sẻ dữ liệu giữa các futures cũng sẽ quen thuộc: chúng ta dùng message passing lại, nhưng lần này với phiên bản async của các kiểu và hàm. Chúng ta sẽ đi theo con đường hơi khác so với phần <a href="ch16-02-message-passing.html">"Truyền Dữ liệu Giữa Threads với Message Passing"</a> trong Chương 16, để minh họa một số điểm khác biệt chính giữa concurrency dựa trên threads và concurrency dựa trên futures. Trong Listing 17-9, chúng ta bắt đầu chỉ với một async block duy nhất — <em>không</em> spawn task riêng như đã spawn thread riêng.</p>
+  <p>Chia sẻ dữ liệu giữa các future cũng sẽ quen thuộc: chúng ta dùng message passing lại, nhưng lần này với phiên bản async của các kiểu và hàm. Chúng ta sẽ đi theo con đường hơi khác so với phần <a href="ch16-02-message-passing.html">"Truyền Dữ liệu Giữa Threads với Message Passing"</a> trong Chương 16, để minh họa một số điểm khác biệt chính giữa concurrency dựa trên threads và concurrency dựa trên futures. Trong Listing 17-9, chúng ta bắt đầu chỉ với một khối async duy nhất — <em>không</em> spawn task riêng như đã spawn thread riêng.</p>
   <figure class="listing" id="listing-17-9">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">        let (tx, mut rx) = trpl::channel();
@@ -275,9 +275,9 @@ hi number 9 from the first task!
   <figcaption><a href="#listing-17-9">Listing 17-9</a>: Tạo async channel và gán hai nửa cho <code>tx</code> và <code>rx</code></figcaption>
   </figure>
   <p>Ở đây chúng ta dùng <code>trpl::channel</code>, phiên bản async của API channel multiple-producer, single-consumer mà chúng ta dùng với threads ở Chương 16. Phiên bản async chỉ khác một chút: nó dùng receiver mutable thay vì immutable <code>rx</code>, và method <code>recv</code> của nó tạo ra một future chúng ta cần await thay vì trả về giá trị trực tiếp. Giờ chúng ta có thể gửi thông báo từ sender đến receiver. Chú ý rằng chúng ta không cần spawn thread riêng hay thậm chí task — chỉ cần await lời gọi <code>rx.recv</code>.</p>
-  <p>Method <code>Receiver::recv</code> đồng bộ trong <code>std::mpsc::channel</code> block cho đến khi nhận được thông báo. Method <code>trpl::Receiver::recv</code> thì không, vì nó là async. Thay vì block, nó trả control lại cho runtime cho đến khi nhận được thông báo hoặc bên gửi của channel đóng lại. Ngược lại, chúng ta không await lời gọi <code>send</code> vì nó không block. Nó không cần phải vì channel chúng ta gửi vào là unbounded.</p>
+  <p>Method <code>Receiver::recv</code> đồng bộ trong <code>std::mpsc::channel</code> khối cho đến khi nhận được thông báo. Method <code>trpl::Receiver::recv</code> thì không, vì nó là async. Thay vì khối, nó trả control lại cho runtime cho đến khi nhận được thông báo hoặc bên gửi của channel đóng lại. Ngược lại, chúng ta không await lời gọi <code>send</code> vì nó không khối. Nó không cần phải vì channel chúng ta gửi vào là unbounded.</p>
   <section class="note" aria-role="note">
-  <p>Lưu ý: Vì tất cả code async này chạy trong một async block trong lời gọi <code>trpl::block_on</code>, mọi thứ bên trong nó có thể tránh block. Tuy nhiên, code <em>bên ngoài</em> nó sẽ block trên hàm <code>block_on</code> trả về. Đó chính là mục đích của hàm <code>trpl::block_on</code>: nó để bạn <em>chọn</em> nơi block trên một tập code async, và từ đó chuyển đổi giữa code đồng bộ và bất đồng bộ.</p>
+  <p>Lưu ý: Vì tất cả mã async này chạy trong một khối async trong lời gọi <code>trpl::block_on</code>, mọi thứ bên trong nó có thể tránh khối. Tuy nhiên, mã <em>bên ngoài</em> nó sẽ khối trên hàm <code>block_on</code> trả về. Đó chính là mục đích của hàm <code>trpl::block_on</code>: nó để bạn <em>chọn</em> nơi khối trên một tập mã async, và từ đó chuyển đổi giữa mã đồng bộ và bất đồng bộ.</p>
   </section>
   <p>Chú ý hai điều về ví dụ này. Thứ nhất, thông báo sẽ đến ngay lập tức. Thứ hai, dù chúng ta dùng future ở đây, vẫn chưa có concurrency. Mọi thứ trong listing xảy ra tuần tự, giống như khi không có futures nào cả.</p>
   <p>Hãy giải quyết phần đầu bằng cách gửi một loạt thông báo và ngủ giữa chừng, như Listing 17-10.</p>
@@ -306,12 +306,12 @@ hi number 9 from the first task!
   <p>Trong Listing 16-10, chúng ta dùng vòng <code>for</code> để xử lý tất cả các item nhận được từ channel đồng bộ. Tuy nhiên Rust chưa có cách dùng vòng <code>for</code> với chuỗi item được tạo ra <em>bất đồng bộ</em>, nên chúng ta cần dùng vòng lặp chưa gặp: vòng <code>while let</code>. Đây là phiên bản vòng lặp của cấu trúc <code>if let</code> ở phần <a href="ch06-03-if-let.html">"Control Flow Súc tích với <code>if let</code> và <code>let...else</code>"</a> trong Chương 6. Vòng lặp sẽ tiếp tục thực thi miễn là pattern nó chỉ định tiếp tục khớp với giá trị.</p>
   <p>Lời gọi <code>rx.recv</code> tạo ra một future mà chúng ta await. Runtime sẽ tạm dừng future đó cho đến khi sẵn sàng. Khi thông báo đến, future sẽ resolve thành <code>Some(message)</code> mỗi lần có thông báo đến. Khi channel đóng, bất kể đã đến bao nhiêu thông báo, future sẽ resolve thành <code>None</code> để báo không còn giá trị nào nữa và chúng ta nên dừng polling — tức là dừng awaiting.</p>
   <p>Vòng <code>while let</code> kết hợp tất cả điều này lại. Nếu kết quả của <code>rx.recv().await</code> là <code>Some(message)</code>, chúng ta truy cập thông báo và có thể dùng nó trong body vòng lặp, giống như với <code>if let</code>. Nếu kết quả là <code>None</code>, vòng lặp kết thúc. Mỗi lần vòng lặp hoàn thành, nó lại đến await point, nên runtime tạm dừng nó lại cho đến khi thông báo khác đến.</p>
-  <p>Code giờ đây gửi và nhận thành công tất cả thông báo. Tiếc là vẫn còn vài vấn đề. Một là, các thông báo không đến theo khoảng cách nửa giây. Chúng đến cùng một lúc, 2 giây sau khi chúng ta khởi động chương trình. Hai là, chương trình cũng không bao giờ thoát! Thay vào đó, nó chờ mãi cho thông báo mới. Bạn cần tắt bằng <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
+  <p>Mã giờ đây gửi và nhận thành công tất cả thông báo. Tiếc là vẫn còn vài vấn đề. Một là, các thông báo không đến theo khoảng cách nửa giây. Chúng đến cùng một lúc, 2 giây sau khi chúng ta khởi động chương trình. Hai là, chương trình cũng không bao giờ thoát! Thay vào đó, nó chờ mãi cho thông báo mới. Bạn cần tắt bằng <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
 
-  <h4 id="code-within-one-async-block-executes-linearly">Code trong Một Async Block Chạy Tuần Tự</h4>
-  <p>Hãy bắt đầu bằng cách tìm hiểu tại sao các thông báo đến cùng lúc sau toàn bộ thời gian delay, thay vì đến với khoảng cách giữa mỗi thông báo. Trong một async block nhất định, thứ tự xuất hiện của từ khóa <code>await</code> trong code cũng là thứ tự chúng được thực thi khi chương trình chạy.</p>
-  <p>Chỉ có một async block trong Listing 17-10, nên mọi thứ trong đó chạy tuần tự. Vẫn chưa có concurrency. Tất cả lời gọi <code>tx.send</code> xảy ra, xen kẽ với tất cả lời gọi <code>trpl::sleep</code> và các await point liên quan. Chỉ sau đó vòng <code>while let</code> mới xử lý các await point trên lời gọi <code>recv</code>.</p>
-  <p>Để có hành vi mong muốn — delay ngủ xảy ra giữa mỗi thông báo — chúng ta cần đặt các thao tác <code>tx</code> và <code>rx</code> trong các async block riêng của chúng, như Listing 17-11. Runtime khi đó có thể thực thi từng cái riêng lẻ bằng <code>trpl::join</code>, giống như trong Listing 17-8. Một lần nữa, chúng ta await kết quả của việc gọi <code>trpl::join</code>, không phải các futures riêng lẻ. Nếu await các futures riêng lẻ theo thứ tự, chúng ta sẽ trở lại luồng tuần tự — chính xác điều chúng ta đang <em>không</em> muốn.</p>
+  <h4 id="code-within-one-async-block-executes-linearly">Mã trong Một Khối async Chạy Tuần Tự</h4>
+  <p>Hãy bắt đầu bằng cách tìm hiểu tại sao các thông báo đến cùng lúc sau toàn bộ thời gian delay, thay vì đến với khoảng cách giữa mỗi thông báo. Trong một khối async nhất định, thứ tự xuất hiện của từ khóa <code>await</code> trong mã cũng là thứ tự chúng được thực thi khi chương trình chạy.</p>
+  <p>Chỉ có một khối async trong Listing 17-10, nên mọi thứ trong đó chạy tuần tự. Vẫn chưa có concurrency. Tất cả lời gọi <code>tx.send</code> xảy ra, xen kẽ với tất cả lời gọi <code>trpl::sleep</code> và các await point liên quan. Chỉ sau đó vòng <code>while let</code> mới xử lý các await point trên lời gọi <code>recv</code>.</p>
+  <p>Để có hành vi mong muốn — delay ngủ xảy ra giữa mỗi thông báo — chúng ta cần đặt các thao tác <code>tx</code> và <code>rx</code> trong các khối async riêng của chúng, như Listing 17-11. Runtime khi đó có thể thực thi từng cái riêng lẻ bằng <code>trpl::join</code>, giống như trong Listing 17-8. Một lần nữa, chúng ta await kết quả của việc gọi <code>trpl::join</code>, không phải các future riêng lẻ. Nếu await các future riêng lẻ theo thứ tự, chúng ta sẽ trở lại luồng tuần tự — chính xác điều chúng ta đang <em>không</em> muốn.</p>
   <figure class="listing" id="listing-17-11">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre><code class="language-rust ignore">        let tx_fut = async {
@@ -335,35 +335,35 @@ hi number 9 from the first task!
         };
 
         trpl::join(tx_fut, rx_fut).await;</code></pre>
-  <figcaption><a href="#listing-17-11">Listing 17-11</a>: Tách <code>send</code> và <code>recv</code> vào các <code>async</code> block riêng và await futures của chúng</figcaption>
+  <figcaption><a href="#listing-17-11">Listing 17-11</a>: Tách <code>send</code> và <code>recv</code> vào các <code>async</code> khối riêng và await futures của chúng</figcaption>
   </figure>
-  <p>Với code cập nhật trong Listing 17-11, các thông báo được in ra theo khoảng cách 500 milliseconds, thay vì ào đến sau 2 giây.</p>
+  <p>Với mã cập nhật trong Listing 17-11, các thông báo được in ra theo khoảng cách 500 milliseconds, thay vì ào đến sau 2 giây.</p>
 
-  <h4 id="moving-ownership-into-an-async-block">Di chuyển Ownership vào Async Block</h4>
+  <h4 id="moving-ownership-into-an-async-block">Di chuyển Ownership vào Khối async</h4>
   <p>Chương trình vẫn không bao giờ thoát, vì cách vòng <code>while let</code> tương tác với <code>trpl::join</code>:</p>
   <ul>
-  <li>Future trả về từ <code>trpl::join</code> chỉ hoàn thành khi <em>cả hai</em> futures truyền vào đã hoàn thành.</li>
+  <li>Future trả về từ <code>trpl::join</code> chỉ hoàn thành khi <em>cả hai</em> future truyền vào đã hoàn thành.</li>
   <li>Future <code>tx_fut</code> hoàn thành khi nó ngủ xong sau khi gửi thông báo cuối cùng trong <code>vals</code>.</li>
   <li>Future <code>rx_fut</code> sẽ không hoàn thành cho đến khi vòng <code>while let</code> kết thúc.</li>
   <li>Vòng <code>while let</code> sẽ không kết thúc cho đến khi await <code>rx.recv</code> trả về <code>None</code>.</li>
   <li>Await <code>rx.recv</code> chỉ trả về <code>None</code> khi đầu kia của channel đóng lại.</li>
   <li>Channel chỉ đóng nếu chúng ta gọi <code>rx.close</code> hoặc khi bên gửi, <code>tx</code>, bị drop.</li>
-  <li>Chúng ta không gọi <code>rx.close</code> ở đâu, và <code>tx</code> sẽ không bị drop cho đến khi async block ngoài cùng truyền vào <code>trpl::block_on</code> kết thúc.</li>
-  <li>Block đó không thể kết thúc vì nó đang bị block trên <code>trpl::join</code> hoàn thành, đưa chúng ta trở lại đầu danh sách này.</li>
+  <li>Chúng ta không gọi <code>rx.close</code> ở đâu, và <code>tx</code> sẽ không bị drop cho đến khi khối async ngoài cùng truyền vào <code>trpl::block_on</code> kết thúc.</li>
+  <li>Khối đó không thể kết thúc vì nó đang bị khối trên <code>trpl::join</code> hoàn thành, đưa chúng ta trở lại đầu danh sách này.</li>
   </ul>
-  <p>Hiện tại, async block gửi thông báo chỉ <em>borrow</em> <code>tx</code> vì gửi thông báo không cần ownership. Nhưng nếu chúng ta có thể <em>move</em> <code>tx</code> vào async block đó, nó sẽ bị drop khi block kết thúc. Ở phần <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">"Capturing References or Moving Ownership"</a> trong Chương 13, bạn đã học dùng từ khóa <code>move</code> với closures, và như đã thảo luận ở phần <a href="ch16-01-threads.html#using-move-closures-with-threads">"Dùng <code>move</code> Closures với Threads"</a> trong Chương 16, chúng ta thường cần move dữ liệu vào closures khi làm việc với threads. Cùng động lực cơ bản áp dụng cho async blocks, vì vậy từ khóa <code>move</code> hoạt động với async blocks giống như với closures.</p>
-  <p>Trong Listing 17-12, chúng ta thay đổi block dùng để gửi thông báo từ <code>async</code> thành <code>async move</code>.</p>
+  <p>Hiện tại, khối async gửi thông báo chỉ <em>borrow</em> <code>tx</code> vì gửi thông báo không cần ownership. Nhưng nếu chúng ta có thể <em>move</em> <code>tx</code> vào khối async đó, nó sẽ bị drop khi khối kết thúc. Ở phần <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Bắt giữ References hoặc chuyển ownership”</a> trong Chương 13, bạn đã học dùng từ khóa <code>move</code> với closures, và như đã thảo luận ở phần <a href="ch16-01-threads.html#using-move-closures-with-threads">"Dùng <code>move</code> Closures với Threads"</a> trong Chương 16, chúng ta thường cần move dữ liệu vào closures khi làm việc với threads. Cùng động lực cơ bản áp dụng cho khối async, vì vậy từ khóa <code>move</code> hoạt động với khối async giống như với closures.</p>
+  <p>Trong Listing 17-12, chúng ta thay đổi khối dùng để gửi thông báo từ <code>async</code> thành <code>async move</code>.</p>
   <figure class="listing" id="listing-17-12">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">        let tx_fut = async move {
             // --snip--
         };</code></pre>
-  <figcaption><a href="#listing-17-12">Listing 17-12</a>: Phiên bản sửa đổi của code từ Listing 17-11, tắt đúng cách khi hoàn thành</figcaption>
+  <figcaption><a href="#listing-17-12">Listing 17-12</a>: Phiên bản sửa đổi của mã từ Listing 17-11, tắt đúng cách khi hoàn thành</figcaption>
   </figure>
-  <p>Khi chạy phiên bản <em>này</em> của code, nó tắt graceful sau khi thông báo cuối cùng được gửi và nhận. Tiếp theo, hãy xem cần thay đổi gì để gửi dữ liệu từ nhiều future hơn.</p>
+  <p>Khi chạy phiên bản <em>này</em> của mã, nó tắt graceful sau khi thông báo cuối cùng được gửi và nhận. Tiếp theo, hãy xem cần thay đổi gì để gửi dữ liệu từ nhiều future hơn.</p>
 
-  <h4 id="joining-a-number-of-futures-with-the-join-macro">Join Nhiều Futures với Macro <code>join!</code></h4>
-  <p>Async channel này cũng là channel multiple-producer, nên chúng ta có thể <code>clone</code> <code>tx</code> nếu muốn gửi thông báo từ nhiều futures, như Listing 17-13.</p>
+  <h4 id="joining-a-number-of-futures-with-the-join-macro">Join Nhiều future với Macro <code>join!</code></h4>
+  <p>Async channel này cũng là channel multiple-producer, nên chúng ta có thể <code>clone</code> <code>tx</code> nếu muốn gửi thông báo từ nhiều future, như Listing 17-13.</p>
   <figure class="listing" id="listing-17-13">
   <span class="file-name">Tên file: src/main.rs</span>
   <pre class="playground"><code class="language-rust edition2024">        let (tx, mut rx) = trpl::channel();
@@ -404,12 +404,12 @@ hi number 9 from the first task!
         };
 
         trpl::join!(tx1_fut, tx_fut, rx_fut);</code></pre>
-  <figcaption><a href="#listing-17-13">Listing 17-13</a>: Dùng multiple producers với async blocks</figcaption>
+  <figcaption><a href="#listing-17-13">Listing 17-13</a>: Dùng multiple producers với khối async</figcaption>
   </figure>
-  <p>Đầu tiên, chúng ta clone <code>tx</code>, tạo ra <code>tx1</code> bên ngoài async block đầu tiên. Chúng ta move <code>tx1</code> vào block đó giống như đã làm với <code>tx</code> trước đây. Sau đó, chúng ta move <code>tx</code> gốc vào một async block <em>mới</em>, nơi gửi thêm thông báo với delay chậm hơn một chút. Chúng ta đặt async block mới này sau async block nhận thông báo, nhưng nó có thể đặt trước cũng được. Điều quan trọng là thứ tự các futures được await, không phải thứ tự chúng được tạo.</p>
-  <p>Cả hai async block gửi thông báo đều cần là <code>async move</code> blocks để cả <code>tx</code> và <code>tx1</code> đều bị drop khi các block đó hoàn thành. Nếu không, chúng ta sẽ rơi lại vào vòng lặp vô tận như lúc đầu.</p>
+  <p>Đầu tiên, chúng ta clone <code>tx</code>, tạo ra <code>tx1</code> bên ngoài khối async đầu tiên. Chúng ta move <code>tx1</code> vào khối đó giống như đã làm với <code>tx</code> trước đây. Sau đó, chúng ta move <code>tx</code> gốc vào một khối async <em>mới</em>, nơi gửi thêm thông báo với delay chậm hơn một chút. Chúng ta đặt khối async mới này sau khối async nhận thông báo, nhưng nó có thể đặt trước cũng được. Điều quan trọng là thứ tự các future được await, không phải thứ tự chúng được tạo.</p>
+  <p>Cả hai khối async gửi thông báo đều cần là <code>async move</code> khối để cả <code>tx</code> và <code>tx1</code> đều bị drop khi các khối đó hoàn thành. Nếu không, chúng ta sẽ rơi lại vào vòng lặp vô tận như lúc đầu.</p>
   <p>Cuối cùng, chúng ta chuyển từ <code>trpl::join</code> sang <code>trpl::join!</code> để xử lý future bổ sung: macro <code>join!</code> await số lượng tùy ý futures khi chúng ta biết số lượng futures tại compile time. Chúng ta sẽ thảo luận về việc await một tập hợp số lượng futures không biết trước ở phần sau của chương.</p>
-  <p>Giờ chúng ta thấy tất cả thông báo từ cả hai futures gửi, và vì các futures gửi dùng delay hơi khác nhau sau khi gửi, các thông báo cũng được nhận theo khoảng cách khác nhau đó:</p>
+  <p>Giờ chúng ta thấy tất cả thông báo từ cả hai future gửi, và vì các future gửi dùng delay hơi khác nhau sau khi gửi, các thông báo cũng được nhận theo khoảng cách khác nhau đó:</p>
   <pre><code class="language-text">received 'hi'
 received 'more'
 received 'from'
@@ -419,7 +419,7 @@ received 'future'
 received 'for'
 received 'you'
 </code></pre>
-  <p>Chúng ta đã khám phá cách dùng message passing để gửi dữ liệu giữa các futures, cách code trong async block chạy tuần tự, cách move ownership vào async block, và cách join nhiều futures. Tiếp theo, hãy thảo luận về cách và lý do tại sao chúng ta nên báo cho runtime biết nó có thể chuyển sang task khác.</p>
+  <p>Chúng ta đã khám phá cách dùng message passing để gửi dữ liệu giữa các future, cách mã trong khối async chạy tuần tự, cách move ownership vào khối async, và cách join nhiều future. Tiếp theo, hãy thảo luận về cách và lý do tại sao chúng ta nên báo cho runtime biết nó có thể chuyển sang task khác.</p>
 
   <div class="page-nav bottom"><a href="ch17-01-futures-and-syntax.html">← Trước</a><a href="ch17-03-more-futures.html">Tiếp →</a></div>
   </div>

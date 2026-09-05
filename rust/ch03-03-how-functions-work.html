@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — Hàm</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch03-02-data-types.html">← Trước</a>
@@ -265,7 +265,7 @@ The value of x is: 5
 
   <p>Khai báo của <code>another_function</code> có một tham số tên <code>x</code>. Kiểu của <code>x</code> được xác định là <code>i32</code>. Khi chúng ta truyền <code>5</code> vào <code>another_function</code>, macro <code>println!</code> đặt số <code>5</code> vào vị trí cặp ngoặc nhọn chứa <code>x</code> trong chuỗi định dạng.</p>
 
-  <p>Trong chữ ký của hàm, bạn <em>bắt buộc</em> phải khai báo kiểu của từng tham số. Đây là một quyết định có chủ ý trong thiết kế của Rust: Yêu cầu chú thích kiểu dữ liệu trong định nghĩa hàm có nghĩa là trình biên dịch gần như không bao giờ yêu cầu bạn sử dụng chúng ở những nơi khác trong code để tìm ra loại kiểu dữ liệu mà bạn muốn sử dụng. Trình biên dịch cũng có thể đưa ra các thông báo lỗi hữu ích hơn nếu nó biết hàm mong đợi các kiểu dữ liệu nào.</p>
+  <p>Trong chữ ký của hàm, bạn <em>bắt buộc</em> phải khai báo kiểu của từng tham số. Đây là một quyết định có chủ ý trong thiết kế của Rust: Yêu cầu chú thích kiểu dữ liệu trong định nghĩa hàm có nghĩa là trình biên dịch gần như không bao giờ yêu cầu bạn sử dụng chúng ở những nơi khác trong mã để tìm ra loại kiểu dữ liệu mà bạn muốn sử dụng. Trình biên dịch cũng có thể đưa ra các thông báo lỗi hữu ích hơn nếu nó biết hàm mong đợi các kiểu dữ liệu nào.</p>
 
   <p>Khi khai báo nhiều tham số, hãy dùng dấu phẩy để phân cách chúng, như sau:</p>
 
@@ -353,7 +353,7 @@ error: could not compile `functions` (bin "functions") due to 1 previous error; 
 
   <p>Câu lệnh <code>let y = 6</code> không trả về một giá trị, vì vậy không có gì để biến <code>x</code> gán cả. Điều này khác biệt so với những gì xảy ra ở các ngôn ngữ khác, như C và Ruby, nơi phép gán trả về của phép gán đó. Trong những ngôn ngữ đó, bạn có thể viết <code>x = y = 6</code> và có cả <code>x</code> lẫn <code>y</code> đều bằng giá trị là <code>6</code>; nhưng Rust thì không như thế.</p>
 
-  <p>Các biểu thức tính toán thành một giá trị chiếm phần lớn của các đoạn code tiếp theo mà bạn sẽ viết bằng ngôn ngữ Rust. Hãy xem xét một phép toán, ví dụ như <code>5 + 6</code>, mà biểu thức này trả về giá trị <code>11</code>. Biểu thức có thể làm một phần của câu lệnh: Trong Listing 3-1, con số <code>6</code> trong ví dụ <code>let y = 6;</code> là một biểu thức trả về giá trị <code>6</code>. Gọi hàm cũng là một biểu thức. Gọi macro cũng là một biểu thức. Một khối phạm vi mới được tạo bằng dấu ngoặc nhọn là một biểu thức, lấy ví dụ sau:</p>
+  <p>Các biểu thức tính toán thành một giá trị chiếm phần lớn của các đoạn mã tiếp theo mà bạn sẽ viết bằng ngôn ngữ Rust. Hãy xem xét một phép toán, ví dụ như <code>5 + 6</code>, mà biểu thức này trả về giá trị <code>11</code>. Biểu thức có thể làm một phần của câu lệnh: Trong Listing 3-1, con số <code>6</code> trong ví dụ <code>let y = 6;</code> là một biểu thức trả về giá trị <code>6</code>. Gọi hàm cũng là một biểu thức. Gọi macro cũng là một biểu thức. Một khối phạm vi mới được tạo bằng dấu ngoặc nhọn là một biểu thức, lấy ví dụ sau:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -419,7 +419,7 @@ fn plus_one(x: i32) -&gt; i32 {
     x + 1
 }</code></pre>
 
-  <p>Nếu bạn thực thi code này thì giá trị in ra sẽ là <code>The value of x is: 6</code>. Vậy khi ta đưa về cùng một kí tự ngắt khi dấu chấm phẩy thay vào cuối thay vì để <code>x + 1</code> thì có ra biểu thức rồi hay trở thành dạng câu lệnh luôn nha?</p>
+  <p>Nếu bạn thực thi mã này thì giá trị in ra sẽ là <code>The value of x is: 6</code>. Vậy khi ta đưa về cùng một kí tự ngắt khi dấu chấm phẩy thay vào cuối thay vì để <code>x + 1</code> thì có ra biểu thức rồi hay trở thành dạng câu lệnh luôn nha?</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -433,7 +433,7 @@ fn plus_one(x: i32) -&gt; i32 {
     x + 1;
 }</code></pre>
 
-  <p>Nếu bạn biên soạn theo code đó thì một thông điệp như phía trên sẽ báo lỗi:</p>
+  <p>Nếu bạn biên soạn theo mã đó thì một thông điệp như phía trên sẽ báo lỗi:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
@@ -451,7 +451,7 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `functions` (bin "functions") due to 1 previous error
 </code></pre>
 
-  <p>Dòng thông báo sự chênh lệch sẽ biểu hiện như, <code>mismatched types</code>, trong bản thông báo khi xảy ra sự cố do code này đưa ra. Dù nó sẽ trở lại thành i32. Một khi phần xác định tại câu lệnh trong phạm vi như thế kia thì có điều là sẽ không định cho một giá trị trở lại khi trong <code>()</code> còn là tên unit type. Cũng vậy không những tại trường một khi trở thành phần thông báo lỗi và đã thành một câu lệnh. Một số giải thích thêm về sửa đi những vấn đề do nó đem lại được hiển thị cho là nó thì ta hãy bỏ bớt nó đi, như là bỏ một phần đi nhé có dấu phẩy rồi và loại thì đi, và sau khi bỏ dấu câu đó chúng mình lại sửa được luôn cơ.</p>
+  <p>Dòng thông báo sự chênh lệch sẽ biểu hiện như, <code>mismatched types</code>, trong bản thông báo khi xảy ra sự cố do mã này đưa ra. Dù nó sẽ trở lại thành i32. Một khi phần xác định tại câu lệnh trong phạm vi như thế kia thì có điều là sẽ không định cho một giá trị trở lại khi trong <code>()</code> còn là tên unit type. Cũng vậy không những tại trường một khi trở thành phần thông báo lỗi và đã thành một câu lệnh. Một số giải thích thêm về sửa đi những vấn đề do nó đem lại được hiển thị cho là nó thì ta hãy bỏ bớt nó đi, như là bỏ một phần đi nhé có dấu phẩy rồi và loại thì đi, và sau khi bỏ dấu câu đó chúng mình lại sửa được luôn cơ.</p>
 
   <div class="page-nav bottom"><a href="ch03-02-data-types.html">← Trước</a><a href="ch03-04-comments.html">Tiếp →</a></div>
   </div>

@@ -216,14 +216,14 @@
 
 <h2 id="separating-modules-into-different-files">Tách Module ra các File khác nhau</h2>
 
-<p>Cho đến nay, tất cả ví dụ trong chương này đều định nghĩa nhiều module trong một file duy nhất. Khi các module trở nên lớn hơn, bạn có thể muốn chuyển định nghĩa của chúng sang một file riêng để code dễ điều hướng hơn.</p>
+<p>Cho đến nay, tất cả ví dụ trong chương này đều định nghĩa nhiều module trong một file duy nhất. Khi các module trở nên lớn hơn, bạn có thể muốn chuyển định nghĩa của chúng sang một file riêng để mã dễ điều hướng hơn.</p>
 
-<p>Ví dụ, hãy bắt đầu từ code trong Listing 7-17 có nhiều module về nhà hàng. Ta sẽ tách các module ra các file thay vì giữ tất cả trong file crate root. Trong trường hợp này, file crate root là <em>src/lib.rs</em>, nhưng quy trình này cũng hoạt động với binary crate có file crate root là <em>src/main.rs</em>.</p>
+<p>Ví dụ, hãy bắt đầu từ mã trong Listing 7-17 có nhiều module về nhà hàng. Ta sẽ tách các module ra các file thay vì giữ tất cả trong file crate root. Trong trường hợp này, file crate root là <em>src/lib.rs</em>, nhưng quy trình này cũng hoạt động với binary crate có file crate root là <em>src/main.rs</em>.</p>
 
-<p>Trước tiên, ta sẽ tách module <code>front_of_house</code> ra file riêng của nó. Xóa phần code nằm trong cặp ngoặc nhọn của module <code>front_of_house</code>, chỉ giữ lại khai báo <code>mod front_of_house;</code>, sao cho <em>src/lib.rs</em> chứa code như trong Listing 7-21. Lưu ý rằng code này sẽ chưa biên dịch được cho đến khi ta tạo file <em>src/front_of_house.rs</em> trong Listing 7-22.</p>
+<p>Trước tiên, ta sẽ tách module <code>front_of_house</code> ra file riêng của nó. Xóa phần mã nằm trong cặp ngoặc nhọn của module <code>front_of_house</code>, chỉ giữ lại khai báo <code>mod front_of_house;</code>, sao cho <em>src/lib.rs</em> chứa mã như trong Listing 7-21. Lưu ý rằng mã này sẽ chưa biên dịch được cho đến khi ta tạo file <em>src/front_of_house.rs</em> trong Listing 7-22.</p>
 
 <figure class="listing" id="listing-7-21">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">mod front_of_house;
 
 pub use crate::front_of_house::hosting;
@@ -234,47 +234,47 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-21">Listing 7-21</a>: Khai báo module <code>front_of_house</code> với phần thân sẽ nằm trong <em>src/front_of_house.rs</em></figcaption>
 </figure>
 
-<p>Tiếp theo, đặt phần code từ trong cặp ngoặc nhọn vào một file mới tên là <em>src/front_of_house.rs</em>, như trong Listing 7-22. Compiler biết cần tìm ở file này vì nó gặp khai báo module trong crate root với tên <code>front_of_house</code>.</p>
+<p>Tiếp theo, đặt phần mã từ trong cặp ngoặc nhọn vào một file mới tên là <em>src/front_of_house.rs</em>, như trong Listing 7-22. Compiler biết cần tìm ở file này vì nó gặp khai báo module trong crate root với tên <code>front_of_house</code>.</p>
 
 <figure class="listing" id="listing-7-22">
-<span class="file-name">Filename: src/front_of_house.rs</span>
+<span class="file-name">Tên file: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting {
     pub fn add_to_waitlist() {}
 }</code></pre>
 <figcaption><a href="#listing-7-22">Listing 7-22</a>: Các định nghĩa bên trong module <code>front_of_house</code> trong <em>src/front_of_house.rs</em></figcaption>
 </figure>
 
-<p>Lưu ý rằng bạn chỉ cần load một file bằng khai báo <code>mod</code> <em>một lần duy nhất</em> trong module tree của mình. Một khi compiler biết file đó là một phần của dự án (và biết code nằm ở đâu trong module tree dựa vào vị trí bạn đặt câu lệnh <code>mod</code>), các file khác trong dự án nên tham chiếu đến code của file đã được load bằng cách dùng path đến nơi nó được khai báo, như đã trình bày trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Paths for Referring to an Item in the Module Tree"</a>. Nói cách khác, <code>mod</code> <em>không phải</em> là thao tác "include" như bạn có thể thấy trong các ngôn ngữ lập trình khác.</p>
+<p>Lưu ý rằng bạn chỉ cần load một file bằng khai báo <code>mod</code> <em>một lần duy nhất</em> trong module tree của mình. Một khi compiler biết file đó là một phần của dự án (và biết mã nằm ở đâu trong module tree dựa vào vị trí bạn đặt câu lệnh <code>mod</code>), các file khác trong dự án nên tham chiếu đến mã của file đã được load bằng cách dùng path đến nơi nó được khai báo, như đã trình bày trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Path — đường dẫn tham chiếu tới một item trong module tree”</a>. Nói cách khác, <code>mod</code> <em>không phải</em> là thao tác "include" như bạn có thể thấy trong các ngôn ngữ lập trình khác.</p>
 
 <p>Tiếp theo, ta sẽ tách module <code>hosting</code> ra file riêng của nó. Quy trình này hơi khác một chút vì <code>hosting</code> là child module của <code>front_of_house</code>, không phải của root module. Ta sẽ đặt file cho <code>hosting</code> trong một thư mục mới được đặt tên theo các module cha của nó trong module tree, trong trường hợp này là <em>src/front_of_house</em>.</p>
 
 <p>Để bắt đầu chuyển <code>hosting</code>, ta sửa <em>src/front_of_house.rs</em> để chỉ chứa khai báo của module <code>hosting</code>:</p>
 
 <figure class="listing">
-<span class="file-name">Filename: src/front_of_house.rs</span>
+<span class="file-name">Tên file: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting;</code></pre>
 </figure>
 
 <p>Sau đó, ta tạo thư mục <em>src/front_of_house</em> và file <em>hosting.rs</em> để chứa các định nghĩa của module <code>hosting</code>:</p>
 
 <figure class="listing">
-<span class="file-name">Filename: src/front_of_house/hosting.rs</span>
+<span class="file-name">Tên file: src/front_of_house/hosting.rs</span>
 <pre><code class="language-rust ignore">pub fn add_to_waitlist() {}</code></pre>
 </figure>
 
-<p>Nếu thay vào đó ta đặt <em>hosting.rs</em> trong thư mục <em>src</em>, compiler sẽ kỳ vọng code trong <em>hosting.rs</em> thuộc module <code>hosting</code> được khai báo trong crate root, chứ không phải là child của module <code>front_of_house</code>. Quy tắc của compiler về việc kiểm tra file nào cho module nào đồng nghĩa với việc cấu trúc thư mục và file phản ánh chặt chẽ module tree.</p>
+<p>Nếu thay vào đó ta đặt <em>hosting.rs</em> trong thư mục <em>src</em>, compiler sẽ kỳ vọng mã trong <em>hosting.rs</em> thuộc module <code>hosting</code> được khai báo trong crate root, chứ không phải là child của module <code>front_of_house</code>. Quy tắc của compiler về việc kiểm tra file nào cho module nào đồng nghĩa với việc cấu trúc thư mục và file phản ánh chặt chẽ module tree.</p>
 
 <section class="note" aria-role="note">
 <h3 id="alternate-file-paths">Các đường dẫn file thay thế</h3>
 
-<p>Cho đến nay ta đã đề cập đến cách đặt đường dẫn file theo phong cách chuẩn nhất mà Rust compiler sử dụng, nhưng Rust cũng hỗ trợ một phong cách cũ hơn. Với module tên là <code>front_of_house</code> được khai báo trong crate root, compiler sẽ tìm code của module trong:</p>
+<p>Cho đến nay ta đã đề cập đến cách đặt đường dẫn file theo phong cách chuẩn nhất mà Rust compiler sử dụng, nhưng Rust cũng hỗ trợ một phong cách cũ hơn. Với module tên là <code>front_of_house</code> được khai báo trong crate root, compiler sẽ tìm mã của module trong:</p>
 
 <ul>
 <li><em>src/front_of_house.rs</em> (cách ta đã đề cập)</li>
 <li><em>src/front_of_house/mod.rs</em> (phong cách cũ, vẫn còn được hỗ trợ)</li>
 </ul>
 
-<p>Với module tên là <code>hosting</code> là submodule của <code>front_of_house</code>, compiler sẽ tìm code của module trong:</p>
+<p>Với module tên là <code>hosting</code> là submodule của <code>front_of_house</code>, compiler sẽ tìm mã của module trong:</p>
 
 <ul>
 <li><em>src/front_of_house/hosting.rs</em> (cách ta đã đề cập)</li>
@@ -286,15 +286,15 @@ pub fn eat_at_restaurant() {
 <p>Nhược điểm chính của phong cách dùng file có tên <em>mod.rs</em> là dự án của bạn có thể có nhiều file cùng tên <em>mod.rs</em>, điều này dễ gây nhầm lẫn khi bạn mở nhiều file như vậy trong editor cùng một lúc.</p>
 </section>
 
-<p>Ta đã chuyển code của mỗi module sang một file riêng, và module tree vẫn giữ nguyên. Các lời gọi hàm trong <code>eat_at_restaurant</code> sẽ hoạt động bình thường mà không cần sửa đổi gì, dù các định nghĩa nằm ở các file khác nhau. Kỹ thuật này cho phép bạn chuyển module sang file mới khi module phát triển về kích thước.</p>
+<p>Ta đã chuyển mã của mỗi module sang một file riêng, và module tree vẫn giữ nguyên. Các lời gọi hàm trong <code>eat_at_restaurant</code> sẽ hoạt động bình thường mà không cần sửa đổi gì, dù các định nghĩa nằm ở các file khác nhau. Kỹ thuật này cho phép bạn chuyển module sang file mới khi module phát triển về kích thước.</p>
 
-<p>Lưu ý rằng câu lệnh <code>pub use crate::front_of_house::hosting</code> trong <em>src/lib.rs</em> cũng không thay đổi, và <code>use</code> không ảnh hưởng đến việc file nào được biên dịch như là một phần của crate. Từ khóa <code>mod</code> khai báo các module, và Rust tìm trong file có cùng tên với module để lấy code đưa vào module đó.</p>
+<p>Lưu ý rằng câu lệnh <code>pub use crate::front_of_house::hosting</code> trong <em>src/lib.rs</em> cũng không thay đổi, và <code>use</code> không ảnh hưởng đến việc file nào được biên dịch như là một phần của crate. Từ khóa <code>mod</code> khai báo các module, và Rust tìm trong file có cùng tên với module để lấy mã đưa vào module đó.</p>
 
 <h2 id="summary">Tổng kết</h2>
 
-<p>Rust cho phép bạn chia một package thành nhiều crate và chia một crate thành các module, nhờ đó bạn có thể tham chiếu đến các item được định nghĩa trong một module từ module khác. Bạn có thể làm điều này bằng cách chỉ định absolute path hoặc relative path. Các path này có thể được đưa vào scope bằng câu lệnh <code>use</code> để bạn dùng path ngắn hơn cho nhiều lần sử dụng item trong scope đó. Code của module mặc định là private, nhưng bạn có thể công khai các định nghĩa bằng cách thêm từ khóa <code>pub</code>.</p>
+<p>Rust cho phép bạn chia một package thành nhiều crate và chia một crate thành các module, nhờ đó bạn có thể tham chiếu đến các item được định nghĩa trong một module từ module khác. Bạn có thể làm điều này bằng cách chỉ định absolute path hoặc relative path. Các path này có thể được đưa vào scope bằng câu lệnh <code>use</code> để bạn dùng path ngắn hơn cho nhiều lần sử dụng item trong scope đó. Mã của module mặc định là private, nhưng bạn có thể công khai các định nghĩa bằng cách thêm từ khóa <code>pub</code>.</p>
 
-<p>Trong chương tiếp theo, ta sẽ xem xét một số cấu trúc dữ liệu collection trong thư viện chuẩn mà bạn có thể sử dụng trong code được tổ chức gọn gàng của mình.</p>
+<p>Trong chương tiếp theo, ta sẽ xem xét một số cấu trúc dữ liệu collection trong thư viện chuẩn mà bạn có thể sử dụng trong mã được tổ chức gọn gàng của mình.</p>
 
   <div class="page-nav bottom">
     <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="nav-btn prev">← Trước: use — Đưa Paths vào Scope</a>

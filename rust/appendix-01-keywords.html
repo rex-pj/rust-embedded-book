@@ -225,9 +225,9 @@
 <li><strong><code>extern</code></strong>: Liên kết một hàm hoặc biến bên ngoài.</li>
 <li><strong><code>false</code></strong>: Giá trị boolean false.</li>
 <li><strong><code>fn</code></strong>: Định nghĩa một hàm hoặc kiểu con trỏ hàm.</li>
-<li><strong><code>for</code></strong>: Lặp qua các phần tử từ một iterator, implement một trait, hoặc chỉ định lifetime bậc cao hơn.</li>
+<li><strong><code>for</code></strong>: Lặp qua các phần tử từ một iterator, triển khai một trait, hoặc chỉ định lifetime bậc cao hơn.</li>
 <li><strong><code>if</code></strong>: Rẽ nhánh dựa trên kết quả của một biểu thức điều kiện.</li>
-<li><strong><code>impl</code></strong>: Implement chức năng inherent hoặc trait.</li>
+<li><strong><code>impl</code></strong>: Triển khai chức năng inherent hoặc trait.</li>
 <li><strong><code>in</code></strong>: Phần của cú pháp vòng lặp <code>for</code>.</li>
 <li><strong><code>let</code></strong>: Gán giá trị cho một biến.</li>
 <li><strong><code>loop</code></strong>: Lặp vô tận không điều kiện.</li>
@@ -238,7 +238,7 @@
 <li><strong><code>pub</code></strong>: Biểu thị phạm vi public trong các trường struct, khối <code>impl</code>, hoặc module.</li>
 <li><strong><code>ref</code></strong>: Gán bằng tham chiếu.</li>
 <li><strong><code>return</code></strong>: Trả về từ hàm.</li>
-<li><strong><code>Self</code></strong>: Bí danh kiểu cho kiểu đang được định nghĩa hoặc implement.</li>
+<li><strong><code>Self</code></strong>: Bí danh kiểu cho kiểu đang được định nghĩa hoặc triển khai.</li>
 <li><strong><code>self</code></strong>: Đối tượng của method hoặc module hiện tại.</li>
 <li><strong><code>static</code></strong>: Biến toàn cục hoặc lifetime kéo dài suốt vòng đời chương trình.</li>
 <li><strong><code>struct</code></strong>: Định nghĩa một structure.</li>
@@ -247,7 +247,7 @@
 <li><strong><code>true</code></strong>: Giá trị boolean true.</li>
 <li><strong><code>type</code></strong>: Định nghĩa một type alias hoặc associated type.</li>
 <li><strong><code>union</code></strong>: Định nghĩa một <a href="../reference/items/unions.html">union</a>; chỉ là keyword khi dùng trong khai báo union.</li>
-<li><strong><code>unsafe</code></strong>: Đánh dấu code, hàm, trait, hoặc implementation là unsafe.</li>
+<li><strong><code>unsafe</code></strong>: Đánh dấu mã, hàm, trait, hoặc phần triển khai là unsafe.</li>
 <li><strong><code>use</code></strong>: Đưa các symbol vào phạm vi.</li>
 <li><strong><code>where</code></strong>: Biểu thị các mệnh đề ràng buộc một kiểu dữ liệu.</li>
 <li><strong><code>while</code></strong>: Lặp có điều kiện dựa trên kết quả của một biểu thức.</li>
@@ -293,8 +293,8 @@
 fn main() {
     assert!(r#match("foo", "foobar"));
 }</code></pre>
-<p>Đoạn code này sẽ compile ngon lành không lỗi lầm gì. Hãy để ý tiền tố <code>r#</code> trước tên hàm ở cả phần định nghĩa lẫn nơi gọi hàm trong <code>main</code>.</p>
-<p>Raw identifier cho phép bạn dùng bất kỳ từ nào làm identifier, kể cả khi từ đó là keyword đang được đặt chỗ. Điều này giúp ta có thêm tự do trong việc đặt tên identifier, đồng thời cho phép tích hợp với các chương trình viết bằng ngôn ngữ khác — nơi những từ này không phải là keyword. Ngoài ra, raw identifier còn cho phép bạn dùng các thư viện viết ở edition Rust khác với edition crate của bạn đang dùng. Ví dụ, <code>try</code> không phải keyword trong edition 2015 nhưng lại là keyword trong các edition 2018, 2021, và 2024. Nếu bạn phụ thuộc vào thư viện viết theo edition 2015 có hàm <code>try</code>, bạn cần dùng cú pháp raw identifier — <code>r#try</code> trong trường hợp này — để gọi hàm đó từ code edition mới hơn. Xem <a href="appendix-05-editions.html">Phụ lục E</a> để biết thêm thông tin về editions.</p>
+<p>Đoạn mã này sẽ compile ngon lành không lỗi lầm gì. Hãy để ý tiền tố <code>r#</code> trước tên hàm ở cả phần định nghĩa lẫn nơi gọi hàm trong <code>main</code>.</p>
+<p>Raw identifier cho phép bạn dùng bất kỳ từ nào làm identifier, kể cả khi từ đó là keyword đang được đặt chỗ. Điều này giúp ta có thêm tự do trong việc đặt tên identifier, đồng thời cho phép tích hợp với các chương trình viết bằng ngôn ngữ khác — nơi những từ này không phải là keyword. Ngoài ra, raw identifier còn cho phép bạn dùng các thư viện viết ở edition Rust khác với edition crate của bạn đang dùng. Ví dụ, <code>try</code> không phải keyword trong edition 2015 nhưng lại là keyword trong các edition 2018, 2021, và 2024. Nếu bạn phụ thuộc vào thư viện viết theo edition 2015 có hàm <code>try</code>, bạn cần dùng cú pháp raw identifier — <code>r#try</code> trong trường hợp này — để gọi hàm đó từ mã edition mới hơn. Xem <a href="appendix-05-editions.html">Phụ lục E</a> để biết thêm thông tin về editions.</p>
 
   <div class="page-nav bottom"><a href="appendix-00.html">← Trước</a><a href="appendix-02-operators.html">Tiếp →</a></div>
   </div>

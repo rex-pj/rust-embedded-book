@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 15 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 15 — Dùng Box&lt;T&gt; để Trỏ tới Dữ liệu trên Heap</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch15-00-smart-pointers.html">← Trước</a>
@@ -216,10 +216,10 @@
 <ul>
 <li>Khi bạn có một kiểu mà kích thước không thể biết lúc biên dịch, nhưng bạn cần dùng giá trị đó trong ngữ cảnh yêu cầu kích thước chính xác</li>
 <li>Khi bạn có một lượng dữ liệu lớn và muốn chuyển ownership mà không để dữ liệu bị copy</li>
-<li>Khi bạn muốn sở hữu một giá trị và chỉ quan tâm nó implement một trait cụ thể nào đó, chứ không quan tâm chính xác kiểu của nó là gì</li>
+<li>Khi bạn muốn sở hữu một giá trị và chỉ quan tâm nó triển khai một trait cụ thể nào đó, chứ không quan tâm chính xác kiểu của nó là gì</li>
 </ul>
 
-<p>Tình huống đầu tiên sẽ được minh họa trong phần <a href="#enabling-recursive-types-with-boxes">"Kích hoạt Kiểu Đệ Quy với Box"</a>. Với tình huống thứ hai, chuyển ownership của một lượng dữ liệu lớn có thể mất nhiều thời gian vì dữ liệu bị copy trên stack. Để cải thiện hiệu năng, ta có thể cấp phát lượng dữ liệu lớn đó lên heap trong một box — khi đó chỉ có phần pointer nhỏ được copy trên stack, còn dữ liệu thực sự vẫn nằm yên một chỗ trên heap. Tình huống thứ ba được gọi là <em>trait object</em>, và Chương 18 sẽ đào sâu về chủ đề đó. Vậy là kiến thức bạn học ở đây sẽ được tái sử dụng sau!</p>
+<p>Tình huống đầu tiên sẽ được minh họa trong phần <a href="#enabling-recursive-types-with-boxes">“Kích Hoạt Kiểu Đệ Quy Bằng Box”</a>. Với tình huống thứ hai, chuyển ownership của một lượng dữ liệu lớn có thể mất nhiều thời gian vì dữ liệu bị copy trên stack. Để cải thiện hiệu năng, ta có thể cấp phát lượng dữ liệu lớn đó lên heap trong một box — khi đó chỉ có phần pointer nhỏ được copy trên stack, còn dữ liệu thực sự vẫn nằm yên một chỗ trên heap. Tình huống thứ ba được gọi là <em>trait object</em>, và Chương 18 sẽ đào sâu về chủ đề đó. Vậy là kiến thức bạn học ở đây sẽ được tái sử dụng sau!</p>
 
 <h3 id="storing-data-on-the-heap"><a class="header" href="#storing-data-on-the-heap">Lưu Dữ Liệu Lên Heap</a></h3>
 
@@ -290,7 +290,7 @@
 
 <p>Cons list không phải cấu trúc dữ liệu được dùng phổ biến trong Rust. Phần lớn thời gian khi bạn cần một danh sách các item trong Rust, <code>Vec&lt;T&gt;</code> là lựa chọn tốt hơn. Các kiểu dữ liệu đệ quy phức tạp hơn thực sự <em>có</em> ứng dụng trong nhiều tình huống, nhưng bằng cách bắt đầu với cons list trong chương này, ta có thể khám phá cách box cho phép ta định nghĩa kiểu dữ liệu đệ quy mà không bị phân tâm quá nhiều.</p>
 
-<p>Listing 15-2 chứa định nghĩa enum cho một cons list. Lưu ý rằng code này chưa thể biên dịch vì kiểu <code>List</code> chưa có kích thước xác định — ta sẽ minh chứng điều này.</p>
+<p>Listing 15-2 chứa định nghĩa enum cho một cons list. Lưu ý rằng mã này chưa thể biên dịch vì kiểu <code>List</code> chưa có kích thước xác định — ta sẽ minh chứng điều này.</p>
 
 <figure class="listing" id="listing-15-2">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -304,10 +304,10 @@
 </figure>
 
 <section class="note" aria-role="note">
-<p>Lưu ý: Ta đang implement một cons list chỉ chứa giá trị <code>i32</code> cho mục đích ví dụ này. Ta có thể đã implement nó dùng generics như đã bàn ở Chương 10 để định nghĩa kiểu cons list có thể chứa giá trị của bất kỳ kiểu nào.</p>
+<p>Lưu ý: Ta đang triển khai một cons list chỉ chứa giá trị <code>i32</code> cho mục đích ví dụ này. Ta có thể đã triển khai nó dùng generics như đã bàn ở Chương 10 để định nghĩa kiểu cons list có thể chứa giá trị của bất kỳ kiểu nào.</p>
 </section>
 
-<p>Dùng kiểu <code>List</code> để lưu danh sách <code>1, 2, 3</code> trông như code trong Listing 15-3.</p>
+<p>Dùng kiểu <code>List</code> để lưu danh sách <code>1, 2, 3</code> trông như mã trong Listing 15-3.</p>
 
 <figure class="listing" id="listing-15-3">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -328,7 +328,7 @@ fn main() {
 
 <p>Giá trị <code>Cons</code> đầu tiên chứa <code>1</code> và một giá trị <code>List</code> khác. Giá trị <code>List</code> đó là một <code>Cons</code> khác chứa <code>2</code> và một <code>List</code> tiếp theo. Giá trị <code>List</code> đó là thêm một <code>Cons</code> nữa chứa <code>3</code> và một <code>List</code> nữa — mà giá trị đó cuối cùng là <code>Nil</code>, variant không đệ quy đánh dấu kết thúc danh sách.</p>
 
-<p>Nếu ta thử biên dịch code trong Listing 15-3, ta sẽ gặp lỗi như trong Listing 15-4.</p>
+<p>Nếu ta thử biên dịch mã trong Listing 15-3, ta sẽ gặp lỗi như trong Listing 15-4.</p>
 
 <figure class="listing" id="listing-15-4">
 <pre><code class="language-console">$ cargo run
@@ -397,9 +397,9 @@ error: could not compile `cons-list` (bin "cons-list") due to 2 previous errors
 
 <p>Trong gợi ý này, <em>indirection</em> có nghĩa là thay vì lưu giá trị trực tiếp, ta nên thay đổi cấu trúc dữ liệu để lưu giá trị gián tiếp — bằng cách lưu một pointer tới giá trị đó thay vì chính giá trị đó.</p>
 
-<p>Vì <code>Box&lt;T&gt;</code> là một pointer, Rust luôn biết <code>Box&lt;T&gt;</code> cần bao nhiêu chỗ: kích thước của pointer không thay đổi dù dữ liệu nó trỏ tới có bao nhiêu. Điều này có nghĩa ta có thể đặt một <code>Box&lt;T&gt;</code> bên trong variant <code>Cons</code> thay vì một giá trị <code>List</code> trực tiếp. <code>Box&lt;T&gt;</code> sẽ trỏ tới giá trị <code>List</code> tiếp theo nằm trên heap thay vì nằm bên trong variant <code>Cons</code>. Về mặt khái niệm, ta vẫn có một danh sách gồm các danh sách lồng nhau, nhưng lần này cách implementation giống như đặt các phần tử cạnh nhau hơn là đặt chúng bên trong nhau.</p>
+<p>Vì <code>Box&lt;T&gt;</code> là một pointer, Rust luôn biết <code>Box&lt;T&gt;</code> cần bao nhiêu chỗ: kích thước của pointer không thay đổi dù dữ liệu nó trỏ tới có bao nhiêu. Điều này có nghĩa ta có thể đặt một <code>Box&lt;T&gt;</code> bên trong variant <code>Cons</code> thay vì một giá trị <code>List</code> trực tiếp. <code>Box&lt;T&gt;</code> sẽ trỏ tới giá trị <code>List</code> tiếp theo nằm trên heap thay vì nằm bên trong variant <code>Cons</code>. Về mặt khái niệm, ta vẫn có một danh sách gồm các danh sách lồng nhau, nhưng lần này cách phần triển khai giống như đặt các phần tử cạnh nhau hơn là đặt chúng bên trong nhau.</p>
 
-<p>Ta có thể thay đổi định nghĩa enum <code>List</code> trong Listing 15-2 và cách dùng trong Listing 15-3 thành code trong Listing 15-5 — code này sẽ biên dịch được.</p>
+<p>Ta có thể thay đổi định nghĩa enum <code>List</code> trong Listing 15-2 và cách dùng trong Listing 15-3 thành mã trong Listing 15-5 — mã này sẽ biên dịch được.</p>
 
 <figure class="listing" id="listing-15-5">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -423,7 +423,7 @@ fn main() {
 
 <p>Box chỉ cung cấp indirection và heap allocation — chúng không có khả năng đặc biệt nào khác, như những thứ ta sẽ thấy với các kiểu smart pointer khác. Chúng cũng không có overhead hiệu năng mà các khả năng đặc biệt đó gây ra, nên chúng hữu ích trong các trường hợp như cons list mà indirection là tính năng duy nhất ta cần. Ta sẽ xem thêm use case cho box ở Chương 18.</p>
 
-<p>Kiểu <code>Box&lt;T&gt;</code> là một smart pointer vì nó implement trait <code>Deref</code>, cho phép các giá trị <code>Box&lt;T&gt;</code> được đối xử như reference. Khi một giá trị <code>Box&lt;T&gt;</code> bước ra khỏi scope, dữ liệu heap mà box trỏ tới cũng được dọn sạch nhờ implementation của trait <code>Drop</code>. Hai trait này sẽ còn quan trọng hơn nữa với chức năng của các kiểu smart pointer khác ta sẽ bàn đến trong phần còn lại của chương. Hãy cùng khám phá chi tiết hai trait đó nào.</p>
+<p>Kiểu <code>Box&lt;T&gt;</code> là một smart pointer vì nó triển khai trait <code>Deref</code>, cho phép các giá trị <code>Box&lt;T&gt;</code> được đối xử như reference. Khi một giá trị <code>Box&lt;T&gt;</code> bước ra khỏi scope, dữ liệu heap mà box trỏ tới cũng được dọn sạch nhờ phần triển khai của trait <code>Drop</code>. Hai trait này sẽ còn quan trọng hơn nữa với chức năng của các kiểu smart pointer khác ta sẽ bàn đến trong phần còn lại của chương. Hãy cùng khám phá chi tiết hai trait đó nào.</p>
 
   <div class="page-nav bottom"><a href="ch15-00-smart-pointers.html">← Trước</a><a href="ch15-02-deref.html">Tiếp →</a></div>
   </div>

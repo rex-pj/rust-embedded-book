@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 17 — Streams: Futures Nối Tiếp Nhau</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch17-03-more-futures.html">← Trước</a><a href="ch17-05-traits-for-async.html">Tiếp →</a></div>
 
@@ -209,7 +209,7 @@
 <h2 id="streams-futures-in-sequence">Streams: Futures Nối Tiếp Nhau</h2>
 
 <p>Hãy nhớ lại cách chúng ta dùng receiver của async channel hồi đầu chương này,
-trong phần <a href="ch17-02-concurrency-with-async.html#message-passing">"Message Passing"</a>.
+trong phần <a href="ch17-02-concurrency-with-async.html#sending-data-between-two-tasks-using-message-passing">"Message Passing"</a>.
 Phương thức async <code>recv</code> tạo ra một chuỗi các phần tử theo thời gian — đây chính là một ví dụ
 của một pattern tổng quát hơn nhiều, gọi là <em>stream</em>. Rất nhiều khái niệm trong thực tế
 được mô tả tự nhiên bằng stream: các phần tử xuất hiện trong hàng đợi, từng mảnh dữ liệu
@@ -220,8 +220,8 @@ rất thú vị. Chẳng hạn: gom nhiều sự kiện thành một batch để
 đặt timeout cho một chuỗi thao tác chạy lâu, hoặc throttle sự kiện giao diện người dùng
 để khỏi làm công việc thừa.</p>
 
-<p>Chúng ta đã gặp chuỗi phần tử ở Chương 13, khi tìm hiểu về Iterator trait
-trong phần <a href="ch13-02-iterators.html#the-iterator-trait-and-the-next-method">"The Iterator Trait and the <code>next</code> Method"</a>,
+<p>Chúng ta đã gặp chuỗi phần tử ở Chương 13, khi tìm hiểu về iterator trait
+trong phần <a href="ch13-02-iterators.html#the-iterator-trait-and-the-next-method">"The iterator trait and the <code>next</code> Method"</a>,
 nhưng có hai điểm khác nhau giữa iterator và async channel receiver.
 Khác biệt thứ nhất là thời gian: iterator là đồng bộ (synchronous),
 còn channel receiver thì bất đồng bộ (asynchronous).
@@ -237,7 +237,7 @@ giống như <code>Iterator</code> làm, nhưng theo cách bất đồng bộ.</
 <p>Sự giống nhau giữa iterator và stream trong Rust có nghĩa là chúng ta thực sự có thể
 tạo một stream từ bất kỳ iterator nào. Cũng như với iterator, ta có thể làm việc với
 một stream bằng cách gọi phương thức <code>next</code> rồi await kết quả,
-như trong Listing 17-21 — tuy nhiên đoạn code này chưa compile được đâu nhé.</p>
+như trong Listing 17-21 — tuy nhiên đoạn mã này chưa compile được đâu nhé.</p>
 
 <figure class="listing" id="listing-17-21">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -262,7 +262,7 @@ như trong Listing 17-21 — tuy nhiên đoạn code này chưa compile được
 bằng hàm <code>trpl::stream_from_iter</code>. Tiếp theo, ta lặp qua các phần tử
 trong stream khi chúng đến lần lượt bằng vòng lặp <code>while let</code>.</p>
 
-<p>Thật đáng tiếc, khi thử chạy code, nó không compile được mà thay vào đó
+<p>Thật đáng tiếc, khi thử chạy mã, nó không compile được mà thay vào đó
 báo rằng không có phương thức <code>next</code> nào:</p>
 
 <pre><code class="language-text">error[E0599]: no method named `next` found for struct `tokio_stream::iter::Iter` in the current scope
@@ -325,7 +325,7 @@ fn main() {
 <figcaption><a href="#listing-17-22">Listing 17-22</a>: Dùng iterator thành công làm nền tảng cho stream</figcaption>
 </figure>
 
-<p>Với tất cả những mảnh ghép đó, code chạy đúng như mong đợi rồi!
+<p>Với tất cả những mảnh ghép đó, mã chạy đúng như mong đợi rồi!
 Hơn nữa, giờ khi đã có <code>StreamExt</code> trong scope,
 ta có thể dùng tất cả các utility method của nó — giống như với iterator vậy.</p>
 

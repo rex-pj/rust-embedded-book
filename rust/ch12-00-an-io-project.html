@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Dự Án I/O: Xây Dựng Chương Trình Dòng Lệnh</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch11-03-test-organization.html">← Trước</a>
@@ -208,14 +208,14 @@
   </div>
 
 <h1 id="an-io-project-building-a-command-line-program">Dự Án I/O: Xây Dựng Chương Trình Dòng Lệnh</h1>
-<p>Chương này là một bản tổng kết lại những kỹ năng bạn đã lượm lặt được cho đến nay, đồng thời dắt bạn dạo qua thêm vài tính năng thú vị của thư viện chuẩn. Chúng ta sẽ cùng nhau chế tạo một công cụ dòng lệnh — thứ sẽ tương tác với file và input/output của terminal — nhằm luyện tập một mớ khái niệm Rust mà bạn đã nhét vào đầu từ đầu đến giờ.</p>
+<p>Chương này là một bản tổng kết lại những kỹ năng bạn đã lượm lặt được cho đến nay, đồng thời dắt bạn dạo qua thêm vài tính năng thú vị của thư viện chuẩn. Chúng ta sẽ cùng nhau chế tạo một công cụ dòng lệnh — thứ sẽ tương tác với file và đầu vào/kết quả của terminal — nhằm luyện tập một mớ khái niệm Rust mà bạn đã nhét vào đầu từ đầu đến giờ.</p>
 <p>Sức mạnh, sự an toàn, đầu ra là một file binary duy nhất, và khả năng chạy đa nền tảng của Rust khiến nó trở thành ngôn ngữ lý tưởng để viết công cụ dòng lệnh. Vậy nên cho dự án lần này, chúng ta sẽ tự tay chế lại phiên bản của riêng mình cho công cụ tìm kiếm kinh điển <code>grep</code>
 (<strong>g</strong>lobally search a <strong>r</strong>egular <strong>e</strong>xpression and <strong>p</strong>rint — tìm kiếm toàn bộ theo biểu thức chính quy rồi in ra). Ở cách dùng đơn giản nhất, <code>grep</code> tìm kiếm một chuỗi ký tự trong một file cụ thể. Muốn làm vậy, <code>grep</code> nhận vào hai tham số: đường dẫn đến file và chuỗi cần tìm. Rồi nó đọc file, lần mò từng dòng chứa chuỗi đó, và in chúng ra màn hình.</p>
-<p>Dọc đường, chúng ta sẽ học cách để công cụ dòng lệnh của mình tận dụng những tính năng terminal mà nhiều công cụ khác hay dùng. Chúng ta sẽ đọc giá trị của biến môi trường (environment variable) để cho phép người dùng tinh chỉnh hành vi của chương trình. Ngoài ra, chúng ta cũng sẽ in thông báo lỗi ra luồng console lỗi chuẩn (<code>stderr</code>) thay vì standard output (<code>stdout</code>), để chẳng hạn người dùng có thể chuyển hướng output thành công vào file trong khi vẫn thấy thông báo lỗi ngay trên màn hình.</p>
+<p>Dọc đường, chúng ta sẽ học cách để công cụ dòng lệnh của mình tận dụng những tính năng terminal mà nhiều công cụ khác hay dùng. Chúng ta sẽ đọc giá trị của biến môi trường (environment variable) để cho phép người dùng tinh chỉnh hành vi của chương trình. Ngoài ra, chúng ta cũng sẽ in thông báo lỗi ra luồng lỗi chuẩn (<code>stderr</code>) thay vì đầu ra chuẩn (<code>stdout</code>), để chẳng hạn người dùng có thể chuyển hướng kết quả thành công vào file trong khi vẫn thấy thông báo lỗi ngay trên màn hình.</p>
 <p>Có một thành viên trong cộng đồng Rust, anh Andrew Gallant, đã dựng lên một phiên bản <code>grep</code> đầy đủ tính năng và cực kỳ nhanh, gọi là <code>ripgrep</code>. So sánh lại thì bản của chúng ta sẽ khá đơn giản thôi, nhưng chương này sẽ cho bạn cái nền tảng cần thiết để hiểu rõ một dự án thực tế như <code>ripgrep</code>.</p>
 <p>Dự án <code>grep</code> của chúng ta sẽ kết hợp nhiều khái niệm bạn đã học:</p>
 <ul>
-<li>Tổ chức code (<a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a>)</li>
+<li>Tổ chức mã (<a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a>)</li>
 <li>Dùng vector và string (<a href="ch08-00-common-collections.html">Chương 8</a>)</li>
 <li>Xử lý lỗi (<a href="ch09-00-error-handling.html">Chương 9</a>)</li>
 <li>Dùng trait và lifetime khi cần thiết (<a href="ch10-00-generics.html">Chương 10</a>)</li>

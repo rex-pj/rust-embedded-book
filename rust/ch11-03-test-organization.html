@@ -43,18 +43,18 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — Tổ chức Test</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch11-02-running-tests.html">← Trước</a><a href="ch12-00-an-io-project.html">Tiếp →</a></div>
 
   <h2 id="test-organization"><a class="header" href="#test-organization">Tổ chức Test</a></h2>
-<p>Như đã đề cập ở đầu chương, testing là một lĩnh vực phức tạp, và mỗi người có cách dùng thuật ngữ và tổ chức khác nhau. Cộng đồng Rust chia test thành hai loại chính: unit test và integration test. <em>Unit test</em> thì nhỏ và tập trung hơn, kiểm thử từng module một cách riêng lẻ, và có thể test cả các interface private. <em>Integration test</em> hoàn toàn đứng ngoài thư viện của bạn và dùng code của bạn theo đúng cách mà code bên ngoài sẽ dùng — chỉ thông qua public interface, và có thể chạm đến nhiều module trong một lần test.</p>
+<p>Như đã đề cập ở đầu chương, testing là một lĩnh vực phức tạp, và mỗi người có cách dùng thuật ngữ và tổ chức khác nhau. Cộng đồng Rust chia test thành hai loại chính: unit test và integration test. <em>Unit test</em> thì nhỏ và tập trung hơn, kiểm thử từng module một cách riêng lẻ, và có thể test cả các interface private. <em>Integration test</em> hoàn toàn đứng ngoài thư viện của bạn và dùng mã của bạn theo đúng cách mà mã bên ngoài sẽ dùng — chỉ thông qua public interface, và có thể chạm đến nhiều module trong một lần test.</p>
 <p>Viết cả hai loại test đều quan trọng để đảm bảo rằng các phần của thư viện hoạt động đúng như kỳ vọng, cả khi chạy độc lập lẫn khi phối hợp với nhau.</p>
 <h3 id="unit-tests"><a class="header" href="#unit-tests">Unit Test</a></h3>
-<p>Mục đích của unit test là kiểm thử từng đơn vị code một cách tách biệt với phần còn lại, để nhanh chóng xác định chỗ nào đang hoạt động đúng, chỗ nào chưa đúng. Bạn sẽ đặt unit test vào thư mục <em>src</em>, trong cùng file với code mà chúng test. Quy ước là tạo một module tên <code>tests</code> trong mỗi file để chứa các hàm test, và đánh dấu module đó bằng <code>cfg(test)</code>.</p>
+<p>Mục đích của unit test là kiểm thử từng đơn vị mã một cách tách biệt với phần còn lại, để nhanh chóng xác định chỗ nào đang hoạt động đúng, chỗ nào chưa đúng. Bạn sẽ đặt unit test vào thư mục <em>src</em>, trong cùng file với mã mà chúng test. Quy ước là tạo một module tên <code>tests</code> trong mỗi file để chứa các hàm test, và đánh dấu module đó bằng <code>cfg(test)</code>.</p>
 <h4 id="the-tests-module-and-cfgtest"><a class="header" href="#the-tests-module-and-cfgtest">Module <code>tests</code> và <code>#[cfg(test)]</code></a></h4>
-<p>Annotation <code>#[cfg(test)]</code> trên module <code>tests</code> báo cho Rust biết chỉ compile và chạy code test khi bạn chạy <code>cargo test</code>, chứ không phải khi chạy <code>cargo build</code>. Điều này giúp tiết kiệm thời gian compile khi bạn chỉ muốn build thư viện, đồng thời giảm dung lượng file kết quả vì test không được đưa vào. Bạn sẽ thấy rằng vì integration test nằm ở thư mục khác, chúng không cần annotation <code>#[cfg(test)]</code>. Nhưng với unit test — nằm chung file với code — bạn cần dùng <code>#[cfg(test)]</code> để chỉ rõ rằng chúng không được đưa vào bản build thông thường.</p>
-<p>Nhớ lại khi chúng ta tạo project <code>adder</code> ở phần đầu chương, Cargo đã tự sinh ra đoạn code này:</p>
+<p>Annotation <code>#[cfg(test)]</code> trên module <code>tests</code> báo cho Rust biết chỉ compile và chạy mã test khi bạn chạy <code>cargo test</code>, chứ không phải khi chạy <code>cargo build</code>. Điều này giúp tiết kiệm thời gian compile khi bạn chỉ muốn build thư viện, đồng thời giảm dung lượng file kết quả vì test không được đưa vào. Bạn sẽ thấy rằng vì integration test nằm ở thư mục khác, chúng không cần annotation <code>#[cfg(test)]</code>. Nhưng với unit test — nằm chung file với mã — bạn cần dùng <code>#[cfg(test)]</code> để chỉ rõ rằng chúng không được đưa vào bản build thông thường.</p>
+<p>Nhớ lại khi chúng ta tạo dự án <code>adder</code> ở phần đầu chương, Cargo đã tự sinh ra đoạn mã này:</p>
 <p><span class="filename">Tên file: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
     left + right
@@ -70,11 +70,11 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<p>Trong module <code>tests</code> được tự sinh ra đó, attribute <code>cfg</code> là viết tắt của <em>configuration</em> — nó báo cho Rust biết rằng item tiếp theo chỉ được đưa vào khi có một tùy chọn cấu hình cụ thể. Trong trường hợp này, tùy chọn đó là <code>test</code>, do Rust cung cấp để compile và chạy test. Nhờ attribute <code>cfg</code>, Cargo chỉ compile code test khi ta chạy lệnh <code>cargo test</code>. Điều này áp dụng cho cả các hàm helper trong module đó, ngoài những hàm được đánh dấu <code>#[test]</code>.</p>
+<p>Trong module <code>tests</code> được tự sinh ra đó, attribute <code>cfg</code> là viết tắt của <em>configuration</em> — nó báo cho Rust biết rằng item tiếp theo chỉ được đưa vào khi có một tùy chọn cấu hình cụ thể. Trong trường hợp này, tùy chọn đó là <code>test</code>, do Rust cung cấp để compile và chạy test. Nhờ attribute <code>cfg</code>, Cargo chỉ compile mã test khi ta chạy lệnh <code>cargo test</code>. Điều này áp dụng cho cả các hàm helper trong module đó, ngoài những hàm được đánh dấu <code>#[test]</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="testing-private-functions"></a></p>
 <h4 id="private-function-tests"><a class="header" href="#private-function-tests">Test Hàm Private</a></h4>
-<p>Cộng đồng testing có nhiều quan điểm về việc có nên test trực tiếp các hàm private hay không, và một số ngôn ngữ thậm chí không cho phép làm điều đó. Dù bạn theo trường phái nào, các quy tắc về privacy của Rust vẫn cho phép bạn test hàm private. Hãy xem đoạn code trong Listing 11-12 với hàm private <code>internal_adder</code>.</p>
+<p>Cộng đồng testing có nhiều quan điểm về việc có nên test trực tiếp các hàm private hay không, và một số ngôn ngữ thậm chí không cho phép làm điều đó. Dù bạn theo trường phái nào, các quy tắc về privacy của Rust vẫn cho phép bạn test hàm private. Hãy xem đoạn mã trong Listing 11-12 với hàm private <code>internal_adder</code>.</p>
 <figure class="listing" id="listing-11-12">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
@@ -97,12 +97,12 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-12">Listing 11-12</a>: Test một hàm private</figcaption>
 </figure>
-<p>Lưu ý rằng hàm <code>internal_adder</code> không được đánh dấu là <code>pub</code>. Test cũng chỉ là code Rust thông thường, và module <code>tests</code> cũng chỉ là một module bình thường. Như đã thảo luận trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">"Paths for Referring to an Item in the Module Tree"</a>, các item trong module con có thể dùng các item từ module cha. Trong test này, ta đưa tất cả item từ module cha của <code>tests</code> vào scope bằng <code>use super::*</code>, và sau đó test có thể gọi <code>internal_adder</code>. Nếu bạn không muốn test hàm private, Rust không ép buộc bạn làm vậy.</p>
+<p>Lưu ý rằng hàm <code>internal_adder</code> không được đánh dấu là <code>pub</code>. Test cũng chỉ là mã Rust thông thường, và module <code>tests</code> cũng chỉ là một module bình thường. Như đã thảo luận trong phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Path — đường dẫn tham chiếu tới một item trong module tree”</a>, các item trong module con có thể dùng các item từ module cha. Trong test này, ta đưa tất cả item từ module cha của <code>tests</code> vào scope bằng <code>use super::*</code>, và sau đó test có thể gọi <code>internal_adder</code>. Nếu bạn không muốn test hàm private, Rust không ép buộc bạn làm vậy.</p>
 <h3 id="integration-tests"><a class="header" href="#integration-tests">Integration Test</a></h3>
-<p>Trong Rust, integration test hoàn toàn đứng ngoài thư viện của bạn. Chúng dùng thư viện theo đúng cách mà code bên ngoài sẽ dùng — tức là chỉ có thể gọi các hàm thuộc public API. Mục đích của chúng là kiểm tra xem nhiều phần của thư viện có phối hợp hoạt động đúng cách không. Những đơn vị code hoạt động tốt riêng lẻ vẫn có thể gặp vấn đề khi tích hợp lại, vì vậy test coverage cho code tích hợp cũng rất quan trọng. Để tạo integration test, trước tiên bạn cần có thư mục <em>tests</em>.</p>
+<p>Trong Rust, integration test hoàn toàn đứng ngoài thư viện của bạn. Chúng dùng thư viện theo đúng cách mà mã bên ngoài sẽ dùng — tức là chỉ có thể gọi các hàm thuộc public API. Mục đích của chúng là kiểm tra xem nhiều phần của thư viện có phối hợp hoạt động đúng cách không. Những đơn vị mã hoạt động tốt riêng lẻ vẫn có thể gặp vấn đề khi tích hợp lại, vì vậy test coverage cho mã tích hợp cũng rất quan trọng. Để tạo integration test, trước tiên bạn cần có thư mục <em>tests</em>.</p>
 <h4 id="the-tests-directory"><a class="header" href="#the-tests-directory">Thư mục <em>tests</em></a></h4>
-<p>Chúng ta tạo thư mục <em>tests</em> ở cấp cao nhất của project, ngang hàng với <em>src</em>. Cargo biết để tìm các file integration test trong thư mục này. Chúng ta có thể tạo bao nhiêu file test tùy thích, và Cargo sẽ compile mỗi file như một crate độc lập.</p>
-<p>Hãy tạo một integration test. Với code trong Listing 11-12 vẫn còn trong file <em>src/lib.rs</em>, tạo thư mục <em>tests</em> và một file mới tên <em>tests/integration_test.rs</em>. Cấu trúc thư mục lúc này trông như thế này:</p>
+<p>Chúng ta tạo thư mục <em>tests</em> ở cấp cao nhất của dự án, ngang hàng với <em>src</em>. Cargo biết để tìm các file integration test trong thư mục này. Chúng ta có thể tạo bao nhiêu file test tùy thích, và Cargo sẽ compile mỗi file như một crate độc lập.</p>
+<p>Hãy tạo một integration test. Với mã trong Listing 11-12 vẫn còn trong file <em>src/lib.rs</em>, tạo thư mục <em>tests</em> và một file mới tên <em>tests/integration_test.rs</em>. Cấu trúc thư mục lúc này trông như thế này:</p>
 <pre><code class="language-text">adder
 ├── Cargo.lock
 ├── Cargo.toml
@@ -111,7 +111,7 @@ mod tests {
 └── tests
     └── integration_test.rs
 </code></pre>
-<p>Nhập code trong Listing 11-13 vào file <em>tests/integration_test.rs</em>.</p>
+<p>Nhập mã trong Listing 11-13 vào file <em>tests/integration_test.rs</em>.</p>
 <figure class="listing" id="listing-11-13">
 <span class="file-name">Tên file: tests/integration_test.rs</span>
 <pre><code class="language-rust ignore">use adder::add_two;
@@ -124,7 +124,7 @@ fn it_adds_two() {
 <figcaption><a href="#listing-11-13">Listing 11-13</a>: Một integration test cho hàm trong crate <code>adder</code></figcaption>
 </figure>
 <p>Mỗi file trong thư mục <em>tests</em> là một crate riêng biệt, vì vậy chúng ta cần đưa thư viện vào scope của từng test crate. Đó là lý do chúng ta thêm <code>use adder::add_two;</code> ở đầu — điều mà trong unit test chúng ta không cần làm.</p>
-<p>Chúng ta không cần đánh dấu bất kỳ code nào trong <em>tests/integration_test.rs</em> bằng <code>#[cfg(test)]</code>. Cargo xử lý thư mục <em>tests</em> một cách đặc biệt và chỉ compile các file trong thư mục này khi chúng ta chạy <code>cargo test</code>. Giờ hãy chạy <code>cargo test</code>:</p>
+<p>Chúng ta không cần đánh dấu bất kỳ mã nào trong <em>tests/integration_test.rs</em> bằng <code>#[cfg(test)]</code>. Cargo xử lý thư mục <em>tests</em> một cách đặc biệt và chỉ compile các file trong thư mục này khi chúng ta chạy <code>cargo test</code>. Giờ hãy chạy <code>cargo test</code>:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 1.31s
@@ -149,10 +149,10 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Ba phần output bao gồm unit test, integration test và doc test. Lưu ý rằng nếu có test nào trong một phần bị fail, các phần tiếp theo sẽ không được chạy. Ví dụ: nếu một unit test fail, sẽ không có output cho integration test và doc test, vì chúng chỉ chạy khi tất cả unit test đều pass.</p>
+<p>Ba phần kết quả bao gồm unit test, integration test và doc test. Lưu ý rằng nếu có test nào trong một phần bị fail, các phần tiếp theo sẽ không được chạy. Ví dụ: nếu một unit test fail, sẽ không có kết quả cho integration test và doc test, vì chúng chỉ chạy khi tất cả unit test đều pass.</p>
 <p>Phần đầu tiên dành cho unit test vẫn như những gì chúng ta đã thấy: một dòng cho mỗi unit test (ở đây là <code>internal</code> từ Listing 11-12) và một dòng tóm tắt.</p>
 <p>Phần integration test bắt đầu với dòng <code>Running tests/integration_test.rs</code>. Tiếp theo là một dòng cho mỗi hàm test trong file integration test đó, và một dòng tóm tắt kết quả, trước khi phần <code>Doc-tests adder</code> bắt đầu.</p>
-<p>Mỗi file integration test có phần output riêng của nó, vì vậy nếu bạn thêm nhiều file vào thư mục <em>tests</em>, sẽ có thêm nhiều phần integration test tương ứng.</p>
+<p>Mỗi file integration test có phần kết quả riêng của nó, vì vậy nếu bạn thêm nhiều file vào thư mục <em>tests</em>, sẽ có thêm nhiều phần integration test tương ứng.</p>
 <p>Bạn vẫn có thể chạy một hàm test integration cụ thể bằng cách truyền tên hàm như một tham số cho <code>cargo test</code>. Để chạy tất cả test trong một file integration test cụ thể, dùng argument <code>--test</code> của <code>cargo test</code> theo sau là tên file:</p>
 <pre><code class="language-console">$ cargo test --test integration_test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -167,13 +167,13 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 </code></pre>
 <p>Lệnh này chỉ chạy các test trong file <em>tests/integration_test.rs</em>.</p>
 <h4 id="submodules-in-integration-tests"><a class="header" href="#submodules-in-integration-tests">Submodule trong Integration Test</a></h4>
-<p>Khi bạn thêm nhiều integration test hơn, bạn có thể muốn tổ chức chúng thành nhiều file trong thư mục <em>tests</em> — ví dụ, nhóm các hàm test theo chức năng mà chúng kiểm thử. Như đã đề cập, mỗi file trong thư mục <em>tests</em> được compile như một crate riêng biệt, điều này hữu ích để tạo các scope tách biệt, mô phỏng cách người dùng cuối sẽ dùng crate của bạn. Tuy nhiên, điều này cũng có nghĩa là các file trong thư mục <em>tests</em> không có cùng hành vi như các file trong <em>src</em>, như bạn đã học trong Chương 7 về cách tách code thành module và file.</p>
-<p>Sự khác biệt về hành vi của thư mục <em>tests</em> thể hiện rõ nhất khi bạn có một bộ hàm helper dùng chung cho nhiều file integration test, và bạn muốn làm theo các bước trong phần <a href="ch07-05-separating-modules-into-different-files.html">"Separating Modules into Different Files"</a> của Chương 7 để tách chúng ra module chung. Ví dụ: nếu chúng ta tạo file <em>tests/common.rs</em> và đặt hàm <code>setup</code> vào đó, chúng ta có thể thêm code vào <code>setup</code> để gọi từ nhiều hàm test trong nhiều file test:</p>
+<p>Khi bạn thêm nhiều integration test hơn, bạn có thể muốn tổ chức chúng thành nhiều file trong thư mục <em>tests</em> — ví dụ, nhóm các hàm test theo chức năng mà chúng kiểm thử. Như đã đề cập, mỗi file trong thư mục <em>tests</em> được compile như một crate riêng biệt, điều này hữu ích để tạo các scope tách biệt, mô phỏng cách người dùng cuối sẽ dùng crate của bạn. Tuy nhiên, điều này cũng có nghĩa là các file trong thư mục <em>tests</em> không có cùng hành vi như các file trong <em>src</em>, như bạn đã học trong Chương 7 về cách tách mã thành module và file.</p>
+<p>Sự khác biệt về hành vi của thư mục <em>tests</em> thể hiện rõ nhất khi bạn có một bộ hàm helper dùng chung cho nhiều file integration test, và bạn muốn làm theo các bước trong phần <a href="ch07-05-separating-modules-into-different-files.html">“Tách Module ra các File khác nhau”</a> của Chương 7 để tách chúng ra module chung. Ví dụ: nếu chúng ta tạo file <em>tests/common.rs</em> và đặt hàm <code>setup</code> vào đó, chúng ta có thể thêm mã vào <code>setup</code> để gọi từ nhiều hàm test trong nhiều file test:</p>
 <p><span class="filename">Tên file: tests/common.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn setup() {
     // code setup riêng cho test của thư viện sẽ đặt ở đây
 }</code></pre>
-<p>Khi chạy test lại, chúng ta sẽ thấy một phần mới trong output cho file <em>common.rs</em>, dù file này không chứa hàm test nào và chúng ta cũng chưa gọi hàm <code>setup</code> từ bất kỳ đâu:</p>
+<p>Khi chạy test lại, chúng ta sẽ thấy một phần mới trong kết quả cho file <em>common.rs</em>, dù file này không chứa hàm test nào và chúng ta cũng chưa gọi hàm <code>setup</code> từ bất kỳ đâu:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.89s
@@ -204,7 +204,7 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Việc <code>common</code> hiện ra trong kết quả test với dòng <code>running 0 tests</code> không phải là điều chúng ta muốn. Chúng ta chỉ muốn chia sẻ code với các file integration test khác. Để tránh <code>common</code> xuất hiện trong output test, thay vì tạo <em>tests/common.rs</em>, hãy tạo <em>tests/common/mod.rs</em>. Cấu trúc thư mục project lúc này trông như thế này:</p>
+<p>Việc <code>common</code> hiện ra trong kết quả test với dòng <code>running 0 tests</code> không phải là điều chúng ta muốn. Chúng ta chỉ muốn chia sẻ mã với các file integration test khác. Để tránh <code>common</code> xuất hiện trong kết quả test, thay vì tạo <em>tests/common.rs</em>, hãy tạo <em>tests/common/mod.rs</em>. Cấu trúc thư mục dự án lúc này trông như thế này:</p>
 <pre><code class="language-text">├── Cargo.lock
 ├── Cargo.toml
 ├── src
@@ -214,7 +214,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
     │   └── mod.rs
     └── integration_test.rs
 </code></pre>
-<p>Đây là quy ước đặt tên cũ hơn mà Rust vẫn hiểu được, đã được đề cập trong phần <a href="ch07-05-separating-modules-into-different-files.html#alternate-file-paths">"Alternate File Paths"</a> của Chương 7. Đặt tên file theo cách này báo cho Rust biết không nên coi module <code>common</code> là file integration test. Khi chúng ta di chuyển code hàm <code>setup</code> vào <em>tests/common/mod.rs</em> và xóa file <em>tests/common.rs</em>, phần đó sẽ không còn xuất hiện trong output test nữa. Các file trong thư mục con của <em>tests</em> không được compile thành các crate riêng biệt và cũng không có phần output trong kết quả test.</p>
+<p>Đây là quy ước đặt tên cũ hơn mà Rust vẫn hiểu được, đã được đề cập trong phần <a href="ch07-05-separating-modules-into-different-files.html#alternate-file-paths">“Các đường dẫn file thay thế”</a> của Chương 7. Đặt tên file theo cách này báo cho Rust biết không nên coi module <code>common</code> là file integration test. Khi chúng ta di chuyển mã hàm <code>setup</code> vào <em>tests/common/mod.rs</em> và xóa file <em>tests/common.rs</em>, phần đó sẽ không còn xuất hiện trong kết quả test nữa. Các file trong thư mục con của <em>tests</em> không được compile thành các crate riêng biệt và cũng không có phần kết quả trong kết quả test.</p>
 <p>Sau khi tạo <em>tests/common/mod.rs</em>, chúng ta có thể dùng nó từ bất kỳ file integration test nào như một module. Đây là ví dụ gọi hàm <code>setup</code> từ test <code>it_adds_two</code> trong <em>tests/integration_test.rs</em>:</p>
 <p><span class="filename">Tên file: tests/integration_test.rs</span></p>
 <pre><code class="language-rust ignore">use adder::add_two;
@@ -230,10 +230,10 @@ fn it_adds_two() {
 }</code></pre>
 <p>Lưu ý rằng khai báo <code>mod common;</code> cũng giống như khai báo module mà chúng ta đã thấy trong Listing 7-21. Sau đó, trong hàm test, chúng ta có thể gọi hàm <code>common::setup()</code>.</p>
 <h4 id="integration-tests-for-binary-crates"><a class="header" href="#integration-tests-for-binary-crates">Integration Test cho Binary Crate</a></h4>
-<p>Nếu project của bạn là một binary crate chỉ chứa file <em>src/main.rs</em> mà không có file <em>src/lib.rs</em>, bạn không thể tạo integration test trong thư mục <em>tests</em> và đưa các hàm được định nghĩa trong <em>src/main.rs</em> vào scope bằng câu lệnh <code>use</code>. Chỉ có library crate mới có thể expose hàm cho crate khác dùng; binary crate được thiết kế để chạy độc lập.</p>
-<p>Đây là một trong những lý do tại sao các project Rust cung cấp binary thường có file <em>src/main.rs</em> rất đơn giản, chỉ gọi logic nằm trong file <em>src/lib.rs</em>. Với cấu trúc đó, integration test <em>có thể</em> test library crate bằng <code>use</code> để truy cập các chức năng quan trọng. Nếu các chức năng quan trọng hoạt động đúng, thì phần code nhỏ trong <em>src/main.rs</em> cũng sẽ hoạt động tốt, và phần code nhỏ đó không nhất thiết phải được test riêng.</p>
+<p>Nếu dự án của bạn là một binary crate chỉ chứa file <em>src/main.rs</em> mà không có file <em>src/lib.rs</em>, bạn không thể tạo integration test trong thư mục <em>tests</em> và đưa các hàm được định nghĩa trong <em>src/main.rs</em> vào scope bằng câu lệnh <code>use</code>. Chỉ có library crate mới có thể expose hàm cho crate khác dùng; binary crate được thiết kế để chạy độc lập.</p>
+<p>Đây là một trong những lý do tại sao các dự án Rust cung cấp binary thường có file <em>src/main.rs</em> rất đơn giản, chỉ gọi logic nằm trong file <em>src/lib.rs</em>. Với cấu trúc đó, integration test <em>có thể</em> test library crate bằng <code>use</code> để truy cập các chức năng quan trọng. Nếu các chức năng quan trọng hoạt động đúng, thì phần mã nhỏ trong <em>src/main.rs</em> cũng sẽ hoạt động tốt, và phần mã nhỏ đó không nhất thiết phải được test riêng.</p>
 <h2 id="summary"><a class="header" href="#summary">Tóm tắt</a></h2>
-<p>Các tính năng testing của Rust cung cấp cách chỉ định code nên hoạt động như thế nào để đảm bảo nó tiếp tục hoạt động đúng như kỳ vọng, ngay cả khi bạn thực hiện thay đổi. Unit test kiểm tra từng phần của thư viện một cách riêng biệt và có thể test các chi tiết implementation private. Integration test kiểm tra xem nhiều phần của thư viện có phối hợp hoạt động đúng không, và chúng dùng public API của thư viện để test code theo đúng cách mà code bên ngoài sẽ dùng. Dù hệ thống kiểu và các quy tắc ownership của Rust giúp ngăn chặn một số loại bug, nhưng test vẫn quan trọng để giảm thiểu các logic bug liên quan đến hành vi kỳ vọng của code.</p>
+<p>Các tính năng testing của Rust cung cấp cách chỉ định mã nên hoạt động như thế nào để đảm bảo nó tiếp tục hoạt động đúng như kỳ vọng, ngay cả khi bạn thực hiện thay đổi. Unit test kiểm tra từng phần của thư viện một cách riêng biệt và có thể test các chi tiết phần triển khai private. Integration test kiểm tra xem nhiều phần của thư viện có phối hợp hoạt động đúng không, và chúng dùng public API của thư viện để test mã theo đúng cách mà mã bên ngoài sẽ dùng. Dù hệ thống kiểu và các quy tắc ownership của Rust giúp ngăn chặn một số loại bug, nhưng test vẫn quan trọng để giảm thiểu các logic bug liên quan đến hành vi kỳ vọng của mã.</p>
 <p>Hãy kết hợp kiến thức bạn đã học trong chương này và các chương trước để cùng làm một dự án thực tế!</p>
 
   <div class="page-nav bottom"><a href="ch11-02-running-tests.html">← Trước</a><a href="ch12-00-an-io-project.html">Tiếp →</a></div>

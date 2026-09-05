@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — Định Nghĩa Một Enum</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch06-00-enums.html">← Trước</a>
@@ -209,11 +209,11 @@
   <h2 id="defining-an-enum">Định Nghĩa Một Enum</h2>
   <p>Trong khi struct cho bạn một cách nhóm các trường và dữ liệu liên quan lại với nhau, như một <code>Rectangle</code> với các trường <code>width</code> và <code>height</code>, enum cho bạn một cách nói rằng một giá trị là một trong tập hợp các giá trị có thể. Ví dụ, chúng ta có thể muốn nói rằng <code>Rectangle</code> là một trong số các hình dạng có thể bao gồm cả <code>Circle</code> và <code>Triangle</code>. Để làm điều này, Rust cho phép chúng ta mã hóa những khả năng này dưới dạng một enum.</p>
 
-  <p>Hãy cùng xem xét một tình huống mà chúng ta có thể muốn diễn đạt bằng code và xem tại sao enum lại hữu ích và phù hợp hơn struct trong trường hợp này. Giả sử chúng ta cần làm việc với địa chỉ IP. Hiện tại, có hai tiêu chuẩn chính được dùng cho địa chỉ IP: phiên bản bốn và phiên bản sáu. Vì đây là những khả năng duy nhất cho địa chỉ IP mà chương trình của chúng ta sẽ gặp phải, chúng ta có thể <em>liệt kê</em> tất cả các biến thể có thể, đó cũng là lý do tên gọi "enumeration" ra đời.</p>
+  <p>Hãy cùng xem xét một tình huống mà chúng ta có thể muốn diễn đạt bằng mã và xem tại sao enum lại hữu ích và phù hợp hơn struct trong trường hợp này. Giả sử chúng ta cần làm việc với địa chỉ IP. Hiện tại, có hai tiêu chuẩn chính được dùng cho địa chỉ IP: phiên bản bốn và phiên bản sáu. Vì đây là những khả năng duy nhất cho địa chỉ IP mà chương trình của chúng ta sẽ gặp phải, chúng ta có thể <em>liệt kê</em> tất cả các biến thể có thể, đó cũng là lý do tên gọi "enumeration" ra đời.</p>
 
-  <p>Bất kỳ địa chỉ IP nào cũng có thể là địa chỉ phiên bản bốn hoặc phiên bản sáu, nhưng không thể cả hai cùng lúc. Đặc tính đó của địa chỉ IP làm cho cấu trúc dữ liệu enum trở nên phù hợp, vì một giá trị enum chỉ có thể là một trong các biến thể của nó. Cả địa chỉ phiên bản bốn và phiên bản sáu về cơ bản vẫn là địa chỉ IP, nên chúng nên được xử lý như cùng một kiểu khi code xử lý các tình huống áp dụng cho bất kỳ loại địa chỉ IP nào.</p>
+  <p>Bất kỳ địa chỉ IP nào cũng có thể là địa chỉ phiên bản bốn hoặc phiên bản sáu, nhưng không thể cả hai cùng lúc. Đặc tính đó của địa chỉ IP làm cho cấu trúc dữ liệu enum trở nên phù hợp, vì một giá trị enum chỉ có thể là một trong các biến thể của nó. Cả địa chỉ phiên bản bốn và phiên bản sáu về cơ bản vẫn là địa chỉ IP, nên chúng nên được xử lý như cùng một kiểu khi mã xử lý các tình huống áp dụng cho bất kỳ loại địa chỉ IP nào.</p>
 
-  <p>Chúng ta có thể diễn đạt khái niệm này bằng code bằng cách định nghĩa một enumeration <code>IpAddrKind</code> và liệt kê các loại có thể có của địa chỉ IP, <code>V4</code> và <code>V6</code>. Đây là các biến thể của enum:</p>
+  <p>Chúng ta có thể diễn đạt khái niệm này bằng mã bằng cách định nghĩa một enumeration <code>IpAddrKind</code> và liệt kê các loại có thể có của địa chỉ IP, <code>V4</code> và <code>V6</code>. Đây là các biến thể của enum:</p>
 
 <pre><code class="language-rust">enum IpAddrKind {
     V4,
@@ -230,7 +230,7 @@ fn main() {
 
 fn route(ip_kind: IpAddrKind) {}</code></pre>
 
-  <p><code>IpAddrKind</code> bây giờ là một kiểu dữ liệu tùy chỉnh mà chúng ta có thể sử dụng ở nhiều nơi trong code.</p>
+  <p><code>IpAddrKind</code> bây giờ là một kiểu dữ liệu tùy chỉnh mà chúng ta có thể sử dụng ở nhiều nơi trong mã.</p>
 
 
   <h3 id="enum-values">Giá trị của Enum (Enum Values)</h3>
@@ -327,7 +327,7 @@ enum IpAddr {
     V6(Ipv6Addr),
 }</code></pre>
 
-  <p>Code này minh họa rằng bạn có thể đặt bất kỳ loại dữ liệu nào vào bên trong một biến thể enum: chuỗi, kiểu số, hoặc struct. Bạn thậm chí có thể bao gồm cả một enum khác! Ngoài ra, các kiểu trong thư viện chuẩn thường không phức tạp hơn nhiều so với những gì bạn có thể nghĩ ra.</p>
+  <p>Mã này minh họa rằng bạn có thể đặt bất kỳ loại dữ liệu nào vào bên trong một biến thể enum: chuỗi, kiểu số, hoặc struct. Bạn thậm chí có thể bao gồm cả một enum khác! Ngoài ra, các kiểu trong thư viện chuẩn thường không phức tạp hơn nhiều so với những gì bạn có thể nghĩ ra.</p>
 
   <p>Lưu ý rằng mặc dù thư viện chuẩn có chứa một định nghĩa cho <code>IpAddr</code>, chúng ta vẫn có thể tạo và sử dụng định nghĩa của riêng mình mà không có xung đột, vì chúng ta chưa đưa định nghĩa của thư viện chuẩn vào phạm vi. Chúng ta sẽ nói thêm về việc đưa các kiểu vào phạm vi trong <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Chương 7</a>.</p>
 
@@ -432,7 +432,7 @@ fn main() {}</code></pre>
 
   <p>Khi chúng ta có một giá trị <code>Some</code>, chúng ta biết rằng một giá trị đang hiện diện và giá trị đó được giữ bên trong <code>Some</code>. Khi chúng ta có một giá trị <code>None</code>, theo một nghĩa nào đó nó có nghĩa tương tự như null: Chúng ta không có một giá trị hợp lệ. Vậy tại sao có <code>Option&lt;T&gt;</code> lại tốt hơn có null?</p>
 
-  <p>Tóm lại, vì <code>Option&lt;T&gt;</code> và <code>T</code> (trong đó <code>T</code> có thể là bất kỳ kiểu nào) là các kiểu khác nhau, trình biên dịch sẽ không cho phép chúng ta dùng một giá trị <code>Option&lt;T&gt;</code> như thể nó chắc chắn là một giá trị hợp lệ. Ví dụ, code này sẽ không biên dịch, vì nó đang cố cộng một <code>i8</code> với một <code>Option&lt;i8&gt;</code>:</p>
+  <p>Tóm lại, vì <code>Option&lt;T&gt;</code> và <code>T</code> (trong đó <code>T</code> có thể là bất kỳ kiểu nào) là các kiểu khác nhau, trình biên dịch sẽ không cho phép chúng ta dùng một giá trị <code>Option&lt;T&gt;</code> như thể nó chắc chắn là một giá trị hợp lệ. Ví dụ, mã này sẽ không biên dịch, vì nó đang cố cộng một <code>i8</code> với một <code>Option&lt;i8&gt;</code>:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x: i8 = 5;
@@ -441,7 +441,7 @@ fn main() {}</code></pre>
     let sum = x + y;
 }</code></pre>
 
-  <p>Nếu chúng ta chạy code này, chúng ta sẽ nhận được thông báo lỗi như sau:</p>
+  <p>Nếu chúng ta chạy mã này, chúng ta sẽ nhận được thông báo lỗi như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
@@ -466,11 +466,11 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
 
   <p>Nói cách khác, bạn phải chuyển đổi một <code>Option&lt;T&gt;</code> sang <code>T</code> trước khi bạn có thể thực hiện các thao tác <code>T</code> với nó. Nhìn chung, điều này giúp phát hiện một trong những vấn đề phổ biến nhất với null: giả định rằng thứ gì đó không phải null khi thực ra nó là null.</p>
 
-  <p>Loại bỏ rủi ro giả định sai về giá trị không-null giúp bạn tự tin hơn vào code của mình. Để có một giá trị có thể là null, bạn phải chủ động lựa chọn bằng cách đặt kiểu của giá trị đó là <code>Option&lt;T&gt;</code>. Sau đó, khi bạn sử dụng giá trị đó, bạn cần phải xử lý tường minh trường hợp giá trị là null. Ở bất cứ đâu có một giá trị với kiểu không phải <code>Option&lt;T&gt;</code>, bạn <em>có thể</em> an toàn giả định rằng giá trị đó không phải null. Đây là một quyết định thiết kế có chủ ý của Rust để hạn chế sự phổ biến của null và tăng tính an toàn của code Rust.</p>
+  <p>Loại bỏ rủi ro giả định sai về giá trị không-null giúp bạn tự tin hơn vào mã của mình. Để có một giá trị có thể là null, bạn phải chủ động lựa chọn bằng cách đặt kiểu của giá trị đó là <code>Option&lt;T&gt;</code>. Sau đó, khi bạn sử dụng giá trị đó, bạn cần phải xử lý tường minh trường hợp giá trị là null. Ở bất cứ đâu có một giá trị với kiểu không phải <code>Option&lt;T&gt;</code>, bạn <em>có thể</em> an toàn giả định rằng giá trị đó không phải null. Đây là một quyết định thiết kế có chủ ý của Rust để hạn chế sự phổ biến của null và tăng tính an toàn của mã Rust.</p>
 
   <p>Vậy làm thế nào để lấy giá trị <code>T</code> ra khỏi một biến thể <code>Some</code> khi bạn có một giá trị kiểu <code>Option&lt;T&gt;</code> để có thể dùng giá trị đó? Enum <code>Option&lt;T&gt;</code> có rất nhiều phương thức hữu ích trong nhiều tình huống khác nhau; bạn có thể xem chúng trong <a href="../std/option/enum.Option.html">tài liệu</a> của nó. Làm quen với các phương thức trên <code>Option&lt;T&gt;</code> sẽ cực kỳ hữu ích trong hành trình học Rust của bạn.</p>
 
-  <p>Nhìn chung, để dùng một giá trị <code>Option&lt;T&gt;</code>, bạn muốn có code xử lý từng biến thể. Bạn muốn có code chỉ chạy khi bạn có giá trị <code>Some(T)</code>, và code đó được phép dùng <code>T</code> bên trong. Bạn muốn có code khác chỉ chạy khi bạn có giá trị <code>None</code>, và code đó không có giá trị <code>T</code> nào. Biểu thức <code>match</code> là một cấu trúc điều khiển luồng làm đúng điều này khi dùng với enum: Nó sẽ chạy code khác nhau tùy thuộc vào biến thể nào của enum nó có, và code đó có thể sử dụng dữ liệu bên trong giá trị khớp.</p>
+  <p>Nhìn chung, để dùng một giá trị <code>Option&lt;T&gt;</code>, bạn muốn có mã xử lý từng biến thể. Bạn muốn có mã chỉ chạy khi bạn có giá trị <code>Some(T)</code>, và mã đó được phép dùng <code>T</code> bên trong. Bạn muốn có mã khác chỉ chạy khi bạn có giá trị <code>None</code>, và mã đó không có giá trị <code>T</code> nào. Biểu thức <code>match</code> là một cấu trúc điều khiển luồng làm đúng điều này khi dùng với enum: Nó sẽ chạy mã khác nhau tùy thuộc vào biến thể nào của enum nó có, và mã đó có thể sử dụng dữ liệu bên trong giá trị khớp.</p>
 
   <div class="page-nav bottom"><a href="ch06-00-enums.html">← Trước</a><a href="ch06-02-match.html">Tiếp →</a></div>
   </div>

@@ -219,9 +219,9 @@
 <figcaption><a href="#listing-8-1">Listing 8-1</a>: Tạo một vector trống để lưu giá trị kiểu <code>i32</code></figcaption>
 </figure>
 
-<p>Chú ý ta đã thêm type annotation ở đây. Vì ta chưa insert bất kỳ giá trị nào vào vector, Rust không biết ta muốn lưu kiểu phần tử nào. Đây là điểm quan trọng. Vector được implement bằng generics — ta sẽ tìm hiểu cách dùng generics với kiểu của riêng bạn ở Chương 10. Tạm thời, biết rằng kiểu <code>Vec&lt;T&gt;</code> do standard library cung cấp có thể chứa bất kỳ kiểu nào. Khi tạo vector để chứa một kiểu cụ thể, ta chỉ định kiểu đó trong dấu ngoặc nhọn. Ở Listing 8-1, ta đã nói với Rust rằng <code>Vec&lt;T&gt;</code> trong biến <code>v</code> sẽ chứa phần tử kiểu <code>i32</code>.</p>
+<p>Chú ý ta đã thêm type annotation ở đây. Vì ta chưa insert bất kỳ giá trị nào vào vector, Rust không biết ta muốn lưu kiểu phần tử nào. Đây là điểm quan trọng. Vector được triển khai bằng generics — ta sẽ tìm hiểu cách dùng generics với kiểu của riêng bạn ở Chương 10. Tạm thời, biết rằng kiểu <code>Vec&lt;T&gt;</code> do standard library cung cấp có thể chứa bất kỳ kiểu nào. Khi tạo vector để chứa một kiểu cụ thể, ta chỉ định kiểu đó trong dấu ngoặc nhọn. Ở Listing 8-1, ta đã nói với Rust rằng <code>Vec&lt;T&gt;</code> trong biến <code>v</code> sẽ chứa phần tử kiểu <code>i32</code>.</p>
 
-<p>Thường gặp hơn, bạn sẽ tạo <code>Vec&lt;T&gt;</code> với các giá trị khởi tạo sẵn và Rust sẽ tự infer được kiểu bạn muốn lưu, nên type annotation hiếm khi cần thiết. Rust có sẵn macro <code>vec!</code> chuyên tạo vector mới chứa các giá trị bạn cung cấp. Listing 8-2 tạo <code>Vec&lt;i32&gt;</code> mới chứa các giá trị <code>1</code>, <code>2</code>, và <code>3</code>. Kiểu integer là <code>i32</code> vì đó là kiểu integer mặc định, như đã bàn ở phần <a href="ch03-02-data-types.html#data-types">"Kiểu Dữ Liệu"</a> của Chương 3.</p>
+<p>Thường gặp hơn, bạn sẽ tạo <code>Vec&lt;T&gt;</code> với các giá trị khởi tạo sẵn và Rust sẽ tự infer được kiểu bạn muốn lưu, nên type annotation hiếm khi cần thiết. Rust có sẵn macro <code>vec!</code> chuyên tạo vector mới chứa các giá trị bạn cung cấp. Listing 8-2 tạo <code>Vec&lt;i32&gt;</code> mới chứa các giá trị <code>1</code>, <code>2</code>, và <code>3</code>. Kiểu integer là <code>i32</code> vì đó là kiểu integer mặc định, như đã bàn ở phần <a href="ch03-02-data-types.html#kieu-du-lieu">"Kiểu Dữ Liệu"</a> của Chương 3.</p>
 
 <figure class="listing" id="listing-8-2">
 <pre><code class="language-rust edition2024">fn main() {
@@ -286,9 +286,9 @@
 <figcaption><a href="#listing-8-5">Listing 8-5</a>: Cố truy cập phần tử ở index 100 trong vector 5 phần tử</figcaption>
 </figure>
 
-<p>Khi chạy code này, cách dùng <code>[]</code> sẽ làm chương trình panic vì tham chiếu đến phần tử không tồn tại. Cách này tốt nhất dùng khi bạn muốn chương trình crash nếu có truy cập vượt ngoài cuối vector.</p>
+<p>Khi chạy mã này, cách dùng <code>[]</code> sẽ làm chương trình panic vì tham chiếu đến phần tử không tồn tại. Cách này tốt nhất dùng khi bạn muốn chương trình crash nếu có truy cập vượt ngoài cuối vector.</p>
 
-<p>Khi method <code>get</code> nhận index vượt ngoài vector, nó trả về <code>None</code> mà không panic. Bạn dùng cách này nếu việc truy cập phần tử ngoài phạm vi có thể xảy ra thỉnh thoảng trong điều kiện bình thường. Code của bạn sẽ cần xử lý cả <code>Some(&amp;element)</code> lẫn <code>None</code>, như đã bàn ở Chương 6. Ví dụ, index có thể đến từ người dùng nhập số. Nếu họ lỡ nhập số quá lớn và chương trình nhận được <code>None</code>, bạn có thể thông báo số lượng item hiện tại và cho họ nhập lại — thân thiện hơn nhiều so với crash chương trình vì lỗi đánh máy!</p>
+<p>Khi method <code>get</code> nhận index vượt ngoài vector, nó trả về <code>None</code> mà không panic. Bạn dùng cách này nếu việc truy cập phần tử ngoài phạm vi có thể xảy ra thỉnh thoảng trong điều kiện bình thường. Mã của bạn sẽ cần xử lý cả <code>Some(&amp;element)</code> lẫn <code>None</code>, như đã bàn ở Chương 6. Ví dụ, index có thể đến từ người dùng nhập số. Nếu họ lỡ nhập số quá lớn và chương trình nhận được <code>None</code>, bạn có thể thông báo số lượng item hiện tại và cho họ nhập lại — thân thiện hơn nhiều so với crash chương trình vì lỗi đánh máy!</p>
 
 <p>Khi chương trình có một reference hợp lệ, borrow checker thực thi các quy tắc ownership và borrowing (đã nói ở Chương 4) để đảm bảo reference này và mọi reference khác đến nội dung vector đều hợp lệ. Nhớ lại quy tắc: bạn không thể có cả mutable lẫn immutable reference trong cùng scope. Quy tắc này áp dụng trong Listing 8-6, nơi ta giữ immutable reference đến phần tử đầu tiên của vector và cố thêm phần tử vào cuối. Chương trình này sẽ không chạy nếu ta cũng cố tham chiếu đến phần tử đó ở phần sau của hàm.</p>
 
@@ -305,7 +305,7 @@
 <figcaption><a href="#listing-8-6">Listing 8-6</a>: Cố thêm phần tử vào vector trong khi đang giữ reference đến một item</figcaption>
 </figure>
 
-<p>Compile code này sẽ gặp lỗi sau:</p>
+<p>Compile mã này sẽ gặp lỗi sau:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
@@ -324,10 +324,10 @@ For more information about this error, try `rustc --explain E0502`.
 error: could not compile `collections` (bin "collections") due to 1 previous error
 </code></pre>
 
-<p>Code ở Listing 8-6 trông như thể nên hoạt động được: tại sao reference đến phần tử đầu lại quan tâm đến thay đổi ở cuối vector? Lỗi này xảy ra vì cách vector hoạt động: vector đặt các giá trị cạnh nhau trong bộ nhớ, nên thêm phần tử mới vào cuối có thể yêu cầu cấp phát bộ nhớ mới và sao chép các phần tử cũ sang vùng mới, nếu không có đủ chỗ cho tất cả phần tử nằm cạnh nhau ở vị trí hiện tại của vector. Trong trường hợp đó, reference đến phần tử đầu sẽ trỏ đến bộ nhớ đã được giải phóng. Các quy tắc borrowing ngăn chương trình rơi vào tình huống đó.</p>
+<p>Mã ở Listing 8-6 trông như thể nên hoạt động được: tại sao reference đến phần tử đầu lại quan tâm đến thay đổi ở cuối vector? Lỗi này xảy ra vì cách vector hoạt động: vector đặt các giá trị cạnh nhau trong bộ nhớ, nên thêm phần tử mới vào cuối có thể yêu cầu cấp phát bộ nhớ mới và sao chép các phần tử cũ sang vùng mới, nếu không có đủ chỗ cho tất cả phần tử nằm cạnh nhau ở vị trí hiện tại của vector. Trong trường hợp đó, reference đến phần tử đầu sẽ trỏ đến bộ nhớ đã được giải phóng. Các quy tắc borrowing ngăn chương trình rơi vào tình huống đó.</p>
 
 <blockquote>
-<p><strong>Lưu ý:</strong> Để biết thêm về chi tiết implementation của <code>Vec&lt;T&gt;</code>, xem <a href="https://doc.rust-lang.org/nomicon/vec/vec.html">"The Rustonomicon"</a>.</p>
+<p><strong>Lưu ý:</strong> Để biết thêm về chi tiết phần triển khai của <code>Vec&lt;T&gt;</code>, xem <a href="https://doc.rust-lang.org/nomicon/vec/vec.html">"The Rustonomicon"</a>.</p>
 </blockquote>
 
 <h3 id="iterating-over-the-values-in-a-vector">Duyệt Qua Các Giá Trị trong Vector</h3>
@@ -356,9 +356,9 @@ error: could not compile `collections` (bin "collections") due to 1 previous err
 <figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterate qua mutable reference đến phần tử trong vector</figcaption>
 </figure>
 
-<p>Để thay đổi giá trị mà mutable reference trỏ đến, ta phải dùng toán tử dereference <code>*</code> để đến được giá trị trong <code>i</code> trước khi dùng toán tử <code>+=</code>. Ta sẽ nói thêm về toán tử dereference ở phần <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">"Following the Reference to the Value"</a> của Chương 15.</p>
+<p>Để thay đổi giá trị mà mutable reference trỏ đến, ta phải dùng toán tử dereference <code>*</code> để đến được giá trị trong <code>i</code> trước khi dùng toán tử <code>+=</code>. Ta sẽ nói thêm về toán tử dereference ở phần <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">"Following the Reference to the Giá trị"</a> của Chương 15.</p>
 
-<p>Việc iterate qua vector, dù immutable hay mutable, đều an toàn nhờ các quy tắc của borrow checker. Nếu ta cố insert hoặc xóa item trong thân vòng lặp <code>for</code> ở Listing 8-7 và 8-8, ta sẽ gặp lỗi compiler tương tự như code ở Listing 8-6. Reference đến vector mà vòng lặp <code>for</code> nắm giữ ngăn chặn việc sửa đổi toàn bộ vector đồng thời.</p>
+<p>Việc iterate qua vector, dù immutable hay mutable, đều an toàn nhờ các quy tắc của borrow checker. Nếu ta cố insert hoặc xóa item trong thân vòng lặp <code>for</code> ở Listing 8-7 và 8-8, ta sẽ gặp lỗi compiler tương tự như mã ở Listing 8-6. Reference đến vector mà vòng lặp <code>for</code> nắm giữ ngăn chặn việc sửa đổi toàn bộ vector đồng thời.</p>
 
 <h3 id="using-an-enum-to-store-multiple-types">Dùng Enum để Lưu Nhiều Kiểu</h3>
 

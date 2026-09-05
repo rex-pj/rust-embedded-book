@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Refactor Để Cải Thiện Tính Mô-đun và Xử Lý Lỗi</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch12-02-reading-a-file.html">← Trước</a>
@@ -211,11 +211,11 @@
 <p>Để cải thiện chương trình, chúng ta sẽ giải quyết bốn vấn đề liên quan đến cấu trúc chương trình và cách nó xử lý các lỗi tiềm tàng. Thứ nhất, hàm <code>main</code> hiện đang đảm nhận hai nhiệm vụ: phân tích tham số và đọc file. Khi chương trình lớn dần, số lượng nhiệm vụ riêng lẻ mà hàm <code>main</code> phải xử lý sẽ tăng lên. Một hàm càng nhiều trách nhiệm thì càng khó lý luận về nó, khó test, và khó thay đổi mà không làm hỏng một phần nào đó. Tốt nhất là tách riêng chức năng để mỗi hàm chỉ chịu trách nhiệm cho một việc.</p>
 <p>Vấn đề này cũng liên quan đến vấn đề thứ hai: mặc dù <code>query</code> và <code>file_path</code> là các biến cấu hình cho chương trình, các biến như <code>contents</code> lại được dùng để thực hiện logic của chương trình. Hàm <code>main</code> càng dài thì càng có nhiều biến cần đưa vào scope; càng nhiều biến trong scope thì càng khó theo dõi mục đích của từng biến. Tốt nhất là gom các biến cấu hình vào một cấu trúc để làm rõ mục đích của chúng.</p>
 <p>Vấn đề thứ ba là chúng ta đang dùng <code>expect</code> để in thông báo lỗi khi đọc file thất bại, nhưng thông báo lỗi chỉ in ra <code>Should have been able to read the file</code>. Việc đọc file có thể thất bại theo nhiều cách: ví dụ, file có thể không tồn tại, hoặc chúng ta không có quyền mở nó. Hiện tại, dù trong tình huống nào chúng ta cũng in cùng một thông báo lỗi, chẳng cho người dùng bất kỳ thông tin gì hữu ích!</p>
-<p>Thứ tư, chúng ta dùng <code>expect</code> để xử lý lỗi, và nếu người dùng chạy chương trình mà không cung cấp đủ tham số, họ sẽ nhận được lỗi <code>index out of bounds</code> từ Rust — lỗi này không giải thích rõ vấn đề. Tốt nhất là tập trung toàn bộ code xử lý lỗi vào một chỗ để người bảo trì sau này chỉ cần xem một nơi nếu logic xử lý lỗi cần thay đổi. Gom toàn bộ code xử lý lỗi vào một chỗ cũng đảm bảo rằng chúng ta in ra những thông báo có ý nghĩa với người dùng cuối.</p>
-<p>Hãy giải quyết bốn vấn đề này bằng cách refactor project.</p>
+<p>Thứ tư, chúng ta dùng <code>expect</code> để xử lý lỗi, và nếu người dùng chạy chương trình mà không cung cấp đủ tham số, họ sẽ nhận được lỗi <code>index out of bounds</code> từ Rust — lỗi này không giải thích rõ vấn đề. Tốt nhất là tập trung toàn bộ mã xử lý lỗi vào một chỗ để người bảo trì sau này chỉ cần xem một nơi nếu logic xử lý lỗi cần thay đổi. Gom toàn bộ mã xử lý lỗi vào một chỗ cũng đảm bảo rằng chúng ta in ra những thông báo có ý nghĩa với người dùng cuối.</p>
+<p>Hãy giải quyết bốn vấn đề này bằng cách refactor dự án.</p>
 <p><a id="separation-of-concerns-for-binary-projects"></a></p>
-<h3 id="separating-concerns-in-binary-projects">Tách Biệt Mối Quan Tâm Trong Binary Project</h3>
-<p>Vấn đề tổ chức giao phó quá nhiều trách nhiệm cho hàm <code>main</code> rất phổ biến trong các binary project. Kết quả là nhiều Rustacean thấy hữu ích khi tách riêng các mối quan tâm của chương trình binary khi hàm <code>main</code> bắt đầu phình to. Quá trình này gồm các bước sau:</p>
+<h3 id="separating-concerns-in-binary-projects">Tách Biệt Mối Quan Tâm Trong Binary Dự án</h3>
+<p>Vấn đề tổ chức giao phó quá nhiều trách nhiệm cho hàm <code>main</code> rất phổ biến trong các dự án binary. Kết quả là nhiều Rustacean thấy hữu ích khi tách riêng các mối quan tâm của chương trình binary khi hàm <code>main</code> bắt đầu phình to. Quá trình này gồm các bước sau:</p>
 <ul>
 <li>Tách chương trình thành file <em>main.rs</em> và file <em>lib.rs</em>, rồi chuyển logic của chương trình sang <em>lib.rs</em>.</li>
 <li>Miễn là logic phân tích tham số dòng lệnh còn nhỏ, nó có thể nằm trong hàm <code>main</code>.</li>
@@ -228,7 +228,7 @@
 <li>Gọi hàm <code>run</code> trong <em>lib.rs</em></li>
 <li>Xử lý lỗi nếu <code>run</code> trả về lỗi</li>
 </ul>
-<p>Mẫu này là về việc tách biệt mối quan tâm: <em>main.rs</em> xử lý việc chạy chương trình và <em>lib.rs</em> xử lý toàn bộ logic của nhiệm vụ hiện tại. Vì bạn không thể test trực tiếp hàm <code>main</code>, cấu trúc này cho phép test toàn bộ logic của chương trình bằng cách chuyển nó ra khỏi hàm <code>main</code>. Code còn lại trong hàm <code>main</code> sẽ đủ nhỏ để xác minh tính đúng đắn bằng cách đọc. Hãy làm lại chương trình bằng cách làm theo quy trình này.</p>
+<p>Mẫu này là về việc tách biệt mối quan tâm: <em>main.rs</em> xử lý việc chạy chương trình và <em>lib.rs</em> xử lý toàn bộ logic của nhiệm vụ hiện tại. Vì bạn không thể test trực tiếp hàm <code>main</code>, cấu trúc này cho phép test toàn bộ logic của chương trình bằng cách chuyển nó ra khỏi hàm <code>main</code>. Mã còn lại trong hàm <code>main</code> sẽ đủ nhỏ để xác minh tính đúng đắn bằng cách đọc. Hãy làm lại chương trình bằng cách làm theo quy trình này.</p>
 <h4 id="extracting-the-argument-parser">Tách Hàm Phân Tích Tham Số</h4>
 <p>Chúng ta sẽ tách chức năng phân tích tham số vào một hàm mà <code>main</code> sẽ gọi. Listing 12-5 cho thấy phần bắt đầu mới của hàm <code>main</code> gọi hàm <code>parse_config</code> mới, được định nghĩa trong <em>src/main.rs</em>.</p>
 <figure class="listing" id="listing-12-5">
@@ -264,7 +264,7 @@ fn parse_config(args: &amp;[String]) -&gt; (&amp;str, &amp;str) {
 <p>Việc refactor này có vẻ overkill cho chương trình nhỏ, nhưng chúng ta đang refactor theo từng bước nhỏ. Sau khi thực hiện thay đổi này, hãy chạy lại chương trình để xác nhận rằng phân tích tham số vẫn hoạt động. Kiểm tra thường xuyên như vậy sẽ giúp xác định nguyên nhân khi có vấn đề.</p>
 <h4 id="grouping-configuration-values">Gom Nhóm Các Giá Trị Cấu Hình</h4>
 <p>Chúng ta có thể cải thiện hàm <code>parse_config</code> thêm một chút nữa. Hiện tại, chúng ta trả về một tuple, nhưng sau đó lại tách tuple thành các phần riêng lẻ. Đây là dấu hiệu cho thấy có lẽ chúng ta chưa có cách trừu tượng hóa đúng.</p>
-<p>Một dấu hiệu khác cho thấy còn chỗ để cải thiện là phần <code>config</code> trong tên <code>parse_config</code>, ngụ ý rằng hai giá trị chúng ta trả về có liên quan với nhau và đều là một phần của một giá trị cấu hình. Thay vì truyền tải ý nghĩa này qua việc gom hai giá trị vào tuple, chúng ta sẽ đặt hai giá trị vào một struct và đặt tên có ý nghĩa cho mỗi trường. Điều này sẽ giúp người bảo trì code sau này dễ hiểu hơn về cách các giá trị khác nhau liên quan với nhau và mục đích của chúng là gì.</p>
+<p>Một dấu hiệu khác cho thấy còn chỗ để cải thiện là phần <code>config</code> trong tên <code>parse_config</code>, ngụ ý rằng hai giá trị chúng ta trả về có liên quan với nhau và đều là một phần của một giá trị cấu hình. Thay vì truyền tải ý nghĩa này qua việc gom hai giá trị vào tuple, chúng ta sẽ đặt hai giá trị vào một struct và đặt tên có ý nghĩa cho mỗi trường. Điều này sẽ giúp người bảo trì mã sau này dễ hiểu hơn về cách các giá trị khác nhau liên quan với nhau và mục đích của chúng là gì.</p>
 <p>Listing 12-6 cho thấy các cải tiến cho hàm <code>parse_config</code>.</p>
 <figure class="listing" id="listing-12-6">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -301,16 +301,16 @@ fn parse_config(args: &amp;[String]) -&gt; Config {
 <figcaption><a href="#listing-12-6">Listing 12-6</a>: Refactor <code>parse_config</code> để trả về instance của struct <code>Config</code></figcaption>
 </figure>
 <p>Chúng ta đã thêm struct <code>Config</code> với các trường <code>query</code> và <code>file_path</code>. Chữ ký của <code>parse_config</code> giờ chỉ ra rằng nó trả về giá trị <code>Config</code>. Trong thân hàm <code>parse_config</code>, trước đây chúng ta trả về string slice tham chiếu đến các giá trị <code>String</code> trong <code>args</code>, giờ ta định nghĩa <code>Config</code> chứa các giá trị <code>String</code> được owned. Biến <code>args</code> trong <code>main</code> là owner của các giá trị tham số và chỉ cho hàm <code>parse_config</code> mượn chúng, nghĩa là ta sẽ vi phạm quy tắc borrowing của Rust nếu <code>Config</code> cố lấy ownership của các giá trị trong <code>args</code>.</p>
-<p>Có nhiều cách để quản lý dữ liệu <code>String</code>; cách đơn giản nhất, dù hơi kém hiệu quả, là gọi phương thức <code>clone</code> trên các giá trị. Điều này sẽ tạo bản sao đầy đủ của dữ liệu cho instance <code>Config</code> sở hữu, tốn thêm thời gian và bộ nhớ hơn so với lưu trữ tham chiếu đến dữ liệu string. Tuy nhiên, clone hóa dữ liệu cũng làm cho code rất đơn giản vì chúng ta không cần quản lý lifetime của các tham chiếu; trong hoàn cảnh này, bỏ ra một chút hiệu suất để đổi lấy sự đơn giản là sự đánh đổi xứng đáng.</p>
+<p>Có nhiều cách để quản lý dữ liệu <code>String</code>; cách đơn giản nhất, dù hơi kém hiệu quả, là gọi phương thức <code>clone</code> trên các giá trị. Điều này sẽ tạo bản sao đầy đủ của dữ liệu cho instance <code>Config</code> sở hữu, tốn thêm thời gian và bộ nhớ hơn so với lưu trữ tham chiếu đến dữ liệu string. Tuy nhiên, clone hóa dữ liệu cũng làm cho mã rất đơn giản vì chúng ta không cần quản lý lifetime của các tham chiếu; trong hoàn cảnh này, bỏ ra một chút hiệu suất để đổi lấy sự đơn giản là sự đánh đổi xứng đáng.</p>
 <section class="note" aria-role="note">
 <h3 id="the-trade-offs-of-using-clone">Đánh Đổi Khi Dùng <code>clone</code></h3>
 <p>Nhiều Rustacean có xu hướng tránh dùng <code>clone</code> để giải quyết vấn đề ownership vì chi phí runtime. Ở <a href="ch13-00-functional-features.html">Chương 13</a>, bạn sẽ học cách dùng các phương thức hiệu quả hơn trong tình huống này. Nhưng bây giờ, sao chép vài chuỗi để tiếp tục tiến triển là ổn thôi — bạn chỉ sao chép một lần duy nhất và đường dẫn file với chuỗi query đều rất nhỏ. Tốt hơn là có một chương trình hoạt động được dù hơi kém hiệu quả, còn hơn cố tối ưu hóa sớm ngay lần đầu. Khi bạn có kinh nghiệm hơn với Rust, sẽ dễ bắt đầu với giải pháp hiệu quả nhất ngay từ đầu, nhưng hiện tại gọi <code>clone</code> là hoàn toàn chấp nhận được.</p>
 </section>
-<p>Chúng ta đã cập nhật <code>main</code> để đặt instance <code>Config</code> được trả về bởi <code>parse_config</code> vào biến <code>config</code>, và cập nhật code trước đây dùng các biến <code>query</code> và <code>file_path</code> riêng lẻ để giờ dùng các trường của struct <code>Config</code>.</p>
-<p>Giờ code truyền tải rõ hơn rằng <code>query</code> và <code>file_path</code> có liên quan với nhau và mục đích của chúng là cấu hình cách chương trình hoạt động. Bất kỳ code nào dùng những giá trị này đều biết tìm chúng trong instance <code>config</code> ở các trường được đặt tên theo mục đích.</p>
+<p>Chúng ta đã cập nhật <code>main</code> để đặt instance <code>Config</code> được trả về bởi <code>parse_config</code> vào biến <code>config</code>, và cập nhật mã trước đây dùng các biến <code>query</code> và <code>file_path</code> riêng lẻ để giờ dùng các trường của struct <code>Config</code>.</p>
+<p>Giờ mã truyền tải rõ hơn rằng <code>query</code> và <code>file_path</code> có liên quan với nhau và mục đích của chúng là cấu hình cách chương trình hoạt động. Bất kỳ mã nào dùng những giá trị này đều biết tìm chúng trong instance <code>config</code> ở các trường được đặt tên theo mục đích.</p>
 <h4 id="creating-a-constructor-for-config">Tạo Constructor Cho <code>Config</code></h4>
-<p>Cho đến nay, chúng ta đã tách logic phân tích tham số dòng lệnh ra khỏi <code>main</code> và đặt nó vào hàm <code>parse_config</code>. Điều này giúp ta thấy rằng các giá trị <code>query</code> và <code>file_path</code> có liên quan, và mối quan hệ đó cần được thể hiện trong code. Chúng ta đã thêm struct <code>Config</code> để đặt tên mục đích liên quan của <code>query</code> và <code>file_path</code>, và có thể trả về tên của các giá trị đó dưới dạng tên trường struct từ hàm <code>parse_config</code>.</p>
-<p>Vậy nên, bây giờ mục đích của hàm <code>parse_config</code> là tạo instance <code>Config</code>, ta có thể đổi tên <code>parse_config</code> từ một hàm thuần túy thành hàm tên <code>new</code> gắn với struct <code>Config</code>. Thay đổi này làm code idiomatic hơn. Chúng ta có thể tạo instance của các kiểu trong thư viện chuẩn, chẳng hạn như <code>String</code>, bằng cách gọi <code>String::new</code>. Tương tự, bằng cách đổi <code>parse_config</code> thành hàm <code>new</code> gắn với <code>Config</code>, ta có thể tạo instance của <code>Config</code> bằng cách gọi <code>Config::new</code>. Listing 12-7 cho thấy các thay đổi cần thực hiện.</p>
+<p>Cho đến nay, chúng ta đã tách logic phân tích tham số dòng lệnh ra khỏi <code>main</code> và đặt nó vào hàm <code>parse_config</code>. Điều này giúp ta thấy rằng các giá trị <code>query</code> và <code>file_path</code> có liên quan, và mối quan hệ đó cần được thể hiện trong mã. Chúng ta đã thêm struct <code>Config</code> để đặt tên mục đích liên quan của <code>query</code> và <code>file_path</code>, và có thể trả về tên của các giá trị đó dưới dạng tên trường struct từ hàm <code>parse_config</code>.</p>
+<p>Vậy nên, bây giờ mục đích của hàm <code>parse_config</code> là tạo instance <code>Config</code>, ta có thể đổi tên <code>parse_config</code> từ một hàm thuần túy thành hàm tên <code>new</code> gắn với struct <code>Config</code>. Thay đổi này làm mã idiomatic hơn. Chúng ta có thể tạo instance của các kiểu trong thư viện chuẩn, chẳng hạn như <code>String</code>, bằng cách gọi <code>String::new</code>. Tương tự, bằng cách đổi <code>parse_config</code> thành hàm <code>new</code> gắn với <code>Config</code>, ta có thể tạo instance của <code>Config</code> bằng cách gọi <code>Config::new</code>. Listing 12-7 cho thấy các thay đổi cần thực hiện.</p>
 <figure class="listing" id="listing-12-7">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground"><span class="boring">use std::env;
@@ -349,7 +349,7 @@ fn parse_config(args: &amp;[String]) -&gt; Config {
 }</code></pre>
 <figcaption><a href="#listing-12-7">Listing 12-7</a>: Đổi tên <code>parse_config</code> thành <code>Config::new</code></figcaption>
 </figure>
-<p>Chúng ta đã cập nhật <code>main</code> để gọi <code>Config::new</code> thay vì <code>parse_config</code>. Chúng ta đổi tên <code>parse_config</code> thành <code>new</code> và chuyển nó vào trong block <code>impl</code>, gắn hàm <code>new</code> với <code>Config</code>. Hãy thử biên dịch lại để chắc chắn rằng nó vẫn hoạt động.</p>
+<p>Chúng ta đã cập nhật <code>main</code> để gọi <code>Config::new</code> thay vì <code>parse_config</code>. Chúng ta đổi tên <code>parse_config</code> thành <code>new</code> và chuyển nó vào trong khối <code>impl</code>, gắn hàm <code>new</code> với <code>Config</code>. Hãy thử biên dịch lại để chắc chắn rằng nó vẫn hoạt động.</p>
 <h3 id="fixing-the-error-handling">Sửa Xử Lý Lỗi</h3>
 <p>Bây giờ chúng ta sẽ xử lý xử lý lỗi. Nhớ lại rằng cố truy cập các giá trị trong vector <code>args</code> ở chỉ số 1 hoặc 2 sẽ khiến chương trình panic nếu vector chứa ít hơn ba phần tử. Thử chạy chương trình không có tham số nào; nó sẽ trông như thế này:</p>
 <pre><code class="language-console">$ cargo run
@@ -404,8 +404,8 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-8">Listing 12-8</a>: Thêm kiểm tra số lượng tham số</figcaption>
 </figure>
-<p>Code này tương tự hàm <code>Guess::new</code> mà chúng ta đã viết ở Listing 9-13, nơi ta gọi <code>panic!</code> khi giá trị tham số nằm ngoài phạm vi hợp lệ. Thay vì kiểm tra phạm vi giá trị ở đây, ta kiểm tra độ dài của <code>args</code> có ít nhất bằng 3 không, và phần còn lại của hàm có thể hoạt động dưới giả định rằng điều kiện này đã được thỏa mãn. Nếu <code>args</code> có ít hơn ba phần tử, điều kiện này sẽ là <code>true</code>, và ta gọi macro <code>panic!</code> để kết thúc chương trình ngay lập tức.</p>
-<p>Với vài dòng code thêm vào trong <code>new</code>, hãy chạy lại chương trình không có tham số để xem lỗi trông như thế nào bây giờ:</p>
+<p>Mã này tương tự hàm <code>Guess::new</code> mà chúng ta đã viết ở Listing 9-13, nơi ta gọi <code>panic!</code> khi giá trị tham số nằm ngoài phạm vi hợp lệ. Thay vì kiểm tra phạm vi giá trị ở đây, ta kiểm tra độ dài của <code>args</code> có ít nhất bằng 3 không, và phần còn lại của hàm có thể hoạt động dưới giả định rằng điều kiện này đã được thỏa mãn. Nếu <code>args</code> có ít hơn ba phần tử, điều kiện này sẽ là <code>true</code>, và ta gọi macro <code>panic!</code> để kết thúc chương trình ngay lập tức.</p>
+<p>Với vài dòng mã thêm vào trong <code>new</code>, hãy chạy lại chương trình không có tham số để xem lỗi trông như thế nào bây giờ:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
@@ -415,7 +415,7 @@ thread 'main' panicked at src/main.rs:26:13:
 not enough arguments
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Output này tốt hơn rồi: giờ chúng ta có thông báo lỗi hợp lý. Tuy nhiên, chúng ta còn có thông tin thừa mà ta không muốn đưa cho người dùng. Kỹ thuật ta dùng ở Listing 9-13 có lẽ không phải tốt nhất ở đây: gọi <code>panic!</code> phù hợp hơn cho vấn đề lập trình hơn là vấn đề sử dụng, như đã thảo luận ở Chương 9. Thay vào đó, ta sẽ dùng kỹ thuật khác mà bạn đã học ở Chương 9 — <a href="ch09-02-recoverable-errors-with-result.html">trả về <code>Result</code></a> để chỉ ra thành công hay thất bại.</p>
+<p>Kết quả này tốt hơn rồi: giờ chúng ta có thông báo lỗi hợp lý. Tuy nhiên, chúng ta còn có thông tin thừa mà ta không muốn đưa cho người dùng. Kỹ thuật ta dùng ở Listing 9-13 có lẽ không phải tốt nhất ở đây: gọi <code>panic!</code> phù hợp hơn cho vấn đề lập trình hơn là vấn đề sử dụng, như đã thảo luận ở Chương 9. Thay vào đó, ta sẽ dùng kỹ thuật khác mà bạn đã học ở Chương 9 — <a href="ch09-02-recoverable-errors-with-result.html">trả về <code>Result</code></a> để chỉ ra thành công hay thất bại.</p>
 <p><a id="returning-a-result-from-new-instead-of-calling-panic"></a></p>
 <h4 id="returning-a-result-instead-of-calling-panic">Trả Về <code>Result</code> Thay Vì Gọi <code>panic!</code></h4>
 <p>Thay vào đó, chúng ta có thể trả về giá trị <code>Result</code> chứa instance <code>Config</code> trong trường hợp thành công và mô tả vấn đề trong trường hợp lỗi. Chúng ta cũng sẽ đổi tên hàm từ <code>new</code> thành <code>build</code> vì nhiều lập trình viên mong đợi hàm <code>new</code> không bao giờ thất bại. Khi <code>Config::build</code> giao tiếp với <code>main</code>, ta có thể dùng kiểu <code>Result</code> để báo hiệu có vấn đề. Sau đó, ta có thể sửa <code>main</code> để chuyển đổi một biến thể <code>Err</code> thành lỗi thực tế hơn cho người dùng mà không có văn bản thừa về <code>thread 'main'</code> và <code>RUST_BACKTRACE</code> mà một cuộc gọi <code>panic!</code> gây ra.</p>
@@ -508,18 +508,18 @@ fn main() {
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-10">Listing 12-10</a>: Thoát với mã lỗi nếu xây dựng <code>Config</code> thất bại</figcaption>
 </figure>
-<p>Trong listing này, ta dùng một phương thức chưa được đề cập chi tiết: <code>unwrap_or_else</code>, được định nghĩa trên <code>Result&lt;T, E&gt;</code> bởi thư viện chuẩn. Dùng <code>unwrap_or_else</code> cho phép ta định nghĩa xử lý lỗi tùy chỉnh, không phải <code>panic!</code>. Nếu <code>Result</code> là giá trị <code>Ok</code>, hành vi của phương thức này tương tự <code>unwrap</code>: nó trả về giá trị bên trong mà <code>Ok</code> đang bọc. Tuy nhiên, nếu giá trị là <code>Err</code>, phương thức này gọi code trong closure — một hàm ẩn danh mà ta định nghĩa và truyền như tham số cho <code>unwrap_or_else</code>. Chúng ta sẽ đề cập closure chi tiết hơn ở <a href="ch13-00-functional-features.html">Chương 13</a>. Hiện tại, chỉ cần biết rằng <code>unwrap_or_else</code> sẽ truyền giá trị bên trong của <code>Err</code> — trong trường hợp này là string tĩnh <code>"not enough arguments"</code> mà ta đã thêm ở Listing 12-9 — vào closure của ta trong tham số <code>err</code> xuất hiện giữa hai dấu gạch đứng. Code trong closure sau đó có thể dùng giá trị <code>err</code> khi nó chạy.</p>
-<p>Chúng ta đã thêm dòng <code>use</code> mới để đưa <code>process</code> từ thư viện chuẩn vào scope. Code trong closure sẽ chạy trong trường hợp lỗi chỉ có hai dòng: in giá trị <code>err</code> rồi gọi <code>process::exit</code>. Hàm <code>process::exit</code> sẽ dừng chương trình ngay lập tức và trả về số được truyền vào làm mã trạng thái thoát. Điều này tương tự xử lý dựa trên <code>panic!</code> ta dùng ở Listing 12-8, nhưng ta không còn nhận được tất cả output thừa nữa. Hãy thử:</p>
+<p>Trong listing này, ta dùng một phương thức chưa được đề cập chi tiết: <code>unwrap_or_else</code>, được định nghĩa trên <code>Result&lt;T, E&gt;</code> bởi thư viện chuẩn. Dùng <code>unwrap_or_else</code> cho phép ta định nghĩa xử lý lỗi tùy chỉnh, không phải <code>panic!</code>. Nếu <code>Result</code> là giá trị <code>Ok</code>, hành vi của phương thức này tương tự <code>unwrap</code>: nó trả về giá trị bên trong mà <code>Ok</code> đang bọc. Tuy nhiên, nếu giá trị là <code>Err</code>, phương thức này gọi mã trong closure — một hàm ẩn danh mà ta định nghĩa và truyền như tham số cho <code>unwrap_or_else</code>. Chúng ta sẽ đề cập closure chi tiết hơn ở <a href="ch13-00-functional-features.html">Chương 13</a>. Hiện tại, chỉ cần biết rằng <code>unwrap_or_else</code> sẽ truyền giá trị bên trong của <code>Err</code> — trong trường hợp này là string tĩnh <code>"not enough arguments"</code> mà ta đã thêm ở Listing 12-9 — vào closure của ta trong tham số <code>err</code> xuất hiện giữa hai dấu gạch đứng. Mã trong closure sau đó có thể dùng giá trị <code>err</code> khi nó chạy.</p>
+<p>Chúng ta đã thêm dòng <code>use</code> mới để đưa <code>process</code> từ thư viện chuẩn vào scope. Mã trong closure sẽ chạy trong trường hợp lỗi chỉ có hai dòng: in giá trị <code>err</code> rồi gọi <code>process::exit</code>. Hàm <code>process::exit</code> sẽ dừng chương trình ngay lập tức và trả về số được truyền vào làm mã trạng thái thoát. Điều này tương tự xử lý dựa trên <code>panic!</code> ta dùng ở Listing 12-8, nhưng ta không còn nhận được tất cả kết quả thừa nữa. Hãy thử:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
      Running `target/debug/minigrep`
 Problem parsing arguments: not enough arguments
 </code></pre>
-<p>Tuyệt! Output này thân thiện với người dùng hơn nhiều rồi.</p>
+<p>Tuyệt! Kết quả này thân thiện với người dùng hơn nhiều rồi.</p>
 <p><a id="extracting-logic-from-the-main-function"></a></p>
 <h3 id="extracting-logic-from-main">Tách Logic Ra Khỏi <code>main</code></h3>
-<p>Bây giờ chúng ta đã xong việc refactor phân tích cấu hình, hãy chuyển sang logic của chương trình. Như đã nêu trong phần "Tách Biệt Mối Quan Tâm Trong Binary Project", ta sẽ tách một hàm tên <code>run</code> chứa tất cả logic hiện đang ở trong hàm <code>main</code> mà không liên quan đến việc thiết lập cấu hình hay xử lý lỗi. Khi hoàn thành, hàm <code>main</code> sẽ gọn và dễ xác nhận bằng cách đọc qua, và ta sẽ có thể viết test cho toàn bộ logic khác.</p>
+<p>Bây giờ chúng ta đã xong việc refactor phân tích cấu hình, hãy chuyển sang logic của chương trình. Như đã nêu trong phần "Tách Biệt Mối Quan Tâm Trong Binary Dự án", ta sẽ tách một hàm tên <code>run</code> chứa tất cả logic hiện đang ở trong hàm <code>main</code> mà không liên quan đến việc thiết lập cấu hình hay xử lý lỗi. Khi hoàn thành, hàm <code>main</code> sẽ gọn và dễ xác nhận bằng cách đọc qua, và ta sẽ có thể viết test cho toàn bộ logic khác.</p>
 <p>Listing 12-11 cho thấy cải tiến nhỏ, từng bước của việc tách hàm <code>run</code>.</p>
 <figure class="listing" id="listing-12-11">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -627,10 +627,10 @@ fn run(config: Config) {
 <figcaption><a href="#listing-12-12">Listing 12-12</a>: Sửa hàm <code>run</code> để trả về <code>Result</code></figcaption>
 </figure>
 <p>Chúng ta đã thực hiện ba thay đổi đáng kể ở đây. Thứ nhất, ta đổi kiểu trả về của hàm <code>run</code> thành <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code>. Hàm này trước đây trả về kiểu unit <code>()</code>, và ta giữ đó làm giá trị trả về trong trường hợp <code>Ok</code>.</p>
-<p>Với kiểu lỗi, ta dùng trait object <code>Box&lt;dyn Error&gt;</code> (và ta đã đưa <code>std::error::Error</code> vào scope với câu lệnh <code>use</code> ở đầu). Chúng ta sẽ đề cập trait object ở <a href="ch18-00-oop.html">Chương 18</a>. Hiện tại, chỉ cần biết rằng <code>Box&lt;dyn Error&gt;</code> có nghĩa là hàm sẽ trả về một kiểu implement trait <code>Error</code>, nhưng ta không cần chỉ định kiểu trả về cụ thể là gì. Điều này cho ta linh hoạt để trả về các giá trị lỗi có thể thuộc các kiểu khác nhau trong các trường hợp lỗi khác nhau. Từ khóa <code>dyn</code> viết tắt của <em>dynamic</em>.</p>
+<p>Với kiểu lỗi, ta dùng trait object <code>Box&lt;dyn Error&gt;</code> (và ta đã đưa <code>std::error::Error</code> vào scope với câu lệnh <code>use</code> ở đầu). Chúng ta sẽ đề cập trait object ở <a href="ch18-00-oop.html">Chương 18</a>. Hiện tại, chỉ cần biết rằng <code>Box&lt;dyn Error&gt;</code> có nghĩa là hàm sẽ trả về một kiểu triển khai trait <code>Error</code>, nhưng ta không cần chỉ định kiểu trả về cụ thể là gì. Điều này cho ta linh hoạt để trả về các giá trị lỗi có thể thuộc các kiểu khác nhau trong các trường hợp lỗi khác nhau. Từ khóa <code>dyn</code> viết tắt của <em>dynamic</em>.</p>
 <p>Thứ hai, ta đã thay thế lệnh gọi <code>expect</code> bằng toán tử <code>?</code>, như ta đã thảo luận ở <a href="ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator">Chương 9</a>. Thay vì <code>panic!</code> khi có lỗi, <code>?</code> sẽ trả về giá trị lỗi từ hàm hiện tại cho người gọi xử lý.</p>
 <p>Thứ ba, hàm <code>run</code> giờ trả về giá trị <code>Ok</code> trong trường hợp thành công. Ta đã khai báo kiểu thành công của hàm <code>run</code> là <code>()</code> trong chữ ký, nghĩa là ta cần bọc giá trị kiểu unit trong <code>Ok</code>. Cú pháp <code>Ok(())</code> trông hơi lạ lúc đầu. Nhưng dùng <code>()</code> như vậy là cách idiomatic để chỉ ra rằng ta đang gọi <code>run</code> chỉ vì side effect của nó; nó không trả về giá trị ta cần.</p>
-<p>Khi bạn chạy code này, nó sẽ biên dịch được nhưng sẽ hiển thị cảnh báo:</p>
+<p>Khi bạn chạy mã này, nó sẽ biên dịch được nhưng sẽ hiển thị cảnh báo:</p>
 <pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
 warning: unused `Result` that must be used
@@ -663,7 +663,7 @@ To tell your name the livelong day
 To an admiring bog!
 
 </code></pre>
-<p>Rust cho ta biết code đã bỏ qua giá trị <code>Result</code> và giá trị <code>Result</code> đó có thể chỉ ra đã có lỗi xảy ra. Nhưng ta chưa kiểm tra xem có lỗi không, và compiler nhắc ta rằng ta có lẽ muốn có một số code xử lý lỗi ở đây! Hãy khắc phục vấn đề đó ngay.</p>
+<p>Rust cho ta biết mã đã bỏ qua giá trị <code>Result</code> và giá trị <code>Result</code> đó có thể chỉ ra đã có lỗi xảy ra. Nhưng ta chưa kiểm tra xem có lỗi không, và compiler nhắc ta rằng ta có lẽ muốn có một số mã xử lý lỗi ở đây! Hãy khắc phục vấn đề đó ngay.</p>
 <h4 id="handling-errors-returned-from-run-in-main">Xử Lý Lỗi Trả Về Từ <code>run</code> Trong <code>main</code></h4>
 <p>Chúng ta sẽ kiểm tra lỗi và xử lý chúng bằng kỹ thuật tương tự với <code>Config::build</code> ở Listing 12-10, nhưng với một điểm khác biệt nhỏ:</p>
 <p><span class="filename">Tên file: src/main.rs</span></p>
@@ -718,9 +718,9 @@ To an admiring bog!
 </span><span class="boring">}</span></code></pre>
 <p>Chúng ta dùng <code>if let</code> thay vì <code>unwrap_or_else</code> để kiểm tra xem <code>run</code> có trả về giá trị <code>Err</code> không và gọi <code>process::exit(1)</code> nếu có. Hàm <code>run</code> không trả về giá trị mà ta muốn <code>unwrap</code> theo cách tương tự như <code>Config::build</code> trả về instance <code>Config</code>. Vì <code>run</code> trả về <code>()</code> trong trường hợp thành công, ta chỉ quan tâm đến việc phát hiện lỗi, nên ta không cần <code>unwrap_or_else</code> để trả về giá trị đã được unwrap, vốn chỉ là <code>()</code>.</p>
 <p>Thân của <code>if let</code> và hàm <code>unwrap_or_else</code> giống nhau trong cả hai trường hợp: ta in lỗi và thoát.</p>
-<h3 id="splitting-code-into-a-library-crate">Tách Code Vào Library Crate</h3>
-<p>Dự án <code>minigrep</code> đang trông ổn rồi! Bây giờ chúng ta sẽ tách file <em>src/main.rs</em> và đặt một phần code vào file <em>src/lib.rs</em>. Bằng cách đó, ta có thể test code và có một file <em>src/main.rs</em> với ít trách nhiệm hơn.</p>
-<p>Hãy định nghĩa code chịu trách nhiệm tìm kiếm văn bản trong <em>src/lib.rs</em> thay vì trong <em>src/main.rs</em>, điều này cho phép ta (hoặc bất kỳ ai dùng thư viện <code>minigrep</code> của ta) gọi hàm tìm kiếm từ nhiều ngữ cảnh hơn binary <code>minigrep</code> của ta.</p>
+<h3 id="splitting-code-into-a-library-crate">Tách Mã Vào Library Crate</h3>
+<p>Dự án <code>minigrep</code> đang trông ổn rồi! Bây giờ chúng ta sẽ tách file <em>src/main.rs</em> và đặt một phần mã vào file <em>src/lib.rs</em>. Bằng cách đó, ta có thể test mã và có một file <em>src/main.rs</em> với ít trách nhiệm hơn.</p>
+<p>Hãy định nghĩa mã chịu trách nhiệm tìm kiếm văn bản trong <em>src/lib.rs</em> thay vì trong <em>src/main.rs</em>, điều này cho phép ta (hoặc bất kỳ ai dùng thư viện <code>minigrep</code> của ta) gọi hàm tìm kiếm từ nhiều ngữ cảnh hơn binary <code>minigrep</code> của ta.</p>
 <p>Đầu tiên, hãy định nghĩa chữ ký hàm <code>search</code> trong <em>src/lib.rs</em> như được thể hiện ở Listing 12-13, với thân hàm gọi macro <code>unimplemented!</code>. Chúng ta sẽ giải thích chữ ký chi tiết hơn khi điền phần triển khai.</p>
 <figure class="listing" id="listing-12-13">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -730,7 +730,7 @@ To an admiring bog!
 <figcaption><a href="#listing-12-13">Listing 12-13</a>: Định nghĩa hàm <code>search</code> trong <em>src/lib.rs</em></figcaption>
 </figure>
 <p>Chúng ta dùng từ khóa <code>pub</code> trên định nghĩa hàm để đánh dấu <code>search</code> là một phần của public API của library crate. Giờ ta có một library crate mà ta có thể dùng từ binary crate và có thể test!</p>
-<p>Giờ ta cần đưa code được định nghĩa trong <em>src/lib.rs</em> vào scope của binary crate trong <em>src/main.rs</em> và gọi nó, như được thể hiện ở Listing 12-14.</p>
+<p>Giờ ta cần đưa mã được định nghĩa trong <em>src/lib.rs</em> vào scope của binary crate trong <em>src/main.rs</em> và gọi nó, như được thể hiện ở Listing 12-14.</p>
 <figure class="listing" id="listing-12-14">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
@@ -790,8 +790,8 @@ fn main() {
 </figure>
 <p>Chúng ta thêm dòng <code>use minigrep::search</code> để đưa hàm <code>search</code> từ library crate vào scope của binary crate. Sau đó trong hàm <code>run</code>, thay vì in nội dung file, ta gọi hàm <code>search</code> và truyền <code>config.query</code> và <code>contents</code> làm tham số. Rồi <code>run</code> sẽ dùng vòng lặp <code>for</code> để in từng dòng được trả về từ <code>search</code> khớp với query. Đây cũng là thời điểm tốt để xóa các lệnh <code>println!</code> trong hàm <code>main</code> hiển thị query và đường dẫn file để chương trình chỉ in kết quả tìm kiếm (nếu không có lỗi).</p>
 <p>Lưu ý rằng hàm search sẽ thu thập tất cả kết quả vào vector trả về trước khi bất kỳ thứ gì được in. Triển khai này có thể chậm khi hiển thị kết quả với file lớn, vì kết quả không được in khi tìm thấy; chúng ta sẽ thảo luận cách khắc phục điều này bằng iterator ở Chương 13.</p>
-<p>Ôi chao! Nhiều công việc quá, nhưng ta đã đặt nền móng cho thành công trong tương lai. Giờ xử lý lỗi dễ hơn nhiều, và ta đã làm cho code mô-đun hơn. Gần như tất cả công việc của ta sẽ được thực hiện trong <em>src/lib.rs</em> từ đây trở đi.</p>
-<p>Hãy tận dụng tính mô-đun mới tìm được này để làm thứ mà với code cũ sẽ khó, nhưng với code mới lại dễ: chúng ta sẽ viết một số test!</p>
+<p>Ôi chao! Nhiều công việc quá, nhưng ta đã đặt nền móng cho thành công trong tương lai. Giờ xử lý lỗi dễ hơn nhiều, và ta đã làm cho mã mô-đun hơn. Gần như tất cả công việc của ta sẽ được thực hiện trong <em>src/lib.rs</em> từ đây trở đi.</p>
+<p>Hãy tận dụng tính mô-đun mới tìm được này để làm thứ mà với mã cũ sẽ khó, nhưng với mã mới lại dễ: chúng ta sẽ viết một số test!</p>
 
   <div class="page-nav bottom"><a href="ch12-02-reading-a-file.html">← Trước</a><a href="ch12-04-testing-the-librarys-functionality.html">Tiếp →</a></div>
   </div>

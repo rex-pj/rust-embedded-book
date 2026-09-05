@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — Cấu trúc điều khiển ngắn gọn với if let và let...else</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch06-02-match.html">← Trước</a>
@@ -233,11 +233,11 @@
 
   <p>Cú pháp <code>if let</code> nhận vào một mẫu và một biểu thức được phân tách bằng dấu bằng. Nó hoạt động theo cùng một cách như <code>match</code>, nơi biểu thức được cung cấp cho <code>match</code> và mẫu là nhánh (arm) đầu tiên của nó. Trong trường hợp này, pattern là <code>Some(max)</code> và biến <code>max</code> liên kết đến giá trị bên trong <code>Some</code>. Sau đó, chúng ta có thể sử dụng <code>max</code> trong phần thân của khối <code>if let</code> theo cùng cách chúng ta đã sử dụng <code>max</code> trong arm <code>match</code> tương ứng. Đoạn mã trong khối <code>if let</code> sẽ chỉ chạy nếu giá trị khớp với mẫu.</p>
 
-  <p>Sử dụng <code>if let</code> đồng nghĩa với việc bạn gõ ít hơn, thụt lề ít hơn và ít boilerplate code hơn. Tuy nhiên, bạn mất chức năng kiểm tra tính toàn vẹn cạn kiệt (exhaustive checking) mà <code>match</code> bắt buộc để đảm bảo rằng bạn không quên xử lý bất kỳ trường hợp nào. Chọn giữa <code>match</code> và <code>if let</code> tùy thuộc vào những gì bạn đang làm trong tình huống cụ thể của bạn, và liệu đánh đổi tính toàn vẹn cạn kiệt để đạt được sự ngắn gọn có phù hợp hay không.</p>
+  <p>Sử dụng <code>if let</code> đồng nghĩa với việc bạn gõ ít hơn, thụt lề ít hơn và ít mã boilerplate hơn. Tuy nhiên, bạn mất chức năng kiểm tra tính toàn vẹn cạn kiệt (exhaustive checking) mà <code>match</code> bắt buộc để đảm bảo rằng bạn không quên xử lý bất kỳ trường hợp nào. Chọn giữa <code>match</code> và <code>if let</code> tùy thuộc vào những gì bạn đang làm trong tình huống cụ thể của bạn, và liệu đánh đổi tính toàn vẹn cạn kiệt để đạt được sự ngắn gọn có phù hợp hay không.</p>
 
   <p>Nói cách khác, bạn có thể coi <code>if let</code> như một cú pháp đường mật (syntax sugar) cho <code>match</code> để chạy mã khi giá trị khớp với một mẫu duy nhất và bỏ qua tất cả các giá trị còn lại.</p>
 
-  <p>Chúng ta có thể bao gồm một <code>else</code> với một <code>if let</code>. Khối mã đi với <code>else</code> giống với khối mã nằm ở phần <code>_</code> trong biểu thức <code>match</code> đối sánh tương đương với <code>if let</code> và <code>else</code> này. Nhớ lại định nghĩa Enum <code>Coin</code> trong Listing 6-4, nơi nhánh <code>Quarter</code> cũng chứa một giá trị <code>UsState</code>. Nếu chúng ta muốn đếm tất cả các đồng xu không phải là loại quý trong khi cũng thông báo tiểu bang của các đồng quarter này, chúng ta có thể làm điều đó với một biểu thức <code>match</code>, như thế này:</p>
+  <p>Chúng ta có thể bao gồm một <code>else</code> với một <code>if let</code>. Khối mã đi với <code>else</code> giống với khối mã nằm ở phần <code>_</code> trong biểu thức <code>match</code> đối sánh tương đương với <code>if let</code> và <code>else</code> này. Nhớ lại định nghĩa enum <code>Coin</code> trong Listing 6-4, nơi nhánh <code>Quarter</code> cũng chứa một giá trị <code>UsState</code>. Nếu chúng ta muốn đếm tất cả các đồng xu không phải là loại quý trong khi cũng thông báo tiểu bang của các đồng quarter này, chúng ta có thể làm điều đó với một biểu thức <code>match</code>, như thế này:</p>
 
 <pre><code class="language-rust">#[derive(Debug)]
 enum UsState {
@@ -433,7 +433,7 @@ fn main() {
 
   <p>Và để làm cho khuôn mẫu chung này trở nên tường minh và hiệu quả hơn, ngôn ngữ Rust cung cấp <code>let...else</code>. Cú pháp <code>let...else</code> lấy về một mẫu (pattern) nằm ở phía bên trái và một biểu thức (expression) ở bên phải, tương đối giống với <code>if let</code>, nhưng nó có điểm khác là không có một rẽ nhánh <code>if</code> nào cả mà lại chỉ có một rẽ nhánh <code>else</code> mà thôi. Trường hợp pattern mà ăn khớp, nó sẽ tiến hành ràng buộc phần giá trị đối chiếu được từ chính pattern này với vùng không gian bên ngoài (outer scope). Ngược lại, nếu pattern đó mà không khớp, thì khi đó chương trình sẽ đi ngược vào bên trong nhánh <code>else</code>, bắt buộc và sẽ phải thoát khỏi hàm thông qua từ khóa return.</p>
 
-  <p>Và thông qua Listing 6-9, thì bạn sẽ thấy là qua cách đoạn code ở Listing 6-8 được trình bày lúc mà áp dụng vào sử dụng <code>let...else</code> thay cho <code>if let</code> thì như thế nào.</p>
+  <p>Và thông qua Listing 6-9, thì bạn sẽ thấy là qua cách đoạn mã ở Listing 6-8 được trình bày lúc mà áp dụng vào sử dụng <code>let...else</code> thay cho <code>if let</code> thì như thế nào.</p>
 
   <figure class="listing" id="listing-6-9">
 <pre><code class="language-rust">#[derive(Debug)] // so we can inspect the state in a minute
@@ -477,7 +477,7 @@ fn main() {
         println!("{desc}");
     }
 }</code></pre>
-    <figcaption><a href="#listing-6-9">Listing 6-9</a>: Việc đi dùng <code>let...else</code> này giúp đoạn code qua hàm này nhìn có vẻ rõ ràng và minh bạch hơn nhiều.</figcaption>
+    <figcaption><a href="#listing-6-9">Listing 6-9</a>: Việc đi dùng <code>let...else</code> này giúp đoạn mã qua hàm này nhìn có vẻ rõ ràng và minh bạch hơn nhiều.</figcaption>
   </figure>
 
   <p>Làm vậy, ta sẽ bảo lưu phần mã nằm trong chức năng chính trên "con đường hạnh phúc" một cách chuẩn nhất, sẽ chẳng hề có phần luồng chạy mã khác đáng kể qua cả hai nhánh phụ như khi ta phải dùng <code>if let</code> cho việc này.</p>
@@ -485,11 +485,11 @@ fn main() {
   <p>Khi bạn mà thấy rơi vào tình trạng mà mã ứng dụng đang dùng cái cấu trúc logic quá ư phức tạp để ghi ra bằng lệnh <code>match</code>, thì hãy chớ quên bạn luôn có <code>if let</code> cùng lệnh <code>let...else</code> đóng vai trò dự phòng và sẵn sàng cho sử dụng ngay trong hộp đồ công nghệ Rust.</p>
 
   <h2 id="summary">Tổng kết</h2>
-  <p>Chúng ta đã trình bày xong tất cả việc đi dùng cấu trúc Enum nhắm tới một mục đích cuối: kiến tạo các data structure theo chuẩn và cho phép việc đó có được một trong số dữ kiện tập hợp định sẵn. Cập nhật này đi liền với sự hé lộ của chính cấu trúc <code>Option&lt;T&gt;</code> tại thư viện cốt lõi: đây được xem  là cấu trúc giúp củng cố dữ kiện dùng, đồng thời tránh việc đưa mã tạo ứng dụng vướng bug ngoài tầm với. Những khi biến số liên quan trong cấu trúc enum đi mang lưu lượng tại chính nó, thì sử dụng <code>match</code> kèm theo cái cấu trúc đi rẽ hướng <code>if let</code> hoàn toàn đủ vững trãi giúp tiến hành gắp và dùng thử phần trị mang về đó, đây lại sẽ phụ thuộc nhiều và một loạt nhiều hay ít điều kiện bạn tính xử.</p>
+  <p>Chúng ta đã trình bày xong tất cả việc đi dùng cấu trúc enum nhắm tới một mục đích cuối: kiến tạo các data structure theo chuẩn và cho phép việc đó có được một trong số dữ kiện tập hợp định sẵn. Cập nhật này đi liền với sự hé lộ của chính cấu trúc <code>Option&lt;T&gt;</code> tại thư viện cốt lõi: đây được xem  là cấu trúc giúp củng cố dữ kiện dùng, đồng thời tránh việc đưa mã tạo ứng dụng vướng bug ngoài tầm với. Những khi biến số liên quan trong cấu trúc enum đi mang lưu lượng tại chính nó, thì sử dụng <code>match</code> kèm theo cái cấu trúc đi rẽ hướng <code>if let</code> hoàn toàn đủ vững trãi giúp tiến hành gắp và dùng thử phần trị mang về đó, đây lại sẽ phụ thuộc nhiều và một loạt nhiều hay ít điều kiện bạn tính xử.</p>
 
-  <p>Rust Program tới nay cho thấy bạn đã biết cách áp mã theo kiểu chuẩn cùng Enum như Struct. Việc bạn đi vào tạo hẳn type riêng hướng đến cho API khi này chỉ nhắm vào 1 sự thật rằng nó củng cố đi hệ thống, Compiler có nhiệm vụ nhắc nhở việc bạn đưa chức năng cần và đủ để những thứ đang có đều luôn mang dữ kiện thuộc kiểu này trong nó.</p>
+  <p>Rust Program tới nay cho thấy bạn đã biết cách áp mã theo kiểu chuẩn cùng enum như struct. Việc bạn đi vào tạo hẳn type riêng hướng đến cho API khi này chỉ nhắm vào 1 sự thật rằng nó củng cố đi hệ thống, Compiler có nhiệm vụ nhắc nhở việc bạn đưa chức năng cần và đủ để những thứ đang có đều luôn mang dữ kiện thuộc kiểu này trong nó.</p>
 
-  <p>Mục tiêu để có đủ sức hướng đến chia module hệ code khi tới tay bạn khi bạn là những Programmers sử dụng, giúp sử dụng đi không rườm rà. Hệ module sẽ nói tiếp sau.</p>
+  <p>Mục tiêu để có đủ sức hướng đến chia module hệ mã khi tới tay bạn khi bạn là những programmer sử dụng, giúp sử dụng đi không rườm rà. Hệ module sẽ nói tiếp sau.</p>
 
 
   <div class="page-nav bottom"><a href="ch06-02-match.html">← Trước</a><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Tiếp →</a></div>

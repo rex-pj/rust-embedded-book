@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 4 — Tham chiếu và Mượn (References and Borrowing)</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch04-01-what-is-ownership.html">← Trước</a>
@@ -207,7 +207,7 @@
   </div>
 
   <h2 id="references-and-borrowing">📍 Tham chiếu và Mượn (References and Borrowing)</h2>
-  <p>Vấn đề với đoạn code tuple trong Listing 4-5 là chúng ta phải trả <code>String</code> về cho hàm gọi để vẫn có thể sử dụng <code>String</code> sau lệnh gọi <code>calculate_length</code>, vì <code>String</code> đã bị di chuyển vào <code>calculate_length</code>. Thay vào đó, chúng ta có thể cung cấp một tham chiếu đến giá trị <code>String</code>. Một tham chiếu giống như một con trỏ ở chỗ nó là một địa chỉ chúng ta có thể đi theo để truy cập dữ liệu được lưu ở địa chỉ đó; dữ liệu đó được sở hữu bởi một biến khác. Khác với con trỏ, tham chiếu được đảm bảo luôn trỏ đến một giá trị hợp lệ của một kiểu dữ liệu cụ thể trong suốt lifetime của tham chiếu đó.</p>
+  <p>Vấn đề với đoạn mã tuple trong Listing 4-5 là chúng ta phải trả <code>String</code> về cho hàm gọi để vẫn có thể sử dụng <code>String</code> sau lệnh gọi <code>calculate_length</code>, vì <code>String</code> đã bị di chuyển vào <code>calculate_length</code>. Thay vào đó, chúng ta có thể cung cấp một tham chiếu đến giá trị <code>String</code>. Một tham chiếu giống như một con trỏ ở chỗ nó là một địa chỉ chúng ta có thể đi theo để truy cập dữ liệu được lưu ở địa chỉ đó; dữ liệu đó được sở hữu bởi một biến khác. Khác với con trỏ, tham chiếu được đảm bảo luôn trỏ đến một giá trị hợp lệ của một kiểu dữ liệu cụ thể trong suốt lifetime của tham chiếu đó.</p>
 
   <p>Đây là cách bạn sẽ định nghĩa và sử dụng một hàm <code>calculate_length</code> có tham chiếu đến một đối tượng làm tham số thay vì nhận ownership của giá trị:</p>
 
@@ -226,7 +226,7 @@ fn calculate_length(s: &amp;String) -&gt; usize {
 }</code></pre>
   </figure>
 
-  <p>Đầu tiên, hãy chú ý rằng toàn bộ code tuple trong phần khai báo biến và giá trị trả về của hàm đã không còn nữa. Thứ hai, lưu ý rằng chúng ta truyền <code>&amp;s1</code> vào <code>calculate_length</code>, và trong định nghĩa của nó, chúng ta nhận <code>&amp;String</code> thay vì <code>String</code>. Các dấu và (&amp;) này biểu thị các tham chiếu, và chúng cho phép bạn tham chiếu đến một giá trị nào đó mà không cần lấy ownership của nó. Hình 4-6 minh họa khái niệm này.</p>
+  <p>Đầu tiên, hãy chú ý rằng toàn bộ mã tuple trong phần khai báo biến và giá trị trả về của hàm đã không còn nữa. Thứ hai, lưu ý rằng chúng ta truyền <code>&amp;s1</code> vào <code>calculate_length</code>, và trong định nghĩa của nó, chúng ta nhận <code>&amp;String</code> thay vì <code>String</code>. Các dấu và (&amp;) này biểu thị các tham chiếu, và chúng cho phép bạn tham chiếu đến một giá trị nào đó mà không cần lấy ownership của nó. Hình 4-6 minh họa khái niệm này.</p>
 
   <p><img alt="Ba bảng: bảng cho s chỉ chứa một con trỏ trỏ đến bảng cho s1. Bảng cho s1 chứa dữ liệu stack của s1 và trỏ đến dữ liệu chuỗi trên heap." src="img/trpl04-06.svg" class="center" /></p>
   <p><span class="caption">Hình 4-6: Sơ đồ biểu diễn <code>&amp;String</code> <code>s</code> trỏ đến <code>String</code> <code>s1</code></span></p>
@@ -270,7 +270,7 @@ fn calculate_length(s: &amp;String) -&gt; usize { // s là tham chiếu tới St
 
   <p>Hành động tạo một tham chiếu được gọi là <em>mượn (borrowing)</em>. Giống như trong cuộc sống thực, nếu một người sở hữu thứ gì đó, bạn có thể mượn nó từ họ. Khi bạn xong việc, bạn phải trả lại. Bạn không sở hữu nó.</p>
 
-  <p>Vậy điều gì xảy ra nếu chúng ta cố thay đổi thứ gì đó mà chúng ta đang mượn? Hãy thử code trong Listing 4-6. Cảnh báo trước: Nó sẽ không hoạt động!</p>
+  <p>Vậy điều gì xảy ra nếu chúng ta cố thay đổi thứ gì đó mà chúng ta đang mượn? Hãy thử mã trong Listing 4-6. Cảnh báo trước: Nó sẽ không hoạt động!</p>
 
   <figure class="listing" id="listing-4-6">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -308,7 +308,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
   <p>Cũng như các biến mặc định là bất biến, các tham chiếu cũng vậy. Chúng ta không được phép thay đổi thứ gì đó mà chúng ta có tham chiếu đến.</p>
 
   <h3 id="mutable-references">🛠️ Tham chiếu Mutable</h3>
-  <p>Chúng ta có thể sửa code từ Listing 4-6 để cho phép thay đổi giá trị đang mượn chỉ với một vài điều chỉnh nhỏ, sử dụng thay vào đó một <em>tham chiếu mutable (mutable reference)</em>:</p>
+  <p>Chúng ta có thể sửa mã từ Listing 4-6 để cho phép thay đổi giá trị đang mượn chỉ với một vài điều chỉnh nhỏ, sử dụng thay vào đó một <em>tham chiếu mutable (mutable reference)</em>:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -325,7 +325,7 @@ fn change(some_string: &amp;mut String) {
 
   <p>Đầu tiên, chúng ta thay đổi <code>s</code> thành <code>mut</code>. Sau đó, chúng ta tạo một tham chiếu mutable với <code>&amp;mut s</code> ở nơi gọi hàm <code>change</code> và cập nhật chữ ký hàm để nhận một tham chiếu mutable với <code>some_string: &amp;mut String</code>. Điều này làm rõ ràng rằng hàm <code>change</code> sẽ thay đổi giá trị mà nó mượn.</p>
 
-  <p>Tham chiếu mutable có một hạn chế lớn: nếu bạn có một tham chiếu mutable đến một giá trị, bạn không thể có bất kỳ tham chiếu nào khác đến giá trị đó. Code này cố tạo hai tham chiếu mutable đến <code>s</code> sẽ thất bại:</p>
+  <p>Tham chiếu mutable có một hạn chế lớn: nếu bạn có một tham chiếu mutable đến một giá trị, bạn không thể có bất kỳ tham chiếu nào khác đến giá trị đó. Mã này cố tạo hai tham chiếu mutable đến <code>s</code> sẽ thất bại:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -358,7 +358,7 @@ For more information about this error, try `rustc --explain E0499`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Lỗi này cho biết code không hợp lệ vì chúng ta không thể mượn <code>s</code> dưới dạng mutable nhiều hơn một lần trong cùng một thời điểm. Lần mượn mutable đầu tiên nằm ở <code>r1</code> và phải kéo dài cho đến khi nó được dùng trong <code>println!</code>, nhưng giữa việc tạo tham chiếu mutable đó và việc sử dụng nó, chúng ta cố tạo một tham chiếu mutable khác trong <code>r2</code> mượn cùng dữ liệu như <code>r1</code>.</p>
+  <p>Lỗi này cho biết mã không hợp lệ vì chúng ta không thể mượn <code>s</code> dưới dạng mutable nhiều hơn một lần trong cùng một thời điểm. Lần mượn mutable đầu tiên nằm ở <code>r1</code> và phải kéo dài cho đến khi nó được dùng trong <code>println!</code>, nhưng giữa việc tạo tham chiếu mutable đó và việc sử dụng nó, chúng ta cố tạo một tham chiếu mutable khác trong <code>r2</code> mượn cùng dữ liệu như <code>r1</code>.</p>
 
   <p>Hạn chế ngăn cản nhiều tham chiếu mutable đến cùng một dữ liệu trong cùng một thời điểm cho phép việc thay đổi nhưng theo cách rất có kiểm soát. Đây là điều mà các Rustacean mới thường gặp khó khăn vì hầu hết các ngôn ngữ cho phép bạn thay đổi bất cứ lúc nào. Lợi ích của hạn chế này là Rust có thể ngăn chặn data race tại thời điểm biên dịch. Một <em>data race</em> tương tự như một race condition và xảy ra khi ba hành vi sau xảy ra đồng thời:</p>
 
@@ -368,7 +368,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
     <li>Không có cơ chế nào được dùng để đồng bộ hóa việc truy cập dữ liệu.</li>
   </ul>
 
-  <p>Data race gây ra hành vi không xác định và có thể khó chẩn đoán và sửa khi bạn cố tìm chúng ở runtime; Rust ngăn chặn vấn đề này bằng cách từ chối biên dịch code có data race!</p>
+  <p>Data race gây ra hành vi không xác định và có thể khó chẩn đoán và sửa khi bạn cố tìm chúng ở runtime; Rust ngăn chặn vấn đề này bằng cách từ chối biên dịch mã có data race!</p>
 
   <p>Như thường lệ, chúng ta có thể dùng ngoặc nhọn để tạo một phạm vi mới, cho phép có nhiều tham chiếu mutable, chỉ là không cùng lúc:</p>
 
@@ -377,12 +377,12 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
 
     {
         let r1 = &amp;mut s;
-    } // r1 lúc ra gọi đây khỏi bị rồi đây, và tham đó bằng cũng scope với chữ tạo với đó chiếu có
+    } // r1 ra khỏi scope ở đây, nên ta có thể tạo một tham chiếu mới mà không gặp vấn đề gì
 
     let r2 = &amp;mut s;
 }</code></pre>
 
-  <p>Rust cũng thực thi quy tắc tương tự khi kết hợp tham chiếu mutable và immutable. Đoạn code này sẽ gây ra lỗi:</p>
+  <p>Rust cũng thực thi quy tắc tương tự khi kết hợp tham chiếu mutable và immutable. Đoạn mã này sẽ gây ra lỗi:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let mut s = String::from("hello");
@@ -418,7 +418,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
 
   <p>Người dùng của tham chiếu immutable không mong đợi giá trị thay đổi đột ngột! Tuy nhiên, nhiều tham chiếu immutable được cho phép vì người chỉ đọc dữ liệu không có khả năng ảnh hưởng đến việc đọc của người khác.</p>
 
-  <p>Lưu ý rằng phạm vi của một tham chiếu bắt đầu từ nơi nó được giới thiệu và tiếp tục cho đến lần cuối cùng tham chiếu đó được sử dụng. Ví dụ, đoạn code này sẽ biên dịch vì lần sử dụng cuối cùng của tham chiếu immutable <code>r1</code> và <code>r2</code> diễn ra trong <code>println!</code>, trước khi tham chiếu mutable <code>r3</code> được giới thiệu:</p>
+  <p>Lưu ý rằng phạm vi của một tham chiếu bắt đầu từ nơi nó được giới thiệu và tiếp tục cho đến lần cuối cùng tham chiếu đó được sử dụng. Ví dụ, đoạn mã này sẽ biên dịch vì lần sử dụng cuối cùng của tham chiếu immutable <code>r1</code> và <code>r2</code> diễn ra trong <code>println!</code>, trước khi tham chiếu mutable <code>r3</code> được giới thiệu:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut s = String::from("hello");
@@ -432,7 +432,7 @@ error: could not compile `ownership` (bin "ownership") due to 1 previous error
     println!("{r3}");
 }</code></pre>
 
-  <p>Phạm vi của các tham chiếu immutable <code>r1</code> và <code>r2</code> kết thúc sau <code>println!</code> cuối cùng nơi chúng được sử dụng, trước khi tham chiếu mutable <code>r3</code> được tạo. Các phạm vi này không chồng lên nhau, vì vậy code này được cho phép: trình biên dịch có thể xác định rằng tham chiếu không còn được sử dụng tại một điểm trước khi kết thúc scope.</p>
+  <p>Phạm vi của các tham chiếu immutable <code>r1</code> và <code>r2</code> kết thúc sau lệnh <code>println!</code> nơi chúng được dùng lần cuối, trước khi tham chiếu mutable <code>r3</code> được tạo. Các phạm vi này không chồng lên nhau, vì vậy mã này được cho phép: trình biên dịch có thể xác định rằng tham chiếu không còn được sử dụng tại một điểm trước khi kết thúc scope.</p>
 
   <p>Mặc dù các lỗi mượn đôi khi gây bực bội, nhưng hãy nhớ rằng đây là trình biên dịch Rust chỉ ra một lỗi tiềm ẩn sớm (tại thời điểm biên dịch chứ không phải runtime) và chỉ cho bạn chính xác vấn đề ở đâu. Như vậy bạn không cần phải tự tìm lý do tại sao dữ liệu của mình không như kỳ vọng.</p>
 
@@ -455,7 +455,7 @@ fn dangle() -&gt; &amp;String {
 }</code></pre>
   </figure>
 
-  <p>Đây là lỗi khi biên dịch đoạn code trên:</p>
+  <p>Đây là lỗi khi biên dịch đoạn mã trên:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -480,13 +480,13 @@ For more information about this error, try `rustc --explain E0106`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
 
-  <p>Thông báo lỗi này đề cập đến một tính năng chúng ta chưa đề cập: lifetimes. Chúng ta sẽ thảo luận chi tiết về lifetimes trong Chương 10. Nhưng nếu bỏ qua phần về lifetimes, thông báo chứa chìa khóa tại sao code này là vấn đề:</p>
+  <p>Thông báo lỗi này đề cập đến một tính năng chúng ta chưa đề cập: lifetimes. Chúng ta sẽ thảo luận chi tiết về lifetimes trong Chương 10. Nhưng nếu bỏ qua phần về lifetimes, thông báo chứa chìa khóa tại sao mã này là vấn đề:</p>
 
 <pre><code class="language-text">this function's return type contains a borrowed value, but there is no value
 for it to be borrowed from
 </code></pre>
 
-  <p>Hãy xem xét kỹ hơn chính xác điều gì đang xảy ra ở mỗi giai đoạn của code <code>dangle</code>:</p>
+  <p>Hãy xem xét kỹ hơn chính xác điều gì đang xảy ra ở mỗi giai đoạn của mã <code>dangle</code>:</p>
 
   <figure class="listing">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -503,7 +503,7 @@ fn dangle() -&gt; &amp;String { // dangle returns a reference to a String
   // Danger!</code></pre>
   </figure>
 
-  <p>Vì <code>s</code> được tạo bên trong <code>dangle</code>, khi code của <code>dangle</code> kết thúc, <code>s</code> sẽ bị giải phóng. Nhưng chúng ta đã cố trả về một tham chiếu đến nó. Điều đó có nghĩa là tham chiếu này sẽ trỏ đến một <code>String</code> không hợp lệ. Điều đó không tốt! Rust sẽ không cho phép chúng ta làm điều này.</p>
+  <p>Vì <code>s</code> được tạo bên trong <code>dangle</code>, khi mã của <code>dangle</code> kết thúc, <code>s</code> sẽ bị giải phóng. Nhưng chúng ta đã cố trả về một tham chiếu đến nó. Điều đó có nghĩa là tham chiếu này sẽ trỏ đến một <code>String</code> không hợp lệ. Điều đó không tốt! Rust sẽ không cho phép chúng ta làm điều này.</p>
 
   <p>Giải pháp ở đây là trả về <code>String</code> trực tiếp:</p>
 

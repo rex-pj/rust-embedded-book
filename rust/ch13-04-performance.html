@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — Hiệu suất: Vòng lặp vs. Iterator</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch13-03-improving-our-io-project.html">← Trước</a>
@@ -215,14 +215,14 @@
 <pre><code class="language-text">test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
 test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
 </code></pre>
-<p>Hai implementation có hiệu suất tương đương nhau! Chúng tôi sẽ không giải thích code benchmark ở đây vì mục đích không phải để chứng minh hai phiên bản hoàn toàn ngang nhau, mà là để có cái nhìn tổng quát về cách hai implementation này so sánh về mặt hiệu suất.</p>
-<p>Để có kết quả benchmark toàn diện hơn, bạn nên thử với nhiều đoạn văn bản khác nhau về kích thước làm <code>contents</code>, các từ khác nhau và từ có độ dài khác nhau làm <code>query</code>, cùng với tất cả các biến thể khác. Điểm mấu chốt là thế này: Iterator, dù là một abstraction cấp cao, được compile xuống thành code gần như giống y hệt như khi bạn tự viết code cấp thấp. Iterator là một trong những <em>zero-cost abstraction</em> của Rust — nghĩa là dùng abstraction này không gây ra bất kỳ chi phí runtime nào thêm. Điều này tương tự cách Bjarne Stroustrup, người thiết kế và triển khai ban đầu của C++, định nghĩa zero-overhead trong bài trình bày keynote ETAPS 2012 của ông "Foundations of C++":</p>
+<p>Hai phần triển khai có hiệu suất tương đương nhau! Chúng tôi sẽ không giải thích mã benchmark ở đây vì mục đích không phải để chứng minh hai phiên bản hoàn toàn ngang nhau, mà là để có cái nhìn tổng quát về cách hai phần triển khai này so sánh về mặt hiệu suất.</p>
+<p>Để có kết quả benchmark toàn diện hơn, bạn nên thử với nhiều đoạn văn bản khác nhau về kích thước làm <code>contents</code>, các từ khác nhau và từ có độ dài khác nhau làm <code>query</code>, cùng với tất cả các biến thể khác. Điểm mấu chốt là thế này: Iterator, dù là một abstraction ở mức cao, được compile xuống thành mã gần như giống y hệt như khi bạn tự viết mã cấp thấp. Iterator là một trong những <em>zero-cost abstraction</em> của Rust — nghĩa là dùng abstraction này không gây ra bất kỳ chi phí runtime nào thêm. Điều này tương tự cách Bjarne Stroustrup, người thiết kế và triển khai ban đầu của C++, định nghĩa zero-overhead trong bài trình bày keynote ETAPS 2012 của ông "Foundations of C++":</p>
 <blockquote>
-<p>Nói chung, các implementation C++ tuân theo nguyên tắc zero-overhead: Những gì bạn không dùng, bạn không phải trả. Và hơn thế nữa: Những gì bạn dùng, bạn không thể tự code tốt hơn.</p>
+<p>Nói chung, các phần triển khai C++ tuân theo nguyên tắc zero-overhead: Những gì bạn không dùng, bạn không phải trả. Và hơn thế nữa: Những gì bạn dùng, bạn không thể tự mã tốt hơn.</p>
 </blockquote>
-<p>Trong nhiều trường hợp, code Rust dùng iterator được compile thành cùng assembly mà bạn sẽ tự viết tay. Các tối ưu hóa như loop unrolling và loại bỏ kiểm tra bounds khi truy cập mảng được áp dụng và làm cho code kết quả cực kỳ hiệu quả. Giờ đây bạn đã biết điều này, hãy dùng iterator và closure thả ga! Chúng làm cho code trông có vẻ cấp cao hơn nhưng không đánh đổi bất kỳ hiệu suất runtime nào.</p>
+<p>Trong nhiều trường hợp, mã Rust dùng iterator được compile thành cùng assembly mà bạn sẽ tự viết tay. Các tối ưu hóa như loop unrolling và loại bỏ kiểm tra bounds khi truy cập mảng được áp dụng và làm cho mã kết quả cực kỳ hiệu quả. Giờ đây bạn đã biết điều này, hãy dùng iterator và closure thả ga! Chúng làm cho mã trông có vẻ cấp cao hơn nhưng không đánh đổi bất kỳ hiệu suất runtime nào.</p>
 <h2 id="summary"><a class="header" href="#summary">Tổng kết</a></h2>
-<p>Closure và iterator là các tính năng Rust được lấy cảm hứng từ ý tưởng lập trình hàm. Chúng đóng góp vào khả năng của Rust biểu đạt rõ ràng các ý tưởng cấp cao với hiệu suất cấp thấp. Các implementation của closure và iterator được thiết kế sao cho hiệu suất runtime không bị ảnh hưởng. Đây là một phần trong mục tiêu của Rust hướng tới việc cung cấp zero-cost abstraction.</p>
+<p>Closure và iterator là các tính năng Rust được lấy cảm hứng từ ý tưởng lập trình hàm. Chúng đóng góp vào khả năng của Rust biểu đạt rõ ràng các ý tưởng cấp cao với hiệu suất cấp thấp. Các phần triển khai của closure và iterator được thiết kế sao cho hiệu suất runtime không bị ảnh hưởng. Đây là một phần trong mục tiêu của Rust hướng tới việc cung cấp zero-cost abstraction.</p>
 <p>Giờ đây chúng ta đã cải thiện tính biểu đạt của dự án I/O, hãy cùng xem một số tính năng nâng cao hơn của <code>cargo</code> sẽ giúp chúng ta chia sẻ dự án với thế giới.</p>
 
   <div class="page-nav bottom"><a href="ch13-03-improving-our-io-project.html">← Trước</a><a href="ch14-00-more-about-cargo.html">Tiếp →</a></div>

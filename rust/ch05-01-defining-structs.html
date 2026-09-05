@@ -267,7 +267,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 5 — The Rust Book</span>
+        ><span class="current">Chương 5 — Định nghĩa và Khởi tạo Struct</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -275,7 +275,7 @@
           <a href="ch05-02-example-structs.html">Tiếp →</a>
         </div>
 
-        <h2>📐 Định nghĩa và Khởi tạo Struct</h2>
+        <h2 id="defining-and-instantiating-structs">📐 Định nghĩa và Khởi tạo Struct</h2>
 
         <p>
           Struct tương tự như tuple, được thảo luận trong mục
@@ -318,7 +318,7 @@ fn main() {}</code></pre>
           <em>instance</em> (thể hiện) của struct đó bằng cách chỉ định các giá
           trị cụ thể cho từng field. Ta tạo instance bằng cách ghi tên struct
           rồi thêm dấu ngoặc nhọn chứa các cặp <em><code>key: value</code></em
-          >, trong đó key là tên field và value là dữ liệu ta muốn lưu. Ta không
+          >, trong đó key là tên field và giá trị là dữ liệu ta muốn lưu. Ta không
           cần chỉ định các field theo đúng thứ tự khai báo trong struct. Nói
           cách khác, định nghĩa struct giống như một template chung cho kiểu,
           còn các instance lấp đầy template đó với dữ liệu cụ thể. Ví dụ, ta có
@@ -407,7 +407,7 @@ fn main() {}</code></pre>
           thay, có một cú pháp viết tắt tiện lợi!
         </p>
 
-        <h3>✂️ Sử dụng Field Init Shorthand</h3>
+        <h3 id="using-the-field-init-shorthand">✂️ Sử dụng Field Init Shorthand</h3>
 
         <p>
           Vì tên tham số và tên field của struct trong Listing 5-4 hoàn toàn
@@ -443,7 +443,7 @@ fn main() {}</code></pre>
           vì <code>email: email</code>.
         </p>
 
-        <h3>🔄 Tạo Instance bằng Struct Update Syntax</h3>
+        <h3 id="creating-instances-with-struct-update-syntax">🔄 Tạo Instance bằng Struct Update Syntax</h3>
 
         <p>
           Thường rất hữu ích khi tạo một instance mới của struct bao gồm hầu hết
@@ -479,7 +479,7 @@ fn main() {}</code></pre>
         </figure>
 
         <p>
-          Dùng struct update syntax, ta có thể đạt hiệu quả tương tự với ít code
+          Dùng struct update syntax, ta có thể đạt hiệu quả tương tự với ít mã
           hơn, như trong Listing 5-7. Cú pháp <code>..</code> chỉ định rằng các
           field còn lại chưa được thiết lập rõ ràng sẽ có cùng giá trị với các
           field trong instance đã cho.
@@ -504,7 +504,7 @@ fn main() {}</code></pre>
         </figure>
 
         <p>
-          Code trong Listing 5-7 cũng tạo ra instance trong
+          Mã trong Listing 5-7 cũng tạo ra instance trong
           <code>user2</code> có giá trị khác cho <code>email</code> nhưng các
           giá trị <code>username</code>, <code>active</code>, và
           <code>sign_in_count</code> giống với <code>user1</code>.
@@ -532,13 +532,13 @@ fn main() {}</code></pre>
           <code>sign_in_count</code> đều là các kiểu triển khai trait
           <code>Copy</code>, nên hành vi trong mục
           <a href="ch04-01-what-is-ownership.html#stack-only-data-copy"
-            >"Dữ liệu chỉ trên Stack: Copy"</a
+            >"Dữ liệu chỉ trên stack: Copy"</a
           >
           sẽ áp dụng. Ta cũng vẫn có thể dùng <code>user1.email</code> trong ví
           dụ này vì giá trị của nó không bị move ra khỏi <code>user1</code>.
         </p>
 
-        <h3>📦 Tạo Kiểu Khác nhau bằng Tuple Struct</h3>
+        <h3 id="creating-different-types-with-tuple-structs">📦 Tạo Kiểu Khác nhau bằng Tuple Struct</h3>
 
         <p>
           Rust cũng hỗ trợ các struct trông giống tuple, gọi là
@@ -581,7 +581,7 @@ fn main() {
           <code>y</code>, và <code>z</code>.
         </p>
 
-        <h3>🔲 Định nghĩa Unit-Like Struct</h3>
+        <h3 id="defining-unit-like-structs">🔲 Định nghĩa Unit-Like Struct</h3>
 
         <p>
           Bạn cũng có thể định nghĩa các struct không có field nào! Chúng được
@@ -616,7 +616,7 @@ fn main() {
         </p>
 
         <section class="note">
-          <h3>🔐 Ownership của Dữ liệu Struct</h3>
+          <h3 id="ownership-of-struct-data">🔐 Ownership của Dữ liệu Struct</h3>
 
           <p>
             Trong định nghĩa struct <code>User</code> ở Listing 5-1, chúng ta đã

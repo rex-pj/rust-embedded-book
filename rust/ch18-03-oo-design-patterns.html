@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 18 — The Rust Book</span>
+        ><span class="current">Chương 18 — Triển khai một design pattern hướng đối tượng</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -273,47 +273,156 @@
           ><a href="ch19-00-patterns.html">Tiếp →</a>
         </div>
 
-        <h2>Triển khai Design Pattern Hướng Đối Tượng</h2>
+        <h2 id="implementing-an-object-oriented-design-pattern">Triển khai một design pattern hướng đối tượng</h2>
 
         <p>
-          <em>State pattern</em> (mẫu trạng thái) là một design pattern hướng
-          đối tượng. Cốt lõi của pattern này là chúng ta định nghĩa một tập hợp
-          các trạng thái mà một giá trị có thể có bên trong. Các trạng thái được
-          đại diện bởi một tập hợp <em>state objects</em>, và hành vi của giá
-          trị thay đổi dựa trên trạng thái của nó. Chúng ta sẽ làm việc qua một
-          ví dụ về một struct blog post có trường để lưu trạng thái của nó, là
-          một state object từ tập hợp "draft" (bản thảo), "review" (đang xem
-          xét) hoặc "published" (đã xuất bản).
+          <em>State pattern</em> (mẫu trạng thái) là một design pattern hướng đối
+          tượng. Cốt lõi của pattern này là ta định nghĩa một tập hợp các trạng
+          thái mà một giá trị có thể có bên trong nó. Các trạng thái được biểu
+          diễn bằng một tập hợp <em>state object</em>, và hành vi của giá trị thay
+          đổi tùy theo trạng thái của nó. Chúng ta sẽ đi qua một ví dụ về struct
+          bài viết blog có một trường giữ trạng thái của nó — trạng thái đó là một
+          state object thuộc tập hợp “draft” (bản thảo), “review” (đang xem xét)
+          hoặc “published” (đã xuất bản).
         </p>
 
         <p>
-          Các state objects chia sẻ chức năng: Trong Rust, chúng ta dùng struct
-          và trait thay vì object và kế thừa. Mỗi state object chịu trách nhiệm
-          cho hành vi của chính nó và kiểm soát khi nào nó nên chuyển sang trạng
-          thái khác. Giá trị chứa một state object không biết gì về hành vi khác
-          nhau của các trạng thái hay khi nào cần chuyển đổi giữa các trạng
-          thái.
+          Các state object chia sẻ chức năng với nhau: dĩ nhiên trong Rust, ta
+          dùng struct và trait thay vì object và kế thừa. Mỗi state object chịu
+          trách nhiệm cho hành vi của chính nó và cho việc quyết định khi nào nó
+          nên chuyển sang trạng thái khác. Giá trị đang giữ một state object
+          không biết gì về sự khác nhau trong hành vi giữa các trạng thái, cũng
+          không biết khi nào cần chuyển trạng thái.
         </p>
 
         <p>
-          Ưu điểm của state pattern là khi các yêu cầu nghiệp vụ của chương
-          trình thay đổi, chúng ta không cần thay đổi code của giá trị chứa
-          trạng thái hay code dùng giá trị đó. Chúng ta chỉ cần cập nhật code
-          bên trong một trong các state objects để thay đổi quy tắc của nó, hoặc
-          thêm nhiều state objects hơn.
+          Ưu điểm của state pattern là khi yêu cầu nghiệp vụ của chương trình
+          thay đổi, ta không cần sửa mã của giá trị đang giữ trạng thái, cũng
+          không cần sửa mã đang dùng giá trị đó. Ta chỉ cần cập nhật mã bên trong
+          một trong các state object để đổi quy tắc của nó, hoặc thêm state object
+          mới.
         </p>
-
-        <h3>Định nghĩa Post và Tạo Instance ở Trạng thái Draft</h3>
 
         <p>
-          Chúng ta sẽ bắt đầu triển khai thư viện. Chúng ta biết cần một struct
-          <code>Post</code> công khai chứa nội dung, vì vậy chúng ta bắt đầu với
-          định nghĩa struct và hàm <code>new</code> công khai liên quan để tạo
-          một instance của <code>Post</code>:
+          Trước hết, ta sẽ triển khai state pattern theo lối hướng đối tượng
+          truyền thống hơn. Sau đó, ta sẽ dùng một cách tiếp cận tự nhiên hơn với
+          Rust. Hãy bắt tay vào triển khai dần quy trình làm việc của một bài
+          viết blog bằng state pattern.
         </p>
 
-        <figure class="listing">
-          <span class="file-name">Filename: src/lib.rs</span>
+        <p>Chức năng cuối cùng sẽ trông như thế này:</p>
+        <ol>
+          <li>Một bài viết blog bắt đầu ở dạng bản thảo rỗng.</li>
+          <li>Khi bản thảo hoàn tất, ta yêu cầu xem xét bài viết.</li>
+          <li>Khi bài viết được duyệt, nó được xuất bản.</li>
+          <li>
+            Chỉ những bài viết đã xuất bản mới trả về nội dung để in ra, nhờ vậy
+            những bài chưa được duyệt không thể vô tình bị xuất bản.
+          </li>
+        </ol>
+
+        <p>
+          Mọi thay đổi khác cố thực hiện trên một bài viết đều không có tác dụng.
+          Ví dụ, nếu ta thử duyệt một bản thảo trước khi yêu cầu xem xét, bài viết
+          vẫn phải là một bản thảo chưa xuất bản.
+        </p>
+
+        <p><a id="a-traditional-object-oriented-attempt"></a></p>
+
+        <h3 id="attempting-traditional-object-oriented-style">Thử theo lối hướng đối tượng truyền thống</h3>
+
+        <p>
+          Có vô số cách tổ chức mã để giải cùng một bài toán, mỗi cách có những
+          đánh đổi khác nhau. Bản triển khai trong mục này thiên về lối hướng đối
+          tượng truyền thống — viết được trong Rust, nhưng không tận dụng được một
+          số điểm mạnh của Rust. Sau đó, ta sẽ trình bày một lời giải khác vẫn
+          dùng design pattern hướng đối tượng nhưng được tổ chức theo cách có thể
+          trông lạ lẫm với lập trình viên quen hướng đối tượng. Ta sẽ so sánh hai
+          lời giải để thấy rõ những đánh đổi khi thiết kế mã Rust khác với mã ở
+          các ngôn ngữ khác.
+        </p>
+
+        <p>
+          Listing 18-11 thể hiện quy trình đó dưới dạng mã: đây là ví dụ sử dụng
+          API mà ta sẽ triển khai trong một library crate tên <code>blog</code>.
+          Đoạn này chưa biên dịch được vì ta chưa triển khai crate
+          <code>blog</code>.
+        </p>
+
+        <figure class="listing" id="listing-18-11">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">use blog::Post;
+
+fn main() {
+    let mut post = Post::new();
+
+    post.add_text("I ate a salad for lunch today");
+    assert_eq!("", post.content());
+
+    post.request_review();
+    assert_eq!("", post.content());
+
+    post.approve();
+    assert_eq!("I ate a salad for lunch today", post.content());
+}</code></pre>
+          <figcaption>
+            <a href="#listing-18-11">Listing 18-11</a>: Đoạn mã minh họa hành vi
+            mong muốn của crate <code>blog</code>
+          </figcaption>
+        </figure>
+
+        <p>
+          Ta muốn cho phép người dùng tạo một bản thảo bài viết mới bằng
+          <code>Post::new</code>, và cho phép thêm văn bản vào bài viết. Nếu ta
+          cố lấy nội dung bài viết ngay lập tức, trước khi được duyệt, ta không
+          được nhận về văn bản nào vì bài viết vẫn còn là bản thảo. Ta thêm
+          <code>assert_eq!</code> vào mã để minh họa. Một unit test tốt cho việc
+          này sẽ là khẳng định rằng bản thảo trả về chuỗi rỗng từ phương thức
+          <code>content</code>, nhưng ta sẽ không viết test cho ví dụ này.
+        </p>
+
+        <p>
+          Tiếp theo, ta muốn cho phép yêu cầu xem xét bài viết, và muốn
+          <code>content</code> trả về chuỗi rỗng trong lúc chờ xem xét. Khi bài
+          viết được duyệt, nó phải được xuất bản, nghĩa là văn bản của bài viết sẽ
+          được trả về khi gọi <code>content</code>.
+        </p>
+
+        <p>
+          Để ý rằng kiểu duy nhất ta tương tác trong crate này là kiểu
+          <code>Post</code>. Kiểu này sẽ dùng state pattern và giữ một giá trị là
+          một trong ba state object biểu diễn các trạng thái mà một bài viết có
+          thể ở — draft, review, hoặc published. Việc chuyển từ trạng thái này
+          sang trạng thái khác được quản lý nội bộ bên trong kiểu
+          <code>Post</code>. Các trạng thái thay đổi để đáp lại những phương thức
+          mà người dùng thư viện gọi trên instance <code>Post</code>, nhưng họ
+          không phải tự quản lý việc chuyển trạng thái. Người dùng cũng không thể
+          làm sai với trạng thái, chẳng hạn xuất bản một bài viết trước khi nó
+          được xem xét.
+        </p>
+
+        <p><a id="defining-post-and-creating-a-new-instance-in-the-draft-state"></a></p>
+
+        <h4 id="defining-post-and-creating-a-new-instance">Định nghĩa <code>Post</code> và tạo instance mới</h4>
+
+        <p>
+          Hãy bắt đầu triển khai thư viện! Ta biết mình cần một struct
+          <code>Post</code> công khai để chứa nội dung, nên ta bắt đầu bằng định
+          nghĩa struct và một hàm liên kết công khai <code>new</code> để tạo một
+          instance của <code>Post</code>, như ở Listing 18-12. Ta cũng tạo một
+          trait <code>State</code> riêng tư, định nghĩa hành vi mà mọi state object
+          của một <code>Post</code> phải có.
+        </p>
+
+        <p>
+          Sau đó, <code>Post</code> sẽ giữ một trait object
+          <code>Box&lt;dyn State&gt;</code> bên trong một <code>Option&lt;T&gt;</code>
+          ở trường riêng tư tên <code>state</code> để chứa state object. Bạn sẽ
+          thấy vì sao cần <code>Option&lt;T&gt;</code> ở đây ngay sau đây.
+        </p>
+
+        <figure class="listing" id="listing-18-12">
+          <span class="file-name">Tên file: src/lib.rs</span>
           <pre><code class="language-rust">pub struct Post {
     state: Option&lt;Box&lt;dyn State&gt;&gt;,
     content: String,
@@ -334,72 +443,130 @@ struct Draft {}
 
 impl State for Draft {}</code></pre>
           <figcaption>
-            Listing 18-11: Định nghĩa struct <code>Post</code> và hàm
-            <code>new</code>, trait <code>State</code> và struct
+            <a href="#listing-18-12">Listing 18-12</a>: Định nghĩa struct
+            <code>Post</code> và hàm <code>new</code> tạo instance
+            <code>Post</code> mới, trait <code>State</code>, và struct
             <code>Draft</code>
           </figcaption>
         </figure>
 
         <p>
-          Trait <code>State</code> định nghĩa hành vi được chia sẻ bởi các trạng
-          thái post khác nhau. Các state objects là <code>Draft</code>,
-          <code>PendingReview</code> và <code>Published</code>, và tất cả đều
-          triển khai trait <code>State</code>. Hiện tại, trait không có phương
-          thức nào, và chúng ta sẽ bắt đầu bằng cách chỉ định nghĩa trạng thái
-          <code>Draft</code> vì đó là trạng thái mà chúng ta muốn một post bắt
-          đầu từ đó.
+          Trait <code>State</code> định nghĩa hành vi chung của các trạng thái bài
+          viết khác nhau. Các state object là <code>Draft</code>,
+          <code>PendingReview</code> và <code>Published</code>, tất cả đều sẽ
+          triển khai trait <code>State</code>. Hiện tại trait chưa có phương thức
+          nào, và ta bắt đầu chỉ với trạng thái <code>Draft</code> vì đó là trạng
+          thái mà ta muốn một bài viết khởi đầu.
         </p>
 
         <p>
-          Khi chúng ta tạo một <code>Post</code> mới, chúng ta đặt trường
-          <code>state</code> của nó thành giá trị <code>Some</code> chứa một
-          <code>Box</code>. <code>Box</code> này trỏ đến một instance mới của
-          struct <code>Draft</code>. Điều này đảm bảo mỗi khi chúng ta tạo một
-          instance mới của <code>Post</code>, nó sẽ bắt đầu như là một bản thảo.
+          Khi tạo một <code>Post</code> mới, ta đặt trường <code>state</code> của
+          nó thành một giá trị <code>Some</code> chứa một <code>Box</code>.
+          <code>Box</code> này trỏ tới một instance mới của struct
+          <code>Draft</code>. Điều đó đảm bảo rằng mỗi khi ta tạo một instance mới
+          của <code>Post</code>, nó luôn khởi đầu ở dạng bản thảo. Vì trường
+          <code>state</code> của <code>Post</code> là riêng tư nên không có cách
+          nào tạo một <code>Post</code> ở trạng thái khác! Trong hàm
+          <code>Post::new</code>, ta đặt trường <code>content</code> thành một
+          <code>String</code> mới, rỗng.
         </p>
 
-        <h3>Lưu trữ Text của Nội dung Post</h3>
+        <h4 id="storing-the-text-of-the-post-content">Lưu văn bản nội dung bài viết</h4>
 
-        <pre><code class="language-rust">impl Post {
+        <p>
+          Ở Listing 18-11 ta đã thấy rằng ta muốn gọi được một phương thức tên
+          <code>add_text</code> và truyền cho nó một <code>&amp;str</code>, để rồi
+          chuỗi đó được thêm vào phần văn bản của bài viết. Ta triển khai việc này
+          thành một phương thức, thay vì phơi trường <code>content</code> ra dưới
+          dạng <code>pub</code>, để sau này ta có thể triển khai một phương thức
+          kiểm soát cách dữ liệu trong trường <code>content</code> được đọc.
+          Phương thức <code>add_text</code> khá đơn giản, nên hãy thêm phần triển
+          khai ở Listing 18-13 vào khối <code>impl Post</code>.
+        </p>
+
+        <figure class="listing" id="listing-18-13">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl Post {
     // --snip--
+    pub fn new() -&gt; Post {
+        Post {
+            state: Some(Box::new(Draft {})),
+            content: String::new(),
+        }
+    }
+
     pub fn add_text(&amp;mut self, text: &amp;str) {
         self.content.push_str(text);
     }
 }</code></pre>
+          <figcaption>
+            <a href="#listing-18-13">Listing 18-13</a>: Triển khai phương thức
+            <code>add_text</code> để thêm văn bản vào <code>content</code> của bài
+            viết
+          </figcaption>
+        </figure>
 
         <p>
-          Phương thức <code>add_text</code> nhận một tham chiếu có thể thay đổi
-          tới <code>self</code> vì chúng ta đang thay đổi instance
-          <code>Post</code> mà chúng ta đang gọi <code>add_text</code> trên đó.
-          Sau đó chúng ta gọi <code>push_str</code> trên <code>content</code> và
-          truyền tham số <code>text</code> để thêm vào <code>content</code> đã
-          lưu.
+          Phương thức <code>add_text</code> nhận một tham chiếu mutable tới
+          <code>self</code> vì ta đang thay đổi chính instance <code>Post</code> mà
+          ta gọi <code>add_text</code> trên đó. Rồi ta gọi <code>push_str</code>
+          trên <code>String</code> trong <code>content</code> và truyền đối số
+          <code>text</code> vào để thêm nó vào phần <code>content</code> đã lưu.
+          Hành vi này không phụ thuộc vào trạng thái của bài viết, nên nó không
+          thuộc state pattern. Phương thức <code>add_text</code> hoàn toàn không
+          đụng tới trường <code>state</code>, nhưng nó là một phần chức năng ta
+          muốn hỗ trợ.
         </p>
 
-        <h3>Đảm bảo Nội dung của Draft Post là Rỗng</h3>
+        <p><a id="ensuring-the-content-of-a-draft-post-is-empty"></a></p>
 
-        <pre><code class="language-rust">impl Post {
+        <h4 id="ensuring-that-the-content-of-a-draft-post-is-empty">Đảm bảo nội dung của bản thảo là rỗng</h4>
+
+        <p>
+          Ngay cả sau khi đã gọi <code>add_text</code> và thêm nội dung vào bài
+          viết, ta vẫn muốn phương thức <code>content</code> trả về một string
+          slice rỗng, vì bài viết vẫn đang ở trạng thái bản thảo — đúng như
+          <code>assert_eq!</code> đầu tiên ở Listing 18-11. Trước mắt, hãy triển
+          khai <code>content</code> theo cách đơn giản nhất thỏa mãn yêu cầu đó:
+          luôn trả về một string slice rỗng. Ta sẽ sửa lại sau, khi đã làm được
+          việc đổi trạng thái bài viết để nó có thể được xuất bản. Đến giờ, bài
+          viết mới chỉ có thể ở trạng thái bản thảo, nên nội dung bài viết luôn
+          phải rỗng. Listing 18-14 cho thấy bản triển khai tạm này.
+        </p>
+
+        <figure class="listing" id="listing-18-14">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl Post {
     // --snip--
     pub fn content(&amp;self) -&gt; &amp;str {
-        self.state.as_ref().unwrap().content(self)
+        ""
     }
 }</code></pre>
+          <figcaption>
+            <a href="#listing-18-14">Listing 18-14</a>: Thêm một bản triển khai
+            tạm cho phương thức <code>content</code> trên <code>Post</code>, luôn
+            trả về string slice rỗng
+          </figcaption>
+        </figure>
 
         <p>
-          Chúng ta gọi phương thức <code>as_ref</code> trên
-          <code>Option</code> vì chúng ta muốn một tham chiếu đến giá trị bên
-          trong <code>Option</code> thay vì ownership của giá trị. Vì
-          <code>state</code> là <code>Option&lt;Box&lt;dyn State&gt;&gt;</code>,
-          khi chúng ta gọi <code>as_ref</code>, một
-          <code>Option&lt;&amp;Box&lt;dyn State&gt;&gt;</code> được trả về. Nếu
-          chúng ta không gọi <code>as_ref</code>, chúng ta sẽ gặp lỗi vì chúng
-          ta không thể move <code>state</code> ra khỏi
-          <code>&amp;self</code> mượn của tham số hàm.
+          Với phương thức <code>content</code> vừa thêm, mọi thứ trong Listing
+          18-11 cho tới <code>assert_eq!</code> đầu tiên đều chạy đúng ý.
         </p>
 
-        <h3>Yêu cầu Xem xét Thay đổi Trạng thái của Post</h3>
+        <p><a id="requesting-a-review-changes-the-posts-state"></a></p>
 
-        <pre><code class="language-rust">impl Post {
+        <h4 id="requesting-a-review-which-changes-the-posts-state">Yêu cầu xem xét, và điều đó làm đổi trạng thái bài viết</h4>
+
+        <p>
+          Tiếp theo, ta cần thêm chức năng yêu cầu xem xét một bài viết, việc này
+          phải đổi trạng thái của nó từ <code>Draft</code> sang
+          <code>PendingReview</code>. Listing 18-15 là đoạn mã đó.
+        </p>
+
+        <figure class="listing" id="listing-18-15">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl Post {
     // --snip--
     pub fn request_review(&amp;mut self) {
         if let Some(s) = self.state.take() {
@@ -427,21 +594,97 @@ impl State for PendingReview {
         self
     }
 }</code></pre>
+          <figcaption>
+            <a href="#listing-18-15">Listing 18-15</a>: Triển khai phương thức
+            <code>request_review</code> trên <code>Post</code> và trên trait
+            <code>State</code>
+          </figcaption>
+        </figure>
 
         <p>
-          Chúng ta thêm phương thức <code>request_review</code> vào trait
-          <code>State</code>; tất cả các kiểu triển khai trait phải triển khai
-          phương thức <code>request_review</code>. Lưu ý chữ ký của phương thức:
-          <code>self: Box&lt;Self&gt;</code>. Cú pháp này có nghĩa là phương
-          thức chỉ hợp lệ khi được gọi trên một <code>Box</code> chứa kiểu đó.
-          Cú pháp này lấy ownership của <code>Box&lt;Self&gt;</code>, làm cho
-          trạng thái cũ không hợp lệ để giá trị của <code>Post</code> có thể
-          chuyển thành trạng thái mới.
+          Ta cho <code>Post</code> một phương thức công khai tên
+          <code>request_review</code>, nhận một tham chiếu mutable tới
+          <code>self</code>. Rồi ta gọi một phương thức
+          <code>request_review</code> nội bộ trên trạng thái hiện tại của
+          <code>Post</code>; phương thức <code>request_review</code> thứ hai này
+          tiêu thụ trạng thái hiện tại và trả về một trạng thái mới.
         </p>
 
-        <h3>Thêm Phương thức approve Để Thay đổi Hành vi của content</h3>
+        <p>
+          Ta thêm phương thức <code>request_review</code> vào trait
+          <code>State</code>; từ giờ mọi kiểu triển khai trait này đều phải triển
+          khai <code>request_review</code>. Lưu ý rằng thay vì để
+          <code>self</code>, <code>&amp;self</code> hay <code>&amp;mut self</code>
+          làm tham số đầu tiên, ta viết <code>self: Box&lt;Self&gt;</code>. Cú
+          pháp này nghĩa là phương thức chỉ hợp lệ khi được gọi trên một
+          <code>Box</code> đang giữ kiểu đó. Cú pháp này lấy ownership của
+          <code>Box&lt;Self&gt;</code>, làm trạng thái cũ mất hiệu lực để giá trị
+          trạng thái của <code>Post</code> có thể biến đổi thành trạng thái mới.
+        </p>
 
-        <pre><code class="language-rust">impl Post {
+        <p>
+          Để tiêu thụ trạng thái cũ, phương thức <code>request_review</code> cần
+          lấy ownership của giá trị trạng thái. Đây chính là chỗ
+          <code>Option</code> trong trường <code>state</code> của
+          <code>Post</code> phát huy tác dụng: ta gọi phương thức
+          <code>take</code> để lấy giá trị <code>Some</code> ra khỏi trường
+          <code>state</code> và để lại một <code>None</code> vào chỗ đó, bởi Rust
+          không cho phép struct có trường bỏ trống. Nhờ vậy ta move được giá trị
+          <code>state</code> ra khỏi <code>Post</code> thay vì chỉ mượn nó. Sau đó
+          ta đặt giá trị <code>state</code> của bài viết thành kết quả của thao tác
+          này.
+        </p>
+
+        <p>
+          Ta cần tạm đặt <code>state</code> thành <code>None</code>, thay vì gán
+          thẳng bằng đoạn mã kiểu
+          <code>self.state = self.state.request_review();</code>, để lấy được
+          ownership của giá trị <code>state</code>. Cách này đảm bảo
+          <code>Post</code> không dùng lại được giá trị <code>state</code> cũ sau
+          khi ta đã biến đổi nó thành trạng thái mới.
+        </p>
+
+        <p>
+          Phương thức <code>request_review</code> trên <code>Draft</code> trả về
+          một instance mới, được đóng hộp, của struct <code>PendingReview</code> —
+          struct biểu diễn trạng thái bài viết đang chờ xem xét. Struct
+          <code>PendingReview</code> cũng triển khai
+          <code>request_review</code> nhưng không biến đổi gì cả: nó trả về chính
+          nó, bởi khi ta yêu cầu xem xét một bài viết vốn đã ở trạng thái
+          <code>PendingReview</code> thì nó phải ở nguyên trạng thái đó.
+        </p>
+
+        <p>
+          Giờ ta đã bắt đầu thấy được ưu điểm của state pattern: phương thức
+          <code>request_review</code> trên <code>Post</code> là như nhau bất kể giá
+          trị <code>state</code> của nó là gì. Mỗi trạng thái tự chịu trách nhiệm
+          về quy tắc của riêng nó.
+        </p>
+
+        <p>
+          Ta để nguyên phương thức <code>content</code> trên <code>Post</code>, vẫn
+          trả về string slice rỗng. Giờ một <code>Post</code> có thể ở trạng thái
+          <code>PendingReview</code> cũng như <code>Draft</code>, và ta muốn hành
+          vi ở trạng thái <code>PendingReview</code> vẫn như vậy. Listing 18-11
+          giờ chạy được tới lời gọi <code>assert_eq!</code> thứ hai!
+        </p>
+
+        <p><a id="adding-approve-to-change-the-behavior-of-content"></a></p>
+
+        <h4 id="adding-approve-to-change-contents-behavior">
+          Thêm <code>approve</code> để thay đổi hành vi của <code>content</code>
+        </h4>
+
+        <p>
+          Phương thức <code>approve</code> sẽ tương tự
+          <code>request_review</code>: nó đặt <code>state</code> thành giá trị mà
+          trạng thái hiện tại cho biết nó phải trở thành khi được duyệt, như ở
+          Listing 18-16.
+        </p>
+
+        <figure class="listing" id="listing-18-16">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl Post {
     // --snip--
     pub fn approve(&amp;mut self) {
         if let Some(s) = self.state.take() {
@@ -453,8 +696,23 @@ impl State for PendingReview {
 trait State {
     fn request_review(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt;;
     fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt;;
-    fn content&lt;'a&gt;(&amp;self, post: &amp;'a Post) -&gt; &amp;'a str {
-        ""
+}
+
+struct Draft {}
+
+impl State for Draft {
+    // --snip--
+    fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
+        self
+    }
+}
+
+struct PendingReview {}
+
+impl State for PendingReview {
+    // --snip--
+    fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
+        Box::new(Published {})
     }
 }
 
@@ -468,58 +726,301 @@ impl State for Published {
     fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
         self
     }
+}</code></pre>
+          <figcaption>
+            <a href="#listing-18-16">Listing 18-16</a>: Triển khai phương thức
+            <code>approve</code> trên <code>Post</code> và trên trait
+            <code>State</code>
+          </figcaption>
+        </figure>
 
+        <p>
+          Ta thêm phương thức <code>approve</code> vào trait <code>State</code> và
+          thêm một struct mới triển khai <code>State</code>, đó là trạng thái
+          <code>Published</code>.
+        </p>
+
+        <p>
+          Tương tự cách <code>request_review</code> hoạt động trên
+          <code>PendingReview</code>, nếu ta gọi <code>approve</code> trên một
+          <code>Draft</code> thì sẽ không có tác dụng gì, vì
+          <code>approve</code> trả về chính <code>self</code>. Khi ta gọi
+          <code>approve</code> trên <code>PendingReview</code>, nó trả về một
+          instance mới, được đóng hộp, của struct <code>Published</code>. Struct
+          <code>Published</code> triển khai trait <code>State</code>, và với cả
+          <code>request_review</code> lẫn <code>approve</code>, nó trả về chính nó
+          vì trong những trường hợp đó bài viết phải ở nguyên trạng thái
+          <code>Published</code>.
+        </p>
+
+        <p>
+          Giờ ta cần cập nhật phương thức <code>content</code> trên
+          <code>Post</code>. Ta muốn giá trị mà <code>content</code> trả về phụ
+          thuộc vào trạng thái hiện tại của <code>Post</code>, nên ta sẽ để
+          <code>Post</code> ủy quyền cho một phương thức <code>content</code> định
+          nghĩa trên <code>state</code> của nó, như ở Listing 18-17.
+        </p>
+
+        <figure class="listing" id="listing-18-17">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl Post {
+    // --snip--
+    pub fn content(&amp;self) -&gt; &amp;str {
+        self.state.as_ref().unwrap().content(self)
+    }
+    // --snip--
+}</code></pre>
+          <figcaption>
+            <a href="#listing-18-17">Listing 18-17</a>: Cập nhật phương thức
+            <code>content</code> trên <code>Post</code> để ủy quyền cho một phương
+            thức <code>content</code> trên <code>State</code>
+          </figcaption>
+        </figure>
+
+        <p>
+          Vì mục tiêu là giữ toàn bộ các quy tắc này bên trong những struct triển
+          khai <code>State</code>, ta gọi phương thức <code>content</code> trên giá
+          trị trong <code>state</code> và truyền chính instance bài viết (tức
+          <code>self</code>) làm đối số. Rồi ta trả về giá trị nhận được từ phương
+          thức <code>content</code> trên giá trị <code>state</code> đó.
+        </p>
+
+        <p>
+          Ta gọi phương thức <code>as_ref</code> trên <code>Option</code> vì ta
+          muốn một tham chiếu tới giá trị bên trong <code>Option</code> chứ không
+          phải ownership của giá trị đó. Vì <code>state</code> có kiểu
+          <code>Option&lt;Box&lt;dyn State&gt;&gt;</code>, khi ta gọi
+          <code>as_ref</code> thì một
+          <code>Option&lt;&amp;Box&lt;dyn State&gt;&gt;</code> được trả về. Nếu
+          không gọi <code>as_ref</code>, ta sẽ gặp lỗi vì không thể move
+          <code>state</code> ra khỏi <code>&amp;self</code> đang được mượn từ tham
+          số của hàm.
+        </p>
+
+        <p>
+          Sau đó ta gọi phương thức <code>unwrap</code>, và ta biết nó sẽ không bao
+          giờ panic, bởi ta biết các phương thức trên <code>Post</code> đảm bảo
+          rằng <code>state</code> luôn chứa một giá trị <code>Some</code> khi chúng
+          chạy xong. Đây là một trong những trường hợp đã bàn ở mục
+          <a
+            href="ch09-03-to-panic-or-not-to-panic.html#cases-in-which-you-have-more-information-than-the-compiler"
+            >“Khi bạn có nhiều thông tin hơn trình biên dịch”</a
+          >
+          của Chương 9, khi ta biết chắc một giá trị <code>None</code> là không thể
+          xảy ra, dù trình biên dịch không hiểu được điều đó.
+        </p>
+
+        <p>
+          Tới đây, khi ta gọi <code>content</code> trên
+          <code>&amp;Box&lt;dyn State&gt;</code>, deref coercion sẽ tác động lên
+          <code>&amp;</code> và <code>Box</code>, để rốt cuộc phương thức
+          <code>content</code> được gọi trên kiểu triển khai trait
+          <code>State</code>. Nghĩa là ta cần thêm <code>content</code> vào định
+          nghĩa của trait <code>State</code>, và đó là nơi ta đặt phần logic quyết
+          định trả về nội dung nào tùy theo trạng thái đang có, như ở Listing
+          18-18.
+        </p>
+
+        <figure class="listing" id="listing-18-18">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">trait State {
+    // --snip--
+    fn request_review(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt;;
+    fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt;;
+
+    fn content&lt;'a&gt;(&amp;self, post: &amp;'a Post) -&gt; &amp;'a str {
+        ""
+    }
+}
+
+// --snip--
+
+struct Published {}
+
+impl State for Published {
+    // --snip--
     fn content&lt;'a&gt;(&amp;self, post: &amp;'a Post) -&gt; &amp;'a str {
         &amp;post.content
     }
 }</code></pre>
+          <figcaption>
+            <a href="#listing-18-18">Listing 18-18</a>: Thêm phương thức
+            <code>content</code> vào trait <code>State</code>
+          </figcaption>
+        </figure>
 
         <p>
-          Chúng ta thêm phương thức <code>content</code> vào trait
-          <code>State</code>. Phương thức này trả về một slice chuỗi trống
-          <code>""</code> như là triển khai mặc định — có nghĩa là chúng ta
-          không cần triển khai <code>content</code> trên các struct
-          <code>Draft</code> và <code>PendingReview</code>. Struct
-          <code>Published</code> sẽ ghi đè phương thức <code>content</code> và
-          trả về giá trị trong <code>post.content</code>.
+          Ta thêm một bản triển khai mặc định cho phương thức
+          <code>content</code>, trả về một string slice rỗng. Nghĩa là ta không cần
+          triển khai <code>content</code> trên struct <code>Draft</code> và
+          <code>PendingReview</code>. Struct <code>Published</code> sẽ ghi đè
+          phương thức <code>content</code> và trả về giá trị trong
+          <code>post.content</code>. Tuy tiện lợi, việc để phương thức
+          <code>content</code> trên <code>State</code> quyết định nội dung của
+          <code>Post</code> làm mờ ranh giới giữa trách nhiệm của
+          <code>State</code> và trách nhiệm của <code>Post</code>.
         </p>
 
-        <h3>Sử dụng Đầy đủ</h3>
+        <p>
+          Lưu ý rằng ta cần chú thích lifetime cho phương thức này, như đã bàn ở
+          Chương 10. Ta nhận một tham chiếu tới <code>post</code> làm đối số và trả
+          về một tham chiếu tới một phần của chính <code>post</code> đó, nên
+          lifetime của tham chiếu trả về có liên hệ với lifetime của đối số
+          <code>post</code>.
+        </p>
 
-        <pre><code class="language-rust">use blog::Post;
+        <p>
+          Và thế là xong — toàn bộ Listing 18-11 giờ đã chạy được! Ta đã triển khai
+          state pattern với các quy tắc của quy trình làm việc bài viết blog. Phần
+          logic liên quan tới các quy tắc nằm trong các state object thay vì rải
+          rác khắp <code>Post</code>.
+        </p>
 
-fn main() {
+        <section class="note" aria-role="note">
+          <h4 id="why-not-an-enum">Tại sao không dùng enum?</h4>
+          <p>
+            Có thể bạn đang tự hỏi vì sao ta không dùng một enum với các trạng thái
+            bài viết làm variant. Đó chắc chắn là một lời giải khả dĩ; hãy thử và
+            so sánh kết quả cuối cùng xem bạn thích cách nào hơn! Một nhược điểm
+            của việc dùng enum là mọi nơi kiểm tra giá trị của enum đều sẽ cần một
+            biểu thức <code>match</code> hay tương tự để xử lý mọi variant có thể
+            có. Cách đó có thể lặp đi lặp lại nhiều hơn so với lời giải dùng trait
+            object này.
+          </p>
+        </section>
+
+        <p><a id="trade-offs-of-the-state-pattern"></a></p>
+
+        <h4 id="evaluating-the-state-pattern">Đánh giá state pattern</h4>
+
+        <p>
+          Ta đã cho thấy Rust có khả năng triển khai state pattern hướng đối tượng
+          để đóng gói những loại hành vi khác nhau mà một bài viết cần có ở mỗi
+          trạng thái. Các phương thức trên <code>Post</code> không biết gì về những
+          hành vi khác nhau đó. Nhờ cách ta tổ chức mã, ta chỉ phải nhìn vào đúng
+          một chỗ để biết một bài viết đã xuất bản có thể hành xử ra sao: phần
+          triển khai trait <code>State</code> trên struct <code>Published</code>.
+        </p>
+
+        <p>
+          Nếu ta làm một bản triển khai thay thế không dùng state pattern, có lẽ ta
+          sẽ phải dùng các biểu thức <code>match</code> trong những phương thức
+          trên <code>Post</code>, hoặc thậm chí trong mã <code>main</code>, để kiểm
+          tra trạng thái bài viết và đổi hành vi ngay tại những chỗ đó. Như vậy
+          nghĩa là ta phải nhìn vào nhiều chỗ mới hiểu hết được hệ quả của việc một
+          bài viết đang ở trạng thái đã xuất bản.
+        </p>
+
+        <p>
+          Với state pattern, các phương thức của <code>Post</code> và những nơi ta
+          dùng <code>Post</code> đều không cần biểu thức <code>match</code>; và để
+          thêm một trạng thái mới, ta chỉ cần thêm một struct mới rồi triển khai
+          các phương thức của trait trên đúng struct đó, tại một chỗ duy nhất.
+        </p>
+
+        <p>
+          Bản triển khai dùng state pattern rất dễ mở rộng để thêm chức năng. Để
+          thấy được sự đơn giản khi bảo trì mã dùng state pattern, hãy thử vài gợi
+          ý sau:
+        </p>
+        <ul>
+          <li>
+            Thêm phương thức <code>reject</code> để đổi trạng thái bài viết từ
+            <code>PendingReview</code> trở lại <code>Draft</code>.
+          </li>
+          <li>
+            Bắt buộc phải gọi <code>approve</code> hai lần thì trạng thái mới
+            chuyển được sang <code>Published</code>.
+          </li>
+          <li>
+            Chỉ cho phép người dùng thêm nội dung văn bản khi bài viết đang ở trạng
+            thái <code>Draft</code>. Gợi ý: để state object chịu trách nhiệm về
+            việc nội dung có thể thay đổi ra sao, nhưng không chịu trách nhiệm sửa
+            đổi <code>Post</code>.
+          </li>
+        </ul>
+
+        <p>
+          Một nhược điểm của state pattern là: vì chính các trạng thái triển khai
+          việc chuyển đổi giữa chúng, nên một số trạng thái bị ghép cặp với nhau.
+          Nếu ta thêm một trạng thái nữa giữa <code>PendingReview</code> và
+          <code>Published</code>, chẳng hạn <code>Scheduled</code>, ta sẽ phải sửa
+          mã trong <code>PendingReview</code> để nó chuyển sang
+          <code>Scheduled</code>. Sẽ đỡ việc hơn nếu <code>PendingReview</code>
+          không phải thay đổi khi thêm một trạng thái mới, nhưng như vậy nghĩa là
+          phải chuyển sang một design pattern khác.
+        </p>
+
+        <p>
+          Một nhược điểm nữa là ta đã lặp lại một phần logic. Để bớt lặp, ta có thể
+          thử tạo bản triển khai mặc định cho các phương thức
+          <code>request_review</code> và <code>approve</code> trên trait
+          <code>State</code>, trả về <code>self</code>. Tuy nhiên cách này không
+          chạy được: khi dùng <code>State</code> làm trait object, trait không biết
+          <code>self</code> cụ thể sẽ là gì, nên kiểu trả về không xác định được tại
+          compile time. (Đây là một trong những quy tắc về dyn compatibility đã nhắc
+          tới trước đó.)
+        </p>
+
+        <p>
+          Chỗ lặp khác nằm ở phần triển khai giống nhau của hai phương thức
+          <code>request_review</code> và <code>approve</code> trên
+          <code>Post</code>. Cả hai đều dùng <code>Option::take</code> với trường
+          <code>state</code> của <code>Post</code>; nếu <code>state</code> là
+          <code>Some</code>, chúng ủy quyền cho bản triển khai cùng tên của giá trị
+          bên trong rồi đặt giá trị mới của trường <code>state</code> thành kết quả.
+          Nếu <code>Post</code> có nhiều phương thức theo mẫu này, ta có thể cân
+          nhắc định nghĩa một macro để loại bỏ phần lặp (xem mục
+          <a href="ch20-05-macros.html#macros">“Macros”</a> ở Chương 20).
+        </p>
+
+        <p>
+          Bằng cách triển khai state pattern đúng y như định nghĩa của nó cho các
+          ngôn ngữ hướng đối tượng, ta chưa tận dụng được hết điểm mạnh của Rust.
+          Hãy xem một vài thay đổi có thể áp dụng cho crate <code>blog</code> để
+          biến những trạng thái và chuyển đổi không hợp lệ thành lỗi ngay tại
+          compile time.
+        </p>
+
+        <h3 id="encoding-states-and-behavior-as-types">Mã hóa trạng thái và hành vi thành kiểu</h3>
+
+        <p>
+          Ta sẽ chỉ cho bạn cách nghĩ lại về state pattern để có một tập đánh đổi
+          khác. Thay vì đóng gói hoàn toàn các trạng thái và chuyển đổi để mã bên
+          ngoài không biết gì về chúng, ta sẽ mã hóa các trạng thái thành những
+          kiểu khác nhau. Nhờ đó, hệ thống kiểm tra kiểu của Rust sẽ ngăn việc dùng
+          bản thảo ở những chỗ chỉ cho phép bài viết đã xuất bản, bằng cách báo lỗi
+          biên dịch.
+        </p>
+
+        <p>Hãy xét phần đầu của <code>main</code> ở Listing 18-11:</p>
+
+        <figure class="listing">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">fn main() {
     let mut post = Post::new();
 
     post.add_text("I ate a salad for lunch today");
     assert_eq!("", post.content());
-
-    post.request_review();
-    assert_eq!("", post.content());
-
-    post.approve();
-    assert_eq!("I ate a salad for lunch today", post.content());
 }</code></pre>
-
-        <h3>Đánh đổi của State Pattern</h3>
-
-        <p>
-          Chúng ta đã thấy rằng Rust có khả năng triển khai state pattern hướng
-          đối tượng để đóng gói các loại hành vi khác nhau mà một post có thể có
-          trong mỗi trạng thái. Các phương thức trên <code>Post</code> không
-          biết gì về các hành vi khác nhau. Cách chúng ta tổ chức code, chúng ta
-          chỉ cần nhìn vào một nơi để biết các cách khác nhau mà một post đã
-          xuất bản có thể hoạt động: triển khai trait <code>State</code> trên
-          struct <code>Published</code>.
-        </p>
+        </figure>
 
         <p>
-          Nếu chúng ta tạo một triển khai thay thế không dùng state pattern,
-          chúng ta có thể dùng các kiểu khác nhau để đại diện cho các trạng thái
-          khác nhau:
+          Ta vẫn cho phép tạo bài viết mới ở trạng thái bản thảo bằng
+          <code>Post::new</code> và thêm văn bản vào nội dung bài viết. Nhưng thay
+          vì có một phương thức <code>content</code> trên bản thảo trả về chuỗi
+          rỗng, ta sẽ làm sao cho bản thảo <em>hoàn toàn không có</em> phương thức
+          <code>content</code>. Như vậy, nếu ta thử lấy nội dung của một bản thảo,
+          ta sẽ nhận lỗi biên dịch báo rằng phương thức đó không tồn tại. Kết quả
+          là ta không thể vô tình hiển thị nội dung bản thảo trên môi trường thật,
+          vì đoạn mã đó thậm chí không biên dịch được. Listing 18-19 cho thấy định
+          nghĩa của struct <code>Post</code> và struct <code>DraftPost</code>, cùng
+          các phương thức trên mỗi struct.
         </p>
 
-        <pre><code class="language-rust">pub struct Post {
+        <figure class="listing" id="listing-18-19">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">pub struct Post {
     content: String,
 }
 
@@ -543,7 +1044,58 @@ impl DraftPost {
     pub fn add_text(&amp;mut self, text: &amp;str) {
         self.content.push_str(text);
     }
+}</code></pre>
+          <figcaption>
+            <a href="#listing-18-19">Listing 18-19</a>: Một <code>Post</code> có
+            phương thức <code>content</code> và một <code>DraftPost</code> không
+            có phương thức <code>content</code>
+          </figcaption>
+        </figure>
 
+        <p>
+          Cả struct <code>Post</code> lẫn <code>DraftPost</code> đều có một trường
+          <code>content</code> riêng tư để lưu văn bản bài viết. Hai struct này
+          không còn trường <code>state</code> nữa, vì ta đang chuyển việc mã hóa
+          trạng thái sang chính kiểu của struct. Struct <code>Post</code> sẽ biểu
+          diễn một bài viết đã xuất bản, và nó có phương thức
+          <code>content</code> trả về <code>content</code>.
+        </p>
+
+        <p>
+          Ta vẫn có hàm <code>Post::new</code>, nhưng thay vì trả về một instance
+          của <code>Post</code>, nó trả về một instance của
+          <code>DraftPost</code>. Vì <code>content</code> là riêng tư và không có
+          hàm nào trả về <code>Post</code>, nên lúc này không thể tạo được một
+          instance của <code>Post</code>.
+        </p>
+
+        <p>
+          Struct <code>DraftPost</code> có phương thức <code>add_text</code>, nên
+          ta vẫn thêm được văn bản vào <code>content</code> như trước; nhưng chú ý
+          rằng <code>DraftPost</code> <em>không</em> định nghĩa phương thức
+          <code>content</code>! Vậy là giờ chương trình bảo đảm mọi bài viết đều
+          khởi đầu là bản thảo, và bản thảo thì không có nội dung để hiển thị. Mọi
+          nỗ lực lách qua những ràng buộc này đều dẫn tới lỗi biên dịch.
+        </p>
+
+        <p><a id="implementing-transitions-as-transformations-into-different-types"></a></p>
+
+        <p>
+          Vậy làm sao để có được một bài viết đã xuất bản? Ta muốn áp đặt quy tắc
+          rằng một bản thảo phải được xem xét và duyệt trước khi có thể xuất bản.
+          Một bài viết ở trạng thái chờ xem xét thì vẫn không được hiển thị nội
+          dung nào. Hãy triển khai những ràng buộc này bằng cách thêm một struct
+          nữa, <code>PendingReviewPost</code>, định nghĩa phương thức
+          <code>request_review</code> trên <code>DraftPost</code> để trả về một
+          <code>PendingReviewPost</code>, và định nghĩa phương thức
+          <code>approve</code> trên <code>PendingReviewPost</code> để trả về một
+          <code>Post</code>, như ở Listing 18-20.
+        </p>
+
+        <figure class="listing" id="listing-18-20">
+          <span class="file-name">Tên file: src/lib.rs</span>
+          <pre><code class="language-rust">impl DraftPost {
+    // --snip--
     pub fn request_review(self) -&gt; PendingReviewPost {
         PendingReviewPost {
             content: self.content,
@@ -562,30 +1114,115 @@ impl PendingReviewPost {
         }
     }
 }</code></pre>
+          <figcaption>
+            <a href="#listing-18-20">Listing 18-20</a>: Một
+            <code>PendingReviewPost</code> được tạo ra bằng cách gọi
+            <code>request_review</code> trên <code>DraftPost</code>, và một phương
+            thức <code>approve</code> biến một <code>PendingReviewPost</code>
+            thành một <code>Post</code> đã xuất bản
+          </figcaption>
+        </figure>
 
         <p>
-          Cả <code>DraftPost</code> và <code>PendingReviewPost</code> không có
-          phương thức <code>content</code>, vì vậy code sử dụng chúng không thể
-          gọi <code>content</code> cho đến khi post đạt trạng thái
-          <code>Published</code>. Điều này mã hóa quy trình làm việc vào hệ
-          thống kiểu: compiler sẽ báo lỗi nếu bạn cố lấy nội dung khi bài viết
-          chưa được xuất bản.
+          Hai phương thức <code>request_review</code> và <code>approve</code> lấy
+          ownership của <code>self</code>, do đó tiêu thụ luôn instance
+          <code>DraftPost</code> và <code>PendingReviewPost</code> rồi biến chúng
+          lần lượt thành một <code>PendingReviewPost</code> và một
+          <code>Post</code> đã xuất bản. Nhờ vậy sẽ không còn instance
+          <code>DraftPost</code> nào sót lại sau khi ta đã gọi
+          <code>request_review</code> trên nó, và tương tự với các bước sau. Struct
+          <code>PendingReviewPost</code> không định nghĩa phương thức
+          <code>content</code>, nên thử đọc nội dung của nó sẽ gây lỗi biên dịch,
+          giống như với <code>DraftPost</code>. Vì cách duy nhất để có được một
+          instance <code>Post</code> đã xuất bản — vốn có định nghĩa phương thức
+          <code>content</code> — là gọi <code>approve</code> trên một
+          <code>PendingReviewPost</code>, và cách duy nhất để có một
+          <code>PendingReviewPost</code> là gọi <code>request_review</code> trên
+          một <code>DraftPost</code>, nên giờ ta đã mã hóa được quy trình làm việc
+          của bài viết blog vào hệ thống kiểu.
         </p>
-
-        <h3>Tóm tắt</h3>
 
         <p>
-          Dù bạn nghĩ rằng Rust là ngôn ngữ hướng đối tượng hay không, bạn đã
-          thấy rằng có thể dùng trait objects để có một số tính năng hướng đối
-          tượng trong Rust. Dynamic dispatch có thể cho code của bạn một chút
-          linh hoạt với một chút overhead về hiệu suất runtime. Bạn có thể dùng
-          tính linh hoạt đó để triển khai các OOP patterns giúp khả năng bảo trì
-          code của bạn. Rust cũng có các tính năng khác, như ownership, mà ngôn
-          ngữ hướng đối tượng không có. Một OOP pattern không phải lúc nào cũng
-          là cách tốt nhất để tận dụng điểm mạnh của Rust, nhưng nó là một tùy
-          chọn có sẵn.
+          Nhưng ta cũng phải sửa vài chỗ nhỏ trong <code>main</code>. Hai phương
+          thức <code>request_review</code> và <code>approve</code> trả về instance
+          mới thay vì sửa struct mà chúng được gọi trên đó, nên ta cần thêm những
+          phép gán shadowing <code>let post =</code> để giữ lại instance trả về. Ta
+          cũng không thể giữ những khẳng định rằng nội dung của bản thảo và bài
+          chờ xem xét là chuỗi rỗng — và cũng không cần chúng nữa: ta không còn
+          biên dịch được đoạn mã cố dùng nội dung của bài viết ở những trạng thái
+          đó. Mã <code>main</code> sau khi cập nhật nằm ở Listing 18-21.
         </p>
 
+        <figure class="listing" id="listing-18-21">
+          <span class="file-name">Tên file: src/main.rs</span>
+          <pre><code class="language-rust">use blog::Post;
+
+fn main() {
+    let mut post = Post::new();
+
+    post.add_text("I ate a salad for lunch today");
+
+    let post = post.request_review();
+
+    let post = post.approve();
+
+    assert_eq!("I ate a salad for lunch today", post.content());
+}</code></pre>
+          <figcaption>
+            <a href="#listing-18-21">Listing 18-21</a>: Sửa <code>main</code> để
+            dùng bản triển khai mới của quy trình làm việc bài viết blog
+          </figcaption>
+        </figure>
+
+        <p>
+          Những thay đổi ta phải làm trong <code>main</code> để gán lại
+          <code>post</code> có nghĩa là bản triển khai này không còn hoàn toàn theo
+          state pattern hướng đối tượng nữa: việc chuyển đổi giữa các trạng thái
+          không còn được đóng gói trọn vẹn bên trong phần triển khai của
+          <code>Post</code>. Bù lại, cái ta được là những trạng thái không hợp lệ
+          giờ trở nên bất khả thi, nhờ hệ thống kiểu và việc kiểm tra kiểu diễn ra
+          tại compile time! Điều đó đảm bảo một số lỗi nhất định — chẳng hạn hiển
+          thị nội dung của bài viết chưa xuất bản — sẽ bị phát hiện trước khi chúng
+          lọt ra môi trường thật.
+        </p>
+
+        <p>
+          Hãy thử những bài tập gợi ý ở đầu mục này trên crate
+          <code>blog</code> sau Listing 18-21 để xem bạn nghĩ gì về thiết kế của
+          phiên bản mã này. Lưu ý rằng một số bài tập có thể đã hoàn thành sẵn
+          trong thiết kế này rồi.
+        </p>
+
+        <p>
+          Ta đã thấy rằng dù Rust có khả năng triển khai các design pattern hướng
+          đối tượng, vẫn còn những pattern khác dùng được trong Rust, chẳng hạn mã
+          hóa trạng thái vào hệ thống kiểu. Những pattern này có các đánh đổi khác
+          nhau. Dù bạn có thể rất quen với các pattern hướng đối tượng, việc nghĩ
+          lại bài toán để tận dụng tính năng của Rust có thể đem lại lợi ích, ví dụ
+          như ngăn được một số lỗi ngay tại compile time. Pattern hướng đối tượng
+          không phải lúc nào cũng là lời giải tốt nhất trong Rust, do Rust có những
+          tính năng như ownership mà các ngôn ngữ hướng đối tượng không có.
+        </p>
+
+        <h2 id="summary">Tóm tắt</h2>
+
+        <p>
+          Dù sau chương này bạn có cho rằng Rust là ngôn ngữ hướng đối tượng hay
+          không, giờ bạn đã biết rằng có thể dùng trait object để có được một số
+          tính năng hướng đối tượng trong Rust. Dynamic dispatch có thể cho mã của
+          bạn thêm chút linh hoạt, đổi lại một chút hiệu năng lúc runtime. Bạn có
+          thể dùng sự linh hoạt đó để triển khai những pattern hướng đối tượng giúp
+          mã dễ bảo trì hơn. Rust cũng có những tính năng khác, như ownership, mà
+          các ngôn ngữ hướng đối tượng không có. Một pattern hướng đối tượng không
+          phải lúc nào cũng là cách tốt nhất để tận dụng điểm mạnh của Rust, nhưng
+          nó là một lựa chọn sẵn có.
+        </p>
+
+        <p>
+          Tiếp theo, ta sẽ tìm hiểu về pattern — một tính năng khác của Rust mang
+          lại rất nhiều sự linh hoạt. Ta đã lướt qua chúng suốt cuốn sách nhưng
+          chưa thấy hết khả năng của chúng. Bắt đầu thôi!
+        </p>
         <div class="page-nav bottom">
           <a href="ch18-02-trait-objects.html">← Trước</a
           ><a href="ch19-00-patterns.html">Tiếp →</a>

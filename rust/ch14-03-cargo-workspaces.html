@@ -43,14 +43,14 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 14 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 14 — Cargo Workspaces</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch14-02-publishing-to-crates-io.html">← Trước</a><a href="ch14-04-installing-binaries.html">Tiếp →</a></div>
 
   <h2 id="cargo-workspaces"><a class="header" href="#cargo-workspaces">Cargo Workspaces</a></h2>
-<p>Ở Chương 12, chúng ta đã xây dựng một package gồm cả binary crate lẫn library crate. Khi project phát triển, bạn có thể thấy library crate ngày càng phình to và muốn tách package ra thành nhiều library crate hơn. Cargo cung cấp một tính năng gọi là <em>workspaces</em> để giúp quản lý nhiều package liên quan được phát triển song song.</p>
+<p>Ở Chương 12, chúng ta đã xây dựng một package gồm cả binary crate lẫn library crate. Khi dự án phát triển, bạn có thể thấy library crate ngày càng phình to và muốn tách package ra thành nhiều library crate hơn. Cargo cung cấp một tính năng gọi là <em>workspaces</em> để giúp quản lý nhiều package liên quan được phát triển song song.</p>
 <h3 id="creating-a-workspace"><a class="header" href="#creating-a-workspace">Tạo một Workspace</a></h3>
-<p>Một <em>workspace</em> là tập hợp các package cùng chia sẻ một file <em>Cargo.lock</em> và thư mục output chung. Hãy cùng tạo một project dùng workspace — chúng ta sẽ dùng code đơn giản để tập trung vào cấu trúc của workspace. Có nhiều cách tổ chức workspace khác nhau, ở đây chúng ta sẽ trình bày một cách phổ biến. Workspace của chúng ta sẽ gồm một binary và hai library. Binary sẽ cung cấp chức năng chính và phụ thuộc vào hai library. Một library cung cấp hàm <code>add_one</code> và library kia cung cấp hàm <code>add_two</code>. Ba crate này sẽ thuộc cùng một workspace. Hãy bắt đầu bằng cách tạo thư mục mới cho workspace:</p>
+<p>Một <em>workspace</em> là tập hợp các package cùng chia sẻ một file <em>Cargo.lock</em> và thư mục kết quả chung. Hãy cùng tạo một dự án dùng workspace — chúng ta sẽ dùng mã đơn giản để tập trung vào cấu trúc của workspace. Có nhiều cách tổ chức workspace khác nhau, ở đây chúng ta sẽ trình bày một cách phổ biến. Workspace của chúng ta sẽ gồm một binary và hai library. Binary sẽ cung cấp chức năng chính và phụ thuộc vào hai library. Một library cung cấp hàm <code>add_one</code> và library kia cung cấp hàm <code>add_two</code>. Ba crate này sẽ thuộc cùng một workspace. Hãy bắt đầu bằng cách tạo thư mục mới cho workspace:</p>
 <pre><code class="language-console">$ mkdir add
 $ cd add
 </code></pre>
@@ -136,7 +136,7 @@ add_one = { path = "../add_one" }
      Running `target/debug/adder`
 Hello, world! 10 plus one is 11!
 </code></pre>
-<p>Lệnh này chạy code trong <em>adder/src/main.rs</em>, vốn phụ thuộc vào crate <code>add_one</code>.</p>
+<p>Lệnh này chạy mã trong <em>adder/src/main.rs</em>, vốn phụ thuộc vào crate <code>add_one</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="depending-on-an-external-package-in-a-workspace"></a></p>
 <h3 id="depending-on-an-external-package"><a class="header" href="#depending-on-an-external-package">Phụ thuộc vào Package Bên Ngoài</a></h3>
@@ -216,7 +216,7 @@ running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 </code></pre>
-<p>Phần đầu tiên của output cho thấy test <code>it_works</code> trong crate <code>add_one</code> đã pass. Phần tiếp theo cho thấy không có test nào trong crate <code>adder</code>, và phần cuối cùng cho thấy không có documentation test nào trong crate <code>add_one</code>.</p>
+<p>Phần đầu tiên của kết quả cho thấy test <code>it_works</code> trong crate <code>add_one</code> đã pass. Phần tiếp theo cho thấy không có test nào trong crate <code>adder</code>, và phần cuối cùng cho thấy không có documentation test nào trong crate <code>add_one</code>.</p>
 <p>Chúng ta cũng có thể chạy test cho một crate cụ thể trong workspace từ thư mục cấp cao nhất bằng cách dùng flag <code>-p</code> và chỉ định tên crate cần test:</p>
 <pre><code class="language-console">$ cargo test -p add_one
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
@@ -233,10 +233,10 @@ running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 </code></pre>
-<p>Output này cho thấy <code>cargo test</code> chỉ chạy test cho crate <code>add_one</code> và không chạy test của crate <code>adder</code>.</p>
+<p>Kết quả này cho thấy <code>cargo test</code> chỉ chạy test cho crate <code>add_one</code> và không chạy test của crate <code>adder</code>.</p>
 <p>Nếu bạn xuất bản các crate trong workspace lên <a href="https://crates.io/">crates.io</a>, mỗi crate trong workspace cần được xuất bản riêng biệt. Giống như <code>cargo test</code>, chúng ta có thể xuất bản một crate cụ thể trong workspace bằng flag <code>-p</code> và chỉ định tên crate cần xuất bản.</p>
 <p>Để luyện tập thêm, hãy thêm crate <code>add_two</code> vào workspace này theo cách tương tự như crate <code>add_one</code>!</p>
-<p>Khi project của bạn phát triển, hãy cân nhắc dùng workspace: nó giúp bạn làm việc với các thành phần nhỏ hơn, dễ hiểu hơn thay vì một khối code khổng lồ. Hơn nữa, giữ các crate trong workspace có thể giúp việc phối hợp giữa chúng dễ dàng hơn nếu chúng thường xuyên được thay đổi cùng lúc.</p>
+<p>Khi dự án của bạn phát triển, hãy cân nhắc dùng workspace: nó giúp bạn làm việc với các thành phần nhỏ hơn, dễ hiểu hơn thay vì một khối mã khổng lồ. Hơn nữa, giữ các crate trong workspace có thể giúp việc phối hợp giữa chúng dễ dàng hơn nếu chúng thường xuyên được thay đổi cùng lúc.</p>
 
   <div class="page-nav bottom"><a href="ch14-02-publishing-to-crates-io.html">← Trước</a><a href="ch14-04-installing-binaries.html">Tiếp →</a></div>
   </div>

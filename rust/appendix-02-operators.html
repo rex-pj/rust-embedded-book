@@ -174,21 +174,21 @@
 <tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Định nghĩa hàm generic</td></tr>
 <tr><td><code>struct ident&lt;...&gt; ...</code></td><td>Định nghĩa struct generic</td></tr>
 <tr><td><code>enum ident&lt;...&gt; ...</code></td><td>Định nghĩa enum generic</td></tr>
-<tr><td><code>impl&lt;...&gt; ...</code></td><td>Định nghĩa implementation generic</td></tr>
+<tr><td><code>impl&lt;...&gt; ...</code></td><td>Định nghĩa phần triển khai generic</td></tr>
 <tr><td><code>for&lt;...&gt; type</code></td><td>Ràng buộc lifetime bậc cao</td></tr>
 <tr><td><code>type&lt;ident=type&gt;</code></td><td>Generic type trong đó một hoặc nhiều associated types có giá trị cụ thể (ví dụ: <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
 </tbody>
 </table>
 </div>
 <p>Bảng B-5 hiển thị các ký hiệu xuất hiện trong ngữ cảnh ràng buộc generic type parameters với trait bounds.</p>
-<p><span class="caption">Bảng B-5: Ràng buộc Trait Bound</span></p>
+<p><span class="caption">Bảng B-5: Ràng buộc trait Bound</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
 <tr><th>Symbol</th><th>Mô tả</th></tr>
 </thead>
 <tbody>
-<tr><td><code>T: U</code></td><td>Generic parameter <code>T</code> bị ràng buộc về các kiểu implement <code>U</code></td></tr>
+<tr><td><code>T: U</code></td><td>Generic parameter <code>T</code> bị ràng buộc về các kiểu triển khai <code>U</code></td></tr>
 <tr><td><code>T: 'a</code></td><td>Generic type <code>T</code> phải sống lâu hơn lifetime <code>'a</code> (nghĩa là kiểu đó không được chứa bất kỳ reference nào có lifetime ngắn hơn <code>'a</code>)</td></tr>
 <tr><td><code>T: 'static</code></td><td>Generic type <code>T</code> không chứa borrowed reference nào ngoài các reference <code>'static</code></td></tr>
 <tr><td><code>'b: 'a</code></td><td>Generic lifetime <code>'b</code> phải sống lâu hơn lifetime <code>'a</code></td></tr>
@@ -225,7 +225,7 @@
 <tr><td><code>//</code></td><td>Comment dòng</td></tr>
 <tr><td><code>//!</code></td><td>Inner line doc comment</td></tr>
 <tr><td><code>///</code></td><td>Outer line doc comment</td></tr>
-<tr><td><code>/*...*/</code></td><td>Comment khối</td></tr>
+<tr><td><code>/*...*/</code></td><td>Block comment</td></tr>
 <tr><td><code>/*!...*/</code></td><td>Inner block doc comment</td></tr>
 <tr><td><code>/**...*/</code></td><td>Outer block doc comment</td></tr>
 </tbody>

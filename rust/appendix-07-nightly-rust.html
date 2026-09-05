@@ -51,7 +51,7 @@
   <p>Phụ lục này nói về cách Rust được tạo ra và điều đó ảnh hưởng đến bạn — với tư cách là một lập trình viên Rust — như thế nào.</p>
 
   <h3 id="on-dinh-ma-khong-tro-nen-cung-nhac">Ổn định mà không trở nên cứng nhắc</h3>
-  <p>Là một ngôn ngữ, Rust coi trọng <em>rất nhiều</em> sự ổn định của code bạn viết. Chúng tôi muốn Rust trở thành nền tảng vững chắc để bạn xây dựng mọi thứ lên trên, và nếu mọi thứ cứ thay đổi liên tục thì điều đó là bất khả thi. Đồng thời, nếu chúng tôi không thể thử nghiệm các tính năng mới, chúng tôi có thể sẽ không phát hiện ra những lỗ hổng quan trọng cho đến tận khi chúng đã được phát hành — lúc đó sẽ không còn cơ hội thay đổi nữa.</p>
+  <p>Là một ngôn ngữ, Rust coi trọng <em>rất nhiều</em> sự ổn định của mã bạn viết. Chúng tôi muốn Rust trở thành nền tảng vững chắc để bạn xây dựng mọi thứ lên trên, và nếu mọi thứ cứ thay đổi liên tục thì điều đó là bất khả thi. Đồng thời, nếu chúng tôi không thể thử nghiệm các tính năng mới, chúng tôi có thể sẽ không phát hiện ra những lỗ hổng quan trọng cho đến tận khi chúng đã được phát hành — lúc đó sẽ không còn cơ hội thay đổi nữa.</p>
   <p>Giải pháp của chúng tôi cho vấn đề này là thứ chúng tôi gọi là "ổn định mà không trở nên cứng nhắc", và nguyên tắc dẫn đường của chúng tôi là: bạn sẽ không bao giờ phải lo lắng khi nâng cấp lên phiên bản stable Rust mới hơn. Mỗi lần nâng cấp phải nhẹ nhàng, nhưng đồng thời phải mang lại tính năng mới, ít bug hơn và thời gian biên dịch nhanh hơn.</p>
 
   <h3 id="xuc-xac-kenh-phat-hanh">Xúc xắc! Các kênh phát hành và mô hình chuyến tàu</h3>
@@ -102,15 +102,15 @@ stable:                                *
   <p>Dự án Rust hỗ trợ phiên bản stable mới nhất. Khi một phiên bản stable mới được phát hành, phiên bản cũ đạt đến ngày kết thúc vòng đời (EOL). Điều này có nghĩa là mỗi phiên bản được hỗ trợ trong sáu tuần.</p>
 
   <h3 id="tinh-nang-khong-on-dinh">Tính năng không ổn định</h3>
-  <p>Còn một điều nữa với mô hình phát hành này: các tính năng không ổn định. Rust sử dụng kỹ thuật gọi là "feature flags" để xác định những tính năng nào được bật trong một phiên bản phát hành nhất định. Nếu một tính năng mới đang được phát triển tích cực, nó sẽ được hợp nhất vào nhánh main, và do đó vào nightly, nhưng ở sau một <em>feature flag</em>. Nếu bạn, với tư cách người dùng, muốn thử nghiệm tính năng đang trong quá trình phát triển, bạn có thể làm vậy, nhưng bạn phải đang dùng bản nightly của Rust và chú thích source code của mình với flag thích hợp để opt in.</p>
-  <p>Nếu bạn đang dùng bản beta hoặc stable của Rust, bạn không thể dùng bất kỳ feature flag nào. Đây là chìa khóa cho phép chúng tôi có được trải nghiệm thực tế với các tính năng mới trước khi tuyên bố chúng ổn định mãi mãi. Những ai muốn tiếp cận công nghệ tiên phong có thể làm vậy, còn những ai muốn trải nghiệm vững chắc có thể gắn bó với stable và biết rằng code của họ sẽ không bị hỏng. Ổn định mà không cứng nhắc.</p>
+  <p>Còn một điều nữa với mô hình phát hành này: các tính năng không ổn định. Rust sử dụng kỹ thuật gọi là "tính năng flags" để xác định những tính năng nào được bật trong một phiên bản phát hành nhất định. Nếu một tính năng mới đang được phát triển tích cực, nó sẽ được hợp nhất vào nhánh main, và do đó vào nightly, nhưng ở sau một <em>tính năng flag</em>. Nếu bạn, với tư cách người dùng, muốn thử nghiệm tính năng đang trong quá trình phát triển, bạn có thể làm vậy, nhưng bạn phải đang dùng bản nightly của Rust và chú thích mã nguồn của mình với flag thích hợp để opt in.</p>
+  <p>Nếu bạn đang dùng bản beta hoặc stable của Rust, bạn không thể dùng bất kỳ tính năng flag nào. Đây là chìa khóa cho phép chúng tôi có được trải nghiệm thực tế với các tính năng mới trước khi tuyên bố chúng ổn định mãi mãi. Những ai muốn tiếp cận công nghệ tiên phong có thể làm vậy, còn những ai muốn trải nghiệm vững chắc có thể gắn bó với stable và biết rằng mã của họ sẽ không bị hỏng. Ổn định mà không cứng nhắc.</p>
   <p>Cuốn sách này chỉ chứa thông tin về các tính năng stable, vì các tính năng đang trong quá trình phát triển vẫn đang thay đổi, và chắc chắn chúng sẽ khác nhau giữa lúc cuốn sách này được viết và khi chúng được bật trong các bản stable. Bạn có thể tìm tài liệu cho các tính năng chỉ dành cho nightly trực tuyến.</p>
 
   <h3 id="rustup-va-vai-tro-cua-nightly-rust">Rustup và vai trò của Nightly Rust</h3>
   <p>Rustup giúp việc chuyển đổi giữa các kênh phát hành khác nhau của Rust trở nên dễ dàng, trên cơ sở toàn cục hoặc theo từng dự án. Mặc định, bạn sẽ cài stable Rust. Để cài nightly, ví dụ:</p>
   <pre><code class="language-console">$ rustup toolchain install nightly
 </code></pre>
-  <p>Bạn cũng có thể xem tất cả các <em>toolchains</em> (các phiên bản phát hành Rust và các thành phần liên quan) đã được cài đặt với <code>rustup</code>. Đây là ví dụ trên máy tính Windows của một trong những tác giả:</p>
+  <p>Bạn cũng có thể xem tất cả các <em>toolchain</em> (các phiên bản phát hành Rust và các thành phần liên quan) đã được cài đặt với <code>rustup</code>. Đây là ví dụ trên máy tính Windows của một trong những tác giả:</p>
   <pre><code class="language-powershell">&gt; rustup toolchain list
 stable-x86_64-pc-windows-msvc (default)
 beta-x86_64-pc-windows-msvc
@@ -120,13 +120,13 @@ nightly-x86_64-pc-windows-msvc
   <pre><code class="language-console">$ cd ~/projects/needs-nightly
 $ rustup override set nightly
 </code></pre>
-  <p>Bây giờ, mỗi khi bạn gọi <code>rustc</code> hoặc <code>cargo</code> bên trong <em>~/projects/needs-nightly</em>, <code>rustup</code> sẽ đảm bảo bạn đang dùng nightly Rust, thay vì mặc định stable Rust. Điều này rất tiện khi bạn có nhiều dự án Rust!</p>
+  <p>Bây giờ, mỗi khi bạn gọi <code>rustc</code> hoặc <code>cargo</code> bên trong <em>~/dự án/needs-nightly</em>, <code>rustup</code> sẽ đảm bảo bạn đang dùng nightly Rust, thay vì mặc định stable Rust. Điều này rất tiện khi bạn có nhiều dự án Rust!</p>
 
   <h3 id="quy-trinh-rfc-va-cac-team">Quy trình RFC và các team</h3>
   <p>Vậy làm thế nào để tìm hiểu về các tính năng mới này? Mô hình phát triển của Rust tuân theo một <em>quy trình Request For Comments (RFC)</em>. Nếu bạn muốn có một cải tiến trong Rust, bạn có thể viết một đề xuất, được gọi là RFC.</p>
   <p>Bất kỳ ai cũng có thể viết RFC để cải thiện Rust, và các đề xuất được xem xét và thảo luận bởi team Rust, bao gồm nhiều team con theo chủ đề. Có danh sách đầy đủ các team <a href="https://www.rust-lang.org/governance">trên trang web của Rust</a>, bao gồm các team phụ trách từng lĩnh vực của dự án: thiết kế ngôn ngữ, triển khai compiler, hạ tầng, tài liệu, và nhiều hơn nữa. Team phù hợp đọc đề xuất và các comment, viết thêm comment của riêng họ, và cuối cùng đạt được sự đồng thuận để chấp nhận hoặc từ chối tính năng đó.</p>
-  <p>Nếu tính năng được chấp nhận, một issue được mở trên repository Rust và ai đó có thể triển khai nó. Người triển khai rất có thể không phải là người đề xuất tính năng ban đầu! Khi quá trình triển khai hoàn tất, nó được hợp nhất vào nhánh main sau một feature gate, như chúng ta đã thảo luận trong phần <a href="#tinh-nang-khong-on-dinh">"Tính năng không ổn định"</a>.</p>
-  <p>Sau một thời gian, khi các lập trình viên Rust dùng nightly đã có thể thử nghiệm tính năng mới, các thành viên team sẽ thảo luận về tính năng đó, cách nó đã hoạt động trên nightly, và quyết định xem có nên đưa nó vào stable Rust hay không. Nếu quyết định là tiến hành, feature gate được gỡ bỏ, và tính năng đó giờ được coi là ổn định! Nó lên chuyến tàu đi vào một phiên bản stable mới của Rust.</p>
+  <p>Nếu tính năng được chấp nhận, một issue được mở trên repository Rust và ai đó có thể triển khai nó. Người triển khai rất có thể không phải là người đề xuất tính năng ban đầu! Khi quá trình triển khai hoàn tất, nó được hợp nhất vào nhánh main sau một tính năng gate, như chúng ta đã thảo luận trong phần <a href="#tinh-nang-khong-on-dinh">"Tính năng không ổn định"</a>.</p>
+  <p>Sau một thời gian, khi các lập trình viên Rust dùng nightly đã có thể thử nghiệm tính năng mới, các thành viên team sẽ thảo luận về tính năng đó, cách nó đã hoạt động trên nightly, và quyết định xem có nên đưa nó vào stable Rust hay không. Nếu quyết định là tiến hành, tính năng gate được gỡ bỏ, và tính năng đó giờ được coi là ổn định! Nó lên chuyến tàu đi vào một phiên bản stable mới của Rust.</p>
 
   <div class="page-nav bottom"><a href="appendix-06-translation.html">← Trước</a><a href="title-page.html">Tiếp →</a></div>
   </div>

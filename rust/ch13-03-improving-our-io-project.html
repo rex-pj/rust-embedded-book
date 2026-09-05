@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 13 — Cải thiện dự án I/O của chúng ta</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch13-02-iterators.html">← Trước</a>
@@ -208,9 +208,9 @@
   </div>
 
 <h2 id="improving-our-io-project"><a class="header" href="#improving-our-io-project">Cải thiện dự án I/O của chúng ta</a></h2>
-<p>Với kiến thức mới về iterator, chúng ta có thể cải thiện dự án I/O ở Chương 12 bằng cách dùng iterator để làm cho code rõ ràng và súc tích hơn. Hãy xem cách iterator có thể cải thiện implementation của hàm <code>Config::build</code> và hàm <code>search</code>.</p>
+<p>Với kiến thức mới về iterator, chúng ta có thể cải thiện dự án I/O ở Chương 12 bằng cách dùng iterator để làm cho mã rõ ràng và súc tích hơn. Hãy xem cách iterator có thể cải thiện phần triển khai của hàm <code>Config::build</code> và hàm <code>search</code>.</p>
 <h3 id="removing-a-clone-using-an-iterator"><a class="header" href="#removing-a-clone-using-an-iterator">Loại bỏ <code>clone</code> bằng cách dùng iterator</a></h3>
-<p>Ở Listing 12-6, chúng ta đã thêm code lấy một slice các giá trị <code>String</code> và tạo một instance của struct <code>Config</code> bằng cách index vào slice và clone các giá trị, cho phép struct <code>Config</code> sở hữu những giá trị đó. Trong Listing 13-17, chúng ta tái hiện lại implementation của hàm <code>Config::build</code> như trong Listing 12-23.</p>
+<p>Ở Listing 12-6, chúng ta đã thêm mã lấy một slice các giá trị <code>String</code> và tạo một instance của struct <code>Config</code> bằng cách index vào slice và clone các giá trị, cho phép struct <code>Config</code> sở hữu những giá trị đó. Trong Listing 13-17, chúng ta tái hiện lại phần triển khai của hàm <code>Config::build</code> như trong Listing 12-23.</p>
 <figure class="listing" id="listing-13-17">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
@@ -278,7 +278,7 @@
 </figure>
 <p>Hồi đó, chúng ta đã nói đừng lo về các lời gọi <code>clone</code> không hiệu quả vì sẽ loại bỏ chúng sau. Và lúc đó đây rồi!</p>
 <p>Chúng ta cần <code>clone</code> ở đây vì tham số <code>args</code> là một slice chứa các phần tử <code>String</code>, nhưng hàm <code>build</code> không sở hữu <code>args</code>. Để trả về ownership của một instance <code>Config</code>, chúng ta phải clone các giá trị từ các trường <code>query</code> và <code>file_path</code> của <code>Config</code> để instance <code>Config</code> có thể sở hữu các giá trị của nó.</p>
-<p>Với kiến thức mới về iterator, chúng ta có thể thay đổi hàm <code>build</code> để lấy ownership của một iterator làm tham số thay vì borrow một slice. Chúng ta sẽ dùng chức năng của iterator thay vì code kiểm tra độ dài của slice và index vào các vị trí cụ thể. Điều này làm rõ hơn hàm <code>Config::build</code> đang làm gì vì iterator sẽ truy cập trực tiếp vào các giá trị.</p>
+<p>Với kiến thức mới về iterator, chúng ta có thể thay đổi hàm <code>build</code> để lấy ownership của một iterator làm tham số thay vì borrow một slice. Chúng ta sẽ dùng chức năng của iterator thay vì mã kiểm tra độ dài của slice và index vào các vị trí cụ thể. Điều này làm rõ hơn hàm <code>Config::build</code> đang làm gì vì iterator sẽ truy cập trực tiếp vào các giá trị.</p>
 <p>Khi <code>Config::build</code> lấy ownership của iterator và dừng dùng các thao tác index mượn, chúng ta có thể di chuyển các giá trị <code>String</code> từ iterator vào <code>Config</code> thay vì gọi <code>clone</code> và tạo bộ nhớ mới.</p>
 <h4 id="using-the-returned-iterator-directly"><a class="header" href="#using-the-returned-iterator-directly">Dùng trực tiếp iterator được trả về</a></h4>
 <p>Mở file <em>src/main.rs</em> của dự án I/O của bạn, trông nó sẽ như thế này:</p>
@@ -346,7 +346,7 @@
 </span><span class="boring">
 </span><span class="boring">    Ok(())
 </span><span class="boring">}</span></code></pre>
-<p>Chúng ta sẽ đầu tiên thay đổi phần đầu hàm <code>main</code> mà chúng ta có trong Listing 12-24 thành code trong Listing 13-18, lần này dùng iterator. Code này sẽ không compile cho đến khi chúng ta cũng cập nhật <code>Config::build</code>.</p>
+<p>Chúng ta sẽ đầu tiên thay đổi phần đầu hàm <code>main</code> mà chúng ta có trong Listing 12-24 thành mã trong Listing 13-18, lần này dùng iterator. Mã này sẽ không compile cho đến khi chúng ta cũng cập nhật <code>Config::build</code>.</p>
 <figure class="listing" id="listing-13-18">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
@@ -413,7 +413,7 @@
 <figcaption><a href="#listing-13-18">Listing 13-18</a>: Truyền giá trị trả về của <code>env::args</code> vào <code>Config::build</code></figcaption>
 </figure>
 <p>Hàm <code>env::args</code> trả về một iterator! Thay vì thu thập các giá trị iterator vào một vector rồi truyền một slice cho <code>Config::build</code>, giờ chúng ta truyền trực tiếp ownership của iterator được trả về từ <code>env::args</code> cho <code>Config::build</code>.</p>
-<p>Tiếp theo, chúng ta cần cập nhật định nghĩa của <code>Config::build</code>. Hãy thay đổi signature của <code>Config::build</code> như trong Listing 13-19. Code này vẫn chưa compile vì chúng ta cần cập nhật thân hàm.</p>
+<p>Tiếp theo, chúng ta cần cập nhật định nghĩa của <code>Config::build</code>. Hãy thay đổi signature của <code>Config::build</code> như trong Listing 13-19. Mã này vẫn chưa compile vì chúng ta cần cập nhật thân hàm.</p>
 <figure class="listing" id="listing-13-19">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
@@ -480,13 +480,13 @@
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-19">Listing 13-19</a>: Cập nhật signature của <code>Config::build</code> để nhận iterator</figcaption>
 </figure>
-<p>Tài liệu thư viện chuẩn của hàm <code>env::args</code> cho thấy kiểu iterator mà nó trả về là <code>std::env::Args</code>, và kiểu đó implement trait <code>Iterator</code> và trả về các giá trị <code>String</code>.</p>
-<p>Chúng ta đã cập nhật signature của hàm <code>Config::build</code> để tham số <code>args</code> có generic type với trait bound <code>impl Iterator&lt;Item = String&gt;</code> thay vì <code>&amp;[String]</code>. Cách dùng cú pháp <code>impl Trait</code> mà chúng ta đã thảo luận trong phần <a href="ch10-02-traits.html#traits-as-parameters">"Dùng Trait làm tham số"</a> của Chương 10 có nghĩa là <code>args</code> có thể là bất kỳ kiểu nào implement trait <code>Iterator</code> và trả về các item <code>String</code>.</p>
+<p>Tài liệu thư viện chuẩn của hàm <code>env::args</code> cho thấy kiểu iterator mà nó trả về là <code>std::env::Args</code>, và kiểu đó triển khai trait <code>Iterator</code> và trả về các giá trị <code>String</code>.</p>
+<p>Chúng ta đã cập nhật signature của hàm <code>Config::build</code> để tham số <code>args</code> có generic type với trait bound <code>impl Iterator&lt;Item = String&gt;</code> thay vì <code>&amp;[String]</code>. Cách dùng cú pháp <code>impl Trait</code> mà chúng ta đã thảo luận trong phần <a href="ch10-02-traits.html#traits-as-parameters">"Dùng trait làm tham số"</a> của Chương 10 có nghĩa là <code>args</code> có thể là bất kỳ kiểu nào triển khai trait <code>Iterator</code> và trả về các item <code>String</code>.</p>
 <p>Vì chúng ta đang lấy ownership của <code>args</code> và sẽ mutate <code>args</code> bằng cách duyệt qua nó, ta có thể thêm từ khóa <code>mut</code> vào khai báo tham số <code>args</code> để làm nó mutable.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-iterator-trait-methods-instead-of-indexing"></a></p>
 <h4 id="using-iterator-trait-methods"><a class="header" href="#using-iterator-trait-methods">Dùng các method của trait <code>Iterator</code></a></h4>
-<p>Tiếp theo, chúng ta sẽ sửa thân hàm <code>Config::build</code>. Vì <code>args</code> implement trait <code>Iterator</code>, chúng ta biết mình có thể gọi method <code>next</code> trên nó! Listing 13-20 cập nhật code từ Listing 12-23 để dùng method <code>next</code>.</p>
+<p>Tiếp theo, chúng ta sẽ sửa thân hàm <code>Config::build</code>. Vì <code>args</code> triển khai trait <code>Iterator</code>, chúng ta biết mình có thể gọi method <code>next</code> trên nó! Listing 13-20 cập nhật mã từ Listing 12-23 để dùng method <code>next</code>.</p>
 <figure class="listing" id="listing-13-20">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore noplayground"><span class="boring">use std::env;
@@ -560,7 +560,7 @@
 <p>Hãy nhớ rằng giá trị đầu tiên trong giá trị trả về của <code>env::args</code> là tên chương trình. Chúng ta muốn bỏ qua phần đó và đến giá trị tiếp theo, vì vậy đầu tiên ta gọi <code>next</code> và không làm gì với giá trị trả về. Sau đó, ta gọi <code>next</code> để lấy giá trị ta muốn đặt vào trường <code>query</code> của <code>Config</code>. Nếu <code>next</code> trả về <code>Some</code>, ta dùng <code>match</code> để lấy ra giá trị. Nếu nó trả về <code>None</code>, tức là chưa đủ tham số, và ta return sớm với giá trị <code>Err</code>. Tương tự cho giá trị <code>file_path</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="making-code-clearer-with-iterator-adapters"></a></p>
-<h3 id="clarifying-code-with-iterator-adapters"><a class="header" href="#clarifying-code-with-iterator-adapters">Làm rõ code với iterator adapter</a></h3>
+<h3 id="clarifying-code-with-iterator-adapters"><a class="header" href="#clarifying-code-with-iterator-adapters">Làm rõ mã với iterator adapter</a></h3>
 <p>Chúng ta cũng có thể tận dụng iterator trong hàm <code>search</code> của dự án I/O, được tái hiện ở đây trong Listing 13-21 như trong Listing 12-19.</p>
 <figure class="listing" id="listing-13-21">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -591,9 +591,9 @@
 </span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-13-21">Listing 13-21</a>: Implementation của hàm <code>search</code> từ Listing 12-19</figcaption>
+<figcaption><a href="#listing-13-21">Listing 13-21</a>: Phần triển khai của hàm <code>search</code> từ Listing 12-19</figcaption>
 </figure>
-<p>Chúng ta có thể viết code này theo cách súc tích hơn bằng cách dùng các iterator adapter method. Làm vậy cũng giúp chúng ta tránh phải có một vector trung gian <code>results</code> mutable. Phong cách lập trình hàm ưu tiên tối thiểu hóa lượng trạng thái mutable để code rõ ràng hơn. Loại bỏ trạng thái mutable còn có thể tạo điều kiện cho một cải tiến trong tương lai: tìm kiếm song song vì chúng ta sẽ không phải quản lý truy cập đồng thời vào vector <code>results</code>. Listing 13-22 cho thấy sự thay đổi này.</p>
+<p>Chúng ta có thể viết mã này theo cách súc tích hơn bằng cách dùng các iterator adapter method. Làm vậy cũng giúp chúng ta tránh phải có một vector trung gian <code>results</code> mutable. Phong cách lập trình hàm ưu tiên tối thiểu hóa lượng trạng thái mutable để mã rõ ràng hơn. Loại bỏ trạng thái mutable còn có thể tạo điều kiện cho một cải tiến trong tương lai: tìm kiếm song song vì chúng ta sẽ không phải quản lý truy cập đồng thời vào vector <code>results</code>. Listing 13-22 cho thấy sự thay đổi này.</p>
 <figure class="listing" id="listing-13-22">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust ignore">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
@@ -650,15 +650,15 @@
 </span><span class="boring">        );
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-13-22">Listing 13-22</a>: Dùng iterator adapter method trong implementation hàm <code>search</code></figcaption>
+<figcaption><a href="#listing-13-22">Listing 13-22</a>: Dùng iterator adapter method trong phần triển khai hàm <code>search</code></figcaption>
 </figure>
-<p>Hãy nhớ mục đích của hàm <code>search</code> là trả về tất cả các dòng trong <code>contents</code> có chứa <code>query</code>. Tương tự ví dụ <code>filter</code> trong Listing 13-16, code này dùng adapter <code>filter</code> để chỉ giữ lại những dòng mà <code>line.contains(query)</code> trả về <code>true</code>. Sau đó chúng ta thu thập các dòng khớp vào một vector khác với <code>collect</code>. Gọn gàng hơn nhiều! Hãy thoải mái áp dụng thay đổi tương tự để dùng iterator method trong hàm <code>search_case_insensitive</code>.</p>
+<p>Hãy nhớ mục đích của hàm <code>search</code> là trả về tất cả các dòng trong <code>contents</code> có chứa <code>query</code>. Tương tự ví dụ <code>filter</code> trong Listing 13-16, mã này dùng adapter <code>filter</code> để chỉ giữ lại những dòng mà <code>line.contains(query)</code> trả về <code>true</code>. Sau đó chúng ta thu thập các dòng khớp vào một vector khác với <code>collect</code>. Gọn gàng hơn nhiều! Hãy thoải mái áp dụng thay đổi tương tự để dùng iterator method trong hàm <code>search_case_insensitive</code>.</p>
 <p>Để cải tiến thêm, hãy trả về một iterator từ hàm <code>search</code> bằng cách bỏ lời gọi <code>collect</code> và thay đổi kiểu trả về thành <code>impl Iterator&lt;Item = &amp;'a str&gt;</code> để hàm trở thành một iterator adapter. Lưu ý rằng bạn cũng cần cập nhật các test! Thử tìm kiếm qua một file lớn bằng công cụ <code>minigrep</code> trước và sau khi thực hiện thay đổi này để quan sát sự khác biệt trong hành vi. Trước thay đổi, chương trình sẽ không in kết quả nào cho đến khi thu thập được tất cả kết quả, nhưng sau thay đổi, kết quả sẽ được in ra ngay khi tìm thấy từng dòng khớp vì vòng lặp <code>for</code> trong hàm <code>run</code> có thể tận dụng tính lazy của iterator.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="choosing-between-loops-or-iterators"></a></p>
 <h3 id="choosing-between-loops-and-iterators"><a class="header" href="#choosing-between-loops-and-iterators">Chọn giữa vòng lặp và iterator</a></h3>
-<p>Câu hỏi logic tiếp theo là bạn nên chọn phong cách nào trong code của mình và tại sao: implementation ban đầu trong Listing 13-21 hay phiên bản dùng iterator trong Listing 13-22 (giả sử chúng ta thu thập tất cả kết quả trước khi trả về thay vì trả về iterator). Hầu hết lập trình viên Rust đều thích dùng phong cách iterator. Ban đầu có hơi khó nắm bắt một chút, nhưng một khi bạn quen với các iterator adapter khác nhau và chức năng của chúng, iterator có thể dễ hiểu hơn. Thay vì loay hoay với các chi tiết của vòng lặp và xây dựng các vector mới, code tập trung vào mục tiêu cấp cao của vòng lặp. Điều này trừu tượng hóa đi những đoạn code quen thuộc, giúp ta dễ nhìn thấy các khái niệm đặc thù trong code này hơn, chẳng hạn như điều kiện lọc mà mỗi phần tử trong iterator phải thỏa mãn.</p>
-<p>Nhưng liệu hai implementation có thực sự tương đương không? Giả định trực giác có thể là vòng lặp cấp thấp sẽ nhanh hơn. Hãy nói về hiệu suất.</p>
+<p>Câu hỏi logic tiếp theo là bạn nên chọn phong cách nào trong mã của mình và tại sao: phần triển khai ban đầu trong Listing 13-21 hay phiên bản dùng iterator trong Listing 13-22 (giả sử chúng ta thu thập tất cả kết quả trước khi trả về thay vì trả về iterator). Hầu hết lập trình viên Rust đều thích dùng phong cách iterator. Ban đầu có hơi khó nắm bắt một chút, nhưng một khi bạn quen với các iterator adapter khác nhau và chức năng của chúng, iterator có thể dễ hiểu hơn. Thay vì loay hoay với các chi tiết của vòng lặp và xây dựng các vector mới, mã tập trung vào mục tiêu cấp cao của vòng lặp. Điều này trừu tượng hóa đi những đoạn mã quen thuộc, giúp ta dễ nhìn thấy các khái niệm đặc thù trong mã này hơn, chẳng hạn như điều kiện lọc mà mỗi phần tử trong iterator phải thỏa mãn.</p>
+<p>Nhưng liệu hai phần triển khai có thực sự tương đương không? Giả định trực giác có thể là vòng lặp cấp thấp sẽ nhanh hơn. Hãy nói về hiệu suất.</p>
 
   <div class="page-nav bottom"><a href="ch13-02-iterators.html">← Trước</a><a href="ch13-04-performance.html">Tiếp →</a></div>
   </div>

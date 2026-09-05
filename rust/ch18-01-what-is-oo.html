@@ -264,7 +264,7 @@
       </nav>
     </nav>
 
-    <div id="content">
+    <main id="content">
       <div id="topbar">
         <span class="chapter-title">Chương 18 — OOP là gì?</span>
       </div>
@@ -326,11 +326,11 @@
         <p>
           Một khía cạnh khác thường gắn liền với OOP là ý tưởng về
           <em>encapsulation</em>, tức là chi tiết triển khai của một đối tượng
-          không thể truy cập bởi code sử dụng đối tượng đó. Do đó, cách duy nhất
-          để tương tác với đối tượng là thông qua API công khai của nó; code sử
+          không thể truy cập bởi mã sử dụng đối tượng đó. Do đó, cách duy nhất
+          để tương tác với đối tượng là thông qua API công khai của nó; mã sử
           dụng đối tượng không nên can thiệp vào nội bộ để thay đổi dữ liệu hay
           hành vi trực tiếp. Điều này cho phép lập trình viên thay đổi và tái
-          cấu trúc nội bộ đối tượng mà không cần sửa đổi code sử dụng nó.
+          cấu trúc nội bộ đối tượng mà không cần sửa đổi mã sử dụng nó.
         </p>
 
         <p>
@@ -361,7 +361,7 @@
         </figure>
 
         <p>
-          Struct được đánh dấu <code>pub</code> để code khác có thể sử dụng,
+          Struct được đánh dấu <code>pub</code> để mã khác có thể sử dụng,
           nhưng các trường bên trong vẫn là private. Điều này quan trọng vì
           chúng ta muốn đảm bảo rằng bất cứ khi nào một giá trị được thêm vào
           hoặc xóa khỏi danh sách, giá trị trung bình cũng được cập nhật. Chúng
@@ -417,11 +417,11 @@
 
         <p>
           Chúng ta để <code>list</code> và <code>average</code> là private để
-          không có cách nào để code bên ngoài thêm hoặc xóa phần tử trực tiếp
+          không có cách nào để mã bên ngoài thêm hoặc xóa phần tử trực tiếp
           vào trường <code>list</code>; nếu không, trường
           <code>average</code> có thể mất đồng bộ khi <code>list</code> thay
           đổi. Phương thức <code>average</code> trả về giá trị trong trường
-          <code>average</code>, cho phép code bên ngoài đọc
+          <code>average</code>, cho phép mã bên ngoài đọc
           <code>average</code> nhưng không thể sửa đổi.
         </p>
 
@@ -432,19 +432,19 @@
           dùng <code>HashSet&lt;i32&gt;</code> thay vì
           <code>Vec&lt;i32&gt;</code> cho trường <code>list</code>. Miễn là
           signature của các phương thức public <code>add</code>,
-          <code>remove</code>, và <code>average</code> không thay đổi, code sử
+          <code>remove</code>, và <code>average</code> không thay đổi, mã sử
           dụng <code>AveragedCollection</code> không cần sửa đổi gì.
         </p>
 
         <p>
           Nếu encapsulation là yêu cầu để một ngôn ngữ được coi là hướng đối
           tượng, thì Rust đáp ứng yêu cầu đó. Tùy chọn sử dụng
-          <code>pub</code> hay không cho các phần khác nhau của code cho phép
+          <code>pub</code> hay không cho các phần khác nhau của mã cho phép
           encapsulate chi tiết triển khai.
         </p>
 
         <h3 id="inheritance-as-a-type-system-and-as-code-sharing">
-          Inheritance như một hệ thống kiểu và chia sẻ code
+          Inheritance như một hệ thống kiểu và chia sẻ mã
         </h3>
 
         <p>
@@ -468,18 +468,18 @@
 
         <p>
           Bạn thường chọn inheritance vì hai lý do chính. Một là để tái sử dụng
-          code: Bạn có thể triển khai một hành vi cụ thể cho một kiểu, và
+          mã: Bạn có thể triển khai một hành vi cụ thể cho một kiểu, và
           inheritance cho phép bạn tái sử dụng triển khai đó cho kiểu khác. Bạn
           có thể làm điều này ở mức độ nhất định trong Rust bằng cách dùng triển
           khai phương thức mặc định của trait, như đã thấy trong Listing 10-14
           khi chúng ta thêm triển khai mặc định của phương thức
           <code>summarize</code> vào trait <code>Summary</code>. Bất kỳ kiểu nào
           triển khai trait <code>Summary</code> đều có phương thức
-          <code>summarize</code> mà không cần thêm code nào. Điều này tương tự
+          <code>summarize</code> mà không cần thêm mã nào. Điều này tương tự
           như lớp cha có triển khai một phương thức và lớp con kế thừa cũng có
-          phương thức đó. Chúng ta cũng có thể override triển khai mặc định của
+          phương thức đó. Chúng ta cũng có thể ghi đè phần triển khai mặc định của
           <code>summarize</code> khi triển khai trait <code>Summary</code>,
-          tương tự như lớp con override triển khai phương thức kế thừa từ lớp
+          tương tự như lớp con ghi đè phần triển khai phương thức kế thừa từ lớp
           cha.
         </p>
 
@@ -497,7 +497,7 @@
             <div class="callout-title">Polymorphism</div>
             <p>
               Với nhiều người, polymorphism đồng nghĩa với inheritance. Nhưng
-              thực ra đó là một khái niệm tổng quát hơn, chỉ code có thể làm
+              thực ra đó là một khái niệm tổng quát hơn, chỉ mã có thể làm
               việc với dữ liệu của nhiều kiểu. Với inheritance, các kiểu đó
               thường là các lớp con.
             </p>
@@ -512,7 +512,7 @@
 
         <p>
           Rust đã chọn một bộ đánh đổi khác bằng cách không cung cấp
-          inheritance. Inheritance thường có nguy cơ chia sẻ nhiều code hơn mức
+          inheritance. Inheritance thường có nguy cơ chia sẻ nhiều mã hơn mức
           cần thiết. Các lớp con không phải lúc nào cũng nên chia sẻ tất cả đặc
           điểm của lớp cha, nhưng với inheritance thì chúng sẽ như vậy. Điều này
           có thể làm cho thiết kế chương trình kém linh hoạt hơn. Nó cũng tạo ra
@@ -534,7 +534,7 @@
           <a href="ch18-02-trait-objects.html" class="next">Trait Objects →</a>
         </nav>
       </div>
-    </div>
+    </main>
 
     <script src="nav.js"></script>
   </body>

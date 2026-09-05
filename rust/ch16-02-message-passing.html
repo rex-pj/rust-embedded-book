@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — Truyền Dữ Liệu Giữa Các Thread Bằng Message Passing</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch16-01-threads.html">← Trước</a>
@@ -264,10 +264,10 @@
 
 <p>Một trong những cách tiếp cận ngày càng phổ biến để đảm bảo concurrency an toàn là <em>message passing</em> — các thread hoặc actor giao tiếp với nhau bằng cách gửi tin nhắn chứa dữ liệu. Có một câu khẩu hiệu nổi tiếng từ <a href="https://golang.org/doc/effective_go.html#concurrency">tài liệu ngôn ngữ Go</a> diễn đạt ý tưởng này rất hay: "Đừng giao tiếp bằng cách chia sẻ bộ nhớ; thay vào đó, hãy chia sẻ bộ nhớ bằng cách giao tiếp."</p>
 <p>Để thực hiện concurrency kiểu message-sending, thư viện chuẩn của Rust cung cấp một triển khai channel. <em>Channel</em> là một khái niệm lập trình tổng quát cho phép gửi dữ liệu từ thread này sang thread khác.</p>
-<p>Hãy hình dung channel như một dòng nước chảy một chiều — dữ liệu chỉ di chuyển từ người gửi đến người nhận.</p>
-<p>Một channel có hai nửa: một transmitter (bên gửi) và một receiver (bên nhận). Nửa transmitter là nơi thượng nguồn — nơi bạn thả con vịt xuống sông — còn nửa receiver là nơi con vịt đến đích ở hạ lưu. Một phần code của bạn gọi các phương thức trên transmitter với dữ liệu muốn gửi, và một phần khác kiểm tra đầu nhận để xem có tin nhắn nào đến không. Channel được gọi là <em>đóng</em> khi một trong hai nửa — transmitter hoặc receiver — bị drop.</p>
+<p>Hãy hình dung channel như một dòng nước chảy một chiều — chẳng hạn một con suối hay một dòng sông. Nếu bạn thả một thứ gì đó như con vịt cao su xuống sông, nó sẽ trôi xuôi dòng tới cuối dòng nước.</p>
+<p>Một channel có hai nửa: một transmitter (bên gửi) và một receiver (bên nhận). Nửa transmitter là nơi thượng nguồn — nơi bạn thả con vịt xuống sông — còn nửa receiver là nơi con vịt đến đích ở hạ lưu. Một phần mã của bạn gọi các phương thức trên transmitter với dữ liệu muốn gửi, và một phần khác kiểm tra đầu nhận để xem có tin nhắn nào đến không. Channel được gọi là <em>đóng</em> khi một trong hai nửa — transmitter hoặc receiver — bị drop.</p>
 <p>Ở đây, chúng ta sẽ xây dựng một chương trình có một thread để tạo ra các giá trị và gửi chúng qua channel, và một thread khác sẽ nhận các giá trị đó rồi in ra. Chúng ta sẽ gửi những giá trị đơn giản giữa các thread thông qua channel để minh họa tính năng này. Khi đã quen với kỹ thuật này, bạn có thể dùng channel cho bất kỳ thread nào cần giao tiếp với nhau — chẳng hạn như hệ thống chat, hoặc hệ thống nhiều thread thực hiện các phần tính toán rồi gửi kết quả về một thread tổng hợp.</p>
-<p>Đầu tiên, trong Listing 16-6, chúng ta sẽ tạo một channel nhưng chưa làm gì với nó. Lưu ý: đoạn code này chưa compile được vì Rust không biết chúng ta muốn gửi kiểu dữ liệu gì qua channel.</p>
+<p>Đầu tiên, trong Listing 16-6, chúng ta sẽ tạo một channel nhưng chưa làm gì với nó. Lưu ý: đoạn mã này chưa compile được vì Rust không biết chúng ta muốn gửi kiểu dữ liệu gì qua channel.</p>
 <figure class="listing" id="listing-16-6">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
@@ -316,17 +316,17 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-16-8">Listing 16-8</a>: Nhận giá trị <code>"hi"</code> ở main thread và in ra</figcaption>
 </figure>
-<p>Receiver có hai phương thức hữu ích: <code>recv</code> và <code>try_recv</code>. Chúng ta dùng <code>recv</code>, viết tắt của <em>receive</em> — phương thức này sẽ block thread chính và chờ cho đến khi có giá trị được gửi qua channel. Khi có giá trị được gửi, <code>recv</code> sẽ trả về nó trong <code>Result&lt;T, E&gt;</code>. Khi transmitter đóng lại, <code>recv</code> sẽ trả về lỗi để báo hiệu rằng không còn giá trị nào đến nữa.</p>
-<p>Phương thức <code>try_recv</code> không block, mà thay vào đó trả về <code>Result&lt;T, E&gt;</code> ngay lập tức: một giá trị <code>Ok</code> chứa tin nhắn nếu có sẵn, hoặc <code>Err</code> nếu không có tin nhắn lúc này. Dùng <code>try_recv</code> rất hữu ích nếu thread có việc khác cần làm trong khi chờ tin nhắn: ta có thể viết một vòng lặp gọi <code>try_recv</code> định kỳ, xử lý tin nhắn nếu có, còn không thì làm việc khác một lúc rồi kiểm tra lại.</p>
-<p>Chúng ta đã dùng <code>recv</code> trong ví dụ này cho đơn giản; main thread không có việc gì khác ngoài chờ tin nhắn, nên block main thread là hợp lý.</p>
-<p>Khi chạy code trong Listing 16-8, chúng ta thấy giá trị được in từ main thread:</p>
+<p>Receiver có hai phương thức hữu ích: <code>recv</code> và <code>try_recv</code>. Chúng ta dùng <code>recv</code>, viết tắt của <em>receive</em> — phương thức này sẽ khối thread chính và chờ cho đến khi có giá trị được gửi qua channel. Khi có giá trị được gửi, <code>recv</code> sẽ trả về nó trong <code>Result&lt;T, E&gt;</code>. Khi transmitter đóng lại, <code>recv</code> sẽ trả về lỗi để báo hiệu rằng không còn giá trị nào đến nữa.</p>
+<p>Phương thức <code>try_recv</code> không khối, mà thay vào đó trả về <code>Result&lt;T, E&gt;</code> ngay lập tức: một giá trị <code>Ok</code> chứa tin nhắn nếu có sẵn, hoặc <code>Err</code> nếu không có tin nhắn lúc này. Dùng <code>try_recv</code> rất hữu ích nếu thread có việc khác cần làm trong khi chờ tin nhắn: ta có thể viết một vòng lặp gọi <code>try_recv</code> định kỳ, xử lý tin nhắn nếu có, còn không thì làm việc khác một lúc rồi kiểm tra lại.</p>
+<p>Chúng ta đã dùng <code>recv</code> trong ví dụ này cho đơn giản; main thread không có việc gì khác ngoài chờ tin nhắn, nên khối main thread là hợp lý.</p>
+<p>Khi chạy mã trong Listing 16-8, chúng ta thấy giá trị được in từ main thread:</p>
 <pre><code class="language-text">Got: hi
 </code></pre>
 <p>Tuyệt vời!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="channels-and-ownership-transference"></a></p>
 <h3 id="transferring-ownership-through-channels"><a class="header" href="#transferring-ownership-through-channels">Chuyển Quyền Sở Hữu Qua Channel</a></h3>
-<p>Các quy tắc ownership đóng vai trò quan trọng trong việc gửi tin nhắn vì chúng giúp bạn viết code concurrent an toàn. Ngăn chặn lỗi trong lập trình concurrent chính là lợi thế của việc tư duy về ownership xuyên suốt chương trình Rust. Hãy làm một thí nghiệm để thấy channel và ownership hoạt động cùng nhau để ngăn sự cố: chúng ta sẽ thử dùng giá trị <code>val</code> trong spawned thread <em>sau khi</em> đã gửi nó qua channel. Hãy thử compile code trong Listing 16-9 để thấy tại sao code này bị cấm.</p>
+<p>Các quy tắc ownership đóng vai trò quan trọng trong việc gửi tin nhắn vì chúng giúp bạn viết mã concurrent an toàn. Ngăn chặn lỗi trong lập trình concurrent chính là lợi thế của việc tư duy về ownership xuyên suốt chương trình Rust. Hãy làm một thí nghiệm để thấy channel và ownership hoạt động cùng nhau để ngăn sự cố: chúng ta sẽ thử dùng giá trị <code>val</code> trong spawned thread <em>sau khi</em> đã gửi nó qua channel. Hãy thử compile mã trong Listing 16-9 để thấy tại sao mã này bị cấm.</p>
 <figure class="listing" id="listing-16-9">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
@@ -346,7 +346,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-16-9">Listing 16-9</a>: Cố dùng <code>val</code> sau khi đã gửi nó qua channel</figcaption>
 </figure>
-<p>Ở đây, chúng ta cố in <code>val</code> sau khi đã gửi nó qua channel qua <code>tx.send</code>. Làm vậy rất nguy hiểm: một khi giá trị đã được gửi cho thread khác, thread đó có thể thay đổi hoặc drop nó trước khi chúng ta dùng lại giá trị. Điều này có thể dẫn đến lỗi hoặc kết quả không mong muốn vì dữ liệu không nhất quán hoặc không còn tồn tại. Tuy nhiên, Rust sẽ báo lỗi nếu ta cố compile code trong Listing 16-9:</p>
+<p>Ở đây, chúng ta cố in <code>val</code> sau khi đã gửi nó qua channel qua <code>tx.send</code>. Làm vậy rất nguy hiểm: một khi giá trị đã được gửi cho thread khác, thread đó có thể thay đổi hoặc drop nó trước khi chúng ta dùng lại giá trị. Điều này có thể dẫn đến lỗi hoặc kết quả không mong muốn vì dữ liệu không nhất quán hoặc không còn tồn tại. Tuy nhiên, Rust sẽ báo lỗi nếu ta cố compile mã trong Listing 16-9:</p>
 <pre><code class="language-console">$ cargo run
    Compiling message-passing v0.1.0 (file:///projects/message-passing)
 error[E0382]: borrow of moved value: `val`
@@ -368,8 +368,8 @@ error: could not compile `message-passing` (bin "message-passing") due to 1 prev
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="sending-multiple-values-and-seeing-the-receiver-waiting"></a></p>
 <h3 id="sending-multiple-values"><a class="header" href="#sending-multiple-values">Gửi Nhiều Giá Trị</a></h3>
-<p>Code trong Listing 16-8 đã compile và chạy được, nhưng nó chưa cho thấy rõ hai thread riêng biệt đang giao tiếp với nhau qua channel.</p>
-<p>Trong Listing 16-10, chúng ta đã thực hiện một số thay đổi sẽ chứng minh code trong Listing 16-8 chạy đồng thời: spawned thread giờ sẽ gửi nhiều tin nhắn và tạm dừng một giây giữa mỗi tin.</p>
+<p>Mã trong Listing 16-8 đã compile và chạy được, nhưng nó chưa cho thấy rõ hai thread riêng biệt đang giao tiếp với nhau qua channel.</p>
+<p>Trong Listing 16-10, chúng ta đã thực hiện một số thay đổi sẽ chứng minh mã trong Listing 16-8 chạy đồng thời: spawned thread giờ sẽ gửi nhiều tin nhắn và tạm dừng một giây giữa mỗi tin.</p>
 <figure class="listing" id="listing-16-10">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust noplayground">use std::sync::mpsc;
@@ -401,17 +401,17 @@ fn main() {
 </figure>
 <p>Lần này, spawned thread có một vector các chuỗi ký tự cần gửi cho main thread. Chúng ta duyệt qua chúng, gửi từng cái, và tạm dừng giữa mỗi lần bằng cách gọi hàm <code>thread::sleep</code> với giá trị <code>Duration</code> một giây.</p>
 <p>Trong main thread, chúng ta không gọi hàm <code>recv</code> trực tiếp nữa: thay vào đó, chúng ta đối xử với <code>rx</code> như một iterator. Với mỗi giá trị nhận được, chúng ta in nó. Khi channel đóng lại, quá trình lặp sẽ kết thúc.</p>
-<p>Khi chạy code trong Listing 16-10, bạn sẽ thấy output sau với khoảng dừng một giây giữa mỗi dòng:</p>
+<p>Khi chạy mã trong Listing 16-10, bạn sẽ thấy kết quả sau với khoảng dừng một giây giữa mỗi dòng:</p>
 <pre><code class="language-text">Got: hi
 Got: from
 Got: the
 Got: thread
 </code></pre>
-<p>Vì không có code nào tạm dừng hay trì hoãn trong vòng lặp <code>for</code> của main thread, chúng ta có thể biết rằng main thread đang chờ nhận giá trị từ spawned thread.</p>
+<p>Vì không có mã nào tạm dừng hay trì hoãn trong vòng lặp <code>for</code> của main thread, chúng ta có thể biết rằng main thread đang chờ nhận giá trị từ spawned thread.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-multiple-producers-by-cloning-the-transmitter"></a></p>
 <h3 id="creating-multiple-producers"><a class="header" href="#creating-multiple-producers">Tạo Nhiều Producer</a></h3>
-<p>Trước đó chúng ta đã đề cập rằng <code>mpsc</code> là từ viết tắt của <em>multiple producer, single consumer</em>. Hãy tận dụng <code>mpsc</code> và mở rộng code trong Listing 16-10 để tạo nhiều thread cùng gửi giá trị tới một receiver. Chúng ta có thể làm điều đó bằng cách clone transmitter, như minh họa trong Listing 16-11.</p>
+<p>Trước đó chúng ta đã đề cập rằng <code>mpsc</code> là từ viết tắt của <em>multiple producer, single consumer</em>. Hãy tận dụng <code>mpsc</code> và mở rộng mã trong Listing 16-10 để tạo nhiều thread cùng gửi giá trị tới một receiver. Chúng ta có thể làm điều đó bằng cách clone transmitter, như minh họa trong Listing 16-11.</p>
 <figure class="listing" id="listing-16-11">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">use std::sync::mpsc;
@@ -461,7 +461,7 @@ Got: thread
 <figcaption><a href="#listing-16-11">Listing 16-11</a>: Gửi nhiều tin nhắn từ nhiều producer</figcaption>
 </figure>
 <p>Lần này, trước khi tạo spawned thread đầu tiên, chúng ta gọi <code>clone</code> trên transmitter. Điều này cho chúng ta một transmitter mới để truyền vào thread đầu tiên. Chúng ta truyền transmitter gốc vào spawned thread thứ hai. Điều này cho chúng ta hai thread, mỗi thread gửi các tin nhắn khác nhau tới cùng một receiver.</p>
-<p>Khi chạy code, output sẽ trông giống như thế này:</p>
+<p>Khi chạy mã, kết quả sẽ trông giống như thế này:</p>
 <pre><code class="language-text">Got: hi
 Got: more
 Got: from
@@ -471,7 +471,7 @@ Got: the
 Got: thread
 Got: you
 </code></pre>
-<p>Bạn có thể thấy các giá trị theo thứ tự khác nhau, tùy thuộc vào hệ thống của bạn. Đây chính là điều khiến concurrency vừa thú vị vừa đầy thách thức. Nếu bạn thử nghiệm với <code>thread::sleep</code>, đặt các giá trị khác nhau cho các thread khác nhau, mỗi lần chạy sẽ cho output khác nhau và thứ tự ngẫu nhiên hơn.</p>
+<p>Bạn có thể thấy các giá trị theo thứ tự khác nhau, tùy thuộc vào hệ thống của bạn. Đây chính là điều khiến concurrency vừa thú vị vừa đầy thách thức. Nếu bạn thử nghiệm với <code>thread::sleep</code>, đặt các giá trị khác nhau cho các thread khác nhau, mỗi lần chạy sẽ cho kết quả khác nhau và thứ tự ngẫu nhiên hơn.</p>
 <p>Giờ chúng ta đã xem cách channel hoạt động, hãy cùng xem xét một phương pháp concurrency khác.</p>
 
   <div class="page-nav bottom"><a href="ch16-01-threads.html">← Trước</a><a href="ch16-03-shared-state.html">Tiếp →</a></div>

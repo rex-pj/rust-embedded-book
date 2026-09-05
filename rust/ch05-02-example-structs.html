@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — Một Ví Dụ Sử Dụng Structs</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch05-01-defining-structs.html">← Trước</a>
@@ -209,7 +209,7 @@
   <h2 id="an-example-program-using-structs">🛠️ Một Ví Dụ Sử Dụng Structs</h2>
   <p>Để hiểu khi nào nên dùng struct, hãy cùng viết một chương trình tính diện tích hình chữ nhật. Ta sẽ bắt đầu với các biến đơn lẻ, rồi dần refactor cho đến khi dùng struct.</p>
 
-  <p>Hãy tạo một project Cargo mới có tên <em>rectangles</em>, nhận chiều dài và chiều cao của hình chữ nhật theo đơn vị pixel rồi tính diện tích. Listing 5-8 là một đoạn mã ngắn trong file <em>src/main.rs</em> thể hiện một cách làm đó.</p>
+  <p>Hãy tạo một dự án Cargo mới có tên <em>rectangles</em>, nhận chiều dài và chiều cao của hình chữ nhật theo đơn vị pixel rồi tính diện tích. Listing 5-8 là một đoạn mã ngắn trong file <em>src/main.rs</em> thể hiện một cách làm đó.</p>
 
   <figure class="listing" id="listing-5-8">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -269,7 +269,7 @@ fn area(dimensions: (u32, u32)) -&gt; u32 {
 
   <p>Về một mặt, chương trình này tốt hơn. Tuples cho phép ta thêm một chút cấu trúc, và giờ ta chỉ truyền một tham số. Nhưng theo một cách khác, phiên bản này lại kém rõ ràng hơn: tuples không đặt tên cho các phần tử, nên ta phải dùng index để truy cập các thành phần, khiến phép tính trở nên khó hiểu hơn.</p>
 
-  <p>Nhầm chiều dài và chiều cao thì không ảnh hưởng đến phép tính diện tích, nhưng nếu ta muốn vẽ hình chữ nhật lên màn hình thì sẽ có vấn đề! Ta phải nhớ rằng <code>width</code> là index <code>0</code> và <code>height</code> là index <code>1</code> của tuple. Điều này sẽ còn khó hơn nữa đối với người khác khi sử dụng code của ta. Bởi vì ta không truyền đạt ý nghĩa của dữ liệu trong code, nên giờ dễ gây ra lỗi hơn.</p>
+  <p>Nhầm chiều dài và chiều cao thì không ảnh hưởng đến phép tính diện tích, nhưng nếu ta muốn vẽ hình chữ nhật lên màn hình thì sẽ có vấn đề! Ta phải nhớ rằng <code>width</code> là index <code>0</code> và <code>height</code> là index <code>1</code> của tuple. Điều này sẽ còn khó hơn nữa đối với người khác khi sử dụng mã của ta. Bởi vì ta không truyền đạt ý nghĩa của dữ liệu trong mã, nên giờ dễ gây ra lỗi hơn.</p>
 
 
   <h3 id="refactoring-with-structs">🏗️ Refactoring với Structs</h3>
@@ -333,7 +333,7 @@ fn main() {
 <pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
 </code></pre>
 
-  <p>Macro <code>println!</code> có thể thực hiện nhiều loại định dạng khác nhau, và theo mặc định, ngoặc nhọn bảo <code>println!</code> dùng định dạng gọi là <code>Display</code>: output dành cho người dùng cuối trực tiếp. Các kiểu nguyên thủy ta đã thấy đến nay đều implement <code>Display</code> mặc định vì chỉ có một cách bạn muốn hiển thị số <code>1</code> hay bất kỳ kiểu nguyên thủy nào cho người dùng. Nhưng với structs, cách <code>println!</code> nên định dạng output thì không rõ ràng vì có nhiều khả năng hiển thị: Có muốn dùng dấu phẩy không? Có muốn in ngoặc nhọn không? Có nên hiển thị tất cả các trường không? Do sự mơ hồ này, Rust không cố đoán điều ta muốn, và structs không có sẵn implementation của <code>Display</code> để dùng với <code>println!</code> và placeholder <code>{}</code>.</p>
+  <p>Macro <code>println!</code> có thể thực hiện nhiều loại định dạng khác nhau, và theo mặc định, ngoặc nhọn bảo <code>println!</code> dùng định dạng gọi là <code>Display</code>: kết quả dành cho người dùng cuối trực tiếp. Các kiểu nguyên thủy ta đã thấy đến nay đều triển khai <code>Display</code> mặc định vì chỉ có một cách bạn muốn hiển thị số <code>1</code> hay bất kỳ kiểu nguyên thủy nào cho người dùng. Nhưng với structs, cách <code>println!</code> nên định dạng kết quả thì không rõ ràng vì có nhiều khả năng hiển thị: Có muốn dùng dấu phẩy không? Có muốn in ngoặc nhọn không? Có nên hiển thị tất cả các trường không? Do sự mơ hồ này, Rust không cố đoán điều ta muốn, và structs không có sẵn phần triển khai của <code>Display</code> để dùng với <code>println!</code> và placeholder <code>{}</code>.</p>
 
   <p>Nếu tiếp tục đọc lỗi, ta sẽ tìm thấy ghi chú hữu ích này:</p>
 
@@ -341,9 +341,9 @@ fn main() {
    |                        required by this formatting parameter
 </code></pre>
 
-  <p>Hãy thử! Câu gọi macro <code>println!</code> giờ sẽ trông như thế này: <code>println!("rect1 is {rect1:?}");</code>. Đặt specifier <code>:?</code> vào trong ngoặc nhọn bảo <code>println!</code> dùng định dạng output gọi là <code>Debug</code>. Trait <code>Debug</code> cho phép ta in struct theo cách hữu ích cho lập trình viên để có thể thấy giá trị của nó trong lúc debug code.</p>
+  <p>Hãy thử! Câu gọi macro <code>println!</code> giờ sẽ trông như thế này: <code>println!("rect1 is {rect1:?}");</code>. Đặt specifier <code>:?</code> vào trong ngoặc nhọn bảo <code>println!</code> dùng định dạng kết quả gọi là <code>Debug</code>. Trait <code>Debug</code> cho phép ta in struct theo cách hữu ích cho lập trình viên để có thể thấy giá trị của nó trong lúc debug mã.</p>
 
-  <p>Hãy biên dịch code với thay đổi này. Chao ôi! Ta vẫn gặp lỗi:</p>
+  <p>Hãy biên dịch mã với thay đổi này. Chao ôi! Ta vẫn gặp lỗi:</p>
 
 <pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `Debug`
 </code></pre>
@@ -375,7 +375,7 @@ fn main() {
     <figcaption><a href="#listing-5-12">Listing 5-12</a>: Thêm attribute để derive trait <code>Debug</code> và in instance <code>Rectangle</code> bằng định dạng debug</figcaption>
   </figure>
 
-  <p>Bây giờ khi ta chạy chương trình, ta sẽ không gặp lỗi nào và sẽ thấy output sau:</p>
+  <p>Bây giờ khi ta chạy chương trình, ta sẽ không gặp lỗi nào và sẽ thấy kết quả sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
@@ -384,7 +384,7 @@ fn main() {
 rect1 is Rectangle { width: 30, height: 50 }
 </code></pre>
 
-  <p>Tuyệt! Output không đẹp nhất nhưng nó hiển thị giá trị của tất cả các trường của instance này, điều đó chắc chắn sẽ hữu ích khi debug. Khi ta có struct lớn hơn, output dễ đọc hơn một chút sẽ hữu ích; trong những trường hợp đó, ta có thể dùng <code>{:#?}</code> thay vì <code>{:?}</code> trong chuỗi <code>println!</code>. Output khi dùng style <code>{:#?}</code> sẽ trông như sau:</p>
+  <p>Tuyệt! Kết quả không đẹp nhất nhưng nó hiển thị giá trị của tất cả các trường của instance này, điều đó chắc chắn sẽ hữu ích khi debug. Khi ta có struct lớn hơn, kết quả dễ đọc hơn một chút sẽ hữu ích; trong những trường hợp đó, ta có thể dùng <code>{:#?}</code> thay vì <code>{:?}</code> trong chuỗi <code>println!</code>. Kết quả khi dùng style <code>{:#?}</code> sẽ trông như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
@@ -396,10 +396,10 @@ rect1 is Rectangle {
 }
 </code></pre>
 
-  <p>Một cách khác để in giá trị theo định dạng <code>Debug</code> là dùng <a href="../std/macro.dbg.html">macro <code>dbg!</code></a>, macro này lấy ownership của một biểu thức (khác với <code>println!</code> lấy một tham chiếu), in file và số dòng nơi macro <code>dbg!</code> đó được gọi trong code cùng với giá trị kết quả của biểu thức, rồi trả lại ownership của giá trị.</p>
+  <p>Một cách khác để in giá trị theo định dạng <code>Debug</code> là dùng <a href="../std/macro.dbg.html">macro <code>dbg!</code></a>, macro này lấy ownership của một biểu thức (khác với <code>println!</code> lấy một tham chiếu), in file và số dòng nơi macro <code>dbg!</code> đó được gọi trong mã cùng với giá trị kết quả của biểu thức, rồi trả lại ownership của giá trị.</p>
 
   <section class="note" aria-role="note">
-    <p>Ghi chú: Gọi macro <code>dbg!</code> sẽ in ra luồng lỗi chuẩn (<code>stderr</code>), khác với <code>println!</code> in ra luồng output chuẩn (<code>stdout</code>). Ta sẽ nói thêm về <code>stderr</code> và <code>stdout</code> trong <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">phần "Redirecting Errors to Standard Error" </a> ở Chương 12.</p>
+    <p>Ghi chú: Gọi macro <code>dbg!</code> sẽ in ra luồng lỗi chuẩn (<code>stderr</code>), khác với <code>println!</code> in ra luồng kết quả chuẩn (<code>stdout</code>). Ta sẽ nói thêm về <code>stderr</code> và <code>stdout</code> trong <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">phần “Chuyển hướng lỗi sang lỗi chuẩn” </a> ở Chương 12.</p>
   </section>
 
   <p>Đây là ví dụ ta quan tâm đến giá trị được gán cho trường <code>width</code> cũng như giá trị của toàn bộ struct trong <code>rect1</code>:</p>
@@ -420,7 +420,7 @@ fn main() {
     dbg!(&amp;rect1);
 }</code></pre>
 
-  <p>Ta có thể đặt <code>dbg!</code> quanh biểu thức <code>30 * scale</code> và, vì <code>dbg!</code> trả về ownership của giá trị biểu thức, trường <code>width</code> sẽ nhận cùng giá trị như thể không có lời gọi <code>dbg!</code> đó. Ta không muốn <code>dbg!</code> lấy ownership của <code>rect1</code>, nên ta dùng tham chiếu đến <code>rect1</code> trong lần gọi tiếp theo. Output của ví dụ này trông như sau:</p>
+  <p>Ta có thể đặt <code>dbg!</code> quanh biểu thức <code>30 * scale</code> và, vì <code>dbg!</code> trả về ownership của giá trị biểu thức, trường <code>width</code> sẽ nhận cùng giá trị như thể không có lời gọi <code>dbg!</code> đó. Ta không muốn <code>dbg!</code> lấy ownership của <code>rect1</code>, nên ta dùng tham chiếu đến <code>rect1</code> trong lần gọi tiếp theo. Kết quả của ví dụ này trông như sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
@@ -433,11 +433,11 @@ fn main() {
 }
 </code></pre>
 
-  <p>Ta có thể thấy phần output đầu tiên đến từ dòng 10 của <em>src/main.rs</em>, nơi ta đang debug biểu thức <code>30 * scale</code>, và giá trị kết quả của nó là <code>60</code> (định dạng <code>Debug</code> implemented cho số nguyên là chỉ in giá trị của chúng). Lời gọi <code>dbg!</code> ở dòng 14 của <em>src/main.rs</em> in ra giá trị của <code>&amp;rect1</code>, là struct <code>Rectangle</code>. Output này dùng định dạng <code>Debug</code> đẹp của kiểu <code>Rectangle</code>. Macro <code>dbg!</code> có thể rất hữu ích khi bạn đang cố tìm hiểu code đang làm gì!</p>
+  <p>Ta có thể thấy phần kết quả đầu tiên đến từ dòng 10 của <em>src/main.rs</em>, nơi ta đang debug biểu thức <code>30 * scale</code>, và giá trị kết quả của nó là <code>60</code> (định dạng <code>Debug</code> triển khai cho số nguyên là chỉ in giá trị của chúng). Lời gọi <code>dbg!</code> ở dòng 14 của <em>src/main.rs</em> in ra giá trị của <code>&amp;rect1</code>, là struct <code>Rectangle</code>. Kết quả này dùng định dạng <code>Debug</code> đẹp của kiểu <code>Rectangle</code>. Macro <code>dbg!</code> có thể rất hữu ích khi bạn đang cố tìm hiểu mã đang làm gì!</p>
 
-  <p>Ngoài trait <code>Debug</code>, Rust còn cung cấp một số trait để dùng với attribute <code>derive</code>, có thể thêm các hành vi hữu ích cho các kiểu tùy chỉnh của ta. Các trait đó và hành vi của chúng được liệt kê trong <a href=”appendix-03-derivable-traits.html”>Appendix C</a>. Ta sẽ tìm hiểu cách implement những trait này với hành vi tùy chỉnh cũng như cách tạo trait của chính mình trong Chương 10. Ngoài ra còn có nhiều attribute khác ngoài <code>derive</code>; để biết thêm thông tin, xem <a href=”../reference/attributes.html”>phần “Attributes” trong Rust Reference</a>.</p>
+  <p>Ngoài trait <code>Debug</code>, Rust còn cung cấp một số trait để dùng với attribute <code>derive</code>, có thể thêm các hành vi hữu ích cho các kiểu tùy chỉnh của ta. Các trait đó và hành vi của chúng được liệt kê trong <a href=”appendix-03-derivable-traits.html”>Appendix C</a>. Ta sẽ tìm hiểu cách triển khai những trait này với hành vi tùy chỉnh cũng như cách tạo trait của chính mình trong Chương 10. Ngoài ra còn có nhiều attribute khác ngoài <code>derive</code>; để biết thêm thông tin, xem <a href=”../reference/attributes.html”>phần “Attributes” trong Rust Reference</a>.</p>
 
-  <p>Hàm <code>area</code> của ta rất đặc thù: nó chỉ tính diện tích của hình chữ nhật. Sẽ hữu ích hơn nếu ta gắn hành vi này chặt hơn với struct <code>Rectangle</code> của mình, vì nó sẽ không hoạt động với bất kỳ kiểu nào khác. Hãy cùng xem ta có thể tiếp tục refactor code này bằng cách biến hàm <code>area</code> thành một phương thức <code>area</code> được định nghĩa trên kiểu <code>Rectangle</code> của mình.</p>
+  <p>Hàm <code>area</code> của ta rất đặc thù: nó chỉ tính diện tích của hình chữ nhật. Sẽ hữu ích hơn nếu ta gắn hành vi này chặt hơn với struct <code>Rectangle</code> của mình, vì nó sẽ không hoạt động với bất kỳ kiểu nào khác. Hãy cùng xem ta có thể tiếp tục refactor mã này bằng cách biến hàm <code>area</code> thành một phương thức <code>area</code> được định nghĩa trên kiểu <code>Rectangle</code> của mình.</p>
 
   <div class="page-nav bottom"><a href="ch05-01-defining-structs.html">← Trước</a><a href="ch05-03-method-syntax.html">Tiếp →</a></div>
   </div>

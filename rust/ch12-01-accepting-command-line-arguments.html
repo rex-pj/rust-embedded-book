@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Đọc Tham Số Dòng Lệnh</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch12-00-an-io-project.html">← Trước</a>
@@ -208,7 +208,7 @@
   </div>
 
 <h2 id="accepting-command-line-arguments">Đọc Tham Số Dòng Lệnh</h2>
-<p>Hãy tạo project mới với công thức quen thuộc muôn thuở, <code>cargo new</code>. Chúng ta sẽ đặt tên dự án là <code>minigrep</code> để phân biệt với công cụ <code>grep</code> có thể đã có sẵn trên hệ thống của bạn:</p>
+<p>Hãy tạo dự án mới với công thức quen thuộc muôn thuở, <code>cargo new</code>. Chúng ta sẽ đặt tên dự án là <code>minigrep</code> để phân biệt với công cụ <code>grep</code> có thể đã có sẵn trên hệ thống của bạn:</p>
 <pre><code class="language-console">$ cargo new minigrep
      Created binary (application) `minigrep` project
 $ cd minigrep
@@ -219,7 +219,7 @@ $ cd minigrep
 <p>Hiện tại, chương trình mà <code>cargo new</code> sinh ra không thể xử lý tham số nào ta truyền vào. Có một số thư viện sẵn có trên <a href="https://crates.io/">crates.io</a> có thể giúp viết chương trình nhận tham số dòng lệnh, nhưng vì bạn đang học khái niệm này, hãy tự mình triển khai nhé.</p>
 <h3 id="reading-the-argument-values">Đọc Giá Trị Tham Số</h3>
 <p>Để <code>minigrep</code> có thể đọc các tham số dòng lệnh được truyền vào, chúng ta cần dùng hàm <code>std::env::args</code> từ thư viện chuẩn của Rust. Hàm này trả về một iterator chứa các tham số dòng lệnh truyền cho <code>minigrep</code>. Chúng ta sẽ nói kỹ hơn về iterator ở <a href="ch13-00-functional-features.html">Chương 13</a>. Còn bây giờ chỉ cần biết hai điều: iterator sinh ra một chuỗi giá trị, và ta có thể gọi phương thức <code>collect</code> trên iterator để biến nó thành một collection — chẳng hạn như một vector — chứa tất cả các phần tử mà iterator sinh ra.</p>
-<p>Đoạn code ở Listing 12-1 cho phép chương trình <code>minigrep</code> đọc mọi tham số dòng lệnh truyền vào, rồi thu thập các giá trị đó thành một vector.</p>
+<p>Đoạn mã ở Listing 12-1 cho phép chương trình <code>minigrep</code> đọc mọi tham số dòng lệnh truyền vào, rồi thu thập các giá trị đó thành một vector.</p>
 <figure class="listing" id="listing-12-1">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::env;
@@ -236,7 +236,7 @@ fn main() {
 <p>Lưu ý rằng <code>std::env::args</code> sẽ panic nếu bất kỳ tham số nào chứa Unicode không hợp lệ. Nếu chương trình của bạn cần nhận tham số chứa Unicode không hợp lệ, hãy dùng <code>std::env::args_os</code> thay thế. Hàm đó trả về iterator sinh ra các giá trị <code>OsString</code> thay vì <code>String</code>. Ở đây chúng ta chọn <code>std::env::args</code> cho đơn giản, vì các giá trị <code>OsString</code> khác nhau theo từng nền tảng và phức tạp hơn để xử lý so với <code>String</code>.</p>
 </section>
 <p>Ở dòng đầu tiên của <code>main</code>, chúng ta gọi <code>env::args</code> và ngay lập tức dùng <code>collect</code> để biến iterator thành một vector chứa tất cả các giá trị mà iterator sinh ra. Ta có thể dùng hàm <code>collect</code> để tạo ra nhiều loại collection khác nhau, vì vậy chúng ta khai báo rõ kiểu của <code>args</code> là vector of strings. Dù hiếm khi phải khai báo kiểu trong Rust, <code>collect</code> lại là một hàm thường xuyên cần khai báo vì Rust không thể tự suy ra bạn muốn tạo kiểu collection gì.</p>
-<p>Cuối cùng, chúng ta in vector bằng debug macro. Hãy thử chạy code trước với không có tham số, rồi thử với hai tham số:</p>
+<p>Cuối cùng, chúng ta in vector bằng debug macro. Hãy thử chạy mã trước với không có tham số, rồi thử với hai tham số:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
@@ -274,7 +274,7 @@ fn main() {
 <figcaption><a href="#listing-12-2">Listing 12-2</a>: Tạo biến để lưu tham số query và đường dẫn file</figcaption>
 </figure>
 <p>Như chúng ta thấy khi in vector, tên chương trình chiếm giá trị đầu tiên ở <code>args[0]</code>, nên ta bắt đầu đọc tham số từ chỉ số 1. Tham số đầu tiên mà <code>minigrep</code> nhận là chuỗi cần tìm, nên ta đặt tham chiếu đến tham số đầu tiên vào biến <code>query</code>. Tham số thứ hai sẽ là đường dẫn file, nên ta đặt tham chiếu đến tham số thứ hai vào biến <code>file_path</code>.</p>
-<p>Chúng ta tạm thời in giá trị của các biến này để kiểm tra code chạy đúng như mong muốn. Hãy chạy lại chương trình với tham số <code>test</code> và <code>sample.txt</code>:</p>
+<p>Chúng ta tạm thời in giá trị của các biến này để kiểm tra mã chạy đúng như mong muốn. Hãy chạy lại chương trình với tham số <code>test</code> và <code>sample.txt</code>:</p>
 <pre><code class="language-console">$ cargo run -- test sample.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s

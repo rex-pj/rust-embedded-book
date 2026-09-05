@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — Lỗi Không Thể Phục Hồi với panic!</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch09-00-error-handling.html">← Trước</a>
@@ -208,7 +208,7 @@
   </div>
 
 <h2 id="unrecoverable-errors-with-panic"><a class="header" href="#unrecoverable-errors-with-panic">Lỗi Không Thể Phục Hồi với <code>panic!</code></a></h2>
-<p>Đôi khi trong code của bạn có những thứ hỏng hoàn toàn và chẳng còn cách nào cứu vãn. Trong những tình huống bi đát đó, Rust trang bị macro <code>panic!</code>. Có hai cách để gây ra panic trong thực tế: hoặc là thực hiện một hành động khiến code banh chành (ví dụ truy cập mảng vượt quá giới hạn cuối), hoặc là gọi macro <code>panic!</code> một cách tường minh. Cả hai cách đều làm cho chương trình của bạn rơi vào trạng thái panic. Theo mặc định, những cơn panic này sẽ in ra thông báo lỗi, unwind (cuộn ngược) stack, dọn dẹp tài nguyên, rồi thoát. Thông qua một biến môi trường, bạn còn có thể bảo Rust hiển thị cả call stack khi panic xảy ra, giúp bạn truy tìm nguyên nhân dễ hơn.</p>
+<p>Đôi khi trong mã của bạn có những thứ hỏng hoàn toàn và chẳng còn cách nào cứu vãn. Trong những tình huống bi đát đó, Rust trang bị macro <code>panic!</code>. Có hai cách để gây ra panic trong thực tế: hoặc là thực hiện một hành động khiến mã banh chành (ví dụ truy cập mảng vượt quá giới hạn cuối), hoặc là gọi macro <code>panic!</code> một cách tường minh. Cả hai cách đều làm cho chương trình của bạn rơi vào trạng thái panic. Theo mặc định, những cơn panic này sẽ in ra thông báo lỗi, unwind (cuộn ngược) stack, dọn dẹp tài nguyên, rồi thoát. Thông qua một biến môi trường, bạn còn có thể bảo Rust hiển thị cả call stack khi panic xảy ra, giúp bạn truy tìm nguyên nhân dễ hơn.</p>
 <section class="note" aria-role="note">
 <h3 id="unwinding-the-stack-or-aborting-in-response-to-a-panic"><a class="header" href="#unwinding-the-stack-or-aborting-in-response-to-a-panic">Unwind Stack hay Abort Khi Gặp Panic?</a></h3>
 <p>Mặc định, khi panic xảy ra, chương trình bắt đầu <em>unwind</em> — nghĩa là Rust leo ngược lên stack và dọn dẹp dữ liệu của từng hàm mà nó đi qua. Tuy nhiên, việc leo ngược và dọn dẹp như vậy tốn khá nhiều công sức. Vì thế Rust cho phép bạn chọn phương án thay thế là <em>abort</em> ngay lập tức — tức là kết thúc chương trình mà không thèm dọn dẹp gì hết.</p>
@@ -234,10 +234,10 @@ thread 'main' panicked at src/main.rs:2:5:
 crash and burn
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Lời gọi <code>panic!</code> gây ra thông báo lỗi xuất hiện ở hai dòng cuối. Dòng đầu tiên cho thấy thông điệp panic và vị trí trong source code nơi panic xảy ra: <em>src/main.rs:2:5</em> nghĩa là dòng thứ hai, ký tự thứ năm của file <em>src/main.rs</em>.</p>
-<p>Trong trường hợp này, dòng được chỉ ra là một phần trong code của ta, và nếu ta tới dòng đó, ta sẽ thấy lời gọi macro <code>panic!</code>. Trong những trường hợp khác, lời gọi <code>panic!</code> có thể nằm trong code của thư viện mà code ta đang gọi, và tên file cùng số dòng được thông báo lỗi chỉ ra sẽ là code của người khác — nơi macro <code>panic!</code> được gọi — chứ không phải dòng code của ta mà rốt cuộc dẫn đến lời gọi <code>panic!</code> đó.</p>
+<p>Lời gọi <code>panic!</code> gây ra thông báo lỗi xuất hiện ở hai dòng cuối. Dòng đầu tiên cho thấy thông điệp panic và vị trí trong mã nguồn nơi panic xảy ra: <em>src/main.rs:2:5</em> nghĩa là dòng thứ hai, ký tự thứ năm của file <em>src/main.rs</em>.</p>
+<p>Trong trường hợp này, dòng được chỉ ra là một phần trong mã của ta, và nếu ta tới dòng đó, ta sẽ thấy lời gọi macro <code>panic!</code>. Trong những trường hợp khác, lời gọi <code>panic!</code> có thể nằm trong mã của thư viện mà mã ta đang gọi, và tên file cùng số dòng được thông báo lỗi chỉ ra sẽ là mã của người khác — nơi macro <code>panic!</code> được gọi — chứ không phải dòng mã của ta mà rốt cuộc dẫn đến lời gọi <code>panic!</code> đó.</p>
 <p><a id="using-a-panic-backtrace"></a></p>
-<p>Ta có thể dùng backtrace của các hàm mà lời gọi <code>panic!</code> xuất phát từ đó để tìm ra phần code của mình đang gây ra vấn đề. Để hiểu cách dùng backtrace của <code>panic!</code>, hãy xem một ví dụ khác và coi thử điều gì xảy ra khi lời gọi <code>panic!</code> đến từ một thư viện do bug trong code của ta thay vì từ code ta gọi macro trực tiếp. Listing 9-1 có đoạn code cố truy cập một chỉ mục trong vector vượt ra ngoài phạm vi chỉ mục hợp lệ.</p>
+<p>Ta có thể dùng backtrace của các hàm mà lời gọi <code>panic!</code> xuất phát từ đó để tìm ra phần mã của mình đang gây ra vấn đề. Để hiểu cách dùng backtrace của <code>panic!</code>, hãy xem một ví dụ khác và coi thử điều gì xảy ra khi lời gọi <code>panic!</code> đến từ một thư viện do bug trong mã của ta thay vì từ mã ta gọi macro trực tiếp. Listing 9-1 có đoạn mã cố truy cập một chỉ mục trong vector vượt ra ngoài phạm vi chỉ mục hợp lệ.</p>
 <figure class="listing" id="listing-9-1">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust should_panic panics edition2024">fn main() {
@@ -260,7 +260,7 @@ index out of bounds: the len is 3 but the index is 99
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>Thông báo lỗi này trỏ vào dòng 4 của file <em>main.rs</em>, nơi ta cố truy cập chỉ mục 99 của vector trong <code>v</code>.</p>
-<p>Dòng <code>note:</code> cho ta biết có thể đặt biến môi trường <code>RUST_BACKTRACE</code> để lấy backtrace về chính xác điều gì đã xảy ra và gây ra lỗi. <em>Backtrace</em> là danh sách tất cả các hàm đã được gọi để đến điểm hiện tại. Backtraces trong Rust hoạt động giống như các ngôn ngữ khác: Bí quyết để đọc backtrace là bắt đầu từ trên cùng và đọc xuống cho đến khi thấy các file mà bạn đã viết. Đó chính là điểm xuất phát của vấn đề. Các dòng phía trên điểm đó là code mà code của bạn đã gọi; các dòng bên dưới là code đã gọi code của bạn. Những dòng trước-và-sau này có thể bao gồm core Rust code, standard library code, hoặc các crate bạn đang dùng. Hãy thử lấy backtrace bằng cách đặt biến môi trường <code>RUST_BACKTRACE</code> thành bất kỳ giá trị nào khác <code>0</code>. Listing 9-2 cho thấy output tương tự với những gì bạn sẽ thấy.</p>
+<p>Dòng <code>note:</code> cho ta biết có thể đặt biến môi trường <code>RUST_BACKTRACE</code> để lấy backtrace về chính xác điều gì đã xảy ra và gây ra lỗi. <em>Backtrace</em> là danh sách tất cả các hàm đã được gọi để đến điểm hiện tại. Backtraces trong Rust hoạt động giống như các ngôn ngữ khác: Bí quyết để đọc backtrace là bắt đầu từ trên cùng và đọc xuống cho đến khi thấy các file mà bạn đã viết. Đó chính là điểm xuất phát của vấn đề. Các dòng phía trên điểm đó là mã mà mã của bạn đã gọi; các dòng bên dưới là mã đã gọi mã của bạn. Những dòng trước-và-sau này có thể bao gồm mã core Rust, mã standard library, hoặc các crate bạn đang dùng. Hãy thử lấy backtrace bằng cách đặt biến môi trường <code>RUST_BACKTRACE</code> thành bất kỳ giá trị nào khác <code>0</code>. Listing 9-2 cho thấy kết quả tương tự với những gì bạn sẽ thấy.</p>
 <figure class="listing" id="listing-9-2">
 <pre><code class="language-console">$ RUST_BACKTRACE=1 cargo run
 thread 'main' panicked at src/main.rs:4:6:
@@ -286,8 +286,8 @@ note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose bac
 </code></pre>
 <figcaption><a href="#listing-9-2">Listing 9-2</a>: Backtrace được tạo ra bởi lời gọi <code>panic!</code> khi biến môi trường <code>RUST_BACKTRACE</code> được đặt</figcaption>
 </figure>
-<p>Đó là một đống output! Output chính xác mà bạn thấy có thể khác tùy thuộc vào hệ điều hành và phiên bản Rust. Để lấy bactraces với thông tin này, debug symbols phải được bật. Debug symbols được bật mặc định khi dùng <code>cargo build</code> hoặc <code>cargo run</code> không có cờ <code>--release</code>, như ở đây.</p>
-<p>Trong output ở Listing 9-2, dòng 6 của backtrace trỏ vào dòng trong dự án của ta đang gây ra vấn đề: dòng 4 của <em>src/main.rs</em>. Nếu ta không muốn chương trình panic, ta nên bắt đầu điều tra tại vị trí được trỏ đến bởi dòng đầu tiên đề cập đến file ta đã viết. Trong Listing 9-1, nơi ta cố tình viết code sẽ panic, cách để sửa là không yêu cầu phần tử ngoài phạm vi chỉ mục của vector. Khi code của bạn panic trong tương lai, bạn cần tìm hiểu hành động nào code đang thực hiện với những giá trị nào khiến panic xảy ra và code nên làm gì thay thế.</p>
+<p>Đó là một đống kết quả! Kết quả chính xác mà bạn thấy có thể khác tùy thuộc vào hệ điều hành và phiên bản Rust. Để lấy bactraces với thông tin này, debug symbols phải được bật. Debug symbols được bật mặc định khi dùng <code>cargo build</code> hoặc <code>cargo run</code> không có cờ <code>--release</code>, như ở đây.</p>
+<p>Trong kết quả ở Listing 9-2, dòng 6 của backtrace trỏ vào dòng trong dự án của ta đang gây ra vấn đề: dòng 4 của <em>src/main.rs</em>. Nếu ta không muốn chương trình panic, ta nên bắt đầu điều tra tại vị trí được trỏ đến bởi dòng đầu tiên đề cập đến file ta đã viết. Trong Listing 9-1, nơi ta cố tình viết mã sẽ panic, cách để sửa là không yêu cầu phần tử ngoài phạm vi chỉ mục của vector. Khi mã của bạn panic trong tương lai, bạn cần tìm hiểu hành động nào mã đang thực hiện với những giá trị nào khiến panic xảy ra và mã nên làm gì thay thế.</p>
 <p>Ta sẽ quay lại <code>panic!</code> và bàn về khi nào nên và không nên dùng <code>panic!</code> để xử lý các điều kiện lỗi trong phần <a href="ch09-03-to-panic-or-not-to-panic.html#to-panic-or-not-to-panic">"<code>panic!</code> hay Không <code>panic!</code>?"</a> sau trong chương này. Tiếp theo, ta sẽ xem cách phục hồi lỗi bằng <code>Result</code>.</p>
 
   <div class="page-nav bottom"><a href="ch09-00-error-handling.html">← Trước</a><a href="ch09-02-recoverable-errors-with-result.html">Tiếp →</a></div>

@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 3 — Control Flow (Luồng điều khiển)</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch03-04-comments.html">← Trước</a>
@@ -212,7 +212,7 @@
   <h3 id="if-expressions">🤔 Biểu thức <code>if</code></h3>
   <p>Biểu thức <code>if</code> cho phép bạn phân nhánh mã tùy thuộc vào các điều kiện. Bạn đưa ra một điều kiện và chỉ thị rằng, “Nếu điều kiện này được đáp ứng, thì chạy khối mã này. Nếu điều kiện không được thỏa mãn, đừng chạy khối mã này.”</p>
 
-  <p>Hãy tạo một dự án mới tên là <em>branches</em> ở trong thư mục <em>projects</em> để khám phá biểu thức <code>if</code> này. Trong thư mục <em>src/main.rs</em>, gõ vào đoạn sau:</p>
+  <p>Hãy tạo một dự án mới tên là <em>branches</em> ở trong thư mục <em>dự án</em> để khám phá biểu thức <code>if</code> này. Trong thư mục <em>src/main.rs</em>, gõ vào đoạn sau:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -226,11 +226,11 @@
     }
 }</code></pre>
 
-  <p>Tất cả các biểu thức <code>if</code> đều bắt đầu bằng từ khóa <code>if</code>, theo sau đó là một điều kiện. Trong trường hợp này, điều kiện để kiểm tra là liệu giá trị của tham số <code>number</code> có mang giá trị nhỏ hơn 5 hay không. Chúng ta viết các đoạn mã mà khi có câu điều kiện là <code>true</code> sẽ thực thi ngay sau ngoặc ngọn của điều kiện đó. Các khối mã gắn với các điều kiện trong các câu lệnh của <code>if</code> đôi khi được gọi chung là “nhánh” (arms), hoàn toàn giống với khái niệm arm của biểu thức lệnh <code>match</code> mà chúng ta vừa nhắc ở <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">Phần "So sánh số dự đoán với con số bí mật"</a> tại Chương 2.</p>
+  <p>Tất cả các biểu thức <code>if</code> đều bắt đầu bằng từ khóa <code>if</code>, theo sau đó là một điều kiện. Trong trường hợp này, điều kiện để kiểm tra là liệu giá trị của tham số <code>number</code> có mang giá trị nhỏ hơn 5 hay không. Chúng ta viết các đoạn mã mà khi có câu điều kiện là <code>true</code> sẽ thực thi ngay sau ngoặc ngọn của điều kiện đó. Các khối mã gắn với các điều kiện trong các câu lệnh của <code>if</code> đôi khi được gọi chung là “nhánh” (arms), hoàn toàn giống với khái niệm arm của biểu thức lệnh <code>match</code> mà chúng ta vừa nhắc ở <a href="ch02-00-guessing-game-tutorial.html#so-sanh-so-doan-voi-so-bi-mat">Phần "So sánh số dự đoán với con số bí mật"</a> tại Chương 2.</p>
 
   <p>Chúng ta cũng có thể thêm mệnh đề <code>else</code> để cung cấp cho chương trình một khối lệnh thay thế khi điều kiện không được thỏa mãn (tức là khi điều kiện là <code>false</code>). Nếu bạn không cung cấp mệnh đề <code>else</code>, chương trình sẽ bỏ qua khối <code>if</code> và tiếp tục thực thi phần tiếp theo.</p>
 
-  <p>Hãy xem kết quả xuất ra. Sau đó thử với code sau:</p>
+  <p>Hãy xem kết quả xuất ra. Sau đó thử với mã sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -252,7 +252,7 @@ condition was true
 condition was false
 </code></pre>
 
-  <p>Điều rất đáng lưu ý là tất cả mọi biểu thức trong đoạn code này <em>bắt buộc</em> phải thuộc dạng Boolean. Khi biểu thức có những nội dụng không cấu thành dạng đó, thì một báo lỗi như dưới đây sẽ làm gián đoạn mọi việc khi bạn đang chạy nó:</p>
+  <p>Điều rất đáng lưu ý là tất cả mọi biểu thức trong đoạn mã này <em>bắt buộc</em> phải thuộc dạng Boolean. Khi biểu thức có những nội dụng không cấu thành dạng đó, thì một báo lỗi như dưới đây sẽ làm gián đoạn mọi việc khi bạn đang chạy nó:</p>
 
   <p><span class="filename">Tên file: src/main.rs</span></p>
 
@@ -290,7 +290,7 @@ error: could not compile `branches` (bin "branches") due to 1 previous error
     }
 }</code></pre>
 
-  <p>Chạy code này sẽ in ra: <code>number was something other than zero</code>.</p>
+  <p>Chạy mã này sẽ in ra: <code>number was something other than zero</code>.</p>
 
   <h4 id="handling-multiple-conditions-with-else-if">Nhiều Điều kiện với <code>else if</code></h4>
   <p>Bạn có thể sử dụng nhiều điều kiện bằng cách kết hợp <code>if</code> và <code>else</code> trong một biểu thức <code>else if</code>. Ví dụ:</p>
@@ -322,7 +322,7 @@ number is divisible by 3
 
   <p>Khi chương trình thực thi, nó kiểm tra từng biểu thức <code>if</code> lần lượt và thực thi khối lệnh đầu tiên mà điều kiện cho ra giá trị <code>true</code>. Lưu ý rằng mặc dù 6 chia hết cho 2, chúng ta không thấy kết quả <code>number is divisible by 2</code>, cũng không thấy dòng <code>number is not divisible by 4, 3, or 2</code> từ khối <code>else</code>. Đó là vì Rust chỉ thực thi khối lệnh cho điều kiện <code>true</code> đầu tiên tìm thấy, và sau khi tìm thấy rồi thì không kiểm tra những điều kiện còn lại nữa.</p>
 
-  <p>Sử dụng quá nhiều biểu thức <code>else if</code> có thể làm cho code trở nên lộn xộn, vì vậy nếu bạn có nhiều hơn một điều kiện, bạn có thể muốn tái cấu trúc code của mình. Chương 6 mô tả một cấu trúc rẽ nhánh mạnh mẽ của Rust gọi là <code>match</code> dành cho những trường hợp như vậy.</p>
+  <p>Sử dụng quá nhiều biểu thức <code>else if</code> có thể làm cho mã trở nên lộn xộn, vì vậy nếu bạn có nhiều hơn một điều kiện, bạn có thể muốn tái cấu trúc mã của mình. Chương 6 mô tả một cấu trúc rẽ nhánh mạnh mẽ của Rust gọi là <code>match</code> dành cho những trường hợp như vậy.</p>
 
   <h4 id="using-if-in-a-let-statement">Dùng <code>if</code> trong Câu Lệnh <code>let</code></h4>
   <p>Vì <code>if</code> là một biểu thức, chúng ta có thể dùng nó ở vế phải của câu lệnh <code>let</code> để gán kết quả vào một biến, như trong Listing 3-2.</p>
@@ -338,7 +338,7 @@ number is divisible by 3
     <figcaption><a href="#listing-3-2">Listing 3-2</a>: Gán kết quả của một biểu thức <code>if</code> vào một biến</figcaption>
   </figure>
 
-  <p>Biến <code>number</code> sẽ được gán một giá trị dựa trên kết quả của biểu thức <code>if</code>. Hãy chạy đoạn code này để xem điều gì xảy ra:</p>
+  <p>Biến <code>number</code> sẽ được gán một giá trị dựa trên kết quả của biểu thức <code>if</code>. Hãy chạy đoạn mã này để xem điều gì xảy ra:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -359,7 +359,7 @@ The value of number is: 5
     println!("The value of number is: {number}");
 }</code></pre>
 
-  <p>Khi chúng ta cố biên dịch đoạn code này, chúng ta sẽ gặp lỗi. Nhánh <code>if</code> và nhánh <code>else</code> có kiểu giá trị không tương thích, và Rust chỉ ra chính xác vị trí của vấn đề trong chương trình:</p>
+  <p>Khi chúng ta cố biên dịch đoạn mã này, chúng ta sẽ gặp lỗi. Nhánh <code>if</code> và nhánh <code>else</code> có kiểu giá trị không tương thích, và Rust chỉ ra chính xác vị trí của vấn đề trong chương trình:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -375,7 +375,7 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `branches` (bin "branches") due to 1 previous error
 </code></pre>
 
-  <p>Biểu thức trong khối <code>if</code> trả về một số nguyên, và biểu thức trong khối <code>else</code> trả về một chuỗi. Điều này không hoạt động được vì các biến phải có một kiểu duy nhất, và Rust cần biết chắc chắn tại thời điểm biên dịch biến <code>number</code> có kiểu gì. Biết được kiểu của <code>number</code> cho phép trình biên dịch xác minh kiểu đó hợp lệ ở mọi nơi chúng ta sử dụng <code>number</code>. Rust sẽ không thể làm điều đó nếu kiểu của <code>number</code> chỉ được xác định tại thời điểm chạy; trình biên dịch sẽ phức tạp hơn và đưa ra ít đảm bảo hơn về code nếu nó phải theo dõi nhiều kiểu giả định cho bất kỳ biến nào.</p>
+  <p>Biểu thức trong khối <code>if</code> trả về một số nguyên, và biểu thức trong khối <code>else</code> trả về một chuỗi. Điều này không hoạt động được vì các biến phải có một kiểu duy nhất, và Rust cần biết chắc chắn tại thời điểm biên dịch biến <code>number</code> có kiểu gì. Biết được kiểu của <code>number</code> cho phép trình biên dịch xác minh kiểu đó hợp lệ ở mọi nơi chúng ta sử dụng <code>number</code>. Rust sẽ không thể làm điều đó nếu kiểu của <code>number</code> chỉ được xác định tại thời điểm chạy; trình biên dịch sẽ phức tạp hơn và đưa ra ít đảm bảo hơn về mã nếu nó phải theo dõi nhiều kiểu giả định cho bất kỳ biến nào.</p>
 
   <h3 id="repetition-with-loops">🔁 Các vòng lặp</h3>
   <p>Thường có lúc sẽ hữu ích khi thực thi một khối lệnh nhiều hơn một lần. Để làm điều này, Rust cung cấp một số loại <em>vòng lặp (loops)</em>, chúng sẽ chạy qua các đoạn mã trong thân vòng lặp đến cuối rồi bắt đầu lại ngay từ đầu. Để thử nghiệm với vòng lặp, hãy tạo một dự án mới có tên là <em>loops</em>.</p>
@@ -410,14 +410,14 @@ again!
 
   <p>Ký hiệu <code>^C</code> đại diện cho vị trí bạn đã nhấn <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
 
-  <p>Bạn có thể thấy hoặc không thấy chữ <code>again!</code> được in ra sau <code>^C</code>, tùy thuộc vào vị trí code đang thực thi trong vòng lặp khi nhận được tín hiệu ngắt.</p>
+  <p>Bạn có thể thấy hoặc không thấy chữ <code>again!</code> được in ra sau <code>^C</code>, tùy thuộc vào vị trí mã đang thực thi trong vòng lặp khi nhận được tín hiệu ngắt.</p>
 
-  <p>May mắn thay, Rust cũng cung cấp một cách để thoát ra khỏi vòng lặp bằng code. Bạn có thể đặt từ khóa <code>break</code> trong vòng lặp để báo cho chương trình biết khi nào cần ngừng thực thi vòng lặp. Hãy nhớ rằng chúng ta đã làm điều này trong trò chơi đoán số ở phần <a href=”ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess”>”Thoát ra sau khi đoán đúng”</a> tại Chương 2 để thoát khỏi chương trình khi người dùng thắng trò chơi bằng cách đoán đúng số.</p>
+  <p>May mắn thay, Rust cũng cung cấp một cách để thoát ra khỏi vòng lặp bằng mã. Bạn có thể đặt từ khóa <code>break</code> trong vòng lặp để báo cho chương trình biết khi nào cần ngừng thực thi vòng lặp. Hãy nhớ rằng chúng ta đã làm điều này trong trò chơi đoán số ở phần <a href=”ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess”>”Thoát ra sau khi đoán đúng”</a> tại Chương 2 để thoát khỏi chương trình khi người dùng thắng trò chơi bằng cách đoán đúng số.</p>
 
-  <p>Chúng ta cũng đã dùng <code>continue</code> trong trò chơi đoán số, từ khóa này trong một vòng lặp sẽ báo cho chương trình bỏ qua phần code còn lại trong lần lặp hiện tại và chuyển sang lần lặp tiếp theo.</p>
+  <p>Chúng ta cũng đã dùng <code>continue</code> trong trò chơi đoán số, từ khóa này trong một vòng lặp sẽ báo cho chương trình bỏ qua phần mã còn lại trong lần lặp hiện tại và chuyển sang lần lặp tiếp theo.</p>
 
   <h4 id="returning-values-from-loops">Trả về Giá trị từ Vòng Lặp</h4>
-  <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một thread đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của code. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
+  <p>Một trong những cách dùng của <code>loop</code> là thử lại một thao tác mà bạn biết có thể thất bại, chẳng hạn như kiểm tra xem một thread đã hoàn thành công việc chưa. Bạn cũng có thể cần truyền kết quả của thao tác đó ra ngoài vòng lặp để dùng ở phần còn lại của mã. Để làm điều này, bạn có thể thêm giá trị cần trả về sau biểu thức <code>break</code> dùng để dừng vòng lặp; giá trị đó sẽ được trả ra ngoài vòng lặp để bạn có thể sử dụng, như ví dụ dưới đây:</p>
 
 <pre><code class="language-rust">fn main() {
     let mut counter = 0;
@@ -463,7 +463,7 @@ again!
     println!("End count = {count}");
 }</code></pre>
 
-  <p>Vòng lặp ngoài có nhãn <code>'counting_up</code>, và nó sẽ đếm từ 0 đến 2. Vòng lặp bên trong không có nhãn sẽ đếm ngược từ 10 xuống 9. Câu lệnh <code>break</code> đầu tiên không chỉ định nhãn sẽ chỉ thoát khỏi vòng lặp bên trong. Câu lệnh <code>break 'counting_up;</code> sẽ thoát khỏi vòng lặp ngoài. Đoạn code này in ra:</p>
+  <p>Vòng lặp ngoài có nhãn <code>'counting_up</code>, và nó sẽ đếm từ 0 đến 2. Vòng lặp bên trong không có nhãn sẽ đếm ngược từ 10 xuống 9. Câu lệnh <code>break</code> đầu tiên không chỉ định nhãn sẽ chỉ thoát khỏi vòng lặp bên trong. Câu lệnh <code>break 'counting_up;</code> sẽ thoát khỏi vòng lặp ngoài. Đoạn mã này in ra:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
@@ -496,10 +496,10 @@ End count = 2
 
     println!("LIFTOFF!!!");
 }</code></pre>
-    <figcaption><a href="#listing-3-3">Listing 3-3</a>: Dùng vòng lặp <code>while</code> để chạy code khi điều kiện còn là <code>true</code></figcaption>
+    <figcaption><a href="#listing-3-3">Listing 3-3</a>: Dùng vòng lặp <code>while</code> để chạy mã khi điều kiện còn là <code>true</code></figcaption>
   </figure>
 
-  <p>Cấu trúc này loại bỏ rất nhiều cấu trúc lồng nhau sẽ cần thiết nếu bạn dùng <code>loop</code>, <code>if</code>, <code>else</code>, và <code>break</code>, và nó rõ ràng hơn. Khi điều kiện là <code>true</code>, code chạy; ngược lại, nó thoát khỏi vòng lặp.</p>
+  <p>Cấu trúc này loại bỏ rất nhiều cấu trúc lồng nhau sẽ cần thiết nếu bạn dùng <code>loop</code>, <code>if</code>, <code>else</code>, và <code>break</code>, và nó rõ ràng hơn. Khi điều kiện là <code>true</code>, mã chạy; ngược lại, nó thoát khỏi vòng lặp.</p>
 
   <h4 id="looping-through-a-collection-with-for">Lặp qua một Collection với <code>for</code></h4>
   <p>Bạn có thể chọn dùng cấu trúc <code>while</code> để lặp qua các phần tử của một collection, chẳng hạn như một mảng. Ví dụ, vòng lặp trong Listing 3-4 in ra từng phần tử trong mảng <code>a</code>.</p>
@@ -519,7 +519,7 @@ End count = 2
     <figcaption><a href="#listing-3-4">Listing 3-4</a>: Lặp qua từng phần tử của một collection dùng vòng lặp <code>while</code></figcaption>
   </figure>
 
-  <p>Ở đây, code đếm qua các phần tử trong mảng. Nó bắt đầu từ chỉ số <code>0</code>, rồi lặp cho đến khi đạt đến chỉ số cuối cùng trong mảng (tức là khi <code>index &lt; 5</code> không còn là <code>true</code>). Chạy code này sẽ in ra mọi phần tử trong mảng:</p>
+  <p>Ở đây, mã đếm qua các phần tử trong mảng. Nó bắt đầu từ chỉ số <code>0</code>, rồi lặp cho đến khi đạt đến chỉ số cuối cùng trong mảng (tức là khi <code>index &lt; 5</code> không còn là <code>true</code>). Chạy mã này sẽ in ra mọi phần tử trong mảng:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
@@ -534,9 +534,9 @@ the value is: 50
 
   <p>Tất cả năm giá trị của mảng xuất hiện trên terminal, như mong đợi. Mặc dù <code>index</code> sẽ đạt đến giá trị <code>5</code> tại một thời điểm nào đó, nhưng vòng lặp dừng thực thi trước khi cố lấy giá trị thứ sáu từ mảng.</p>
 
-  <p>Tuy nhiên, cách tiếp cận này dễ gây lỗi; chúng ta có thể khiến chương trình panic nếu giá trị chỉ số hoặc điều kiện kiểm tra không đúng. Ví dụ, nếu bạn thay đổi định nghĩa mảng <code>a</code> để có bốn phần tử nhưng quên cập nhật điều kiện thành <code>while index &lt; 4</code>, code sẽ panic. Ngoài ra, cách này còn chậm vì trình biên dịch thêm code runtime để kiểm tra điều kiện xem chỉ số có nằm trong giới hạn của mảng hay không tại mỗi lần lặp.</p>
+  <p>Tuy nhiên, cách tiếp cận này dễ gây lỗi; chúng ta có thể khiến chương trình panic nếu giá trị chỉ số hoặc điều kiện kiểm tra không đúng. Ví dụ, nếu bạn thay đổi định nghĩa mảng <code>a</code> để có bốn phần tử nhưng quên cập nhật điều kiện thành <code>while index &lt; 4</code>, mã sẽ panic. Ngoài ra, cách này còn chậm vì trình biên dịch thêm mã runtime để kiểm tra điều kiện xem chỉ số có nằm trong giới hạn của mảng hay không tại mỗi lần lặp.</p>
 
-  <p>Là một lựa chọn ngắn gọn hơn, bạn có thể dùng vòng lặp <code>for</code> và thực thi một đoạn code cho từng phần tử trong một collection. Vòng lặp <code>for</code> trông như code trong Listing 3-5.</p>
+  <p>Là một lựa chọn ngắn gọn hơn, bạn có thể dùng vòng lặp <code>for</code> và thực thi một đoạn mã cho từng phần tử trong một collection. Vòng lặp <code>for</code> trông như mã trong Listing 3-5.</p>
 
   <figure class="listing" id="listing-3-5">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -550,11 +550,11 @@ the value is: 50
     <figcaption><a href="#listing-3-5">Listing 3-5</a>: Lặp qua từng phần tử của một collection dùng vòng lặp <code>for</code></figcaption>
   </figure>
 
-  <p>Khi chúng ta chạy code này, chúng ta sẽ thấy kết quả đầu ra giống như trong Listing 3-4. Quan trọng hơn, chúng ta đã tăng tính an toàn của code và loại bỏ khả năng xảy ra lỗi do vượt qua cuối mảng hoặc không đi đủ xa và bỏ sót một số phần tử. Code máy được tạo ra từ vòng lặp <code>for</code> cũng có thể hiệu quả hơn vì chỉ số không cần được so sánh với độ dài của mảng tại mỗi lần lặp.</p>
+  <p>Khi chúng ta chạy mã này, chúng ta sẽ thấy kết quả đầu ra giống như trong Listing 3-4. Quan trọng hơn, chúng ta đã tăng tính an toàn của mã và loại bỏ khả năng xảy ra lỗi do vượt qua cuối mảng hoặc không đi đủ xa và bỏ sót một số phần tử. Mã máy được tạo ra từ vòng lặp <code>for</code> cũng có thể hiệu quả hơn vì chỉ số không cần được so sánh với độ dài của mảng tại mỗi lần lặp.</p>
 
-  <p>Khi dùng vòng lặp <code>for</code>, bạn không cần phải nhớ thay đổi bất kỳ code nào khác nếu bạn thay đổi số lượng giá trị trong mảng, như bạn sẽ phải làm với phương pháp dùng trong Listing 3-4.</p>
+  <p>Khi dùng vòng lặp <code>for</code>, bạn không cần phải nhớ thay đổi bất kỳ mã nào khác nếu bạn thay đổi số lượng giá trị trong mảng, như bạn sẽ phải làm với phương pháp dùng trong Listing 3-4.</p>
 
-  <p>Tính an toàn và ngắn gọn của vòng lặp <code>for</code> khiến chúng trở thành cấu trúc vòng lặp được dùng phổ biến nhất trong Rust. Ngay cả trong các tình huống bạn muốn chạy một đoạn code một số lần nhất định, như trong ví dụ đếm ngược dùng vòng lặp <code>while</code> ở Listing 3-3, hầu hết các Rustacean sẽ dùng vòng lặp <code>for</code>. Cách để làm điều đó là dùng <code>Range</code>, được cung cấp bởi thư viện chuẩn, nó tạo ra tất cả các số theo thứ tự bắt đầu từ một số và kết thúc trước một số khác.</p>
+  <p>Tính an toàn và ngắn gọn của vòng lặp <code>for</code> khiến chúng trở thành cấu trúc vòng lặp được dùng phổ biến nhất trong Rust. Ngay cả trong các tình huống bạn muốn chạy một đoạn mã một số lần nhất định, như trong ví dụ đếm ngược dùng vòng lặp <code>while</code> ở Listing 3-3, hầu hết các Rustacean sẽ dùng vòng lặp <code>for</code>. Cách để làm điều đó là dùng <code>Range</code>, được cung cấp bởi thư viện chuẩn, nó tạo ra tất cả các số theo thứ tự bắt đầu từ một số và kết thúc trước một số khác.</p>
 
   <p>Đây là cách đếm ngược trông như thế nào khi dùng vòng lặp <code>for</code> và một phương thức chúng ta chưa đề cập, <code>rev</code>, để đảo ngược dãy số:</p>
 
@@ -567,7 +567,7 @@ the value is: 50
     println!("LIFTOFF!!!");
 }</code></pre>
 
-  <p>Đoạn code này khá gọn hơn, phải không?</p>
+  <p>Đoạn mã này khá gọn hơn, phải không?</p>
 
   <h2 id="summary">📋 Tóm tắt</h2>
   <p>Bạn đã làm xong rồi! Đây là một chương khá dài: Bạn đã học về biến, các kiểu dữ liệu vô hướng và hợp chất, hàm, comment, biểu thức <code>if</code>, và vòng lặp! Để thực hành với các khái niệm đã được thảo luận trong chương này, hãy thử xây dựng các chương trình để thực hiện những việc sau:</p>

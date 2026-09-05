@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — Tất Tần Tật Những Nơi Pattern Có Thể Xuất Hiện</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch19-00-patterns.html">← Trước</a>
@@ -226,7 +226,7 @@
 }</code></pre>
 <p>Các pattern trong biểu thức <code>match</code> này là <code>None</code> và <code>Some(i)</code> nằm bên trái của mỗi mũi tên.</p>
 <p>Một yêu cầu bắt buộc đối với biểu thức <code>match</code> là phải <em>exhaustive</em> — tức là mọi khả năng có thể xảy ra của giá trị trong <code>match</code> đều phải được xử lý. Một cách đảm bảo bạn đã phủ kín mọi trường hợp là dùng catch-all pattern ở nhánh cuối cùng: ví dụ như tên biến có thể khớp với bất kỳ giá trị nào thì không bao giờ thất bại, do đó che phủ luôn mọi trường hợp còn sót.</p>
-<p>Pattern đặc biệt <code>_</code> sẽ khớp với bất kỳ thứ gì, nhưng nó không bao giờ gắn kết (bind) vào biến, nên thường được dùng ở nhánh match cuối cùng. Pattern <code>_</code> đặc biệt hữu dụng khi bạn muốn phớt lờ mọi giá trị không được chỉ định. Chúng ta sẽ đào sâu hơn về pattern <code>_</code> trong phần <a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">"Bỏ Qua Giá Trị Trong Pattern"</a> ở cuối chương này.</p>
+<p>Pattern đặc biệt <code>_</code> sẽ khớp với bất kỳ thứ gì, nhưng nó không bao giờ gắn kết (bind) vào biến, nên thường được dùng ở nhánh match cuối cùng. Pattern <code>_</code> đặc biệt hữu dụng khi bạn muốn phớt lờ mọi giá trị không được chỉ định. Chúng ta sẽ đào sâu hơn về pattern <code>_</code> trong phần <a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">"Bỏ Qua Giá Trị Trong pattern"</a> ở cuối chương này.</p>
 
 <h3 id="let-statements"><a class="header" href="#let-statements">Các Câu Lệnh <code>let</code></a></h3>
 <p>Trước chương này, chúng ta chỉ bàn rõ ràng việc dùng pattern với <code>match</code> và <code>if let</code>, nhưng thật ra chúng ta đã dùng pattern ở nhiều chỗ khác nữa — kể cả trong câu lệnh <code>let</code>. Ví dụ, hãy nhìn vào phép gán biến đơn giản bằng <code>let</code> này:</p>
@@ -256,7 +256,7 @@
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-2">Listing 19-2</a>: Xây sai pattern với số biến không khớp số phần tử trong tuple</figcaption>
 </figure>
-<p>Cố biên dịch đoạn code này sẽ trả về lỗi kiểu dữ liệu:</p>
+<p>Cố biên dịch đoạn mã này sẽ trả về lỗi kiểu dữ liệu:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
 error[E0308]: mismatched types
@@ -273,12 +273,12 @@ error[E0308]: mismatched types
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `patterns` (bin "patterns") due to 1 previous error
 </code></pre>
-<p>Để sửa lỗi, chúng ta có thể bỏ qua một hoặc nhiều giá trị trong tuple bằng cách dùng <code>_</code> hoặc <code>..</code>, như bạn sẽ thấy trong phần <a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">"Bỏ Qua Giá Trị Trong Pattern"</a>. Nếu vấn đề là chúng ta có quá nhiều biến trong pattern, giải pháp là khiến các kiểu khớp nhau bằng cách bỏ bớt biến cho đến khi số biến bằng số phần tử tuple.</p>
+<p>Để sửa lỗi, chúng ta có thể bỏ qua một hoặc nhiều giá trị trong tuple bằng cách dùng <code>_</code> hoặc <code>..</code>, như bạn sẽ thấy trong phần <a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">"Bỏ Qua Giá Trị Trong pattern"</a>. Nếu vấn đề là chúng ta có quá nhiều biến trong pattern, giải pháp là khiến các kiểu khớp nhau bằng cách bỏ bớt biến cho đến khi số biến bằng số phần tử tuple.</p>
 
 <h3 id="conditional-if-let-expressions"><a class="header" href="#conditional-if-let-expressions">Biểu Thức <code>if let</code> Có Điều Kiện</a></h3>
-<p>Ở Chương 6, chúng ta đã bàn về cách dùng biểu thức <code>if let</code> chủ yếu như một cách ngắn gọn hơn để viết tương đương với <code>match</code> chỉ xử lý một trường hợp. Tùy chọn, <code>if let</code> có thể kèm theo một nhánh <code>else</code> chứa code chạy nếu pattern trong <code>if let</code> không khớp.</p>
+<p>Ở Chương 6, chúng ta đã bàn về cách dùng biểu thức <code>if let</code> chủ yếu như một cách ngắn gọn hơn để viết tương đương với <code>match</code> chỉ xử lý một trường hợp. Tùy chọn, <code>if let</code> có thể kèm theo một nhánh <code>else</code> chứa mã chạy nếu pattern trong <code>if let</code> không khớp.</p>
 <p>Listing 19-3 cho thấy ta còn có thể pha trộn thoải mái <code>if let</code>, <code>else if</code>, và <code>else if let</code> với nhau. Làm vậy cho chúng ta sự linh hoạt hơn so với biểu thức <code>match</code> — nơi ta chỉ có thể so một giá trị với các pattern. Ngoài ra, Rust không yêu cầu các điều kiện trong chuỗi <code>if let</code>, <code>else if</code>, và <code>else if let</code> phải liên quan đến nhau.</p>
-<p>Code trong Listing 19-3 xác định màu nền dựa trên hàng loạt kiểm tra nhiều điều kiện. Ví dụ này dùng các biến với giá trị hardcode mà trong chương trình thực tế có thể nhận từ input của người dùng.</p>
+<p>Mã trong Listing 19-3 xác định màu nền dựa trên hàng loạt kiểm tra nhiều điều kiện. Ví dụ này dùng các biến với giá trị hardcode mà trong chương trình thực tế có thể nhận từ đầu vào của người dùng.</p>
 <figure class="listing" id="listing-19-3">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -338,7 +338,7 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-5">Listing 19-5</a>: Dùng pattern trong vòng lặp <code>for</code> để destructure một tuple</figcaption>
 </figure>
-<p>Code trong Listing 19-5 sẽ in ra:</p>
+<p>Mã trong Listing 19-5 sẽ in ra:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s
@@ -347,10 +347,10 @@ a is at index 0
 b is at index 1
 c is at index 2
 </code></pre>
-<p>Chúng ta adapt một iterator bằng phương thức <code>enumerate</code> để nó tạo ra một giá trị kèm chỉ số của giá trị đó, đặt vào trong một tuple. Giá trị đầu tiên được tạo ra là tuple <code>(0, 'a')</code>. Khi giá trị này được so khớp với pattern <code>(index, value)</code>, index sẽ là <code>0</code> và value sẽ là <code>'a'</code>, in ra dòng đầu tiên của output.</p>
+<p>Chúng ta adapt một iterator bằng phương thức <code>enumerate</code> để nó tạo ra một giá trị kèm chỉ số của giá trị đó, đặt vào trong một tuple. Giá trị đầu tiên được tạo ra là tuple <code>(0, 'a')</code>. Khi giá trị này được so khớp với pattern <code>(index, value)</code>, index sẽ là <code>0</code> và giá trị sẽ là <code>'a'</code>, in ra dòng đầu tiên của kết quả.</p>
 
 <h3 id="function-parameters"><a class="header" href="#function-parameters">Tham Số Hàm</a></h3>
-<p>Tham số hàm cũng có thể là pattern. Code trong Listing 19-6, khai báo hàm tên <code>foo</code> nhận một tham số tên <code>x</code> kiểu <code>i32</code>, chắc trông quen quen rồi nhỉ.</p>
+<p>Tham số hàm cũng có thể là pattern. Mã trong Listing 19-6, khai báo hàm tên <code>foo</code> nhận một tham số tên <code>x</code> kiểu <code>i32</code>, chắc trông quen quen rồi nhỉ.</p>
 <figure class="listing" id="listing-19-6">
 <pre class="playground"><code class="language-rust edition2024">fn foo(x: i32) {
     // code goes here
@@ -372,7 +372,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-7">Listing 19-7</a>: Hàm có tham số destructure một tuple</figcaption>
 </figure>
-<p>Code này in ra <code>Current location: (3, 5)</code>. Các giá trị <code>&amp;(3, 5)</code> khớp với pattern <code>&amp;(x, y)</code>, vậy nên <code>x</code> có giá trị <code>3</code> và <code>y</code> có giá trị <code>5</code>.</p>
+<p>Mã này in ra <code>Current location: (3, 5)</code>. Các giá trị <code>&amp;(3, 5)</code> khớp với pattern <code>&amp;(x, y)</code>, vậy nên <code>x</code> có giá trị <code>3</code> và <code>y</code> có giá trị <code>5</code>.</p>
 <p>Chúng ta cũng có thể dùng pattern trong danh sách tham số của closure theo cách tương tự như trong danh sách tham số của hàm, vì closure tương tự như hàm — như đã bàn ở Chương 13.</p>
 <p>Tới đây, bạn đã thấy nhiều cách dùng pattern rồi, nhưng pattern không hoạt động giống nhau ở mọi nơi có thể dùng chúng. Ở một số chỗ, pattern phải là irrefutable (không thể bác bỏ); ở những hoàn cảnh khác, chúng có thể là refutable (có thể bác bỏ). Chúng ta sẽ bàn luận về hai khái niệm này tiếp theo.</p>
 

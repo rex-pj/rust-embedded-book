@@ -204,23 +204,23 @@
   <div id="main">
     <div class="page-nav"><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">← Trước</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">Tiếp →</a></div>
 
-<h2 id="paths-for-referring-to-an-item-in-the-module-tree">Paths — Đường dẫn tham chiếu item trong Module Tree</h2>
+<h2 id="paths-for-referring-to-an-item-in-the-module-tree">Path — đường dẫn tham chiếu tới một item trong module tree</h2>
 
-<p>Để chỉ cho Rust biết một item đang nằm ở đâu trong cây module, ta dùng <em>path</em> — hoàn toàn giống cách bạn dùng đường dẫn khi điều hướng filesystem. Muốn gọi một hàm, bạn cần biết path của nó.</p>
+<p>Để chỉ cho Rust biết tìm một item ở đâu trong module tree, ta dùng path, hoàn toàn giống cách dùng đường dẫn khi di chuyển trong hệ thống tệp. Muốn gọi một hàm, ta cần biết path của nó.</p>
 
 <p>Một path có thể ở hai dạng:</p>
 <ul>
-  <li><em>Absolute path</em> là path đầy đủ tính từ crate root; với code từ crate ngoài thì bắt đầu bằng tên crate, còn code trong crate hiện tại thì bắt đầu bằng từ khóa <code>crate</code>.</li>
-  <li><em>Relative path</em> bắt đầu từ module hiện tại và dùng <code>self</code>, <code>super</code>, hoặc một identifier trong module đó.</li>
+  <li><em>Absolute path</em> (đường dẫn tuyệt đối) là path đầy đủ tính từ crate root; với mã từ một crate bên ngoài, absolute path bắt đầu bằng tên crate, còn với mã trong crate hiện tại thì bắt đầu bằng đúng từ <code>crate</code>.</li>
+  <li><em>Relative path</em> (đường dẫn tương đối) bắt đầu từ module hiện tại và dùng <code>self</code>, <code>super</code>, hoặc một identifier trong module đó.</li>
 </ul>
 
-<p>Cả hai loại path đều được nối tiếp bởi một hoặc nhiều identifier phân cách nhau bằng dấu hai chấm đôi (<code>::</code>).</p>
+<p>Cả absolute path lẫn relative path đều gồm một hoặc nhiều identifier ngăn cách nhau bằng dấu hai chấm đôi (<code>::</code>).</p>
 
-<p>Quay lại Listing 7-1 — giả sử ta muốn gọi hàm <code>add_to_waitlist</code>. Câu hỏi đặt ra là: path của hàm <code>add_to_waitlist</code> là gì? Listing 7-3 là Listing 7-1 với một số module và hàm đã được lược bỏ.</p>
+<p>Quay lại Listing 7-1, giả sử ta muốn gọi hàm <code>add_to_waitlist</code>. Câu hỏi này cũng chính là: path của hàm <code>add_to_waitlist</code> là gì? Listing 7-3 chính là Listing 7-1 nhưng đã lược bớt một số module và hàm.</p>
 
-<p>Ta sẽ trình bày hai cách gọi hàm <code>add_to_waitlist</code> từ hàm mới <code>eat_at_restaurant</code> được định nghĩa ở crate root. Hai path này đúng, nhưng vẫn còn một vấn đề khác khiến ví dụ chưa compile được — ta sẽ giải thích ngay sau đây.</p>
+<p>Ta sẽ trình bày hai cách gọi hàm <code>add_to_waitlist</code> từ một hàm mới tên <code>eat_at_restaurant</code>, được định nghĩa ở crate root. Những path này là đúng, nhưng vẫn còn một vấn đề khác khiến ví dụ chưa biên dịch được như hiện tại. Lát nữa ta sẽ giải thích vì sao.</p>
 
-<p>Hàm <code>eat_at_restaurant</code> là một phần public API của library crate, nên ta đánh dấu nó bằng từ khóa <code>pub</code>. Phần <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">"Exposing Paths với từ khóa <code>pub</code>"</a> sẽ đi sâu hơn về <code>pub</code>.</p>
+<p>Hàm <code>eat_at_restaurant</code> là một phần API công khai của library crate, nên ta đánh dấu nó bằng từ khóa <code>pub</code>. Ở mục <a href="#exposing-paths-with-the-pub-keyword">“Phơi path ra bằng từ khóa <code>pub</code>”</a>, ta sẽ nói kỹ hơn về <code>pub</code>.</p>
 
 <figure class="listing" id="listing-7-3">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -240,13 +240,13 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-3">Listing 7-3</a>: Gọi hàm <code>add_to_waitlist</code> bằng absolute path và relative path</figcaption>
 </figure>
 
-<p>Lần đầu gọi <code>add_to_waitlist</code> trong <code>eat_at_restaurant</code>, ta dùng absolute path. Hàm <code>add_to_waitlist</code> được định nghĩa trong cùng crate với <code>eat_at_restaurant</code>, nghĩa là ta có thể dùng từ khóa <code>crate</code> để bắt đầu absolute path. Sau đó ta lần lượt liệt kê từng module cho đến khi đến được <code>add_to_waitlist</code>. Hình dung như hệ thống file: ta chỉ định <code>/front_of_house/hosting/add_to_waitlist</code> để chạy chương trình; dùng <code>crate</code> để bắt đầu từ crate root giống như dùng <code>/</code> để bắt đầu từ filesystem root trong shell.</p>
+<p>Lần đầu ta gọi hàm <code>add_to_waitlist</code> trong <code>eat_at_restaurant</code>, ta dùng absolute path. Hàm <code>add_to_waitlist</code> được định nghĩa trong cùng crate với <code>eat_at_restaurant</code>, nghĩa là ta dùng được từ khóa <code>crate</code> để mở đầu một absolute path. Sau đó ta liệt kê từng module kế tiếp cho tới khi tới được <code>add_to_waitlist</code>. Bạn có thể hình dung một hệ thống tệp có cấu trúc y hệt: ta sẽ ghi path <code>/front_of_house/hosting/add_to_waitlist</code> để chạy chương trình <code>add_to_waitlist</code>; việc dùng từ <code>crate</code> để bắt đầu từ crate root cũng giống dùng <code>/</code> để bắt đầu từ gốc hệ thống tệp trong shell.</p>
 
-<p>Lần thứ hai gọi <code>add_to_waitlist</code>, ta dùng relative path bắt đầu từ <code>front_of_house</code> — module được định nghĩa cùng cấp với <code>eat_at_restaurant</code>. Equivalent trong filesystem là <code>front_of_house/hosting/add_to_waitlist</code>. Bắt đầu bằng tên module nghĩa là path đó là relative.</p>
+<p>Lần thứ hai ta gọi <code>add_to_waitlist</code> trong <code>eat_at_restaurant</code>, ta dùng relative path. Path này bắt đầu bằng <code>front_of_house</code> — tên của module được định nghĩa ở cùng cấp trong module tree với <code>eat_at_restaurant</code>. Ở đây, tương đương bên hệ thống tệp sẽ là path <code>front_of_house/hosting/add_to_waitlist</code>. Bắt đầu bằng một tên module nghĩa là path đó có tính tương đối.</p>
 
-<p>Việc chọn absolute hay relative là quyết định bạn đưa ra dựa trên dự án, tùy thuộc khả năng bạn sẽ di chuyển code định nghĩa item riêng biệt hay cùng với code sử dụng nó. Ví dụ, nếu ta chuyển module <code>front_of_house</code> và hàm <code>eat_at_restaurant</code> vào module <code>customer_experience</code>, ta phải cập nhật absolute path đến <code>add_to_waitlist</code>, nhưng relative path vẫn hợp lệ. Ngược lại, nếu ta chuyển riêng hàm <code>eat_at_restaurant</code> vào module <code>dining</code>, absolute path đến <code>add_to_waitlist</code> vẫn nguyên vẹn nhưng relative path cần cập nhật. Nhìn chung ta thiên về dùng absolute path vì khả năng muốn di chuyển phần định nghĩa và phần sử dụng độc lập nhau là cao hơn.</p>
+<p>Chọn dùng relative path hay absolute path là quyết định bạn đưa ra tùy theo dự án, và phụ thuộc vào việc bạn có nhiều khả năng di chuyển phần mã định nghĩa item tách rời hay cùng lúc với phần mã dùng item đó. Ví dụ, nếu ta chuyển cả module <code>front_of_house</code> lẫn hàm <code>eat_at_restaurant</code> vào một module tên <code>customer_experience</code>, ta sẽ phải cập nhật absolute path tới <code>add_to_waitlist</code>, nhưng relative path vẫn còn đúng. Ngược lại, nếu ta chỉ chuyển riêng hàm <code>eat_at_restaurant</code> vào một module tên <code>dining</code>, thì absolute path tới lời gọi <code>add_to_waitlist</code> vẫn nguyên, còn relative path lại phải sửa. Nói chung, chúng tôi thiên về dùng absolute path, vì nhiều khả năng ta sẽ muốn di chuyển phần định nghĩa và phần gọi item độc lập với nhau.</p>
 
-<p>Giờ thử compile Listing 7-3 xem sao! Lỗi xuất hiện như ở Listing 7-4.</p>
+<p>Hãy thử biên dịch Listing 7-3 để xem vì sao nó chưa chạy được! Những lỗi ta nhận được nằm ở Listing 7-4.</p>
 
 <figure class="listing" id="listing-7-4">
 <pre><code class="language-console">$ cargo build
@@ -282,18 +282,18 @@ note: the module `hosting` is defined here
 For more information about this error, try `rustc --explain E0603`.
 error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
-<figcaption><a href="#listing-7-4">Listing 7-4</a>: Lỗi compiler khi build code ở Listing 7-3</figcaption>
+<figcaption><a href="#listing-7-4">Listing 7-4</a>: Lỗi compiler khi build mã ở Listing 7-3</figcaption>
 </figure>
 
-<p>Thông báo lỗi nói module <code>hosting</code> là private. Tức là ta có path đúng đến module <code>hosting</code> và hàm <code>add_to_waitlist</code>, nhưng Rust không cho phép dùng chúng vì không có quyền truy cập phần private. Trong Rust, tất cả item (hàm, method, struct, enum, module, constant) đều private với module cha theo mặc định. Nếu muốn giữ một item là private, hãy đặt nó trong module.</p>
+<p>Các thông báo lỗi cho biết module <code>hosting</code> là private. Nói cách khác, ta đã có path đúng tới module <code>hosting</code> và hàm <code>add_to_waitlist</code>, nhưng Rust không cho ta dùng chúng vì ta không có quyền truy cập những phần private. Trong Rust, mặc định mọi item (hàm, phương thức, struct, enum, module và hằng số) đều là private đối với các module cha. Nếu bạn muốn một item như một hàm hay một struct thành private, hãy đặt nó vào trong một module.</p>
 
-<p>Item trong module cha không thể dùng item private bên trong module con, nhưng item trong module con có thể dùng item của các module tổ tiên. Lý do là module con bọc và ẩn chi tiết implementation của nó, nhưng module con vẫn thấy được ngữ cảnh mà nó được định nghĩa. Hình dung như phòng back office nhà hàng: những gì xảy ra trong đó là private với khách, nhưng quản lý có thể thấy và làm mọi thứ trong nhà hàng họ điều hành.</p>
+<p>Item ở module cha không dùng được những item private nằm trong module con, nhưng item ở module con thì dùng được item của các module tổ tiên. Lý do là module con bao bọc và giấu đi chi tiết triển khai của nó, trong khi nó vẫn nhìn thấy được ngữ cảnh nơi nó được định nghĩa. Vẫn theo phép ẩn dụ của ta, hãy hình dung các quy tắc riêng tư giống như khu văn phòng phía sau của một nhà hàng: chuyện diễn ra trong đó là riêng tư với khách hàng, nhưng người quản lý văn phòng thì nhìn thấy và làm được mọi việc trong nhà hàng họ điều hành.</p>
 
-<p>Rust chọn cách này để việc ẩn chi tiết implementation trở thành mặc định — bạn biết phần code nào có thể thay đổi mà không làm vỡ code bên ngoài. Tuy nhiên Rust cho phép phơi bày phần bên trong module con ra cho module tổ tiên bằng cách dùng từ khóa <code>pub</code>.</p>
+<p>Rust chọn để hệ thống module hoạt động theo cách này để việc giấu chi tiết triển khai bên trong là mặc định. Nhờ vậy, bạn biết được phần nào của mã bên trong có thể thay đổi mà không làm hỏng mã bên ngoài. Tuy nhiên, Rust vẫn cho bạn lựa chọn phơi những phần bên trong của mã ở module con ra cho các module tổ tiên bên ngoài, bằng cách dùng từ khóa <code>pub</code> để biến một item thành public.</p>
 
-<h3 id="exposing-paths-with-the-pub-keyword">Exposing Paths với từ khóa <code>pub</code></h3>
+<h3 id="exposing-paths-with-the-pub-keyword">Phơi path ra bằng từ khóa <code>pub</code></h3>
 
-<p>Quay lại lỗi ở Listing 7-4 — module <code>hosting</code> là private. Ta muốn hàm <code>eat_at_restaurant</code> ở module cha có thể truy cập hàm <code>add_to_waitlist</code> trong module con, nên ta đánh dấu module <code>hosting</code> bằng <code>pub</code> như ở Listing 7-5.</p>
+<p>Hãy quay lại lỗi ở Listing 7-4, lỗi báo rằng module <code>hosting</code> là private. Ta muốn hàm <code>eat_at_restaurant</code> ở module cha truy cập được hàm <code>add_to_waitlist</code> ở module con, nên ta đánh dấu module <code>hosting</code> bằng từ khóa <code>pub</code>, như ở Listing 7-5.</p>
 
 <figure class="listing" id="listing-7-5">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -314,7 +314,7 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-5">Listing 7-5</a>: Khai báo module <code>hosting</code> là <code>pub</code> để dùng từ <code>eat_at_restaurant</code></figcaption>
 </figure>
 
-<p>Tiếc là code ở Listing 7-5 vẫn còn lỗi compiler, như ở Listing 7-6.</p>
+<p>Đáng tiếc, mã ở Listing 7-5 vẫn sinh lỗi biên dịch, như ở Listing 7-6.</p>
 
 <figure class="listing" id="listing-7-6">
 <pre><code class="language-console">$ cargo build
@@ -346,14 +346,14 @@ note: the function `add_to_waitlist` is defined here
 For more information about this error, try `rustc --explain E0603`.
 error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
-<figcaption><a href="#listing-7-6">Listing 7-6</a>: Lỗi compiler khi build code ở Listing 7-5</figcaption>
+<figcaption><a href="#listing-7-6">Listing 7-6</a>: Lỗi compiler khi build mã ở Listing 7-5</figcaption>
 </figure>
 
-<p>Chuyện gì xảy ra vậy? Thêm <code>pub</code> trước <code>mod hosting</code> làm module đó public. Với thay đổi này, nếu ta truy cập được <code>front_of_house</code>, ta truy cập được <code>hosting</code>. Nhưng <em>nội dung</em> bên trong <code>hosting</code> vẫn còn private — làm module public không có nghĩa là làm public nội dung bên trong nó. Từ khóa <code>pub</code> trên module chỉ cho phép code ở module tổ tiên <em>tham chiếu</em> đến nó, chứ không truy cập được code bên trong. Vì module là container, chỉ làm module public thôi chưa đủ — ta cần chọn một hoặc nhiều item bên trong để public hóa thêm.</p>
+<p>Chuyện gì đã xảy ra? Việc thêm từ khóa <code>pub</code> trước <code>mod hosting</code> làm module đó thành public. Với thay đổi này, nếu ta truy cập được <code>front_of_house</code> thì ta truy cập được <code>hosting</code>. Nhưng <em>nội dung</em> bên trong <code>hosting</code> thì vẫn private; làm một module thành public không làm nội dung của nó thành public. Từ khóa <code>pub</code> trên một module chỉ cho phép mã ở các module tổ tiên tham chiếu tới nó, chứ không cho truy cập phần mã bên trong. Vì module là vật chứa, chỉ làm module thành public thì chẳng giúp được bao nhiêu; ta cần đi xa hơn và chọn làm một hoặc nhiều item bên trong module đó thành public nữa.</p>
 
-<p>Lỗi ở Listing 7-6 nói hàm <code>add_to_waitlist</code> là private. Quy tắc privacy áp dụng cho cả struct, enum, hàm, method và module.</p>
+<p>Các lỗi ở Listing 7-6 nói rằng hàm <code>add_to_waitlist</code> là private. Các quy tắc riêng tư áp dụng cho struct, enum, hàm và phương thức, chứ không riêng gì module.</p>
 
-<p>Hãy cũng làm hàm <code>add_to_waitlist</code> public bằng cách thêm <code>pub</code> trước định nghĩa của nó, như ở Listing 7-7.</p>
+<p>Vậy hãy làm luôn hàm <code>add_to_waitlist</code> thành public bằng cách thêm từ khóa <code>pub</code> trước phần định nghĩa của nó, như ở Listing 7-7.</p>
 
 <figure class="listing" id="listing-7-7">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -374,26 +374,26 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-7">Listing 7-7</a>: Thêm <code>pub</code> vào cả <code>mod hosting</code> lẫn <code>fn add_to_waitlist</code> để gọi được hàm từ <code>eat_at_restaurant</code></figcaption>
 </figure>
 
-<p>Giờ code compile được rồi! Để hiểu tại sao thêm <code>pub</code> lại cho phép dùng các path này theo quy tắc privacy, hãy xem xét cả hai dạng path.</p>
+<p>Giờ mã đã biên dịch được! Để hiểu vì sao việc thêm từ khóa <code>pub</code> lại cho phép ta dùng những path này trong <code>eat_at_restaurant</code> theo đúng các quy tắc riêng tư, hãy xét lần lượt absolute path và relative path.</p>
 
-<p>Với absolute path, ta bắt đầu từ <code>crate</code> — root của cây module. Module <code>front_of_house</code> được định nghĩa ở crate root. Dù <code>front_of_house</code> không public, vì <code>eat_at_restaurant</code> được định nghĩa trong cùng module với <code>front_of_house</code> (chúng là siblings), ta có thể tham chiếu đến <code>front_of_house</code> từ <code>eat_at_restaurant</code>. Tiếp theo là module <code>hosting</code> được đánh dấu <code>pub</code> — ta truy cập được module cha của <code>hosting</code> nên truy cập được <code>hosting</code>. Cuối cùng, hàm <code>add_to_waitlist</code> được đánh dấu <code>pub</code> và ta truy cập được module cha của nó, nên lời gọi hàm này hợp lệ!</p>
+<p>Ở absolute path, ta bắt đầu bằng <code>crate</code> — gốc của module tree của crate. Module <code>front_of_house</code> được định nghĩa ở crate root. Dù <code>front_of_house</code> không public, nhưng vì hàm <code>eat_at_restaurant</code> được định nghĩa trong cùng module với <code>front_of_house</code> (tức <code>eat_at_restaurant</code> và <code>front_of_house</code> là anh em), ta vẫn tham chiếu được tới <code>front_of_house</code> từ <code>eat_at_restaurant</code>. Tiếp theo là module <code>hosting</code> đã được đánh dấu <code>pub</code>. Ta truy cập được module cha của <code>hosting</code>, nên ta truy cập được <code>hosting</code>. Cuối cùng, hàm <code>add_to_waitlist</code> cũng được đánh dấu <code>pub</code>, và ta truy cập được module cha của nó, nên lời gọi hàm này chạy được!</p>
 
-<p>Với relative path, logic tương tự ngoại trừ bước đầu: thay vì bắt đầu từ crate root, path bắt đầu từ <code>front_of_house</code>. Module <code>front_of_house</code> được định nghĩa trong cùng module với <code>eat_at_restaurant</code>, nên relative path này hợp lệ. Vì <code>hosting</code> và <code>add_to_waitlist</code> đều <code>pub</code>, phần còn lại cũng hợp lệ, và lời gọi hàm ổn!</p>
+<p>Ở relative path, logic giống hệt absolute path, chỉ khác ở bước đầu tiên: thay vì bắt đầu từ crate root, path bắt đầu từ <code>front_of_house</code>. Module <code>front_of_house</code> được định nghĩa trong cùng module với <code>eat_at_restaurant</code>, nên relative path bắt đầu từ module chứa <code>eat_at_restaurant</code> là hợp lệ. Sau đó, vì <code>hosting</code> và <code>add_to_waitlist</code> đều được đánh dấu <code>pub</code>, phần còn lại của path cũng hợp lệ, và lời gọi hàm này chạy được!</p>
 
-<p>Nếu bạn định chia sẻ library crate để các project khác dùng, public API là hợp đồng với người dùng crate — quy định cách họ tương tác với code của bạn. Có nhiều vấn đề xoay quanh việc quản lý thay đổi public API để người khác dễ phụ thuộc vào crate; những vấn đề đó nằm ngoài phạm vi cuốn sách. Nếu bạn quan tâm, xem <a href="https://rust-lang.github.io/api-guidelines/">Rust API Guidelines</a>.</p>
+<p>Nếu bạn định chia sẻ library crate của mình để các dự án khác dùng được, thì API công khai của bạn chính là bản giao kèo với người dùng crate, quy định cách họ tương tác với mã của bạn. Có rất nhiều điều cần cân nhắc khi quản lý những thay đổi đối với API công khai, sao cho người khác dễ phụ thuộc vào crate của bạn. Những điều đó nằm ngoài phạm vi cuốn sách; nếu bạn quan tâm tới chủ đề này, hãy xem <a href="https://rust-lang.github.io/api-guidelines/">Rust API Guidelines</a>.</p>
 
-<blockquote>
-<p><strong>Lưu ý: Best Practices cho Package có cả Binary và Library</strong></p>
-<p>Ta đã nhắc rằng một package có thể chứa cả binary crate root <em>src/main.rs</em> lẫn library crate root <em>src/lib.rs</em>, và cả hai crate mang tên package mặc định. Thông thường, package theo pattern này chỉ đặt vừa đủ code trong binary crate để khởi chạy executable gọi vào code trong library crate. Điều này giúp các project khác tận dụng tối đa chức năng của package vì library crate có thể được chia sẻ.</p>
-<p>Module tree nên được định nghĩa trong <em>src/lib.rs</em>. Từ đó, mọi item public có thể dùng trong binary crate bằng cách bắt đầu path bằng tên package. Binary crate trở thành user của library crate — giống hệt một crate ngoài hoàn toàn: nó chỉ dùng được public API. Điều này giúp bạn thiết kế API tốt; không chỉ là tác giả, bạn còn là client của chính mình!</p>
-<p>Ở <a href="ch12-00-an-io-project.html">Chương 12</a>, ta sẽ minh họa quy tắc tổ chức này với một chương trình command line chứa cả binary crate lẫn library crate.</p>
-</blockquote>
+<section class="note" aria-role="note">
+  <h4 id="best-practices-for-packages-with-a-binary-and-a-library">Thực hành tốt cho package có cả binary và library</h4>
+  <p>Ta đã nhắc rằng một package có thể chứa cả crate root binary <em>src/main.rs</em> lẫn crate root library <em>src/lib.rs</em>, và mặc định cả hai crate đều mang tên package. Thông thường, những package theo mẫu này — chứa cả một library crate và một binary crate — sẽ chỉ để vừa đủ mã trong binary crate để khởi động một chương trình thực thi gọi tới mã định nghĩa trong library crate. Nhờ vậy, các dự án khác hưởng được phần lớn chức năng mà package cung cấp, bởi mã của library crate chia sẻ được.</p>
+  <p>Module tree nên được định nghĩa trong <em>src/lib.rs</em>. Sau đó, mọi item public đều dùng được từ binary crate bằng cách bắt đầu path bằng tên package. Binary crate trở thành một người dùng của library crate, y như một crate hoàn toàn bên ngoài sẽ dùng library crate: nó chỉ dùng được API công khai. Điều này giúp bạn thiết kế API tốt hơn — bạn không chỉ là tác giả mà còn là khách hàng của chính mình!</p>
+  <p>Ở <a href="ch12-00-an-io-project.html">Chương 12</a>, ta sẽ minh họa cách tổ chức này bằng một chương trình dòng lệnh chứa cả một binary crate lẫn một library crate.</p>
+</section>
 
-<h3 id="starting-relative-paths-with-super">Bắt đầu Relative Path với <code>super</code></h3>
+<h3 id="starting-relative-paths-with-super">Bắt đầu relative path bằng <code>super</code></h3>
 
-<p>Ta có thể xây dựng relative path bắt đầu từ module <em>cha</em> thay vì module hiện tại hoặc crate root, bằng cách dùng <code>super</code> ở đầu path. Điều này giống như bắt đầu filesystem path bằng <code>..</code> — nhảy lên thư mục cha. Dùng <code>super</code> giúp ta tham chiếu item biết chắc nằm trong module cha, làm việc sắp xếp lại cây module dễ hơn khi module gắn chặt với cha nhưng cha có thể bị chuyển đi chỗ khác trong tương lai.</p>
+<p>Ta có thể tạo những relative path bắt đầu từ module cha, thay vì từ module hiện tại hay từ crate root, bằng cách đặt <code>super</code> ở đầu path. Cách này giống việc bắt đầu một đường dẫn hệ thống tệp bằng cú pháp <code>..</code>, nghĩa là đi lên thư mục cha. Dùng <code>super</code> cho phép ta tham chiếu tới một item mà ta biết chắc nằm ở module cha, và điều đó khiến việc sắp xếp lại module tree dễ hơn khi module con gắn bó chặt với module cha nhưng module cha có thể sẽ được chuyển đi chỗ khác trong module tree.</p>
 
-<p>Xem code ở Listing 7-8 mô tả tình huống đầu bếp sửa một order sai rồi đích thân mang ra cho khách. Hàm <code>fix_incorrect_order</code> trong module <code>back_of_house</code> gọi hàm <code>deliver_order</code> ở module cha bằng cách dùng <code>super</code> để bắt đầu path.</p>
+<p>Hãy xét đoạn mã ở Listing 7-8, mô phỏng tình huống một đầu bếp sửa lại một món bị gọi nhầm rồi đích thân mang ra cho khách. Hàm <code>fix_incorrect_order</code> định nghĩa trong module <code>back_of_house</code> gọi hàm <code>deliver_order</code> định nghĩa ở module cha, bằng cách chỉ ra path tới <code>deliver_order</code> bắt đầu bằng <code>super</code>.</p>
 
 <figure class="listing" id="listing-7-8">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -410,11 +410,11 @@ mod back_of_house {
 <figcaption><a href="#listing-7-8">Listing 7-8</a>: Gọi hàm bằng relative path bắt đầu với <code>super</code></figcaption>
 </figure>
 
-<p>Hàm <code>fix_incorrect_order</code> nằm trong module <code>back_of_house</code>, nên ta dùng <code>super</code> để nhảy lên module cha của <code>back_of_house</code> — tức là <code>crate</code>, root. Từ đó ta tìm <code>deliver_order</code> và tìm thấy nó. Thành công! Ta cho rằng module <code>back_of_house</code> và hàm <code>deliver_order</code> sẽ giữ nguyên quan hệ và được chuyển cùng nhau nếu ta tổ chức lại cây module. Vì vậy dùng <code>super</code> sẽ có ít chỗ cần cập nhật code hơn nếu code này được chuyển sang module khác.</p>
+<p>Hàm <code>fix_incorrect_order</code> nằm trong module <code>back_of_house</code>, nên ta dùng được <code>super</code> để đi lên module cha của <code>back_of_house</code> — trong trường hợp này là <code>crate</code>, tức gốc. Từ đó ta tìm <code>deliver_order</code> và thấy nó. Thành công! Ta nghĩ rằng module <code>back_of_house</code> và hàm <code>deliver_order</code> nhiều khả năng vẫn giữ nguyên quan hệ với nhau và sẽ được chuyển đi cùng nhau nếu ta quyết định tổ chức lại module tree của crate. Vì vậy ta dùng <code>super</code>, để sau này nếu đoạn mã này được chuyển sang module khác thì có ít chỗ phải sửa hơn.</p>
 
-<h3 id="making-structs-and-enums-public">Làm Struct và Enum Public</h3>
+<h3 id="making-structs-and-enums-public">Làm struct và enum thành public</h3>
 
-<p>Ta cũng có thể dùng <code>pub</code> để biến struct và enum thành public, nhưng có vài chi tiết thêm. Nếu dùng <code>pub</code> trước định nghĩa struct, ta làm struct đó public, nhưng các field của struct vẫn còn private. Ta có thể làm từng field public hay không tùy trường hợp. Ở Listing 7-9, ta định nghĩa struct public <code>back_of_house::Breakfast</code> với field <code>toast</code> public nhưng field <code>seasonal_fruit</code> private. Mô hình này giống nhà hàng: khách có thể chọn loại bánh mì đi kèm bữa ăn, nhưng đầu bếp quyết định loại trái cây dựa vào mùa và tồn kho. Trái cây thay đổi nhanh nên khách không được chọn hay thậm chí biết họ sẽ nhận loại gì.</p>
+<p>Ta cũng dùng được <code>pub</code> để đánh dấu struct và enum là public, nhưng dùng <code>pub</code> với struct và enum có vài chi tiết riêng. Nếu ta đặt <code>pub</code> trước phần định nghĩa một struct, ta làm struct đó thành public, nhưng các trường của struct vẫn là private. Ta có thể chọn cho từng trường thành public hay không, tùy trường hợp. Ở Listing 7-9, ta định nghĩa một struct public <code>back_of_house::Breakfast</code> có trường <code>toast</code> public nhưng trường <code>seasonal_fruit</code> private. Ví dụ này mô phỏng tình huống trong nhà hàng: khách chọn được loại bánh mì đi kèm bữa ăn, nhưng đầu bếp mới là người quyết định loại trái cây kèm theo, dựa trên trái cây nào đang vào mùa và còn hàng. Trái cây có sẵn thay đổi liên tục, nên khách không chọn được, thậm chí không biết trước mình sẽ nhận trái cây gì.</p>
 
 <figure class="listing" id="listing-7-9">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -448,11 +448,11 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-9">Listing 7-9</a>: Một struct với một số field public và một số field private</figcaption>
 </figure>
 
-<p>Vì field <code>toast</code> trong <code>back_of_house::Breakfast</code> là public, trong <code>eat_at_restaurant</code> ta có thể đọc và ghi vào <code>toast</code> bằng dot notation. Chú ý ta không thể dùng field <code>seasonal_fruit</code> vì nó là private. Thử bỏ comment dòng sửa <code>seasonal_fruit</code> để xem lỗi gì xuất hiện!</p>
+<p>Vì trường <code>toast</code> trong struct <code>back_of_house::Breakfast</code> là public, nên trong <code>eat_at_restaurant</code> ta ghi và đọc được trường <code>toast</code> bằng cú pháp dấu chấm. Lưu ý rằng ta không dùng được trường <code>seasonal_fruit</code> trong <code>eat_at_restaurant</code>, bởi <code>seasonal_fruit</code> là private. Hãy thử bỏ dấu chú thích ở dòng sửa giá trị trường <code>seasonal_fruit</code> để xem bạn gặp lỗi gì!</p>
 
-<p>Ngoài ra, vì <code>back_of_house::Breakfast</code> có field private, struct cần cung cấp một associated function public để tạo instance của <code>Breakfast</code> (ta đặt tên là <code>summer</code>). Nếu <code>Breakfast</code> không có hàm như vậy, ta không thể tạo instance của <code>Breakfast</code> trong <code>eat_at_restaurant</code> vì không thể đặt giá trị cho field private <code>seasonal_fruit</code>.</p>
+<p>Cũng lưu ý rằng vì <code>back_of_house::Breakfast</code> có một trường private, struct này cần cung cấp một hàm liên kết công khai để tạo instance của <code>Breakfast</code> (ở đây ta đặt tên là <code>summer</code>). Nếu <code>Breakfast</code> không có hàm như vậy, ta sẽ không tạo được instance <code>Breakfast</code> trong <code>eat_at_restaurant</code>, bởi ta không đặt được giá trị cho trường private <code>seasonal_fruit</code> từ <code>eat_at_restaurant</code>.</p>
 
-<p>Ngược lại, nếu ta làm một enum public thì tất cả variant của nó đều public. Ta chỉ cần đặt <code>pub</code> trước từ khóa <code>enum</code>, như ở Listing 7-10.</p>
+<p>Ngược lại, nếu ta làm một enum thành public thì mọi variant của nó cũng thành public luôn. Ta chỉ cần <code>pub</code> đặt trước từ khóa <code>enum</code>, như ở Listing 7-10.</p>
 
 <figure class="listing" id="listing-7-10">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -470,11 +470,11 @@ pub fn eat_at_restaurant() {
 <figcaption><a href="#listing-7-10">Listing 7-10</a>: Khai báo enum public làm tất cả variant của nó public</figcaption>
 </figure>
 
-<p>Vì ta làm enum <code>Appetizer</code> public, ta có thể dùng variant <code>Soup</code> và <code>Salad</code> trong <code>eat_at_restaurant</code>.</p>
+<p>Vì ta đã làm enum <code>Appetizer</code> thành public, nên ta dùng được các variant <code>Soup</code> và <code>Salad</code> trong <code>eat_at_restaurant</code>.</p>
 
-<p>Enum không hữu ích lắm nếu variant không public — sẽ rất phiền nếu phải annotate từng variant với <code>pub</code> mỗi lần. Vì vậy, mặc định variant của enum là public. Còn struct thường hữu ích dù field không public, nên field của struct mặc định là private trừ khi được annotate bằng <code>pub</code>.</p>
+<p>Enum chẳng mấy hữu dụng nếu các variant của nó không public; sẽ rất phiền nếu lần nào cũng phải chú thích <code>pub</code> cho mọi variant, nên mặc định của variant enum là public. Còn struct thì thường vẫn hữu dụng ngay cả khi các trường không public, nên trường của struct theo quy tắc chung: mặc định mọi thứ là private trừ khi được chú thích <code>pub</code>.</p>
 
-<p>Còn một tình huống liên quan đến <code>pub</code> ta chưa đề cập — đó là tính năng cuối của module system: từ khóa <code>use</code>. Ta sẽ nói về <code>use</code> trước, rồi sau đó trình bày cách kết hợp <code>pub</code> với <code>use</code>.</p>
+<p>Còn một tình huống nữa liên quan tới <code>pub</code> mà ta chưa nói tới, và đó cũng là tính năng cuối cùng của hệ thống module: từ khóa <code>use</code>. Ta sẽ nói về <code>use</code> trước, rồi sau đó trình bày cách kết hợp <code>pub</code> với <code>use</code>.</p>
 
     <div class="page-nav bottom"><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">← Trước</a><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html">Tiếp →</a></div>
   </div>

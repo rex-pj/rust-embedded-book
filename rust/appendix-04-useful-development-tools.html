@@ -205,17 +205,17 @@
   <div class="page-nav"><a href="appendix-03-derivable-traits.html">← Trước</a><a href="appendix-05-editions.html">Tiếp →</a></div>
 
 <h2 id="appendix-d-useful-development-tools">Phụ lục D: Các Công Cụ Phát Triển Hữu Ích</h2>
-<p>Trong phụ lục này, chúng ta sẽ nói về một số công cụ phát triển hữu ích mà dự án Rust cung cấp. Ta sẽ xem qua tính năng định dạng code tự động, cách nhanh chóng áp dụng các gợi ý sửa lỗi từ compiler, một công cụ lint chuyên nghiệp, và cách tích hợp với các IDE.</p>
+<p>Trong phụ lục này, chúng ta sẽ nói về một số công cụ phát triển hữu ích mà dự án Rust cung cấp. Ta sẽ xem qua tính năng định dạng mã tự động, cách nhanh chóng áp dụng các gợi ý sửa lỗi từ compiler, một công cụ lint chuyên nghiệp, và cách tích hợp với các IDE.</p>
 
-<h3 id="automatic-formatting-with-rustfmt">Tự Động Định Dạng Code với <code>rustfmt</code></h3>
-<p>Công cụ <code>rustfmt</code> định dạng lại code của bạn theo phong cách cộng đồng đã thống nhất. Nhiều dự án cộng tác sử dụng <code>rustfmt</code> để tránh những cuộc tranh cãi vô tận về "nên dùng style nào khi viết Rust" — mọi người cứ chạy tool là xong, chẳng ai phải cãi nhau!</p>
-<p>Cài đặt Rust đã bao gồm sẵn <code>rustfmt</code>, vì vậy bạn đã có hai chương trình <code>rustfmt</code> và <code>cargo-fmt</code> trên máy rồi. Hai lệnh này tương tự như <code>rustc</code> và <code>cargo</code> vậy — <code>rustfmt</code> cho phép kiểm soát chi tiết hơn, còn <code>cargo-fmt</code> hiểu rõ các quy ước của project dùng Cargo. Để định dạng bất kỳ Cargo project nào, gõ lệnh sau:</p>
+<h3 id="automatic-formatting-with-rustfmt">Tự Động Định Dạng Mã với <code>rustfmt</code></h3>
+<p>Công cụ <code>rustfmt</code> định dạng lại mã của bạn theo phong cách cộng đồng đã thống nhất. Nhiều dự án cộng tác sử dụng <code>rustfmt</code> để tránh những cuộc tranh cãi vô tận về "nên dùng style nào khi viết Rust" — mọi người cứ chạy công cụ là xong, chẳng ai phải cãi nhau!</p>
+<p>Cài đặt Rust đã bao gồm sẵn <code>rustfmt</code>, vì vậy bạn đã có hai chương trình <code>rustfmt</code> và <code>cargo-fmt</code> trên máy rồi. Hai lệnh này tương tự như <code>rustc</code> và <code>cargo</code> vậy — <code>rustfmt</code> cho phép kiểm soát chi tiết hơn, còn <code>cargo-fmt</code> hiểu rõ các quy ước của dự án dùng Cargo. Để định dạng bất kỳ dự án Cargo nào, gõ lệnh sau:</p>
 <pre><code class="language-console">$ cargo fmt
 </code></pre>
-<p>Chạy lệnh này sẽ định dạng lại toàn bộ code Rust trong crate hiện tại. Điều này chỉ thay đổi phong cách code, không thay đổi ngữ nghĩa của code. Để biết thêm thông tin về <code>rustfmt</code>, xem <a href="https://github.com/rust-lang/rustfmt">tài liệu của nó</a>.</p>
+<p>Chạy lệnh này sẽ định dạng lại toàn bộ mã Rust trong crate hiện tại. Điều này chỉ thay đổi phong cách mã, không thay đổi ngữ nghĩa của mã. Để biết thêm thông tin về <code>rustfmt</code>, xem <a href="https://github.com/rust-lang/rustfmt">tài liệu của nó</a>.</p>
 
-<h3 id="fix-your-code-with-rustfix">Sửa Code Tự Động với <code>rustfix</code></h3>
-<p>Công cụ <code>rustfix</code> được đóng gói sẵn cùng Rust và có thể tự động sửa các cảnh báo từ compiler khi cách sửa rõ ràng và đúng với ý bạn muốn. Chắc bạn đã thấy compiler cảnh báo nhiều lần rồi. Ví dụ, xem đoạn code này:</p>
+<h3 id="fix-your-code-with-rustfix">Sửa Mã Tự Động với <code>rustfix</code></h3>
+<p>Công cụ <code>rustfix</code> được đóng gói sẵn cùng Rust và có thể tự động sửa các cảnh báo từ compiler khi cách sửa rõ ràng và đúng với ý bạn muốn. Chắc bạn đã thấy compiler cảnh báo nhiều lần rồi. Ví dụ, xem đoạn mã này:</p>
 <p><span class="filename">Tên file: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut x = 42;
@@ -240,18 +240,18 @@ warning: variable does not need to be mutable
       Fixing src/main.rs (1 fix)
     Finished dev [unoptimized + debuginfo] target(s) in 0.59s
 </code></pre>
-<p>Khi nhìn lại <em>src/main.rs</em>, ta sẽ thấy <code>cargo fix</code> đã thay đổi code:</p>
+<p>Khi nhìn lại <em>src/main.rs</em>, ta sẽ thấy <code>cargo fix</code> đã thay đổi mã:</p>
 <p><span class="filename">Tên file: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 42;
     println!("{x}");
 }</code></pre>
 <p>Biến <code>x</code> giờ đã là immutable, và cảnh báo không còn xuất hiện nữa.</p>
-<p>Bạn cũng có thể dùng lệnh <code>cargo fix</code> để chuyển đổi code của mình giữa các Rust edition khác nhau. Các edition được đề cập trong <a href="appendix-05-editions.html">Phụ lục E</a>.</p>
+<p>Bạn cũng có thể dùng lệnh <code>cargo fix</code> để chuyển đổi mã của mình giữa các Rust edition khác nhau. Các edition được đề cập trong <a href="appendix-05-editions.html">Phụ lục E</a>.</p>
 
 <h3 id="more-lints-with-clippy">Thêm Lint với Clippy</h3>
-<p>Clippy là một bộ sưu tập các lint để phân tích code, giúp bạn phát hiện những lỗi phổ biến và cải thiện chất lượng code Rust. Clippy được đóng gói sẵn trong bản cài đặt Rust tiêu chuẩn — cứ cài Rust là có Clippy luôn!</p>
-<p>Để chạy các lint của Clippy trên bất kỳ Cargo project nào, gõ:</p>
+<p>Clippy là một bộ sưu tập các lint để phân tích mã, giúp bạn phát hiện những lỗi phổ biến và cải thiện chất lượng mã Rust. Clippy được đóng gói sẵn trong bản cài đặt Rust tiêu chuẩn — cứ cài Rust là có Clippy luôn!</p>
+<p>Để chạy các lint của Clippy trên bất kỳ dự án Cargo nào, gõ:</p>
 <pre><code class="language-console">$ cargo clippy
 </code></pre>
 <p>Ví dụ, giả sử bạn viết một chương trình sử dụng giá trị xấp xỉ của một hằng số toán học, chẳng hạn như pi, như chương trình này:</p>
@@ -263,7 +263,7 @@ warning: variable does not need to be mutable
     println!("the area of the circle is {}", x * r * r);
 }</code></pre>
 </figure>
-<p>Chạy <code>cargo clippy</code> trên project này sẽ ra lỗi này:</p>
+<p>Chạy <code>cargo clippy</code> trên dự án này sẽ ra lỗi này:</p>
 <pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found
  --&gt; src/main.rs:2:13
   |
@@ -274,8 +274,8 @@ warning: variable does not need to be mutable
   = help: consider using the constant directly
   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
 </code></pre>
-<p>Lỗi này cho bạn biết rằng Rust đã có sẵn hằng số <code>PI</code> chính xác hơn, và chương trình của bạn sẽ đúng hơn nếu dùng hằng số đó thay vì gõ tay con số xấp xỉ. Bạn sẽ sửa code để dùng hằng số <code>PI</code>.</p>
-<p>Đoạn code sau không gây ra lỗi hay cảnh báo gì từ Clippy cả:</p>
+<p>Lỗi này cho bạn biết rằng Rust đã có sẵn hằng số <code>PI</code> chính xác hơn, và chương trình của bạn sẽ đúng hơn nếu dùng hằng số đó thay vì gõ tay con số xấp xỉ. Bạn sẽ sửa mã để dùng hằng số <code>PI</code>.</p>
+<p>Đoạn mã sau không gây ra lỗi hay cảnh báo gì từ Clippy cả:</p>
 <figure class="listing">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -288,8 +288,8 @@ warning: variable does not need to be mutable
 
 <h3 id="ide-integration-using-rust-analyzer">Tích Hợp IDE với <code>rust-analyzer</code></h3>
 <p>Để hỗ trợ tích hợp IDE, cộng đồng Rust khuyến nghị dùng
-<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a>. Công cụ này là một tập hợp các tiện ích lấy compiler làm trung tâm, giao tiếp qua giao thức <a href="http://langserver.org/">Language Server Protocol</a> — một đặc tả cho phép IDE và ngôn ngữ lập trình "nói chuyện" với nhau. Nhiều client có thể dùng <code>rust-analyzer</code>, chẳng hạn như <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">plugin Rust analyzer cho Visual Studio Code</a>.</p>
-<p>Truy cập <a href="https://rust-analyzer.github.io">trang chủ</a> của project <code>rust-analyzer</code> để xem hướng dẫn cài đặt, rồi cài hỗ trợ language server vào IDE của bạn. IDE của bạn sẽ "thông minh" hẳn lên với các tính năng như tự động hoàn thành code, nhảy tới định nghĩa, và hiển thị lỗi ngay tại chỗ.</p>
+<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a>. Công cụ này là một tập hợp các tiện ích lấy compiler làm trung tâm, giao tiếp qua giao thức <a href="http://langserver.org/">Language Server Protocol</a> — một đặc tả cho phép IDE và ngôn ngữ lập trình "nói chuyện" với nhau. Nhiều client có thể dùng <code>rust-analyzer</code>, chẳng hạn như <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">plugin Rust analyzer cho Visual Studio Mã</a>.</p>
+<p>Truy cập <a href="https://rust-analyzer.github.io">trang chủ</a> của dự án <code>rust-analyzer</code> để xem hướng dẫn cài đặt, rồi cài hỗ trợ language server vào IDE của bạn. IDE của bạn sẽ "thông minh" hẳn lên với các tính năng như tự động hoàn thành mã, nhảy tới định nghĩa, và hiển thị lỗi ngay tại chỗ.</p>
 
   <div class="page-nav bottom"><a href="appendix-03-derivable-traits.html">← Trước</a><a href="appendix-05-editions.html">Tiếp →</a></div>
   </div>

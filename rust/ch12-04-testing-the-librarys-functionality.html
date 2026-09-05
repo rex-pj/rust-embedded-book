@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Bổ sung tính năng bằng Test-Driven Development</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch12-03-improving-error-handling-and-modularity.html">← Trước</a>
@@ -214,11 +214,11 @@
 <p>Trong phần này, ta sẽ bổ sung logic tìm kiếm vào chương trình <code>minigrep</code> theo quy trình test-driven development (TDD) với các bước như sau:</p>
 <ol>
 <li>Viết một test thất bại, chạy nó để chắc chắn nó thất bại đúng lý do bạn kỳ vọng.</li>
-<li>Viết hoặc chỉnh sửa vừa đủ code để test mới đó vượt qua.</li>
-<li>Refactor code vừa thêm hoặc sửa, đảm bảo các test vẫn xanh.</li>
+<li>Viết hoặc chỉnh sửa vừa đủ mã để test mới đó vượt qua.</li>
+<li>Refactor mã vừa thêm hoặc sửa, đảm bảo các test vẫn xanh.</li>
 <li>Lặp lại từ bước 1!</li>
 </ol>
-<p>Tuy TDD chỉ là một trong nhiều cách viết phần mềm, nhưng nó giúp dẫn dắt thiết kế code rất tốt. Viết test trước khi viết code thực thi giúp duy trì độ phủ test cao suốt cả quá trình phát triển.</p>
+<p>Tuy TDD chỉ là một trong nhiều cách viết phần mềm, nhưng nó giúp dẫn dắt thiết kế mã rất tốt. Viết test trước khi viết mã thực thi giúp duy trì độ phủ test cao suốt cả quá trình phát triển.</p>
 <p>Ta sẽ test-drive việc hiện thực hoá chức năng tìm kiếm chuỗi query trong nội dung file và trả về danh sách các dòng khớp với query. Ta sẽ đặt chức năng này vào một hàm tên là <code>search</code>.</p>
 <h3 id="writing-a-failing-test"><a class="header" href="#writing-a-failing-test">Viết test thất bại đầu tiên</a></h3>
 <p>Trong <em>src/lib.rs</em>, ta thêm một module <code>tests</code> chứa một hàm test, giống như đã làm ở <a href="ch11-01-writing-tests.html#the-anatomy-of-a-test-function">Chương 11</a>. Hàm test mô tả hành vi mà ta muốn hàm <code>search</code> có: nhận vào một query và văn bản cần tìm kiếm, rồi trả về chỉ những dòng trong văn bản chứa query. Listing 12-15 cho thấy test này.</p>
@@ -248,7 +248,7 @@ Pick three.";
 <figcaption><a href="#listing-12-15">Listing 12-15</a>: Tạo một test thất bại cho hàm <code>search</code> với tính năng ta mong muốn</figcaption>
 </figure>
 <p>Test này tìm kiếm chuỗi <code>"duct"</code>. Văn bản tìm kiếm gồm ba dòng, chỉ một dòng chứa <code>"duct"</code> (lưu ý dấu gạch chéo ngược sau dấu nháy kép mở đầu bảo Rust không chèn ký tự xuống dòng vào đầu nội dung string literal). Ta khẳng định rằng giá trị trả về từ hàm <code>search</code> chỉ chứa đúng dòng ta kỳ vọng.</p>
-<p>Nếu chạy test này ngay bây giờ, nó sẽ thất bại vì macro <code>unimplemented!</code> sẽ panic với thông báo "not implemented". Theo nguyên tắc TDD, ta sẽ tiến một bước nhỏ: thêm vừa đủ code để test không còn panic khi gọi hàm, bằng cách định nghĩa hàm <code>search</code> luôn trả về vector rỗng, như trong Listing 12-16. Khi đó, test sẽ compile được và thất bại vì vector rỗng không khớp với vector chứa dòng <code>"safe, fast, productive."</code>.</p>
+<p>Nếu chạy test này ngay bây giờ, nó sẽ thất bại vì macro <code>unimplemented!</code> sẽ panic với thông báo "not triển khai". Theo nguyên tắc TDD, ta sẽ tiến một bước nhỏ: thêm vừa đủ mã để test không còn panic khi gọi hàm, bằng cách định nghĩa hàm <code>search</code> luôn trả về vector rỗng, như trong Listing 12-16. Khi đó, test sẽ compile được và thất bại vì vector rỗng không khớp với vector chứa dòng <code>"safe, fast, productive."</code>.</p>
 <figure class="listing" id="listing-12-16">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
@@ -293,8 +293,8 @@ For more information about this error, try `rustc --explain E0106`.
 error: could not compile `minigrep` (lib) due to 1 previous error
 </code></pre>
 <p>Rust không biết ta cần tham số nào cho đầu ra, vì vậy ta phải chỉ định tường minh. Lưu ý rằng gợi ý trong thông báo lỗi đề nghị dùng cùng một tham số lifetime cho tất cả các tham số và kiểu trả về — điều đó sai! Vì <code>contents</code> là tham số chứa toàn bộ văn bản và ta muốn trả về các phần của văn bản đó khớp với query, nên ta biết <code>contents</code> mới là tham số duy nhất cần được kết nối với giá trị trả về qua cú pháp lifetime.</p>
-<p>Các ngôn ngữ lập trình khác không yêu cầu kết nối đối số với giá trị trả về trong chữ ký, nhưng thực hành này sẽ dần quen theo thời gian. Bạn có thể so sánh ví dụ này với các ví dụ trong phần <a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">"Validating References with Lifetimes"</a> ở Chương 10.</p>
-<h3 id="writing-code-to-pass-the-test"><a class="header" href="#writing-code-to-pass-the-test">Viết code để test vượt qua</a></h3>
+<p>Các ngôn ngữ lập trình khác không yêu cầu kết nối đối số với giá trị trả về trong chữ ký, nhưng thực hành này sẽ dần quen theo thời gian. Bạn có thể so sánh ví dụ này với các ví dụ trong phần <a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">“Kiểm tra tính hợp lệ của references với Lifetimes”</a> ở Chương 10.</p>
+<h3 id="writing-code-to-pass-the-test"><a class="header" href="#writing-code-to-pass-the-test">Viết mã để test vượt qua</a></h3>
 <p>Hiện tại, test đang thất bại vì ta luôn trả về vector rỗng. Để sửa điều đó và hiện thực hoá <code>search</code>, chương trình cần thực hiện các bước sau:</p>
 <ol>
 <li>Lặp qua từng dòng của nội dung.</li>
@@ -331,9 +331,9 @@ error: could not compile `minigrep` (lib) due to 1 previous error
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-17">Listing 12-17</a>: Lặp qua từng dòng trong <code>contents</code></figcaption>
 </figure>
-<p>Method <code>lines</code> trả về một iterator. Ta sẽ bàn sâu về iterator ở <a href="ch13-02-iterators.html">Chương 13</a>. Nhưng nhớ lại là bạn đã thấy cách dùng iterator kiểu này ở <a href="ch03-05-control-flow.html#looping-through-a-collection-with-for">Listing 3-5</a>, khi ta dùng vòng lặp <code>for</code> với iterator để chạy code trên từng phần tử của một collection.</p>
+<p>Method <code>lines</code> trả về một iterator. Ta sẽ bàn sâu về iterator ở <a href="ch13-02-iterators.html">Chương 13</a>. Nhưng nhớ lại là bạn đã thấy cách dùng iterator kiểu này ở <a href="ch03-05-control-flow.html#looping-through-a-collection-with-for">Listing 3-5</a>, khi ta dùng vòng lặp <code>for</code> với iterator để chạy mã trên từng phần tử của một collection.</p>
 <h4 id="searching-each-line-for-the-query"><a class="header" href="#searching-each-line-for-the-query">Tìm kiếm query trong từng dòng</a></h4>
-<p>Tiếp theo, ta kiểm tra xem dòng hiện tại có chứa chuỗi query không. May mắn thay, string có một method hữu ích tên <code>contains</code> làm đúng điều đó! Thêm lời gọi method <code>contains</code> vào hàm <code>search</code> như trong Listing 12-18. Lưu ý code này vẫn chưa compile được.</p>
+<p>Tiếp theo, ta kiểm tra xem dòng hiện tại có chứa chuỗi query không. May mắn thay, string có một method hữu ích tên <code>contains</code> làm đúng điều đó! Thêm lời gọi method <code>contains</code> vào hàm <code>search</code> như trong Listing 12-18. Lưu ý mã này vẫn chưa compile được.</p>
 <figure class="listing" id="listing-12-18">
 <span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
@@ -361,7 +361,7 @@ error: could not compile `minigrep` (lib) due to 1 previous error
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-18">Listing 12-18</a>: Thêm chức năng kiểm tra dòng có chứa chuỗi trong <code>query</code> không</figcaption>
 </figure>
-<p>Tạm thời ta đang dần xây dựng chức năng. Để code compile được, ta cần trả về một giá trị từ phần thân hàm như đã khai báo trong chữ ký.</p>
+<p>Tạm thời ta đang dần xây dựng chức năng. Để mã compile được, ta cần trả về một giá trị từ phần thân hàm như đã khai báo trong chữ ký.</p>
 <h4 id="storing-matching-lines"><a class="header" href="#storing-matching-lines">Lưu trữ các dòng khớp</a></h4>
 <p>Để hoàn thiện hàm này, ta cần một cách lưu các dòng khớp để trả về. Để làm vậy, ta có thể tạo một vector mutable trước vòng lặp <code>for</code> và gọi method <code>push</code> để lưu <code>line</code> vào vector. Sau vòng lặp <code>for</code>, ta trả về vector, như trong Listing 12-19.</p>
 <figure class="listing" id="listing-12-19">
@@ -420,7 +420,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 </code></pre>
 <p>Test vượt qua rồi, vậy là nó hoạt động!</p>
-<p>Lúc này, ta có thể nghĩ đến cơ hội refactor phần hiện thực của hàm search trong khi vẫn giữ test xanh để duy trì cùng chức năng. Code trong hàm search không tệ lắm, nhưng nó chưa tận dụng một số tính năng hữu ích của iterator. Ta sẽ quay lại ví dụ này ở <a href="ch13-02-iterators.html">Chương 13</a>, nơi ta sẽ khám phá iterator chi tiết và xem cách cải thiện nó.</p>
+<p>Lúc này, ta có thể nghĩ đến cơ hội refactor phần hiện thực của hàm search trong khi vẫn giữ test xanh để duy trì cùng chức năng. Mã trong hàm search không tệ lắm, nhưng nó chưa tận dụng một số tính năng hữu ích của iterator. Ta sẽ quay lại ví dụ này ở <a href="ch13-02-iterators.html">Chương 13</a>, nơi ta sẽ khám phá iterator chi tiết và xem cách cải thiện nó.</p>
 <p>Giờ thì toàn bộ chương trình đã hoạt động! Hãy thử nghiệm, đầu tiên với một từ chỉ xuất hiện một dòng trong bài thơ của Emily Dickinson: <em>frog</em>.</p>
 <pre><code class="language-console">$ cargo run -- frog poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
@@ -444,7 +444,7 @@ How dreary to be somebody!
      Running `target/debug/minigrep monomorphization poem.txt`
 </code></pre>
 <p>Xuất sắc! Ta đã xây dựng phiên bản mini của một công cụ kinh điển và học được rất nhiều về cách cấu trúc ứng dụng. Ta cũng học được một chút về file I/O, lifetime, testing và phân tích tham số dòng lệnh.</p>
-<p>Để hoàn thiện dự án này, ta sẽ trình bày ngắn gọn cách làm việc với biến môi trường và cách in ra standard error — cả hai đều hữu ích khi viết chương trình dòng lệnh.</p>
+<p>Để hoàn thiện dự án này, ta sẽ trình bày ngắn gọn cách làm việc với biến môi trường và cách in ra lỗi chuẩn — cả hai đều hữu ích khi viết chương trình dòng lệnh.</p>
 
   <div class="page-nav bottom"><a href="ch12-03-improving-error-handling-and-modularity.html">← Trước</a><a href="ch12-05-working-with-environment-variables.html">Tiếp →</a></div>
   </div>

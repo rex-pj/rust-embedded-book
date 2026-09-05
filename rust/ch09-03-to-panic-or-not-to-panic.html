@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 9 — Nên panic! hay không panic!?</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch09-02-recoverable-errors-with-result.html">← Trước</a>
@@ -209,29 +209,29 @@
 
 <h2 id="to-panic-or-not-to-panic"><a class="header" href="#to-panic-or-not-to-panic">Nên <code>panic!</code> hay không <code>panic!</code>?</a></h2>
 <p>Vậy làm sao bạn biết khi nào nên gọi <code>panic!</code> và khi nào nên trả về
-<code>Result</code>? Khi code bị panic, không có cách nào phục hồi. Bạn có thể gọi <code>panic!</code>
+<code>Result</code>? Khi mã bị panic, không có cách nào phục hồi. Bạn có thể gọi <code>panic!</code>
 cho bất kỳ tình huống lỗi nào, dù có thể phục hồi hay không, nhưng như vậy bạn đang
 tự mình quyết định rằng tình huống đó là không thể cứu vãn — thay vì để cho
-code gọi bạn tự quyết định. Khi bạn chọn trả về giá trị <code>Result</code>, bạn trao
-quyền lựa chọn cho code phía trên. Họ có thể tự xử lý theo cách phù hợp với
+mã gọi bạn tự quyết định. Khi bạn chọn trả về giá trị <code>Result</code>, bạn trao
+quyền lựa chọn cho mã phía trên. Họ có thể tự xử lý theo cách phù hợp với
 hoàn cảnh của mình, hoặc quyết định rằng <code>Err</code> lần này là không thể vượt qua
 và gọi <code>panic!</code> để biến lỗi có thể phục hồi thành không thể phục hồi. Do đó,
 trả về <code>Result</code> là lựa chọn mặc định tốt khi bạn viết một hàm có thể thất bại.</p>
-<p>Trong những tình huống như ví dụ minh họa, code prototype, hay test, việc
-viết code panic thẳng thay vì trả về <code>Result</code> lại phù hợp hơn. Hãy cùng tìm
+<p>Trong những tình huống như ví dụ minh họa, mã prototype, hay test, việc
+viết mã panic thẳng thay vì trả về <code>Result</code> lại phù hợp hơn. Hãy cùng tìm
 hiểu tại sao, rồi bàn về những trường hợp mà compiler không thể biết failure
 là bất khả thi nhưng bạn — với tư cách là con người — lại có thể nắm chắc
 điều đó. Chương này sẽ kết thúc với một số hướng dẫn chung để bạn quyết định
-có nên panic trong code của thư viện hay không.</p>
-<h3 id="examples-prototype-code-and-tests"><a class="header" href="#examples-prototype-code-and-tests">Ví dụ minh họa, code prototype và test</a></h3>
-<p>Khi bạn viết ví dụ để minh họa một khái niệm nào đó, nhồi thêm code xử lý
+có nên panic trong mã của thư viện hay không.</p>
+<h3 id="examples-prototype-code-and-tests"><a class="header" href="#examples-prototype-code-and-tests">Ví dụ minh họa, mã prototype và test</a></h3>
+<p>Khi bạn viết ví dụ để minh họa một khái niệm nào đó, nhồi thêm mã xử lý
 lỗi đầy đủ vào sẽ làm ví dụ kém rõ ràng hơn. Trong ví dụ, mọi người đều
 hiểu rằng lệnh gọi một method như <code>unwrap</code> — thứ có thể gây panic — chỉ là
 placeholder cho cách bạn muốn ứng dụng thực sự xử lý lỗi, và cách đó có thể
-thay đổi tùy theo phần còn lại của code.</p>
+thay đổi tùy theo phần còn lại của mã.</p>
 <p>Tương tự, các method <code>unwrap</code> và <code>expect</code> rất tiện dụng khi bạn đang làm
 prototype và chưa sẵn sàng quyết định cách xử lý lỗi. Chúng để lại các điểm
-đánh dấu rõ ràng trong code để khi bạn sẵn sàng làm chương trình vững chắc
+đánh dấu rõ ràng trong mã để khi bạn sẵn sàng làm chương trình vững chắc
 hơn, bạn biết chính xác cần sửa ở đâu.</p>
 <p>Nếu một lệnh gọi method thất bại trong một test, bạn muốn cả test đó fail —
 dù method đó không phải thứ đang được kiểm tra. Vì <code>panic!</code> là cách đánh dấu
@@ -244,7 +244,7 @@ bảo rằng <code>Result</code> sẽ là giá trị <code>Ok</code>, nhưng log
 không hiểu được. Bạn vẫn sẽ có một giá trị <code>Result</code> cần xử lý: dù sao thì
 operation bạn đang gọi vẫn có khả năng thất bại về mặt tổng quát, dù trong
 hoàn cảnh cụ thể của bạn nó không thể nào thất bại được. Nếu bạn có thể đảm
-bảo bằng cách đọc code thủ công rằng bạn sẽ không bao giờ gặp variant <code>Err</code>,
+bảo bằng cách đọc mã thủ công rằng bạn sẽ không bao giờ gặp variant <code>Err</code>,
 thì hoàn toàn có thể gọi <code>expect</code> và ghi lại lý do tại sao bạn cho là sẽ
 không bao giờ có <code>Err</code> vào trong chuỗi thông báo. Đây là một ví dụ:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -263,38 +263,38 @@ vì compiler không đủ thông minh để nhận ra rằng chuỗi này luôn 
 hợp lệ. Nếu địa chỉ IP đến từ người dùng thay vì được hardcode trong chương
 trình và do đó <em>có thể</em> thất bại, ta chắc chắn muốn xử lý <code>Result</code> theo
 cách chắc chắn hơn. Nhắc đến giả định rằng IP này được hardcode sẽ nhắc nhở
-chúng ta đổi <code>expect</code> sang code xử lý lỗi tốt hơn nếu sau này ta cần lấy
+chúng ta đổi <code>expect</code> sang mã xử lý lỗi tốt hơn nếu sau này ta cần lấy
 địa chỉ IP từ nguồn khác.</p>
 <h3 id="guidelines-for-error-handling"><a class="header" href="#guidelines-for-error-handling">Hướng dẫn xử lý lỗi</a></h3>
-<p>Nên để code panic khi có khả năng code của bạn rơi vào <em>trạng thái xấu</em>. Trong
+<p>Nên để mã panic khi có khả năng mã của bạn rơi vào <em>trạng thái xấu</em>. Trong
 ngữ cảnh này, <em>trạng thái xấu</em> là khi một giả định, đảm bảo, hợp đồng hoặc
 bất biến nào đó bị vi phạm — chẳng hạn khi giá trị không hợp lệ, giá trị mâu
-thuẫn, hoặc giá trị thiếu được truyền vào code của bạn — cộng với một hoặc
+thuẫn, hoặc giá trị thiếu được truyền vào mã của bạn — cộng với một hoặc
 nhiều điều kiện sau:</p>
 <ul>
 <li>Trạng thái xấu đó là điều bất ngờ, không phải thứ thỉnh thoảng có thể xảy
 ra như người dùng nhập dữ liệu sai định dạng.</li>
-<li>Code của bạn sau điểm này cần dựa vào việc không ở trong trạng thái xấu đó,
+<li>Mã của bạn sau điểm này cần dựa vào việc không ở trong trạng thái xấu đó,
 thay vì kiểm tra vấn đề ở mọi bước.</li>
 <li>Không có cách tốt nào để mã hóa thông tin này vào trong các kiểu bạn đang
 dùng. Chúng ta sẽ đi qua một ví dụ về ý này trong
-<a href="ch18-03-oo-design-patterns.html#encoding-states-and-behavior-as-types">"Encoding States and Behavior as Types"</a><!-- ignore -->
+<a href="ch18-03-oo-design-patterns.html#encoding-states-and-behavior-as-types">“Mã hóa trạng thái và hành vi thành kiểu”</a><!-- ignore -->
 ở Chương 18.</li>
 </ul>
-<p>Nếu ai đó gọi code của bạn và truyền vào giá trị vô nghĩa, tốt nhất là trả
+<p>Nếu ai đó gọi mã của bạn và truyền vào giá trị vô nghĩa, tốt nhất là trả
 về lỗi nếu có thể, để người dùng thư viện tự quyết định muốn làm gì. Tuy
 nhiên, trong những trường hợp tiếp tục có thể gây mất an toàn hoặc gây hại,
 lựa chọn tốt nhất có thể là gọi <code>panic!</code> và cảnh báo người dùng thư viện về
-bug trong code của họ để họ sửa trong quá trình phát triển. Tương tự,
-<code>panic!</code> thường phù hợp khi bạn gọi code bên ngoài mà bạn không kiểm soát và
+bug trong mã của họ để họ sửa trong quá trình phát triển. Tương tự,
+<code>panic!</code> thường phù hợp khi bạn gọi mã bên ngoài mà bạn không kiểm soát và
 nó trả về trạng thái không hợp lệ mà bạn không có cách khắc phục.</p>
 <p>Tuy nhiên, khi thất bại là điều được dự kiến trước, trả về <code>Result</code> phù hợp
 hơn là gọi <code>panic!</code>. Ví dụ bao gồm parser nhận dữ liệu không đúng chuẩn hay
 HTTP request trả về status cho biết bạn đã vượt giới hạn rate. Trong những
 trường hợp này, trả về <code>Result</code> thể hiện rằng thất bại là khả năng được dự
-kiến mà code gọi cần tự quyết định cách xử lý.</p>
-<p>Khi code của bạn thực hiện thao tác có thể gây rủi ro cho người dùng nếu được
-gọi với giá trị không hợp lệ, code của bạn nên kiểm tra giá trị trước và
+kiến mà mã gọi cần tự quyết định cách xử lý.</p>
+<p>Khi mã của bạn thực hiện thao tác có thể gây rủi ro cho người dùng nếu được
+gọi với giá trị không hợp lệ, mã của bạn nên kiểm tra giá trị trước và
 panic nếu không hợp lệ. Điều này chủ yếu là vì lý do an toàn: Cố gắng thao
 tác trên dữ liệu không hợp lệ có thể tạo ra lỗ hổng bảo mật. Đây là lý do
 chính mà thư viện chuẩn sẽ gọi <code>panic!</code> nếu bạn cố truy cập bộ nhớ ngoài
@@ -302,19 +302,19 @@ vùng cho phép: Cố truy cập bộ nhớ không thuộc về cấu trúc dữ
 vấn đề bảo mật phổ biến. Các hàm thường có <em>hợp đồng</em>: Hành vi của chúng chỉ
 được đảm bảo nếu đầu vào đáp ứng các yêu cầu nhất định. Panic khi hợp đồng
 bị vi phạm là hợp lý vì vi phạm hợp đồng luôn là bug phía người gọi, và đó
-không phải loại lỗi bạn muốn code gọi phải xử lý tường minh. Thực ra không
-có cách hợp lý nào để code gọi phục hồi từ lỗi này; chính <em>lập trình viên</em>
-cần sửa code. Hợp đồng của một hàm, đặc biệt khi vi phạm sẽ gây panic, nên
+không phải loại lỗi bạn muốn mã gọi phải xử lý tường minh. Thực ra không
+có cách hợp lý nào để mã gọi phục hồi từ lỗi này; chính <em>lập trình viên</em>
+cần sửa mã. Hợp đồng của một hàm, đặc biệt khi vi phạm sẽ gây panic, nên
 được giải thích trong tài liệu API của hàm đó.</p>
 <p>Tuy nhiên, có quá nhiều kiểm tra lỗi trong tất cả các hàm sẽ rất dài dòng và
 phiền phức. May thay, bạn có thể dùng hệ thống kiểu của Rust (và do đó là
 việc kiểm tra kiểu của compiler) để thực hiện nhiều kiểm tra cho bạn. Nếu
 hàm của bạn có một kiểu cụ thể làm tham số, bạn có thể tiến hành với logic
-của code biết rằng compiler đã đảm bảo bạn có giá trị hợp lệ. Ví dụ, nếu
+của mã biết rằng compiler đã đảm bảo bạn có giá trị hợp lệ. Ví dụ, nếu
 bạn có một kiểu thay vì <code>Option</code>, chương trình của bạn kỳ vọng sẽ có <em>thứ gì
-đó</em> thay vì <em>không có gì</em>. Code của bạn sau đó không cần xử lý hai trường hợp
+đó</em> thay vì <em>không có gì</em>. Mã của bạn sau đó không cần xử lý hai trường hợp
 cho variant <code>Some</code> và <code>None</code>: Nó chỉ có một trường hợp là chắc chắn có giá
-trị. Code cố truyền không có gì vào hàm của bạn thậm chí sẽ không compile
+trị. Mã cố truyền không có gì vào hàm của bạn thậm chí sẽ không compile
 được, vì vậy hàm không cần kiểm tra điều đó lúc runtime. Một ví dụ khác là
 dùng kiểu số nguyên không dấu như <code>u32</code>, điều này đảm bảo tham số không bao
 giờ âm.</p>
@@ -323,10 +323,10 @@ giờ âm.</p>
 <h3 id="custom-types-for-validation"><a class="header" href="#custom-types-for-validation">Tạo kiểu tùy chỉnh để kiểm tra dữ liệu</a></h3>
 <p>Hãy đẩy ý tưởng dùng hệ thống kiểu của Rust để đảm bảo giá trị hợp lệ lên
 một bậc nữa và xem cách tạo kiểu tùy chỉnh để kiểm tra dữ liệu. Nhớ lại
-trò chơi đoán số ở Chương 2, nơi code yêu cầu người dùng đoán một số từ 1
+trò chơi đoán số ở Chương 2, nơi mã yêu cầu người dùng đoán một số từ 1
 đến 100. Ta chưa bao giờ kiểm tra xem số đoán của người dùng có nằm trong
 khoảng đó không trước khi so với số bí mật; ta chỉ xác nhận rằng số đoán là
-dương. Trong trường hợp đó hậu quả không quá nghiêm trọng: Output "Too high"
+dương. Trong trường hợp đó hậu quả không quá nghiêm trọng: Kết quả "Too high"
 hay "Too low" vẫn đúng. Nhưng sẽ hữu ích hơn nếu ta hướng người dùng đến
 các giá trị hợp lệ và có hành vi khác nhau khi người dùng đoán số ngoài khoảng
 so với khi họ nhập chữ cái chẳng hạn.</p>
@@ -413,27 +413,27 @@ impl Guess {
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-9-13">Listing 9-13</a>: Kiểu <code>Guess</code> chỉ tiếp tục với giá trị từ 1 đến 100</figcaption>
 </figure>
-<p>Lưu ý rằng code trong <em>src/guessing_game.rs</em> này phụ thuộc vào việc thêm khai
+<p>Lưu ý rằng mã trong <em>src/guessing_game.rs</em> này phụ thuộc vào việc thêm khai
 báo module <code>mod guessing_game;</code> vào <em>src/lib.rs</em> mà ta chưa thể hiện ở đây.
 Trong file của module mới này, ta định nghĩa một struct tên <code>Guess</code> có một
 field tên <code>value</code> kiểu <code>i32</code>. Đây là nơi lưu trữ con số.</p>
-<p>Tiếp theo, ta implement một associated function tên <code>new</code> trên <code>Guess</code> để
+<p>Tiếp theo, ta triển khai một associated function tên <code>new</code> trên <code>Guess</code> để
 tạo instance của <code>Guess</code>. Hàm <code>new</code> nhận một tham số tên <code>value</code> kiểu <code>i32</code>
-và trả về <code>Guess</code>. Code trong thân hàm <code>new</code> kiểm tra <code>value</code> để đảm bảo
+và trả về <code>Guess</code>. Mã trong thân hàm <code>new</code> kiểm tra <code>value</code> để đảm bảo
 nó nằm từ 1 đến 100. Nếu <code>value</code> không vượt qua kiểm tra này, ta gọi
-<code>panic!</code>, cảnh báo lập trình viên viết code gọi rằng họ có bug cần sửa, vì
+<code>panic!</code>, cảnh báo lập trình viên viết mã gọi rằng họ có bug cần sửa, vì
 tạo <code>Guess</code> với <code>value</code> ngoài khoảng này sẽ vi phạm hợp đồng mà <code>Guess::new</code>
 dựa vào. Các điều kiện mà <code>Guess::new</code> có thể panic nên được ghi trong tài
 liệu API công khai của nó; ta sẽ đề cập đến quy ước ghi chú khả năng
 <code>panic!</code> trong tài liệu API ở Chương 14. Nếu <code>value</code> vượt qua kiểm tra, ta
 tạo một <code>Guess</code> mới với field <code>value</code> được đặt bằng tham số <code>value</code> và trả
 về <code>Guess</code>.</p>
-<p>Tiếp theo, ta implement một method tên <code>value</code> mượn <code>self</code>, không có tham số
+<p>Tiếp theo, ta triển khai một method tên <code>value</code> mượn <code>self</code>, không có tham số
 nào khác, và trả về <code>i32</code>. Loại method này đôi khi được gọi là <em>getter</em> vì
 mục đích của nó là lấy dữ liệu từ field và trả về. Method public này cần
 thiết vì field <code>value</code> của struct <code>Guess</code> là private. Quan trọng là field
-<code>value</code> phải private để code dùng struct <code>Guess</code> không thể đặt trực tiếp
-giá trị cho <code>value</code>: Code bên ngoài module <code>guessing_game</code> <em>phải</em> dùng hàm
+<code>value</code> phải private để mã dùng struct <code>Guess</code> không thể đặt trực tiếp
+giá trị cho <code>value</code>: Mã bên ngoài module <code>guessing_game</code> <em>phải</em> dùng hàm
 <code>Guess::new</code> để tạo instance của <code>Guess</code>, từ đó đảm bảo không có cách nào
 để <code>Guess</code> có giá trị <code>value</code> chưa được kiểm tra bởi các điều kiện trong
 hàm <code>Guess::new</code>.</p>
@@ -441,17 +441,17 @@ hàm <code>Guess::new</code>.</p>
 trong signature rằng nó nhận hoặc trả về <code>Guess</code> thay vì <code>i32</code> và không
 cần thực hiện thêm bất kỳ kiểm tra nào trong thân hàm.</p>
 <h2 id="summary"><a class="header" href="#summary">Tóm tắt</a></h2>
-<p>Các tính năng xử lý lỗi của Rust được thiết kế để giúp bạn viết code vững
+<p>Các tính năng xử lý lỗi của Rust được thiết kế để giúp bạn viết mã vững
 chắc hơn. Macro <code>panic!</code> báo hiệu chương trình đang ở trạng thái nó không thể
 xử lý và cho phép bạn bảo tiến trình dừng lại thay vì cố tiếp tục với giá trị
 không hợp lệ hay sai. Enum <code>Result</code> dùng hệ thống kiểu của Rust để chỉ ra
-rằng các thao tác có thể thất bại theo cách code của bạn có thể phục hồi. Bạn
-có thể dùng <code>Result</code> để báo cho code gọi bạn biết rằng nó cần xử lý cả thành
+rằng các thao tác có thể thất bại theo cách mã của bạn có thể phục hồi. Bạn
+có thể dùng <code>Result</code> để báo cho mã gọi bạn biết rằng nó cần xử lý cả thành
 công lẫn thất bại. Dùng <code>panic!</code> và <code>Result</code> trong những tình huống phù hợp
-sẽ làm code của bạn đáng tin cậy hơn trước những vấn đề không thể tránh khỏi.</p>
+sẽ làm mã của bạn đáng tin cậy hơn trước những vấn đề không thể tránh khỏi.</p>
 <p>Bây giờ bạn đã thấy những cách hữu ích mà thư viện chuẩn dùng generics với
 enum <code>Option</code> và <code>Result</code>, ta sẽ nói về cách generics hoạt động và cách bạn
-có thể dùng chúng trong code của mình.</p>
+có thể dùng chúng trong mã của mình.</p>
 
   <div class="page-nav bottom"><a href="ch09-02-recoverable-errors-with-result.html">← Trước</a><a href="ch10-00-generics.html">Tiếp →</a></div>
   </div>

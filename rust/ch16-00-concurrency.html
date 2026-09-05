@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — Fearless Concurrency</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch15-06-reference-cycles.html">← Trước</a>
@@ -211,7 +211,7 @@
 
 <p>Xử lý lập trình song song một cách an toàn và hiệu quả là một mục tiêu chính của Rust. <em>Lập trình concurrent</em>, tức là các phần khác nhau của chương trình chạy độc lập với nhau, và <em>lập trình parallel</em>, tức là các phần khác nhau chạy đồng thời cùng một lúc, ngày càng trở nên quan trọng hơn khi máy tính tận dụng nhiều bộ vi xử lý hơn. Lịch sử cho thấy lập trình trong các ngữ cảnh này vốn dĩ rất khó khăn và dễ phát sinh lỗi. Rust quyết tâm thay đổi điều đó.</p>
 
-<p>Ban đầu, đội ngũ Rust nghĩ rằng đảm bảo memory safety và ngăn chặn các vấn đề concurrency là hai thách thức riêng biệt cần giải quyết bằng các phương pháp khác nhau. Theo thời gian, đội ngũ phát hiện ra rằng hệ thống ownership và kiểu dữ liệu là bộ công cụ cực kỳ mạnh mẽ để giúp quản lý cả memory safety <em>lẫn</em> các vấn đề concurrency! Nhờ tận dụng ownership và kiểm tra kiểu, nhiều lỗi concurrency trở thành lỗi compile-time trong Rust thay vì lỗi runtime. Do đó, thay vì bắt bạn tốn cả đống thời gian tái hiện chính xác các hoàn cảnh gây ra lỗi concurrency lúc runtime, code sai sẽ thẳng thừng từ chối biên dịch và chỉ rõ vấn đề. Kết quả là bạn có thể sửa code ngay khi đang viết thay vì phải vá sau khi đã tung lên production. Chúng tôi đặt cho khía cạnh này của Rust cái tên <em>fearless concurrency</em>. Fearless concurrency cho phép bạn viết code không có những bug tinh vi và dễ dàng refactor mà không sợ tạo ra bug mới.</p>
+<p>Ban đầu, đội ngũ Rust nghĩ rằng đảm bảo memory safety và ngăn chặn các vấn đề concurrency là hai thách thức riêng biệt cần giải quyết bằng các phương pháp khác nhau. Theo thời gian, đội ngũ phát hiện ra rằng hệ thống ownership và kiểu dữ liệu là bộ công cụ cực kỳ mạnh mẽ để giúp quản lý cả memory safety <em>lẫn</em> các vấn đề concurrency! Nhờ tận dụng ownership và kiểm tra kiểu, nhiều lỗi concurrency trở thành lỗi compile-time trong Rust thay vì lỗi runtime. Do đó, thay vì bắt bạn tốn cả đống thời gian tái hiện chính xác các hoàn cảnh gây ra lỗi concurrency lúc runtime, mã sai sẽ thẳng thừng từ chối biên dịch và chỉ rõ vấn đề. Kết quả là bạn có thể sửa mã ngay khi đang viết thay vì phải vá sau khi đã tung lên production. Chúng tôi đặt cho khía cạnh này của Rust cái tên <em>fearless concurrency</em>. Fearless concurrency cho phép bạn viết mã không có những bug tinh vi và dễ dàng refactor mà không sợ tạo ra bug mới.</p>
 
 <section class="note" aria-role="note">
 <p>Lưu ý: Để cho đơn giản, chúng ta sẽ gọi nhiều vấn đề là <em>concurrent</em> thay vì nói chính xác hơn là <em>concurrent và/hoặc parallel</em>. Trong chương này, hễ chúng ta dùng từ <em>concurrent</em>, bạn hãy ngầm hiểu là <em>concurrent và/hoặc parallel</em>. Ở chương sau, khi sự phân biệt quan trọng hơn, chúng ta sẽ nói rõ hơn.</p>
@@ -221,7 +221,7 @@
 
 <p>Đây là những chủ đề chúng ta sẽ đề cập trong chương này:</p>
 <ul>
-<li>Cách tạo các thread để chạy nhiều đoạn code cùng một lúc</li>
+<li>Cách tạo các thread để chạy nhiều đoạn mã cùng một lúc</li>
 <li>Concurrency kiểu <em>message-passing</em>, nơi các channel gửi tin nhắn giữa các thread</li>
 <li>Concurrency kiểu <em>shared-state</em>, nơi nhiều thread có thể truy cập cùng một dữ liệu</li>
 <li>Các trait <code>Sync</code> và <code>Send</code>, mở rộng các đảm bảo concurrency của Rust sang các kiểu do người dùng định nghĩa cũng như các kiểu được cung cấp bởi thư viện chuẩn</li>

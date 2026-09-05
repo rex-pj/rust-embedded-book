@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 3 — The Rust Book</span>
+        ><span class="current">Chương 3 — Kiểu Dữ Liệu</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -289,7 +289,7 @@
           có thể xảy ra, chẳng hạn khi chuyển đổi <code>String</code> sang kiểu
           số bằng <code>parse</code> trong phần
           <a
-            href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number"
+            href="ch02-00-guessing-game-tutorial.html#so-sanh-so-doan-voi-so-bi-mat"
             >"So sánh số đoán với số bí mật"</a
           >
           ở Chương 2, chúng ta phải thêm chú thích kiểu (type annotation), như
@@ -594,7 +594,7 @@ error: could not compile `no_type_annotations` (bin "no_type_annotations") due t
           Cách dùng chính của giá trị Boolean là qua các biểu thức điều kiện,
           chẳng hạn biểu thức <code>if</code>. Chúng ta sẽ đề cập cách biểu thức
           <code>if</code> hoạt động trong Rust ở phần
-          <a href="ch03-05-control-flow.html#control-flow">"Control Flow"</a>.
+          <a href="ch03-05-control-flow.html#control-flow">“Control Flow (Luồng điều khiển)”</a>.
         </p>
 
         <h4 id="the-character-type">🔵 Kiểu Character (Ký tự)</h4>
@@ -851,7 +851,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</c
           chỉ định có nhỏ hơn độ dài array không. Nếu chỉ mục lớn hơn hoặc bằng
           độ dài, Rust sẽ panic. Kiểm tra này phải xảy ra tại thời điểm chạy,
           đặc biệt trong trường hợp này, vì trình biên dịch không thể biết trước
-          giá trị người dùng sẽ nhập khi chạy code.
+          giá trị người dùng sẽ nhập khi chạy mã.
         </p>
 
         <p>
@@ -860,7 +860,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</c
           khi bạn cung cấp chỉ mục sai, bộ nhớ không hợp lệ có thể bị truy cập.
           Rust bảo vệ bạn khỏi loại lỗi này bằng cách thoát ngay lập tức thay vì
           cho phép truy cập bộ nhớ và tiếp tục. Chương 9 thảo luận thêm về xử lý
-          lỗi của Rust và cách viết code dễ đọc, an toàn không panic và không
+          lỗi của Rust và cách viết mã dễ đọc, an toàn không panic và không
           cho phép truy cập bộ nhớ không hợp lệ.
         </p>
 

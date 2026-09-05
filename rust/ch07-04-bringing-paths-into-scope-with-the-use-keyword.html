@@ -221,7 +221,7 @@
 <p>Trong Listing 7-11, ta đưa module <code>crate::front_of_house::hosting</code> vào scope của hàm <code>eat_at_restaurant</code>, nhờ đó chỉ cần viết <code>hosting::add_to_waitlist</code> để gọi hàm <code>add_to_waitlist</code> bên trong <code>eat_at_restaurant</code>.</p>
 
 <figure class="listing" id="listing-7-11">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -241,7 +241,7 @@ pub fn eat_at_restaurant() {
 <p>Lưu ý rằng <code>use</code> chỉ tạo shortcut trong phạm vi scope mà câu lệnh <code>use</code> đó xuất hiện. Listing 7-12 chuyển hàm <code>eat_at_restaurant</code> vào một child module mới tên là <code>customer</code> — đây là scope khác với scope chứa câu lệnh <code>use</code>, nên phần thân hàm sẽ không biên dịch được.</p>
 
 <figure class="listing" id="listing-7-12">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness does_not_compile ignore">mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -294,7 +294,7 @@ error: could not compile `restaurant` (lib) due to 1 previous error; 1 warning e
 <p>Trong Listing 7-11, bạn có thể thắc mắc tại sao ta viết <code>use crate::front_of_house::hosting</code> rồi gọi <code>hosting::add_to_waitlist</code> trong <code>eat_at_restaurant</code>, thay vì viết thẳng <code>use</code> path đến tận hàm <code>add_to_waitlist</code> để đạt kết quả tương tự như Listing 7-13.</p>
 
 <figure class="listing" id="listing-7-13">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -314,7 +314,7 @@ pub fn eat_at_restaurant() {
 <p>Ngược lại, khi đưa struct, enum và các item khác vào scope bằng <code>use</code>, quy ước là viết full path. Listing 7-14 cho thấy cách chuẩn để đưa struct <code>HashMap</code> từ thư viện chuẩn vào scope của một binary crate.</p>
 
 <figure class="listing" id="listing-7-14">
-<span class="file-name">Filename: src/main.rs</span>
+<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust edition2024">use std::collections::HashMap;
 
 fn main() {
@@ -324,12 +324,12 @@ fn main() {
 <figcaption><a href="#listing-7-14">Listing 7-14</a>: Đưa <code>HashMap</code> vào scope theo cách chuẩn</figcaption>
 </figure>
 
-<p>Không có lý do đặc biệt nào đằng sau quy ước này: đây chỉ là thói quen đã hình thành theo thời gian và mọi người đã quen đọc cũng như viết code Rust theo cách đó.</p>
+<p>Không có lý do đặc biệt nào đằng sau quy ước này: đây chỉ là thói quen đã hình thành theo thời gian và mọi người đã quen đọc cũng như viết mã Rust theo cách đó.</p>
 
 <p>Ngoại lệ của quy ước này là khi ta đưa hai item cùng tên vào scope bằng các câu lệnh <code>use</code>, vì Rust không cho phép điều đó. Listing 7-15 cho thấy cách đưa hai kiểu <code>Result</code> cùng tên nhưng thuộc các module cha khác nhau vào scope, và cách tham chiếu đến chúng.</p>
 
 <figure class="listing" id="listing-7-15">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt;
 use std::io;
 
@@ -347,10 +347,10 @@ fn function2() -&gt; io::Result&lt;()&gt; {
 
 <h3 id="providing-new-names-with-the-as-keyword">Đặt tên mới bằng từ khóa <code>as</code></h3>
 
-<p>Có một cách khác để giải quyết vấn đề đưa hai kiểu cùng tên vào cùng một scope bằng <code>use</code>: sau path, ta có thể chỉ định <code>as</code> kèm theo một tên local mới, hay còn gọi là <em>alias</em>, cho kiểu đó. Listing 7-16 cho thấy cách viết lại code trong Listing 7-15 bằng cách đổi tên một trong hai kiểu <code>Result</code> dùng <code>as</code>.</p>
+<p>Có một cách khác để giải quyết vấn đề đưa hai kiểu cùng tên vào cùng một scope bằng <code>use</code>: sau path, ta có thể chỉ định <code>as</code> kèm theo một tên local mới, hay còn gọi là <em>alias</em>, cho kiểu đó. Listing 7-16 cho thấy cách viết lại mã trong Listing 7-15 bằng cách đổi tên một trong hai kiểu <code>Result</code> dùng <code>as</code>.</p>
 
 <figure class="listing" id="listing-7-16">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt::Result;
 use std::io::Result as IoResult;
 
@@ -368,12 +368,12 @@ fn function2() -&gt; IoResult&lt;()&gt; {
 
 <h3 id="re-exporting-names-with-pub-use">Re-export tên bằng <code>pub use</code></h3>
 
-<p>Khi ta đưa một tên vào scope bằng từ khóa <code>use</code>, tên đó chỉ có giá trị (private) trong scope mà ta đã import vào. Để cho phép code bên ngoài scope đó tham chiếu đến tên này như thể nó được định nghĩa trong scope đó, ta có thể kết hợp <code>pub</code> với <code>use</code>. Kỹ thuật này gọi là <em>re-exporting</em> vì ta vừa đưa item vào scope, vừa cho phép người khác đưa item đó vào scope của họ.</p>
+<p>Khi ta đưa một tên vào scope bằng từ khóa <code>use</code>, tên đó chỉ có giá trị (private) trong scope mà ta đã import vào. Để cho phép mã bên ngoài scope đó tham chiếu đến tên này như thể nó được định nghĩa trong scope đó, ta có thể kết hợp <code>pub</code> với <code>use</code>. Kỹ thuật này gọi là <em>re-exporting</em> vì ta vừa đưa item vào scope, vừa cho phép người khác đưa item đó vào scope của họ.</p>
 
-<p>Listing 7-17 cho thấy code trong Listing 7-11 với câu lệnh <code>use</code> ở root module được đổi thành <code>pub use</code>.</p>
+<p>Listing 7-17 cho thấy mã trong Listing 7-11 với câu lệnh <code>use</code> ở root module được đổi thành <code>pub use</code>.</p>
 
 <figure class="listing" id="listing-7-17">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -385,26 +385,26 @@ pub use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-17">Listing 7-17</a>: Cho phép mọi code có thể dùng một tên từ scope mới bằng <code>pub use</code></figcaption>
+<figcaption><a href="#listing-7-17">Listing 7-17</a>: Cho phép mọi mã có thể dùng một tên từ scope mới bằng <code>pub use</code></figcaption>
 </figure>
 
-<p>Trước thay đổi này, code bên ngoài phải gọi hàm <code>add_to_waitlist</code> qua path <code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, và module <code>front_of_house</code> cũng cần được đánh dấu là <code>pub</code>. Bây giờ với <code>pub use</code> đã re-export module <code>hosting</code> từ root module, code bên ngoài có thể dùng path <code>restaurant::hosting::add_to_waitlist()</code> thay thế.</p>
+<p>Trước thay đổi này, mã bên ngoài phải gọi hàm <code>add_to_waitlist</code> qua path <code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, và module <code>front_of_house</code> cũng cần được đánh dấu là <code>pub</code>. Bây giờ với <code>pub use</code> đã re-export module <code>hosting</code> từ root module, mã bên ngoài có thể dùng path <code>restaurant::hosting::add_to_waitlist()</code> thay thế.</p>
 
-<p>Re-exporting rất hữu ích khi cấu trúc nội bộ của code khác với cách lập trình viên bên ngoài nghĩ về domain đó. Ví dụ, trong phép ẩn dụ nhà hàng này, những người vận hành nhà hàng nghĩ đến "front of house" và "back of house". Nhưng khách hàng đến nhà hàng có thể không dùng những khái niệm đó. Với <code>pub use</code>, ta có thể viết code theo một cấu trúc nhưng lại expose một cấu trúc khác ra ngoài. Điều này giúp thư viện được tổ chức tốt cho cả lập trình viên làm việc bên trong lẫn lập trình viên sử dụng thư viện. Chúng ta sẽ xem thêm ví dụ về <code>pub use</code> và ảnh hưởng của nó đến tài liệu của crate trong phần <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api">"Exporting a Convenient Public API"</a> trong Chương 14.</p>
+<p>Re-exporting rất hữu ích khi cấu trúc nội bộ của mã khác với cách lập trình viên bên ngoài nghĩ về domain đó. Ví dụ, trong phép ẩn dụ nhà hàng này, những người vận hành nhà hàng nghĩ đến "front of house" và "back of house". Nhưng khách hàng đến nhà hàng có thể không dùng những khái niệm đó. Với <code>pub use</code>, ta có thể viết mã theo một cấu trúc nhưng lại expose một cấu trúc khác ra ngoài. Điều này giúp thư viện được tổ chức tốt cho cả lập trình viên làm việc bên trong lẫn lập trình viên sử dụng thư viện. Chúng ta sẽ xem thêm ví dụ về <code>pub use</code> và ảnh hưởng của nó đến tài liệu của crate trong phần <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api">“Xuất khẩu Public API Tiện Lợi”</a> trong Chương 14.</p>
 
 <h3 id="using-external-packages">Sử dụng các External Package</h3>
 
 <p>Trong Chương 2, ta đã lập trình dự án trò chơi đoán số sử dụng một external package tên là <code>rand</code> để tạo số ngẫu nhiên. Để dùng <code>rand</code> trong dự án, ta đã thêm dòng này vào <em>Cargo.toml</em>:</p>
 
 <figure class="listing">
-<span class="file-name">Filename: Cargo.toml</span>
+<span class="file-name">Tên file: Cargo.toml</span>
 <pre><code class="language-toml">rand = "0.8.5"
 </code></pre>
 </figure>
 
 <p>Việc thêm <code>rand</code> làm dependency trong <em>Cargo.toml</em> cho Cargo biết cần tải package <code>rand</code> và các dependency của nó từ <a href="https://crates.io/">crates.io</a>, rồi đưa <code>rand</code> vào phạm vi dự án.</p>
 
-<p>Sau đó, để đưa các định nghĩa từ <code>rand</code> vào scope của package, ta thêm một dòng <code>use</code> bắt đầu bằng tên crate là <code>rand</code>, rồi liệt kê các item muốn đưa vào scope. Nhớ lại ở phần <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">"Generating a Random Number"</a> trong Chương 2, ta đã đưa trait <code>Rng</code> vào scope và gọi hàm <code>rand::thread_rng</code>:</p>
+<p>Sau đó, để đưa các định nghĩa từ <code>rand</code> vào scope của package, ta thêm một dòng <code>use</code> bắt đầu bằng tên crate là <code>rand</code>, rồi liệt kê các item muốn đưa vào scope. Nhớ lại ở phần <a href="ch02-00-guessing-game-tutorial.html#sinh-so-ngau-nhien">“Sinh số ngẫu nhiên”</a> trong Chương 2, ta đã đưa trait <code>Rng</code> vào scope và gọi hàm <code>rand::thread_rng</code>:</p>
 
 <pre><code class="language-rust ignore">use rand::Rng;
 
@@ -425,7 +425,7 @@ fn main() {
 <p>Khi dùng nhiều item được định nghĩa trong cùng một crate hay module, việc liệt kê từng item trên một dòng riêng có thể chiếm khá nhiều chỗ trong file. Ví dụ, hai câu lệnh <code>use</code> sau đây trong trò chơi đoán số ở Listing 2-4 đưa các item từ <code>std</code> vào scope:</p>
 
 <figure class="listing">
-<span class="file-name">Filename: src/main.rs</span>
+<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore">// --snip--
 use std::cmp::Ordering;
 use std::io;
@@ -435,7 +435,7 @@ use std::io;
 <p>Thay vào đó, ta có thể dùng nested paths để đưa các item đó vào scope chỉ trong một dòng. Ta làm điều này bằng cách chỉ định phần chung của path, theo sau là hai dấu hai chấm, rồi dùng cặp ngoặc nhọn bao quanh danh sách các phần khác nhau của paths, như trong Listing 7-18.</p>
 
 <figure class="listing" id="listing-7-18">
-<span class="file-name">Filename: src/main.rs</span>
+<span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore">// --snip--
 use std::{cmp::Ordering, io};
 // --snip--</code></pre>
@@ -447,7 +447,7 @@ use std::{cmp::Ordering, io};
 <p>Ta có thể dùng nested path ở bất kỳ cấp nào trong một path, điều này rất hữu ích khi gộp hai câu lệnh <code>use</code> có cùng một subpath. Ví dụ, Listing 7-19 cho thấy hai câu lệnh <code>use</code>: một đưa <code>std::io</code> vào scope và một đưa <code>std::io::Write</code> vào scope.</p>
 
 <figure class="listing" id="listing-7-19">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io;
 use std::io::Write;</code></pre>
 <figcaption><a href="#listing-7-19">Listing 7-19</a>: Hai câu lệnh <code>use</code> trong đó một path là subpath của path kia</figcaption>
@@ -456,7 +456,7 @@ use std::io::Write;</code></pre>
 <p>Phần chung của hai path này là <code>std::io</code>, và đó cũng là toàn bộ path đầu tiên. Để gộp hai path này thành một câu lệnh <code>use</code>, ta có thể dùng <code>self</code> trong nested path như trong Listing 7-20.</p>
 
 <figure class="listing" id="listing-7-20">
-<span class="file-name">Filename: src/lib.rs</span>
+<span class="file-name">Tên file: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io::{self, Write};</code></pre>
 <figcaption><a href="#listing-7-20">Listing 7-20</a>: Gộp hai path trong Listing 7-19 thành một câu lệnh <code>use</code></figcaption>
 </figure>
@@ -471,7 +471,7 @@ use std::io::Write;</code></pre>
 
 <p>Câu lệnh <code>use</code> này đưa tất cả public item được định nghĩa trong <code>std::collections</code> vào scope hiện tại. Hãy cẩn thận khi dùng glob operator! Glob có thể khiến việc xác định tên nào đang có trong scope và tên được dùng trong chương trình đến từ đâu trở nên khó khăn hơn. Ngoài ra, nếu dependency thay đổi định nghĩa của nó, những gì bạn đã import cũng thay đổi theo, điều này có thể gây ra lỗi biên dịch khi bạn nâng cấp dependency nếu dependency đó thêm một định nghĩa trùng tên với định nghĩa của bạn trong cùng scope chẳng hạn.</p>
 
-<p>Glob operator thường được dùng trong testing để đưa tất cả các thứ cần kiểm thử vào module <code>tests</code>; chúng ta sẽ nói đến điều đó trong phần <a href="ch11-01-writing-tests.html#how-to-write-tests">"How to Write Tests"</a> trong Chương 11. Glob operator cũng đôi khi được dùng trong prelude pattern: xem thêm <a href="../std/prelude/index.html#other-preludes">tài liệu thư viện chuẩn</a> để biết thêm thông tin về pattern đó.</p>
+<p>Glob operator thường được dùng trong testing để đưa tất cả các thứ cần kiểm thử vào module <code>tests</code>; chúng ta sẽ nói đến điều đó trong phần <a href="ch11-01-writing-tests.html#how-to-write-tests">“Cách Viết Test”</a> trong Chương 11. Glob operator cũng đôi khi được dùng trong prelude pattern: xem thêm <a href="../std/prelude/index.html#other-preludes">tài liệu thư viện chuẩn</a> để biết thêm thông tin về pattern đó.</p>
 
   <div class="page-nav bottom">
     <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html" class="nav-btn prev">← Trước: Paths trong Module Tree</a>

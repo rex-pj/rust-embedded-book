@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 20 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 20 — Advanced Functions and Closures</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch20-03-advanced-types.html">← Trước</a><a href="ch20-05-macros.html">Tiếp →</a></div>
 
@@ -229,10 +229,10 @@ fn main() {
   <figcaption><a href="#listing-20-28">Listing 20-28</a>: Dùng kiểu <code>fn</code> để nhận function pointer làm đối số</figcaption>
   </figure>
 
-  <p>Code này in ra <code>The answer is: 12</code>. Chúng ta khai báo tham số <code>f</code> trong <code>do_twice</code> là <code>fn</code> nhận một tham số <code>i32</code> và trả về <code>i32</code>. Sau đó có thể gọi <code>f</code> bên trong <code>do_twice</code>. Trong <code>main</code>, chúng ta truyền tên hàm <code>add_one</code> làm đối số đầu tiên cho <code>do_twice</code>.</p>
+  <p>Mã này in ra <code>The answer is: 12</code>. Chúng ta khai báo tham số <code>f</code> trong <code>do_twice</code> là <code>fn</code> nhận một tham số <code>i32</code> và trả về <code>i32</code>. Sau đó có thể gọi <code>f</code> bên trong <code>do_twice</code>. Trong <code>main</code>, chúng ta truyền tên hàm <code>add_one</code> làm đối số đầu tiên cho <code>do_twice</code>.</p>
   <p>Khác với closure, <code>fn</code> là một kiểu (type) chứ không phải trait, vì vậy chúng ta dùng <code>fn</code> trực tiếp làm kiểu tham số thay vì khai báo generic type với một trong các <code>Fn</code> trait.</p>
   <p>Function pointer thực thi cả ba closure trait (<code>Fn</code>, <code>FnMut</code>, và <code>FnOnce</code>), nghĩa là bạn luôn có thể truyền function pointer vào chỗ nào cần closure. Cách tốt nhất là viết hàm dùng generic type và một trong các closure trait để hàm của bạn chấp nhận cả hàm lẫn closure.</p>
-  <p>Dù vậy, có một trường hợp bạn chỉ muốn chấp nhận <code>fn</code> chứ không muốn closure — đó là khi giao tiếp với code bên ngoài không có khái niệm closure, ví dụ như C: hàm C có thể nhận hàm làm đối số, nhưng C không có closure.</p>
+  <p>Dù vậy, có một trường hợp bạn chỉ muốn chấp nhận <code>fn</code> chứ không muốn closure — đó là khi giao tiếp với mã bên ngoài không có khái niệm closure, ví dụ như C: hàm C có thể nhận hàm làm đối số, nhưng C không có closure.</p>
   <p>Để thấy rõ khi nào dùng closure inline và khi nào dùng hàm được đặt tên, hãy xem cách dùng phương thức <code>map</code> từ trait <code>Iterator</code> trong thư viện chuẩn. Để chuyển một vector số thành vector chuỗi, ta có thể dùng closure như Listing 20-29.</p>
 
   <figure class="listing" id="listing-20-29">
@@ -256,8 +256,8 @@ fn main() {
   </figure>
 
   <p>Lưu ý rằng chúng ta phải dùng fully qualified syntax như đã đề cập trong phần <a href="ch20-02-advanced-traits.html#advanced-traits">"Advanced Traits"</a> vì có nhiều hàm cùng tên <code>to_string</code>.</p>
-  <p>Ở đây chúng ta dùng hàm <code>to_string</code> định nghĩa trong trait <code>ToString</code>, mà thư viện chuẩn đã cài đặt cho mọi kiểu implement <code>Display</code>.</p>
-  <p>Nhớ lại từ phần <a href="ch06-01-defining-an-enum.html#enum-values">"Enum Values"</a> ở Chương 6: tên mỗi variant của enum cũng trở thành một hàm khởi tạo. Chúng ta có thể dùng các hàm khởi tạo này như function pointer thực thi closure trait, nghĩa là có thể truyền chúng vào phương thức nhận closure, như Listing 20-31.</p>
+  <p>Ở đây chúng ta dùng hàm <code>to_string</code> định nghĩa trong trait <code>ToString</code>, mà thư viện chuẩn đã cài đặt cho mọi kiểu triển khai <code>Display</code>.</p>
+  <p>Nhớ lại từ phần <a href="ch06-01-defining-an-enum.html#enum-values">“Giá trị của enum (Enum Values)”</a> ở Chương 6: tên mỗi variant của enum cũng trở thành một hàm khởi tạo. Chúng ta có thể dùng các hàm khởi tạo này như function pointer thực thi closure trait, nghĩa là có thể truyền chúng vào phương thức nhận closure, như Listing 20-31.</p>
 
   <figure class="listing" id="listing-20-31">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -271,11 +271,11 @@ fn main() {
   <figcaption><a href="#listing-20-31">Listing 20-31</a>: Dùng hàm khởi tạo enum với <code>map</code> để tạo instance <code>Status</code> từ các số</figcaption>
   </figure>
 
-  <p>Ở đây chúng ta tạo các instance <code>Status::Value</code> từ mỗi giá trị <code>u32</code> trong range mà <code>map</code> duyệt qua, bằng cách dùng hàm khởi tạo của <code>Status::Value</code>. Một số người thích style này, một số khác lại thích closure hơn. Cả hai đều biên dịch ra code giống nhau, vậy hãy dùng cái nào rõ ràng hơn với bạn.</p>
+  <p>Ở đây chúng ta tạo các instance <code>Status::Value</code> từ mỗi giá trị <code>u32</code> trong range mà <code>map</code> duyệt qua, bằng cách dùng hàm khởi tạo của <code>Status::Value</code>. Một số người thích style này, một số khác lại thích closure hơn. Cả hai đều biên dịch ra mã giống nhau, vậy hãy dùng cái nào rõ ràng hơn với bạn.</p>
 
   <h3 id="returning-closures">Returning Closures</h3>
-  <p>Closure được đại diện bởi trait, có nghĩa là bạn không thể trả về closure một cách trực tiếp. Trong hầu hết trường hợp muốn trả về một trait, bạn có thể dùng kiểu cụ thể (concrete type) implement trait đó làm giá trị trả về. Nhưng với closure thì khác — chúng không có kiểu cụ thể có thể trả về được; bạn không được phép dùng function pointer <code>fn</code> làm kiểu trả về nếu closure đó capture giá trị từ scope bên ngoài.</p>
-  <p>Thay vào đó, thông thường bạn sẽ dùng cú pháp <code>impl Trait</code> học ở Chương 10. Bạn có thể trả về bất kỳ kiểu hàm nào dùng <code>Fn</code>, <code>FnOnce</code>, hay <code>FnMut</code>. Ví dụ code trong Listing 20-32 sẽ biên dịch ngon lành.</p>
+  <p>Closure được đại diện bởi trait, có nghĩa là bạn không thể trả về closure một cách trực tiếp. Trong hầu hết trường hợp muốn trả về một trait, bạn có thể dùng kiểu cụ thể (concrete type) triển khai trait đó làm giá trị trả về. Nhưng với closure thì khác — chúng không có kiểu cụ thể có thể trả về được; bạn không được phép dùng function pointer <code>fn</code> làm kiểu trả về nếu closure đó capture giá trị từ scope bên ngoài.</p>
+  <p>Thay vào đó, thông thường bạn sẽ dùng cú pháp <code>impl Trait</code> học ở Chương 10. Bạn có thể trả về bất kỳ kiểu hàm nào dùng <code>Fn</code>, <code>FnOnce</code>, hay <code>FnMut</code>. Ví dụ mã trong Listing 20-32 sẽ biên dịch ngon lành.</p>
 
   <figure class="listing" id="listing-20-32">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
@@ -287,7 +287,7 @@ fn main() {
   <figcaption><a href="#listing-20-32">Listing 20-32</a>: Trả về closure từ hàm bằng cú pháp <code>impl Trait</code></figcaption>
   </figure>
 
-  <p>Tuy nhiên, như đã đề cập trong phần <a href="ch13-01-closures.html#closure-type-inference-and-annotation">"Inferring and Annotating Closure Types"</a> ở Chương 13, mỗi closure cũng là một kiểu riêng biệt. Nếu bạn cần làm việc với nhiều hàm có cùng signature nhưng implementation khác nhau, bạn cần dùng trait object cho chúng. Hãy xem điều gì xảy ra với code như Listing 20-33.</p>
+  <p>Tuy nhiên, như đã đề cập trong phần <a href="ch13-01-closures.html#closure-type-inference-and-annotation">“Suy luận và chú thích kiểu của Closure”</a> ở Chương 13, mỗi closure cũng là một kiểu riêng biệt. Nếu bạn cần làm việc với nhiều hàm có cùng signature nhưng phần triển khai khác nhau, bạn cần dùng trait object cho chúng. Hãy xem điều gì xảy ra với mã như Listing 20-33.</p>
 
   <figure class="listing" id="listing-20-33">
   <span class="file-name">Tên file: src/main.rs</span>
@@ -309,7 +309,7 @@ fn returns_initialized_closure(init: i32) -&gt; impl Fn(i32) -&gt; i32 {
   <figcaption><a href="#listing-20-33">Listing 20-33</a>: Tạo <code>Vec&lt;T&gt;</code> chứa các closure từ hàm trả về kiểu <code>impl Fn</code></figcaption>
   </figure>
 
-  <p>Ở đây chúng ta có hai hàm <code>returns_closure</code> và <code>returns_initialized_closure</code>, cả hai đều trả về <code>impl Fn(i32) -&gt; i32</code>. Để ý rằng dù chúng implement cùng trait, nhưng các closure trả về lại khác nhau. Nếu cố biên dịch, Rust sẽ báo lỗi:</p>
+  <p>Ở đây chúng ta có hai hàm <code>returns_closure</code> và <code>returns_initialized_closure</code>, cả hai đều trả về <code>impl Fn(i32) -&gt; i32</code>. Để ý rằng dù chúng triển khai cùng trait, nhưng các closure trả về lại khác nhau. Nếu cố biên dịch, Rust sẽ báo lỗi:</p>
 
 <pre><code class="language-text">$ cargo build
    Compiling functions-example v0.1.0 (file:///projects/functions-example)
@@ -333,7 +333,7 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `functions-example` (bin "functions-example") due to 1 previous error
 </code></pre>
 
-  <p>Thông báo lỗi cho biết: mỗi khi bạn trả về <code>impl Trait</code>, Rust tạo ra một <em>opaque type</em> (kiểu mờ) duy nhất — kiểu mà chúng ta không thể nhìn thấy bên trong, cũng không thể tự viết ra. Vì vậy, dù hai hàm đều trả về closure implement cùng trait <code>Fn(i32) -&gt; i32</code>, nhưng các opaque type mà Rust tạo cho chúng là hoàn toàn riêng biệt. (Điều này giống với cách Rust tạo ra các kiểu cụ thể khác nhau cho các async block riêng biệt dù chúng có cùng output type, như đã thấy ở <a href="ch17-03-more-futures.html">"The <code>Pin</code> Type and the <code>Unpin</code> Trait"</a> trong Chương 17.) Giải pháp mà chúng ta đã gặp nhiều lần: dùng trait object, như trong Listing 20-34.</p>
+  <p>Thông báo lỗi cho biết: mỗi khi bạn trả về <code>impl Trait</code>, Rust tạo ra một <em>opaque type</em> (kiểu mờ) duy nhất — kiểu mà chúng ta không thể nhìn thấy bên trong, cũng không thể tự viết ra. Vì vậy, dù hai hàm đều trả về closure triển khai cùng trait <code>Fn(i32) -&gt; i32</code>, nhưng các opaque type mà Rust tạo cho chúng là hoàn toàn riêng biệt. (Điều này giống với cách Rust tạo ra các kiểu cụ thể khác nhau cho các khối async riêng biệt dù chúng có cùng kết quả type, như đã thấy ở <a href="ch17-03-more-futures.html">"The <code>Pin</code> Type and the <code>Unpin</code> Trait"</a> trong Chương 17.) Giải pháp mà chúng ta đã gặp nhiều lần: dùng trait object, như trong Listing 20-34.</p>
 
   <figure class="listing" id="listing-20-34">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -354,7 +354,7 @@ fn returns_initialized_closure(init: i32) -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt;
   <figcaption><a href="#listing-20-34">Listing 20-34</a>: Tạo <code>Vec&lt;T&gt;</code> chứa các closure từ hàm trả về <code>Box&lt;dyn Fn&gt;</code> để có cùng kiểu</figcaption>
   </figure>
 
-  <p>Code này sẽ biên dịch tốt. Để tìm hiểu thêm về trait object, xem phần <a href="ch18-02-trait-objects.html">"Using Trait Objects To Abstract over Shared Behavior"</a> ở Chương 18.</p>
+  <p>Mã này sẽ biên dịch tốt. Để tìm hiểu thêm về trait object, xem phần <a href="ch18-02-trait-objects.html">“Dùng trait object để trừu tượng hóa hành vi chung”</a> ở Chương 18.</p>
   <p>Tiếp theo, hãy cùng khám phá macros!</p>
 
   <div class="page-nav bottom"><a href="ch20-03-advanced-types.html">← Trước</a><a href="ch20-05-macros.html">Tiếp →</a></div>

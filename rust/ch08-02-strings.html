@@ -245,7 +245,7 @@ như Listing 8-11 dưới đây.</p>
 </figure>
 <p>Dòng này tạo ra một string rỗng tên là <code>s</code>, sau đó ta có thể nạp dữ liệu vào.
 Thường thì ta sẽ có sẵn dữ liệu ban đầu để khởi tạo string. Khi đó, ta dùng
-method <code>to_string</code>, có sẵn trên bất kỳ kiểu nào implement trait <code>Display</code>,
+method <code>to_string</code>, có sẵn trên bất kỳ kiểu nào triển khai trait <code>Display</code>,
 trong đó có string literal. Listing 8-12 cho thấy hai cách dùng.</p>
 <figure class="listing" id="listing-8-12">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -258,9 +258,9 @@ trong đó có string literal. Listing 8-12 cho thấy hai cách dùng.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-8-12">Listing 8-12</a>: Dùng method <code>to_string</code> để tạo <code>String</code> từ string literal</figcaption>
 </figure>
-<p>Đoạn code này tạo ra một string chứa <code>initial contents</code>.</p>
+<p>Đoạn mã này tạo ra một string chứa <code>initial contents</code>.</p>
 <p>Ta cũng có thể dùng hàm <code>String::from</code> để tạo <code>String</code> từ string literal.
-Đoạn code ở Listing 8-13 tương đương với Listing 8-12 dùng <code>to_string</code>.</p>
+Đoạn mã ở Listing 8-13 tương đương với Listing 8-12 dùng <code>to_string</code>.</p>
 <figure class="listing" id="listing-8-13">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s = String::from("initial contents");
@@ -308,7 +308,7 @@ string slice, như Listing 8-15 dưới đây.</p>
 </figure>
 <p>Sau hai dòng này, <code>s</code> sẽ chứa <code>foobar</code>. Method <code>push_str</code> nhận vào string
 slice vì ta không nhất thiết muốn lấy ownership của tham số. Ví dụ, trong
-đoạn code ở Listing 8-16, ta muốn vẫn dùng được <code>s2</code> sau khi đã thêm nội
+đoạn mã ở Listing 8-16, ta muốn vẫn dùng được <code>s2</code> sau khi đã thêm nội
 dung của nó vào <code>s1</code>.</p>
 <figure class="listing" id="listing-8-16">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -320,7 +320,7 @@ dung của nó vào <code>s1</code>.</p>
 <figcaption><a href="#listing-8-16">Listing 8-16</a>: Dùng string slice sau khi đã thêm nội dung của nó vào <code>String</code></figcaption>
 </figure>
 <p>Nếu <code>push_str</code> lấy ownership của <code>s2</code>, ta sẽ không in được giá trị của nó
-ở dòng cuối. Nhưng code này hoạt động đúng như kỳ vọng!</p>
+ở dòng cuối. Nhưng mã này hoạt động đúng như kỳ vọng!</p>
 <p>Method <code>push</code> nhận vào một ký tự đơn và thêm nó vào <code>String</code>. Listing 8-17
 thêm chữ <em>l</em> vào một <code>String</code> bằng method <code>push</code>.</p>
 <figure class="listing" id="listing-8-17">
@@ -380,7 +380,7 @@ nhưng thực ra không phải; cách cài đặt này hiệu quả hơn copy.</
     let s = s1 + "-" + &amp;s2 + "-" + &amp;s3;
 <span class="boring">}</span></code></pre>
 <p>Lúc này <code>s</code> sẽ là <code>tic-tac-toe</code>. Với đống dấu <code>+</code> và <code>"</code> lộn xộn, khó
-mà đọc hiểu code. Khi cần nối string theo cách phức tạp hơn, ta có thể dùng
+mà đọc hiểu mã. Khi cần nối string theo cách phức tạp hơn, ta có thể dùng
 macro <code>format!</code> thay thế:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("tic");
@@ -389,16 +389,16 @@ macro <code>format!</code> thay thế:</p>
 
     let s = format!("{s1}-{s2}-{s3}");
 <span class="boring">}</span></code></pre>
-<p>Code này cũng gán <code>s</code> bằng <code>tic-tac-toe</code>. Macro <code>format!</code> hoạt động giống
+<p>Mã này cũng gán <code>s</code> bằng <code>tic-tac-toe</code>. Macro <code>format!</code> hoạt động giống
 <code>println!</code>, nhưng thay vì in ra màn hình, nó trả về một <code>String</code> với nội dung
-tương ứng. Phiên bản dùng <code>format!</code> dễ đọc hơn nhiều, và code do macro
+tương ứng. Phiên bản dùng <code>format!</code> dễ đọc hơn nhiều, và mã do macro
 <code>format!</code> tạo ra dùng tham chiếu nên không lấy ownership của bất kỳ tham số
 nào.</p>
 <h3 id="indexing-into-strings"><a class="header" href="#indexing-into-strings">Truy cập String bằng index</a></h3>
 <p>Trong nhiều ngôn ngữ lập trình khác, truy cập từng ký tự trong string bằng
 index là thao tác bình thường và phổ biến. Tuy nhiên, nếu bạn thử truy cập
 các phần của <code>String</code> bằng cú pháp index trong Rust, bạn sẽ gặp lỗi. Hãy
-xem đoạn code không hợp lệ ở Listing 8-19.</p>
+xem đoạn mã không hợp lệ ở Listing 8-19.</p>
 <figure class="listing" id="listing-8-19">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1 = String::from("hi");
@@ -406,7 +406,7 @@ xem đoạn code không hợp lệ ở Listing 8-19.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-8-19">Listing 8-19</a>: Thử dùng cú pháp index với <code>String</code></figcaption>
 </figure>
-<p>Đoạn code này sẽ gây ra lỗi sau:</p>
+<p>Đoạn mã này sẽ gây ra lỗi sau:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0277]: the type `str` cannot be indexed by `{integer}`
@@ -463,9 +463,9 @@ bằng chữ hoa Cyrillic <em>Ze</em>, không phải số 3):</p>
 </span><span class="boring">}</span></code></pre>
 <p>Nếu bạn được hỏi chuỗi này dài bao nhiêu, bạn có thể đáp là 12. Nhưng thực
 ra Rust trả lời là 24: đó là số byte cần để mã hóa "Здравствуйте" trong UTF-8,
-vì mỗi Unicode scalar value trong chuỗi đó chiếm 2 byte. Vì thế, một index
+vì mỗi Unicode scalar giá trị trong chuỗi đó chiếm 2 byte. Vì thế, một index
 vào các byte của string không phải lúc nào cũng tương ứng với một Unicode
-scalar value hợp lệ. Để minh họa, hãy xem đoạn code Rust không hợp lệ này:</p>
+scalar giá trị hợp lệ. Để minh họa, hãy xem đoạn mã Rust không hợp lệ này:</p>
 <pre><code class="language-rust ignore does_not_compile">let hello = "Здравствуйте";
 let answer = &amp;hello[0];</code></pre>
 <p>Bạn đã biết <code>answer</code> sẽ không phải là <code>З</code>, chữ cái đầu tiên. Khi mã hóa
@@ -474,16 +474,16 @@ trông như <code>answer</code> phải là <code>208</code>, nhưng <code>208</c
 đứng một mình. Trả về <code>208</code> chắc chắn không phải điều người dùng muốn khi
 họ hỏi chữ cái đầu tiên của string; tuy nhiên, đó là dữ liệu duy nhất Rust
 có ở byte index 0. Người dùng thường không muốn nhận về giá trị byte, kể cả
-khi string chỉ chứa chữ Latin: nếu <code>&amp;"hi"[0]</code> là code hợp lệ trả về giá trị
+khi string chỉ chứa chữ Latin: nếu <code>&amp;"hi"[0]</code> là mã hợp lệ trả về giá trị
 byte, nó sẽ trả về <code>104</code>, không phải <code>h</code>.</p>
 <p>Câu trả lời là: để tránh trả về giá trị không mong muốn và gây ra bug khó
-phát hiện, Rust không compile code này từ đầu, ngăn chặn hiểu nhầm ngay
+phát hiện, Rust không compile mã này từ đầu, ngăn chặn hiểu nhầm ngay
 trong quá trình phát triển.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="bytes-and-scalar-values-and-grapheme-clusters-oh-my"></a></p>
 <h4 id="bytes-scalar-values-and-grapheme-clusters"><a class="header" href="#bytes-scalar-values-and-grapheme-clusters">Bytes, Scalar Values, và Grapheme Clusters</a></h4>
 <p>Một điểm nữa về UTF-8 là có ba cách nhìn khác nhau về string từ góc độ Rust:
-dưới dạng byte, scalar values, và grapheme clusters (cái gần nhất với điều
+dưới dạng byte, scalar giá trị, và grapheme clusters (cái gần nhất với điều
 ta gọi là <em>chữ cái</em>).</p>
 <p>Nếu ta nhìn vào chữ Hindi "नमस्ते" viết theo chữ Devanagari, nó được lưu
 dưới dạng vector các giá trị <code>u8</code> trông như thế này:</p>
@@ -491,7 +491,7 @@ dưới dạng vector các giá trị <code>u8</code> trông như thế này:</p
 224, 165, 135]
 </code></pre>
 <p>Đó là 18 byte và là cách máy tính thực sự lưu dữ liệu này. Nếu ta nhìn chúng
-dưới dạng Unicode scalar values — tức là kiểu <code>char</code> của Rust — các byte đó
+dưới dạng Unicode scalar giá trị — tức là kiểu <code>char</code> của Rust — các byte đó
 trông như thế này:</p>
 <pre><code class="language-text">['न', 'म', 'स', '्', 'त', 'े']
 </code></pre>
@@ -540,7 +540,7 @@ chương trình.</p>
 <p><a id="methods-for-iterating-over-strings"></a></p>
 <h3 id="iterating-over-strings"><a class="header" href="#iterating-over-strings">Duyệt qua String</a></h3>
 <p>Cách tốt nhất để thao tác trên từng phần của string là nói rõ bạn muốn ký
-tự hay byte. Với từng Unicode scalar value, dùng method <code>chars</code>. Gọi <code>chars</code>
+tự hay byte. Với từng Unicode scalar giá trị, dùng method <code>chars</code>. Gọi <code>chars</code>
 trên <code>"Зд"</code> sẽ tách ra và trả về hai giá trị kiểu <code>char</code>, và bạn có thể
 duyệt qua kết quả để truy cập từng phần tử:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
@@ -549,7 +549,7 @@ duyệt qua kết quả để truy cập từng phần tử:</p>
     println!("{c}");
 }
 <span class="boring">}</span></code></pre>
-<p>Đoạn code này sẽ in ra:</p>
+<p>Đoạn mã này sẽ in ra:</p>
 <pre><code class="language-text">З
 д
 </code></pre>
@@ -561,13 +561,13 @@ hợp của bạn:</p>
     println!("{b}");
 }
 <span class="boring">}</span></code></pre>
-<p>Đoạn code này sẽ in ra 4 byte tạo nên string này:</p>
+<p>Đoạn mã này sẽ in ra 4 byte tạo nên string này:</p>
 <pre><code class="language-text">208
 151
 208
 180
 </code></pre>
-<p>Nhưng hãy nhớ rằng một Unicode scalar value hợp lệ có thể gồm nhiều hơn 1 byte.</p>
+<p>Nhưng hãy nhớ rằng một Unicode scalar giá trị hợp lệ có thể gồm nhiều hơn 1 byte.</p>
 <p>Lấy grapheme clusters từ string, như với chữ Devanagari, là việc phức tạp,
 nên chức năng này không có trong thư viện chuẩn. Nếu bạn cần, có thể tìm
 các crate trên <a href="https://crates.io/">crates.io</a>.</p>

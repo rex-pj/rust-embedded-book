@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 0 — The Rust Book</span>
+        ><span class="current">Chương 0 — Giới thiệu</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -310,11 +310,11 @@
 
         <p>
           Rust đang chứng tỏ là một công cụ năng suất cao khi làm việc nhóm lớn
-          với trình độ kiến thức lập trình hệ thống khác nhau. Code tầng thấp
+          với trình độ kiến thức lập trình hệ thống khác nhau. Mã tầng thấp
           thường tiềm ẩn nhiều lỗi vi tế — ở hầu hết các ngôn ngữ khác, những
-          lỗi này chỉ được phát hiện qua kiểm thử kỹ lưỡng và review code cẩn
+          lỗi này chỉ được phát hiện qua kiểm thử kỹ lưỡng và review mã cẩn
           thận bởi các lập trình viên kỳ cựu. Với Rust, trình biên dịch đóng vai
-          trò người gác cổng — nó từ chối biên dịch những đoạn code chứa các lỗi
+          trò người gác cổng — nó từ chối biên dịch những đoạn mã chứa các lỗi
           tiềm ẩn này, kể cả lỗi liên quan đến concurrency. Nhờ cộng tác cùng
           trình biên dịch, cả đội có thể tập trung vào logic của chương trình
           thay vì mải mê săn lùng bug.
@@ -326,23 +326,23 @@
         </p>
         <ul>
           <li>
-            <strong>Cargo</strong> — trình quản lý dependency và build tool tích
+            <strong>Cargo</strong> — trình quản lý dependency và build công cụ tích
             hợp sẵn, giúp việc thêm, biên dịch và quản lý dependency trở nên đơn
             giản và nhất quán trong toàn hệ sinh thái Rust.
           </li>
           <li>
-            Công cụ định dạng <code>rustfmt</code> đảm bảo phong cách code nhất
+            Công cụ định dạng <code>rustfmt</code> đảm bảo phong cách mã nhất
             quán giữa các thành viên trong đội.
           </li>
           <li>
             Rust Language Server cung cấp tích hợp IDE với tính năng tự động
-            hoàn thành code và hiển thị lỗi trực tiếp.
+            hoàn thành mã và hiển thị lỗi trực tiếp.
           </li>
         </ul>
 
         <p>
           Bằng cách sử dụng những công cụ này cùng với hệ sinh thái Rust phong
-          phú, lập trình viên có thể làm việc hiệu quả ngay cả khi viết code
+          phú, lập trình viên có thể làm việc hiệu quả ngay cả khi viết mã
           tầng hệ thống.
         </p>
 
@@ -382,13 +382,13 @@
         <p>
           Rust dành cho những người khao khát tốc độ và sự ổn định trong một
           ngôn ngữ. Tốc độ ở đây có hai nghĩa: tốc độ thực thi của chương trình
-          Rust và tốc độ viết code với Rust. Các kiểm tra của trình biên dịch
-          Rust đảm bảo sự ổn định khi thêm tính năng mới và tái cấu trúc code —
-          điều khác hẳn với những codebase cũ kỹ dễ vỡ trong các ngôn ngữ không
+          Rust và tốc độ viết mã với Rust. Các kiểm tra của trình biên dịch
+          Rust đảm bảo sự ổn định khi thêm tính năng mới và tái cấu trúc mã —
+          điều khác hẳn với những mã nguồn cũ kỹ dễ vỡ trong các ngôn ngữ không
           có cơ chế kiểm tra này, khiến lập trình viên thường sợ phải chỉnh sửa.
           Bằng cách hướng tới <em>zero-cost abstractions</em> — các tính năng
-          tầng cao được biên dịch thành code tầng thấp nhanh tương đương code
-          viết tay — Rust nỗ lực để code an toàn cũng là code nhanh.
+          tầng cao được biên dịch thành mã tầng thấp nhanh tương đương mã
+          viết tay — Rust nỗ lực để mã an toàn cũng là mã nhanh.
         </p>
 
         <p>
@@ -404,7 +404,7 @@
         <h2 id="who-this-book-is-for">📚 Cuốn sách này dành cho ai?</h2>
 
         <p>
-          Cuốn sách này giả định rằng bạn đã từng viết code bằng một ngôn ngữ
+          Cuốn sách này giả định rằng bạn đã từng viết mã bằng một ngôn ngữ
           lập trình khác, nhưng không đặt giả định về ngôn ngữ cụ thể đó là gì.
           Chúng tôi đã cố gắng làm cho tài liệu tiếp cận được với người đến từ
           nhiều nền tảng lập trình khác nhau. Chúng tôi không dành nhiều thời
@@ -433,7 +433,7 @@
         <p>
           <strong>Chương 1</strong> giải thích cách cài đặt Rust, cách viết
           chương trình "Hello, world!" và cách dùng Cargo — trình quản lý
-          package và build tool của Rust. <strong>Chương 2</strong> là phần nhập
+          package và build công cụ của Rust. <strong>Chương 2</strong> là phần nhập
           môn thực hành — bạn sẽ xây dựng trò chơi đoán số. Ở đây chúng ta đề
           cập các khái niệm ở mức tổng quan, còn chi tiết sẽ được trình bày ở
           các chương sau. Nếu bạn muốn xắn tay vào làm ngay, Chương 2 chính là
@@ -455,7 +455,7 @@
 
         <p>
           <strong>Chương 7</strong> đề cập hệ thống module của Rust và các quy
-          tắc về phạm vi truy cập để tổ chức code và API công khai.
+          tắc về phạm vi truy cập để tổ chức mã và API công khai.
           <strong>Chương 8</strong> thảo luận về một số cấu trúc dữ liệu
           collection phổ biến mà thư viện chuẩn cung cấp: vector, string và hash
           map. <strong>Chương 9</strong> khám phá triết lý và kỹ thuật xử lý lỗi
@@ -464,7 +464,7 @@
 
         <p>
           <strong>Chương 10</strong> đào sâu vào generics, trait và lifetime —
-          những thứ cho phép bạn định nghĩa code áp dụng được cho nhiều kiểu dữ
+          những thứ cho phép bạn định nghĩa mã áp dụng được cho nhiều kiểu dữ
           liệu. <strong>Chương 11</strong> tập trung hoàn toàn vào kiểm thử, vốn
           vẫn cần thiết ngay cả với các đảm bảo an toàn của Rust. Trong
           <strong>Chương 12</strong>, chúng ta sẽ tự xây dựng một tập hợp con
@@ -501,7 +501,7 @@
 
         <p>
           <strong>Chương 21</strong> sẽ hoàn thiện một dự án trong đó chúng ta
-          implement một web server đa luồng tầng thấp!
+          triển khai một web server đa luồng tầng thấp!
         </p>
 
         <p>
@@ -526,12 +526,12 @@
 
         <p>
           Một phần quan trọng trong quá trình học Rust là học cách đọc hiểu các
-          thông báo lỗi từ trình biên dịch — chúng sẽ dẫn đường cho bạn đến code
+          thông báo lỗi từ trình biên dịch — chúng sẽ dẫn đường cho bạn đến mã
           chạy được. Do đó, chúng tôi sẽ cung cấp nhiều ví dụ không thể biên
           dịch kèm theo thông báo lỗi mà trình biên dịch sẽ hiển thị. Hãy lưu ý
           rằng nếu bạn nhập và chạy một ví dụ ngẫu nhiên, nó có thể không biên
           dịch! Hãy đọc văn bản xung quanh để biết ví dụ đó có chủ đích gây lỗi
-          hay không. Ferris sẽ giúp bạn phân biệt các đoạn code không hoạt động
+          hay không. Ferris sẽ giúp bạn phân biệt các đoạn mã không hoạt động
           như mong muốn:
         </p>
 
@@ -552,7 +552,7 @@
                     alt="Ferris cua với dấu hỏi"
                   />
                 </td>
-                <td>Đoạn code này <strong>không biên dịch được!</strong></td>
+                <td>Đoạn mã này <strong>không biên dịch được!</strong></td>
               </tr>
               <tr>
                 <td>
@@ -562,7 +562,7 @@
                     alt="Ferris cua giơ tay"
                   />
                 </td>
-                <td>Đoạn code này <strong>gây panic!</strong></td>
+                <td>Đoạn mã này <strong>gây panic!</strong></td>
               </tr>
               <tr>
                 <td>
@@ -573,7 +573,7 @@
                   />
                 </td>
                 <td>
-                  Đoạn code này
+                  Đoạn mã này
                   <strong>không cho kết quả như mong muốn.</strong>
                 </td>
               </tr>
@@ -583,7 +583,7 @@
 
         <p>
           Trong hầu hết các trường hợp, chúng tôi sẽ dẫn bạn đến phiên bản đúng
-          của bất kỳ đoạn code nào không biên dịch.
+          của bất kỳ đoạn mã nào không biên dịch.
         </p>
 
         <h2 id="source-code">💾 Mã nguồn</h2>

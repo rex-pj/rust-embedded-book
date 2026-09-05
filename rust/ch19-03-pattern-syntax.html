@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — Cú Pháp Pattern</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch19-02-refutability.html">← Trước</a><a href="ch20-00-advanced-features.html">Tiếp →</a></div>
 
@@ -208,7 +208,7 @@
 <p>Trong phần này, chúng ta sẽ tổng hợp tất cả cú pháp hợp lệ trong pattern và bàn về lý do cũng như thời điểm bạn nên dùng từng loại.</p>
 
 <h3 id="matching-literals">Khớp với Literal</h3>
-<p>Như bạn đã thấy ở Chương 6, bạn có thể khớp pattern trực tiếp với các giá trị literal. Đoạn code sau minh họa điều đó:</p>
+<p>Như bạn đã thấy ở Chương 6, bạn có thể khớp pattern trực tiếp với các giá trị literal. Đoạn mã sau minh họa điều đó:</p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 1;
 
@@ -219,10 +219,10 @@
         _ =&gt; println!("anything"),
     }
 }</code></pre>
-<p>Code in ra <code>one</code> vì giá trị của <code>x</code> là <code>1</code>. Cú pháp này rất tiện khi bạn muốn code thực hiện một hành động cụ thể khi nhận được một giá trị cụ thể.</p>
+<p>Mã in ra <code>one</code> vì giá trị của <code>x</code> là <code>1</code>. Cú pháp này rất tiện khi bạn muốn mã thực hiện một hành động cụ thể khi nhận được một giá trị cụ thể.</p>
 
 <h3 id="matching-named-variables">Khớp với Biến Có Tên</h3>
-<p>Biến có tên là irrefutable pattern — khớp với bất kỳ giá trị nào, và chúng ta đã dùng chúng nhiều lần trong cuốn sách. Tuy nhiên, có một điểm tinh tế khi dùng biến có tên trong <code>match</code>, <code>if let</code>, hay <code>while let</code>: vì các biểu thức này tạo ra scope mới, biến được khai báo trong pattern bên trong sẽ shadow biến cùng tên ở ngoài — giống như mọi biến khác vậy. Trong Listing 19-11, ta khai báo biến <code>x</code> có giá trị <code>Some(5)</code> và biến <code>y</code> có giá trị <code>10</code>. Sau đó tạo biểu thức <code>match</code> trên giá trị <code>x</code>. Hãy nhìn vào các pattern trong các nhánh match và lệnh <code>println!</code> ở cuối, rồi thử đoán code sẽ in ra gì trước khi chạy hoặc đọc tiếp.</p>
+<p>Biến có tên là irrefutable pattern — khớp với bất kỳ giá trị nào, và chúng ta đã dùng chúng nhiều lần trong cuốn sách. Tuy nhiên, có một điểm tinh tế khi dùng biến có tên trong <code>match</code>, <code>if let</code>, hay <code>while let</code>: vì các biểu thức này tạo ra scope mới, biến được khai báo trong pattern bên trong sẽ shadow biến cùng tên ở ngoài — giống như mọi biến khác vậy. Trong Listing 19-11, ta khai báo biến <code>x</code> có giá trị <code>Some(5)</code> và biến <code>y</code> có giá trị <code>10</code>. Sau đó tạo biểu thức <code>match</code> trên giá trị <code>x</code>. Hãy nhìn vào các pattern trong các nhánh match và lệnh <code>println!</code> ở cuối, rồi thử đoán mã sẽ in ra gì trước khi chạy hoặc đọc tiếp.</p>
 <figure class="listing" id="listing-19-11">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -239,14 +239,14 @@
 }</code></pre>
 <figcaption><a href="#listing-19-11">Listing 19-11</a>: Biểu thức <code>match</code> với nhánh giới thiệu biến mới shadow biến <code>y</code> hiện có</figcaption>
 </figure>
-<p>Hãy xem qua những gì xảy ra khi biểu thức <code>match</code> chạy. Pattern của nhánh match đầu tiên không khớp với giá trị đã định của <code>x</code>, nên code tiếp tục.</p>
+<p>Hãy xem qua những gì xảy ra khi biểu thức <code>match</code> chạy. Pattern của nhánh match đầu tiên không khớp với giá trị đã định của <code>x</code>, nên mã tiếp tục.</p>
 <p>Pattern của nhánh match thứ hai giới thiệu một biến mới tên <code>y</code> sẽ khớp với bất kỳ giá trị nào bên trong một giá trị <code>Some</code>. Vì ta đang ở trong scope mới bên trong biểu thức <code>match</code>, đây là một biến <code>y</code> mới hoàn toàn — không phải cái <code>y</code> ta khai báo lúc đầu với giá trị <code>10</code>. Binding <code>y</code> mới này sẽ khớp với bất kỳ giá trị nào bên trong <code>Some</code>, tức là giá trị trong <code>x</code>. Vì vậy, <code>y</code> mới này bind vào giá trị bên trong của <code>Some</code> trong <code>x</code>. Giá trị đó là <code>5</code>, nên biểu thức cho nhánh đó thực thi và in ra <code>Matched, y = 5</code>.</p>
 <p>Nếu <code>x</code> là <code>None</code> thay vì <code>Some(5)</code>, các pattern ở hai nhánh đầu sẽ không khớp, và giá trị sẽ khớp với dấu gạch dưới. Ta không giới thiệu biến <code>x</code> trong pattern của nhánh gạch dưới, nên <code>x</code> trong biểu thức vẫn là <code>x</code> bên ngoài chưa bị shadow. Trong trường hợp giả định này, <code>match</code> sẽ in ra <code>Default case, x = None</code>.</p>
 <p>Khi biểu thức <code>match</code> kết thúc, scope của nó cũng kết thúc, và cùng với nó là scope của <code>y</code> bên trong. Lệnh <code>println!</code> cuối in ra <code>at the end: x = Some(5), y = 10</code>.</p>
-<p>Để tạo biểu thức <code>match</code> so sánh giá trị của <code>x</code> và <code>y</code> bên ngoài — thay vì tạo biến mới shadow <code>y</code> hiện có — ta cần dùng match guard conditional. Chúng ta sẽ nói về match guard ở phần <a href="#adding-conditionals-with-match-guards">"Thêm điều kiện với Match Guard"</a> phía sau.</p>
+<p>Để tạo biểu thức <code>match</code> so sánh giá trị của <code>x</code> và <code>y</code> bên ngoài — thay vì tạo biến mới shadow <code>y</code> hiện có — ta cần dùng match guard conditional. Chúng ta sẽ nói về match guard ở phần <a href="#adding-conditionals-with-match-guards">“Thêm Điều Kiện với Match Guard”</a> phía sau.</p>
 
 <h3 id="matching-multiple-patterns">Khớp Nhiều Pattern</h3>
-<p>Trong biểu thức <code>match</code>, bạn có thể khớp nhiều pattern bằng cú pháp <code>|</code> — toán tử <em>or</em> của pattern. Ví dụ, đoạn code sau khớp giá trị của <code>x</code> với các nhánh match, trong đó nhánh đầu tiên có tùy chọn <em>or</em>, nghĩa là nếu giá trị của <code>x</code> khớp với bất kỳ giá trị nào trong nhánh đó, code của nhánh đó sẽ chạy:</p>
+<p>Trong biểu thức <code>match</code>, bạn có thể khớp nhiều pattern bằng cú pháp <code>|</code> — toán tử <em>or</em> của pattern. Ví dụ, đoạn mã sau khớp giá trị của <code>x</code> với các nhánh match, trong đó nhánh đầu tiên có tùy chọn <em>or</em>, nghĩa là nếu giá trị của <code>x</code> khớp với bất kỳ giá trị nào trong nhánh đó, mã của nhánh đó sẽ chạy:</p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 1;
 
@@ -256,10 +256,10 @@
         _ =&gt; println!("anything"),
     }
 }</code></pre>
-<p>Code này in ra <code>one or two</code>.</p>
+<p>Mã này in ra <code>one or two</code>.</p>
 
 <h3 id="matching-ranges-of-values-with-">Khớp Khoảng Giá Trị với <code>..=</code></h3>
-<p>Cú pháp <code>..=</code> cho phép khớp với một khoảng giá trị kín (inclusive). Trong đoạn code sau, khi pattern khớp với bất kỳ giá trị nào trong khoảng đã cho, nhánh đó sẽ thực thi:</p>
+<p>Cú pháp <code>..=</code> cho phép khớp với một khoảng giá trị kín (inclusive). Trong đoạn mã sau, khi pattern khớp với bất kỳ giá trị nào trong khoảng đã cho, nhánh đó sẽ thực thi:</p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;
 
@@ -303,7 +303,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-12">Listing 19-12</a>: Destructure các trường của struct vào các biến riêng biệt</figcaption>
 </figure>
-<p>Code này tạo các biến <code>a</code> và <code>b</code> khớp với giá trị của các trường <code>x</code> và <code>y</code> trong struct <code>p</code>. Ví dụ này cho thấy tên biến trong pattern không nhất thiết phải trùng với tên trường của struct. Tuy nhiên, thường thì người ta đặt tên biến trùng với tên trường để dễ nhớ. Vì thói quen phổ biến này và vì viết <code>let Point { x: x, y: y } = p;</code> lặp lại nhiều, Rust có cú pháp tắt cho pattern khớp với trường struct: chỉ cần liệt kê tên trường, và các biến tạo ra từ pattern sẽ có cùng tên. Listing 19-13 hoạt động giống với code trong Listing 19-12, nhưng các biến được tạo trong pattern <code>let</code> là <code>x</code> và <code>y</code> thay vì <code>a</code> và <code>b</code>.</p>
+<p>Mã này tạo các biến <code>a</code> và <code>b</code> khớp với giá trị của các trường <code>x</code> và <code>y</code> trong struct <code>p</code>. Ví dụ này cho thấy tên biến trong pattern không nhất thiết phải trùng với tên trường của struct. Tuy nhiên, thường thì người ta đặt tên biến trùng với tên trường để dễ nhớ. Vì thói quen phổ biến này và vì viết <code>let Point { x: x, y: y } = p;</code> lặp lại nhiều, Rust có cú pháp tắt cho pattern khớp với trường struct: chỉ cần liệt kê tên trường, và các biến tạo ra từ pattern sẽ có cùng tên. Listing 19-13 hoạt động giống với mã trong Listing 19-12, nhưng các biến được tạo trong pattern <code>let</code> là <code>x</code> và <code>y</code> thay vì <code>a</code> và <code>b</code>.</p>
 <figure class="listing" id="listing-19-13">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point {
@@ -320,7 +320,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-13">Listing 19-13</a>: Destructure trường struct dùng cú pháp tắt</figcaption>
 </figure>
-<p>Code này tạo các biến <code>x</code> và <code>y</code> khớp với các trường <code>x</code> và <code>y</code> của biến <code>p</code>. Kết quả là các biến <code>x</code> và <code>y</code> chứa giá trị từ struct <code>p</code>.</p>
+<p>Mã này tạo các biến <code>x</code> và <code>y</code> khớp với các trường <code>x</code> và <code>y</code> của biến <code>p</code>. Kết quả là các biến <code>x</code> và <code>y</code> chứa giá trị từ struct <code>p</code>.</p>
 <p>Ta cũng có thể destructure với các giá trị literal như một phần của pattern struct thay vì tạo biến cho tất cả các trường. Điều này giúp kiểm tra một số trường với giá trị cụ thể trong khi tạo biến để destructure các trường còn lại.</p>
 <p>Trong Listing 19-14, ta có biểu thức <code>match</code> phân chia các giá trị <code>Point</code> thành ba trường hợp: điểm nằm trên trục <code>x</code> (khi <code>y = 0</code>), trên trục <code>y</code> (<code>x = 0</code>), hoặc không nằm trên trục nào.</p>
 <figure class="listing" id="listing-19-14">
@@ -343,10 +343,10 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-14">Listing 19-14</a>: Destructure và khớp với giá trị literal trong cùng một pattern</figcaption>
 </figure>
-<p>Nhánh đầu tiên khớp với điểm nằm trên trục <code>x</code> bằng cách chỉ định trường <code>y</code> khớp nếu giá trị của nó bằng literal <code>0</code>. Pattern vẫn tạo biến <code>x</code> mà ta có thể dùng trong code của nhánh này.</p>
+<p>Nhánh đầu tiên khớp với điểm nằm trên trục <code>x</code> bằng cách chỉ định trường <code>y</code> khớp nếu giá trị của nó bằng literal <code>0</code>. Pattern vẫn tạo biến <code>x</code> mà ta có thể dùng trong mã của nhánh này.</p>
 <p>Tương tự, nhánh thứ hai khớp với điểm nằm trên trục <code>y</code> bằng cách chỉ định trường <code>x</code> khớp nếu giá trị của nó là <code>0</code> và tạo biến <code>y</code> cho giá trị của trường <code>y</code>. Nhánh thứ ba không chỉ định literal nào, nên khớp với bất kỳ <code>Point</code> nào khác và tạo biến cho cả hai trường <code>x</code> và <code>y</code>.</p>
-<p>Trong ví dụ này, giá trị <code>p</code> khớp với nhánh thứ hai vì <code>x</code> chứa <code>0</code>, nên code sẽ in ra <code>On the y axis at 7</code>.</p>
-<p>Nhớ rằng biểu thức <code>match</code> dừng kiểm tra các nhánh ngay khi tìm thấy pattern khớp đầu tiên, nên dù <code>Point { x: 0, y: 0 }</code> nằm trên cả trục <code>x</code> lẫn trục <code>y</code>, code này chỉ in ra <code>On the x axis at 0</code>.</p>
+<p>Trong ví dụ này, giá trị <code>p</code> khớp với nhánh thứ hai vì <code>x</code> chứa <code>0</code>, nên mã sẽ in ra <code>On the y axis at 7</code>.</p>
+<p>Nhớ rằng biểu thức <code>match</code> dừng kiểm tra các nhánh ngay khi tìm thấy pattern khớp đầu tiên, nên dù <code>Point { x: 0, y: 0 }</code> nằm trên cả trục <code>x</code> lẫn trục <code>y</code>, mã này chỉ in ra <code>On the x axis at 0</code>.</p>
 
 <h4 id="enums">Enum</h4>
 <p>Ta đã destructure enum trong cuốn sách (ví dụ Listing 6-5 ở Chương 6), nhưng chưa thảo luận rõ ràng rằng pattern để destructure enum tương ứng với cách dữ liệu được định nghĩa bên trong enum. Ví dụ, trong Listing 19-15, ta dùng enum <code>Message</code> từ Listing 6-2 và viết <code>match</code> với các pattern sẽ destructure từng giá trị bên trong.</p>
@@ -379,13 +379,13 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-15">Listing 19-15</a>: Destructure các variant enum chứa các loại giá trị khác nhau</figcaption>
 </figure>
-<p>Code này sẽ in ra <code>Change color to red 0, green 160, and blue 255</code>. Hãy thử thay đổi giá trị của <code>msg</code> để xem code từ các nhánh khác chạy.</p>
+<p>Mã này sẽ in ra <code>Change color to red 0, green 160, and blue 255</code>. Hãy thử thay đổi giá trị của <code>msg</code> để xem mã từ các nhánh khác chạy.</p>
 <p>Với các variant enum không có dữ liệu, như <code>Message::Quit</code>, ta không thể destructure thêm. Ta chỉ có thể khớp với giá trị literal <code>Message::Quit</code>, và không có biến nào trong pattern đó.</p>
-<p>Với các variant dạng struct, như <code>Message::Move</code>, ta có thể dùng pattern tương tự như khi khớp struct. Sau tên variant, ta đặt cặp ngoặc nhọn và liệt kê các trường với biến để tháo rời từng phần cho code của nhánh. Ở đây ta dùng cú pháp tắt như trong Listing 19-13.</p>
+<p>Với các variant dạng struct, như <code>Message::Move</code>, ta có thể dùng pattern tương tự như khi khớp struct. Sau tên variant, ta đặt cặp ngoặc nhọn và liệt kê các trường với biến để tháo rời từng phần cho mã của nhánh. Ở đây ta dùng cú pháp tắt như trong Listing 19-13.</p>
 <p>Với các variant dạng tuple, như <code>Message::Write</code> chứa tuple với một phần tử và <code>Message::ChangeColor</code> chứa tuple với ba phần tử, pattern tương tự như khi khớp tuple. Số biến trong pattern phải khớp với số phần tử trong variant đang khớp.</p>
 
 <h4 id="nested-structs-and-enums">Struct và Enum Lồng Nhau</h4>
-<p>Cho đến nay các ví dụ của ta đều khớp struct hoặc enum ở một cấp độ, nhưng matching cũng hoạt động với các item lồng nhau! Ví dụ, ta có thể refactor code trong Listing 19-15 để hỗ trợ cả màu RGB và HSV trong message <code>ChangeColor</code>, như trong Listing 19-16.</p>
+<p>Cho đến nay các ví dụ của ta đều khớp struct hoặc enum ở một cấp độ, nhưng matching cũng hoạt động với các item lồng nhau! Ví dụ, ta có thể refactor mã trong Listing 19-15 để hỗ trợ cả màu RGB và HSV trong message <code>ChangeColor</code>, như trong Listing 19-16.</p>
 <figure class="listing" id="listing-19-16">
 <pre class="playground"><code class="language-rust edition2024">enum Color {
     Rgb(i32, i32, i32),
@@ -426,7 +426,7 @@ fn main() {
 
     let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
 }</code></pre>
-<p>Code này cho phép ta tháo các kiểu phức tạp thành các phần cấu thành để có thể dùng các giá trị ta quan tâm một cách riêng lẻ.</p>
+<p>Mã này cho phép ta tháo các kiểu phức tạp thành các phần cấu thành để có thể dùng các giá trị ta quan tâm một cách riêng lẻ.</p>
 <p>Destructuring với pattern là cách tiện lợi để dùng từng phần của giá trị — chẳng hạn giá trị từ mỗi trường trong struct — một cách độc lập.</p>
 
 <h3 id="ignoring-values-in-a-pattern">Bỏ Qua Giá Trị Trong Pattern</h3>
@@ -445,11 +445,11 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-17">Listing 19-17</a>: Dùng <code>_</code> trong signature hàm</figcaption>
 </figure>
-<p>Code này sẽ hoàn toàn bỏ qua giá trị <code>3</code> truyền làm tham số đầu tiên, và sẽ in ra <code>This code only uses the y parameter: 4</code>.</p>
-<p>Trong hầu hết các trường hợp khi bạn không cần một tham số hàm cụ thể nữa, bạn sẽ thay đổi signature để bỏ tham số không dùng đó đi. Bỏ qua tham số hàm có thể đặc biệt hữu ích trong các trường hợp, ví dụ, khi bạn đang implement một trait với signature kiểu nhất định nhưng phần thân hàm không cần một trong các tham số. Khi đó bạn tránh được cảnh báo compiler về tham số hàm không dùng, như bạn sẽ nhận nếu dùng tên thay thế.</p>
+<p>Mã này sẽ hoàn toàn bỏ qua giá trị <code>3</code> truyền làm tham số đầu tiên, và sẽ in ra <code>This code only uses the y parameter: 4</code>.</p>
+<p>Trong hầu hết các trường hợp khi bạn không cần một tham số hàm cụ thể nữa, bạn sẽ thay đổi signature để bỏ tham số không dùng đó đi. Bỏ qua tham số hàm có thể đặc biệt hữu ích trong các trường hợp, ví dụ, khi bạn đang triển khai một trait với signature kiểu nhất định nhưng phần thân hàm không cần một trong các tham số. Khi đó bạn tránh được cảnh báo compiler về tham số hàm không dùng, như bạn sẽ nhận nếu dùng tên thay thế.</p>
 
 <h4 id="parts-of-a-value-with-a-nested-_">Một Phần Giá Trị với <code>_</code> Lồng Nhau</h4>
-<p>Ta cũng có thể dùng <code>_</code> bên trong pattern khác để bỏ qua chỉ một phần của giá trị — chẳng hạn khi ta muốn kiểm tra chỉ một phần giá trị nhưng không cần các phần khác trong code tương ứng. Listing 19-18 cho thấy code quản lý giá trị của một setting. Yêu cầu nghiệp vụ là người dùng không được phép ghi đè customization hiện có của setting nhưng có thể unset setting và đặt giá trị mới nếu setting hiện đang unset.</p>
+<p>Ta cũng có thể dùng <code>_</code> bên trong pattern khác để bỏ qua chỉ một phần của giá trị — chẳng hạn khi ta muốn kiểm tra chỉ một phần giá trị nhưng không cần các phần khác trong mã tương ứng. Listing 19-18 cho thấy mã quản lý giá trị của một setting. Yêu cầu nghiệp vụ là người dùng không được phép ghi đè customization hiện có của setting nhưng có thể unset setting và đặt giá trị mới nếu setting hiện đang unset.</p>
 <figure class="listing" id="listing-19-18">
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut setting_value = Some(5);
@@ -468,7 +468,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-18">Listing 19-18</a>: Dùng dấu gạch dưới trong pattern khớp với variant <code>Some</code> khi không cần dùng giá trị bên trong <code>Some</code></figcaption>
 </figure>
-<p>Code này sẽ in ra <code>Can't overwrite an existing customized value</code> và sau đó <code>setting is Some(5)</code>. Trong nhánh match đầu tiên, ta không cần khớp hay dùng các giá trị bên trong một trong hai variant <code>Some</code>, nhưng ta cần kiểm tra trường hợp khi cả <code>setting_value</code> và <code>new_setting_value</code> đều là variant <code>Some</code>. Khi đó, ta in lý do không thay đổi <code>setting_value</code>, và nó không bị thay đổi.</p>
+<p>Mã này sẽ in ra <code>Can't overwrite an existing customized value</code> và sau đó <code>setting is Some(5)</code>. Trong nhánh match đầu tiên, ta không cần khớp hay dùng các giá trị bên trong một trong hai variant <code>Some</code>, nhưng ta cần kiểm tra trường hợp khi cả <code>setting_value</code> và <code>new_setting_value</code> đều là variant <code>Some</code>. Khi đó, ta in lý do không thay đổi <code>setting_value</code>, và nó không bị thay đổi.</p>
 <p>Trong tất cả các trường hợp khác (nếu <code>setting_value</code> hoặc <code>new_setting_value</code> là <code>None</code>) được diễn đạt bởi pattern <code>_</code> trong nhánh thứ hai, ta muốn cho phép <code>new_setting_value</code> trở thành <code>setting_value</code>.</p>
 <p>Ta cũng có thể dùng dấu gạch dưới ở nhiều vị trí trong một pattern để bỏ qua các giá trị cụ thể. Listing 19-19 cho thấy ví dụ bỏ qua giá trị thứ hai và thứ tư trong một tuple gồm năm phần tử.</p>
 <figure class="listing" id="listing-19-19">
@@ -483,10 +483,10 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-19">Listing 19-19</a>: Bỏ qua nhiều phần của tuple</figcaption>
 </figure>
-<p>Code này sẽ in ra <code>Some numbers: 2, 8, 32</code>, và các giá trị <code>4</code> và <code>16</code> sẽ bị bỏ qua.</p>
+<p>Mã này sẽ in ra <code>Some numbers: 2, 8, 32</code>, và các giá trị <code>4</code> và <code>16</code> sẽ bị bỏ qua.</p>
 
 <h4 id="an-unused-variable-by-starting-its-name-with-_">Biến Không Dùng Bằng Cách Bắt Đầu Tên với <code>_</code></h4>
-<p>Nếu bạn tạo biến nhưng không dùng ở đâu, Rust thường sẽ đưa ra cảnh báo vì biến không dùng có thể là bug. Tuy nhiên, đôi khi hữu ích khi tạo biến bạn chưa dùng đến, chẳng hạn khi đang prototype hay mới bắt đầu một dự án. Trong trường hợp đó, bạn có thể bảo Rust không cảnh báo về biến chưa dùng bằng cách bắt đầu tên biến bằng dấu gạch dưới. Trong Listing 19-20, ta tạo hai biến chưa dùng, nhưng khi compile code này, chỉ nhận được cảnh báo về một trong chúng.</p>
+<p>Nếu bạn tạo biến nhưng không dùng ở đâu, Rust thường sẽ đưa ra cảnh báo vì biến không dùng có thể là bug. Tuy nhiên, đôi khi hữu ích khi tạo biến bạn chưa dùng đến, chẳng hạn khi đang prototype hay mới bắt đầu một dự án. Trong trường hợp đó, bạn có thể bảo Rust không cảnh báo về biến chưa dùng bằng cách bắt đầu tên biến bằng dấu gạch dưới. Trong Listing 19-20, ta tạo hai biến chưa dùng, nhưng khi compile mã này, chỉ nhận được cảnh báo về một trong chúng.</p>
 <figure class="listing" id="listing-19-20">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -522,7 +522,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-22">Listing 19-22</a>: Dùng dấu gạch dưới không bind giá trị.</figcaption>
 </figure>
-<p>Code này chạy tốt vì ta không bao giờ bind <code>s</code> vào bất cứ thứ gì; nó không bị move.</p>
+<p>Mã này chạy tốt vì ta không bao giờ bind <code>s</code> vào bất cứ thứ gì; nó không bị move.</p>
 
 <h4 id="remaining-parts-of-a-value-with-">Các Phần Còn Lại của Giá Trị với <code>..</code></h4>
 <p>Với các giá trị có nhiều phần, ta có thể dùng cú pháp <code>..</code> để chỉ dùng những phần cụ thể và bỏ qua phần còn lại, tránh phải liệt kê dấu gạch dưới cho từng giá trị bị bỏ qua. Pattern <code>..</code> bỏ qua mọi phần của giá trị ta chưa khớp rõ ràng trong phần còn lại của pattern. Trong Listing 19-23, ta có struct <code>Point</code> chứa tọa độ trong không gian ba chiều. Trong biểu thức <code>match</code>, ta muốn chỉ thao tác trên tọa độ <code>x</code> và bỏ qua các giá trị trong trường <code>y</code> và <code>z</code>.</p>
@@ -557,7 +557,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-24">Listing 19-24</a>: Khớp chỉ giá trị đầu và cuối trong tuple, bỏ qua tất cả giá trị khác</figcaption>
 </figure>
-<p>Trong code này, giá trị đầu và cuối được khớp với <code>first</code> và <code>last</code>. Phần <code>..</code> sẽ khớp và bỏ qua tất cả ở giữa.</p>
+<p>Trong mã này, giá trị đầu và cuối được khớp với <code>first</code> và <code>last</code>. Phần <code>..</code> sẽ khớp và bỏ qua tất cả ở giữa.</p>
 <p>Tuy nhiên, dùng <code>..</code> phải rõ nghĩa. Nếu không rõ giá trị nào dùng để khớp và giá trị nào bị bỏ qua, Rust sẽ báo lỗi. Listing 19-25 cho thấy ví dụ dùng <code>..</code> mơ hồ, vì vậy sẽ không compile được.</p>
 <figure class="listing" id="listing-19-25">
 <span class="file-name">Tên file: src/main.rs</span>
@@ -585,7 +585,7 @@ error: `..` can only be used once per tuple pattern
 
 error: could not compile `patterns` (bin "patterns") due to 1 previous error
 </code></pre>
-<p>Rust không thể xác định có bao nhiêu giá trị trong tuple cần bỏ qua trước khi khớp giá trị với <code>second</code>, rồi tiếp theo bỏ qua bao nhiêu nữa. Code này có thể có nghĩa là ta muốn bỏ qua <code>2</code>, bind <code>second</code> vào <code>4</code>, rồi bỏ qua <code>8</code>, <code>16</code>, và <code>32</code>; hoặc bỏ qua <code>2</code> và <code>4</code>, bind <code>second</code> vào <code>8</code>, rồi bỏ qua <code>16</code> và <code>32</code>; và còn nhiều cách khác nữa. Tên biến <code>second</code> không có ý nghĩa đặc biệt với Rust, nên ta nhận lỗi compiler vì dùng <code>..</code> ở hai vị trí như thế này là mơ hồ.</p>
+<p>Rust không thể xác định có bao nhiêu giá trị trong tuple cần bỏ qua trước khi khớp giá trị với <code>second</code>, rồi tiếp theo bỏ qua bao nhiêu nữa. Mã này có thể có nghĩa là ta muốn bỏ qua <code>2</code>, bind <code>second</code> vào <code>4</code>, rồi bỏ qua <code>8</code>, <code>16</code>, và <code>32</code>; hoặc bỏ qua <code>2</code> và <code>4</code>, bind <code>second</code> vào <code>8</code>, rồi bỏ qua <code>16</code> và <code>32</code>; và còn nhiều cách khác nữa. Tên biến <code>second</code> không có ý nghĩa đặc biệt với Rust, nên ta nhận lỗi compiler vì dùng <code>..</code> ở hai vị trí như thế này là mơ hồ.</p>
 
 <h3 id="adding-conditionals-with-match-guards">Thêm Điều Kiện với Match Guard</h3>
 <p>Một <em>match guard</em> là điều kiện <code>if</code> bổ sung, được chỉ định sau pattern trong nhánh <code>match</code>, cũng phải khớp để chọn nhánh đó. Match guard hữu ích để diễn đạt ý tưởng phức tạp hơn những gì pattern đơn thuần cho phép. Lưu ý, chúng chỉ khả dụng trong biểu thức <code>match</code>, không phải <code>if let</code> hay <code>while let</code>.</p>
@@ -622,7 +622,7 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 }</code></pre>
 <figcaption><a href="#listing-19-27">Listing 19-27</a>: Dùng match guard để kiểm tra bằng biến bên ngoài</figcaption>
 </figure>
-<p>Code này bây giờ sẽ in ra <code>Default case, x = Some(5)</code>. Pattern trong nhánh match thứ hai không tạo biến mới <code>y</code> shadow <code>y</code> bên ngoài, nghĩa là ta có thể dùng <code>y</code> bên ngoài trong match guard. Thay vì chỉ định pattern là <code>Some(y)</code> — sẽ shadow <code>y</code> bên ngoài — ta chỉ định <code>Some(n)</code>. Điều này tạo biến mới <code>n</code> không shadow gì cả vì không có biến <code>n</code> nào bên ngoài <code>match</code>.</p>
+<p>Mã này bây giờ sẽ in ra <code>Default case, x = Some(5)</code>. Pattern trong nhánh match thứ hai không tạo biến mới <code>y</code> shadow <code>y</code> bên ngoài, nghĩa là ta có thể dùng <code>y</code> bên ngoài trong match guard. Thay vì chỉ định pattern là <code>Some(y)</code> — sẽ shadow <code>y</code> bên ngoài — ta chỉ định <code>Some(n)</code>. Điều này tạo biến mới <code>n</code> không shadow gì cả vì không có biến <code>n</code> nào bên ngoài <code>match</code>.</p>
 <p>Match guard <code>if n == y</code> không phải là pattern và do đó không tạo biến mới. Cái <code>y</code> này <em>là</em> <code>y</code> bên ngoài chứ không phải <code>y</code> mới shadow nó, và ta có thể tìm kiếm giá trị có cùng giá trị với <code>y</code> bên ngoài bằng cách so sánh <code>n</code> với <code>y</code>.</p>
 <p>Bạn cũng có thể dùng toán tử <em>or</em> <code>|</code> trong match guard để chỉ định nhiều pattern; điều kiện match guard sẽ áp dụng cho tất cả các pattern. Listing 19-28 cho thấy độ ưu tiên khi kết hợp pattern dùng <code>|</code> với match guard. Phần quan trọng trong ví dụ này là match guard <code>if y</code> áp dụng cho <code>4</code>, <code>5</code>, <em>và</em> <code>6</code>, dù trông như <code>if y</code> chỉ áp dụng cho <code>6</code>.</p>
 <figure class="listing" id="listing-19-28">
@@ -637,16 +637,16 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 }</code></pre>
 <figcaption><a href="#listing-19-28">Listing 19-28</a>: Kết hợp nhiều pattern với match guard</figcaption>
 </figure>
-<p>Điều kiện match cho biết nhánh chỉ khớp nếu giá trị của <code>x</code> bằng <code>4</code>, <code>5</code>, hoặc <code>6</code> <em>và</em> nếu <code>y</code> là <code>true</code>. Khi code này chạy, pattern của nhánh đầu tiên khớp vì <code>x</code> là <code>4</code>, nhưng match guard <code>if y</code> là <code>false</code>, nên nhánh đầu tiên không được chọn. Code chuyển sang nhánh thứ hai, sẽ khớp, và chương trình in ra <code>no</code>. Lý do là điều kiện <code>if</code> áp dụng cho toàn bộ pattern <code>4 | 5 | 6</code>, không chỉ giá trị cuối <code>6</code>. Nói cách khác, độ ưu tiên của match guard trong quan hệ với pattern hoạt động như thế này:</p>
+<p>Điều kiện match cho biết nhánh chỉ khớp nếu giá trị của <code>x</code> bằng <code>4</code>, <code>5</code>, hoặc <code>6</code> <em>và</em> nếu <code>y</code> là <code>true</code>. Khi mã này chạy, pattern của nhánh đầu tiên khớp vì <code>x</code> là <code>4</code>, nhưng match guard <code>if y</code> là <code>false</code>, nên nhánh đầu tiên không được chọn. Mã chuyển sang nhánh thứ hai, sẽ khớp, và chương trình in ra <code>no</code>. Lý do là điều kiện <code>if</code> áp dụng cho toàn bộ pattern <code>4 | 5 | 6</code>, không chỉ giá trị cuối <code>6</code>. Nói cách khác, độ ưu tiên của match guard trong quan hệ với pattern hoạt động như thế này:</p>
 <pre><code class="language-text">(4 | 5 | 6) if y =&gt; ...
 </code></pre>
 <p>chứ không phải:</p>
 <pre><code class="language-text">4 | 5 | (6 if y) =&gt; ...
 </code></pre>
-<p>Sau khi chạy code, hành vi độ ưu tiên rõ ràng: Nếu match guard chỉ áp dụng cho giá trị cuối trong danh sách chỉ định bằng toán tử <code>|</code>, nhánh sẽ đã khớp và chương trình sẽ in ra <code>yes</code>.</p>
+<p>Sau khi chạy mã, hành vi độ ưu tiên rõ ràng: Nếu match guard chỉ áp dụng cho giá trị cuối trong danh sách chỉ định bằng toán tử <code>|</code>, nhánh sẽ đã khớp và chương trình sẽ in ra <code>yes</code>.</p>
 
 <h3 id="using--bindings">Dùng <code>@</code> Binding</h3>
-<p>Toán tử <em>at</em> <code>@</code> cho phép ta tạo biến giữ giá trị trong khi đồng thời kiểm tra giá trị đó với pattern. Trong Listing 19-29, ta muốn kiểm tra rằng trường <code>id</code> của <code>Message::Hello</code> nằm trong khoảng <code>3..=7</code>. Ta cũng muốn bind giá trị vào biến <code>id</code> để có thể dùng trong code liên kết với nhánh.</p>
+<p>Toán tử <em>at</em> <code>@</code> cho phép ta tạo biến giữ giá trị trong khi đồng thời kiểm tra giá trị đó với pattern. Trong Listing 19-29, ta muốn kiểm tra rằng trường <code>id</code> của <code>Message::Hello</code> nằm trong khoảng <code>3..=7</code>. Ta cũng muốn bind giá trị vào biến <code>id</code> để có thể dùng trong mã liên kết với nhánh.</p>
 <figure class="listing" id="listing-19-29">
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     enum Message {
@@ -668,8 +668,8 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 <figcaption><a href="#listing-19-29">Listing 19-29</a>: Dùng <code>@</code> để bind vào giá trị trong pattern trong khi cũng kiểm tra nó</figcaption>
 </figure>
 <p>Ví dụ này sẽ in ra <code>Found an id in range: 5</code>. Bằng cách chỉ định <code>id @</code> trước khoảng <code>3..=7</code>, ta đang bắt giá trị nào khớp với khoảng đó vào biến tên <code>id</code> trong khi cũng kiểm tra rằng giá trị khớp với pattern khoảng.</p>
-<p>Trong nhánh thứ hai, nơi ta chỉ có khoảng được chỉ định trong pattern, code liên kết với nhánh không có biến chứa giá trị thực của trường <code>id</code>. Giá trị của trường <code>id</code> có thể là 10, 11, hoặc 12, nhưng code đi cùng pattern đó không biết là cái nào. Code pattern không thể dùng giá trị từ trường <code>id</code> vì ta không lưu giá trị <code>id</code> vào biến.</p>
-<p>Trong nhánh cuối, nơi ta chỉ định biến không có khoảng, ta có giá trị sẵn sàng để dùng trong code của nhánh trong biến tên <code>id</code>. Lý do là ta dùng cú pháp tắt của trường struct. Nhưng ta không áp dụng bất kỳ kiểm tra nào với giá trị trong trường <code>id</code> trong nhánh này, như ta đã làm với hai nhánh đầu: mọi giá trị đều khớp với pattern này.</p>
+<p>Trong nhánh thứ hai, nơi ta chỉ có khoảng được chỉ định trong pattern, mã liên kết với nhánh không có biến chứa giá trị thực của trường <code>id</code>. Giá trị của trường <code>id</code> có thể là 10, 11, hoặc 12, nhưng mã đi cùng pattern đó không biết là cái nào. Mã pattern không thể dùng giá trị từ trường <code>id</code> vì ta không lưu giá trị <code>id</code> vào biến.</p>
+<p>Trong nhánh cuối, nơi ta chỉ định biến không có khoảng, ta có giá trị sẵn sàng để dùng trong mã của nhánh trong biến tên <code>id</code>. Lý do là ta dùng cú pháp tắt của trường struct. Nhưng ta không áp dụng bất kỳ kiểm tra nào với giá trị trong trường <code>id</code> trong nhánh này, như ta đã làm với hai nhánh đầu: mọi giá trị đều khớp với pattern này.</p>
 <p>Dùng <code>@</code> cho phép ta kiểm tra giá trị và lưu nó vào biến trong một pattern duy nhất.</p>
 
 <h2 id="summary">Tóm Tắt</h2>

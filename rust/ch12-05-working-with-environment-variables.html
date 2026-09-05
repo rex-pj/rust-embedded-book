@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 12 — Làm việc với biến môi trường</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch12-04-testing-the-librarys-functionality.html">← Trước</a>
@@ -415,7 +415,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 </span><span class="boring">
 </span><span class="boring">    Ok(())
 </span><span class="boring">}</span></code></pre>
-<p>Ta đã thêm field <code>ignore_case</code> kiểu Boolean. Tiếp theo, hàm <code>run</code> cần kiểm tra giá trị của field <code>ignore_case</code> để quyết định gọi hàm <code>search</code> hay <code>search_case_insensitive</code>, như trong Listing 12-22. Code này vẫn chưa compile được.</p>
+<p>Ta đã thêm field <code>ignore_case</code> kiểu Boolean. Tiếp theo, hàm <code>run</code> cần kiểm tra giá trị của field <code>ignore_case</code> để quyết định gọi hàm <code>search</code> hay <code>search_case_insensitive</code>, như trong Listing 12-22. Mã này vẫn chưa compile được.</p>
 <figure class="listing" id="listing-12-22">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;

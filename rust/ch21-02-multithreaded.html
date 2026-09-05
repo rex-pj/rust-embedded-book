@@ -199,20 +199,20 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 21 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 21 — Chuyển từ Server Đơn luồng sang Đa luồng</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch21-01-single-threaded.html">← Trước</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Tiếp →</a></div>
 
-  <h2>Chuyển từ Server Đơn luồng sang Đa luồng</h2>
+  <h2 id="from-a-single-threaded-to-a-multithreaded-server">Chuyển từ Server Đơn luồng sang Đa luồng</h2>
 
   <p>Hiện tại, server xử lý từng request theo thứ tự tuần tự — tức là nó sẽ không xử lý kết nối thứ hai cho đến khi kết nối đầu tiên hoàn thành. Nếu server nhận ngày càng nhiều request, kiểu xử lý tuần tự này sẽ ngày càng kém hiệu quả. Nếu server nhận một request cần nhiều thời gian xử lý, các request tiếp theo sẽ phải chờ đợi cho đến khi request dài đó hoàn thành, dù chúng có thể được xử lý nhanh. Chúng ta cần khắc phục điều này, nhưng trước tiên hãy quan sát vấn đề trong thực tế.</p>
 
-  <h3>Mô phỏng một Request Chậm</h3>
+  <h3 id="simulating-a-slow-request">Mô phỏng một Request Chậm</h3>
 
   <p>Chúng ta sẽ xem làm thế nào một request xử lý chậm có thể ảnh hưởng đến các request khác trong server hiện tại. Listing 21-10 triển khai xử lý request đến <em>/sleep</em> với phản hồi chậm giả lập — server sẽ ngủ 5 giây trước khi phản hồi.</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/main.rs</span>
+  <figure class="listing" id="listing-21-10">
+    <span class="file-name">Tên file: src/main.rs</span>
     <pre><code class="language-rust">use std::{
     fs,
     io::{BufReader, prelude::*},
@@ -236,7 +236,7 @@ fn handle_connection(mut stream: TcpStream) {
 
     // --snip--
 }</code></pre>
-    <figcaption>Listing 21-10: Mô phỏng request chậm bằng cách sleep 5 giây</figcaption>
+    <figcaption><a href="#listing-21-10">Listing 21-10</a>: Mô phỏng request chậm bằng cách sleep 5 giây</figcaption>
   </figure>
 
   <p>Chúng ta đã chuyển từ <code>if</code> sang <code>match</code> vì bây giờ có ba trường hợp. Chúng ta cần khớp tường minh trên một slice của <code>request_line</code> để pattern-match với các chuỗi literal; <code>match</code> không tự động tham chiếu và giải tham chiếu như phương thức equality.</p>
@@ -249,7 +249,7 @@ fn handle_connection(mut stream: TcpStream) {
 
   <p>Có nhiều kỹ thuật để tránh tình trạng các request bị chặn sau một request chậm, bao gồm sử dụng async như chúng ta đã làm trong Chương 17; kỹ thuật chúng ta sẽ triển khai là <strong>thread pool</strong>.</p>
 
-  <h3>Cải thiện Throughput với Thread Pool</h3>
+  <h3 id="improving-throughput-with-a-thread-pool">Cải thiện Throughput với Thread Pool</h3>
 
   <p>Một <em>thread pool</em> là một nhóm các thread đã được tạo sẵn và đang chờ để xử lý tác vụ. Khi chương trình nhận được tác vụ mới, nó giao tác vụ đó cho một thread trong pool, thread đó sẽ xử lý. Các thread còn lại trong pool sẵn sàng xử lý các tác vụ khác đến trong khi thread đầu đang bận. Khi thread đầu hoàn thành, nó quay lại pool của các thread rảnh, sẵn sàng nhận tác vụ mới. Thread pool cho phép xử lý các kết nối đồng thời, tăng throughput của server.</p>
 
@@ -323,16 +323,16 @@ fn handle_connection(mut stream: TcpStream) {
 
   <p>Kỹ thuật này chỉ là một trong nhiều cách cải thiện throughput của web server. Các tùy chọn khác gồm mô hình fork/join, mô hình async I/O đơn luồng và mô hình async I/O đa luồng. Với ngôn ngữ cấp thấp như Rust, tất cả các tùy chọn này đều khả thi.</p>
 
-  <p>Trước khi bắt đầu triển khai thread pool, hãy nói về giao diện sử dụng pool trông như thế nào. Khi thiết kế code, việc viết giao diện client trước có thể giúp định hướng thiết kế. Viết API theo cách bạn muốn gọi nó, rồi triển khai chức năng bên trong cấu trúc đó.</p>
+  <p>Trước khi bắt đầu triển khai thread pool, hãy nói về giao diện sử dụng pool trông như thế nào. Khi thiết kế mã, việc viết giao diện client trước có thể giúp định hướng thiết kế. Viết API theo cách bạn muốn gọi nó, rồi triển khai chức năng bên trong cấu trúc đó.</p>
 
-  <p>Tương tự như cách chúng ta sử dụng test-driven development trong Chương 12, chúng ta sẽ dùng compiler-driven development ở đây. Chúng ta sẽ viết code gọi các hàm mong muốn, rồi xem lỗi từ compiler để xác định cần thay đổi gì tiếp theo.</p>
+  <p>Tương tự như cách chúng ta sử dụng test-driven development trong Chương 12, chúng ta sẽ dùng compiler-driven development ở đây. Chúng ta sẽ viết mã gọi các hàm mong muốn, rồi xem lỗi từ compiler để xác định cần thay đổi gì tiếp theo.</p>
 
-  <h4>Tạo Thread cho Mỗi Request</h4>
+  <h4 id="spawning-a-thread-for-each-request">Tạo Thread cho Mỗi Request</h4>
 
-  <p>Đầu tiên, hãy khám phá code có thể trông như thế nào nếu nó tạo thread mới cho mỗi kết nối. Như đã đề cập, đây không phải kế hoạch cuối cùng do vấn đề tạo thread không giới hạn, nhưng đây là điểm khởi đầu để có server đa luồng hoạt động. Listing 21-11 hiển thị các thay đổi với <code>main</code> để tạo thread mới xử lý mỗi stream trong vòng lặp <code>for</code>.</p>
+  <p>Đầu tiên, hãy khám phá mã có thể trông như thế nào nếu nó tạo thread mới cho mỗi kết nối. Như đã đề cập, đây không phải kế hoạch cuối cùng do vấn đề tạo thread không giới hạn, nhưng đây là điểm khởi đầu để có server đa luồng hoạt động. Listing 21-11 hiển thị các thay đổi với <code>main</code> để tạo thread mới xử lý mỗi stream trong vòng lặp <code>for</code>.</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/main.rs</span>
+  <figure class="listing" id="listing-21-11">
+    <span class="file-name">Tên file: src/main.rs</span>
     <pre><code class="language-rust">fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
 
@@ -344,17 +344,19 @@ fn handle_connection(mut stream: TcpStream) {
         });
     }
 }</code></pre>
-    <figcaption>Listing 21-11: Tạo thread mới cho mỗi stream</figcaption>
+    <figcaption><a href="#listing-21-11">Listing 21-11</a>: Tạo thread mới cho mỗi stream</figcaption>
   </figure>
 
-  <p>Như bạn đã học trong Chương 16, <code>thread::spawn</code> sẽ tạo thread mới và chạy code trong closure trong thread đó. Nếu chạy code này và tải <em>/sleep</em> trong trình duyệt, rồi <em>/</em> trong thêm hai tab, bạn sẽ thấy các request đến <em>/</em> không cần chờ <em>/sleep</em> hoàn thành. Tuy nhiên, điều này cuối cùng sẽ làm quá tải hệ thống vì bạn đang tạo thread mới không giới hạn.</p>
+  <p>Như bạn đã học trong Chương 16, <code>thread::spawn</code> sẽ tạo thread mới và chạy mã trong closure trong thread đó. Nếu chạy mã này và tải <em>/sleep</em> trong trình duyệt, rồi <em>/</em> trong thêm hai tab, bạn sẽ thấy các request đến <em>/</em> không cần chờ <em>/sleep</em> hoàn thành. Tuy nhiên, điều này cuối cùng sẽ làm quá tải hệ thống vì bạn đang tạo thread mới không giới hạn.</p>
 
-  <h4>Tạo Số Lượng Thread Hữu Hạn</h4>
+  <p>Bạn cũng có thể nhớ lại từ Chương 17 rằng đây đúng là kiểu tình huống mà async và await phát huy tác dụng! Hãy ghi nhớ điều đó trong lúc ta dựng thread pool, và thử nghĩ xem mọi thứ sẽ khác đi hay vẫn vậy nếu dùng async.</p>
 
-  <p>Chúng ta muốn thread pool hoạt động theo cách quen thuộc để việc chuyển đổi từ threads sang thread pool không yêu cầu thay đổi nhiều code. Listing 21-12 hiển thị giao diện giả thuyết cho struct <code>ThreadPool</code> mà chúng ta muốn dùng thay cho <code>thread::spawn</code>.</p>
+  <h4 id="creating-a-finite-number-of-threads">Tạo Số Lượng Thread Hữu Hạn</h4>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/main.rs</span>
+  <p>Chúng ta muốn thread pool hoạt động theo cách quen thuộc để việc chuyển đổi từ threads sang thread pool không yêu cầu thay đổi nhiều mã. Listing 21-12 hiển thị giao diện giả thuyết cho struct <code>ThreadPool</code> mà chúng ta muốn dùng thay cho <code>thread::spawn</code>.</p>
+
+  <figure class="listing" id="listing-21-12">
+    <span class="file-name">Tên file: src/main.rs</span>
     <pre><code class="language-rust ignore">fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
@@ -367,37 +369,81 @@ fn handle_connection(mut stream: TcpStream) {
         });
     }
 }</code></pre>
-    <figcaption>Listing 21-12: Giao diện <code>ThreadPool</code> lý tưởng của chúng ta</figcaption>
+    <figcaption><a href="#listing-21-12">Listing 21-12</a>: Giao diện <code>ThreadPool</code> lý tưởng của chúng ta</figcaption>
   </figure>
 
   <p>Chúng ta dùng <code>ThreadPool::new</code> để tạo thread pool mới với số thread có thể cấu hình, trong trường hợp này là bốn. Sau đó, trong vòng lặp <code>for</code>, <code>pool.execute</code> có giao diện tương tự <code>thread::spawn</code> — nó nhận closure mà pool sẽ chạy cho mỗi stream. Chúng ta cần triển khai <code>pool.execute</code> để nó nhận closure và giao cho thread trong pool thực thi.</p>
 
-  <h4>Xây dựng <code>ThreadPool</code> bằng Compiler-Driven Development</h4>
+  <h4 id="building-threadpool-using-compiler-driven-development">Xây dựng <code>ThreadPool</code> bằng Compiler-Driven Development</h4>
 
-  <p>Thực hiện các thay đổi trong Listing 21-12 vào <em>src/main.rs</em>, rồi dùng lỗi compiler từ <code>cargo check</code> để dẫn dắt quá trình phát triển. Lỗi đầu tiên:</p>
+  <p>Hãy thực hiện các thay đổi trong Listing 21-12 vào <em>src/main.rs</em>, rồi dùng chính những lỗi biên dịch từ <code>cargo check</code> để dẫn dắt quá trình phát triển. Đây là lỗi đầu tiên ta nhận được:</p>
 
   <pre><code class="language-console">$ cargo check
+    Checking hello v0.1.0 (file:///projects/hello)
 error[E0433]: failed to resolve: use of undeclared type `ThreadPool`
   --&gt; src/main.rs:11:16
    |
 11 |     let pool = ThreadPool::new(4);
-   |                ^^^^^^^^^^ use of undeclared type `ThreadPool`</code></pre>
+   |                ^^^^^^^^^^ use of undeclared type `ThreadPool`
 
-  <p>Tạo file <em>src/lib.rs</em> với định nghĩa đơn giản nhất của struct <code>ThreadPool</code>:</p>
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `hello` (bin "hello") due to 1 previous error
+</code></pre>
+
+  <p>Tốt! Lỗi này cho ta biết cần một kiểu hoặc module <code>ThreadPool</code>, nên giờ ta sẽ dựng nó. Bản triển khai <code>ThreadPool</code> của ta sẽ độc lập với loại công việc mà web server đang làm. Vậy nên hãy chuyển crate <code>hello</code> từ binary crate sang library crate để chứa phần triển khai <code>ThreadPool</code>. Sau khi chuyển sang library crate, ta còn có thể dùng thư viện thread pool riêng này cho bất kỳ công việc nào cần thread pool, chứ không chỉ để phục vụ request web.</p>
+
+  <p>Hãy tạo file <em>src/lib.rs</em> với nội dung sau — đây là định nghĩa đơn giản nhất có thể của struct <code>ThreadPool</code> lúc này:</p>
 
   <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
+    <span class="file-name">Tên file: src/lib.rs</span>
     <pre><code class="language-rust">pub struct ThreadPool;</code></pre>
   </figure>
 
-  <p>Sau đó thêm dòng sau vào đầu <em>src/main.rs</em> để đưa <code>ThreadPool</code> vào scope từ crate library:</p>
-
-  <pre><code class="language-rust">use hello::ThreadPool;</code></pre>
-
-  <p>Tiếp tục với <code>cargo check</code>, lỗi tiếp theo yêu cầu tạo hàm <code>new</code> có liên kết với <code>ThreadPool</code>. Chúng ta cũng biết <code>new</code> cần có một tham số chấp nhận <code>4</code> và trả về instance <code>ThreadPool</code>:</p>
+  <p>Rồi sửa file <em>main.rs</em> để đưa <code>ThreadPool</code> từ library crate vào scope, bằng cách thêm đoạn mã sau vào đầu <em>src/main.rs</em>:</p>
 
   <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
+    <span class="file-name">Tên file: src/main.rs</span>
+    <pre><code class="language-rust">use hello::ThreadPool;
+use std::{
+    fs,
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let pool = ThreadPool::new(4);
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        pool.execute(|| {
+            handle_connection(stream);
+        });
+    }
+}</code></pre>
+  </figure>
+
+  <p>Đoạn mã này vẫn chưa chạy được, nhưng hãy kiểm tra lại để lấy lỗi tiếp theo cần xử lý:</p>
+
+  <pre><code class="language-console">$ cargo check
+    Checking hello v0.1.0 (file:///projects/hello)
+error[E0599]: no function or associated item named `new` found for struct `ThreadPool` in the current scope
+  --&gt; src/main.rs:12:28
+   |
+12 |     let pool = ThreadPool::new(4);
+   |                            ^^^ function or associated item not found in `ThreadPool`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `hello` (bin "hello") due to 1 previous error
+</code></pre>
+
+  <p>Lỗi này cho biết tiếp theo ta cần tạo một hàm liên kết tên <code>new</code> cho <code>ThreadPool</code>. Ta cũng biết <code>new</code> phải có một tham số nhận được đối số <code>4</code>, và phải trả về một instance <code>ThreadPool</code>. Hãy triển khai hàm <code>new</code> đơn giản nhất có những đặc điểm đó:</p>
+
+  <figure class="listing">
+    <span class="file-name">Tên file: src/lib.rs</span>
     <pre><code class="language-rust">pub struct ThreadPool;
 
 impl ThreadPool {
@@ -407,14 +453,44 @@ impl ThreadPool {
 }</code></pre>
   </figure>
 
-  <p>Chúng ta chọn <code>usize</code> làm kiểu cho tham số <code>size</code> vì số thread âm không có nghĩa. Chúng ta cũng biết sẽ dùng <code>4</code> này như số phần tử trong một collection, đó chính là mục đích của kiểu <code>usize</code>.</p>
+  <p>Ta chọn <code>usize</code> làm kiểu cho tham số <code>size</code> vì ta biết một số lượng thread âm là vô nghĩa. Ta cũng biết sẽ dùng con số <code>4</code> này làm số phần tử trong một collection các thread — và đó chính là công dụng của kiểu <code>usize</code>, như đã bàn ở mục <a href="ch03-02-data-types.html#integer-types">“Kiểu Integer (Số nguyên)”</a> của Chương 3.</p>
 
-  <p>Lỗi tiếp theo yêu cầu method <code>execute</code>. Triển khai hàm <code>execute</code> nhận closure làm tham số. Từ Chương 13, chúng ta có thể nhận closure làm tham số với ba trait khác nhau: <code>Fn</code>, <code>FnMut</code>, và <code>FnOnce</code>. Chúng ta sẽ dùng <code>FnOnce</code> vì thread sẽ chỉ thực thi closure của request một lần:</p>
+  <p>Hãy kiểm tra lại mã:</p>
+
+  <pre><code class="language-console">$ cargo check
+    Checking hello v0.1.0 (file:///projects/hello)
+error[E0599]: no method named `execute` found for struct `ThreadPool` in the current scope
+  --&gt; src/main.rs:17:14
+   |
+17 |         pool.execute(|| {
+   |         -----^^^^^^^ method not found in `ThreadPool`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `hello` (bin "hello") due to 1 previous error
+</code></pre>
+
+  <p>Lần này lỗi xảy ra vì <code>ThreadPool</code> chưa có phương thức <code>execute</code>. Nhớ lại ở mục “Tạo số lượng thread hữu hạn” rằng ta đã quyết định thread pool của mình nên có giao diện tương tự <code>thread::spawn</code>. Ngoài ra, ta sẽ triển khai hàm <code>execute</code> sao cho nó nhận closure được truyền vào và giao cho một thread đang rảnh trong pool chạy.</p>
+
+  <p>Ta sẽ định nghĩa phương thức <code>execute</code> trên <code>ThreadPool</code> để nhận một closure làm tham số. Nhớ lại ở mục <a href="ch13-01-closures.html#moving-captured-values-out-of-closures">“Chuyển giá trị đã bắt giữ ra khỏi closure”</a> của Chương 13 rằng ta có thể nhận closure làm tham số qua ba trait khác nhau: <code>Fn</code>, <code>FnMut</code> và <code>FnOnce</code>. Ta cần quyết định dùng loại nào ở đây. Ta biết rốt cuộc mình sẽ làm điều gì đó tương tự bản triển khai <code>thread::spawn</code> của thư viện chuẩn, nên có thể xem chữ ký của <code>thread::spawn</code> ràng buộc tham số của nó ra sao. Tài liệu cho thấy như sau:</p>
+
+  <pre><code class="language-rust">pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
+    where
+        F: FnOnce() -&gt; T,
+        F: Send + 'static,
+        T: Send + 'static,</code></pre>
+
+  <p>Tham số kiểu <code>F</code> mới là thứ ta quan tâm ở đây; tham số kiểu <code>T</code> liên quan tới giá trị trả về, và ta không quan tâm tới nó. Ta thấy <code>spawn</code> dùng <code>FnOnce</code> làm trait bound cho <code>F</code>. Đây có lẽ cũng là thứ ta muốn, vì cuối cùng ta sẽ truyền đối số nhận được trong <code>execute</code> sang cho <code>spawn</code>. Ta còn có thêm cơ sở để tin <code>FnOnce</code> là trait cần dùng, bởi thread chạy một request sẽ chỉ thực thi closure của request đó đúng một lần — khớp với chữ <code>Once</code> trong <code>FnOnce</code>.</p>
+
+  <p>Tham số kiểu <code>F</code> cũng có trait bound <code>Send</code> và lifetime bound <code>'static</code>, cả hai đều hữu ích trong tình huống của ta: ta cần <code>Send</code> để chuyển closure từ thread này sang thread khác, và cần <code>'static</code> vì ta không biết thread sẽ mất bao lâu để chạy xong. Hãy tạo phương thức <code>execute</code> trên <code>ThreadPool</code> nhận một tham số generic kiểu <code>F</code> với những bound đó:</p>
 
   <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
+    <span class="file-name">Tên file: src/lib.rs</span>
     <pre><code class="language-rust">impl ThreadPool {
     // --snip--
+    pub fn new(size: usize) -&gt; ThreadPool {
+        ThreadPool
+    }
+
     pub fn execute&lt;F&gt;(&amp;self, f: F)
     where
         F: FnOnce() + Send + 'static,
@@ -423,16 +499,33 @@ impl ThreadPool {
 }</code></pre>
   </figure>
 
-  <h4>Xác thực Số Thread trong <code>new</code></h4>
+  <p>Ta vẫn viết <code>()</code> sau <code>FnOnce</code> vì <code>FnOnce</code> ở đây biểu diễn một closure không nhận tham số nào và trả về kiểu unit <code>()</code>. Cũng như khi định nghĩa hàm, kiểu trả về có thể lược bỏ khỏi chữ ký; nhưng ngay cả khi không có tham số nào, ta vẫn cần cặp ngoặc tròn.</p>
 
-  <p>Chúng ta sẽ thêm code kiểm tra rằng <code>size</code> lớn hơn không trước khi trả về instance <code>ThreadPool</code>, và chương trình sẽ panic nếu nhận giá trị không bằng cách dùng macro <code>assert!</code>:</p>
+  <p>Một lần nữa, đây là bản triển khai đơn giản nhất của phương thức <code>execute</code>: nó chẳng làm gì cả, ta chỉ đang cố cho mã biên dịch được. Hãy kiểm tra lại:</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
+  <pre><code class="language-console">$ cargo check
+    Checking hello v0.1.0 (file:///projects/hello)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.24s
+</code></pre>
+
+  <p>Biên dịch được rồi! Nhưng lưu ý rằng nếu bạn thử <code>cargo run</code> rồi gửi một request từ trình duyệt, bạn sẽ thấy lại đúng những lỗi trên trình duyệt như ở đầu chương. Thư viện của ta vẫn chưa thực sự gọi closure được truyền vào <code>execute</code>!</p>
+
+  <section class="note" aria-role="note">
+    <p>Ghi chú: Có một câu người ta hay nói về những ngôn ngữ có trình biên dịch nghiêm ngặt như Haskell và Rust: “Nếu mã biên dịch được thì nó chạy đúng.” Nhưng câu này không phải lúc nào cũng đúng. Dự án của ta biên dịch được, mà lại chẳng làm gì cả! Nếu đang xây dựng một dự án thật, hoàn chỉnh, thì đây là lúc thích hợp để bắt đầu viết unit test nhằm kiểm tra rằng mã vừa biên dịch được <em>vừa</em> có hành vi ta muốn.</p>
+  </section>
+
+  <p>Hãy thử nghĩ: sẽ có gì khác đi ở đây nếu ta chạy một future thay vì một closure?</p>
+
+  <h4 id="validating-the-number-of-threads-in-new">Xác thực số lượng thread trong <code>new</code></h4>
+
+  <p>Ta chưa làm gì với các tham số của <code>new</code> và <code>execute</code>. Hãy triển khai phần thân của hai hàm này với hành vi ta muốn. Bắt đầu với <code>new</code>. Trước đó ta đã chọn một kiểu không dấu cho tham số <code>size</code>, vì một pool có số thread âm là vô nghĩa. Tuy nhiên, một pool có không thread cũng vô nghĩa, mà số không lại là một giá trị <code>usize</code> hoàn toàn hợp lệ. Ta sẽ thêm mã kiểm tra rằng <code>size</code> lớn hơn không trước khi trả về instance <code>ThreadPool</code>, và cho chương trình panic nếu nhận được số không, bằng macro <code>assert!</code>, như ở Listing 21-13.</p>
+
+  <figure class="listing" id="listing-21-13">
+    <span class="file-name">Tên file: src/lib.rs</span>
     <pre><code class="language-rust">impl ThreadPool {
-    /// Tạo ThreadPool mới.
+    /// Tạo một ThreadPool mới.
     ///
-    /// `size` là số thread trong pool.
+    /// size là số thread trong pool.
     ///
     /// # Panics
     ///
@@ -442,48 +535,95 @@ impl ThreadPool {
 
         ThreadPool
     }
+
     // --snip--
+    pub fn execute&lt;F&gt;(&amp;self, f: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+    }
 }</code></pre>
-    <figcaption>Listing 21-13: Triển khai <code>ThreadPool::new</code> để panic nếu <code>size</code> bằng không</figcaption>
+    <figcaption><a href="#listing-21-13">Listing 21-13</a>: Triển khai <code>ThreadPool::new</code> để panic nếu <code>size</code> bằng không</figcaption>
   </figure>
 
-  <h4>Tạo Không gian Lưu trữ Threads</h4>
+  <p>Ta cũng đã thêm ít tài liệu cho <code>ThreadPool</code> bằng doc comment. Lưu ý rằng ta theo đúng thông lệ viết tài liệu tốt: thêm một mục nêu rõ những tình huống hàm có thể panic, như đã bàn ở Chương 14. Hãy thử chạy <code>cargo doc --open</code> rồi bấm vào struct <code>ThreadPool</code> để xem tài liệu sinh ra cho <code>new</code> trông thế nào!</p>
 
-  <p>Sau khi có cách kiểm tra số thread hợp lệ, chúng ta có thể tạo các thread và lưu chúng trong struct <code>ThreadPool</code>. Hàm <code>thread::spawn</code> trả về <code>JoinHandle&lt;T&gt;</code>. Listing 21-14 hiển thị cách thay đổi định nghĩa <code>ThreadPool</code> để giữ vector <code>thread::JoinHandle&lt;()&gt;</code>:</p>
+  <p>Thay vì thêm macro <code>assert!</code> như ta vừa làm, ta cũng có thể đổi <code>new</code> thành <code>build</code> và trả về một <code>Result</code>, giống như đã làm với <code>Config::build</code> trong dự án I/O ở Listing 12-9. Nhưng trong trường hợp này ta quyết định rằng việc cố tạo một thread pool không có thread nào phải là một lỗi không thể phục hồi. Nếu muốn thử sức, hãy viết một hàm tên <code>build</code> với chữ ký sau để so sánh với hàm <code>new</code>:</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
-    <pre><code class="language-rust ignore">use std::thread;
+  <pre><code class="language-rust">pub fn build(size: usize) -&gt; Result&lt;ThreadPool, PoolCreationError&gt; {</code></pre>
+
+  <h4 id="creating-space-to-store-the-threads">Tạo chỗ để lưu các thread</h4>
+
+  <p>Giờ đã có cách biết được số lượng thread cần lưu trong pool là hợp lệ, ta có thể tạo những thread đó và lưu chúng vào struct <code>ThreadPool</code> trước khi trả về struct. Nhưng “lưu” một thread nghĩa là sao? Hãy nhìn lại chữ ký của <code>thread::spawn</code>:</p>
+
+  <pre><code class="language-rust">pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
+    where
+        F: FnOnce() -&gt; T,
+        F: Send + 'static,
+        T: Send + 'static,</code></pre>
+
+  <p>Hàm <code>spawn</code> trả về một <code>JoinHandle&lt;T&gt;</code>, trong đó <code>T</code> là kiểu mà closure trả về. Hãy thử dùng <code>JoinHandle</code> xem sao. Trong trường hợp của ta, những closure truyền vào thread pool sẽ xử lý kết nối và không trả về gì, nên <code>T</code> sẽ là kiểu unit <code>()</code>.</p>
+
+  <p>Đoạn mã ở Listing 21-14 sẽ biên dịch được, nhưng chưa tạo thread nào cả. Ta đã đổi định nghĩa của <code>ThreadPool</code> để giữ một vector các instance <code>thread::JoinHandle&lt;()&gt;</code>, khởi tạo vector với dung lượng <code>size</code>, dựng một vòng <code>for</code> sẽ chạy đoạn mã tạo thread, và trả về một instance <code>ThreadPool</code> chứa chúng.</p>
+
+  <figure class="listing" id="listing-21-14">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">use std::thread;
 
 pub struct ThreadPool {
     threads: Vec&lt;thread::JoinHandle&lt;()&gt;&gt;,
 }
 
 impl ThreadPool {
+    // --snip--
     pub fn new(size: usize) -&gt; ThreadPool {
         assert!(size &gt; 0);
 
         let mut threads = Vec::with_capacity(size);
 
         for _ in 0..size {
-            // tạo các thread và lưu vào vector
+            // tạo vài thread và lưu chúng vào vector
         }
 
         ThreadPool { threads }
     }
     // --snip--
 }</code></pre>
-    <figcaption>Listing 21-14: Tạo vector cho <code>ThreadPool</code> để giữ các thread</figcaption>
+    <figcaption><a href="#listing-21-14">Listing 21-14</a>: Tạo một vector để <code>ThreadPool</code> giữ các thread</figcaption>
   </figure>
 
-  <h4>Gửi Code từ <code>ThreadPool</code> sang Thread</h4>
+  <p>Ta đã đưa <code>std::thread</code> vào scope trong library crate, vì ta dùng <code>thread::JoinHandle</code> làm kiểu cho các phần tử của vector trong <code>ThreadPool</code>.</p>
 
-  <p>Chúng ta sẽ triển khai bằng cách giới thiệu cấu trúc dữ liệu mới <em>Worker</em> giữa <code>ThreadPool</code> và các thread. <code>Worker</code> lấy code cần chạy và thực thi trong thread của nó.</p>
+  <p>Khi nhận được một size hợp lệ, <code>ThreadPool</code> tạo một vector mới có thể chứa <code>size</code> phần tử. Hàm <code>with_capacity</code> làm cùng việc như <code>Vec::new</code> nhưng có một khác biệt quan trọng: nó cấp phát sẵn chỗ trong vector. Vì ta biết mình cần lưu <code>size</code> phần tử, việc cấp phát trước như vậy hiệu quả hơn đôi chút so với dùng <code>Vec::new</code> — vốn phải tự thay đổi kích thước mỗi khi có phần tử được thêm vào.</p>
 
-  <p>Thay vì lưu vector <code>JoinHandle&lt;()&gt;</code> trong thread pool, chúng ta sẽ lưu các instance của struct <code>Worker</code>. Mỗi <code>Worker</code> lưu một <code>JoinHandle&lt;()&gt;</code>. Chúng ta cũng sẽ cho mỗi <code>Worker</code> một <code>id</code> để phân biệt khi log hoặc debug:</p>
+  <p>Chạy lại <code>cargo check</code> thì sẽ thành công.</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
+  <p><a id="a-worker-struct-responsible-for-sending-code-from-the-threadpool-to-a-thread"></a></p>
+
+  <h4 id="sending-code-from-the-threadpool-to-a-thread">Gửi mã từ <code>ThreadPool</code> sang một thread</h4>
+
+  <p>Ta đã để lại một chú thích trong vòng <code>for</code> ở Listing 21-14 về việc tạo thread. Giờ hãy xem thực sự tạo thread ra sao. Thư viện chuẩn cung cấp <code>thread::spawn</code> để tạo thread, và <code>thread::spawn</code> mong nhận được đoạn mã mà thread cần chạy ngay khi thread được tạo. Tuy nhiên, trong trường hợp của ta, ta muốn tạo các thread rồi để chúng <em>chờ</em> đoạn mã mà ta sẽ gửi tới sau. Bản triển khai thread của thư viện chuẩn không có cách nào làm việc đó; ta phải tự triển khai.</p>
+
+  <p>Ta sẽ triển khai hành vi này bằng cách đưa vào một cấu trúc dữ liệu mới nằm giữa <code>ThreadPool</code> và các thread để quản lý hành vi mới đó. Ta gọi cấu trúc dữ liệu này là <em>Worker</em> — một thuật ngữ thường gặp trong các bản triển khai pool. <code>Worker</code> nhận đoạn mã cần chạy và chạy đoạn mã đó trong thread của nó.</p>
+
+  <p>Hãy nghĩ tới những người làm bếp trong một nhà hàng: các nhân viên chờ tới khi có đơn từ khách, rồi họ chịu trách nhiệm nhận và hoàn thành những đơn đó.</p>
+
+  <p>Thay vì lưu một vector các instance <code>JoinHandle&lt;()&gt;</code> trong thread pool, ta sẽ lưu các instance của struct <code>Worker</code>. Mỗi <code>Worker</code> sẽ lưu một instance <code>JoinHandle&lt;()&gt;</code>. Rồi ta sẽ triển khai một phương thức trên <code>Worker</code> nhận một closure chứa mã cần chạy và gửi nó tới thread đang chạy sẵn để thực thi. Ta cũng cho mỗi <code>Worker</code> một <code>id</code> để phân biệt được các instance <code>Worker</code> khác nhau trong pool khi ghi log hay debug.</p>
+
+  <p>Đây là quy trình mới sẽ diễn ra khi ta tạo một <code>ThreadPool</code>. Ta sẽ triển khai phần mã gửi closure tới thread sau khi đã dựng xong <code>Worker</code> theo cách này:</p>
+  <ol>
+    <li>Định nghĩa struct <code>Worker</code> giữ một <code>id</code> và một <code>JoinHandle&lt;()&gt;</code>.</li>
+    <li>Đổi <code>ThreadPool</code> để giữ một vector các instance <code>Worker</code>.</li>
+    <li>Định nghĩa hàm <code>Worker::new</code> nhận một số <code>id</code> và trả về một instance <code>Worker</code> giữ <code>id</code> đó cùng một thread được spawn với closure rỗng.</li>
+    <li>Trong <code>ThreadPool::new</code>, dùng biến đếm của vòng <code>for</code> để sinh <code>id</code>, tạo một <code>Worker</code> mới với <code>id</code> đó, rồi lưu <code>Worker</code> vào vector.</li>
+  </ol>
+
+  <p>Nếu bạn muốn thử sức, hãy tự triển khai những thay đổi trên trước khi xem mã ở Listing 21-15.</p>
+
+  <p>Sẵn sàng chưa? Đây là Listing 21-15, một cách để thực hiện những thay đổi vừa nêu.</p>
+
+  <figure class="listing" id="listing-21-15">
+    <span class="file-name">Tên file: src/lib.rs</span>
     <pre><code class="language-rust">use std::thread;
 
 pub struct ThreadPool {
@@ -491,6 +631,7 @@ pub struct ThreadPool {
 }
 
 impl ThreadPool {
+    // --snip--
     pub fn new(size: usize) -&gt; ThreadPool {
         assert!(size &gt; 0);
 
@@ -517,38 +658,149 @@ impl Worker {
         Worker { id, thread }
     }
 }</code></pre>
-    <figcaption>Listing 21-15: Sửa <code>ThreadPool</code> để giữ các instance <code>Worker</code></figcaption>
+    <figcaption><a href="#listing-21-15">Listing 21-15</a>: Sửa <code>ThreadPool</code> để giữ các instance <code>Worker</code> thay vì giữ thread trực tiếp</figcaption>
   </figure>
 
-  <h4>Gửi Request đến Threads qua Channel</h4>
+  <p>Ta đã đổi tên trường của <code>ThreadPool</code> từ <code>threads</code> thành <code>workers</code>, vì giờ nó giữ các instance <code>Worker</code> chứ không phải <code>JoinHandle&lt;()&gt;</code>. Ta dùng biến đếm trong vòng <code>for</code> làm đối số cho <code>Worker::new</code>, và lưu mỗi <code>Worker</code> mới vào vector tên <code>workers</code>.</p>
 
-  <p>Các channel mà chúng ta đã học ở Chương 16 — một cách đơn giản để giao tiếp giữa hai thread — rất phù hợp cho trường hợp này. Chúng ta sẽ dùng channel như hàng đợi job, và <code>execute</code> sẽ gửi job từ <code>ThreadPool</code> đến các <code>Worker</code>. Đây là kế hoạch:</p>
+  <p>Mã bên ngoài (như server của ta trong <em>src/main.rs</em>) không cần biết chi tiết triển khai về việc dùng struct <code>Worker</code> bên trong <code>ThreadPool</code>, nên ta để struct <code>Worker</code> và hàm <code>new</code> của nó ở dạng riêng tư. Hàm <code>Worker::new</code> dùng <code>id</code> ta truyền vào và lưu một instance <code>JoinHandle&lt;()&gt;</code> được tạo bằng cách spawn một thread mới với closure rỗng.</p>
 
+  <section class="note" aria-role="note">
+    <p>Ghi chú: Nếu hệ điều hành không tạo được thread vì thiếu tài nguyên hệ thống, <code>thread::spawn</code> sẽ panic. Điều đó khiến toàn bộ server panic, dù việc tạo một số thread có thể đã thành công. Cho đơn giản thì hành vi này chấp nhận được, nhưng trong một bản triển khai thread pool dùng thật, có lẽ bạn sẽ muốn dùng <code>std::thread::Builder</code> và phương thức <code>spawn</code> của nó — phương thức này trả về <code>Result</code>.</p>
+  </section>
+
+  <p>Đoạn mã này biên dịch được và sẽ lưu đúng số instance <code>Worker</code> mà ta truyền làm đối số cho <code>ThreadPool::new</code>. Nhưng ta <em>vẫn</em> chưa xử lý closure nhận được trong <code>execute</code>. Hãy xem cách làm việc đó tiếp theo.</p>
+
+  <h4 id="sending-requests-to-threads-via-channels">Gửi request tới các thread qua channel</h4>
+
+  <p>Vấn đề tiếp theo cần giải quyết là những closure truyền cho <code>thread::spawn</code> hoàn toàn chẳng làm gì. Hiện tại, ta nhận closure cần thực thi trong phương thức <code>execute</code>. Nhưng ta lại cần đưa cho <code>thread::spawn</code> một closure để chạy ngay lúc tạo từng <code>Worker</code> trong quá trình tạo <code>ThreadPool</code>.</p>
+
+  <p>Ta muốn những struct <code>Worker</code> vừa tạo lấy đoạn mã cần chạy từ một hàng đợi do <code>ThreadPool</code> giữ, rồi gửi đoạn mã đó cho thread của nó chạy.</p>
+
+  <p>Channel mà ta đã học ở Chương 16 — một cách đơn giản để hai thread giao tiếp với nhau — rất hợp cho tình huống này. Ta sẽ dùng một channel làm hàng đợi công việc, và <code>execute</code> sẽ gửi một công việc từ <code>ThreadPool</code> tới các instance <code>Worker</code>, rồi <code>Worker</code> gửi công việc đó cho thread của nó. Kế hoạch như sau:</p>
   <ol>
-    <li><code>ThreadPool</code> sẽ tạo channel và giữ sender.</li>
-    <li>Mỗi <code>Worker</code> sẽ giữ receiver.</li>
-    <li>Tạo struct <code>Job</code> mới để giữ các closure muốn gửi qua channel.</li>
-    <li>Method <code>execute</code> sẽ gửi job qua sender.</li>
-    <li>Trong thread của nó, <code>Worker</code> sẽ lặp qua receiver và thực thi closure của các job nhận được.</li>
+    <li><code>ThreadPool</code> sẽ tạo một channel và giữ bên gửi.</li>
+    <li>Mỗi <code>Worker</code> sẽ giữ bên nhận.</li>
+    <li>Ta sẽ tạo một struct <code>Job</code> mới để chứa những closure ta muốn gửi qua channel.</li>
+    <li>Phương thức <code>execute</code> sẽ gửi công việc cần thực thi qua bên gửi.</li>
+    <li>Trong thread của mình, <code>Worker</code> sẽ lặp trên bên nhận và thực thi closure của bất kỳ công việc nào nó nhận được.</li>
   </ol>
 
-  <p>Vì muốn nhiều <code>Worker</code> cùng chia sẻ một receiver, chúng ta cần dùng <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>. <code>Arc</code> cho phép nhiều <code>Worker</code> sở hữu receiver, và <code>Mutex</code> đảm bảo chỉ một <code>Worker</code> lấy job từ receiver tại một thời điểm:</p>
+  <p>Hãy bắt đầu bằng việc tạo một channel trong <code>ThreadPool::new</code> và giữ bên gửi trong instance <code>ThreadPool</code>, như ở Listing 21-16. Struct <code>Job</code> hiện chưa chứa gì, nhưng nó sẽ là kiểu của thứ ta gửi qua channel.</p>
 
-  <figure class="listing">
-    <span class="file-name">Filename: src/lib.rs</span>
-    <pre><code class="language-rust">use std::{
-    sync::{Arc, Mutex, mpsc},
-    thread,
-};
+  <figure class="listing" id="listing-21-16">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">use std::{sync::mpsc, thread};
 
 pub struct ThreadPool {
     workers: Vec&lt;Worker&gt;,
     sender: mpsc::Sender&lt;Job&gt;,
 }
 
-type Job = Box&lt;dyn FnOnce() + Send + 'static&gt;;
+struct Job;
 
 impl ThreadPool {
+    // --snip--
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let (sender, receiver) = mpsc::channel();
+
+        let mut workers = Vec::with_capacity(size);
+
+        for id in 0..size {
+            workers.push(Worker::new(id));
+        }
+
+        ThreadPool { workers, sender }
+    }
+    // --snip--
+}</code></pre>
+    <figcaption><a href="#listing-21-16">Listing 21-16</a>: Sửa <code>ThreadPool</code> để lưu bên gửi của một channel truyền các instance <code>Job</code></figcaption>
+  </figure>
+
+  <p>Trong <code>ThreadPool::new</code>, ta tạo channel mới và cho pool giữ bên gửi. Đoạn này sẽ biên dịch thành công.</p>
+
+  <p>Giờ hãy thử truyền bên nhận của channel vào từng <code>Worker</code> khi thread pool tạo channel. Ta biết mình muốn dùng bên nhận trong thread mà các instance <code>Worker</code> spawn ra, nên ta sẽ tham chiếu tới tham số <code>receiver</code> bên trong closure. Đoạn mã ở Listing 21-17 chưa biên dịch được ngay.</p>
+
+  <figure class="listing" id="listing-21-17">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">impl ThreadPool {
+    // --snip--
+    pub fn new(size: usize) -&gt; ThreadPool {
+        assert!(size &gt; 0);
+
+        let (sender, receiver) = mpsc::channel();
+
+        let mut workers = Vec::with_capacity(size);
+
+        for id in 0..size {
+            workers.push(Worker::new(id, receiver));
+        }
+
+        ThreadPool { workers, sender }
+    }
+    // --snip--
+}
+
+// --snip--
+
+impl Worker {
+    fn new(id: usize, receiver: mpsc::Receiver&lt;Job&gt;) -&gt; Worker {
+        let thread = thread::spawn(|| {
+            receiver;
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption><a href="#listing-21-17">Listing 21-17</a>: Truyền bên nhận vào từng <code>Worker</code></figcaption>
+  </figure>
+
+  <p>Ta đã thực hiện vài thay đổi nhỏ và đơn giản: truyền bên nhận vào <code>Worker::new</code>, rồi dùng nó bên trong closure.</p>
+
+  <p>Khi thử kiểm tra đoạn mã này, ta nhận được lỗi sau:</p>
+
+  <pre><code class="language-console">$ cargo check
+    Checking hello v0.1.0 (file:///projects/hello)
+error[E0382]: use of moved value: `receiver`
+  --&gt; src/lib.rs:26:42
+   |
+21 |         let (sender, receiver) = mpsc::channel();
+   |                      -------- move occurs because `receiver` has type `std::sync::mpsc::Receiver&lt;Job&gt;`, which does not implement the `Copy` trait
+...
+25 |         for id in 0..size {
+   |         ----------------- inside of this loop
+26 |             workers.push(Worker::new(id, receiver));
+   |                                          ^^^^^^^^ value moved here, in previous iteration of loop
+   |
+note: consider changing this parameter type in method `new` to borrow instead if owning the value isn't necessary
+  --&gt; src/lib.rs:47:33
+   |
+47 |     fn new(id: usize, receiver: mpsc::Receiver&lt;Job&gt;) -&gt; Worker {
+   |        --- in this method       ^^^^^^^^^^^^^^^^^^^ this parameter takes ownership of the value
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `hello` (lib) due to 1 previous error
+</code></pre>
+
+  <p>Đoạn mã đang cố truyền <code>receiver</code> cho nhiều instance <code>Worker</code>. Cách đó không được, như bạn còn nhớ từ Chương 16: bản triển khai channel mà Rust cung cấp là nhiều <em>producer</em>, một <em>consumer</em>. Nghĩa là ta không thể chỉ clone đầu tiêu thụ của channel để sửa đoạn mã này. Ta cũng không muốn gửi một tin nhắn nhiều lần tới nhiều consumer; ta muốn một danh sách tin nhắn duy nhất với nhiều instance <code>Worker</code>, sao cho mỗi tin nhắn được xử lý đúng một lần.</p>
+
+  <p>Ngoài ra, việc lấy một công việc ra khỏi hàng đợi channel có thay đổi <code>receiver</code>, nên các thread cần một cách an toàn để chia sẻ và sửa đổi <code>receiver</code>; nếu không, ta có thể gặp race condition (như đã nói ở Chương 16).</p>
+
+  <p>Nhớ lại những smart pointer an toàn với thread đã bàn ở Chương 16: để chia sẻ ownership giữa nhiều thread và cho phép các thread thay đổi giá trị, ta cần dùng <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>. Kiểu <code>Arc</code> cho phép nhiều instance <code>Worker</code> cùng sở hữu bên nhận, còn <code>Mutex</code> đảm bảo mỗi lúc chỉ một <code>Worker</code> lấy được công việc từ bên nhận. Listing 21-18 cho thấy những thay đổi cần thực hiện.</p>
+
+  <figure class="listing" id="listing-21-18">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">use std::{
+    sync::{Arc, Mutex, mpsc},
+    thread,
+};
+
+// --snip--
+
+impl ThreadPool {
+    // --snip--
     pub fn new(size: usize) -&gt; ThreadPool {
         assert!(size &gt; 0);
 
@@ -564,6 +816,40 @@ impl ThreadPool {
 
         ThreadPool { workers, sender }
     }
+    // --snip--
+}
+
+// --snip--
+
+impl Worker {
+    fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
+        // --snip--
+        let thread = thread::spawn(|| {
+            receiver;
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption><a href="#listing-21-18">Listing 21-18</a>: Chia sẻ bên nhận giữa các instance <code>Worker</code> bằng <code>Arc</code> và <code>Mutex</code></figcaption>
+  </figure>
+
+  <p>Trong <code>ThreadPool::new</code>, ta đặt bên nhận vào trong một <code>Arc</code> và một <code>Mutex</code>. Với mỗi <code>Worker</code> mới, ta clone <code>Arc</code> để tăng bộ đếm tham chiếu, nhờ đó các instance <code>Worker</code> chia sẻ được ownership của bên nhận.</p>
+
+  <p>Với những thay đổi này, mã biên dịch được! Sắp xong rồi!</p>
+
+  <h4 id="implementing-the-execute-method">Triển khai phương thức <code>execute</code></h4>
+
+  <p>Cuối cùng, hãy triển khai phương thức <code>execute</code> trên <code>ThreadPool</code>. Ta cũng sẽ đổi <code>Job</code> từ một struct thành một type alias cho trait object giữ kiểu closure mà <code>execute</code> nhận được. Như đã bàn ở mục <a href="ch20-03-advanced-types.html#type-synonyms-and-type-aliases">“Type Synonyms và Type Aliases”</a> của Chương 20, type alias cho phép ta rút ngắn những kiểu dài để dùng cho tiện. Hãy xem Listing 21-19.</p>
+
+  <figure class="listing" id="listing-21-19">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">// --snip--
+
+type Job = Box&lt;dyn FnOnce() + Send + 'static&gt;;
+
+impl ThreadPool {
+    // --snip--
 
     pub fn execute&lt;F&gt;(&amp;self, f: F)
     where
@@ -575,10 +861,17 @@ impl ThreadPool {
     }
 }
 
-struct Worker {
-    id: usize,
-    thread: thread::JoinHandle&lt;()&gt;,
-}
+// --snip--</code></pre>
+    <figcaption><a href="#listing-21-19">Listing 21-19</a>: Tạo type alias <code>Job</code> cho một <code>Box</code> giữ từng closure, rồi gửi công việc đó qua channel</figcaption>
+  </figure>
+
+  <p>Sau khi tạo một instance <code>Job</code> mới từ closure nhận được trong <code>execute</code>, ta gửi công việc đó qua đầu gửi của channel. Ta gọi <code>unwrap</code> trên <code>send</code> để phòng trường hợp việc gửi thất bại. Điều đó có thể xảy ra nếu, chẳng hạn, ta dừng hết các thread, nghĩa là đầu nhận đã ngừng nhận tin nhắn mới. Hiện tại ta chưa thể dừng các thread: chúng tiếp tục chạy chừng nào pool còn tồn tại. Lý do ta dùng <code>unwrap</code> là vì ta biết trường hợp thất bại sẽ không xảy ra, còn trình biên dịch thì không biết điều đó.</p>
+
+  <p>Nhưng vẫn chưa xong hẳn! Trong <code>Worker</code>, closure truyền cho <code>thread::spawn</code> mới chỉ <em>tham chiếu</em> tới đầu nhận của channel. Thay vào đó, ta cần closure lặp mãi, liên tục hỏi đầu nhận xem có công việc không và chạy công việc khi nhận được. Hãy thực hiện thay đổi ở Listing 21-20 cho <code>Worker::new</code>.</p>
+
+  <figure class="listing" id="listing-21-20">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">// --snip--
 
 impl Worker {
     fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
@@ -595,17 +888,81 @@ impl Worker {
         Worker { id, thread }
     }
 }</code></pre>
-    <figcaption>Listing 21-20: Code hoàn chỉnh của thread pool</figcaption>
+    <figcaption><a href="#listing-21-20">Listing 21-20</a>: Nhận và thực thi công việc trong thread của instance <code>Worker</code></figcaption>
   </figure>
 
-  <p>Chúng ta đã hoàn thành! Trong <code>ThreadPool::new</code>, chúng ta đặt receiver trong <code>Arc</code> và <code>Mutex</code>. Với mỗi <code>Worker</code> mới, chúng ta clone <code>Arc</code> để tăng reference count để các <code>Worker</code> có thể chia sẻ ownership receiver.</p>
+  <p>Ở đây, trước hết ta gọi <code>lock</code> trên <code>receiver</code> để lấy mutex, rồi gọi <code>unwrap</code> để panic nếu có lỗi. Việc lấy khóa có thể thất bại nếu mutex đang ở trạng thái <em>poisoned</em> — điều này xảy ra khi một thread khác panic trong lúc đang giữ khóa thay vì nhả khóa ra. Trong tình huống đó, gọi <code>unwrap</code> để thread này panic là hành động đúng. Bạn có thể thoải mái đổi <code>unwrap</code> này thành <code>expect</code> kèm thông báo lỗi có ý nghĩa với mình.</p>
 
-  <p>Với những thay đổi này, code biên dịch thành công! Hãy thử chạy server và xem nó xử lý đồng thời như thế nào — truy cập <em>/sleep</em> trong một tab và <em>/</em> trong tab khác, bạn sẽ thấy <em>/</em> không cần chờ <em>/sleep</em> nữa.</p>
+  <p>Nếu lấy được khóa trên mutex, ta gọi <code>recv</code> để nhận một <code>Job</code> từ channel. Một <code>unwrap</code> cuối cùng cũng bỏ qua mọi lỗi ở đây, những lỗi có thể xảy ra nếu thread đang giữ bên gửi đã tắt — tương tự như cách phương thức <code>send</code> trả về <code>Err</code> nếu bên nhận tắt.</p>
 
-  <blockquote>
-    <p><strong>Lưu ý:</strong> Nếu hệ điều hành không thể tạo thread do thiếu tài nguyên hệ thống, <code>thread::spawn</code> sẽ panic. Trong triển khai thread pool sản xuất, bạn có thể muốn dùng <a href="https://doc.rust-lang.org/std/thread/struct.Builder.html"><code>std::thread::Builder</code></a> và method <code>spawn</code> trả về <code>Result</code> thay thế.</p>
-  </blockquote>
+  <p>Lời gọi <code>recv</code> là blocking, nên nếu chưa có công việc nào thì thread hiện tại sẽ chờ tới khi có. <code>Mutex&lt;T&gt;</code> đảm bảo mỗi lúc chỉ một thread <code>Worker</code> đang xin việc.</p>
 
+  <p>Thread pool của ta giờ đã chạy được! Hãy thử <code>cargo run</code> rồi gửi vài request:</p>
+
+  <pre><code class="language-console">$ cargo run
+   Compiling hello v0.1.0 (file:///projects/hello)
+warning: field `workers` is never read
+ --&gt; src/lib.rs:7:5
+  |
+6 | pub struct ThreadPool {
+  |            ---------- field in this struct
+7 |     workers: Vec&lt;Worker&gt;,
+  |     ^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: fields `id` and `thread` are never read
+  --&gt; src/lib.rs:48:5
+   |
+47 | struct Worker {
+   |        ------ fields in this struct
+48 |     id: usize,
+   |     ^^
+49 |     thread: thread::JoinHandle&lt;()&gt;,
+   |     ^^^^^^
+
+warning: `hello` (lib) generated 2 warnings
+Worker 0 got a job; executing.
+Worker 2 got a job; executing.
+Worker 1 got a job; executing.
+Worker 3 got a job; executing.
+Worker 0 got a job; executing.
+Worker 2 got a job; executing.
+</code></pre>
+
+  <p>Thành công! Giờ ta đã có một thread pool thực thi các kết nối một cách bất đồng bộ. Không bao giờ có quá bốn thread được tạo, nên hệ thống sẽ không bị quá tải khi server nhận nhiều request. Nếu ta gửi một request tới <em>/sleep</em>, server vẫn phục vụ được các request khác bằng cách để một thread khác chạy chúng.</p>
+
+  <section class="note" aria-role="note">
+    <p>Ghi chú: Nếu bạn mở <em>/sleep</em> trên nhiều cửa sổ trình duyệt cùng lúc, chúng có thể tải lần lượt cách nhau năm giây. Một số trình duyệt web thực thi tuần tự nhiều instance của cùng một request vì lý do caching. Hạn chế này không phải do web server của ta gây ra.</p>
+  </section>
+
+  <p>Đây là lúc thích hợp để dừng lại và nghĩ xem mã ở Listing 21-18, 21-19 và 21-20 sẽ khác đi thế nào nếu ta dùng future thay vì closure cho phần việc cần làm. Những kiểu nào sẽ đổi? Chữ ký các phương thức sẽ khác ra sao, nếu có? Phần nào của mã sẽ giữ nguyên?</p>
+
+  <p>Sau khi học về vòng lặp <code>while let</code> ở Chương 17 và Chương 19, có thể bạn thắc mắc vì sao ta không viết mã thread của <code>Worker</code> như ở Listing 21-21.</p>
+
+  <figure class="listing" id="listing-21-21">
+    <span class="file-name">Tên file: src/lib.rs</span>
+    <pre><code class="language-rust">// --snip--
+
+impl Worker {
+    fn new(id: usize, receiver: Arc&lt;Mutex&lt;mpsc::Receiver&lt;Job&gt;&gt;&gt;) -&gt; Worker {
+        let thread = thread::spawn(move || {
+            while let Ok(job) = receiver.lock().unwrap().recv() {
+                println!("Worker {id} got a job; executing.");
+
+                job();
+            }
+        });
+
+        Worker { id, thread }
+    }
+}</code></pre>
+    <figcaption><a href="#listing-21-21">Listing 21-21</a>: Một bản triển khai khác của <code>Worker::new</code> dùng <code>while let</code></figcaption>
+  </figure>
+
+  <p>Đoạn mã này biên dịch và chạy được, nhưng không cho ra hành vi đa luồng như mong muốn: một request chậm vẫn khiến các request khác phải chờ được xử lý. Lý do khá tinh tế: struct <code>Mutex</code> không có phương thức <code>unlock</code> công khai, bởi quyền sở hữu khóa dựa trên lifetime của <code>MutexGuard&lt;T&gt;</code> nằm bên trong <code>LockResult&lt;MutexGuard&lt;T&gt;&gt;</code> mà phương thức <code>lock</code> trả về. Nhờ vậy, tại compile time borrow checker có thể áp đặt quy tắc rằng không thể truy cập một tài nguyên được <code>Mutex</code> bảo vệ nếu ta không đang giữ khóa. Tuy nhiên, cách triển khai này cũng có thể khiến khóa bị giữ lâu hơn dự tính nếu ta không để ý tới lifetime của <code>MutexGuard&lt;T&gt;</code>.</p>
+
+  <p>Đoạn mã ở Listing 21-20 dùng <code>let job = receiver.lock().unwrap().recv().unwrap();</code> chạy đúng, bởi với <code>let</code>, mọi giá trị tạm dùng trong biểu thức ở vế phải dấu bằng đều bị drop ngay khi câu lệnh <code>let</code> kết thúc. Ngược lại, <code>while let</code> (cũng như <code>if let</code> và <code>match</code>) không drop các giá trị tạm cho tới hết khối lệnh tương ứng. Ở Listing 21-21, khóa vẫn bị giữ suốt thời gian gọi <code>job()</code>, nghĩa là các instance <code>Worker</code> khác không nhận được việc.</p>
   <div class="page-nav bottom"><a href="ch21-01-single-threaded.html">← Trước</a><a href="ch21-03-graceful-shutdown-and-cleanup.html">Tiếp →</a></div>
   </div>
 </main>

@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 16 — Concurrency Với Shared State</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch16-02-message-passing.html">← Trước</a>
@@ -276,8 +276,8 @@
 </figure>
 
 <p>Message passing là một cách xử lý concurrency tốt, nhưng không phải cách duy nhất. Một phương pháp khác là cho phép nhiều thread cùng truy cập dữ liệu chia sẻ. Hãy nhớ lại phần khẩu hiệu từ tài liệu Go: "Đừng giao tiếp bằng cách chia sẻ bộ nhớ."</p>
-<p>Vậy giao tiếp bằng cách chia sẻ bộ nhớ trông như thế nào? Và tại sao những người ủng hộ message-passing lại cảnh báo không nên dùng memory sharing?</p>
-<p>Theo một nghĩa nào đó, channel trong bất kỳ ngôn ngữ lập trình nào đều giống như single ownership: một khi bạn chuyển giá trị xuống channel, bạn không nên dùng giá trị đó nữa. Concurrency với shared memory giống như multiple ownership: nhiều thread có thể cùng truy cập một vùng bộ nhớ. Như bạn đã thấy ở Chương 15, khi smart pointer cho phép multiple ownership, sự phức tạp tăng lên vì các owner khác nhau cần được quản lý. Hệ thống kiểu và các quy tắc ownership của Rust hỗ trợ rất nhiều để quản lý chính xác. Ví dụ, hãy xem xét mutex — một trong những primitive concurrency phổ biến nhất dành cho shared memory.</p>
+<p>Vậy giao tiếp bằng cách chia sẻ bộ nhớ trông như thế nào? Và tại sao những người ủng hộ message-passing lại cảnh báo không nên dùng bộ nhớ sharing?</p>
+<p>Theo một nghĩa nào đó, channel trong bất kỳ ngôn ngữ lập trình nào đều giống như single ownership: một khi bạn chuyển giá trị xuống channel, bạn không nên dùng giá trị đó nữa. Concurrency với shared bộ nhớ giống như multiple ownership: nhiều thread có thể cùng truy cập một vùng bộ nhớ. Như bạn đã thấy ở Chương 15, khi smart pointer cho phép multiple ownership, sự phức tạp tăng lên vì các owner khác nhau cần được quản lý. Hệ thống kiểu và các quy tắc ownership của Rust hỗ trợ rất nhiều để quản lý chính xác. Ví dụ, hãy xem xét mutex — một trong những primitive concurrency phổ biến nhất dành cho shared bộ nhớ.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-mutexes-to-allow-access-to-data-from-one-thread-at-a-time"></a></p>
 <h3 id="controlling-access-with-mutexes"><a class="header" href="#controlling-access-with-mutexes">Kiểm Soát Truy Cập Bằng Mutex</a></h3>
@@ -307,10 +307,10 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-16-12">Listing 16-12</a>: Khám phá API của <code>Mutex&lt;T&gt;</code> trong single-threaded context cho đơn giản</figcaption>
 </figure>
-<p>Như nhiều kiểu khác, chúng ta tạo <code>Mutex&lt;T&gt;</code> bằng hàm liên kết <code>new</code>. Để truy cập dữ liệu bên trong mutex, chúng ta dùng phương thức <code>lock</code> để acquire lock. Lời gọi này sẽ block thread hiện tại để nó không làm gì được cho đến khi đến lượt chúng ta có lock.</p>
+<p>Như nhiều kiểu khác, chúng ta tạo <code>Mutex&lt;T&gt;</code> bằng hàm liên kết <code>new</code>. Để truy cập dữ liệu bên trong mutex, chúng ta dùng phương thức <code>lock</code> để acquire lock. Lời gọi này sẽ khối thread hiện tại để nó không làm gì được cho đến khi đến lượt chúng ta có lock.</p>
 <p>Lời gọi <code>lock</code> sẽ thất bại nếu thread khác đang giữ lock và bị panic. Trong trường hợp đó, không ai có thể lấy lock nữa, vì vậy chúng ta chọn <code>unwrap</code> và để thread này panic nếu gặp tình huống đó.</p>
 <p>Sau khi acquire lock, giá trị trả về (ở đây đặt tên là <code>num</code>) hoạt động như một mutable reference tới dữ liệu bên trong. Hệ thống kiểu đảm bảo chúng ta phải acquire lock trước khi dùng giá trị trong <code>m</code>. Kiểu của <code>m</code> là <code>Mutex&lt;i32&gt;</code>, không phải <code>i32</code>, vì vậy chúng ta <em>bắt buộc</em> phải gọi <code>lock</code> để có thể dùng giá trị <code>i32</code>. Không thể bỏ qua; hệ thống kiểu không cho phép truy cập <code>i32</code> bên trong theo cách nào khác.</p>
-<p>Lời gọi <code>lock</code> trả về kiểu <code>MutexGuard</code>, được bọc trong <code>LockResult</code> mà chúng ta xử lý bằng <code>unwrap</code>. Kiểu <code>MutexGuard</code> implement <code>Deref</code> để trỏ vào dữ liệu bên trong; kiểu này cũng có implementation <code>Drop</code> tự động giải phóng lock khi <code>MutexGuard</code> ra khỏi scope — xảy ra ở cuối inner scope. Kết quả là chúng ta không có nguy cơ quên giải phóng lock và chặn mutex khỏi các thread khác vì lock được giải phóng tự động.</p>
+<p>Lời gọi <code>lock</code> trả về kiểu <code>MutexGuard</code>, được bọc trong <code>LockResult</code> mà chúng ta xử lý bằng <code>unwrap</code>. Kiểu <code>MutexGuard</code> triển khai <code>Deref</code> để trỏ vào dữ liệu bên trong; kiểu này cũng có phần triển khai <code>Drop</code> tự động giải phóng lock khi <code>MutexGuard</code> ra khỏi scope — xảy ra ở cuối inner scope. Kết quả là chúng ta không có nguy cơ quên giải phóng lock và chặn mutex khỏi các thread khác vì lock được giải phóng tự động.</p>
 <p>Sau khi drop lock, chúng ta có thể in giá trị mutex và thấy chúng ta đã thay đổi được <code>i32</code> bên trong thành <code>6</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="sharing-a-mutext-between-multiple-threads"></a></p>
@@ -437,8 +437,8 @@ error: could not compile `shared-state` (bin "shared-state") due to 1 previous e
 <p>Thật không may, <code>Rc&lt;T&gt;</code> không an toàn để chia sẻ qua các thread. Khi <code>Rc&lt;T&gt;</code> quản lý reference count, nó tăng đếm mỗi khi <code>clone</code> được gọi và giảm đếm khi mỗi clone bị drop. Nhưng nó không dùng bất kỳ primitive concurrency nào để đảm bảo các thay đổi đếm không bị gián đoạn bởi thread khác. Điều này có thể dẫn đến sai số đếm — những bug tinh vi có thể gây ra memory leak hoặc giá trị bị drop trước khi chúng ta xong với nó. Chúng ta cần một kiểu giống hệt <code>Rc&lt;T&gt;</code> nhưng thực hiện thay đổi reference count theo cách thread-safe.</p>
 <h4 id="atomic-reference-counting-with-arct"><a class="header" href="#atomic-reference-counting-with-arct">Atomic Reference Counting Với <code>Arc&lt;T&gt;</code></a></h4>
 <p>May mắn thay, <code>Arc&lt;T&gt;</code> <em>là</em> một kiểu giống <code>Rc&lt;T&gt;</code> nhưng an toàn khi dùng trong tình huống concurrent. Chữ <em>a</em> là viết tắt của <em>atomic</em>, nghĩa là nó là kiểu <em>atomically reference-counted</em>. Atomic là một loại primitive concurrency bổ sung mà chúng ta sẽ không đi sâu ở đây: xem tài liệu thư viện chuẩn cho <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code></a> để biết thêm chi tiết. Hiện tại, bạn chỉ cần biết rằng atomic hoạt động như các primitive type nhưng an toàn để chia sẻ qua các thread.</p>
-<p>Bạn có thể tự hỏi tại sao không phải tất cả primitive type đều là atomic và tại sao thư viện chuẩn không mặc định dùng <code>Arc&lt;T&gt;</code>. Lý do là thread safety đi kèm với chi phí hiệu suất mà bạn chỉ muốn trả khi thực sự cần. Nếu bạn chỉ thực hiện các thao tác trên giá trị trong một thread đơn, code có thể chạy nhanh hơn nếu không phải thực thi các đảm bảo mà atomic cung cấp.</p>
-<p>Quay lại ví dụ: <code>Arc&lt;T&gt;</code> và <code>Rc&lt;T&gt;</code> có cùng API, vì vậy chúng ta sửa chương trình bằng cách thay dòng <code>use</code>, lời gọi <code>new</code>, và lời gọi <code>clone</code>. Code trong Listing 16-15 cuối cùng sẽ compile và chạy được.</p>
+<p>Bạn có thể tự hỏi tại sao không phải tất cả primitive type đều là atomic và tại sao thư viện chuẩn không mặc định dùng <code>Arc&lt;T&gt;</code>. Lý do là thread safety đi kèm với chi phí hiệu suất mà bạn chỉ muốn trả khi thực sự cần. Nếu bạn chỉ thực hiện các thao tác trên giá trị trong một thread đơn, mã có thể chạy nhanh hơn nếu không phải thực thi các đảm bảo mà atomic cung cấp.</p>
+<p>Quay lại ví dụ: <code>Arc&lt;T&gt;</code> và <code>Rc&lt;T&gt;</code> có cùng API, vì vậy chúng ta sửa chương trình bằng cách thay dòng <code>use</code>, lời gọi <code>new</code>, và lời gọi <code>clone</code>. Mã trong Listing 16-15 cuối cùng sẽ compile và chạy được.</p>
 <figure class="listing" id="listing-16-15">
 <span class="file-name">Tên file: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::sync::{Arc, Mutex};
@@ -466,7 +466,7 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-16-15">Listing 16-15</a>: Dùng <code>Arc&lt;T&gt;</code> để bọc <code>Mutex&lt;T&gt;</code> nhằm chia sẻ ownership qua nhiều thread</figcaption>
 </figure>
-<p>Code này sẽ in ra:</p>
+<p>Mã này sẽ in ra:</p>
 <pre><code class="language-text">Result: 10
 </code></pre>
 <p>Chúng ta đã làm được! Đếm từ 0 đến 10 có vẻ không ấn tượng lắm, nhưng nó dạy chúng ta rất nhiều về <code>Mutex&lt;T&gt;</code> và thread safety. Bạn cũng có thể dùng cấu trúc của chương trình này để thực hiện các thao tác phức tạp hơn là chỉ tăng bộ đếm. Bằng chiến lược này, bạn có thể chia một phép tính thành các phần độc lập, phân chia các phần đó cho các thread, rồi dùng <code>Mutex&lt;T&gt;</code> để mỗi thread cập nhật kết quả cuối cùng với phần của nó.</p>
@@ -475,7 +475,7 @@ fn main() {
 <p><a id="similarities-between-refcelltrct-and-mutextarct"></a></p>
 <h3 id="comparing-refcelltrct-and-mutextarct"><a class="header" href="#comparing-refcelltrct-and-mutextarct">So Sánh <code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> và <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code></a></h3>
 <p>Bạn có thể nhận thấy rằng <code>counter</code> là immutable nhưng chúng ta có thể lấy mutable reference tới giá trị bên trong; điều này có nghĩa là <code>Mutex&lt;T&gt;</code> cung cấp interior mutability, như họ <code>Cell</code> vậy. Giống như chúng ta đã dùng <code>RefCell&lt;T&gt;</code> ở Chương 15 để cho phép mutate nội dung bên trong <code>Rc&lt;T&gt;</code>, chúng ta dùng <code>Mutex&lt;T&gt;</code> để mutate nội dung bên trong <code>Arc&lt;T&gt;</code>.</p>
-<p>Một điều cần lưu ý là Rust không thể bảo vệ bạn khỏi tất cả các loại lỗi logic khi dùng <code>Mutex&lt;T&gt;</code>. Nhắc lại từ Chương 15 rằng dùng <code>Rc&lt;T&gt;</code> có nguy cơ tạo reference cycle, khi hai giá trị <code>Rc&lt;T&gt;</code> tham chiếu lẫn nhau gây ra memory leak. Tương tự, <code>Mutex&lt;T&gt;</code> có nguy cơ tạo <em>deadlock</em>. Điều này xảy ra khi một thao tác cần lock hai tài nguyên và hai thread đã mỗi thread acquire một trong hai lock, khiến chúng chờ nhau mãi mãi. Nếu bạn hứng thú với deadlock, hãy thử tạo một chương trình Rust có deadlock; sau đó nghiên cứu các chiến lược giảm thiểu deadlock cho mutex trong bất kỳ ngôn ngữ nào và thử implement chúng trong Rust. Tài liệu API thư viện chuẩn cho <code>Mutex&lt;T&gt;</code> và <code>MutexGuard</code> cung cấp thông tin hữu ích.</p>
+<p>Một điều cần lưu ý là Rust không thể bảo vệ bạn khỏi tất cả các loại lỗi logic khi dùng <code>Mutex&lt;T&gt;</code>. Nhắc lại từ Chương 15 rằng dùng <code>Rc&lt;T&gt;</code> có nguy cơ tạo reference cycle, khi hai giá trị <code>Rc&lt;T&gt;</code> tham chiếu lẫn nhau gây ra memory leak. Tương tự, <code>Mutex&lt;T&gt;</code> có nguy cơ tạo <em>deadlock</em>. Điều này xảy ra khi một thao tác cần lock hai tài nguyên và hai thread đã mỗi thread acquire một trong hai lock, khiến chúng chờ nhau mãi mãi. Nếu bạn hứng thú với deadlock, hãy thử tạo một chương trình Rust có deadlock; sau đó nghiên cứu các chiến lược giảm thiểu deadlock cho mutex trong bất kỳ ngôn ngữ nào và thử triển khai chúng trong Rust. Tài liệu API thư viện chuẩn cho <code>Mutex&lt;T&gt;</code> và <code>MutexGuard</code> cung cấp thông tin hữu ích.</p>
 <p>Chúng ta sẽ kết thúc chương này bằng cách nói về các trait <code>Send</code> và <code>Sync</code> và cách chúng ta có thể dùng chúng với các kiểu tùy chỉnh.</p>
 
   <div class="page-nav bottom"><a href="ch16-02-message-passing.html">← Trước</a><a href="ch16-04-extensible-concurrency-sync-and-send.html">Tiếp →</a></div>

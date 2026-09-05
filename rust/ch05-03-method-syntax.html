@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 5 — Phương thức (Methods)</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch05-02-example-structs.html">← Trước</a>
@@ -241,13 +241,13 @@ fn main() {
     <figcaption><a href="#listing-5-13">Listing 5-13</a>: Định nghĩa phương thức <code>area</code> trên struct <code>Rectangle</code></figcaption>
   </figure>
 
-  <p>Để định nghĩa hàm trong ngữ cảnh của <code>Rectangle</code>, ta bắt đầu một khối <code>impl</code> (implementation) cho <code>Rectangle</code>. Mọi thứ trong khối <code>impl</code> này sẽ được gắn với kiểu <code>Rectangle</code>. Tiếp theo, ta chuyển hàm <code>area</code> vào trong ngoặc nhọn của <code>impl</code> và thay đổi tham số đầu tiên (và trong trường hợp này là duy nhất) thành <code>self</code> trong chữ ký và trong phần thân. Tại <code>main</code>, nơi ta gọi hàm <code>area</code> và truyền <code>rect1</code> vào làm đối số, ta có thể dùng <em>cú pháp phương thức</em> để gọi phương thức <code>area</code> trên instance <code>Rectangle</code> của ta. Cú pháp phương thức đặt sau một instance: ta thêm một dấu chấm theo sau là tên phương thức, ngoặc tròn, và bất kỳ tham số nào.</p>
+  <p>Để định nghĩa hàm trong ngữ cảnh của <code>Rectangle</code>, ta bắt đầu một khối <code>impl</code> (phần triển khai) cho <code>Rectangle</code>. Mọi thứ trong khối <code>impl</code> này sẽ được gắn với kiểu <code>Rectangle</code>. Tiếp theo, ta chuyển hàm <code>area</code> vào trong ngoặc nhọn của <code>impl</code> và thay đổi tham số đầu tiên (và trong trường hợp này là duy nhất) thành <code>self</code> trong chữ ký và trong phần thân. Tại <code>main</code>, nơi ta gọi hàm <code>area</code> và truyền <code>rect1</code> vào làm đối số, ta có thể dùng <em>cú pháp phương thức</em> để gọi phương thức <code>area</code> trên instance <code>Rectangle</code> của ta. Cú pháp phương thức đặt sau một instance: ta thêm một dấu chấm theo sau là tên phương thức, ngoặc tròn, và bất kỳ tham số nào.</p>
 
   <p>Trong chữ ký của <code>area</code>, ta dùng <code>&amp;self</code> thay vì <code>rectangle: &amp;Rectangle</code>. <code>&amp;self</code> thực ra là viết tắt của <code>self: &amp;Self</code>. Trong một khối <code>impl</code>, kiểu <code>Self</code> là alias cho kiểu mà khối <code>impl</code> đó đang dành cho. Phương thức phải có một tham số tên <code>self</code> kiểu <code>Self</code> làm tham số đầu tiên, vì vậy Rust cho phép ta viết tắt bằng cách chỉ dùng tên <code>self</code> ở vị trí tham số đầu tiên. Lưu ý ta vẫn cần dùng <code>&amp;</code> trước tên tắt <code>self</code> để chỉ ra rằng phương thức này mượn instance <code>Self</code>, giống như ta làm trong <code>rectangle: &amp;Rectangle</code>. Phương thức có thể lấy ownership của <code>self</code>, mượn <code>self</code> immutable như ta đã làm ở đây, hoặc mượn <code>self</code> mutable, giống như bất kỳ tham số nào khác.</p>
 
   <p>Ta chọn <code>&amp;self</code> ở đây vì lý do giống như khi ta dùng <code>&amp;Rectangle</code> trong phiên bản hàm: ta không muốn lấy ownership, và ta chỉ muốn đọc dữ liệu trong struct, không muốn ghi vào nó. Nếu ta muốn thay đổi instance mà ta đã gọi phương thức như một phần trong những gì phương thức làm, ta sẽ dùng <code>&amp;mut self</code> làm tham số đầu tiên. Việc có một phương thức lấy ownership của instance bằng cách chỉ dùng <code>self</code> làm tham số đầu tiên là rất hiếm; kỹ thuật này thường được dùng khi phương thức biến đổi <code>self</code> thành thứ khác và bạn muốn ngăn caller sử dụng instance gốc sau khi biến đổi.</p>
 
-  <p>Lý do chính để dùng phương thức thay vì hàm, ngoài việc cung cấp cú pháp phương thức và không cần lặp lại kiểu của <code>self</code> trong mọi chữ ký phương thức, là để tổ chức code. Ta đã gom tất cả những gì ta có thể làm với một instance của kiểu vào trong một khối <code>impl</code> thay vì để người dùng code của ta phải tìm kiếm khả năng của <code>Rectangle</code> ở nhiều nơi khác nhau trong thư viện ta cung cấp.</p>
+  <p>Lý do chính để dùng phương thức thay vì hàm, ngoài việc cung cấp cú pháp phương thức và không cần lặp lại kiểu của <code>self</code> trong mọi chữ ký phương thức, là để tổ chức mã. Ta đã gom tất cả những gì ta có thể làm với một instance của kiểu vào trong một khối <code>impl</code> thay vì để người dùng mã của ta phải tìm kiếm khả năng của <code>Rectangle</code> ở nhiều nơi khác nhau trong thư viện ta cung cấp.</p>
 
   <p>Lưu ý rằng ta có thể đặt tên phương thức trùng với một trong các trường của struct. Ví dụ, ta có thể định nghĩa một phương thức trên <code>Rectangle</code> cũng có tên là <code>width</code>:</p>
 
@@ -273,7 +273,7 @@ fn main() {
 
   <p>Ở đây, ta chọn phương thức <code>width</code> trả về <code>true</code> nếu giá trị trong trường <code>width</code> của instance lớn hơn <code>0</code> và <code>false</code> nếu giá trị là <code>0</code>: ta có thể dùng một trường trong phương thức cùng tên cho bất kỳ mục đích gì. Trong <code>main</code>, khi ta viết <code>rect1.width</code> theo sau bằng ngoặc tròn, Rust biết ta đang gọi phương thức <code>width</code>. Khi ta không dùng ngoặc tròn, Rust biết ta đang nói đến trường <code>width</code>.</p>
 
-  <p>Thông thường, nhưng không phải luôn luôn, khi ta đặt tên phương thức trùng với một trường ta muốn nó chỉ trả về giá trị trong trường đó và không làm gì thêm. Những phương thức như vậy được gọi là <em>getters</em>, và Rust không tự động implement chúng cho các trường struct như một số ngôn ngữ khác. Getters hữu ích vì bạn có thể làm trường private nhưng phương thức public và nhờ đó cho phép truy cập read-only vào trường đó như một phần của public API kiểu. Ta sẽ bàn đến public và private là gì và cách chỉ định trường hay phương thức là public hay private trong <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">Chương 7</a>.</p>
+  <p>Thông thường, nhưng không phải luôn luôn, khi ta đặt tên phương thức trùng với một trường ta muốn nó chỉ trả về giá trị trong trường đó và không làm gì thêm. Những phương thức như vậy được gọi là <em>getters</em>, và Rust không tự động triển khai chúng cho các trường struct như một số ngôn ngữ khác. Getters hữu ích vì bạn có thể làm trường private nhưng phương thức public và nhờ đó cho phép truy cập read-only vào trường đó như một phần của API công khai của kiểu. Ta sẽ bàn đến public và private là gì và cách chỉ định trường hay phương thức là public hay private trong <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">Chương 7</a>.</p>
 
   <section class="note" aria-role="note">
     <h3 id="wheres-the---operator">Toán tử <code>-&gt;</code> đi đâu rồi?</h3>
@@ -291,8 +291,8 @@ fn main() {
   </section>
 
 
-  <h3 id="methods-with-more-parameters">Nhiều Tham số Trong Phương thức (Methods)</h3>
-  <p>Hãy luyện tập dùng phương thức bằng cách implement một phương thức thứ hai trên struct <code>Rectangle</code>. Lần này ta muốn một instance của <code>Rectangle</code> nhận một instance khác của <code>Rectangle</code> và trả về <code>true</code> nếu <code>Rectangle</code> thứ hai có thể nằm hoàn toàn bên trong <code>self</code> (tức <code>Rectangle</code> đầu tiên); nếu không, nó sẽ trả về <code>false</code>. Nghĩa là, khi ta đã định nghĩa phương thức <code>can_hold</code>, ta muốn có thể viết chương trình như trong Listing 5-14.</p>
+  <h3 id="methods-with-more-parameters">Phương thức có nhiều tham số hơn</h3>
+  <p>Hãy luyện tập dùng phương thức bằng cách triển khai một phương thức thứ hai trên struct <code>Rectangle</code>. Lần này ta muốn một instance của <code>Rectangle</code> nhận một instance khác của <code>Rectangle</code> và trả về <code>true</code> nếu <code>Rectangle</code> thứ hai có thể nằm hoàn toàn bên trong <code>self</code> (tức <code>Rectangle</code> đầu tiên); nếu không, nó sẽ trả về <code>false</code>. Nghĩa là, khi ta đã định nghĩa phương thức <code>can_hold</code>, ta muốn có thể viết chương trình như trong Listing 5-14.</p>
 
   <figure class="listing" id="listing-5-14">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -316,13 +316,13 @@ fn main() {
     <figcaption><a href="#listing-5-14">Listing 5-14</a>: Sử dụng phương thức <code>can_hold</code> chưa được viết</figcaption>
   </figure>
 
-  <p>Output kỳ vọng sẽ trông như sau vì cả hai chiều của <code>rect2</code> đều nhỏ hơn các chiều của <code>rect1</code>, nhưng <code>rect3</code> lại rộng hơn <code>rect1</code>:</p>
+  <p>Kết quả kỳ vọng sẽ trông như sau vì cả hai chiều của <code>rect2</code> đều nhỏ hơn các chiều của <code>rect1</code>, nhưng <code>rect3</code> lại rộng hơn <code>rect1</code>:</p>
 
 <pre><code class="language-text">Can rect1 hold rect2? true
 Can rect1 hold rect3? false
 </code></pre>
 
-  <p>Ta biết phương thức sẽ nằm trong khối <code>impl Rectangle</code>. Tên phương thức sẽ là <code>can_hold</code>, và nó sẽ nhận một immutable borrow của một <code>Rectangle</code> khác làm tham số. Ta có thể biết kiểu của tham số là gì bằng cách nhìn vào code gọi phương thức: <code>rect1.can_hold(&amp;rect2)</code> truyền vào <code>&amp;rect2</code>, là một immutable borrow đến <code>rect2</code>, một instance của <code>Rectangle</code>. Điều này hợp lý vì ta chỉ cần đọc <code>rect2</code> (không ghi, tức không cần mutable borrow), và ta muốn <code>main</code> giữ ownership của <code>rect2</code> để có thể dùng lại sau khi gọi phương thức <code>can_hold</code>. Giá trị trả về của <code>can_hold</code> sẽ là Boolean, và implementation sẽ kiểm tra xem chiều dài và chiều cao của <code>self</code> có lớn hơn chiều dài và chiều cao của <code>Rectangle</code> kia không. Hãy thêm phương thức <code>can_hold</code> mới vào khối <code>impl</code> từ Listing 5-13, như trong Listing 5-15.</p>
+  <p>Ta biết phương thức sẽ nằm trong khối <code>impl Rectangle</code>. Tên phương thức sẽ là <code>can_hold</code>, và nó sẽ nhận một immutable borrow của một <code>Rectangle</code> khác làm tham số. Ta có thể biết kiểu của tham số là gì bằng cách nhìn vào mã gọi phương thức: <code>rect1.can_hold(&amp;rect2)</code> truyền vào <code>&amp;rect2</code>, là một immutable borrow đến <code>rect2</code>, một instance của <code>Rectangle</code>. Điều này hợp lý vì ta chỉ cần đọc <code>rect2</code> (không ghi, tức không cần mutable borrow), và ta muốn <code>main</code> giữ ownership của <code>rect2</code> để có thể dùng lại sau khi gọi phương thức <code>can_hold</code>. Giá trị trả về của <code>can_hold</code> sẽ là Boolean, và phần triển khai sẽ kiểm tra xem chiều dài và chiều cao của <code>self</code> có lớn hơn chiều dài và chiều cao của <code>Rectangle</code> kia không. Hãy thêm phương thức <code>can_hold</code> mới vào khối <code>impl</code> từ Listing 5-13, như trong Listing 5-15.</p>
 
   <figure class="listing" id="listing-5-15">
     <span class="file-name">Tên file: src/main.rs</span>
@@ -359,14 +359,14 @@ fn main() {
     println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
     println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
 }</code></pre>
-    <figcaption><a href="#listing-5-15">Listing 5-15</a>: Implement phương thức <code>can_hold</code> trên <code>Rectangle</code> nhận một instance <code>Rectangle</code> khác làm tham số</figcaption>
+    <figcaption><a href="#listing-5-15">Listing 5-15</a>: Triển khai phương thức <code>can_hold</code> trên <code>Rectangle</code> nhận một instance <code>Rectangle</code> khác làm tham số</figcaption>
   </figure>
 
-  <p>Khi chạy code này với hàm <code>main</code> trong Listing 5-14, ta sẽ nhận được output mong muốn. Phương thức có thể nhận nhiều tham số hơn mà ta thêm vào chữ ký sau tham số <code>self</code>, và những tham số đó hoạt động giống như tham số trong hàm.</p>
+  <p>Khi chạy mã này với hàm <code>main</code> trong Listing 5-14, ta sẽ nhận được kết quả mong muốn. Phương thức có thể nhận nhiều tham số hơn mà ta thêm vào chữ ký sau tham số <code>self</code>, và những tham số đó hoạt động giống như tham số trong hàm.</p>
 
 
-  <h3 id="associated-functions">Phụ Cận Của Các (Associated Functions) Hàm</h3>
-  <p>Tất cả các hàm được định nghĩa trong một khối <code>impl</code> đều được gọi là <em>associated functions</em> (hàm phụ cận) vì chúng gắn với kiểu được đặt tên sau <code>impl</code>. Ta có thể định nghĩa các associated function không có <code>self</code> làm tham số đầu tiên (và do đó không phải phương thức) vì chúng không cần một instance của kiểu để hoạt động. Ta đã dùng một hàm như vậy: hàm <code>String::from</code> được định nghĩa trên kiểu <code>String</code>.</p>
+  <h3 id="associated-functions">Associated Function (hàm liên kết)</h3>
+  <p>Tất cả các hàm được định nghĩa trong một khối <code>impl</code> đều được gọi là <em>associated function</em> (hàm liên kết) vì chúng gắn với kiểu được đặt tên sau <code>impl</code>. Ta có thể định nghĩa các associated function không có <code>self</code> làm tham số đầu tiên (và do đó không phải phương thức) vì chúng không cần một instance của kiểu để hoạt động. Ta đã dùng một hàm như vậy: hàm <code>String::from</code> được định nghĩa trên kiểu <code>String</code>.</p>
 
   <p>Các associated function không phải phương thức thường được dùng làm constructor, trả về một instance mới của struct. Chúng thường có tên là <code>new</code>, nhưng <code>new</code> không phải tên đặc biệt và không được tích hợp vào ngôn ngữ. Ví dụ, ta có thể chọn cung cấp một associated function tên <code>square</code> nhận một tham số kích thước duy nhất và dùng nó cho cả chiều dài lẫn chiều cao, giúp tạo một <code>Rectangle</code> hình vuông dễ hơn thay vì phải chỉ định cùng giá trị hai lần:</p>
 
@@ -395,7 +395,7 @@ fn main() {
   <p>Để gọi associated function này, ta dùng cú pháp <code>::</code> với tên struct; <code>let sq = Rectangle::square(3);</code> là một ví dụ. Hàm này được đặt trong không gian tên của struct: cú pháp <code>::</code> được dùng cho cả associated functions lẫn các namespace được tạo bởi modules. Ta sẽ bàn đến modules trong <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Chương 7</a>.</p>
 
   <h3 id="multiple-impl-blocks">Biến Của Các <code>impl</code></h3>
-  <p>Mỗi struct được phép có nhiều khối <code>impl</code>. Ví dụ, Listing 5-15 tương đương với code trong Listing 5-16, mỗi phương thức nằm trong khối <code>impl</code> riêng của nó.</p>
+  <p>Mỗi struct được phép có nhiều khối <code>impl</code>. Ví dụ, Listing 5-15 tương đương với mã trong Listing 5-16, mỗi phương thức nằm trong khối <code>impl</code> riêng của nó.</p>
 
   <figure class="listing" id="listing-5-16">
 <pre><code class="language-rust">#[derive(Debug)]
@@ -440,7 +440,7 @@ fn main() {
 
 
   <h2 id="summary">📋 Tóm tắt</h2>
-  <p>Structs cho phép bạn tạo các kiểu tùy chỉnh có ý nghĩa trong lĩnh vực của bạn. Bằng cách dùng structs, bạn có thể giữ các dữ liệu liên quan gắn kết với nhau và đặt tên cho từng phần để code rõ ràng hơn. Trong các khối <code>impl</code>, bạn có thể định nghĩa các hàm gắn với kiểu của mình, và phương thức là một loại associated function cho phép bạn chỉ định hành vi mà các instance của struct có.</p>
+  <p>Structs cho phép bạn tạo các kiểu tùy chỉnh có ý nghĩa trong lĩnh vực của bạn. Bằng cách dùng structs, bạn có thể giữ các dữ liệu liên quan gắn kết với nhau và đặt tên cho từng phần để mã rõ ràng hơn. Trong các khối <code>impl</code>, bạn có thể định nghĩa các hàm gắn với kiểu của mình, và phương thức là một loại associated function cho phép bạn chỉ định hành vi mà các instance của struct có.</p>
 
   <p>Nhưng structs không phải là cách duy nhất để tạo kiểu tùy chỉnh: hãy cùng tìm hiểu tính năng enum của Rust để thêm một công cụ nữa vào hộp công cụ của bạn.</p>
 

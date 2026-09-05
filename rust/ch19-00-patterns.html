@@ -265,7 +265,7 @@
     <main id="content">
       <div id="topbar">
         <a href="index.html">The Rust Book</a><span class="sep">›</span
-        ><span class="current">Chương 19 — The Rust Book</span>
+        ><span class="current">Chương 19 — Chương 19: Patterns và Matching</span>
       </div>
       <div id="main">
         <div class="page-nav">
@@ -273,7 +273,7 @@
           ><a href="ch19-01-all-the-places-for-patterns.html">Tiếp →</a>
         </div>
 
-        <h1>Chương 19: Patterns và Matching</h1>
+        <h1 id="patterns-and-matching">Chương 19: Patterns và Matching</h1>
 
         <p>
           <em>Pattern</em> (khuôn mẫu) là một cú pháp đặc biệt trong Rust để so
@@ -295,18 +295,18 @@
           Một số ví dụ về patterns bao gồm <code>x</code>,
           <code>(a, 3)</code> và <code>Some(Color::Red)</code>. Trong các ngữ
           cảnh nơi patterns hợp lệ, những thành phần này mô tả hình dạng của dữ
-          liệu. Sau đó chương trình khớp các giá trị với các patterns để xác
+          liệu. Sau đó chương trình khớp các giá trị với các pattern để xác
           định xem nó có hình dạng dữ liệu đúng không để tiếp tục chạy một đoạn
-          code cụ thể.
+          mã cụ thể.
         </p>
 
         <p>
           Để dùng một pattern, chúng ta so sánh nó với một giá trị nào đó. Nếu
-          pattern khớp với giá trị, chúng ta dùng các phần giá trị trong code
+          pattern khớp với giá trị, chúng ta dùng các phần giá trị trong mã
           của mình. Nhớ lại các biểu thức <code>match</code> trong Chương 6 dùng
           patterns, chẳng hạn như ví dụ máy bán hàng tự động. Nếu giá trị phù
           hợp với hình dạng của pattern, chúng ta có thể dùng các phần được đặt
-          tên. Nếu không, code liên quan đến pattern sẽ không chạy.
+          tên. Nếu không, mã liên quan đến pattern sẽ không chạy.
         </p>
 
         <p>

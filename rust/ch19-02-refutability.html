@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 19 — Refutability: Khi Pattern Có Thể Thất Bại</span></div>
   <div id="main">
   <div class="page-nav"><a href="ch19-01-all-the-places-for-patterns.html">← Trước</a><a href="ch19-03-pattern-syntax.html">Tiếp →</a></div>
 
@@ -208,7 +208,7 @@
 <p>Pattern có hai dạng: <em>refutable</em> (có thể bác bỏ) và <em>irrefutable</em> (không thể bác bỏ). Pattern nào khớp được với mọi giá trị truyền vào thì gọi là <em>irrefutable</em>. Ví dụ kinh điển là <code>x</code> trong câu lệnh <code>let x = 5;</code> — vì <code>x</code> khớp với bất kỳ thứ gì nên nó không bao giờ thất bại. Ngược lại, pattern nào có thể không khớp với một số giá trị thì gọi là <em>refutable</em>. Ví dụ: <code>Some(x)</code> trong biểu thức <code>if let Some(x) = a_value</code> — nếu <code>a_value</code> là <code>None</code> thay vì <code>Some</code>, thì <code>Some(x)</code> sẽ bị "hụt chân" ngay.</p>
 <p>Tham số hàm, câu lệnh <code>let</code>, và vòng lặp <code>for</code> chỉ chấp nhận pattern irrefutable, vì chương trình chẳng biết làm gì khi giá trị không khớp. Các biểu thức <code>if let</code>, <code>while let</code>, và câu lệnh <code>let...else</code> thì chấp nhận cả hai loại, nhưng compiler sẽ cảnh báo khi bạn dùng pattern irrefutable ở đó — vì vốn dĩ các cấu trúc điều kiện này được sinh ra để xử lý trường hợp thất bại: sức mạnh của chúng nằm ở khả năng "rẽ nhánh" tùy tình huống.</p>
 <p>Nói chung, bạn không cần quá lo lắng về sự phân biệt này. Tuy nhiên, bạn cần nắm được khái niệm refutability để khi gặp nó trong thông báo lỗi, bạn biết mình phải làm gì. Khi đó, bạn cần thay đổi pattern hoặc cấu trúc đang sử dụng pattern đó, tùy thuộc vào hành vi bạn muốn.</p>
-<p>Hãy xem điều gì xảy ra khi ta cố dùng refutable pattern ở nơi Rust đòi irrefutable, và ngược lại. Listing 19-8 dưới đây có câu lệnh <code>let</code>, nhưng pattern được chỉ định là <code>Some(x)</code> — một refutable pattern. Đương nhiên đoạn code này sẽ không compile được.</p>
+<p>Hãy xem điều gì xảy ra khi ta cố dùng refutable pattern ở nơi Rust đòi irrefutable, và ngược lại. Listing 19-8 dưới đây có câu lệnh <code>let</code>, nhưng pattern được chỉ định là <code>Some(x)</code> — một refutable pattern. Đương nhiên đoạn mã này sẽ không compile được.</p>
 <figure class="listing" id="listing-19-8">
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let some_option_value: Option&lt;i32&gt; = None;
@@ -237,7 +237,7 @@ For more information about this error, try `rustc --explain E0005`.
 error: could not compile `patterns` (bin "patterns") due to 1 previous error
 </code></pre>
 <p>Vì ta không bao quát (và không thể bao quát!) toàn bộ giá trị hợp lệ với pattern <code>Some(x)</code>, Rust đã chính xác khi báo lỗi compiler.</p>
-<p>Nếu có refutable pattern ở nơi cần irrefutable, ta có thể sửa bằng cách thay <code>let</code> bằng <code>let...else</code>. Khi đó, nếu pattern không khớp, code trong cặp ngoặc nhọn sẽ xử lý phần còn lại. Listing 19-9 cho thấy cách sửa code ở Listing 19-8.</p>
+<p>Nếu có refutable pattern ở nơi cần irrefutable, ta có thể sửa bằng cách thay <code>let</code> bằng <code>let...else</code>. Khi đó, nếu pattern không khớp, mã trong cặp ngoặc nhọn sẽ xử lý phần còn lại. Listing 19-9 cho thấy cách sửa mã ở Listing 19-8.</p>
 <figure class="listing" id="listing-19-9">
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let some_option_value: Option&lt;i32&gt; = None;
@@ -245,9 +245,9 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
         return;
     };
 }</code></pre>
-<figcaption><a href="#listing-19-9">Listing 19-9</a>: Dùng <code>let...else</code> và một block với refutable pattern thay vì <code>let</code></figcaption>
+<figcaption><a href="#listing-19-9">Listing 19-9</a>: Dùng <code>let...else</code> và một khối với refutable pattern thay vì <code>let</code></figcaption>
 </figure>
-<p>Chúng ta đã cho code một "lối thoát"! Đoạn code này hoàn toàn hợp lệ. Tuy nhiên, điều đó cũng có nghĩa là ta không thể dùng irrefutable pattern mà không nhận cảnh báo. Nếu truyền cho <code>let...else</code> một pattern luôn khớp như <code>x</code> (xem Listing 19-10), compiler sẽ phàn nàn.</p>
+<p>Chúng ta đã cho mã một "lối thoát"! Đoạn mã này hoàn toàn hợp lệ. Tuy nhiên, điều đó cũng có nghĩa là ta không thể dùng irrefutable pattern mà không nhận cảnh báo. Nếu truyền cho <code>let...else</code> một pattern luôn khớp như <code>x</code> (xem Listing 19-10), compiler sẽ phàn nàn.</p>
 <figure class="listing" id="listing-19-10">
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5 else {

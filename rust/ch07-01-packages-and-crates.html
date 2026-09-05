@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 7 — Packages và Crates</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">← Trước</a>
@@ -213,7 +213,7 @@
 
   <p>Một crate có thể tồn tại dưới một trong hai dạng: binary crate hoặc library crate. <em>Binary crates</em> là các chương trình có thể biên dịch thành file thực thi để chạy, chẳng hạn như một chương trình dòng lệnh hoặc một server. Mỗi binary crate phải có một hàm <code>main</code> xác định điều gì xảy ra khi file thực thi được chạy. Tất cả các crate chúng ta đã tạo từ trước đến nay đều là binary crate.</p>
 
-  <p><em>Library crates</em> không có hàm <code>main</code> và không biên dịch thành file thực thi. Thay vào đó, chúng định nghĩa các chức năng để chia sẻ với nhiều dự án. Ví dụ, crate <code>rand</code> mà chúng ta đã dùng trong <a href=”ch02-00-guessing-game-tutorial.html#generating-a-random-number”>Chương 2</a> cung cấp chức năng tạo số ngẫu nhiên. Phần lớn khi các Rustacean nói “crate”, họ thường ý chỉ library crate, và dùng từ “crate” như từ đồng nghĩa với khái niệm “library” trong lập trình nói chung.</p>
+  <p><em>Library crates</em> không có hàm <code>main</code> và không biên dịch thành file thực thi. Thay vào đó, chúng định nghĩa các chức năng để chia sẻ với nhiều dự án. Ví dụ, crate <code>rand</code> mà chúng ta đã dùng trong <a href=”ch02-00-guessing-game-tutorial.html#sinh-so-ngau-nhien”>Chương 2</a> cung cấp chức năng tạo số ngẫu nhiên. Phần lớn khi các Rustacean nói “crate”, họ thường ý chỉ library crate, và dùng từ “crate” như từ đồng nghĩa với khái niệm “library” trong lập trình nói chung.</p>
 
   <p><em>Crate root</em> là file mã nguồn mà trình biên dịch Rust bắt đầu từ đó và tạo thành module gốc của crate (chúng ta sẽ tìm hiểu sâu hơn về module ở phần <a href=”ch07-02-defining-modules-to-control-scope-and-privacy.html”>”Kiểm soát Phạm Vi và Quyền Riêng Tư với Modules”</a>).</p>
 
@@ -232,7 +232,7 @@ $ ls my-project/src
 main.rs
 </code></pre>
 
-  <p>Sau khi chạy <code>cargo new my-project</code>, chúng ta dùng <code>ls</code> để xem những gì Cargo tạo ra. Trong thư mục <em>my-project</em>, có một file <em>Cargo.toml</em> — đây là package của chúng ta. Ngoài ra còn có thư mục <em>src</em> chứa file <em>main.rs</em>. Mở <em>Cargo.toml</em> trong trình soạn thảo văn bản và bạn sẽ thấy không có đề cập nào tới <em>src/main.rs</em>. Cargo quy ước rằng <em>src/main.rs</em> là crate root của một binary crate có cùng tên với package. Tương tự, Cargo biết rằng nếu thư mục package chứa file <em>src/lib.rs</em>, thì package đó chứa một library crate có cùng tên với package, và <em>src/lib.rs</em> là crate root của nó. Cargo truyền các file crate root cho <code>rustc</code> để build library hoặc binary.</p>
+  <p>Sau khi chạy <code>cargo new my-project</code>, chúng ta dùng <code>ls</code> để xem những gì Cargo tạo ra. Trong thư mục <em>my-dự án</em>, có một file <em>Cargo.toml</em> — đây là package của chúng ta. Ngoài ra còn có thư mục <em>src</em> chứa file <em>main.rs</em>. Mở <em>Cargo.toml</em> trong trình soạn thảo văn bản và bạn sẽ thấy không có đề cập nào tới <em>src/main.rs</em>. Cargo quy ước rằng <em>src/main.rs</em> là crate root của một binary crate có cùng tên với package. Tương tự, Cargo biết rằng nếu thư mục package chứa file <em>src/lib.rs</em>, thì package đó chứa một library crate có cùng tên với package, và <em>src/lib.rs</em> là crate root của nó. Cargo truyền các file crate root cho <code>rustc</code> để build library hoặc binary.</p>
 
   <p>Ở đây, chúng ta có một package chỉ chứa <em>src/main.rs</em>, nghĩa là nó chỉ có một binary crate tên <code>my-project</code>. Nếu một package chứa cả <em>src/main.rs</em> lẫn <em>src/lib.rs</em>, nó có hai crate: một binary và một library, cả hai đều có cùng tên với package. Một package có thể có nhiều binary crate bằng cách đặt các file trong thư mục <em>src/bin</em>: mỗi file sẽ là một binary crate riêng biệt.</p>
 

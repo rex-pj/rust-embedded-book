@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 11 — Kiểm Soát Cách Chạy Test</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch11-01-writing-tests.html">← Trước</a>
@@ -207,17 +207,17 @@
   </div>
 
   <h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Kiểm Soát Cách Chạy Test</a></h2>
-<p>Cũng như <code>cargo run</code> biên dịch code rồi chạy file binary kết quả, <code>cargo test</code> biên dịch code ở chế độ test rồi chạy file binary test kết quả. Hành vi mặc định của file binary được tạo ra bởi <code>cargo test</code> là chạy tất cả các test song song và bắt output được sinh ra trong quá trình chạy test, ngăn không cho output hiển thị và giúp dễ đọc output liên quan đến kết quả test hơn. Tuy nhiên, bạn có thể chỉ định các tùy chọn dòng lệnh để thay đổi hành vi mặc định này.</p>
-<p>Một số tùy chọn dòng lệnh dành cho <code>cargo test</code>, một số khác dành cho file binary test kết quả. Để phân biệt hai loại đối số này, bạn liệt kê các đối số cho <code>cargo test</code> trước, rồi dùng dấu phân tách <code>--</code>, rồi mới đến các đối số cho file binary test. Chạy <code>cargo test --help</code> để xem các tùy chọn bạn có thể dùng với <code>cargo test</code>, và chạy <code>cargo test -- --help</code> để xem các tùy chọn sau dấu phân tách. Các tùy chọn này cũng được ghi lại trong <a href="https://doc.rust-lang.org/rustc/tests/index.html">phần "Tests" của <em>The <code>rustc</code> Book</em></a>.</p>
+<p>Cũng như <code>cargo run</code> biên dịch mã rồi chạy file binary sinh ra, <code>cargo test</code> biên dịch mã ở chế độ test rồi chạy file binary test sinh ra. Hành vi mặc định của file binary được tạo ra bởi <code>cargo test</code> là chạy tất cả các test song song và bắt kết quả được sinh ra trong quá trình chạy test, ngăn không cho kết quả hiển thị và giúp dễ đọc kết quả liên quan đến kết quả test hơn. Tuy nhiên, bạn có thể chỉ định các tùy chọn dòng lệnh để thay đổi hành vi mặc định này.</p>
+<p>Một số tùy chọn dòng lệnh dành cho <code>cargo test</code>, một số khác dành cho file binary test sinh ra. Để phân biệt hai loại đối số này, bạn liệt kê các đối số cho <code>cargo test</code> trước, rồi dùng dấu phân tách <code>--</code>, rồi mới đến các đối số cho file binary test. Chạy <code>cargo test --help</code> để xem các tùy chọn bạn có thể dùng với <code>cargo test</code>, và chạy <code>cargo test -- --help</code> để xem các tùy chọn sau dấu phân tách. Các tùy chọn này cũng được ghi lại trong <a href="https://doc.rust-lang.org/rustc/tests/index.html">phần "Tests" của <em>The <code>rustc</code> Book</em></a>.</p>
 <h3 id="running-tests-in-parallel-or-consecutively"><a class="header" href="#running-tests-in-parallel-or-consecutively">Chạy Test Song Song Hay Tuần Tự</a></h3>
 <p>Khi bạn chạy nhiều test, theo mặc định chúng chạy song song dùng các thread, có nghĩa là chúng kết thúc chạy nhanh hơn và bạn nhận phản hồi sớm hơn. Vì các test chạy cùng một lúc, bạn phải đảm bảo các test không phụ thuộc vào nhau hoặc vào bất kỳ trạng thái dùng chung nào, bao gồm môi trường dùng chung, chẳng hạn như thư mục làm việc hiện tại hay các biến môi trường.</p>
-<p>Ví dụ, giả sử mỗi test chạy một đoạn code tạo một file trên đĩa tên <em>test-output.txt</em> và ghi một số dữ liệu vào file đó. Rồi mỗi test đọc dữ liệu trong file đó và khẳng định file chứa một giá trị cụ thể, khác nhau trong mỗi test. Vì các test chạy cùng lúc, một test có thể ghi đè file trong khoảng thời gian giữa lúc test khác đang viết và đọc file. Test thứ hai sẽ fail, không phải vì code sai mà vì các test đã xen vào nhau khi chạy song song. Một giải pháp là đảm bảo mỗi test viết vào một file khác; giải pháp khác là chạy test lần lượt từng cái một.</p>
+<p>Ví dụ, giả sử mỗi test chạy một đoạn mã tạo một file trên đĩa tên <em>test-output.txt</em> và ghi một số dữ liệu vào file đó. Rồi mỗi test đọc dữ liệu trong file đó và khẳng định file chứa một giá trị cụ thể, khác nhau trong mỗi test. Vì các test chạy cùng lúc, một test có thể ghi đè file trong khoảng thời gian giữa lúc test khác đang viết và đọc file. Test thứ hai sẽ fail, không phải vì mã sai mà vì các test đã xen vào nhau khi chạy song song. Một giải pháp là đảm bảo mỗi test viết vào một file khác; giải pháp khác là chạy test lần lượt từng cái một.</p>
 <p>Nếu bạn không muốn chạy test song song hoặc muốn kiểm soát chính xác hơn số thread được dùng, bạn có thể truyền cờ <code>--test-threads</code> và số thread bạn muốn dùng cho file binary test. Hãy xem ví dụ sau:</p>
 <pre><code class="language-console">$ cargo test -- --test-threads=1
 </code></pre>
 <p>Ta đặt số thread test thành <code>1</code>, báo cho chương trình không dùng bất kỳ song song nào. Chạy test dùng một thread sẽ mất nhiều thời gian hơn so với chạy song song, nhưng các test sẽ không xen vào nhau nếu chúng chia sẻ trạng thái.</p>
-<h3 id="showing-function-output"><a class="header" href="#showing-function-output">Hiển Thị Output Của Hàm</a></h3>
-<p>Theo mặc định, nếu test pass, thư viện test của Rust bắt bất kỳ thứ gì được in ra stdout. Ví dụ, nếu ta gọi <code>println!</code> trong test và test pass, ta sẽ không thấy output <code>println!</code> trong terminal; ta chỉ thấy dòng cho biết test đã pass. Nếu test fail, ta sẽ thấy bất kỳ thứ gì đã được in ra stdout cùng với phần còn lại của thông báo fail.</p>
+<h3 id="showing-function-output"><a class="header" href="#showing-function-output">Hiển Thị Kết quả Của Hàm</a></h3>
+<p>Theo mặc định, nếu test pass, thư viện test của Rust bắt bất kỳ thứ gì được in ra stdout. Ví dụ, nếu ta gọi <code>println!</code> trong test và test pass, ta sẽ không thấy kết quả <code>println!</code> trong terminal; ta chỉ thấy dòng cho biết test đã pass. Nếu test fail, ta sẽ thấy bất kỳ thứ gì đã được in ra stdout cùng với phần còn lại của thông báo fail.</p>
 <p>Ví dụ, Listing 11-10 có một hàm ngớ ngẩn in ra giá trị tham số của nó và trả về 10, cùng với một test sẽ pass và một test sẽ fail.</p>
 <figure class="listing" id="listing-11-10">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -244,7 +244,7 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-10">Listing 11-10</a>: Test cho hàm gọi <code>println!</code></figcaption>
 </figure>
-<p>Khi ta chạy các test này bằng <code>cargo test</code>, ta sẽ thấy output sau:</p>
+<p>Khi ta chạy các test này bằng <code>cargo test</code>, ta sẽ thấy kết quả sau:</p>
 <pre><code class="language-console">$ cargo test
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
@@ -273,11 +273,11 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Lưu ý rằng không có chỗ nào trong output này ta thấy <code>I got the value 4</code>, dòng được in khi test pass chạy. Output đó đã bị bắt giữ. Output từ test fail, <code>I got the value 8</code>, xuất hiện trong phần output tổng kết test, cùng với nguyên nhân fail của test.</p>
-<p>Nếu ta muốn thấy các giá trị được in cho cả test pass, ta có thể báo cho Rust cũng hiển thị output của test thành công bằng <code>--show-output</code>:</p>
+<p>Lưu ý rằng không có chỗ nào trong kết quả này ta thấy <code>I got the value 4</code>, dòng được in khi test pass chạy. Kết quả đó đã bị bắt giữ. Kết quả từ test fail, <code>I got the value 8</code>, xuất hiện trong phần kết quả tổng kết test, cùng với nguyên nhân fail của test.</p>
+<p>Nếu ta muốn thấy các giá trị được in cho cả test pass, ta có thể báo cho Rust cũng hiển thị kết quả của test thành công bằng <code>--show-output</code>:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
 </code></pre>
-<p>Khi ta chạy lại các test trong Listing 11-10 với cờ <code>--show-output</code>, ta thấy output sau:</p>
+<p>Khi ta chạy lại các test trong Listing 11-10 với cờ <code>--show-output</code>, ta thấy kết quả sau:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
@@ -316,7 +316,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 error: test failed, to rerun pass `--lib`
 </code></pre>
 <h3 id="running-a-subset-of-tests-by-name"><a class="header" href="#running-a-subset-of-tests-by-name">Chạy Một Tập Hợp Con Các Test Theo Tên</a></h3>
-<p>Đôi khi chạy toàn bộ test suite có thể mất nhiều thời gian. Nếu bạn đang làm việc trên code trong một khu vực cụ thể, bạn có thể chỉ muốn chạy các test liên quan đến code đó. Bạn có thể chọn test nào chạy bằng cách truyền cho <code>cargo test</code> tên hoặc danh sách tên của test bạn muốn chạy làm đối số.</p>
+<p>Đôi khi chạy toàn bộ test suite có thể mất nhiều thời gian. Nếu bạn đang làm việc trên mã trong một khu vực cụ thể, bạn có thể chỉ muốn chạy các test liên quan đến mã đó. Bạn có thể chọn test nào chạy bằng cách truyền cho <code>cargo test</code> tên hoặc danh sách tên của test bạn muốn chạy làm đối số.</p>
 <p>Để minh họa cách chạy một tập hợp con test, trước tiên ta sẽ tạo ba test cho hàm <code>add_two</code> như trong Listing 11-11, và chọn test nào muốn chạy.</p>
 <figure class="listing" id="listing-11-11">
 <span class="file-name">Tên file: src/lib.rs</span>
@@ -381,7 +381,7 @@ test tests::one_hundred ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Chỉ test có tên <code>one_hundred</code> chạy; hai test kia không khớp với tên đó. Output test cho ta biết ta còn nhiều test không chạy bằng cách hiển thị <code>2 filtered out</code> ở cuối.</p>
+<p>Chỉ test có tên <code>one_hundred</code> chạy; hai test kia không khớp với tên đó. Kết quả test cho ta biết ta còn nhiều test không chạy bằng cách hiển thị <code>2 filtered out</code> ở cuối.</p>
 <p>Ta không thể chỉ định tên của nhiều test theo cách này; chỉ giá trị đầu tiên được truyền cho <code>cargo test</code> sẽ được dùng. Nhưng có cách để chạy nhiều test.</p>
 <h4 id="filtering-to-run-multiple-tests"><a class="header" href="#filtering-to-run-multiple-tests">Lọc Để Chạy Nhiều Test</a></h4>
 <p>Ta có thể chỉ định một phần tên test, và bất kỳ test nào có tên khớp với giá trị đó sẽ được chạy. Ví dụ, vì hai test của ta có tên chứa <code>add</code>, ta có thể chạy cả hai bằng lệnh <code>cargo test add</code>:</p>

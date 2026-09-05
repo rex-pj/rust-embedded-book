@@ -199,7 +199,7 @@
   </nav>
 </nav>
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 6 — Cấu trúc điều khiển match</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch06-01-defining-an-enum.html">← Trước</a>
@@ -207,9 +207,9 @@
   </div>
 
   <h2 id="the-match-control-flow-construct">Cấu trúc điều khiển <code>match</code></h2>
-  <p>Rust có một cấu trúc điều khiển luồng cực kỳ mạnh mẽ gọi là <code>match</code> cho phép bạn so sánh một giá trị với một chuỗi các mẫu và sau đó thực thi code dựa trên mẫu nào khớp. Mẫu có thể được tạo thành từ các giá trị literal, tên biến, ký tự đại diện (wildcard), và nhiều thứ khác; <a href="ch19-00-patterns.html">Chương 19</a> bao gồm tất cả các loại mẫu khác nhau và những gì chúng làm. Sức mạnh của <code>match</code> đến từ tính biểu đạt của các mẫu và thực tế là trình biên dịch xác nhận rằng tất cả các trường hợp có thể đã được xử lý.</p>
+  <p>Rust có một cấu trúc điều khiển luồng cực kỳ mạnh mẽ gọi là <code>match</code> cho phép bạn so sánh một giá trị với một chuỗi các mẫu và sau đó thực thi mã dựa trên mẫu nào khớp. Mẫu có thể được tạo thành từ các giá trị literal, tên biến, ký tự đại diện (wildcard), và nhiều thứ khác; <a href="ch19-00-patterns.html">Chương 19</a> bao gồm tất cả các loại mẫu khác nhau và những gì chúng làm. Sức mạnh của <code>match</code> đến từ tính biểu đạt của các mẫu và thực tế là trình biên dịch xác nhận rằng tất cả các trường hợp có thể đã được xử lý.</p>
 
-  <p>Hãy nghĩ về biểu thức <code>match</code> như một máy phân loại đồng xu: Các đồng xu trượt xuống một đường ray có các lỗ kích thước khác nhau, và mỗi đồng xu rơi qua lỗ đầu tiên vừa với nó. Tương tự, các giá trị đi qua từng mẫu trong một <code>match</code>, và ở mẫu đầu tiên mà giá trị "khớp", giá trị rơi vào khối code liên kết để được sử dụng trong quá trình thực thi.</p>
+  <p>Hãy nghĩ về biểu thức <code>match</code> như một máy phân loại đồng xu: Các đồng xu trượt xuống một đường ray có các lỗ kích thước khác nhau, và mỗi đồng xu rơi qua lỗ đầu tiên vừa với nó. Tương tự, các giá trị đi qua từng mẫu trong một <code>match</code>, và ở mẫu đầu tiên mà giá trị "khớp", giá trị rơi vào khối mã liên kết để được sử dụng trong quá trình thực thi.</p>
 
   <p>Nói đến đồng xu, hãy dùng chúng làm ví dụ với <code>match</code>! Chúng ta có thể viết một hàm nhận một đồng xu Mỹ không xác định và, tương tự như máy đếm, xác định đó là đồng xu nào và trả về giá trị của nó tính bằng cent, như trong Listing 6-3.</p>
 
@@ -236,13 +236,13 @@ fn main() {}</code></pre>
 
   <p>Hãy cùng phân tích biểu thức <code>match</code> trong hàm <code>value_in_cents</code>. Trước tiên, chúng ta liệt kê từ khóa <code>match</code> theo sau bởi một biểu thức, trong trường hợp này là giá trị <code>coin</code>. Điều này trông rất giống với một biểu thức điều kiện dùng với <code>if</code>, nhưng có một sự khác biệt lớn: Với <code>if</code>, điều kiện cần đánh giá ra một giá trị Boolean, nhưng ở đây nó có thể là bất kỳ kiểu nào. Kiểu của <code>coin</code> trong ví dụ này là enum <code>Coin</code> mà chúng ta đã định nghĩa ở dòng đầu tiên.</p>
 
-  <p>Tiếp theo là các nhánh (arm) của <code>match</code>. Một nhánh có hai phần: một mẫu (pattern) và một số code. Nhánh đầu tiên ở đây có mẫu là giá trị <code>Coin::Penny</code> và sau đó là toán tử <code>=&gt;</code> phân tách mẫu và code cần chạy. Code trong trường hợp này chỉ là giá trị <code>1</code>. Mỗi nhánh được phân tách từ nhánh tiếp theo bằng dấu phẩy.</p>
+  <p>Tiếp theo là các nhánh (arm) của <code>match</code>. Một nhánh có hai phần: một mẫu (pattern) và một số mã. Nhánh đầu tiên ở đây có mẫu là giá trị <code>Coin::Penny</code> và sau đó là toán tử <code>=&gt;</code> phân tách mẫu và mã cần chạy. Mã trong trường hợp này chỉ là giá trị <code>1</code>. Mỗi nhánh được phân tách từ nhánh tiếp theo bằng dấu phẩy.</p>
 
-  <p>Khi biểu thức <code>match</code> thực thi, nó so sánh giá trị kết quả với mẫu của từng nhánh, theo thứ tự. Nếu một mẫu khớp với giá trị, code liên kết với mẫu đó được thực thi. Nếu mẫu đó không khớp với giá trị, quá trình thực thi tiếp tục sang nhánh tiếp theo, giống như trong máy phân loại đồng xu. Chúng ta có thể có bao nhiêu nhánh tùy ý: Trong Listing 6-3, <code>match</code> của chúng ta có bốn nhánh.</p>
+  <p>Khi biểu thức <code>match</code> thực thi, nó so sánh giá trị kết quả với mẫu của từng nhánh, theo thứ tự. Nếu một mẫu khớp với giá trị, mã liên kết với mẫu đó được thực thi. Nếu mẫu đó không khớp với giá trị, quá trình thực thi tiếp tục sang nhánh tiếp theo, giống như trong máy phân loại đồng xu. Chúng ta có thể có bao nhiêu nhánh tùy ý: Trong Listing 6-3, <code>match</code> của chúng ta có bốn nhánh.</p>
 
-  <p>Code liên kết với mỗi nhánh là một biểu thức, và giá trị kết quả của biểu thức trong nhánh khớp là giá trị được trả về cho toàn bộ biểu thức <code>match</code>.</p>
+  <p>Mã liên kết với mỗi nhánh là một biểu thức, và giá trị kết quả của biểu thức trong nhánh khớp là giá trị được trả về cho toàn bộ biểu thức <code>match</code>.</p>
 
-  <p>Chúng ta thường không dùng dấu ngoặc nhọn nếu code trong nhánh match ngắn, như trong Listing 6-3 nơi mỗi nhánh chỉ trả về một giá trị. Nếu bạn muốn chạy nhiều dòng code trong một nhánh match, bạn phải dùng dấu ngoặc nhọn, và dấu phẩy sau nhánh thì là tùy chọn. Ví dụ, code sau in "Lucky penny!" mỗi khi phương thức được gọi với <code>Coin::Penny</code>, nhưng vẫn trả về giá trị cuối cùng của khối, <code>1</code>:</p>
+  <p>Chúng ta thường không dùng dấu ngoặc nhọn nếu mã trong nhánh match ngắn, như trong Listing 6-3 nơi mỗi nhánh chỉ trả về một giá trị. Nếu bạn muốn chạy nhiều dòng mã trong một nhánh match, bạn phải dùng dấu ngoặc nhọn, và dấu phẩy sau nhánh thì là tùy chọn. Ví dụ, mã sau in "Lucky penny!" mỗi khi phương thức được gọi với <code>Coin::Penny</code>, nhưng vẫn trả về giá trị cuối cùng của khối, <code>1</code>:</p>
 
 <pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
     match coin {
@@ -282,7 +282,7 @@ fn main() {}</code></pre>
 
   <p>Hãy tưởng tượng một người bạn đang cố sưu tập tất cả 50 đồng quarter bang. Trong khi chúng ta phân loại tiền lẻ theo loại đồng xu, chúng ta cũng sẽ gọi tên bang liên kết với mỗi đồng quarter để nếu đó là đồng bạn của chúng ta chưa có, họ có thể thêm vào bộ sưu tập của mình.</p>
 
-  <p>Trong biểu thức match cho code này, chúng ta thêm một biến tên <code>state</code> vào mẫu khớp với các giá trị của biến thể <code>Coin::Quarter</code>. Khi một <code>Coin::Quarter</code> khớp, biến <code>state</code> sẽ ràng buộc với giá trị bang của đồng quarter đó. Sau đó, chúng ta có thể dùng <code>state</code> trong code của nhánh đó, như sau:</p>
+  <p>Trong biểu thức match cho mã này, chúng ta thêm một biến tên <code>state</code> vào mẫu khớp với các giá trị của biến thể <code>Coin::Quarter</code>. Khi một <code>Coin::Quarter</code> khớp, biến <code>state</code> sẽ ràng buộc với giá trị bang của đồng quarter đó. Sau đó, chúng ta có thể dùng <code>state</code> trong mã của nhánh đó, như sau:</p>
 
 <pre><code class="language-rust">fn value_in_cents(coin: Coin) -&gt; u8 {
     match coin {
@@ -335,7 +335,7 @@ fn main() {}</code></pre>
             Some(i) =&gt; Some(i + 1),
         }</code></pre>
 
-  <p><code>Some(5)</code> có khớp với <code>Some(i)</code> không? Có! Chúng ta có cùng biến thể. <code>i</code> ràng buộc với giá trị chứa trong <code>Some</code>, nên <code>i</code> lấy giá trị <code>5</code>. Code trong nhánh match sau đó được thực thi, nên chúng ta cộng 1 vào giá trị của <code>i</code> và tạo một giá trị <code>Some</code> mới với tổng <code>6</code> bên trong.</p>
+  <p><code>Some(5)</code> có khớp với <code>Some(i)</code> không? Có! Chúng ta có cùng biến thể. <code>i</code> ràng buộc với giá trị chứa trong <code>Some</code>, nên <code>i</code> lấy giá trị <code>5</code>. Mã trong nhánh match sau đó được thực thi, nên chúng ta cộng 1 vào giá trị của <code>i</code> và tạo một giá trị <code>Some</code> mới với tổng <code>6</code> bên trong.</p>
 
   <p>Bây giờ hãy xem lần gọi thứ hai của <code>plus_one</code> trong Listing 6-5, nơi <code>x</code> là <code>None</code>. Chúng ta vào <code>match</code> và so sánh với nhánh đầu tiên:</p>
 
@@ -346,10 +346,10 @@ fn main() {}</code></pre>
 
   <p>Khớp rồi! Không có giá trị để cộng thêm vào, vì vậy chương trình dừng lại và trả về giá trị <code>None</code> ở bên phải của <code>=&gt;</code>. Vì nhánh đầu tiên khớp, không có nhánh nào khác được so sánh.</p>
 
-  <p>Kết hợp <code>match</code> và enum rất hữu ích trong nhiều tình huống. Bạn sẽ thấy mẫu này rất nhiều trong code Rust: <code>match</code> với một enum, ràng buộc một biến với dữ liệu bên trong, và sau đó thực thi code dựa trên đó. Thoạt đầu có vẻ khó, nhưng khi bạn quen với nó, bạn sẽ ước mình có nó trong tất cả các ngôn ngữ. Đây là một tính năng được người dùng yêu thích.
+  <p>Kết hợp <code>match</code> và enum rất hữu ích trong nhiều tình huống. Bạn sẽ thấy mẫu này rất nhiều trong mã Rust: <code>match</code> với một enum, ràng buộc một biến với dữ liệu bên trong, và sau đó thực thi mã dựa trên đó. Thoạt đầu có vẻ khó, nhưng khi bạn quen với nó, bạn sẽ ước mình có nó trong tất cả các ngôn ngữ. Đây là một tính năng được người dùng yêu thích.
   </p>
 
-  <h3 id="matches-are-exhaustive">Matches bắt buộc phải cạn kiệt (Matches Are Exhaustive)</h3>
+  <h3 id="matches-are-exhaustive">match phải vét cạn mọi trường hợp (Matches Are Exhaustive)</h3>
   <p>Còn một khía cạnh khác của <code>match</code> chúng ta cần thảo luận: các mẫu của nhánh phải bao gồm tất cả các khả năng. Xét phiên bản này của hàm <code>plus_one</code>, có một lỗi và sẽ không biên dịch được:</p>
 
 <pre><code class="language-rust ignore does_not_compile">fn main() {
@@ -364,7 +364,7 @@ fn main() {}</code></pre>
     let none = plus_one(None);
 }</code></pre>
 
-  <p>Chúng ta đã không xử lý trường hợp <code>None</code>, nên code này sẽ gây ra lỗi. May mắn thay, đây là lỗi Rust biết cách phát hiện. Nếu chúng ta cố biên dịch code này, chúng ta sẽ nhận được lỗi sau:</p>
+  <p>Chúng ta đã không xử lý trường hợp <code>None</code>, nên mã này sẽ gây ra lỗi. May mắn thay, đây là lỗi Rust biết cách phát hiện. Nếu chúng ta cố biên dịch mã này, chúng ta sẽ nhận được lỗi sau:</p>
 
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
@@ -390,7 +390,7 @@ For more information about this error, try `rustc --explain E0004`.
 error: could not compile `enums` (bin "enums") due to 1 previous error
 </code></pre>
 
-  <p>Rust biết rằng chúng ta đã không bao gồm mọi trường hợp có thể và thậm chí biết mẫu nào chúng ta đã quên! Các match trong Rust là <em>exhaustive</em> (cạn kiệt): Chúng ta phải kiệt sức mọi khả năng cuối cùng để code hợp lệ. Đặc biệt trong trường hợp của <code>Option&lt;T&gt;</code>, khi Rust ngăn chúng ta quên xử lý tường minh trường hợp <code>None</code>, nó bảo vệ chúng ta khỏi việc giả định rằng chúng ta có một giá trị trong khi thực ra có thể là null, từ đó làm cho sai lầm tỷ đô đã thảo luận trước đó trở nên không thể xảy ra.</p>
+  <p>Rust biết rằng chúng ta đã không bao gồm mọi trường hợp có thể và thậm chí biết mẫu nào chúng ta đã quên! Các match trong Rust là <em>exhaustive</em> (vét cạn): chúng ta phải xét hết mọi khả năng cuối cùng để mã hợp lệ. Đặc biệt trong trường hợp của <code>Option&lt;T&gt;</code>, khi Rust ngăn chúng ta quên xử lý tường minh trường hợp <code>None</code>, nó bảo vệ chúng ta khỏi việc giả định rằng chúng ta có một giá trị trong khi thực ra có thể là null, từ đó làm cho sai lầm tỷ đô đã thảo luận trước đó trở nên không thể xảy ra.</p>
 
 
   <h3 id="catch-all-patterns-and-the-_-placeholder">Bắt tất cả mẫu và ký tự đại diện <code>_</code></h3>
@@ -409,13 +409,13 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
     fn move_player(num_spaces: u8) {}
 }</code></pre>
 
-  <p>Đối với hai nhánh đầu tiên, mẫu là các giá trị literal <code>3</code> và <code>7</code>. Đối với nhánh cuối bao gồm mọi giá trị có thể khác, mẫu là biến mà chúng ta chọn đặt tên là <code>other</code>. Code chạy cho nhánh <code>other</code> sử dụng biến bằng cách truyền nó vào hàm <code>move_player</code>.</p>
+  <p>Đối với hai nhánh đầu tiên, mẫu là các giá trị literal <code>3</code> và <code>7</code>. Đối với nhánh cuối bao gồm mọi giá trị có thể khác, mẫu là biến mà chúng ta chọn đặt tên là <code>other</code>. Mã chạy cho nhánh <code>other</code> sử dụng biến bằng cách truyền nó vào hàm <code>move_player</code>.</p>
 
-  <p>Code này biên dịch được, mặc dù chúng ta chưa liệt kê tất cả các giá trị có thể của <code>u8</code>, vì mẫu cuối cùng sẽ khớp tất cả các giá trị không được liệt kê cụ thể. Mẫu bắt-tất-cả này đáp ứng yêu cầu rằng <code>match</code> phải exhaustive. Lưu ý rằng chúng ta phải đặt nhánh bắt-tất-cả ở cuối vì các mẫu được đánh giá theo thứ tự. Nếu chúng ta đặt nhánh bắt-tất-cả ở trước, các nhánh khác sẽ không bao giờ chạy, nên Rust sẽ cảnh báo chúng ta nếu chúng ta thêm các nhánh sau một nhánh bắt-tất-cả!</p>
+  <p>Mã này biên dịch được, mặc dù chúng ta chưa liệt kê tất cả các giá trị có thể của <code>u8</code>, vì mẫu cuối cùng sẽ khớp tất cả các giá trị không được liệt kê cụ thể. Mẫu bắt-tất-cả này đáp ứng yêu cầu rằng <code>match</code> phải exhaustive. Lưu ý rằng chúng ta phải đặt nhánh bắt-tất-cả ở cuối vì các mẫu được đánh giá theo thứ tự. Nếu chúng ta đặt nhánh bắt-tất-cả ở trước, các nhánh khác sẽ không bao giờ chạy, nên Rust sẽ cảnh báo chúng ta nếu chúng ta thêm các nhánh sau một nhánh bắt-tất-cả!</p>
 
   <p>Rust cũng có một mẫu chúng ta có thể dùng khi muốn bắt-tất-cả nhưng không muốn <em>sử dụng</em> giá trị trong mẫu bắt-tất-cả: <code>_</code> là một mẫu đặc biệt khớp với bất kỳ giá trị nào và không ràng buộc với giá trị đó. Điều này nói với Rust rằng chúng ta sẽ không sử dụng giá trị, vì vậy Rust sẽ không cảnh báo chúng ta về một biến không được dùng.</p>
 
-  <p>Hãy thay đổi luật chơi: Bây giờ, nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7, bạn phải tung lại. Chúng ta không còn cần dùng giá trị bắt-tất-cả, nên chúng ta có thể thay đổi code để dùng <code>_</code> thay vì biến tên <code>other</code>:</p>
+  <p>Hãy thay đổi luật chơi: Bây giờ, nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7, bạn phải tung lại. Chúng ta không còn cần dùng giá trị bắt-tất-cả, nên chúng ta có thể thay đổi mã để dùng <code>_</code> thay vì biến tên <code>other</code>:</p>
 
 <pre><code class="language-rust">fn main() {
     let dice_roll = 9;
@@ -432,7 +432,7 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
 
   <p>Ví dụ này cũng đáp ứng yêu cầu exhaustive vì chúng ta đang bỏ qua tường minh tất cả các giá trị khác trong nhánh cuối; chúng ta chưa quên gì cả.</p>
 
-  <p>Cuối cùng, hãy thay đổi luật chơi một lần nữa để không có gì xảy ra trong lượt của bạn nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7. Chúng ta có thể diễn đạt điều đó bằng cách dùng giá trị đơn vị (kiểu tuple rỗng mà chúng ta đã đề cập trong phần <a href="ch03-02-data-types.html#the-tuple-type">The Tuple Type</a>) làm code đi kèm với nhánh <code>_</code>:</p>
+  <p>Cuối cùng, hãy thay đổi luật chơi một lần nữa để không có gì xảy ra trong lượt của bạn nếu bạn tung ra bất cứ thứ gì khác ngoài 3 hoặc 7. Chúng ta có thể diễn đạt điều đó bằng cách dùng giá trị đơn vị (kiểu tuple rỗng mà chúng ta đã đề cập trong phần <a href="ch03-02-data-types.html#the-tuple-type">“Kiểu Tuple”</a>) làm mã đi kèm với nhánh <code>_</code>:</p>
 
 <pre><code class="language-rust">fn main() {
     let dice_roll = 9;
@@ -446,7 +446,7 @@ error: could not compile `enums` (bin "enums") due to 1 previous error
     fn remove_fancy_hat() {}
 }</code></pre>
 
-  <p>Ở đây, chúng ta đang nói rõ với Rust rằng chúng ta sẽ không dùng bất kỳ giá trị nào không khớp với mẫu ở nhánh trước, và chúng ta không muốn chạy bất kỳ code nào trong trường hợp này.</p>
+  <p>Ở đây, chúng ta đang nói rõ với Rust rằng chúng ta sẽ không dùng bất kỳ giá trị nào không khớp với mẫu ở nhánh trước, và chúng ta không muốn chạy bất kỳ mã nào trong trường hợp này.</p>
 
   <p>Còn nhiều hơn về mẫu và khớp mẫu mà chúng ta sẽ đề cập trong <a href="ch19-00-patterns.html">Chương 19</a>. Hiện tại, chúng ta sẽ tiếp tục với cú pháp <code>if let</code>, có thể hữu ích trong những tình huống mà biểu thức <code>match</code> có phần dài dòng.</p>
 

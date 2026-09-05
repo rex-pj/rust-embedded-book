@@ -200,7 +200,7 @@
 </nav>
 
 <main id="content">
-<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 14 — The Rust Book</span></div>
+<div id="topbar"><a href="index.html">The Rust Book</a><span class="sep">›</span><span class="current">Chương 14 — Tùy chỉnh Build với Release Profiles</span></div>
   <div id="main">
   <div class="page-nav">
     <a href="ch14-00-more-about-cargo.html">← Trước</a>
@@ -210,14 +210,14 @@
 <h2 id="customizing-builds-with-release-profiles"><a class="header" href="#customizing-builds-with-release-profiles">Tùy chỉnh Build với Release Profiles</a></h2>
 <p>Trong Rust, <em>release profiles</em> là những profile được định nghĩa sẵn và có thể tùy chỉnh — mỗi profile mang cấu hình riêng biệt, giúp lập trình viên kiểm soát nhiều tùy chọn biên dịch khác nhau. Mỗi profile hoạt động độc lập, không ảnh hưởng lẫn nhau.</p>
 <p>Cargo có hai profile chính: profile <code>dev</code> được dùng khi bạn chạy <code>cargo build</code>, và profile <code>release</code> được dùng khi bạn chạy <code>cargo build --release</code>. Profile <code>dev</code> được thiết lập với những giá trị mặc định phù hợp cho quá trình phát triển, còn profile <code>release</code> có mặc định tối ưu hóa cho bản phát hành chính thức.</p>
-<p>Tên hai profile này chắc hẳn bạn đã thấy trong output khi build:</p>
+<p>Tên hai profile này chắc hẳn bạn đã thấy trong kết quả khi build:</p>
 <pre><code class="language-console">$ cargo build
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
 $ cargo build --release
     Finished `release` profile [optimized] target(s) in 0.32s
 </code></pre>
 <p><code>dev</code> và <code>release</code> là hai profile khác nhau mà compiler sử dụng.</p>
-<p>Cargo có cài đặt mặc định cho mỗi profile — những mặc định này sẽ được áp dụng khi bạn chưa thêm bất kỳ section <code>[profile.*]</code> nào vào file <em>Cargo.toml</em> của dự án. Bằng cách thêm section <code>[profile.*]</code> cho profile mà bạn muốn tùy chỉnh, bạn có thể ghi đè lên bất kỳ tập hợp con nào của cài đặt mặc định. Ví dụ, đây là giá trị mặc định của setting <code>opt-level</code> cho profile <code>dev</code> và <code>release</code>:</p>
+<p>Cargo có cài đặt mặc định cho mỗi profile — những mặc định này sẽ được áp dụng khi bạn chưa thêm bất kỳ mục <code>[profile.*]</code> nào vào file <em>Cargo.toml</em> của dự án. Bằng cách thêm mục <code>[profile.*]</code> cho profile mà bạn muốn tùy chỉnh, bạn có thể ghi đè lên bất kỳ tập hợp con nào của cài đặt mặc định. Ví dụ, đây là giá trị mặc định của setting <code>opt-level</code> cho profile <code>dev</code> và <code>release</code>:</p>
 <p><span class="filename">Tên file: Cargo.toml</span></p>
 <pre><code class="language-toml">[profile.dev]
 opt-level = 0
@@ -225,13 +225,13 @@ opt-level = 0
 [profile.release]
 opt-level = 3
 </code></pre>
-<p>Setting <code>opt-level</code> kiểm soát số lượng tối ưu hóa mà Rust áp dụng lên code, với thang đo từ 0 đến 3. Càng tối ưu hóa nhiều thì thời gian biên dịch càng dài, vì vậy khi bạn đang trong giai đoạn phát triển và biên dịch code liên tục, bạn sẽ muốn ít tối ưu hóa hơn để build nhanh hơn dù code chạy chậm hơn một chút. Đó là lý do <code>opt-level</code> mặc định cho <code>dev</code> là <code>0</code>. Còn khi sắp phát hành, tốt hơn hết là bỏ thêm thời gian biên dịch. Bạn chỉ biên dịch ở chế độ release một lần, nhưng chương trình sẽ được chạy nhiều lần — nên release mode đánh đổi thời gian biên dịch lâu hơn để có code chạy nhanh hơn. Đó là lý do <code>opt-level</code> mặc định cho profile <code>release</code> là <code>3</code>.</p>
+<p>Setting <code>opt-level</code> kiểm soát số lượng tối ưu hóa mà Rust áp dụng lên mã, với thang đo từ 0 đến 3. Càng tối ưu hóa nhiều thì thời gian biên dịch càng dài, vì vậy khi bạn đang trong giai đoạn phát triển và biên dịch mã liên tục, bạn sẽ muốn ít tối ưu hóa hơn để build nhanh hơn dù mã chạy chậm hơn một chút. Đó là lý do <code>opt-level</code> mặc định cho <code>dev</code> là <code>0</code>. Còn khi sắp phát hành, tốt hơn hết là bỏ thêm thời gian biên dịch. Bạn chỉ biên dịch ở chế độ release một lần, nhưng chương trình sẽ được chạy nhiều lần — nên release mode đánh đổi thời gian biên dịch lâu hơn để có mã chạy nhanh hơn. Đó là lý do <code>opt-level</code> mặc định cho profile <code>release</code> là <code>3</code>.</p>
 <p>Bạn có thể ghi đè cài đặt mặc định bằng cách thêm giá trị khác trong <em>Cargo.toml</em>. Ví dụ, nếu muốn dùng mức tối ưu hóa 1 trong profile phát triển, ta có thể thêm hai dòng này vào <em>Cargo.toml</em> của dự án:</p>
 <p><span class="filename">Tên file: Cargo.toml</span></p>
 <pre><code class="language-toml">[profile.dev]
 opt-level = 1
 </code></pre>
-<p>Đoạn code này ghi đè lên giá trị mặc định <code>0</code>. Giờ khi chạy <code>cargo build</code>, Cargo sẽ dùng các mặc định của profile <code>dev</code> cộng với tùy chỉnh <code>opt-level</code> của chúng ta. Vì ta đặt <code>opt-level</code> thành <code>1</code>, Cargo sẽ áp dụng nhiều tối ưu hóa hơn mặc định, nhưng vẫn ít hơn so với bản release build.</p>
+<p>Đoạn mã này ghi đè lên giá trị mặc định <code>0</code>. Giờ khi chạy <code>cargo build</code>, Cargo sẽ dùng các mặc định của profile <code>dev</code> cộng với tùy chỉnh <code>opt-level</code> của chúng ta. Vì ta đặt <code>opt-level</code> thành <code>1</code>, Cargo sẽ áp dụng nhiều tối ưu hóa hơn mặc định, nhưng vẫn ít hơn so với bản release build.</p>
 <p>Để xem danh sách đầy đủ các tùy chọn cấu hình và giá trị mặc định cho từng profile, hãy xem <a href="https://doc.rust-lang.org/cargo/reference/profiles.html">tài liệu của Cargo</a>.</p>
 
   <div class="page-nav bottom"><a href="ch14-00-more-about-cargo.html">← Trước</a><a href="ch14-02-publishing-to-crates-io.html">Tiếp →</a></div>
